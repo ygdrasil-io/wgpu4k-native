@@ -18,6 +18,7 @@ jobs:
       - name: Build and publish with Gradle
         run: |
           gradle wrapper
+          ./gradlew fetch-native-dependencies
           ./gradlew jreleaserConfig assemble publish jreleaserFullRelease --info
         env:
           SNAPSHOT: "false"
