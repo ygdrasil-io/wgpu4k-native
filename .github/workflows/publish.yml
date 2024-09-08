@@ -19,7 +19,9 @@ jobs:
         run: |
           gradle wrapper
           ./gradlew fetch-native-dependencies
-          ./gradlew assemble publish publishToCentralPortal --info
+          ./gradlew assemble
+          ./gradlew build
+          ./gradlew publish publishToCentralPortal --info
         env:
           SNAPSHOT: "false"
           VERSION: ${{ github.event.release.tag_name }}
