@@ -148,18 +148,19 @@ object NativeWgpu4k {
     external fun wgpuDeviceCreateQuerySet(handler: Long, descriptor: Long): Long
     external fun wgpuDevicePoll(handler: Long, bool: Int, ptr: Long)
     external fun wgpuDeviceRelease(handler: Long)
+    external fun wgpuDeviceHasFeature(handler: Long, feature: Int): Int
 
     /** TODO
      * external fun wgpuDeviceSetLabel
      * external fun wgpuDevicePopErrorScope
      * external fun wgpuDevicePushErrorScope
      * external fun wgpuDeviceReference
-     * external fun wgpuDeviceHasFeature
      * external fun wgpuDeviceDestroy
      * external fun wgpuDeviceEnumerateFeatures
      * external fun wgpuDeviceGetLimits
      * external fun wgpuDeviceCreateRenderPipelineAsync
      * external fun wgpuDeviceCreateComputePipelineAsync
+     *
      * external fun wgpuComputePipelineSetLabel
      * external fun wgpuComputePipelineReference
      */
@@ -355,7 +356,6 @@ object NativeWgpu4k {
 
 
     /*** Buffer ***/
-
     external fun wgpuBufferGetSize(handler: Long): Long
     external fun wgpuBufferGetUsage(handler: Long): Int
     external fun wgpuBufferGetMapState(handler: Long): Int
