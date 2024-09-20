@@ -149,6 +149,7 @@ object NativeWgpu4k {
     external fun wgpuDevicePoll(handler: Long, bool: Int, ptr: Long)
     external fun wgpuDeviceRelease(handler: Long)
     external fun wgpuDeviceHasFeature(handler: Long, feature: Int): Int
+    external fun wgpuDeviceGetLimits(handler: Long, limits: Long)
 
     /** TODO
      * external fun wgpuDeviceSetLabel
@@ -157,7 +158,6 @@ object NativeWgpu4k {
      * external fun wgpuDeviceReference
      * external fun wgpuDeviceDestroy
      * external fun wgpuDeviceEnumerateFeatures
-     * external fun wgpuDeviceGetLimits
      * external fun wgpuDeviceCreateRenderPipelineAsync
      * external fun wgpuDeviceCreateComputePipelineAsync
      *
@@ -383,12 +383,13 @@ object NativeWgpu4k {
     external fun wgpuAdapterRequestDevice(handler: Long, descriptor: Long): Long
     external fun wgpuAdapterRequestDeviceNoCallback(handler: Long, descriptor: Long): Long
     external fun wgpuAdapterRelease(handler: Long)
+
+    external fun wgpuAdapterHasFeature(handler: Long, feature: Int): Int
+    external fun wgpuAdapterGetLimits(handler: Long, limits: Long)
     /**
      * TODO
      * external fun wgpuAdapterEnumerateFeatures
      * external fun wgpuAdapterGetInfo
-     * external fun wgpuAdapterGetLimits
-     * external fun wgpuAdapterHasFeature
      * external fun wgpuAdapterInfoFreeMembers
      * external fun wgpuAdapterReference
      */
