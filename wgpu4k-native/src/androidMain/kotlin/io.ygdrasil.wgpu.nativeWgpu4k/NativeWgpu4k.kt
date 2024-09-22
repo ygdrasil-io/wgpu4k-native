@@ -409,10 +409,10 @@ object NativeWgpu4k {
      */
 
     /*** PipelineLayout **/
+    external fun wgpuPipelineLayoutRelease(handler: Long)
     /**
      * TODO
      * external fun wgpuPipelineLayoutReference
-     * external fun wgpuPipelineLayoutRelease
      * external fun wgpuPipelineLayoutSetLabel
      */
 
