@@ -79,7 +79,17 @@ object NativeWgpu4k {
     external fun wgpuRenderPassEncoderSetStencilReference(handler: Long,reference: Long)
     external fun wgpuRenderPassEncoderBeginOcclusionQuery(handler: Long,queryIndex: Int)
     external fun wgpuRenderPassEncoderEndOcclusionQuery(handler: Long)
+    external fun wgpuRenderPassEncoderDrawIndexed(
+        handler: Long,
+        indexCount: Int,
+        instanceCount: Int,
+        firstIndex: Int,
+        baseVertex: Int,
+        firstInstance: Int,
+    )
 
+    external fun wgpuRenderPassEncoderDrawIndirect(handler: Long,indirectBuffer: Long, indirectOffset: Long)
+    external fun wgpuRenderPassEncoderDrawIndexedIndirect(handler: Long,indirectBuffer: Long, indirectOffset: Long)
     /**
      * TODO
      * external fun wgpuRenderPassEncoderSetPushConstants
@@ -93,9 +103,6 @@ object NativeWgpu4k {
      * external fun wgpuRenderPassEncoderMultiDrawIndexedIndirect
      * external fun wgpuRenderPassEncoderInsertDebugMarker
      * external fun wgpuRenderPassEncoderEndPipelineStatisticsQuery
-     * external fun wgpuRenderPassEncoderDrawIndirect
-     * external fun wgpuRenderPassEncoderDrawIndexedIndirect
-     * external fun wgpuRenderPassEncoderDrawIndexed
      * external fun wgpuRenderPassEncoderBeginPipelineStatisticsQuery
      */
 
