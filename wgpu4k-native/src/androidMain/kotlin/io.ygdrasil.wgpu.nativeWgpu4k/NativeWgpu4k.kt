@@ -66,15 +66,25 @@ object NativeWgpu4k {
     )
 
     external fun wgpuRenderPassEncoderExecuteBundles(handler: Long, toLong: Long, toNativeArray: Long)
+    external fun wgpuRenderPassEncoderSetViewport(handler: Long,x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float)
+    external fun setScissorRect(
+        handler: Long,
+        x: Int,
+        y: Int,
+        width: Int,
+        height: Int,
+    )
+
+    external fun wgpuRenderPassEncoderSetBlendConstant(handler: Long,color: Long)
+    external fun wgpuRenderPassEncoderSetStencilReference(handler: Long,reference: Long)
+    external fun wgpuRenderPassEncoderBeginOcclusionQuery(handler: Long,queryIndex: Int)
+    external fun wgpuRenderPassEncoderEndOcclusionQuery(handler: Long)
 
     /**
      * TODO
-     * external fun wgpuRenderPassEncoderSetViewport
-     * external fun wgpuRenderPassEncoderSetStencilReference
      * external fun wgpuRenderPassEncoderSetScissorRect
      * external fun wgpuRenderPassEncoderSetPushConstants
      * external fun wgpuRenderPassEncoderSetLabel
-     * external fun wgpuRenderPassEncoderSetBlendConstant
      * external fun wgpuRenderPassEncoderReference
      * external fun wgpuRenderPassEncoderPushDebugGroup
      * external fun wgpuRenderPassEncoderPopDebugGroup
@@ -84,12 +94,10 @@ object NativeWgpu4k {
      * external fun wgpuRenderPassEncoderMultiDrawIndexedIndirect
      * external fun wgpuRenderPassEncoderInsertDebugMarker
      * external fun wgpuRenderPassEncoderEndPipelineStatisticsQuery
-     * external fun wgpuRenderPassEncoderEndOcclusionQuery
      * external fun wgpuRenderPassEncoderDrawIndirect
      * external fun wgpuRenderPassEncoderDrawIndexedIndirect
      * external fun wgpuRenderPassEncoderDrawIndexed
      * external fun wgpuRenderPassEncoderBeginPipelineStatisticsQuery
-     * external fun wgpuRenderPassEncoderBeginOcclusionQuery
      */
 
     /*** CommandBuffer ***/
