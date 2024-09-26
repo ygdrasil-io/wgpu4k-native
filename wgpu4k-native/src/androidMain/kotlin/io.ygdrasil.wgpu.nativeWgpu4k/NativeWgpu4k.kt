@@ -67,7 +67,7 @@ object NativeWgpu4k {
 
     external fun wgpuRenderPassEncoderExecuteBundles(handler: Long, toLong: Long, toNativeArray: Long)
     external fun wgpuRenderPassEncoderSetViewport(handler: Long,x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float)
-    external fun setScissorRect(
+    external fun wgpuRenderPassEncoderSetScissorRect(
         handler: Long,
         x: Int,
         y: Int,
@@ -82,7 +82,6 @@ object NativeWgpu4k {
 
     /**
      * TODO
-     * external fun wgpuRenderPassEncoderSetScissorRect
      * external fun wgpuRenderPassEncoderSetPushConstants
      * external fun wgpuRenderPassEncoderSetLabel
      * external fun wgpuRenderPassEncoderReference
