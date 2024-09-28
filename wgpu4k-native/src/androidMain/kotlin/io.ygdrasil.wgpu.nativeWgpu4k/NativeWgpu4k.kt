@@ -394,7 +394,7 @@ object NativeWgpu4k {
      */
 
     /*** Adapter ***/
-    external fun wgpuAdapterRequestDevice(handler: Long, descriptor: Long): Long
+    external fun wgpuAdapterRequestDevice(handler: Long, descriptor: Long, callback: Long, userdata: Long): Long
     external fun wgpuAdapterRequestDeviceNoCallback(handler: Long, descriptor: Long): Long
     external fun wgpuAdapterRelease(handler: Long)
 
