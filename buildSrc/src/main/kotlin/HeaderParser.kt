@@ -22,10 +22,91 @@ data class HeaderModel(
     val constants: List<Constant>,
     val typedefs: List<String>,
     val enums: List<Enum>,
-    val bitflags: List<String>
-    val structs: List<String>
-
+    val bitflags: List<Bitflag>,
+    val structs: List<Struct>,
+    val callbacks: List<Callback>,
+    val functions: List<Function>,
+    val objects: List<Object>,
 ) {
+
+    @Serializable
+    data class Object(
+        val name: String,
+        val doc: String,
+        val methods: List<Function>,
+    )
+
+    @Serializable
+    data class Function(
+        val name: String,
+        val doc: String,
+        val args: List<Arg> = listOf(),
+        val returns: Return? = null,
+        val callback: String? = null,
+    ) {
+        @Serializable
+        data class Return(
+            val type: String,
+            val doc: String,
+            val pointer: String? = null,
+        )
+        @Serializable
+        data class Arg(
+            val name: String,
+            val doc: String,
+            val type: String,
+            val pointer: String? = null,
+            val optional: Boolean = false,
+        )
+    }
+
+    @Serializable
+    data class Callback(
+        val name: String,
+        val doc: String,
+        val style: String,
+        val args: List<Arg>,
+    ){
+        @Serializable
+        data class Arg(
+            val name: String,
+            val doc: String,
+            val type: String,
+            val pointer: String? = null,
+        )
+
+    }
+    @Serializable
+    data class Struct(
+        val name: String,
+        val doc: String,
+        val type: String,
+        val members: List<Member>,
+        val free_members: Boolean = false,
+        val extends: List<String> = listOf()
+    ) {
+        @Serializable
+        data class Member(
+            val name: String,
+            val doc: String,
+            val type: String,
+            val optional: Boolean = false,
+            val pointer: String? = null
+        )
+    }
+    @Serializable
+    data class Bitflag(
+        val name: String,
+        val doc: String,
+        val entries: List<Entry>,
+    ) {
+        @Serializable
+        data class Entry(
+            val name: String,
+            val doc: String,
+            val value_combination: List<String>? = listOf(),
+        )
+    }
     @Serializable
     data class Constant(
         val name: String,
