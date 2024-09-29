@@ -39,6 +39,7 @@ kotlin {
     nativeTargets.forEach { target ->
         val main by target.compilations.getting {
             cinterops.create("webgpu") {
+                packageName = "webgpu.native"
                 header(buildNativeResourcesDirectory.resolve("wgpu.h"))
             }
         }
@@ -55,6 +56,7 @@ kotlin {
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
         allWarningsAsErrors = true
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
     sourceSets {

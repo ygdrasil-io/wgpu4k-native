@@ -12,10 +12,10 @@ import kotlinx.cinterop.staticCFunction
 import kotlinx.cinterop.toCPointer
 import kotlinx.cinterop.toKStringFromUtf8
 import kotlinx.cinterop.toLong
-import webgpu.WGPUAdapter
-import webgpu.WGPURequestAdapterStatus
-import webgpu.WGPURequestAdapterStatus_Success
-import webgpu.wgpuInstanceRequestAdapter
+import webgpu.native.WGPUAdapter
+import webgpu.native.WGPURequestAdapterStatus
+import webgpu.native.WGPURequestAdapterStatus_Success
+import webgpu.native.wgpuInstanceRequestAdapter
 import kotlin.experimental.ExperimentalNativeApi
 
 

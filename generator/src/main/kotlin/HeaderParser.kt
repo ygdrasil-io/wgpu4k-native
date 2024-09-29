@@ -2,17 +2,36 @@ import com.charleskorn.kaml.Yaml
 import kotlinx.serialization.Serializable
 import java.io.File
 
+val basePath = File(".")
+val sourceBasePath = basePath.resolve("wgpu4k-native")
+    .resolve("src")
 
 fun main() {
     println(File(".").absoluteFile)
 
-    val webgpuModel = File(".").resolve("webgpu-headers")
+    val webgpuModel = basePath.resolve("webgpu-headers")
         .resolve("webgpu.yml")
         .readText()
         .let { Yaml.default.decodeFromString(HeaderModel.serializer(), it) }
 
-    println(webgpuModel)
+    //println(webgpuModel)
+    (webgpuModel.objects.flatMap { it.methods } + webgpuModel.functions)
+        .filter { it.callback != null }
+        .forEach { println(it) }
+
+    //println(typesCommonMainFile.absolutePath)
+    webgpuModel.objects.map { it.name.convertToKotlinClassName() }
+        .also {
+            typesCommonMainFile.generateTypesCommonMain(it)
+            typesAndroidFile.generateTypesAndroidMain(it)
+            typesNativeFile.generateTypesNativeMain(it)
+        }
 }
+
+private fun String.convertToKotlinClassName() = split("_")
+    .map { component -> component.replaceFirstChar { it.uppercase() } }
+    .joinToString("")
+    .let { "WGPU$it" }
 
 @Serializable
 data class HeaderModel(
@@ -50,6 +69,7 @@ data class HeaderModel(
             val doc: String,
             val pointer: String? = null,
         )
+
         @Serializable
         data class Arg(
             val name: String,
@@ -66,7 +86,7 @@ data class HeaderModel(
         val doc: String,
         val style: String,
         val args: List<Arg>,
-    ){
+    ) {
         @Serializable
         data class Arg(
             val name: String,
@@ -76,6 +96,7 @@ data class HeaderModel(
         )
 
     }
+
     @Serializable
     data class Struct(
         val name: String,
@@ -94,6 +115,7 @@ data class HeaderModel(
             val pointer: String? = null
         )
     }
+
     @Serializable
     data class Bitflag(
         val name: String,
@@ -107,12 +129,14 @@ data class HeaderModel(
             val value_combination: List<String>? = listOf(),
         )
     }
+
     @Serializable
     data class Constant(
         val name: String,
         val value: String,
         val doc: String
     )
+
     @Serializable
     data class Enum(
         val name: String,

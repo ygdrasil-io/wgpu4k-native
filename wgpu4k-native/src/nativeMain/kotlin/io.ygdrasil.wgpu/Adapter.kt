@@ -10,9 +10,9 @@ import kotlinx.cinterop.staticCFunction
 import kotlinx.cinterop.toCPointer
 import kotlinx.cinterop.toKStringFromUtf8
 import kotlinx.cinterop.toLong
-import webgpu.WGPUDevice
-import webgpu.WGPURequestDeviceStatus
-import webgpu.WGPURequestDeviceStatus_Success
+import webgpu.native.WGPUDevice
+import webgpu.native.WGPURequestDeviceStatus
+import webgpu.native.WGPURequestDeviceStatus_Success
 import kotlin.experimental.ExperimentalNativeApi
 
 private var lastFindDevice: WGPUDevice? = null
@@ -30,7 +30,7 @@ fun wgpuAdapterRequestDeviceNoCallback(handler: Long, descriptor: Long) : Long {
 
         }
 
-    webgpu.wgpuAdapterRequestDevice(handler.toCPointer(), descriptor.toCPointer(), handleRequestDevice, null)
+    webgpu.native.wgpuAdapterRequestDevice(handler.toCPointer(), descriptor.toCPointer(), handleRequestDevice, null)
 
     val device = lastFindDevice
     lastFindDevice = null
