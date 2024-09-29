@@ -35,6 +35,7 @@ fun main() {
             //typesNativeFile.generateTypesNativeMain(it)
         }
     callbackCommonMainFile.generateCallback(webgpuModel.callbacks)
+    functionsCommonMainFile.generateCommonFunctions(webgpuModel.functions, webgpuModel.objects)
 }
 
 
