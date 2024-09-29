@@ -1,3 +1,3 @@
 package webgpu
 
-expect fun wgpuDeviceGetQueue(handler: WGPUDevice): WGPUQueue?
+expect inline fun wgpuDeviceGetQueue(handler: WGPUDevice): WGPUQueue?
