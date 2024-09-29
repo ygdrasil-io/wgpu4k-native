@@ -1,24 +1,11 @@
 import java.io.File
 
-val typesCommonMainFile = sourceBasePath
-    .resolve("commonMain")
-    .resolve("kotlin")
+val typesCommonMainFile = commonMainBasePath
     .resolve("webgpu")
     .resolve("Types.kt")
 
-val typesNativeFile = sourceBasePath
-    .resolve("nativeMain")
-    .resolve("kotlin")
-    .resolve("webgpu")
-    .resolve("Types.native.kt")
-
-val typesAndroidFile = sourceBasePath
-    .resolve("androidMain")
-    .resolve("kotlin")
-    .resolve("webgpu")
-    .resolve("Types.android.kt")
-
 private val header = """
+    $disclamer
     package webgpu
     
     import ffi.NativeAddress
@@ -26,18 +13,7 @@ private val header = """
     
 """.trimIndent()
 
-private val headerNative = """
-    @file:OptIn(ExperimentalForeignApi::class)
-    
-    package webgpu
-    
-    import kotlinx.cinterop.ExperimentalForeignApi
-        
-    
-""".trimIndent()
-
 fun File.generateTypesCommonMain(classes: List<String>) {
-
     writeText(header)
     classes.forEach {
         appendText("@JvmInline\n")

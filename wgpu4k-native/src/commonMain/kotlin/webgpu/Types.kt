@@ -1,3 +1,4 @@
+// This file has been generated DO NOT EDIT !!!
 package webgpu
 
 import ffi.NativeAddress

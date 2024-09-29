@@ -1,8 +1,6 @@
 package ffi
 
-interface WGPURequestDevice {
-    fun invoke(status: UInt, device: Long, message: Long, userData1: Long/*, userData2: Long*/)
-}
+import webgpu.WGPURequestDevice
 
 object Callback {
 

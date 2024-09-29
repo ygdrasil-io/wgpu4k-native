@@ -3,8 +3,12 @@ import kotlinx.serialization.Serializable
 import java.io.File
 
 val basePath = File(".")
-val sourceBasePath = basePath.resolve("wgpu4k-native")
+val sourceBasePath = basePath
+    .resolve("wgpu4k-native")
     .resolve("src")
+val commonMainBasePath = sourceBasePath
+    .resolve("commonMain")
+    .resolve("kotlin")
 
 fun main() {
     println(File(".").absoluteFile)
@@ -14,10 +18,14 @@ fun main() {
         .readText()
         .let { Yaml.default.decodeFromString(HeaderModel.serializer(), it) }
 
-    //println(webgpuModel)
-    (webgpuModel.objects.flatMap { it.methods } + webgpuModel.functions)
-        .filter { it.callback != null }
-        .forEach { println(it) }
+    val types = (webgpuModel.functions.flatMap { it.args }.map { it.type } +
+            webgpuModel.objects.flatMap { it.methods }.flatMap { it.args }.map { it.type } +
+            webgpuModel.structs.flatMap { it.members }.map { it.type } +
+            webgpuModel.callbacks.flatMap { it.args }.map { it.type })
+        .toSet()
+
+    types.forEach { println(it) }
+
 
     //println(typesCommonMainFile.absolutePath)
     webgpuModel.objects.map { it.name.convertToKotlinClassName() }
@@ -26,12 +34,10 @@ fun main() {
             //typesAndroidFile.generateTypesAndroidMain(it)
             //typesNativeFile.generateTypesNativeMain(it)
         }
+    callbackCommonMainFile.generateCallback(webgpuModel.callbacks)
 }
 
-private fun String.convertToKotlinClassName() = split("_")
-    .map { component -> component.replaceFirstChar { it.uppercase() } }
-    .joinToString("")
-    .let { "WGPU$it" }
+
 
 @Serializable
 data class HeaderModel(
