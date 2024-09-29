@@ -21,6 +21,8 @@ val typesAndroidFile = sourceBasePath
 private val header = """
     package webgpu
     
+    import ffi.NativeAddress
+    import kotlin.jvm.JvmInline
     
 """.trimIndent()
 
@@ -38,22 +40,7 @@ fun File.generateTypesCommonMain(classes: List<String>) {
 
     writeText(header)
     classes.forEach {
-        appendText("expect class $it\n")
-    }
-}
-
-fun File.generateTypesNativeMain(classes: List<String>) {
-
-    writeText(headerNative)
-    classes.forEach {
-        appendText("actual class $it(val value: webgpu.native.$it)\n")
-    }
-}
-
-fun File.generateTypesAndroidMain(classes: List<String>) {
-
-    writeText(header)
-    classes.forEach {
-        appendText("actual class $it(val value: Long)\n")
+        appendText("@JvmInline\n")
+        appendText("value class $it(val handler: NativeAddress)\n")
     }
 }

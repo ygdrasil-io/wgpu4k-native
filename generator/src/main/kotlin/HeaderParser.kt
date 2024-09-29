@@ -23,8 +23,8 @@ fun main() {
     webgpuModel.objects.map { it.name.convertToKotlinClassName() }
         .also {
             typesCommonMainFile.generateTypesCommonMain(it)
-            typesAndroidFile.generateTypesAndroidMain(it)
-            typesNativeFile.generateTypesNativeMain(it)
+            //typesAndroidFile.generateTypesAndroidMain(it)
+            //typesNativeFile.generateTypesNativeMain(it)
         }
 }
 
