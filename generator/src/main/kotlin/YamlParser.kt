@@ -1,4 +1,21 @@
 import com.charleskorn.kaml.Yaml
+import domain.CLibraryModel
+import domain.YamlModel
+import domain.toCType
+import generator.callbackCommonMainFile
+import generator.enumerationCommonMainFile
+import generator.functionsCommonMainFile
+import generator.generateCallback
+import generator.generateCommonEnumerations
+import generator.generateCommonFunctions
+import generator.generateCommonStructures
+import generator.generateJvmStructures
+import generator.generateNativeStructures
+import generator.generateTypesCommonMain
+import generator.structuresAndroidMainFile
+import generator.structuresCommonMainFile
+import generator.structuresNativeMainFile
+import generator.typesCommonMainFile
 import java.io.File
 
 val basePath = File(".")
@@ -49,17 +66,43 @@ fun main() {
     typesCommonMainFile.generateTypesCommonMain(webgpuCModel.pointers)
 
     callbackCommonMainFile.generateCallback(webgpuModel.callbacks)
-    functionsCommonMainFile.generateCommonFunctions(webgpuModel.functions, webgpuModel.objects)
+
+    functionsCommonMainFile.generateCommonFunctions(webgpuCModel.functions)
 
     structuresCommonMainFile.generateCommonStructures(webgpuModel.structs)
     structuresAndroidMainFile.generateJvmStructures(webgpuModel.structs)
     structuresNativeMainFile.generateNativeStructures(webgpuModel.structs)
+
+    enumerationCommonMainFile.generateCommonEnumerations(webgpuCModel.enumerations)
 }
 
 private fun YamlModel.toCModel(): Pair<YamlModel, CLibraryModel> {
     val pointers = objects.map { it.name.convertToKotlinClassName() }
         .map { CLibraryModel.Pointer(it) }
-    return this to CLibraryModel(pointers)
+
+    val functions = functions.map {
+        CLibraryModel.Function(
+            it.name.convertToKotlinFunctionName(),
+            it.returns.let { it?.type }.toCType(),
+            it.args.map { it.name to it.type.toCType() }
+        )
+    } + objects.flatMap { reference ->
+        reference.methods.map {
+            val name = "${reference.name}_${it.name}".convertToKotlinFunctionName()
+            val args = listOf(YamlModel.Function.Arg("handler", "", "object.${reference.name}")) + it.args
+            CLibraryModel.Function(
+                name,
+                it.returns.let { it?.type }.toCType(),
+                args.map { it.name to it.type.toCType() }
+            )
+        }
+    }
+
+    val enumerations = enums.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName())}
+
+    return this to CLibraryModel(pointers, functions, enumerations)
 }
+
+
 
 

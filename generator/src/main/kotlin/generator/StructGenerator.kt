@@ -1,3 +1,11 @@
+package generator
+
+import androidMainBasePath
+import commonMainBasePath
+import convertToKotlinClassName
+import disclamer
+import domain.YamlModel
+import nativeMainBasePath
 import java.io.File
 
 val structuresCommonMainFile = commonMainBasePath

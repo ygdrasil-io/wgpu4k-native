@@ -1,3 +1,10 @@
+package generator
+
+import commonMainBasePath
+import convertToKotlinClassName
+import disclamer
+import domain.YamlModel
+import toFunctionKotlinType
 import java.io.File
 
 val callbackCommonMainFile = commonMainBasePath
@@ -17,7 +24,7 @@ internal fun File.generateCallback(callbacks: List<YamlModel.Callback>) {
     callbacks.forEach {
         val name = it.name.convertToKotlinClassName()
         val args = it.args
-            .map { "${it.name}: ${it.type.toKotlinType()}" }
+            .map { "${it.name}: ${it.type.toFunctionKotlinType()}" }
             .plus("userData1: Long")
             // TODO uncomment when upgrading version
             //.plus("userData2: Long")

@@ -1,3 +1,8 @@
+package generator
+
+import commonMainBasePath
+import disclamer
+import domain.CLibraryModel
 import java.io.File
 
 val typesCommonMainFile = commonMainBasePath
