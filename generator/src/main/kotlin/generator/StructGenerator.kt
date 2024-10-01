@@ -4,6 +4,7 @@ import androidMainBasePath
 import commonMainBasePath
 import convertToKotlinClassName
 import disclamer
+import domain.CLibraryModel
 import domain.YamlModel
 import nativeMainBasePath
 import java.io.File
@@ -30,27 +31,27 @@ private val header = """
     
 """.trimIndent()
 
-internal fun File.generateCommonStructures(structures: List<YamlModel.Struct>) {
+internal fun File.generateCommonStructures(structures: List<CLibraryModel.Structure>) {
     writeText(header)
     structures.forEach {
-        appendText("expect value class ${it.name.convertToKotlinClassName()}(val handler: NativeAddress) {\n")
+        appendText("expect value class ${it.name}(val handler: NativeAddress) {\n")
         appendText("}\n\n")
     }
 }
 
-internal fun File.generateNativeStructures(structures: List<YamlModel.Struct>) {
+internal fun File.generateNativeStructures(structures: List<CLibraryModel.Structure>) {
     writeText(header)
     structures.forEach {
-        appendText("actual value class ${it.name.convertToKotlinClassName()}(actual val handler: NativeAddress) {\n")
+        appendText("actual value class ${it.name}(actual val handler: NativeAddress) {\n")
         appendText("}\n\n")
     }
 }
 
-internal fun File.generateJvmStructures(structures: List<YamlModel.Struct>) {
+internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure>) {
     writeText(header)
     structures.forEach {
         appendText("@JvmInline\n")
-        appendText("actual value class ${it.name.convertToKotlinClassName()}(actual val handler: NativeAddress) {\n")
+        appendText("actual value class ${it.name}(actual val handler: NativeAddress) {\n")
         appendText("}\n\n")
     }
 }
