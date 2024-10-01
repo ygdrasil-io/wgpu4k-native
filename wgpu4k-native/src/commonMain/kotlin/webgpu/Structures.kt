@@ -219,3 +219,9 @@ expect value class WGPUVertexBufferLayout(val handler: NativeAddress) {
 expect value class WGPUVertexState(val handler: NativeAddress) {
 }
 
+expect value class WGPUChainedStruct(val handler: NativeAddress) {
+}
+
+expect value class WGPUChainedStructOut(val handler: NativeAddress) {
+}
+

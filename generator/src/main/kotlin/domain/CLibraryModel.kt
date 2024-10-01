@@ -59,8 +59,10 @@ internal fun CLibraryModel.Primitive.toPrimitiveKotlinType(): String = when (thi
 internal fun String?.toCType(): CLibraryModel.Type {
     return when {
         this == null -> CLibraryModel.Primitive.Void
-        startsWith("callback.") || startsWith("struct.") || startsWith("object.") || startsWith("enum.")
+        startsWith("struct.") || startsWith("object.") || startsWith("enum.")
             -> return CLibraryModel.Reference(split(".").last().convertToKotlinClassName())
+        startsWith("callback.")
+            -> return CLibraryModel.Reference("${this}_callback".split(".").last().convertToKotlinClassName())
         startsWith("bitflag.") -> CLibraryModel.Primitive.UInt64
         equals("string") -> CLibraryModel.CString
         equals("bool") -> CLibraryModel.Primitive.Bool

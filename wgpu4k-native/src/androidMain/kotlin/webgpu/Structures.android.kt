@@ -291,3 +291,11 @@ actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
 actual value class WGPUVertexState(actual val handler: NativeAddress) {
 }
 
+@JvmInline
+actual value class WGPUChainedStruct(actual val handler: NativeAddress) {
+}
+
+@JvmInline
+actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
+}
+

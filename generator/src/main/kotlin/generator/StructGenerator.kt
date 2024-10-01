@@ -6,6 +6,7 @@ import convertToKotlinClassName
 import disclamer
 import domain.CLibraryModel
 import domain.YamlModel
+import domain.toFunctionKotlinType
 import nativeMainBasePath
 import java.io.File
 
@@ -43,6 +44,9 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
     writeText(header)
     structures.forEach {
         appendText("actual value class ${it.name}(actual val handler: NativeAddress) {\n")
+        it.members.forEach { (name, type) ->
+            appendText("\tval $name: ${type.toFunctionKotlinType()}\n\t\tget() = TODO()\n\n")
+        }
         appendText("}\n\n")
     }
 }

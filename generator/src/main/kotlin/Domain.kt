@@ -1,5 +1,14 @@
 val disclamer = "// This file has been generated DO NOT EDIT !!!"
 
+internal fun String.convertToKotlinVariableName() = split("_")
+    .mapIndexed { index, component ->
+        when {
+            index == 0 -> component.replaceFirstChar { it.lowercase() }
+            else -> component.replaceFirstChar { it.uppercase() }
+        }
+    }
+    .joinToString("")
+
 internal fun String.convertToKotlinClassName() = split("_")
     .map { component -> component.replaceFirstChar { it.uppercase() } }
     .joinToString("")

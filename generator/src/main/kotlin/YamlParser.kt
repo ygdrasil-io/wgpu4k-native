@@ -33,18 +33,6 @@ val nativeMainBasePath = sourceBasePath
     .resolve("nativeMain")
     .resolve("kotlin")
 
-/*
-typedef struct WGPUChainedStruct {
-    struct WGPUChainedStruct const * next;
-    WGPUSType sType;
-} WGPUChainedStruct WGPU_STRUCTURE_ATTRIBUTE;
-
-typedef struct WGPUChainedStructOut {
-    struct WGPUChainedStructOut * next;
-    WGPUSType sType;
-} WGPUChainedStructOut WGPU_STRUCTURE_ATTRIBUTE;
- */
-
 fun main() {
     println(File(".").absoluteFile)
 

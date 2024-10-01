@@ -2,6 +2,7 @@ package converter
 
 import convertToKotlinClassName
 import convertToKotlinFunctionName
+import convertToKotlinVariableName
 import domain.CLibraryModel
 import domain.YamlModel
 import domain.toCType
@@ -14,21 +15,32 @@ internal fun YamlModel.toCModel(): Pair<YamlModel, CLibraryModel> {
     val structures = structs.map {
         CLibraryModel.Structure(
             it.name.convertToKotlinClassName(),
-            it.members.map { it.name to it.type.toCType() }
+            it.members.map { it.name.convertToKotlinVariableName() to it.type.toCType() }
         )
-    }
+    } + listOf(
+        CLibraryModel.Structure("WGPUChainedStruct", listOf(
+            "next" to CLibraryModel.Reference("WGPUChainedStruct"),
+            "sType" to CLibraryModel.Reference("WGPUSType")
+        )),
+        CLibraryModel.Structure("WGPUChainedStructOut", listOf(
+            "next" to CLibraryModel.Reference("WGPUChainedStruct"),
+            "sType" to CLibraryModel.Reference("WGPUSType")
+        ))
+    )
 
     return this to CLibraryModel(pointers, functions, enumerations, structures)
 }
 
 private fun YamlModel.convertToCLibraryEnumerations() =
-    enums.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName()) }
+    enums.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName()) } +
+            bitflags.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName()) }
+
 
 private fun YamlModel.convertToCLibraryFunctions() = functions.map {
     CLibraryModel.Function(
         it.name.convertToKotlinFunctionName(),
         it.returns.let { it?.type }.toCType(),
-        it.args.map { it.name to it.type.toCType() }
+        it.args.map { it.name.convertToKotlinVariableName() to it.type.toCType() }
     )
 } + objects.flatMap { reference ->
     reference.methods.map {
@@ -37,7 +49,7 @@ private fun YamlModel.convertToCLibraryFunctions() = functions.map {
         CLibraryModel.Function(
             name,
             it.returns.let { it?.type }.toCType(),
-            args.map { it.name to it.type.toCType() }
+            args.map { it.name.convertToKotlinVariableName() to it.type.toCType() }
         )
     }
 }
