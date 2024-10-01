@@ -13,10 +13,10 @@ private val header = """
     
 """.trimIndent()
 
-fun File.generateTypesCommonMain(classes: List<String>) {
+fun File.generateTypesCommonMain(classes: List<CLibraryModel.Pointer>) {
     writeText(header)
     classes.forEach {
         appendText("@JvmInline\n")
-        appendText("value class $it(val handler: NativeAddress)\n")
+        appendText("value class ${it.name}(val handler: NativeAddress)\n")
     }
 }

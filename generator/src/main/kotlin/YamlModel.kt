@@ -1,57 +1,7 @@
-import com.charleskorn.kaml.Yaml
 import kotlinx.serialization.Serializable
-import java.io.File
-
-val basePath = File(".")
-val sourceBasePath = basePath
-    .resolve("wgpu4k-native")
-    .resolve("src")
-val commonMainBasePath = sourceBasePath
-    .resolve("commonMain")
-    .resolve("kotlin")
-val androidMainBasePath = sourceBasePath
-    .resolve("androidMain")
-    .resolve("kotlin")
-val nativeMainBasePath = sourceBasePath
-    .resolve("nativeMain")
-    .resolve("kotlin")
-
-fun main() {
-    println(File(".").absoluteFile)
-
-    val webgpuModel = basePath.resolve("webgpu-headers")
-        .resolve("webgpu.yml")
-        .readText()
-        .let { Yaml.default.decodeFromString(HeaderModel.serializer(), it) }
-
-    val types = (webgpuModel.functions.flatMap { it.args }.map { it.type } +
-            webgpuModel.objects.flatMap { it.methods }.flatMap { it.args }.map { it.type } +
-            webgpuModel.structs.flatMap { it.members }.map { it.type } +
-            webgpuModel.callbacks.flatMap { it.args }.map { it.type })
-        .toSet()
-
-    types.forEach { println(it) }
-
-
-    //println(typesCommonMainFile.absolutePath)
-    webgpuModel.objects.map { it.name.convertToKotlinClassName() }
-        .also {
-            typesCommonMainFile.generateTypesCommonMain(it)
-            //typesAndroidFile.generateTypesAndroidMain(it)
-            //typesNativeFile.generateTypesNativeMain(it)
-        }
-    callbackCommonMainFile.generateCallback(webgpuModel.callbacks)
-    functionsCommonMainFile.generateCommonFunctions(webgpuModel.functions, webgpuModel.objects)
-
-    structuresCommonMainFile.generateCommonStructures(webgpuModel.structs)
-    structuresAndroidMainFile.generateJvmStructures(webgpuModel.structs)
-    structuresNativeMainFile.generateNativeStructures(webgpuModel.structs)
-}
-
-
 
 @Serializable
-data class HeaderModel(
+data class YamlModel(
     val copyright: String,
     val name: String,
     val enum_prefix: String,
@@ -111,7 +61,6 @@ data class HeaderModel(
             val type: String,
             val pointer: String? = null,
         )
-
     }
 
     @Serializable

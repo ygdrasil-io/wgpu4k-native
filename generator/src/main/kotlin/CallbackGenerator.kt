@@ -11,7 +11,7 @@ private val header = """
     
 """.trimIndent()
 
-internal fun File.generateCallback(callbacks: List<HeaderModel.Callback>) {
+internal fun File.generateCallback(callbacks: List<YamlModel.Callback>) {
 
     writeText(header)
     callbacks.forEach {

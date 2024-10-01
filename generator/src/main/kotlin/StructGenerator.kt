@@ -22,7 +22,7 @@ private val header = """
     
 """.trimIndent()
 
-internal fun File.generateCommonStructures(structures: List<HeaderModel.Struct>) {
+internal fun File.generateCommonStructures(structures: List<YamlModel.Struct>) {
     writeText(header)
     structures.forEach {
         appendText("expect value class ${it.name.convertToKotlinClassName()}(val handler: NativeAddress) {\n")
@@ -30,7 +30,7 @@ internal fun File.generateCommonStructures(structures: List<HeaderModel.Struct>)
     }
 }
 
-internal fun File.generateNativeStructures(structures: List<HeaderModel.Struct>) {
+internal fun File.generateNativeStructures(structures: List<YamlModel.Struct>) {
     writeText(header)
     structures.forEach {
         appendText("actual value class ${it.name.convertToKotlinClassName()}(actual val handler: NativeAddress) {\n")
@@ -38,7 +38,7 @@ internal fun File.generateNativeStructures(structures: List<HeaderModel.Struct>)
     }
 }
 
-internal fun File.generateJvmStructures(structures: List<HeaderModel.Struct>) {
+internal fun File.generateJvmStructures(structures: List<YamlModel.Struct>) {
     writeText(header)
     structures.forEach {
         appendText("@JvmInline\n")

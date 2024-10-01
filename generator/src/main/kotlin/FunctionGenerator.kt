@@ -11,7 +11,7 @@ private val header = """
     
 """.trimIndent()
 
-internal fun File.generateCommonFunctions(functions: List<HeaderModel.Function>, objects: List<HeaderModel.Object>) {
+internal fun File.generateCommonFunctions(functions: List<YamlModel.Function>, objects: List<YamlModel.Object>) {
 
     writeText(header)
 
@@ -25,13 +25,13 @@ internal fun File.generateCommonFunctions(functions: List<HeaderModel.Function>,
             writeFunction(
                 function,
                 "${ref.name}_${function.name}",
-                listOf(HeaderModel.Function.Arg("handler", "", "object.${ref.name}")) + function.args
+                listOf(YamlModel.Function.Arg("handler", "", "object.${ref.name}")) + function.args
             )
         }
     }
 }
 
-fun File.writeFunction(function: HeaderModel.Function, name: String, args: List<HeaderModel.Function.Arg>) {
+fun File.writeFunction(function: YamlModel.Function, name: String, args: List<YamlModel.Function.Arg>) {
     val name = name.convertToKotlinFunctionName()
     val returnType = function.returns?.type?.toKotlinType() ?: "Unit"
     val args = args
