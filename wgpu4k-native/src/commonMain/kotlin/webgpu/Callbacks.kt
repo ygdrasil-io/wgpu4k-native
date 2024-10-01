@@ -1,43 +1,43 @@
 // This file has been generated DO NOT EDIT !!!
 package webgpu
 
-interface WGPUBufferMap {
+interface WGPUBufferMapCallback {
 	fun invoke(status: UInt, message: Long, userData1: Long)
 }
 
-interface WGPUCompilationInfo {
+interface WGPUCompilationInfoCallback {
 	fun invoke(status: UInt, compilation_info: Long, userData1: Long)
 }
 
-interface WGPUCreateComputePipelineAsync {
+interface WGPUCreateComputePipelineAsyncCallback {
 	fun invoke(status: UInt, pipeline: Long, message: Long, userData1: Long)
 }
 
-interface WGPUCreateRenderPipelineAsync {
+interface WGPUCreateRenderPipelineAsyncCallback {
 	fun invoke(status: UInt, pipeline: Long, message: Long, userData1: Long)
 }
 
-interface WGPUDeviceLost {
+interface WGPUDeviceLostCallback {
 	fun invoke(device: Long, reason: UInt, message: Long, userData1: Long)
 }
 
-interface WGPUPopErrorScope {
+interface WGPUPopErrorScopeCallback {
 	fun invoke(status: UInt, type: UInt, message: Long, userData1: Long)
 }
 
-interface WGPUQueueWorkDone {
+interface WGPUQueueWorkDoneCallback {
 	fun invoke(status: UInt, userData1: Long)
 }
 
-interface WGPURequestAdapter {
+interface WGPURequestAdapterCallback {
 	fun invoke(status: UInt, adapter: Long, message: Long, userData1: Long)
 }
 
-interface WGPURequestDevice {
+interface WGPURequestDeviceCallback {
 	fun invoke(status: UInt, device: Long, message: Long, userData1: Long)
 }
 
-interface WGPUUncapturedError {
+interface WGPUUncapturedErrorCallback {
 	fun invoke(device: Long, type: UInt, message: Long, userData1: Long)
 }
 

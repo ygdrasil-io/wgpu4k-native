@@ -22,7 +22,7 @@ internal fun File.generateCallback(callbacks: List<HeaderModel.Callback>) {
             // TODO uncomment when upgrading version
             //.plus("userData2: Long")
             .joinToString(", ")
-        appendText("interface $name {\n")
+        appendText("interface ${name}Callback {\n")
         appendText("\tfun invoke($args)\n")
         appendText("}\n\n")
 

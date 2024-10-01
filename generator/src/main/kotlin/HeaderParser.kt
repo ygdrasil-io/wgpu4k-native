@@ -9,6 +9,12 @@ val sourceBasePath = basePath
 val commonMainBasePath = sourceBasePath
     .resolve("commonMain")
     .resolve("kotlin")
+val androidMainBasePath = sourceBasePath
+    .resolve("androidMain")
+    .resolve("kotlin")
+val nativeMainBasePath = sourceBasePath
+    .resolve("nativeMain")
+    .resolve("kotlin")
 
 fun main() {
     println(File(".").absoluteFile)
@@ -36,6 +42,10 @@ fun main() {
         }
     callbackCommonMainFile.generateCallback(webgpuModel.callbacks)
     functionsCommonMainFile.generateCommonFunctions(webgpuModel.functions, webgpuModel.objects)
+
+    structuresCommonMainFile.generateCommonStructures(webgpuModel.structs)
+    structuresAndroidMainFile.generateJvmStructures(webgpuModel.structs)
+    structuresNativeMainFile.generateNativeStructures(webgpuModel.structs)
 }
 
 
