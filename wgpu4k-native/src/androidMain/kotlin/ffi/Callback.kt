@@ -2,7 +2,7 @@ package ffi
 
 import webgpu.WGPURequestDeviceCallbackInfo
 
-object Callback {
+object CallbackManager {
 
     init {
         System.loadLibrary("wgpu4k")

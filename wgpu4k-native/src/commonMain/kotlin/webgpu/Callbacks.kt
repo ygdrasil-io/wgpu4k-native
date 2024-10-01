@@ -1,43 +1,45 @@
 // This file has been generated DO NOT EDIT !!!
 package webgpu
 
-interface WGPUBufferMapCallbackInfo {
+import ffi.Callback
+
+interface WGPUBufferMapCallbackInfo : Callback {
 	fun invoke(status: WGPUMapAsyncStatus, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPUCompilationInfoCallbackInfo {
+interface WGPUCompilationInfoCallbackInfo : Callback {
 	fun invoke(status: WGPUCompilationInfoRequestStatus, compilationInfo: WGPUCompilationInfo, userData1: Long, userData2: Long)
 }
 
-interface WGPUCreateComputePipelineAsyncCallbackInfo {
+interface WGPUCreateComputePipelineAsyncCallbackInfo : Callback {
 	fun invoke(status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPUCreateRenderPipelineAsyncCallbackInfo {
+interface WGPUCreateRenderPipelineAsyncCallbackInfo : Callback {
 	fun invoke(status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPUDeviceLostCallbackInfo {
+interface WGPUDeviceLostCallbackInfo : Callback {
 	fun invoke(device: WGPUDevice, reason: WGPUDeviceLostReason, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPUPopErrorScopeCallbackInfo {
+interface WGPUPopErrorScopeCallbackInfo : Callback {
 	fun invoke(status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPUQueueWorkDoneCallbackInfo {
+interface WGPUQueueWorkDoneCallbackInfo : Callback {
 	fun invoke(status: WGPUQueueWorkDoneStatus, userData1: Long, userData2: Long)
 }
 
-interface WGPURequestAdapterCallbackInfo {
+interface WGPURequestAdapterCallbackInfo : Callback {
 	fun invoke(status: WGPURequestAdapterStatus, adapter: WGPUAdapter, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPURequestDeviceCallbackInfo {
+interface WGPURequestDeviceCallbackInfo : Callback {
 	fun invoke(status: WGPURequestDeviceStatus, device: WGPUDevice, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPUUncapturedErrorCallbackInfo {
+interface WGPUUncapturedErrorCallbackInfo : Callback {
 	fun invoke(device: WGPUDevice, type: WGPUErrorType, message: String, userData1: Long, userData2: Long)
 }
 

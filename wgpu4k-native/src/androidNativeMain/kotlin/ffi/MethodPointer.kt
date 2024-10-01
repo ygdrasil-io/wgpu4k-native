@@ -5,11 +5,9 @@ package ffi
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.pointed
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.staticCFunction
 import platform.android.JNIEnvVar
-import platform.android.jlong
 import platform.android.jobject
 import platform.android.jstring
 import kotlin.experimental.ExperimentalNativeApi
@@ -42,11 +40,5 @@ fun registerRequestDevice(env: CPointer<JNIEnvVar>, thiz: jobject, callback: job
     return handleRequestDevice.rawValue.toLong()
 }
 
-
-
-@CName("Java_ffi_Callback_free")
-fun freeCallback(env: CPointer<JNIEnvVar>, thiz: jobject, callback: jlong) {
-    deleteCallback(callback)
-}
 
 

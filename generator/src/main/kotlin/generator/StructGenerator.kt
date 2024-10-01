@@ -22,12 +22,24 @@ val structuresNativeMainFile = nativeMainBasePath
     .resolve("webgpu")
     .resolve("Structures.native.kt")
 
-
 private val header = """
     $disclamer
     package webgpu
     
     import ffi.NativeAddress
+    import ffi.CallbackHolder
+    
+    
+""".trimIndent()
+
+private val headerNative = """
+    $disclamer
+    @file:OptIn(ExperimentalForeignApi::class)
+    package webgpu
+        
+    import ffi.NativeAddress
+    import ffi.CallbackHolder
+    import kotlinx.cinterop.ExperimentalForeignApi
     
     
 """.trimIndent()
@@ -41,7 +53,7 @@ internal fun File.generateCommonStructures(structures: List<CLibraryModel.Struct
 }
 
 internal fun File.generateNativeStructures(structures: List<CLibraryModel.Structure>) {
-    writeText(header)
+    writeText(headerNative)
     structures.forEach {
         appendText("actual value class ${it.name}(actual val handler: NativeAddress) {\n")
         it.members.forEach { (name, type) ->

@@ -2,6 +2,7 @@
 package webgpu
 
 import ffi.NativeAddress
+import ffi.CallbackHolder
 
 @JvmInline
 actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {

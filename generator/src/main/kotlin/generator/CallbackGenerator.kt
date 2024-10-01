@@ -16,6 +16,8 @@ private val header = """
     $disclamer
     package webgpu
     
+    import ffi.Callback
+    
     
 """.trimIndent()
 
@@ -27,7 +29,7 @@ internal fun File.generateCallback(callbacks: List<CLibraryModel.Callback>) {
         val args = it.members
             .map { (name, type) -> "$name: ${type.toFunctionKotlinType()}" }
             .joinToString(", ")
-        appendText("interface ${name} {\n")
+        appendText("interface ${name} : Callback {\n")
         appendText("\tfun invoke($args)\n")
         appendText("}\n\n")
 

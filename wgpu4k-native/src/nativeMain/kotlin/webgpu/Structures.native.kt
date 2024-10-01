@@ -1,7 +1,10 @@
 // This file has been generated DO NOT EDIT !!!
+@file:OptIn(ExperimentalForeignApi::class)
 package webgpu
-
+    
 import ffi.NativeAddress
+import ffi.CallbackHolder
+import kotlinx.cinterop.ExperimentalForeignApi
 
 actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 	val vendor: String
@@ -304,10 +307,10 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 	val defaultQueue: WGPUQueueDescriptor
 		get() = TODO()
 
-	val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
+	val deviceLostCallbackInfo: CallbackHolder<WGPUDeviceLostCallbackInfo>
 		get() = TODO()
 
-	val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
+	val uncapturedErrorCallbackInfo: CallbackHolder<WGPUUncapturedErrorCallbackInfo>
 		get() = TODO()
 
 }

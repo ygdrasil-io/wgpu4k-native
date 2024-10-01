@@ -36,14 +36,14 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
 } + listOf(
     CLibraryModel.Structure(
         "WGPUChainedStruct", listOf(
-            "next" to CLibraryModel.Reference("WGPUChainedStruct"),
-            "sType" to CLibraryModel.Reference("WGPUSType")
+            "next" to CLibraryModel.Reference.Structure("WGPUChainedStruct"),
+            "sType" to CLibraryModel.Reference.Enumeration("WGPUSType")
         )
     ),
     CLibraryModel.Structure(
         "WGPUChainedStructOut", listOf(
-            "next" to CLibraryModel.Reference("WGPUChainedStruct"),
-            "sType" to CLibraryModel.Reference("WGPUSType")
+            "next" to CLibraryModel.Reference.Enumeration("WGPUChainedStruct"),
+            "sType" to CLibraryModel.Reference.Structure("WGPUSType")
         )
     )
 )

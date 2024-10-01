@@ -16,9 +16,15 @@ data class CLibraryModel(
 
     sealed interface Type
     object CString : Type
-    class Reference(val name: String) : Type
+    sealed class Reference(val name: String) : Type {
+        class Pointer(name: String) : Reference(name)
+        class Callback(name: String) : Reference(name)
+        class Structure(name: String) : Reference(name)
+        class Enumeration(name: String) : Reference(name)
+    }
+
     class Array(val subType: Type) : Type
-    sealed interface Primitive: Type {
+    sealed interface Primitive : Type {
         object Bool : Primitive
         object UInt32 : Primitive
         object UInt16 : Primitive
@@ -46,6 +52,7 @@ data class CLibraryModel(
 }
 
 internal fun CLibraryModel.Type.toFunctionKotlinType(): String = when (this) {
+    is CLibraryModel.Reference.Callback -> "CallbackHolder<${name}>"
     is CLibraryModel.Reference -> name
     is CLibraryModel.CString -> "String"
     is CLibraryModel.Array -> "Long"
@@ -67,10 +74,14 @@ internal fun CLibraryModel.Primitive.toPrimitiveKotlinType(): String = when (thi
 internal fun String?.toCType(): CLibraryModel.Type {
     return when {
         this == null -> CLibraryModel.Primitive.Void
-        startsWith("struct.") || startsWith("object.") || startsWith("enum.")
-            -> return CLibraryModel.Reference(split(".").last().convertToKotlinClassName())
+        startsWith("struct.")
+            -> return CLibraryModel.Reference.Structure(split(".").last().convertToKotlinClassName())
+        startsWith("object.")
+            -> return CLibraryModel.Reference.Pointer(split(".").last().convertToKotlinClassName())
+        startsWith("enum.")
+            -> return CLibraryModel.Reference.Enumeration(split(".").last().convertToKotlinClassName())
         startsWith("callback.")
-            -> return CLibraryModel.Reference(split(".").last().convertToKotlinCallbackName())
+            -> return CLibraryModel.Reference.Callback(split(".").last().convertToKotlinCallbackName())
         startsWith("bitflag.") -> CLibraryModel.Primitive.UInt64
         equals("string") -> CLibraryModel.CString
         equals("bool") -> CLibraryModel.Primitive.Bool

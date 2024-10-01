@@ -2,6 +2,7 @@
 package webgpu
 
 import ffi.NativeAddress
+import ffi.CallbackHolder
 
 expect value class WGPUAdapterInfo(val handler: NativeAddress) {
 }

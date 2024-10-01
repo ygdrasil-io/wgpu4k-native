@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalForeignApi::class)
+@file:OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
 
 package ffi
 
@@ -7,7 +7,9 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.rawValue
 import platform.android.JNIEnvVar
 import platform.android.jclass
-import platform.android.jmethodID
+import platform.android.jlong
+import platform.android.jobject
+import kotlin.experimental.ExperimentalNativeApi
 
 internal val handleRequestDeviceCallbacks = mutableListOf<CallbackInfo>()
 
@@ -27,4 +29,7 @@ internal fun deleteCallback(callbackPtr: Long) {
         .also { handleRequestDeviceCallbacks.remove(it) }
 }
 
-
+@CName("Java_ffi_Callback_free")
+fun freeCallback(env: CPointer<JNIEnvVar>, thiz: jobject, callback: jlong) {
+    deleteCallback(callback)
+}
