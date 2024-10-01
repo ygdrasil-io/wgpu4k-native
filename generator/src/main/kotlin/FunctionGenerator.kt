@@ -14,14 +14,28 @@ private val header = """
 internal fun File.generateCommonFunctions(functions: List<HeaderModel.Function>, objects: List<HeaderModel.Object>) {
 
     writeText(header)
-    (functions.map { it.name to it } +
-            objects.flatMap { ref -> ref.methods.map { "${ref.name}_${it.name}" to it } })
-        .map { (name, function) -> name.convertToKotlinFunctionName() to function }
-        .forEach { (name, function) ->
-        val returnType = function.returns?.type?.toKotlinType() ?: "Unit"
-        val args = function.args
-            .map { "${it.name}: ${it.type.toKotlinType()}" }
-            .joinToString(", ")
-        appendText("fun $name($args): $returnType = TODO()\n")
+
+    functions.forEach { function ->
+        writeFunction(function, function.name, function.args)
     }
+
+    objects.forEach { ref ->
+        appendText("// methods of ${ref.name.convertToKotlinClassName() }\n")
+        ref.methods.forEach { function ->
+            writeFunction(
+                function,
+                "${ref.name}_${function.name}",
+                listOf(HeaderModel.Function.Arg("handler", "", "object.${ref.name}")) + function.args
+            )
+        }
+    }
+}
+
+fun File.writeFunction(function: HeaderModel.Function, name: String, args: List<HeaderModel.Function.Arg>) {
+    val name = name.convertToKotlinFunctionName()
+    val returnType = function.returns?.type?.toKotlinType() ?: "Unit"
+    val args = args
+        .map { "${it.name}: ${it.type.toKotlinType()}" }
+        .joinToString(", ")
+    appendText("fun $name($args): $returnType = TODO()\n")
 }
