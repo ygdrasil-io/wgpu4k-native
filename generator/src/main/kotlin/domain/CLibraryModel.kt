@@ -1,5 +1,6 @@
 package domain
 
+import convertToKotlinCallbackName
 import convertToKotlinClassName
 
 
@@ -8,6 +9,7 @@ data class CLibraryModel(
     val functions: List<Function>,
     val enumerations: List<Enumeration>,
     val structures: List<Structure>,
+    val callbacks: List<Callback>,
 ) {
 
     class Enumeration(val name: String)
@@ -35,6 +37,12 @@ data class CLibraryModel(
         val name: String,
         val members: List<Pair<String, Type>>
     )
+
+    data class Callback(
+        val name: String,
+        val members: List<Pair<String, Type>>,
+    )
+
 }
 
 internal fun CLibraryModel.Type.toFunctionKotlinType(): String = when (this) {
@@ -62,7 +70,7 @@ internal fun String?.toCType(): CLibraryModel.Type {
         startsWith("struct.") || startsWith("object.") || startsWith("enum.")
             -> return CLibraryModel.Reference(split(".").last().convertToKotlinClassName())
         startsWith("callback.")
-            -> return CLibraryModel.Reference("${this}_callback".split(".").last().convertToKotlinClassName())
+            -> return CLibraryModel.Reference(split(".").last().convertToKotlinCallbackName())
         startsWith("bitflag.") -> CLibraryModel.Primitive.UInt64
         equals("string") -> CLibraryModel.CString
         equals("bool") -> CLibraryModel.Primitive.Bool

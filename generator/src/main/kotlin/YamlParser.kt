@@ -1,8 +1,6 @@
 import com.charleskorn.kaml.Yaml
 import converter.toCModel
-import domain.CLibraryModel
 import domain.YamlModel
-import domain.toCType
 import generator.callbackCommonMainFile
 import generator.enumerationCommonMainFile
 import generator.functionsCommonMainFile
@@ -45,7 +43,7 @@ fun main() {
 
     typesCommonMainFile.generateTypesCommonMain(webgpuCModel.pointers)
 
-    callbackCommonMainFile.generateCallback(webgpuModel.callbacks)
+    callbackCommonMainFile.generateCallback(webgpuCModel.callbacks)
 
     functionsCommonMainFile.generateCommonFunctions(webgpuCModel.functions)
 

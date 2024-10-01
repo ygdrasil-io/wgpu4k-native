@@ -1,43 +1,43 @@
 // This file has been generated DO NOT EDIT !!!
 package webgpu
 
-interface WGPUBufferMapCallback {
-	fun invoke(status: UInt, message: Long, userData1: Long)
+interface WGPUBufferMapCallbackInfo {
+	fun invoke(status: WGPUMapAsyncStatus, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPUCompilationInfoCallback {
-	fun invoke(status: UInt, compilation_info: Long, userData1: Long)
+interface WGPUCompilationInfoCallbackInfo {
+	fun invoke(status: WGPUCompilationInfoRequestStatus, compilationInfo: WGPUCompilationInfo, userData1: Long, userData2: Long)
 }
 
-interface WGPUCreateComputePipelineAsyncCallback {
-	fun invoke(status: UInt, pipeline: Long, message: Long, userData1: Long)
+interface WGPUCreateComputePipelineAsyncCallbackInfo {
+	fun invoke(status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPUCreateRenderPipelineAsyncCallback {
-	fun invoke(status: UInt, pipeline: Long, message: Long, userData1: Long)
+interface WGPUCreateRenderPipelineAsyncCallbackInfo {
+	fun invoke(status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPUDeviceLostCallback {
-	fun invoke(device: Long, reason: UInt, message: Long, userData1: Long)
+interface WGPUDeviceLostCallbackInfo {
+	fun invoke(device: WGPUDevice, reason: WGPUDeviceLostReason, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPUPopErrorScopeCallback {
-	fun invoke(status: UInt, type: UInt, message: Long, userData1: Long)
+interface WGPUPopErrorScopeCallbackInfo {
+	fun invoke(status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPUQueueWorkDoneCallback {
-	fun invoke(status: UInt, userData1: Long)
+interface WGPUQueueWorkDoneCallbackInfo {
+	fun invoke(status: WGPUQueueWorkDoneStatus, userData1: Long, userData2: Long)
 }
 
-interface WGPURequestAdapterCallback {
-	fun invoke(status: UInt, adapter: Long, message: Long, userData1: Long)
+interface WGPURequestAdapterCallbackInfo {
+	fun invoke(status: WGPURequestAdapterStatus, adapter: WGPUAdapter, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPURequestDeviceCallback {
-	fun invoke(status: UInt, device: Long, message: Long, userData1: Long)
+interface WGPURequestDeviceCallbackInfo {
+	fun invoke(status: WGPURequestDeviceStatus, device: WGPUDevice, message: String, userData1: Long, userData2: Long)
 }
 
-interface WGPUUncapturedErrorCallback {
-	fun invoke(device: Long, type: UInt, message: Long, userData1: Long)
+interface WGPUUncapturedErrorCallbackInfo {
+	fun invoke(device: WGPUDevice, type: WGPUErrorType, message: String, userData1: Long, userData2: Long)
 }
 

@@ -304,10 +304,10 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 	val defaultQueue: WGPUQueueDescriptor
 		get() = TODO()
 
-	val deviceLostCallbackInfo: WGPUDeviceLostCallback
+	val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
 		get() = TODO()
 
-	val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallback
+	val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
 		get() = TODO()
 
 }

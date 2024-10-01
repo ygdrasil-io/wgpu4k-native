@@ -1,5 +1,6 @@
 package converter
 
+import convertToKotlinCallbackName
 import convertToKotlinClassName
 import convertToKotlinFunctionName
 import convertToKotlinVariableName
@@ -12,24 +13,40 @@ internal fun YamlModel.toCModel(): Pair<YamlModel, CLibraryModel> {
     val pointers = convertToPointer()
     val functions = convertToCLibraryFunctions()
     val enumerations = convertToCLibraryEnumerations()
-    val structures = structs.map {
-        CLibraryModel.Structure(
-            it.name.convertToKotlinClassName(),
-            it.members.map { it.name.convertToKotlinVariableName() to it.type.toCType() }
+    val structures = generateCLibraryStructures()
+    val callbacks = callbacks.map {
+        CLibraryModel.Callback(
+            it.name.convertToKotlinCallbackName(),
+            it.args.map { it.name.convertToKotlinVariableName() to it.type.toCType() } +
+                    listOf(
+                        "userData1" to CLibraryModel.Primitive.Int64,
+                        "userData2" to CLibraryModel.Primitive.Int64
+                    )
         )
-    } + listOf(
-        CLibraryModel.Structure("WGPUChainedStruct", listOf(
-            "next" to CLibraryModel.Reference("WGPUChainedStruct"),
-            "sType" to CLibraryModel.Reference("WGPUSType")
-        )),
-        CLibraryModel.Structure("WGPUChainedStructOut", listOf(
-            "next" to CLibraryModel.Reference("WGPUChainedStruct"),
-            "sType" to CLibraryModel.Reference("WGPUSType")
-        ))
-    )
+    }
 
-    return this to CLibraryModel(pointers, functions, enumerations, structures)
+    return this to CLibraryModel(pointers, functions, enumerations, structures, callbacks)
 }
+
+private fun YamlModel.generateCLibraryStructures() = structs.map {
+    CLibraryModel.Structure(
+        it.name.convertToKotlinClassName(),
+        it.members.map { it.name.convertToKotlinVariableName() to it.type.toCType() }
+    )
+} + listOf(
+    CLibraryModel.Structure(
+        "WGPUChainedStruct", listOf(
+            "next" to CLibraryModel.Reference("WGPUChainedStruct"),
+            "sType" to CLibraryModel.Reference("WGPUSType")
+        )
+    ),
+    CLibraryModel.Structure(
+        "WGPUChainedStructOut", listOf(
+            "next" to CLibraryModel.Reference("WGPUChainedStruct"),
+            "sType" to CLibraryModel.Reference("WGPUSType")
+        )
+    )
+)
 
 private fun YamlModel.convertToCLibraryEnumerations() =
     enums.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName()) } +

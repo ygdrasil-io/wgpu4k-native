@@ -3,7 +3,8 @@ package generator
 import commonMainBasePath
 import convertToKotlinClassName
 import disclamer
-import domain.YamlModel
+import domain.CLibraryModel
+import domain.toFunctionKotlinType
 import toFunctionKotlinType
 import java.io.File
 
@@ -18,18 +19,15 @@ private val header = """
     
 """.trimIndent()
 
-internal fun File.generateCallback(callbacks: List<YamlModel.Callback>) {
+internal fun File.generateCallback(callbacks: List<CLibraryModel.Callback>) {
 
     writeText(header)
     callbacks.forEach {
-        val name = it.name.convertToKotlinClassName()
-        val args = it.args
-            .map { "${it.name}: ${it.type.toFunctionKotlinType()}" }
-            .plus("userData1: Long")
-            // TODO uncomment when upgrading version
-            //.plus("userData2: Long")
+        val name = it.name
+        val args = it.members
+            .map { (name, type) -> "$name: ${type.toFunctionKotlinType()}" }
             .joinToString(", ")
-        appendText("interface ${name}Callback {\n")
+        appendText("interface ${name} {\n")
         appendText("\tfun invoke($args)\n")
         appendText("}\n\n")
 
