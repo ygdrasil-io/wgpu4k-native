@@ -2,10 +2,8 @@ package generator
 
 import androidMainBasePath
 import commonMainBasePath
-import convertToKotlinClassName
 import disclamer
 import domain.CLibraryModel
-import domain.YamlModel
 import domain.toFunctionKotlinType
 import nativeMainBasePath
 import java.io.File
@@ -75,8 +73,19 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                         "?.takeIf {it != 0L}" +
                         "?.let { CallbackHolder(it) }"*/
                 else -> "TODO()"
-            }.let { appendText("\t\tget() = $it\n\n") }
-            appendText("\t\tset(newValue) = TODO()\n\n")
+            }.let { appendText("\t\tget() = $it\n") }
+            when (type) {
+                is CLibraryModel.Reference.Pointer
+                    -> "{" +
+                        "handler.toCPointer<webgpu.native.$structureName>()?.pointed" +
+                        "?.let { it.${name} = newValue?.handler?.toCPointer() }" +
+                        "}"
+                /*is CLibraryModel.Reference.Callback
+                    -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { CallbackHolder(it) }"*/
+                else -> " = TODO()"
+            }.let { appendText("\t\tset(newValue) $it\n\n") }
         }
         appendText("}\n\n")
     }
@@ -99,7 +108,7 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
                         "?.takeIf {it != 0L}" +
                         "?.let { CallbackHolder(it) }"*/
                 else -> "TODO()"
-            }.let { appendText("\t\tget() = $it\n\n") }
+            }.let { appendText("\t\tget() = $it\n") }
             appendText("\t\tset(newValue) = TODO()\n\n")
         }
         appendText("}\n\n")
