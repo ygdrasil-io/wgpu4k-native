@@ -40,6 +40,7 @@ private val headerNative = """
     import kotlinx.cinterop.ExperimentalForeignApi
     import kotlinx.cinterop.pointed
     import kotlinx.cinterop.toCPointer
+    import kotlinx.cinterop.toKString
     import kotlinx.cinterop.toLong
     
     
@@ -62,30 +63,31 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
         val structureName = it.name
         appendText("actual value class $structureName(actual val handler: NativeAddress) {\n")
         it.members.forEach { (name, type, optional) ->
+            val nativeAccessor = "handler.toCPointer<webgpu.native.$structureName>()?.pointed"
             appendText("\tactual var $name: ${type.toFunctionKotlinType()}$optional\n")
             when (type) {
+                is CLibraryModel.Reference.CString
+                    -> "$nativeAccessor?.${name}?.toKString()"
                 is CLibraryModel.Reference.Pointer
-                    -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
+                    -> "$nativeAccessor?.${name}?.toLong()" +
                         "?.takeIf {it != 0L}" +
                         "?.let { ${type.name}(it) }"
-                /*is CLibraryModel.Reference.Callback
+                is CLibraryModel.Reference.Callback
                     -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
                         "?.takeIf {it != 0L}" +
-                        "?.let { CallbackHolder(it) }"*/
+                        "?.let { CallbackHolder(it) }"
                 else -> "TODO()"
             }.let { appendText("\t\tget() = $it\n") }
             when (type) {
                 is CLibraryModel.Reference.Pointer
-                    -> "{" +
-                        "handler.toCPointer<webgpu.native.$structureName>()?.pointed" +
-                        "?.let { it.${name} = newValue?.handler?.toCPointer() }" +
-                        "}"
-                /*is CLibraryModel.Reference.Callback
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue?.handler?.toCPointer() }"
+                is CLibraryModel.Reference.Callback
                     -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
                         "?.takeIf {it != 0L}" +
-                        "?.let { CallbackHolder(it) }"*/
-                else -> " = TODO()"
-            }.let { appendText("\t\tset(newValue) $it\n\n") }
+                        "?.let { CallbackHolder(it) }"
+                else -> " TODO()"
+            }.let { appendText("\t\tset(newValue) { $it } \n\n") }
         }
         appendText("}\n\n")
     }

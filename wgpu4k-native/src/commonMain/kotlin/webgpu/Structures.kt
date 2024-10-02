@@ -5,10 +5,10 @@ import ffi.NativeAddress
 import ffi.CallbackHolder
 
 expect value class WGPUAdapterInfo(val handler: NativeAddress) {
-	var vendor: String
-	var architecture: String
-	var device: String
-	var description: String
+	var vendor: String?
+	var architecture: String?
+	var device: String?
+	var description: String?
 	var backendType: WGPUBackendType?
 	var adapterType: WGPUAdapterType?
 	var vendorID: UInt
@@ -16,7 +16,7 @@ expect value class WGPUAdapterInfo(val handler: NativeAddress) {
 }
 
 expect value class WGPUBindGroupDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var layout: WGPUBindGroupLayout?
 	var entries: Long
 }
@@ -31,7 +31,7 @@ expect value class WGPUBindGroupEntry(val handler: NativeAddress) {
 }
 
 expect value class WGPUBindGroupLayoutDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var entries: Long
 }
 
@@ -62,7 +62,7 @@ expect value class WGPUBufferBindingLayout(val handler: NativeAddress) {
 }
 
 expect value class WGPUBufferDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var usage: ULong
 	var size: ULong
 	var mappedAtCreation: Boolean
@@ -82,11 +82,11 @@ expect value class WGPUColorTargetState(val handler: NativeAddress) {
 }
 
 expect value class WGPUCommandBufferDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 }
 
 expect value class WGPUCommandEncoderDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 }
 
 expect value class WGPUCompilationInfo(val handler: NativeAddress) {
@@ -94,7 +94,7 @@ expect value class WGPUCompilationInfo(val handler: NativeAddress) {
 }
 
 expect value class WGPUCompilationMessage(val handler: NativeAddress) {
-	var message: String
+	var message: String?
 	var type: WGPUCompilationMessageType?
 	var lineNum: ULong
 	var linePos: ULong
@@ -106,7 +106,7 @@ expect value class WGPUCompilationMessage(val handler: NativeAddress) {
 }
 
 expect value class WGPUComputePassDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var timestampWrites: WGPUComputePassTimestampWrites?
 }
 
@@ -117,13 +117,13 @@ expect value class WGPUComputePassTimestampWrites(val handler: NativeAddress) {
 }
 
 expect value class WGPUComputePipelineDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var layout: WGPUPipelineLayout?
 	var compute: WGPUProgrammableStageDescriptor?
 }
 
 expect value class WGPUConstantEntry(val handler: NativeAddress) {
-	var key: String
+	var key: String?
 	var value: Double
 }
 
@@ -141,7 +141,7 @@ expect value class WGPUDepthStencilState(val handler: NativeAddress) {
 }
 
 expect value class WGPUDeviceDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var requiredFeatures: Long
 	var requiredLimits: WGPURequiredLimits?
 	var defaultQueue: WGPUQueueDescriptor?
@@ -157,7 +157,7 @@ expect value class WGPUExtent3D(val handler: NativeAddress) {
 
 expect value class WGPUFragmentState(val handler: NativeAddress) {
 	var module: WGPUShaderModule?
-	var entryPoint: String
+	var entryPoint: String?
 	var constants: Long
 	var targets: Long
 }
@@ -239,7 +239,7 @@ expect value class WGPUOrigin3D(val handler: NativeAddress) {
 }
 
 expect value class WGPUPipelineLayoutDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var bindGroupLayouts: Long
 }
 
@@ -253,26 +253,26 @@ expect value class WGPUPrimitiveState(val handler: NativeAddress) {
 
 expect value class WGPUProgrammableStageDescriptor(val handler: NativeAddress) {
 	var module: WGPUShaderModule?
-	var entryPoint: String
+	var entryPoint: String?
 	var constants: Long
 }
 
 expect value class WGPUQuerySetDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var type: WGPUQueryType?
 	var count: UInt
 }
 
 expect value class WGPUQueueDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 }
 
 expect value class WGPURenderBundleDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 }
 
 expect value class WGPURenderBundleEncoderDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var colorFormats: Long
 	var depthStencilFormat: WGPUTextureFormat?
 	var sampleCount: UInt
@@ -302,7 +302,7 @@ expect value class WGPURenderPassDepthStencilAttachment(val handler: NativeAddre
 }
 
 expect value class WGPURenderPassDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var colorAttachments: Long
 	var depthStencilAttachment: WGPURenderPassDepthStencilAttachment?
 	var occlusionQuerySet: WGPUQuerySet?
@@ -320,7 +320,7 @@ expect value class WGPURenderPassTimestampWrites(val handler: NativeAddress) {
 }
 
 expect value class WGPURenderPipelineDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var layout: WGPUPipelineLayout?
 	var vertex: WGPUVertexState?
 	var primitive: WGPUPrimitiveState?
@@ -345,7 +345,7 @@ expect value class WGPUSamplerBindingLayout(val handler: NativeAddress) {
 }
 
 expect value class WGPUSamplerDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var addressModeU: WGPUAddressMode?
 	var addressModeV: WGPUAddressMode?
 	var addressModeW: WGPUAddressMode?
@@ -359,7 +359,7 @@ expect value class WGPUSamplerDescriptor(val handler: NativeAddress) {
 }
 
 expect value class WGPUShaderModuleDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 }
 
 expect value class WGPUShaderSourceSPIRV(val handler: NativeAddress) {
@@ -368,7 +368,7 @@ expect value class WGPUShaderSourceSPIRV(val handler: NativeAddress) {
 }
 
 expect value class WGPUShaderSourceWGSL(val handler: NativeAddress) {
-	var code: String
+	var code: String?
 }
 
 expect value class WGPUStencilFaceState(val handler: NativeAddress) {
@@ -407,7 +407,7 @@ expect value class WGPUSurfaceConfiguration(val handler: NativeAddress) {
 }
 
 expect value class WGPUSurfaceDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 }
 
 expect value class WGPUSurfaceSourceAndroidNativeWindow(val handler: NativeAddress) {
@@ -456,7 +456,7 @@ expect value class WGPUTextureDataLayout(val handler: NativeAddress) {
 }
 
 expect value class WGPUTextureDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var usage: ULong
 	var dimension: WGPUTextureDimension?
 	var size: WGPUExtent3D?
@@ -467,7 +467,7 @@ expect value class WGPUTextureDescriptor(val handler: NativeAddress) {
 }
 
 expect value class WGPUTextureViewDescriptor(val handler: NativeAddress) {
-	var label: String
+	var label: String?
 	var format: WGPUTextureFormat?
 	var dimension: WGPUTextureViewDimension?
 	var baseMipLevel: UInt
@@ -492,7 +492,7 @@ expect value class WGPUVertexBufferLayout(val handler: NativeAddress) {
 
 expect value class WGPUVertexState(val handler: NativeAddress) {
 	var module: WGPUShaderModule?
-	var entryPoint: String
+	var entryPoint: String?
 	var constants: Long
 	var buffers: Long
 }

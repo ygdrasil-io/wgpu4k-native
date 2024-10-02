@@ -6,19 +6,19 @@ import ffi.CallbackHolder
 
 @JvmInline
 actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
-	actual var vendor: String
+	actual var vendor: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var architecture: String
+	actual var architecture: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var device: String
+	actual var device: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var description: String
+	actual var description: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -42,7 +42,7 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -86,7 +86,7 @@ actual value class WGPUBindGroupEntry(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -170,7 +170,7 @@ actual value class WGPUBufferBindingLayout(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUBufferDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -226,7 +226,7 @@ actual value class WGPUColorTargetState(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUCommandBufferDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -234,7 +234,7 @@ actual value class WGPUCommandBufferDescriptor(actual val handler: NativeAddress
 
 @JvmInline
 actual value class WGPUCommandEncoderDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -250,7 +250,7 @@ actual value class WGPUCompilationInfo(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
-	actual var message: String
+	actual var message: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -290,7 +290,7 @@ actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUComputePassDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -318,7 +318,7 @@ actual value class WGPUComputePassTimestampWrites(actual val handler: NativeAddr
 
 @JvmInline
 actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -334,7 +334,7 @@ actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddre
 
 @JvmInline
 actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
-	actual var key: String
+	actual var key: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -390,7 +390,7 @@ actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -438,7 +438,7 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var entryPoint: String
+	actual var entryPoint: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -686,7 +686,7 @@ actual value class WGPUOrigin3D(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -726,7 +726,7 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var entryPoint: String
+	actual var entryPoint: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -738,7 +738,7 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 
 @JvmInline
 actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -754,7 +754,7 @@ actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUQueueDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -762,7 +762,7 @@ actual value class WGPUQueueDescriptor(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -770,7 +770,7 @@ actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress)
 
 @JvmInline
 actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -866,7 +866,7 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 
 @JvmInline
 actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -914,7 +914,7 @@ actual value class WGPURenderPassTimestampWrites(actual val handler: NativeAddre
 
 @JvmInline
 actual value class WGPURenderPipelineDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -982,7 +982,7 @@ actual value class WGPUSamplerBindingLayout(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1030,7 +1030,7 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUShaderModuleDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1050,7 +1050,7 @@ actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
-	actual var code: String
+	actual var code: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1158,7 +1158,7 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUSurfaceDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1274,7 +1274,7 @@ actual value class WGPUTextureDataLayout(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1310,7 +1310,7 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) {
-	actual var label: String
+	actual var label: String?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1386,7 +1386,7 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var entryPoint: String
+	actual var entryPoint: String?
 		get() = TODO()
 		set(newValue) = TODO()
 

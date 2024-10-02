@@ -15,12 +15,12 @@ data class CLibraryModel(
     class Enumeration(val name: String)
 
     sealed interface Type
-    object CString : Type
     sealed class Reference(val name: String) : Type {
         class Pointer(name: String) : Reference(name)
         class Callback(name: String) : Reference(name)
         class Structure(name: String) : Reference(name)
         class Enumeration(name: String) : Reference(name)
+        object CString : Reference("String")
     }
 
     class Array(val subType: Type) : Type
@@ -54,7 +54,6 @@ data class CLibraryModel(
 internal fun CLibraryModel.Type.toFunctionKotlinType(): String = when (this) {
     is CLibraryModel.Reference.Callback -> "CallbackHolder<${name}>"
     is CLibraryModel.Reference -> name
-    is CLibraryModel.CString -> "String"
     is CLibraryModel.Array -> "Long"
     is CLibraryModel.Primitive -> this.toPrimitiveKotlinType()
 }
@@ -83,7 +82,7 @@ internal fun String?.toCType(): CLibraryModel.Type {
         startsWith("callback.")
             -> return CLibraryModel.Reference.Callback(split(".").last().convertToKotlinCallbackName())
         startsWith("bitflag.") -> CLibraryModel.Primitive.UInt64
-        equals("string") -> CLibraryModel.CString
+        equals("string") -> CLibraryModel.Reference.CString
         equals("bool") -> CLibraryModel.Primitive.Bool
         equals("usize") -> CLibraryModel.Primitive.UInt64
         equals("uint64") -> CLibraryModel.Primitive.UInt64
