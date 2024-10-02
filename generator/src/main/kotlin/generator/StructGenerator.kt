@@ -65,7 +65,10 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
         it.members.forEach { (name, type, optional) ->
             val nativeAccessor = "handler.toCPointer<webgpu.native.$structureName>()?.pointed"
             appendText("\tactual var $name: ${type.toFunctionKotlinType()}$optional\n")
+            // Getter
             when (type) {
+                is CLibraryModel.Primitive
+                    -> "$nativeAccessor?.${name} ?: error(\"pointer of $structureName is null\")"
                 is CLibraryModel.Reference.CString
                     -> "$nativeAccessor?.${name}?.toKString()"
                 is CLibraryModel.Reference.Pointer
@@ -78,7 +81,11 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                         "?.let { CallbackHolder(it) }"
                 else -> "TODO()"
             }.let { appendText("\t\tget() = $it\n") }
+            // Setter
             when (type) {
+                is CLibraryModel.Primitive
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue }"
                 is CLibraryModel.Reference.Pointer
                     -> nativeAccessor +
                         "?.let { it.${name} = newValue?.handler?.toCPointer() }"
