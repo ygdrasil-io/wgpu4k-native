@@ -31,19 +31,23 @@ internal fun YamlModel.toCModel(): Pair<YamlModel, CLibraryModel> {
 private fun YamlModel.generateCLibraryStructures() = structs.map {
     CLibraryModel.Structure(
         it.name.convertToKotlinClassName(),
-        it.members.map { it.name.convertToKotlinVariableName() to it.type.toCType() }
+        it.members.map { Triple(
+            it.name.convertToKotlinVariableName(),
+            it.type.toCType(),
+            if (it.type.toCType() is CLibraryModel.Reference) "?" else "")
+        }
     )
 } + listOf(
     CLibraryModel.Structure(
         "WGPUChainedStruct", listOf(
-            "next" to CLibraryModel.Reference.Structure("WGPUChainedStruct"),
-            "sType" to CLibraryModel.Reference.Enumeration("WGPUSType")
+            Triple("next", CLibraryModel.Reference.Structure("WGPUChainedStruct"), "?"),
+            Triple("sType", CLibraryModel.Reference.Enumeration("WGPUSType"), "")
         )
     ),
     CLibraryModel.Structure(
         "WGPUChainedStructOut", listOf(
-            "next" to CLibraryModel.Reference.Enumeration("WGPUChainedStruct"),
-            "sType" to CLibraryModel.Reference.Structure("WGPUSType")
+            Triple("next", CLibraryModel.Reference.Structure("WGPUChainedStructOut"), "?"),
+            Triple("sType", CLibraryModel.Reference.Enumeration("WGPUSType"), "")
         )
     )
 )

@@ -41,7 +41,7 @@ data class CLibraryModel(
 
     data class Structure(
         val name: String,
-        val members: List<Pair<String, Type>>
+        val members: List<Triple<String, Type, String>>
     )
 
     data class Callback(

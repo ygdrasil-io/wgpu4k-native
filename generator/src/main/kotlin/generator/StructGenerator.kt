@@ -40,6 +40,9 @@ private val headerNative = """
     import ffi.NativeAddress
     import ffi.CallbackHolder
     import kotlinx.cinterop.ExperimentalForeignApi
+    import kotlinx.cinterop.pointed
+    import kotlinx.cinterop.toCPointer
+    import kotlinx.cinterop.toLong
     
     
 """.trimIndent()
@@ -48,6 +51,9 @@ internal fun File.generateCommonStructures(structures: List<CLibraryModel.Struct
     writeText(header)
     structures.forEach {
         appendText("expect value class ${it.name}(val handler: NativeAddress) {\n")
+        it.members.forEach { (name, type, optional) ->
+            appendText("\tval $name: ${type.toFunctionKotlinType()}$optional\n")
+        }
         appendText("}\n\n")
     }
 }
@@ -55,9 +61,21 @@ internal fun File.generateCommonStructures(structures: List<CLibraryModel.Struct
 internal fun File.generateNativeStructures(structures: List<CLibraryModel.Structure>) {
     writeText(headerNative)
     structures.forEach {
-        appendText("actual value class ${it.name}(actual val handler: NativeAddress) {\n")
-        it.members.forEach { (name, type) ->
-            appendText("\tval $name: ${type.toFunctionKotlinType()}\n\t\tget() = TODO()\n\n")
+        val structureName = it.name
+        appendText("actual value class $structureName(actual val handler: NativeAddress) {\n")
+        it.members.forEach { (name, type, optional) ->
+            appendText("\tactual val $name: ${type.toFunctionKotlinType()}$optional\n")
+            when (type) {
+                is CLibraryModel.Reference.Pointer
+                    -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { ${type.name}(it) }"
+                /*is CLibraryModel.Reference.Callback
+                    -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { CallbackHolder(it) }"*/
+                else -> "TODO()"
+            }.let { appendText("\t\tget() = $it\n\n") }
         }
         appendText("}\n\n")
     }
@@ -68,6 +86,20 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
     structures.forEach {
         appendText("@JvmInline\n")
         appendText("actual value class ${it.name}(actual val handler: NativeAddress) {\n")
+        it.members.forEach { (name, type, optional) ->
+            appendText("\tactual val $name: ${type.toFunctionKotlinType()}$optional\n")
+            when (type) {
+                /*is CLibraryModel.Reference.Pointer
+                    -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { ${type.name}(it) }"
+                is CLibraryModel.Reference.Callback
+                    -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { CallbackHolder(it) }"*/
+                else -> "TODO()"
+            }.let { appendText("\t\tget() = $it\n\n") }
+        }
         appendText("}\n\n")
     }
 }

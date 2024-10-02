@@ -5,1068 +5,1071 @@ package webgpu
 import ffi.NativeAddress
 import ffi.CallbackHolder
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.pointed
+import kotlinx.cinterop.toCPointer
+import kotlinx.cinterop.toLong
 
 actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
-	val vendor: String
+	actual val vendor: String
 		get() = TODO()
 
-	val architecture: String
+	actual val architecture: String
 		get() = TODO()
 
-	val device: String
+	actual val device: String
 		get() = TODO()
 
-	val description: String
+	actual val description: String
 		get() = TODO()
 
-	val backendType: WGPUBackendType
+	actual val backendType: WGPUBackendType?
 		get() = TODO()
 
-	val adapterType: WGPUAdapterType
+	actual val adapterType: WGPUAdapterType?
 		get() = TODO()
 
-	val vendorID: UInt
+	actual val vendorID: UInt
 		get() = TODO()
 
-	val deviceID: UInt
+	actual val deviceID: UInt
 		get() = TODO()
 
 }
 
 actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val layout: WGPUBindGroupLayout
-		get() = TODO()
+	actual val layout: WGPUBindGroupLayout?
+		get() = handler.toCPointer<webgpu.native.WGPUBindGroupDescriptor>()?.pointed?.layout?.toLong()?.takeIf {it != 0L}?.let { WGPUBindGroupLayout(it) }
 
-	val entries: Long
+	actual val entries: Long
 		get() = TODO()
 
 }
 
 actual value class WGPUBindGroupEntry(actual val handler: NativeAddress) {
-	val binding: UInt
+	actual val binding: UInt
 		get() = TODO()
 
-	val buffer: WGPUBuffer
+	actual val buffer: WGPUBuffer?
+		get() = handler.toCPointer<webgpu.native.WGPUBindGroupEntry>()?.pointed?.buffer?.toLong()?.takeIf {it != 0L}?.let { WGPUBuffer(it) }
+
+	actual val offset: ULong
 		get() = TODO()
 
-	val offset: ULong
+	actual val size: ULong
 		get() = TODO()
 
-	val size: ULong
-		get() = TODO()
+	actual val sampler: WGPUSampler?
+		get() = handler.toCPointer<webgpu.native.WGPUBindGroupEntry>()?.pointed?.sampler?.toLong()?.takeIf {it != 0L}?.let { WGPUSampler(it) }
 
-	val sampler: WGPUSampler
-		get() = TODO()
-
-	val textureView: WGPUTextureView
-		get() = TODO()
+	actual val textureView: WGPUTextureView?
+		get() = handler.toCPointer<webgpu.native.WGPUBindGroupEntry>()?.pointed?.textureView?.toLong()?.takeIf {it != 0L}?.let { WGPUTextureView(it) }
 
 }
 
 actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val entries: Long
+	actual val entries: Long
 		get() = TODO()
 
 }
 
 actual value class WGPUBindGroupLayoutEntry(actual val handler: NativeAddress) {
-	val binding: UInt
+	actual val binding: UInt
 		get() = TODO()
 
-	val visibility: ULong
+	actual val visibility: ULong
 		get() = TODO()
 
-	val buffer: WGPUBufferBindingLayout
+	actual val buffer: WGPUBufferBindingLayout?
 		get() = TODO()
 
-	val sampler: WGPUSamplerBindingLayout
+	actual val sampler: WGPUSamplerBindingLayout?
 		get() = TODO()
 
-	val texture: WGPUTextureBindingLayout
+	actual val texture: WGPUTextureBindingLayout?
 		get() = TODO()
 
-	val storageTexture: WGPUStorageTextureBindingLayout
+	actual val storageTexture: WGPUStorageTextureBindingLayout?
 		get() = TODO()
 
 }
 
 actual value class WGPUBlendComponent(actual val handler: NativeAddress) {
-	val operation: WGPUBlendOperation
+	actual val operation: WGPUBlendOperation?
 		get() = TODO()
 
-	val srcFactor: WGPUBlendFactor
+	actual val srcFactor: WGPUBlendFactor?
 		get() = TODO()
 
-	val dstFactor: WGPUBlendFactor
+	actual val dstFactor: WGPUBlendFactor?
 		get() = TODO()
 
 }
 
 actual value class WGPUBlendState(actual val handler: NativeAddress) {
-	val color: WGPUBlendComponent
+	actual val color: WGPUBlendComponent?
 		get() = TODO()
 
-	val alpha: WGPUBlendComponent
+	actual val alpha: WGPUBlendComponent?
 		get() = TODO()
 
 }
 
 actual value class WGPUBufferBindingLayout(actual val handler: NativeAddress) {
-	val type: WGPUBufferBindingType
+	actual val type: WGPUBufferBindingType?
 		get() = TODO()
 
-	val hasDynamicOffset: Boolean
+	actual val hasDynamicOffset: Boolean
 		get() = TODO()
 
-	val minBindingSize: ULong
+	actual val minBindingSize: ULong
 		get() = TODO()
 
 }
 
 actual value class WGPUBufferDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val usage: ULong
+	actual val usage: ULong
 		get() = TODO()
 
-	val size: ULong
+	actual val size: ULong
 		get() = TODO()
 
-	val mappedAtCreation: Boolean
+	actual val mappedAtCreation: Boolean
 		get() = TODO()
 
 }
 
 actual value class WGPUColor(actual val handler: NativeAddress) {
-	val r: Double
+	actual val r: Double
 		get() = TODO()
 
-	val g: Double
+	actual val g: Double
 		get() = TODO()
 
-	val b: Double
+	actual val b: Double
 		get() = TODO()
 
-	val a: Double
+	actual val a: Double
 		get() = TODO()
 
 }
 
 actual value class WGPUColorTargetState(actual val handler: NativeAddress) {
-	val format: WGPUTextureFormat
+	actual val format: WGPUTextureFormat?
 		get() = TODO()
 
-	val blend: WGPUBlendState
+	actual val blend: WGPUBlendState?
 		get() = TODO()
 
-	val writeMask: ULong
+	actual val writeMask: ULong
 		get() = TODO()
 
 }
 
 actual value class WGPUCommandBufferDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
 }
 
 actual value class WGPUCommandEncoderDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
 }
 
 actual value class WGPUCompilationInfo(actual val handler: NativeAddress) {
-	val messages: Long
+	actual val messages: Long
 		get() = TODO()
 
 }
 
 actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
-	val message: String
+	actual val message: String
 		get() = TODO()
 
-	val type: WGPUCompilationMessageType
+	actual val type: WGPUCompilationMessageType?
 		get() = TODO()
 
-	val lineNum: ULong
+	actual val lineNum: ULong
 		get() = TODO()
 
-	val linePos: ULong
+	actual val linePos: ULong
 		get() = TODO()
 
-	val offset: ULong
+	actual val offset: ULong
 		get() = TODO()
 
-	val length: ULong
+	actual val length: ULong
 		get() = TODO()
 
-	val utf16LinePos: ULong
+	actual val utf16LinePos: ULong
 		get() = TODO()
 
-	val utf16Offset: ULong
+	actual val utf16Offset: ULong
 		get() = TODO()
 
-	val utf16Length: ULong
+	actual val utf16Length: ULong
 		get() = TODO()
 
 }
 
 actual value class WGPUComputePassDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val timestampWrites: WGPUComputePassTimestampWrites
+	actual val timestampWrites: WGPUComputePassTimestampWrites?
 		get() = TODO()
 
 }
 
 actual value class WGPUComputePassTimestampWrites(actual val handler: NativeAddress) {
-	val querySet: WGPUQuerySet
+	actual val querySet: WGPUQuerySet?
+		get() = handler.toCPointer<webgpu.native.WGPUComputePassTimestampWrites>()?.pointed?.querySet?.toLong()?.takeIf {it != 0L}?.let { WGPUQuerySet(it) }
+
+	actual val beginningOfPassWriteIndex: UInt
 		get() = TODO()
 
-	val beginningOfPassWriteIndex: UInt
-		get() = TODO()
-
-	val endOfPassWriteIndex: UInt
+	actual val endOfPassWriteIndex: UInt
 		get() = TODO()
 
 }
 
 actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val layout: WGPUPipelineLayout
-		get() = TODO()
+	actual val layout: WGPUPipelineLayout?
+		get() = handler.toCPointer<webgpu.native.WGPUComputePipelineDescriptor>()?.pointed?.layout?.toLong()?.takeIf {it != 0L}?.let { WGPUPipelineLayout(it) }
 
-	val compute: WGPUProgrammableStageDescriptor
+	actual val compute: WGPUProgrammableStageDescriptor?
 		get() = TODO()
 
 }
 
 actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
-	val key: String
+	actual val key: String
 		get() = TODO()
 
-	val value: Double
+	actual val value: Double
 		get() = TODO()
 
 }
 
 actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
-	val format: WGPUTextureFormat
+	actual val format: WGPUTextureFormat?
 		get() = TODO()
 
-	val depthWriteEnabled: WGPUOptionalBool
+	actual val depthWriteEnabled: WGPUOptionalBool?
 		get() = TODO()
 
-	val depthCompare: WGPUCompareFunction
+	actual val depthCompare: WGPUCompareFunction?
 		get() = TODO()
 
-	val stencilFront: WGPUStencilFaceState
+	actual val stencilFront: WGPUStencilFaceState?
 		get() = TODO()
 
-	val stencilBack: WGPUStencilFaceState
+	actual val stencilBack: WGPUStencilFaceState?
 		get() = TODO()
 
-	val stencilReadMask: UInt
+	actual val stencilReadMask: UInt
 		get() = TODO()
 
-	val stencilWriteMask: UInt
+	actual val stencilWriteMask: UInt
 		get() = TODO()
 
-	val depthBias: Int
+	actual val depthBias: Int
 		get() = TODO()
 
-	val depthBiasSlopeScale: Float
+	actual val depthBiasSlopeScale: Float
 		get() = TODO()
 
-	val depthBiasClamp: Float
+	actual val depthBiasClamp: Float
 		get() = TODO()
 
 }
 
 actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val requiredFeatures: Long
+	actual val requiredFeatures: Long
 		get() = TODO()
 
-	val requiredLimits: WGPURequiredLimits
+	actual val requiredLimits: WGPURequiredLimits?
 		get() = TODO()
 
-	val defaultQueue: WGPUQueueDescriptor
+	actual val defaultQueue: WGPUQueueDescriptor?
 		get() = TODO()
 
-	val deviceLostCallbackInfo: CallbackHolder<WGPUDeviceLostCallbackInfo>
+	actual val deviceLostCallbackInfo: CallbackHolder<WGPUDeviceLostCallbackInfo>?
 		get() = TODO()
 
-	val uncapturedErrorCallbackInfo: CallbackHolder<WGPUUncapturedErrorCallbackInfo>
+	actual val uncapturedErrorCallbackInfo: CallbackHolder<WGPUUncapturedErrorCallbackInfo>?
 		get() = TODO()
 
 }
 
 actual value class WGPUExtent3D(actual val handler: NativeAddress) {
-	val width: UInt
+	actual val width: UInt
 		get() = TODO()
 
-	val height: UInt
+	actual val height: UInt
 		get() = TODO()
 
-	val depthOrArrayLayers: UInt
+	actual val depthOrArrayLayers: UInt
 		get() = TODO()
 
 }
 
 actual value class WGPUFragmentState(actual val handler: NativeAddress) {
-	val module: WGPUShaderModule
+	actual val module: WGPUShaderModule?
+		get() = handler.toCPointer<webgpu.native.WGPUFragmentState>()?.pointed?.module?.toLong()?.takeIf {it != 0L}?.let { WGPUShaderModule(it) }
+
+	actual val entryPoint: String
 		get() = TODO()
 
-	val entryPoint: String
+	actual val constants: Long
 		get() = TODO()
 
-	val constants: Long
-		get() = TODO()
-
-	val targets: Long
+	actual val targets: Long
 		get() = TODO()
 
 }
 
 actual value class WGPUFuture(actual val handler: NativeAddress) {
-	val id: ULong
+	actual val id: ULong
 		get() = TODO()
 
 }
 
 actual value class WGPUFutureWaitInfo(actual val handler: NativeAddress) {
-	val future: WGPUFuture
+	actual val future: WGPUFuture?
 		get() = TODO()
 
-	val completed: Boolean
+	actual val completed: Boolean
 		get() = TODO()
 
 }
 
 actual value class WGPUImageCopyBuffer(actual val handler: NativeAddress) {
-	val layout: WGPUTextureDataLayout
+	actual val layout: WGPUTextureDataLayout?
 		get() = TODO()
 
-	val buffer: WGPUBuffer
-		get() = TODO()
+	actual val buffer: WGPUBuffer?
+		get() = handler.toCPointer<webgpu.native.WGPUImageCopyBuffer>()?.pointed?.buffer?.toLong()?.takeIf {it != 0L}?.let { WGPUBuffer(it) }
 
 }
 
 actual value class WGPUImageCopyTexture(actual val handler: NativeAddress) {
-	val texture: WGPUTexture
+	actual val texture: WGPUTexture?
+		get() = handler.toCPointer<webgpu.native.WGPUImageCopyTexture>()?.pointed?.texture?.toLong()?.takeIf {it != 0L}?.let { WGPUTexture(it) }
+
+	actual val mipLevel: UInt
 		get() = TODO()
 
-	val mipLevel: UInt
+	actual val origin: WGPUOrigin3D?
 		get() = TODO()
 
-	val origin: WGPUOrigin3D
-		get() = TODO()
-
-	val aspect: WGPUTextureAspect
+	actual val aspect: WGPUTextureAspect?
 		get() = TODO()
 
 }
 
 actual value class WGPUInstanceDescriptor(actual val handler: NativeAddress) {
-	val features: WGPUInstanceFeatures
+	actual val features: WGPUInstanceFeatures?
 		get() = TODO()
 
 }
 
 actual value class WGPUInstanceFeatures(actual val handler: NativeAddress) {
-	val timedWaitAnyEnable: Boolean
+	actual val timedWaitAnyEnable: Boolean
 		get() = TODO()
 
-	val timedWaitAnyMaxCount: ULong
+	actual val timedWaitAnyMaxCount: ULong
 		get() = TODO()
 
 }
 
 actual value class WGPULimits(actual val handler: NativeAddress) {
-	val maxTextureDimension1D: UInt
+	actual val maxTextureDimension1D: UInt
 		get() = TODO()
 
-	val maxTextureDimension2D: UInt
+	actual val maxTextureDimension2D: UInt
 		get() = TODO()
 
-	val maxTextureDimension3D: UInt
+	actual val maxTextureDimension3D: UInt
 		get() = TODO()
 
-	val maxTextureArrayLayers: UInt
+	actual val maxTextureArrayLayers: UInt
 		get() = TODO()
 
-	val maxBindGroups: UInt
+	actual val maxBindGroups: UInt
 		get() = TODO()
 
-	val maxBindGroupsPlusVertexBuffers: UInt
+	actual val maxBindGroupsPlusVertexBuffers: UInt
 		get() = TODO()
 
-	val maxBindingsPerBindGroup: UInt
+	actual val maxBindingsPerBindGroup: UInt
 		get() = TODO()
 
-	val maxDynamicUniformBuffersPerPipelineLayout: UInt
+	actual val maxDynamicUniformBuffersPerPipelineLayout: UInt
 		get() = TODO()
 
-	val maxDynamicStorageBuffersPerPipelineLayout: UInt
+	actual val maxDynamicStorageBuffersPerPipelineLayout: UInt
 		get() = TODO()
 
-	val maxSampledTexturesPerShaderStage: UInt
+	actual val maxSampledTexturesPerShaderStage: UInt
 		get() = TODO()
 
-	val maxSamplersPerShaderStage: UInt
+	actual val maxSamplersPerShaderStage: UInt
 		get() = TODO()
 
-	val maxStorageBuffersPerShaderStage: UInt
+	actual val maxStorageBuffersPerShaderStage: UInt
 		get() = TODO()
 
-	val maxStorageTexturesPerShaderStage: UInt
+	actual val maxStorageTexturesPerShaderStage: UInt
 		get() = TODO()
 
-	val maxUniformBuffersPerShaderStage: UInt
+	actual val maxUniformBuffersPerShaderStage: UInt
 		get() = TODO()
 
-	val maxUniformBufferBindingSize: ULong
+	actual val maxUniformBufferBindingSize: ULong
 		get() = TODO()
 
-	val maxStorageBufferBindingSize: ULong
+	actual val maxStorageBufferBindingSize: ULong
 		get() = TODO()
 
-	val minUniformBufferOffsetAlignment: UInt
+	actual val minUniformBufferOffsetAlignment: UInt
 		get() = TODO()
 
-	val minStorageBufferOffsetAlignment: UInt
+	actual val minStorageBufferOffsetAlignment: UInt
 		get() = TODO()
 
-	val maxVertexBuffers: UInt
+	actual val maxVertexBuffers: UInt
 		get() = TODO()
 
-	val maxBufferSize: ULong
+	actual val maxBufferSize: ULong
 		get() = TODO()
 
-	val maxVertexAttributes: UInt
+	actual val maxVertexAttributes: UInt
 		get() = TODO()
 
-	val maxVertexBufferArrayStride: UInt
+	actual val maxVertexBufferArrayStride: UInt
 		get() = TODO()
 
-	val maxInterStageShaderVariables: UInt
+	actual val maxInterStageShaderVariables: UInt
 		get() = TODO()
 
-	val maxColorAttachments: UInt
+	actual val maxColorAttachments: UInt
 		get() = TODO()
 
-	val maxColorAttachmentBytesPerSample: UInt
+	actual val maxColorAttachmentBytesPerSample: UInt
 		get() = TODO()
 
-	val maxComputeWorkgroupStorageSize: UInt
+	actual val maxComputeWorkgroupStorageSize: UInt
 		get() = TODO()
 
-	val maxComputeInvocationsPerWorkgroup: UInt
+	actual val maxComputeInvocationsPerWorkgroup: UInt
 		get() = TODO()
 
-	val maxComputeWorkgroupSizeX: UInt
+	actual val maxComputeWorkgroupSizeX: UInt
 		get() = TODO()
 
-	val maxComputeWorkgroupSizeY: UInt
+	actual val maxComputeWorkgroupSizeY: UInt
 		get() = TODO()
 
-	val maxComputeWorkgroupSizeZ: UInt
+	actual val maxComputeWorkgroupSizeZ: UInt
 		get() = TODO()
 
-	val maxComputeWorkgroupsPerDimension: UInt
+	actual val maxComputeWorkgroupsPerDimension: UInt
 		get() = TODO()
 
 }
 
 actual value class WGPUMultisampleState(actual val handler: NativeAddress) {
-	val count: UInt
+	actual val count: UInt
 		get() = TODO()
 
-	val mask: UInt
+	actual val mask: UInt
 		get() = TODO()
 
-	val alphaToCoverageEnabled: Boolean
+	actual val alphaToCoverageEnabled: Boolean
 		get() = TODO()
 
 }
 
 actual value class WGPUOrigin3D(actual val handler: NativeAddress) {
-	val x: UInt
+	actual val x: UInt
 		get() = TODO()
 
-	val y: UInt
+	actual val y: UInt
 		get() = TODO()
 
-	val z: UInt
+	actual val z: UInt
 		get() = TODO()
 
 }
 
 actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val bindGroupLayouts: Long
+	actual val bindGroupLayouts: Long
 		get() = TODO()
 
 }
 
 actual value class WGPUPrimitiveState(actual val handler: NativeAddress) {
-	val topology: WGPUPrimitiveTopology
+	actual val topology: WGPUPrimitiveTopology?
 		get() = TODO()
 
-	val stripIndexFormat: WGPUIndexFormat
+	actual val stripIndexFormat: WGPUIndexFormat?
 		get() = TODO()
 
-	val frontFace: WGPUFrontFace
+	actual val frontFace: WGPUFrontFace?
 		get() = TODO()
 
-	val cullMode: WGPUCullMode
+	actual val cullMode: WGPUCullMode?
 		get() = TODO()
 
-	val unclippedDepth: Boolean
+	actual val unclippedDepth: Boolean
 		get() = TODO()
 
 }
 
 actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAddress) {
-	val module: WGPUShaderModule
+	actual val module: WGPUShaderModule?
+		get() = handler.toCPointer<webgpu.native.WGPUProgrammableStageDescriptor>()?.pointed?.module?.toLong()?.takeIf {it != 0L}?.let { WGPUShaderModule(it) }
+
+	actual val entryPoint: String
 		get() = TODO()
 
-	val entryPoint: String
-		get() = TODO()
-
-	val constants: Long
+	actual val constants: Long
 		get() = TODO()
 
 }
 
 actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val type: WGPUQueryType
+	actual val type: WGPUQueryType?
 		get() = TODO()
 
-	val count: UInt
+	actual val count: UInt
 		get() = TODO()
 
 }
 
 actual value class WGPUQueueDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
 }
 
 actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
 }
 
 actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val colorFormats: Long
+	actual val colorFormats: Long
 		get() = TODO()
 
-	val depthStencilFormat: WGPUTextureFormat
+	actual val depthStencilFormat: WGPUTextureFormat?
 		get() = TODO()
 
-	val sampleCount: UInt
+	actual val sampleCount: UInt
 		get() = TODO()
 
-	val depthReadOnly: Boolean
+	actual val depthReadOnly: Boolean
 		get() = TODO()
 
-	val stencilReadOnly: Boolean
+	actual val stencilReadOnly: Boolean
 		get() = TODO()
 
 }
 
 actual value class WGPURenderPassColorAttachment(actual val handler: NativeAddress) {
-	val view: WGPUTextureView
+	actual val view: WGPUTextureView?
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassColorAttachment>()?.pointed?.view?.toLong()?.takeIf {it != 0L}?.let { WGPUTextureView(it) }
+
+	actual val depthSlice: UInt
 		get() = TODO()
 
-	val depthSlice: UInt
+	actual val resolveTarget: WGPUTextureView?
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassColorAttachment>()?.pointed?.resolveTarget?.toLong()?.takeIf {it != 0L}?.let { WGPUTextureView(it) }
+
+	actual val loadOp: WGPULoadOp?
 		get() = TODO()
 
-	val resolveTarget: WGPUTextureView
+	actual val storeOp: WGPUStoreOp?
 		get() = TODO()
 
-	val loadOp: WGPULoadOp
-		get() = TODO()
-
-	val storeOp: WGPUStoreOp
-		get() = TODO()
-
-	val clearValue: WGPUColor
+	actual val clearValue: WGPUColor?
 		get() = TODO()
 
 }
 
 actual value class WGPURenderPassDepthStencilAttachment(actual val handler: NativeAddress) {
-	val view: WGPUTextureView
+	actual val view: WGPUTextureView?
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.view?.toLong()?.takeIf {it != 0L}?.let { WGPUTextureView(it) }
+
+	actual val depthLoadOp: WGPULoadOp?
 		get() = TODO()
 
-	val depthLoadOp: WGPULoadOp
+	actual val depthStoreOp: WGPUStoreOp?
 		get() = TODO()
 
-	val depthStoreOp: WGPUStoreOp
+	actual val depthClearValue: Float
 		get() = TODO()
 
-	val depthClearValue: Float
+	actual val depthReadOnly: Boolean
 		get() = TODO()
 
-	val depthReadOnly: Boolean
+	actual val stencilLoadOp: WGPULoadOp?
 		get() = TODO()
 
-	val stencilLoadOp: WGPULoadOp
+	actual val stencilStoreOp: WGPUStoreOp?
 		get() = TODO()
 
-	val stencilStoreOp: WGPUStoreOp
+	actual val stencilClearValue: UInt
 		get() = TODO()
 
-	val stencilClearValue: UInt
-		get() = TODO()
-
-	val stencilReadOnly: Boolean
+	actual val stencilReadOnly: Boolean
 		get() = TODO()
 
 }
 
 actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val colorAttachments: Long
+	actual val colorAttachments: Long
 		get() = TODO()
 
-	val depthStencilAttachment: WGPURenderPassDepthStencilAttachment
+	actual val depthStencilAttachment: WGPURenderPassDepthStencilAttachment?
 		get() = TODO()
 
-	val occlusionQuerySet: WGPUQuerySet
-		get() = TODO()
+	actual val occlusionQuerySet: WGPUQuerySet?
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassDescriptor>()?.pointed?.occlusionQuerySet?.toLong()?.takeIf {it != 0L}?.let { WGPUQuerySet(it) }
 
-	val timestampWrites: WGPURenderPassTimestampWrites
+	actual val timestampWrites: WGPURenderPassTimestampWrites?
 		get() = TODO()
 
 }
 
 actual value class WGPURenderPassMaxDrawCount(actual val handler: NativeAddress) {
-	val maxDrawCount: ULong
+	actual val maxDrawCount: ULong
 		get() = TODO()
 
 }
 
 actual value class WGPURenderPassTimestampWrites(actual val handler: NativeAddress) {
-	val querySet: WGPUQuerySet
+	actual val querySet: WGPUQuerySet?
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassTimestampWrites>()?.pointed?.querySet?.toLong()?.takeIf {it != 0L}?.let { WGPUQuerySet(it) }
+
+	actual val beginningOfPassWriteIndex: UInt
 		get() = TODO()
 
-	val beginningOfPassWriteIndex: UInt
-		get() = TODO()
-
-	val endOfPassWriteIndex: UInt
+	actual val endOfPassWriteIndex: UInt
 		get() = TODO()
 
 }
 
 actual value class WGPURenderPipelineDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val layout: WGPUPipelineLayout
+	actual val layout: WGPUPipelineLayout?
+		get() = handler.toCPointer<webgpu.native.WGPURenderPipelineDescriptor>()?.pointed?.layout?.toLong()?.takeIf {it != 0L}?.let { WGPUPipelineLayout(it) }
+
+	actual val vertex: WGPUVertexState?
 		get() = TODO()
 
-	val vertex: WGPUVertexState
+	actual val primitive: WGPUPrimitiveState?
 		get() = TODO()
 
-	val primitive: WGPUPrimitiveState
+	actual val depthStencil: WGPUDepthStencilState?
 		get() = TODO()
 
-	val depthStencil: WGPUDepthStencilState
+	actual val multisample: WGPUMultisampleState?
 		get() = TODO()
 
-	val multisample: WGPUMultisampleState
-		get() = TODO()
-
-	val fragment: WGPUFragmentState
+	actual val fragment: WGPUFragmentState?
 		get() = TODO()
 
 }
 
 actual value class WGPURequestAdapterOptions(actual val handler: NativeAddress) {
-	val compatibleSurface: WGPUSurface
+	actual val compatibleSurface: WGPUSurface?
+		get() = handler.toCPointer<webgpu.native.WGPURequestAdapterOptions>()?.pointed?.compatibleSurface?.toLong()?.takeIf {it != 0L}?.let { WGPUSurface(it) }
+
+	actual val powerPreference: WGPUPowerPreference?
 		get() = TODO()
 
-	val powerPreference: WGPUPowerPreference
+	actual val backendType: WGPUBackendType?
 		get() = TODO()
 
-	val backendType: WGPUBackendType
-		get() = TODO()
-
-	val forceFallbackAdapter: Boolean
+	actual val forceFallbackAdapter: Boolean
 		get() = TODO()
 
 }
 
 actual value class WGPURequiredLimits(actual val handler: NativeAddress) {
-	val limits: WGPULimits
+	actual val limits: WGPULimits?
 		get() = TODO()
 
 }
 
 actual value class WGPUSamplerBindingLayout(actual val handler: NativeAddress) {
-	val type: WGPUSamplerBindingType
+	actual val type: WGPUSamplerBindingType?
 		get() = TODO()
 
 }
 
 actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val addressModeU: WGPUAddressMode
+	actual val addressModeU: WGPUAddressMode?
 		get() = TODO()
 
-	val addressModeV: WGPUAddressMode
+	actual val addressModeV: WGPUAddressMode?
 		get() = TODO()
 
-	val addressModeW: WGPUAddressMode
+	actual val addressModeW: WGPUAddressMode?
 		get() = TODO()
 
-	val magFilter: WGPUFilterMode
+	actual val magFilter: WGPUFilterMode?
 		get() = TODO()
 
-	val minFilter: WGPUFilterMode
+	actual val minFilter: WGPUFilterMode?
 		get() = TODO()
 
-	val mipmapFilter: WGPUMipmapFilterMode
+	actual val mipmapFilter: WGPUMipmapFilterMode?
 		get() = TODO()
 
-	val lodMinClamp: Float
+	actual val lodMinClamp: Float
 		get() = TODO()
 
-	val lodMaxClamp: Float
+	actual val lodMaxClamp: Float
 		get() = TODO()
 
-	val compare: WGPUCompareFunction
+	actual val compare: WGPUCompareFunction?
 		get() = TODO()
 
-	val maxAnisotropy: UShort
+	actual val maxAnisotropy: UShort
 		get() = TODO()
 
 }
 
 actual value class WGPUShaderModuleDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
 }
 
 actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
-	val codeSize: UInt
+	actual val codeSize: UInt
 		get() = TODO()
 
-	val code: UInt
+	actual val code: UInt
 		get() = TODO()
 
 }
 
 actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
-	val code: String
+	actual val code: String
 		get() = TODO()
 
 }
 
 actual value class WGPUStencilFaceState(actual val handler: NativeAddress) {
-	val compare: WGPUCompareFunction
+	actual val compare: WGPUCompareFunction?
 		get() = TODO()
 
-	val failOp: WGPUStencilOperation
+	actual val failOp: WGPUStencilOperation?
 		get() = TODO()
 
-	val depthFailOp: WGPUStencilOperation
+	actual val depthFailOp: WGPUStencilOperation?
 		get() = TODO()
 
-	val passOp: WGPUStencilOperation
+	actual val passOp: WGPUStencilOperation?
 		get() = TODO()
 
 }
 
 actual value class WGPUStorageTextureBindingLayout(actual val handler: NativeAddress) {
-	val access: WGPUStorageTextureAccess
+	actual val access: WGPUStorageTextureAccess?
 		get() = TODO()
 
-	val format: WGPUTextureFormat
+	actual val format: WGPUTextureFormat?
 		get() = TODO()
 
-	val viewDimension: WGPUTextureViewDimension
+	actual val viewDimension: WGPUTextureViewDimension?
 		get() = TODO()
 
 }
 
 actual value class WGPUSupportedLimits(actual val handler: NativeAddress) {
-	val limits: WGPULimits
+	actual val limits: WGPULimits?
 		get() = TODO()
 
 }
 
 actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
-	val usages: ULong
+	actual val usages: ULong
 		get() = TODO()
 
-	val formats: Long
+	actual val formats: Long
 		get() = TODO()
 
-	val presentModes: Long
+	actual val presentModes: Long
 		get() = TODO()
 
-	val alphaModes: Long
+	actual val alphaModes: Long
 		get() = TODO()
 
 }
 
 actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
-	val device: WGPUDevice
+	actual val device: WGPUDevice?
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceConfiguration>()?.pointed?.device?.toLong()?.takeIf {it != 0L}?.let { WGPUDevice(it) }
+
+	actual val format: WGPUTextureFormat?
 		get() = TODO()
 
-	val format: WGPUTextureFormat
+	actual val usage: ULong
 		get() = TODO()
 
-	val usage: ULong
+	actual val width: UInt
 		get() = TODO()
 
-	val width: UInt
+	actual val height: UInt
 		get() = TODO()
 
-	val height: UInt
+	actual val viewFormats: Long
 		get() = TODO()
 
-	val viewFormats: Long
+	actual val alphaMode: WGPUCompositeAlphaMode?
 		get() = TODO()
 
-	val alphaMode: WGPUCompositeAlphaMode
-		get() = TODO()
-
-	val presentMode: WGPUPresentMode
+	actual val presentMode: WGPUPresentMode?
 		get() = TODO()
 
 }
 
 actual value class WGPUSurfaceDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
 }
 
 actual value class WGPUSurfaceSourceAndroidNativeWindow(actual val handler: NativeAddress) {
-	val window: Unit
+	actual val window: Unit
 		get() = TODO()
 
 }
 
 actual value class WGPUSurfaceSourceMetalLayer(actual val handler: NativeAddress) {
-	val layer: Unit
+	actual val layer: Unit
 		get() = TODO()
 
 }
 
 actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAddress) {
-	val display: Unit
+	actual val display: Unit
 		get() = TODO()
 
-	val surface: Unit
+	actual val surface: Unit
 		get() = TODO()
 
 }
 
 actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddress) {
-	val hinstance: Unit
+	actual val hinstance: Unit
 		get() = TODO()
 
-	val hwnd: Unit
+	actual val hwnd: Unit
 		get() = TODO()
 
 }
 
 actual value class WGPUSurfaceSourceXCBWindow(actual val handler: NativeAddress) {
-	val connection: Unit
+	actual val connection: Unit
 		get() = TODO()
 
-	val window: UInt
+	actual val window: UInt
 		get() = TODO()
 
 }
 
 actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress) {
-	val display: Unit
+	actual val display: Unit
 		get() = TODO()
 
-	val window: ULong
+	actual val window: ULong
 		get() = TODO()
 
 }
 
 actual value class WGPUSurfaceTexture(actual val handler: NativeAddress) {
-	val texture: WGPUTexture
-		get() = TODO()
+	actual val texture: WGPUTexture?
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceTexture>()?.pointed?.texture?.toLong()?.takeIf {it != 0L}?.let { WGPUTexture(it) }
 
-	val status: WGPUSurfaceGetCurrentTextureStatus
+	actual val status: WGPUSurfaceGetCurrentTextureStatus?
 		get() = TODO()
 
 }
 
 actual value class WGPUTextureBindingLayout(actual val handler: NativeAddress) {
-	val sampleType: WGPUTextureSampleType
+	actual val sampleType: WGPUTextureSampleType?
 		get() = TODO()
 
-	val viewDimension: WGPUTextureViewDimension
+	actual val viewDimension: WGPUTextureViewDimension?
 		get() = TODO()
 
-	val multisampled: Boolean
+	actual val multisampled: Boolean
 		get() = TODO()
 
 }
 
 actual value class WGPUTextureDataLayout(actual val handler: NativeAddress) {
-	val offset: ULong
+	actual val offset: ULong
 		get() = TODO()
 
-	val bytesPerRow: UInt
+	actual val bytesPerRow: UInt
 		get() = TODO()
 
-	val rowsPerImage: UInt
+	actual val rowsPerImage: UInt
 		get() = TODO()
 
 }
 
 actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val usage: ULong
+	actual val usage: ULong
 		get() = TODO()
 
-	val dimension: WGPUTextureDimension
+	actual val dimension: WGPUTextureDimension?
 		get() = TODO()
 
-	val size: WGPUExtent3D
+	actual val size: WGPUExtent3D?
 		get() = TODO()
 
-	val format: WGPUTextureFormat
+	actual val format: WGPUTextureFormat?
 		get() = TODO()
 
-	val mipLevelCount: UInt
+	actual val mipLevelCount: UInt
 		get() = TODO()
 
-	val sampleCount: UInt
+	actual val sampleCount: UInt
 		get() = TODO()
 
-	val viewFormats: Long
+	actual val viewFormats: Long
 		get() = TODO()
 
 }
 
 actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) {
-	val label: String
+	actual val label: String
 		get() = TODO()
 
-	val format: WGPUTextureFormat
+	actual val format: WGPUTextureFormat?
 		get() = TODO()
 
-	val dimension: WGPUTextureViewDimension
+	actual val dimension: WGPUTextureViewDimension?
 		get() = TODO()
 
-	val baseMipLevel: UInt
+	actual val baseMipLevel: UInt
 		get() = TODO()
 
-	val mipLevelCount: UInt
+	actual val mipLevelCount: UInt
 		get() = TODO()
 
-	val baseArrayLayer: UInt
+	actual val baseArrayLayer: UInt
 		get() = TODO()
 
-	val arrayLayerCount: UInt
+	actual val arrayLayerCount: UInt
 		get() = TODO()
 
-	val aspect: WGPUTextureAspect
+	actual val aspect: WGPUTextureAspect?
 		get() = TODO()
 
-	val usage: ULong
+	actual val usage: ULong
 		get() = TODO()
 
 }
 
 actual value class WGPUVertexAttribute(actual val handler: NativeAddress) {
-	val format: WGPUVertexFormat
+	actual val format: WGPUVertexFormat?
 		get() = TODO()
 
-	val offset: ULong
+	actual val offset: ULong
 		get() = TODO()
 
-	val shaderLocation: UInt
+	actual val shaderLocation: UInt
 		get() = TODO()
 
 }
 
 actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
-	val arrayStride: ULong
+	actual val arrayStride: ULong
 		get() = TODO()
 
-	val stepMode: WGPUVertexStepMode
+	actual val stepMode: WGPUVertexStepMode?
 		get() = TODO()
 
-	val attributes: Long
+	actual val attributes: Long
 		get() = TODO()
 
 }
 
 actual value class WGPUVertexState(actual val handler: NativeAddress) {
-	val module: WGPUShaderModule
+	actual val module: WGPUShaderModule?
+		get() = handler.toCPointer<webgpu.native.WGPUVertexState>()?.pointed?.module?.toLong()?.takeIf {it != 0L}?.let { WGPUShaderModule(it) }
+
+	actual val entryPoint: String
 		get() = TODO()
 
-	val entryPoint: String
+	actual val constants: Long
 		get() = TODO()
 
-	val constants: Long
-		get() = TODO()
-
-	val buffers: Long
+	actual val buffers: Long
 		get() = TODO()
 
 }
 
 actual value class WGPUChainedStruct(actual val handler: NativeAddress) {
-	val next: WGPUChainedStruct
+	actual val next: WGPUChainedStruct?
 		get() = TODO()
 
-	val sType: WGPUSType
+	actual val sType: WGPUSType
 		get() = TODO()
 
 }
 
 actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
-	val next: WGPUChainedStruct
+	actual val next: WGPUChainedStructOut?
 		get() = TODO()
 
-	val sType: WGPUSType
+	actual val sType: WGPUSType
 		get() = TODO()
 
 }
