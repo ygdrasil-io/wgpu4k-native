@@ -52,7 +52,7 @@ internal fun File.generateCommonStructures(structures: List<CLibraryModel.Struct
     structures.forEach {
         appendText("expect value class ${it.name}(val handler: NativeAddress) {\n")
         it.members.forEach { (name, type, optional) ->
-            appendText("\tval $name: ${type.toFunctionKotlinType()}$optional\n")
+            appendText("\tvar $name: ${type.toFunctionKotlinType()}$optional\n")
         }
         appendText("}\n\n")
     }
@@ -64,7 +64,7 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
         val structureName = it.name
         appendText("actual value class $structureName(actual val handler: NativeAddress) {\n")
         it.members.forEach { (name, type, optional) ->
-            appendText("\tactual val $name: ${type.toFunctionKotlinType()}$optional\n")
+            appendText("\tactual var $name: ${type.toFunctionKotlinType()}$optional\n")
             when (type) {
                 is CLibraryModel.Reference.Pointer
                     -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
@@ -76,6 +76,7 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                         "?.let { CallbackHolder(it) }"*/
                 else -> "TODO()"
             }.let { appendText("\t\tget() = $it\n\n") }
+            appendText("\t\tset(newValue) = TODO()\n\n")
         }
         appendText("}\n\n")
     }
@@ -87,7 +88,7 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
         appendText("@JvmInline\n")
         appendText("actual value class ${it.name}(actual val handler: NativeAddress) {\n")
         it.members.forEach { (name, type, optional) ->
-            appendText("\tactual val $name: ${type.toFunctionKotlinType()}$optional\n")
+            appendText("\tactual var $name: ${type.toFunctionKotlinType()}$optional\n")
             when (type) {
                 /*is CLibraryModel.Reference.Pointer
                     -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
@@ -99,6 +100,7 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
                         "?.let { CallbackHolder(it) }"*/
                 else -> "TODO()"
             }.let { appendText("\t\tget() = $it\n\n") }
+            appendText("\t\tset(newValue) = TODO()\n\n")
         }
         appendText("}\n\n")
     }
