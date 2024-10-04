@@ -18,6 +18,7 @@ private val header = """
     
     import ffi.Callback
     import ffi.CString
+    import ffi.NativeAddress
     
     
 """.trimIndent()

@@ -2,6 +2,9 @@
 package webgpu
 
 import ffi.CString
+import ffi.NativeAddress
+
+
 fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor): WGPUInstance = TODO()
 fun wgpuGetInstanceFeatures(features: WGPUInstanceFeatures): Unit = TODO()
 fun wgpuAdapterGetLimits(handler: WGPUAdapter, limits: WGPUSupportedLimits): Boolean = TODO()
@@ -80,8 +83,8 @@ fun wgpuQuerySetGetCount(handler: WGPUQuerySet): UInt = TODO()
 fun wgpuQuerySetDestroy(handler: WGPUQuerySet): Unit = TODO()
 fun wgpuQueueSubmit(handler: WGPUQueue, commands: Long): Unit = TODO()
 fun wgpuQueueOnSubmittedWorkDone(handler: WGPUQueue): Unit = TODO()
-fun wgpuQueueWriteBuffer(handler: WGPUQueue, buffer: WGPUBuffer, bufferOffset: ULong, data: Unit, size: ULong): Unit = TODO()
-fun wgpuQueueWriteTexture(handler: WGPUQueue, destination: WGPUImageCopyTexture, data: Unit, dataSize: ULong, dataLayout: WGPUTextureDataLayout, writeSize: WGPUExtent3D): Unit = TODO()
+fun wgpuQueueWriteBuffer(handler: WGPUQueue, buffer: WGPUBuffer, bufferOffset: ULong, data: NativeAddress, size: ULong): Unit = TODO()
+fun wgpuQueueWriteTexture(handler: WGPUQueue, destination: WGPUImageCopyTexture, data: NativeAddress, dataSize: ULong, dataLayout: WGPUTextureDataLayout, writeSize: WGPUExtent3D): Unit = TODO()
 fun wgpuQueueSetLabel(handler: WGPUQueue, label: CString): Unit = TODO()
 fun wgpuRenderBundleSetLabel(handler: WGPURenderBundle, label: CString): Unit = TODO()
 fun wgpuRenderBundleEncoderSetPipeline(handler: WGPURenderBundleEncoder, pipeline: WGPURenderPipeline): Unit = TODO()

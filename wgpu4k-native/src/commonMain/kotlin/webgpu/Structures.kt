@@ -412,30 +412,30 @@ expect value class WGPUSurfaceDescriptor(val handler: NativeAddress) {
 }
 
 expect value class WGPUSurfaceSourceAndroidNativeWindow(val handler: NativeAddress) {
-	var window: Unit
+	var window: NativeAddress?
 }
 
 expect value class WGPUSurfaceSourceMetalLayer(val handler: NativeAddress) {
-	var layer: Unit
+	var layer: NativeAddress?
 }
 
 expect value class WGPUSurfaceSourceWaylandSurface(val handler: NativeAddress) {
-	var display: Unit
-	var surface: Unit
+	var display: NativeAddress?
+	var surface: NativeAddress?
 }
 
 expect value class WGPUSurfaceSourceWindowsHWND(val handler: NativeAddress) {
-	var hinstance: Unit
-	var hwnd: Unit
+	var hinstance: NativeAddress?
+	var hwnd: NativeAddress?
 }
 
 expect value class WGPUSurfaceSourceXCBWindow(val handler: NativeAddress) {
-	var connection: Unit
+	var connection: NativeAddress?
 	var window: UInt
 }
 
 expect value class WGPUSurfaceSourceXlibWindow(val handler: NativeAddress) {
-	var display: Unit
+	var display: NativeAddress?
 	var window: ULong
 }
 
@@ -511,70 +511,70 @@ expect value class WGPUChainedStructOut(val handler: NativeAddress) {
 expect value class WGPUBufferMapCallbackInfo(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var callback: CallbackHolder<WGPUBufferMapCallback>?
-	var userData1: Long?
-	var userData2: Long?
+	var userdata1: NativeAddress?
+	var userdata2: NativeAddress?
 }
 
 expect value class WGPUCompilationInfoCallbackInfo(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var callback: CallbackHolder<WGPUCompilationInfoCallback>?
-	var userData1: Long?
-	var userData2: Long?
+	var userdata1: NativeAddress?
+	var userdata2: NativeAddress?
 }
 
 expect value class WGPUCreateComputePipelineAsyncCallbackInfo(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var callback: CallbackHolder<WGPUCreateComputePipelineAsyncCallback>?
-	var userData1: Long?
-	var userData2: Long?
+	var userdata1: NativeAddress?
+	var userdata2: NativeAddress?
 }
 
 expect value class WGPUCreateRenderPipelineAsyncCallbackInfo(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var callback: CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>?
-	var userData1: Long?
-	var userData2: Long?
+	var userdata1: NativeAddress?
+	var userdata2: NativeAddress?
 }
 
 expect value class WGPUDeviceLostCallbackInfo(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var callback: CallbackHolder<WGPUDeviceLostCallback>?
-	var userData1: Long?
-	var userData2: Long?
+	var userdata1: NativeAddress?
+	var userdata2: NativeAddress?
 }
 
 expect value class WGPUPopErrorScopeCallbackInfo(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
-	var userData1: Long?
-	var userData2: Long?
+	var userdata1: NativeAddress?
+	var userdata2: NativeAddress?
 }
 
 expect value class WGPUQueueWorkDoneCallbackInfo(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var callback: CallbackHolder<WGPUQueueWorkDoneCallback>?
-	var userData1: Long?
-	var userData2: Long?
+	var userdata1: NativeAddress?
+	var userdata2: NativeAddress?
 }
 
 expect value class WGPURequestAdapterCallbackInfo(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var callback: CallbackHolder<WGPURequestAdapterCallback>?
-	var userData1: Long?
-	var userData2: Long?
+	var userdata1: NativeAddress?
+	var userdata2: NativeAddress?
 }
 
 expect value class WGPURequestDeviceCallbackInfo(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var callback: CallbackHolder<WGPURequestDeviceCallback>?
-	var userData1: Long?
-	var userData2: Long?
+	var userdata1: NativeAddress?
+	var userdata2: NativeAddress?
 }
 
 expect value class WGPUUncapturedErrorCallbackInfo(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
-	var userData1: Long?
-	var userData2: Long?
+	var userdata1: NativeAddress?
+	var userdata2: NativeAddress?
 }
 

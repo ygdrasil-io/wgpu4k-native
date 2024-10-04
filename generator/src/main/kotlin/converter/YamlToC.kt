@@ -18,10 +18,10 @@ internal fun YamlModel.toCModel(): Pair<YamlModel, CLibraryModel> {
     val callbacks = callbacks.map {
         CLibraryModel.Callback(
             it.name.convertToKotlinCallbackName(),
-            it.args.map { it.name.convertToKotlinVariableName() to it.type.toCType() } +
+            it.args.map { it.name.convertToKotlinVariableName() to it.type.toCType(it.pointer != null) } +
                     listOf(
-                        "userData1" to CLibraryModel.Primitive.Int64,
-                        "userData2" to CLibraryModel.Primitive.Int64
+                        "userdata1" to CLibraryModel.Reference.OpaquePointer,
+                        "userdata2" to CLibraryModel.Reference.OpaquePointer
                     )
         )
     }
@@ -35,8 +35,8 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
         it.members.map {
             Triple(
                 it.name.convertToKotlinVariableName(),
-                it.type.toCType(),
-                if (it.type.toCType() is CLibraryModel.Reference) "?" else ""
+                it.type.toCType(it.pointer != null),
+                if (it.type.toCType(it.pointer != null) is CLibraryModel.Reference) "?" else ""
             )
         }
     )
@@ -59,8 +59,8 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
         name, listOf(
             Triple("nextInChain", CLibraryModel.Reference.Structure("WGPUChainedStruct"), "?"),
             Triple("callback", CLibraryModel.Reference.Callback(it.name.convertToKotlinCallbackName()), "?"),
-            Triple("userData1", CLibraryModel.Primitive.Int64, "?"),
-            Triple("userData2", CLibraryModel.Primitive.Int64, "?")
+            Triple("userdata1", CLibraryModel.Reference.OpaquePointer, "?"),
+            Triple("userdata2", CLibraryModel.Reference.OpaquePointer, "?")
         )
     )
 }
@@ -74,7 +74,7 @@ private fun YamlModel.convertToCLibraryFunctions() = functions.map {
     CLibraryModel.Function(
         it.name.convertToKotlinFunctionName(),
         it.returns.let { it?.type }.toCType(),
-        it.args.map { it.name.convertToKotlinVariableName() to it.type.toCType() }
+        it.args.map { it.name.convertToKotlinVariableName() to it.type.toCType(it.pointer != null) }
     )
 } + objects.flatMap { reference ->
     reference.methods.map {
@@ -83,7 +83,7 @@ private fun YamlModel.convertToCLibraryFunctions() = functions.map {
         CLibraryModel.Function(
             name,
             it.returns.let { it?.type }.toCType(),
-            args.map { it.name.convertToKotlinVariableName() to it.type.toCType() }
+            args.map { it.name.convertToKotlinVariableName() to it.type.toCType(it.pointer != null) }
         )
     }
 }

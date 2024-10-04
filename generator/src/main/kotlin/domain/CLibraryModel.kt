@@ -1,6 +1,5 @@
 package domain
 
-import convertToKotlinCallbackName
 import convertToKotlinCallbackStructureName
 import convertToKotlinClassName
 
@@ -17,6 +16,7 @@ data class CLibraryModel(
 
     sealed interface Type
     sealed class Reference(val name: String) : Type {
+        object OpaquePointer : Reference("NativeAddress")
         class Pointer(name: String) : Reference(name)
         class Callback(name: String) : Reference(name)
         class Structure(name: String) : Reference(name)
@@ -71,7 +71,7 @@ internal fun CLibraryModel.Primitive.toPrimitiveKotlinType(): String = when (thi
     CLibraryModel.Primitive.UInt16 -> "UShort"
 }
 
-internal fun String?.toCType(): CLibraryModel.Type {
+internal fun String?.toCType(isPointer: Boolean = false): CLibraryModel.Type {
     return when {
         this == null -> CLibraryModel.Primitive.Void
         startsWith("struct.")
@@ -92,7 +92,10 @@ internal fun String?.toCType(): CLibraryModel.Type {
         equals("int32") -> CLibraryModel.Primitive.Int32
         equals("float32") -> CLibraryModel.Primitive.Float32
         equals("float64") -> CLibraryModel.Primitive.Float64
-        equals("c_void") -> CLibraryModel.Primitive.Void
+        equals("c_void") -> when (isPointer) {
+            true -> CLibraryModel.Reference.OpaquePointer
+            else -> CLibraryModel.Primitive.Void
+        }
         startsWith("array<") -> CLibraryModel.Array(substring(6, length - 1).toCType())
         else -> error("unknown type $this")
     }

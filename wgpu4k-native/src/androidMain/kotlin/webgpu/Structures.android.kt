@@ -1167,7 +1167,7 @@ actual value class WGPUSurfaceDescriptor(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUSurfaceSourceAndroidNativeWindow(actual val handler: NativeAddress) {
-	actual var window: Unit
+	actual var window: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1175,7 +1175,7 @@ actual value class WGPUSurfaceSourceAndroidNativeWindow(actual val handler: Nati
 
 @JvmInline
 actual value class WGPUSurfaceSourceMetalLayer(actual val handler: NativeAddress) {
-	actual var layer: Unit
+	actual var layer: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1183,11 +1183,11 @@ actual value class WGPUSurfaceSourceMetalLayer(actual val handler: NativeAddress
 
 @JvmInline
 actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAddress) {
-	actual var display: Unit
+	actual var display: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var surface: Unit
+	actual var surface: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1195,11 +1195,11 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAdd
 
 @JvmInline
 actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddress) {
-	actual var hinstance: Unit
+	actual var hinstance: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var hwnd: Unit
+	actual var hwnd: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1207,7 +1207,7 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddres
 
 @JvmInline
 actual value class WGPUSurfaceSourceXCBWindow(actual val handler: NativeAddress) {
-	actual var connection: Unit
+	actual var connection: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1219,7 +1219,7 @@ actual value class WGPUSurfaceSourceXCBWindow(actual val handler: NativeAddress)
 
 @JvmInline
 actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress) {
-	actual var display: Unit
+	actual var display: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1435,11 +1435,11 @@ actual value class WGPUBufferMapCallbackInfo(actual val handler: NativeAddress) 
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData1: Long?
+	actual var userdata1: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData2: Long?
+	actual var userdata2: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1455,11 +1455,11 @@ actual value class WGPUCompilationInfoCallbackInfo(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData1: Long?
+	actual var userdata1: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData2: Long?
+	actual var userdata2: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1475,11 +1475,11 @@ actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual val handler
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData1: Long?
+	actual var userdata1: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData2: Long?
+	actual var userdata2: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1495,11 +1495,11 @@ actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual val handler:
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData1: Long?
+	actual var userdata1: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData2: Long?
+	actual var userdata2: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1515,11 +1515,11 @@ actual value class WGPUDeviceLostCallbackInfo(actual val handler: NativeAddress)
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData1: Long?
+	actual var userdata1: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData2: Long?
+	actual var userdata2: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1535,11 +1535,11 @@ actual value class WGPUPopErrorScopeCallbackInfo(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData1: Long?
+	actual var userdata1: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData2: Long?
+	actual var userdata2: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1555,11 +1555,11 @@ actual value class WGPUQueueWorkDoneCallbackInfo(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData1: Long?
+	actual var userdata1: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData2: Long?
+	actual var userdata2: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1575,11 +1575,11 @@ actual value class WGPURequestAdapterCallbackInfo(actual val handler: NativeAddr
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData1: Long?
+	actual var userdata1: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData2: Long?
+	actual var userdata2: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1595,11 +1595,11 @@ actual value class WGPURequestDeviceCallbackInfo(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData1: Long?
+	actual var userdata1: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData2: Long?
+	actual var userdata2: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1615,11 +1615,11 @@ actual value class WGPUUncapturedErrorCallbackInfo(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData1: Long?
+	actual var userdata1: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var userData2: Long?
+	actual var userdata2: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 

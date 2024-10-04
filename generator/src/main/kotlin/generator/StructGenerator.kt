@@ -83,7 +83,7 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                 is CLibraryModel.Reference.Callback
                     -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
                         "?.takeIf {it != 0L}" +
-                        "?.let { CallbackHolder(it) }"
+                        "?.let { CallbackHolder<${type.name}>(it) }"
                 else -> "TODO()"
             }.let { appendText("\t\tget() = $it\n") }
             // Setter
@@ -103,7 +103,7 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                 is CLibraryModel.Reference.Callback
                     -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
                         "?.takeIf {it != 0L}" +
-                        "?.let { CallbackHolder(it) }"
+                        "?.let { CallbackHolder<${type.name}>(it) }"
                 else -> " TODO()"
             }.let { appendText("\t\tset(newValue) { $it } \n\n") }
         }
