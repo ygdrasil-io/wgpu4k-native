@@ -13,6 +13,7 @@ import generator.generateNativeStructures
 import generator.generateTypesCommonMain
 import generator.structuresAndroidMainFile
 import generator.structuresCommonMainFile
+import generator.structuresJvmMainFile
 import generator.structuresNativeMainFile
 import generator.typesCommonMainFile
 import java.io.File
@@ -26,6 +27,9 @@ val commonMainBasePath = sourceBasePath
     .resolve("kotlin")
 val androidMainBasePath = sourceBasePath
     .resolve("androidMain")
+    .resolve("kotlin")
+val jvmMainBasePath = sourceBasePath
+    .resolve("jvmMain")
     .resolve("kotlin")
 val nativeMainBasePath = sourceBasePath
     .resolve("nativeMain")
@@ -49,6 +53,7 @@ fun main() {
 
     structuresCommonMainFile.generateCommonStructures(webgpuCModel.structures)
     structuresAndroidMainFile.generateJvmStructures(webgpuCModel.structures)
+    structuresJvmMainFile.generateJvmStructures(webgpuCModel.structures)
     structuresNativeMainFile.generateNativeStructures(webgpuCModel.structures)
 
     enumerationCommonMainFile.generateCommonEnumerations(webgpuCModel.enumerations)

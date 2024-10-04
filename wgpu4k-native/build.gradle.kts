@@ -39,6 +39,13 @@ kotlin {
         publishLibraryVariants("release", "debug")
     }
 
+    jvm {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_22
+        }
+    }
+
     nativeTargets.forEach { target ->
         val main by target.compilations.getting {
             cinterops.create("webgpu") {

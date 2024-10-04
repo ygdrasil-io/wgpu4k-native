@@ -5,6 +5,7 @@ import commonMainBasePath
 import disclamer
 import domain.CLibraryModel
 import domain.toFunctionKotlinType
+import jvmMainBasePath
 import nativeMainBasePath
 import java.io.File
 
@@ -15,6 +16,10 @@ val structuresCommonMainFile = commonMainBasePath
 val structuresAndroidMainFile = androidMainBasePath
     .resolve("webgpu")
     .resolve("Structures.android.kt")
+
+val structuresJvmMainFile = jvmMainBasePath
+    .resolve("webgpu")
+    .resolve("Structures.jvm.kt")
 
 val structuresNativeMainFile = nativeMainBasePath
     .resolve("webgpu")
