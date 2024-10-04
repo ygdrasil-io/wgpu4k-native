@@ -70,6 +70,9 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
             appendText("\tactual var $name: ${type.toFunctionKotlinType()}$optional\n")
             // Getter
             when (type) {
+                is CLibraryModel.Reference.OpaquePointer
+                    -> "$nativeAccessor?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}"
                 is CLibraryModel.Reference.Enumeration
                     -> "$nativeAccessor?.${name} ?: error(\"pointer of $structureName is null\")"
                 is CLibraryModel.Primitive.Bool
@@ -90,6 +93,9 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
             }.let { appendText("\t\tget() = $it\n") }
             // Setter
             when (type) {
+                is CLibraryModel.Reference.OpaquePointer
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue?.toCPointer() }"
                 is CLibraryModel.Reference.Enumeration
                     -> nativeAccessor +
                         "?.let { it.${name} = newValue }"
