@@ -365,7 +365,7 @@ expect value class WGPUShaderModuleDescriptor(val handler: NativeAddress) {
 
 expect value class WGPUShaderSourceSPIRV(val handler: NativeAddress) {
 	var codeSize: UInt
-	var code: UInt
+	var code: NativeAddress?
 }
 
 expect value class WGPUShaderSourceWGSL(val handler: NativeAddress) {

@@ -1043,7 +1043,7 @@ actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var code: UInt
+	actual var code: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 

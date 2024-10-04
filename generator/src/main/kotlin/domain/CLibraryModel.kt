@@ -87,7 +87,10 @@ internal fun String?.toCType(isPointer: Boolean = false): CLibraryModel.Type {
         equals("bool") -> CLibraryModel.Primitive.Bool
         equals("usize") -> CLibraryModel.Primitive.UInt64
         equals("uint64") -> CLibraryModel.Primitive.UInt64
-        equals("uint32") -> CLibraryModel.Primitive.UInt32
+        equals("uint32") ->  when (isPointer) {
+            true -> CLibraryModel.Reference.OpaquePointer
+            else -> CLibraryModel.Primitive.UInt32
+        }
         equals("uint16") -> CLibraryModel.Primitive.UInt16
         equals("int32") -> CLibraryModel.Primitive.Int32
         equals("float32") -> CLibraryModel.Primitive.Float32

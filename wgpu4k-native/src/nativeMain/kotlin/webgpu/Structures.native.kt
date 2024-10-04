@@ -999,9 +999,9 @@ actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
 		get() = handler.toCPointer<webgpu.native.WGPUShaderSourceSPIRV>()?.pointed?.codeSize ?: error("pointer of WGPUShaderSourceSPIRV is null")
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUShaderSourceSPIRV>()?.pointed?.let { it.codeSize = newValue } } 
 
-	actual var code: UInt
-		get() = handler.toCPointer<webgpu.native.WGPUShaderSourceSPIRV>()?.pointed?.code ?: error("pointer of WGPUShaderSourceSPIRV is null")
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUShaderSourceSPIRV>()?.pointed?.let { it.code = newValue } } 
+	actual var code: NativeAddress?
+		get() = TODO()
+		set(newValue) {  TODO() } 
 
 }
 
