@@ -29,13 +29,13 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.description?.toCString()
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.let { it.description = newValue?.handler?.toCPointer() } } 
 
-	actual var backendType: WGPUBackendType?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var backendType: WGPUBackendType
+		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.backendType ?: error("pointer of WGPUAdapterInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.let { it.backendType = newValue } } 
 
-	actual var adapterType: WGPUAdapterType?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var adapterType: WGPUAdapterType
+		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.adapterType ?: error("pointer of WGPUAdapterInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.let { it.adapterType = newValue } } 
 
 	actual var vendorID: UInt
 		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.vendorID ?: error("pointer of WGPUAdapterInfo is null")
@@ -128,17 +128,17 @@ actual value class WGPUBindGroupLayoutEntry(actual val handler: NativeAddress) {
 }
 
 actual value class WGPUBlendComponent(actual val handler: NativeAddress) {
-	actual var operation: WGPUBlendOperation?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var operation: WGPUBlendOperation
+		get() = handler.toCPointer<webgpu.native.WGPUBlendComponent>()?.pointed?.operation ?: error("pointer of WGPUBlendComponent is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUBlendComponent>()?.pointed?.let { it.operation = newValue } } 
 
-	actual var srcFactor: WGPUBlendFactor?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var srcFactor: WGPUBlendFactor
+		get() = handler.toCPointer<webgpu.native.WGPUBlendComponent>()?.pointed?.srcFactor ?: error("pointer of WGPUBlendComponent is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUBlendComponent>()?.pointed?.let { it.srcFactor = newValue } } 
 
-	actual var dstFactor: WGPUBlendFactor?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var dstFactor: WGPUBlendFactor
+		get() = handler.toCPointer<webgpu.native.WGPUBlendComponent>()?.pointed?.dstFactor ?: error("pointer of WGPUBlendComponent is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUBlendComponent>()?.pointed?.let { it.dstFactor = newValue } } 
 
 }
 
@@ -154,9 +154,9 @@ actual value class WGPUBlendState(actual val handler: NativeAddress) {
 }
 
 actual value class WGPUBufferBindingLayout(actual val handler: NativeAddress) {
-	actual var type: WGPUBufferBindingType?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var type: WGPUBufferBindingType
+		get() = handler.toCPointer<webgpu.native.WGPUBufferBindingLayout>()?.pointed?.type ?: error("pointer of WGPUBufferBindingLayout is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUBufferBindingLayout>()?.pointed?.let { it.type = newValue } } 
 
 	actual var hasDynamicOffset: Boolean
 		get() = handler.toCPointer<webgpu.native.WGPUBufferBindingLayout>()?.pointed?.hasDynamicOffset?.toBoolean() ?: error("pointer of WGPUBufferBindingLayout is null")
@@ -207,9 +207,9 @@ actual value class WGPUColor(actual val handler: NativeAddress) {
 }
 
 actual value class WGPUColorTargetState(actual val handler: NativeAddress) {
-	actual var format: WGPUTextureFormat?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var format: WGPUTextureFormat
+		get() = handler.toCPointer<webgpu.native.WGPUColorTargetState>()?.pointed?.format ?: error("pointer of WGPUColorTargetState is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUColorTargetState>()?.pointed?.let { it.format = newValue } } 
 
 	actual var blend: WGPUBlendState?
 		get() = TODO()
@@ -247,9 +247,9 @@ actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
 		get() = handler.toCPointer<webgpu.native.WGPUCompilationMessage>()?.pointed?.message?.toCString()
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUCompilationMessage>()?.pointed?.let { it.message = newValue?.handler?.toCPointer() } } 
 
-	actual var type: WGPUCompilationMessageType?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var type: WGPUCompilationMessageType
+		get() = handler.toCPointer<webgpu.native.WGPUCompilationMessage>()?.pointed?.type ?: error("pointer of WGPUCompilationMessage is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUCompilationMessage>()?.pointed?.let { it.type = newValue } } 
 
 	actual var lineNum: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUCompilationMessage>()?.pointed?.lineNum ?: error("pointer of WGPUCompilationMessage is null")
@@ -334,17 +334,17 @@ actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
 }
 
 actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
-	actual var format: WGPUTextureFormat?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var format: WGPUTextureFormat
+		get() = handler.toCPointer<webgpu.native.WGPUDepthStencilState>()?.pointed?.format ?: error("pointer of WGPUDepthStencilState is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUDepthStencilState>()?.pointed?.let { it.format = newValue } } 
 
-	actual var depthWriteEnabled: WGPUOptionalBool?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var depthWriteEnabled: WGPUOptionalBool
+		get() = handler.toCPointer<webgpu.native.WGPUDepthStencilState>()?.pointed?.depthWriteEnabled ?: error("pointer of WGPUDepthStencilState is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUDepthStencilState>()?.pointed?.let { it.depthWriteEnabled = newValue } } 
 
-	actual var depthCompare: WGPUCompareFunction?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var depthCompare: WGPUCompareFunction
+		get() = handler.toCPointer<webgpu.native.WGPUDepthStencilState>()?.pointed?.depthCompare ?: error("pointer of WGPUDepthStencilState is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUDepthStencilState>()?.pointed?.let { it.depthCompare = newValue } } 
 
 	actual var stencilFront: WGPUStencilFaceState?
 		get() = TODO()
@@ -479,9 +479,9 @@ actual value class WGPUImageCopyTexture(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) {  TODO() } 
 
-	actual var aspect: WGPUTextureAspect?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var aspect: WGPUTextureAspect
+		get() = handler.toCPointer<webgpu.native.WGPUImageCopyTexture>()?.pointed?.aspect ?: error("pointer of WGPUImageCopyTexture is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUImageCopyTexture>()?.pointed?.let { it.aspect = newValue } } 
 
 }
 
@@ -672,21 +672,21 @@ actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddres
 }
 
 actual value class WGPUPrimitiveState(actual val handler: NativeAddress) {
-	actual var topology: WGPUPrimitiveTopology?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var topology: WGPUPrimitiveTopology
+		get() = handler.toCPointer<webgpu.native.WGPUPrimitiveState>()?.pointed?.topology ?: error("pointer of WGPUPrimitiveState is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUPrimitiveState>()?.pointed?.let { it.topology = newValue } } 
 
-	actual var stripIndexFormat: WGPUIndexFormat?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var stripIndexFormat: WGPUIndexFormat
+		get() = handler.toCPointer<webgpu.native.WGPUPrimitiveState>()?.pointed?.stripIndexFormat ?: error("pointer of WGPUPrimitiveState is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUPrimitiveState>()?.pointed?.let { it.stripIndexFormat = newValue } } 
 
-	actual var frontFace: WGPUFrontFace?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var frontFace: WGPUFrontFace
+		get() = handler.toCPointer<webgpu.native.WGPUPrimitiveState>()?.pointed?.frontFace ?: error("pointer of WGPUPrimitiveState is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUPrimitiveState>()?.pointed?.let { it.frontFace = newValue } } 
 
-	actual var cullMode: WGPUCullMode?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var cullMode: WGPUCullMode
+		get() = handler.toCPointer<webgpu.native.WGPUPrimitiveState>()?.pointed?.cullMode ?: error("pointer of WGPUPrimitiveState is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUPrimitiveState>()?.pointed?.let { it.cullMode = newValue } } 
 
 	actual var unclippedDepth: Boolean
 		get() = handler.toCPointer<webgpu.native.WGPUPrimitiveState>()?.pointed?.unclippedDepth?.toBoolean() ?: error("pointer of WGPUPrimitiveState is null")
@@ -714,9 +714,9 @@ actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
 		get() = handler.toCPointer<webgpu.native.WGPUQuerySetDescriptor>()?.pointed?.label?.toCString()
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUQuerySetDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
 
-	actual var type: WGPUQueryType?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var type: WGPUQueryType
+		get() = handler.toCPointer<webgpu.native.WGPUQuerySetDescriptor>()?.pointed?.type ?: error("pointer of WGPUQuerySetDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUQuerySetDescriptor>()?.pointed?.let { it.type = newValue } } 
 
 	actual var count: UInt
 		get() = handler.toCPointer<webgpu.native.WGPUQuerySetDescriptor>()?.pointed?.count ?: error("pointer of WGPUQuerySetDescriptor is null")
@@ -747,9 +747,9 @@ actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeA
 		get() = TODO()
 		set(newValue) {  TODO() } 
 
-	actual var depthStencilFormat: WGPUTextureFormat?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var depthStencilFormat: WGPUTextureFormat
+		get() = handler.toCPointer<webgpu.native.WGPURenderBundleEncoderDescriptor>()?.pointed?.depthStencilFormat ?: error("pointer of WGPURenderBundleEncoderDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderBundleEncoderDescriptor>()?.pointed?.let { it.depthStencilFormat = newValue } } 
 
 	actual var sampleCount: UInt
 		get() = handler.toCPointer<webgpu.native.WGPURenderBundleEncoderDescriptor>()?.pointed?.sampleCount ?: error("pointer of WGPURenderBundleEncoderDescriptor is null")
@@ -778,13 +778,13 @@ actual value class WGPURenderPassColorAttachment(actual val handler: NativeAddre
 		get() = handler.toCPointer<webgpu.native.WGPURenderPassColorAttachment>()?.pointed?.resolveTarget?.toLong()?.takeIf {it != 0L}?.let { WGPUTextureView(it) }
 		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderPassColorAttachment>()?.pointed?.let { it.resolveTarget = newValue?.handler?.toCPointer() } } 
 
-	actual var loadOp: WGPULoadOp?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var loadOp: WGPULoadOp
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassColorAttachment>()?.pointed?.loadOp ?: error("pointer of WGPURenderPassColorAttachment is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderPassColorAttachment>()?.pointed?.let { it.loadOp = newValue } } 
 
-	actual var storeOp: WGPUStoreOp?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var storeOp: WGPUStoreOp
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassColorAttachment>()?.pointed?.storeOp ?: error("pointer of WGPURenderPassColorAttachment is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderPassColorAttachment>()?.pointed?.let { it.storeOp = newValue } } 
 
 	actual var clearValue: WGPUColor?
 		get() = TODO()
@@ -797,13 +797,13 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 		get() = handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.view?.toLong()?.takeIf {it != 0L}?.let { WGPUTextureView(it) }
 		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.let { it.view = newValue?.handler?.toCPointer() } } 
 
-	actual var depthLoadOp: WGPULoadOp?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var depthLoadOp: WGPULoadOp
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.depthLoadOp ?: error("pointer of WGPURenderPassDepthStencilAttachment is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.let { it.depthLoadOp = newValue } } 
 
-	actual var depthStoreOp: WGPUStoreOp?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var depthStoreOp: WGPUStoreOp
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.depthStoreOp ?: error("pointer of WGPURenderPassDepthStencilAttachment is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.let { it.depthStoreOp = newValue } } 
 
 	actual var depthClearValue: Float
 		get() = handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.depthClearValue ?: error("pointer of WGPURenderPassDepthStencilAttachment is null")
@@ -813,13 +813,13 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 		get() = handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.depthReadOnly?.toBoolean() ?: error("pointer of WGPURenderPassDepthStencilAttachment is null")
 		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.let { it.depthReadOnly = newValue.toUInt() } } 
 
-	actual var stencilLoadOp: WGPULoadOp?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var stencilLoadOp: WGPULoadOp
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.stencilLoadOp ?: error("pointer of WGPURenderPassDepthStencilAttachment is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.let { it.stencilLoadOp = newValue } } 
 
-	actual var stencilStoreOp: WGPUStoreOp?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var stencilStoreOp: WGPUStoreOp
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.stencilStoreOp ?: error("pointer of WGPURenderPassDepthStencilAttachment is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.let { it.stencilStoreOp = newValue } } 
 
 	actual var stencilClearValue: UInt
 		get() = handler.toCPointer<webgpu.native.WGPURenderPassDepthStencilAttachment>()?.pointed?.stencilClearValue ?: error("pointer of WGPURenderPassDepthStencilAttachment is null")
@@ -912,13 +912,13 @@ actual value class WGPURequestAdapterOptions(actual val handler: NativeAddress) 
 		get() = handler.toCPointer<webgpu.native.WGPURequestAdapterOptions>()?.pointed?.compatibleSurface?.toLong()?.takeIf {it != 0L}?.let { WGPUSurface(it) }
 		set(newValue) { handler.toCPointer<webgpu.native.WGPURequestAdapterOptions>()?.pointed?.let { it.compatibleSurface = newValue?.handler?.toCPointer() } } 
 
-	actual var powerPreference: WGPUPowerPreference?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var powerPreference: WGPUPowerPreference
+		get() = handler.toCPointer<webgpu.native.WGPURequestAdapterOptions>()?.pointed?.powerPreference ?: error("pointer of WGPURequestAdapterOptions is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURequestAdapterOptions>()?.pointed?.let { it.powerPreference = newValue } } 
 
-	actual var backendType: WGPUBackendType?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var backendType: WGPUBackendType
+		get() = handler.toCPointer<webgpu.native.WGPURequestAdapterOptions>()?.pointed?.backendType ?: error("pointer of WGPURequestAdapterOptions is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURequestAdapterOptions>()?.pointed?.let { it.backendType = newValue } } 
 
 	actual var forceFallbackAdapter: Boolean
 		get() = handler.toCPointer<webgpu.native.WGPURequestAdapterOptions>()?.pointed?.forceFallbackAdapter?.toBoolean() ?: error("pointer of WGPURequestAdapterOptions is null")
@@ -934,9 +934,9 @@ actual value class WGPURequiredLimits(actual val handler: NativeAddress) {
 }
 
 actual value class WGPUSamplerBindingLayout(actual val handler: NativeAddress) {
-	actual var type: WGPUSamplerBindingType?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var type: WGPUSamplerBindingType
+		get() = handler.toCPointer<webgpu.native.WGPUSamplerBindingLayout>()?.pointed?.type ?: error("pointer of WGPUSamplerBindingLayout is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSamplerBindingLayout>()?.pointed?.let { it.type = newValue } } 
 
 }
 
@@ -945,29 +945,29 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.label?.toCString()
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
 
-	actual var addressModeU: WGPUAddressMode?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var addressModeU: WGPUAddressMode
+		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.addressModeU ?: error("pointer of WGPUSamplerDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.let { it.addressModeU = newValue } } 
 
-	actual var addressModeV: WGPUAddressMode?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var addressModeV: WGPUAddressMode
+		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.addressModeV ?: error("pointer of WGPUSamplerDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.let { it.addressModeV = newValue } } 
 
-	actual var addressModeW: WGPUAddressMode?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var addressModeW: WGPUAddressMode
+		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.addressModeW ?: error("pointer of WGPUSamplerDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.let { it.addressModeW = newValue } } 
 
-	actual var magFilter: WGPUFilterMode?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var magFilter: WGPUFilterMode
+		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.magFilter ?: error("pointer of WGPUSamplerDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.let { it.magFilter = newValue } } 
 
-	actual var minFilter: WGPUFilterMode?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var minFilter: WGPUFilterMode
+		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.minFilter ?: error("pointer of WGPUSamplerDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.let { it.minFilter = newValue } } 
 
-	actual var mipmapFilter: WGPUMipmapFilterMode?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var mipmapFilter: WGPUMipmapFilterMode
+		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.mipmapFilter ?: error("pointer of WGPUSamplerDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.let { it.mipmapFilter = newValue } } 
 
 	actual var lodMinClamp: Float
 		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.lodMinClamp ?: error("pointer of WGPUSamplerDescriptor is null")
@@ -977,9 +977,9 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.lodMaxClamp ?: error("pointer of WGPUSamplerDescriptor is null")
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.let { it.lodMaxClamp = newValue } } 
 
-	actual var compare: WGPUCompareFunction?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var compare: WGPUCompareFunction
+		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.compare ?: error("pointer of WGPUSamplerDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.let { it.compare = newValue } } 
 
 	actual var maxAnisotropy: UShort
 		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.maxAnisotropy ?: error("pointer of WGPUSamplerDescriptor is null")
@@ -1013,36 +1013,36 @@ actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
 }
 
 actual value class WGPUStencilFaceState(actual val handler: NativeAddress) {
-	actual var compare: WGPUCompareFunction?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var compare: WGPUCompareFunction
+		get() = handler.toCPointer<webgpu.native.WGPUStencilFaceState>()?.pointed?.compare ?: error("pointer of WGPUStencilFaceState is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUStencilFaceState>()?.pointed?.let { it.compare = newValue } } 
 
-	actual var failOp: WGPUStencilOperation?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var failOp: WGPUStencilOperation
+		get() = handler.toCPointer<webgpu.native.WGPUStencilFaceState>()?.pointed?.failOp ?: error("pointer of WGPUStencilFaceState is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUStencilFaceState>()?.pointed?.let { it.failOp = newValue } } 
 
-	actual var depthFailOp: WGPUStencilOperation?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var depthFailOp: WGPUStencilOperation
+		get() = handler.toCPointer<webgpu.native.WGPUStencilFaceState>()?.pointed?.depthFailOp ?: error("pointer of WGPUStencilFaceState is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUStencilFaceState>()?.pointed?.let { it.depthFailOp = newValue } } 
 
-	actual var passOp: WGPUStencilOperation?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var passOp: WGPUStencilOperation
+		get() = handler.toCPointer<webgpu.native.WGPUStencilFaceState>()?.pointed?.passOp ?: error("pointer of WGPUStencilFaceState is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUStencilFaceState>()?.pointed?.let { it.passOp = newValue } } 
 
 }
 
 actual value class WGPUStorageTextureBindingLayout(actual val handler: NativeAddress) {
-	actual var access: WGPUStorageTextureAccess?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var access: WGPUStorageTextureAccess
+		get() = handler.toCPointer<webgpu.native.WGPUStorageTextureBindingLayout>()?.pointed?.access ?: error("pointer of WGPUStorageTextureBindingLayout is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUStorageTextureBindingLayout>()?.pointed?.let { it.access = newValue } } 
 
-	actual var format: WGPUTextureFormat?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var format: WGPUTextureFormat
+		get() = handler.toCPointer<webgpu.native.WGPUStorageTextureBindingLayout>()?.pointed?.format ?: error("pointer of WGPUStorageTextureBindingLayout is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUStorageTextureBindingLayout>()?.pointed?.let { it.format = newValue } } 
 
-	actual var viewDimension: WGPUTextureViewDimension?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var viewDimension: WGPUTextureViewDimension
+		get() = handler.toCPointer<webgpu.native.WGPUStorageTextureBindingLayout>()?.pointed?.viewDimension ?: error("pointer of WGPUStorageTextureBindingLayout is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUStorageTextureBindingLayout>()?.pointed?.let { it.viewDimension = newValue } } 
 
 }
 
@@ -1077,9 +1077,9 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 		get() = handler.toCPointer<webgpu.native.WGPUSurfaceConfiguration>()?.pointed?.device?.toLong()?.takeIf {it != 0L}?.let { WGPUDevice(it) }
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceConfiguration>()?.pointed?.let { it.device = newValue?.handler?.toCPointer() } } 
 
-	actual var format: WGPUTextureFormat?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var format: WGPUTextureFormat
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceConfiguration>()?.pointed?.format ?: error("pointer of WGPUSurfaceConfiguration is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceConfiguration>()?.pointed?.let { it.format = newValue } } 
 
 	actual var usage: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUSurfaceConfiguration>()?.pointed?.usage ?: error("pointer of WGPUSurfaceConfiguration is null")
@@ -1097,13 +1097,13 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) {  TODO() } 
 
-	actual var alphaMode: WGPUCompositeAlphaMode?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var alphaMode: WGPUCompositeAlphaMode
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceConfiguration>()?.pointed?.alphaMode ?: error("pointer of WGPUSurfaceConfiguration is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceConfiguration>()?.pointed?.let { it.alphaMode = newValue } } 
 
-	actual var presentMode: WGPUPresentMode?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var presentMode: WGPUPresentMode
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceConfiguration>()?.pointed?.presentMode ?: error("pointer of WGPUSurfaceConfiguration is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceConfiguration>()?.pointed?.let { it.presentMode = newValue } } 
 
 }
 
@@ -1177,20 +1177,20 @@ actual value class WGPUSurfaceTexture(actual val handler: NativeAddress) {
 		get() = handler.toCPointer<webgpu.native.WGPUSurfaceTexture>()?.pointed?.texture?.toLong()?.takeIf {it != 0L}?.let { WGPUTexture(it) }
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceTexture>()?.pointed?.let { it.texture = newValue?.handler?.toCPointer() } } 
 
-	actual var status: WGPUSurfaceGetCurrentTextureStatus?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var status: WGPUSurfaceGetCurrentTextureStatus
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceTexture>()?.pointed?.status ?: error("pointer of WGPUSurfaceTexture is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceTexture>()?.pointed?.let { it.status = newValue } } 
 
 }
 
 actual value class WGPUTextureBindingLayout(actual val handler: NativeAddress) {
-	actual var sampleType: WGPUTextureSampleType?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var sampleType: WGPUTextureSampleType
+		get() = handler.toCPointer<webgpu.native.WGPUTextureBindingLayout>()?.pointed?.sampleType ?: error("pointer of WGPUTextureBindingLayout is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUTextureBindingLayout>()?.pointed?.let { it.sampleType = newValue } } 
 
-	actual var viewDimension: WGPUTextureViewDimension?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var viewDimension: WGPUTextureViewDimension
+		get() = handler.toCPointer<webgpu.native.WGPUTextureBindingLayout>()?.pointed?.viewDimension ?: error("pointer of WGPUTextureBindingLayout is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUTextureBindingLayout>()?.pointed?.let { it.viewDimension = newValue } } 
 
 	actual var multisampled: Boolean
 		get() = handler.toCPointer<webgpu.native.WGPUTextureBindingLayout>()?.pointed?.multisampled?.toBoolean() ?: error("pointer of WGPUTextureBindingLayout is null")
@@ -1222,17 +1222,17 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 		get() = handler.toCPointer<webgpu.native.WGPUTextureDescriptor>()?.pointed?.usage ?: error("pointer of WGPUTextureDescriptor is null")
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUTextureDescriptor>()?.pointed?.let { it.usage = newValue } } 
 
-	actual var dimension: WGPUTextureDimension?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var dimension: WGPUTextureDimension
+		get() = handler.toCPointer<webgpu.native.WGPUTextureDescriptor>()?.pointed?.dimension ?: error("pointer of WGPUTextureDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUTextureDescriptor>()?.pointed?.let { it.dimension = newValue } } 
 
 	actual var size: WGPUExtent3D?
 		get() = TODO()
 		set(newValue) {  TODO() } 
 
-	actual var format: WGPUTextureFormat?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var format: WGPUTextureFormat
+		get() = handler.toCPointer<webgpu.native.WGPUTextureDescriptor>()?.pointed?.format ?: error("pointer of WGPUTextureDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUTextureDescriptor>()?.pointed?.let { it.format = newValue } } 
 
 	actual var mipLevelCount: UInt
 		get() = handler.toCPointer<webgpu.native.WGPUTextureDescriptor>()?.pointed?.mipLevelCount ?: error("pointer of WGPUTextureDescriptor is null")
@@ -1253,13 +1253,13 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 		get() = handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.label?.toCString()
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
 
-	actual var format: WGPUTextureFormat?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var format: WGPUTextureFormat
+		get() = handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.format ?: error("pointer of WGPUTextureViewDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.let { it.format = newValue } } 
 
-	actual var dimension: WGPUTextureViewDimension?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var dimension: WGPUTextureViewDimension
+		get() = handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.dimension ?: error("pointer of WGPUTextureViewDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.let { it.dimension = newValue } } 
 
 	actual var baseMipLevel: UInt
 		get() = handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.baseMipLevel ?: error("pointer of WGPUTextureViewDescriptor is null")
@@ -1277,9 +1277,9 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 		get() = handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.arrayLayerCount ?: error("pointer of WGPUTextureViewDescriptor is null")
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.let { it.arrayLayerCount = newValue } } 
 
-	actual var aspect: WGPUTextureAspect?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var aspect: WGPUTextureAspect
+		get() = handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.aspect ?: error("pointer of WGPUTextureViewDescriptor is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.let { it.aspect = newValue } } 
 
 	actual var usage: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.usage ?: error("pointer of WGPUTextureViewDescriptor is null")
@@ -1288,9 +1288,9 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 }
 
 actual value class WGPUVertexAttribute(actual val handler: NativeAddress) {
-	actual var format: WGPUVertexFormat?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var format: WGPUVertexFormat
+		get() = handler.toCPointer<webgpu.native.WGPUVertexAttribute>()?.pointed?.format ?: error("pointer of WGPUVertexAttribute is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUVertexAttribute>()?.pointed?.let { it.format = newValue } } 
 
 	actual var offset: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUVertexAttribute>()?.pointed?.offset ?: error("pointer of WGPUVertexAttribute is null")
@@ -1307,9 +1307,9 @@ actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
 		get() = handler.toCPointer<webgpu.native.WGPUVertexBufferLayout>()?.pointed?.arrayStride ?: error("pointer of WGPUVertexBufferLayout is null")
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUVertexBufferLayout>()?.pointed?.let { it.arrayStride = newValue } } 
 
-	actual var stepMode: WGPUVertexStepMode?
-		get() = TODO()
-		set(newValue) {  TODO() } 
+	actual var stepMode: WGPUVertexStepMode
+		get() = handler.toCPointer<webgpu.native.WGPUVertexBufferLayout>()?.pointed?.stepMode ?: error("pointer of WGPUVertexBufferLayout is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUVertexBufferLayout>()?.pointed?.let { it.stepMode = newValue } } 
 
 	actual var attributes: Long
 		get() = TODO()
@@ -1342,8 +1342,8 @@ actual value class WGPUChainedStruct(actual val handler: NativeAddress) {
 		set(newValue) {  TODO() } 
 
 	actual var sType: WGPUSType
-		get() = TODO()
-		set(newValue) {  TODO() } 
+		get() = handler.toCPointer<webgpu.native.WGPUChainedStruct>()?.pointed?.sType ?: error("pointer of WGPUChainedStruct is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUChainedStruct>()?.pointed?.let { it.sType = newValue } } 
 
 }
 
@@ -1353,8 +1353,8 @@ actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
 		set(newValue) {  TODO() } 
 
 	actual var sType: WGPUSType
-		get() = TODO()
-		set(newValue) {  TODO() } 
+		get() = handler.toCPointer<webgpu.native.WGPUChainedStructOut>()?.pointed?.sType ?: error("pointer of WGPUChainedStructOut is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUChainedStructOut>()?.pointed?.let { it.sType = newValue } } 
 
 }
 

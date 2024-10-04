@@ -70,6 +70,8 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
             appendText("\tactual var $name: ${type.toFunctionKotlinType()}$optional\n")
             // Getter
             when (type) {
+                is CLibraryModel.Reference.Enumeration
+                    -> "$nativeAccessor?.${name} ?: error(\"pointer of $structureName is null\")"
                 is CLibraryModel.Primitive.Bool
                     -> "$nativeAccessor?.${name}?.toBoolean() ?: error(\"pointer of $structureName is null\")"
                 is CLibraryModel.Primitive
@@ -88,6 +90,9 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
             }.let { appendText("\t\tget() = $it\n") }
             // Setter
             when (type) {
+                is CLibraryModel.Reference.Enumeration
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue }"
                 is CLibraryModel.Reference.CString
                     -> nativeAccessor +
                         "?.let { it.${name} = newValue?.handler?.toCPointer() }"
@@ -114,8 +119,9 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
 internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure>) {
     writeText(header)
     structures.forEach {
+        val structureName = it.name
         appendText("@JvmInline\n")
-        appendText("actual value class ${it.name}(actual val handler: NativeAddress) {\n")
+        appendText("actual value class $structureName(actual val handler: NativeAddress) {\n")
         it.members.forEach { (name, type, optional) ->
             appendText("\tactual var $name: ${type.toFunctionKotlinType()}$optional\n")
             when (type) {

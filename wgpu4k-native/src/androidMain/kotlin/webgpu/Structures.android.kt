@@ -23,11 +23,11 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var backendType: WGPUBackendType?
+	actual var backendType: WGPUBackendType
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var adapterType: WGPUAdapterType?
+	actual var adapterType: WGPUAdapterType
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -127,15 +127,15 @@ actual value class WGPUBindGroupLayoutEntry(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUBlendComponent(actual val handler: NativeAddress) {
-	actual var operation: WGPUBlendOperation?
+	actual var operation: WGPUBlendOperation
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var srcFactor: WGPUBlendFactor?
+	actual var srcFactor: WGPUBlendFactor
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var dstFactor: WGPUBlendFactor?
+	actual var dstFactor: WGPUBlendFactor
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -155,7 +155,7 @@ actual value class WGPUBlendState(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUBufferBindingLayout(actual val handler: NativeAddress) {
-	actual var type: WGPUBufferBindingType?
+	actual var type: WGPUBufferBindingType
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -211,7 +211,7 @@ actual value class WGPUColor(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUColorTargetState(actual val handler: NativeAddress) {
-	actual var format: WGPUTextureFormat?
+	actual var format: WGPUTextureFormat
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -255,7 +255,7 @@ actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var type: WGPUCompilationMessageType?
+	actual var type: WGPUCompilationMessageType
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -347,15 +347,15 @@ actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
-	actual var format: WGPUTextureFormat?
+	actual var format: WGPUTextureFormat
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var depthWriteEnabled: WGPUOptionalBool?
+	actual var depthWriteEnabled: WGPUOptionalBool
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var depthCompare: WGPUCompareFunction?
+	actual var depthCompare: WGPUCompareFunction
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -499,7 +499,7 @@ actual value class WGPUImageCopyTexture(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var aspect: WGPUTextureAspect?
+	actual var aspect: WGPUTextureAspect
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -699,19 +699,19 @@ actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddres
 
 @JvmInline
 actual value class WGPUPrimitiveState(actual val handler: NativeAddress) {
-	actual var topology: WGPUPrimitiveTopology?
+	actual var topology: WGPUPrimitiveTopology
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var stripIndexFormat: WGPUIndexFormat?
+	actual var stripIndexFormat: WGPUIndexFormat
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var frontFace: WGPUFrontFace?
+	actual var frontFace: WGPUFrontFace
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var cullMode: WGPUCullMode?
+	actual var cullMode: WGPUCullMode
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -743,7 +743,7 @@ actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var type: WGPUQueryType?
+	actual var type: WGPUQueryType
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -779,7 +779,7 @@ actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeA
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var depthStencilFormat: WGPUTextureFormat?
+	actual var depthStencilFormat: WGPUTextureFormat
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -811,11 +811,11 @@ actual value class WGPURenderPassColorAttachment(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var loadOp: WGPULoadOp?
+	actual var loadOp: WGPULoadOp
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var storeOp: WGPUStoreOp?
+	actual var storeOp: WGPUStoreOp
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -831,11 +831,11 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var depthLoadOp: WGPULoadOp?
+	actual var depthLoadOp: WGPULoadOp
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var depthStoreOp: WGPUStoreOp?
+	actual var depthStoreOp: WGPUStoreOp
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -847,11 +847,11 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var stencilLoadOp: WGPULoadOp?
+	actual var stencilLoadOp: WGPULoadOp
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var stencilStoreOp: WGPUStoreOp?
+	actual var stencilStoreOp: WGPUStoreOp
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -951,11 +951,11 @@ actual value class WGPURequestAdapterOptions(actual val handler: NativeAddress) 
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var powerPreference: WGPUPowerPreference?
+	actual var powerPreference: WGPUPowerPreference
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var backendType: WGPUBackendType?
+	actual var backendType: WGPUBackendType
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -975,7 +975,7 @@ actual value class WGPURequiredLimits(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUSamplerBindingLayout(actual val handler: NativeAddress) {
-	actual var type: WGPUSamplerBindingType?
+	actual var type: WGPUSamplerBindingType
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -987,27 +987,27 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var addressModeU: WGPUAddressMode?
+	actual var addressModeU: WGPUAddressMode
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var addressModeV: WGPUAddressMode?
+	actual var addressModeV: WGPUAddressMode
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var addressModeW: WGPUAddressMode?
+	actual var addressModeW: WGPUAddressMode
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var magFilter: WGPUFilterMode?
+	actual var magFilter: WGPUFilterMode
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var minFilter: WGPUFilterMode?
+	actual var minFilter: WGPUFilterMode
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var mipmapFilter: WGPUMipmapFilterMode?
+	actual var mipmapFilter: WGPUMipmapFilterMode
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1019,7 +1019,7 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var compare: WGPUCompareFunction?
+	actual var compare: WGPUCompareFunction
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1059,19 +1059,19 @@ actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUStencilFaceState(actual val handler: NativeAddress) {
-	actual var compare: WGPUCompareFunction?
+	actual var compare: WGPUCompareFunction
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var failOp: WGPUStencilOperation?
+	actual var failOp: WGPUStencilOperation
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var depthFailOp: WGPUStencilOperation?
+	actual var depthFailOp: WGPUStencilOperation
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var passOp: WGPUStencilOperation?
+	actual var passOp: WGPUStencilOperation
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1079,15 +1079,15 @@ actual value class WGPUStencilFaceState(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUStorageTextureBindingLayout(actual val handler: NativeAddress) {
-	actual var access: WGPUStorageTextureAccess?
+	actual var access: WGPUStorageTextureAccess
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var format: WGPUTextureFormat?
+	actual var format: WGPUTextureFormat
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var viewDimension: WGPUTextureViewDimension?
+	actual var viewDimension: WGPUTextureViewDimension
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1127,7 +1127,7 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var format: WGPUTextureFormat?
+	actual var format: WGPUTextureFormat
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1147,11 +1147,11 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var alphaMode: WGPUCompositeAlphaMode?
+	actual var alphaMode: WGPUCompositeAlphaMode
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var presentMode: WGPUPresentMode?
+	actual var presentMode: WGPUPresentMode
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1235,7 +1235,7 @@ actual value class WGPUSurfaceTexture(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var status: WGPUSurfaceGetCurrentTextureStatus?
+	actual var status: WGPUSurfaceGetCurrentTextureStatus
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1243,11 +1243,11 @@ actual value class WGPUSurfaceTexture(actual val handler: NativeAddress) {
 
 @JvmInline
 actual value class WGPUTextureBindingLayout(actual val handler: NativeAddress) {
-	actual var sampleType: WGPUTextureSampleType?
+	actual var sampleType: WGPUTextureSampleType
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var viewDimension: WGPUTextureViewDimension?
+	actual var viewDimension: WGPUTextureViewDimension
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1283,7 +1283,7 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var dimension: WGPUTextureDimension?
+	actual var dimension: WGPUTextureDimension
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1291,7 +1291,7 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var format: WGPUTextureFormat?
+	actual var format: WGPUTextureFormat
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1315,11 +1315,11 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var format: WGPUTextureFormat?
+	actual var format: WGPUTextureFormat
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var dimension: WGPUTextureViewDimension?
+	actual var dimension: WGPUTextureViewDimension
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1339,7 +1339,7 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var aspect: WGPUTextureAspect?
+	actual var aspect: WGPUTextureAspect
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1351,7 +1351,7 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 
 @JvmInline
 actual value class WGPUVertexAttribute(actual val handler: NativeAddress) {
-	actual var format: WGPUVertexFormat?
+	actual var format: WGPUVertexFormat
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1371,7 +1371,7 @@ actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var stepMode: WGPUVertexStepMode?
+	actual var stepMode: WGPUVertexStepMode
 		get() = TODO()
 		set(newValue) = TODO()
 
