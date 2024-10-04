@@ -51,6 +51,10 @@ actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	actual var entryCount: ULong
+		get() = TODO()
+		set(newValue) = TODO()
+
 	actual var entries: Long
 		get() = TODO()
 		set(newValue) = TODO()
@@ -88,6 +92,10 @@ actual value class WGPUBindGroupEntry(actual val handler: NativeAddress) {
 @JvmInline
 actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddress) {
 	actual var label: CString?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var entryCount: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -231,6 +239,10 @@ actual value class WGPUCommandEncoderDescriptor(actual val handler: NativeAddres
 
 @JvmInline
 actual value class WGPUCompilationInfo(actual val handler: NativeAddress) {
+	actual var messageCount: ULong
+		get() = TODO()
+		set(newValue) = TODO()
+
 	actual var messages: Long
 		get() = TODO()
 		set(newValue) = TODO()
@@ -377,6 +389,10 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	actual var requiredFeatureCount: ULong
+		get() = TODO()
+		set(newValue) = TODO()
+
 	actual var requiredFeatures: Long
 		get() = TODO()
 		set(newValue) = TODO()
@@ -419,7 +435,15 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	actual var constantCount: ULong
+		get() = TODO()
+		set(newValue) = TODO()
+
 	actual var constants: Long
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var targetCount: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -659,6 +683,10 @@ actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddres
 		get() = TODO()
 		set(newValue) = TODO()
 
+	actual var bindGroupLayoutCount: ULong
+		get() = TODO()
+		set(newValue) = TODO()
+
 	actual var bindGroupLayouts: Long
 		get() = TODO()
 		set(newValue) = TODO()
@@ -696,6 +724,10 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 		set(newValue) = TODO()
 
 	actual var entryPoint: CString?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var constantCount: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -740,6 +772,10 @@ actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress)
 @JvmInline
 actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeAddress) {
 	actual var label: CString?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var colorFormatCount: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -834,6 +870,10 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 @JvmInline
 actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
 	actual var label: CString?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var colorAttachmentCount: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1063,11 +1103,23 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	actual var formatCount: ULong
+		get() = TODO()
+		set(newValue) = TODO()
+
 	actual var formats: Long
 		get() = TODO()
 		set(newValue) = TODO()
 
+	actual var presentModeCount: ULong
+		get() = TODO()
+		set(newValue) = TODO()
+
 	actual var presentModes: Long
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var alphaModeCount: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1096,6 +1148,10 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual var height: UInt
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var viewFormatCount: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1257,6 +1313,10 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	actual var viewFormatCount: ULong
+		get() = TODO()
+		set(newValue) = TODO()
+
 	actual var viewFormats: Long
 		get() = TODO()
 		set(newValue) = TODO()
@@ -1329,6 +1389,10 @@ actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	actual var attributeCount: ULong
+		get() = TODO()
+		set(newValue) = TODO()
+
 	actual var attributes: Long
 		get() = TODO()
 		set(newValue) = TODO()
@@ -1345,7 +1409,15 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	actual var constantCount: ULong
+		get() = TODO()
+		set(newValue) = TODO()
+
 	actual var constants: Long
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var bufferCount: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 

@@ -32,14 +32,23 @@ internal fun YamlModel.toCModel(): Pair<YamlModel, CLibraryModel> {
 private fun YamlModel.generateCLibraryStructures() = structs.map {
     CLibraryModel.Structure(
         it.name.convertToKotlinClassName(),
-        it.members.map {
+        it.members.flatMap {
             Triple(
                 it.name.convertToKotlinVariableName(),
                 it.type.toCType(it.pointer != null),
                 if (it.type.toCType(it.pointer != null) is CLibraryModel.Reference &&
-                    it.type.toCType(it.pointer != null) !is CLibraryModel.Reference.Enumeration&&
-                    it.type.toCType(it.pointer != null) !is CLibraryModel.Reference.StructureField) "?" else ""
-            )
+                    it.type.toCType(it.pointer != null) !is CLibraryModel.Reference.Enumeration &&
+                    it.type.toCType(it.pointer != null) !is CLibraryModel.Reference.StructureField
+                ) "?" else ""
+            ).let {
+                when (it.second) {
+                    is CLibraryModel.Array -> listOf(
+                        it.generateArrayCounter(),
+                        it
+                    )
+                    else -> listOf(it)
+                }
+            }
         }
     )
 } + listOf(
@@ -94,4 +103,12 @@ private fun YamlModel.convertToPointer(): List<CLibraryModel.Pointer> {
     val pointers = objects.map { it.name.convertToKotlinClassName() }
         .map { CLibraryModel.Pointer(it) }
     return pointers
+}
+
+private fun Triple<String, CLibraryModel.Type, String>.generateArrayCounter() = let { (name, _, _) ->
+    val newName = when {
+        name.endsWith("ies") -> name.removeSuffix("ies") + "yCount"
+        else -> name.removeSuffix("s") + "Count"
+    }
+    Triple(newName, CLibraryModel.Primitive.UInt64, "")
 }
