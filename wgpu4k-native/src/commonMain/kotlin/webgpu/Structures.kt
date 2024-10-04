@@ -4,6 +4,7 @@ package webgpu
 import ffi.NativeAddress
 import ffi.CallbackHolder
 import ffi.CString
+import ffi.ArrayHolder
 
 expect value class WGPUAdapterInfo(val handler: NativeAddress) {
 	var vendor: CString?
@@ -20,7 +21,7 @@ expect value class WGPUBindGroupDescriptor(val handler: NativeAddress) {
 	var label: CString?
 	var layout: WGPUBindGroupLayout?
 	var entryCount: ULong
-	var entries: Long
+	var entries: ArrayHolder<WGPUBindGroupEntry>?
 }
 
 expect value class WGPUBindGroupEntry(val handler: NativeAddress) {
@@ -35,7 +36,7 @@ expect value class WGPUBindGroupEntry(val handler: NativeAddress) {
 expect value class WGPUBindGroupLayoutDescriptor(val handler: NativeAddress) {
 	var label: CString?
 	var entryCount: ULong
-	var entries: Long
+	var entries: ArrayHolder<WGPUBindGroupLayoutEntry>?
 }
 
 expect value class WGPUBindGroupLayoutEntry(val handler: NativeAddress) {
@@ -94,7 +95,7 @@ expect value class WGPUCommandEncoderDescriptor(val handler: NativeAddress) {
 
 expect value class WGPUCompilationInfo(val handler: NativeAddress) {
 	var messageCount: ULong
-	var messages: Long
+	var messages: ArrayHolder<WGPUCompilationMessage>?
 }
 
 expect value class WGPUCompilationMessage(val handler: NativeAddress) {
@@ -147,7 +148,7 @@ expect value class WGPUDepthStencilState(val handler: NativeAddress) {
 expect value class WGPUDeviceDescriptor(val handler: NativeAddress) {
 	var label: CString?
 	var requiredFeatureCount: ULong
-	var requiredFeatures: Long
+	var requiredFeatures: ArrayHolder<WGPUFeatureName>?
 	var requiredLimits: WGPURequiredLimits?
 	val defaultQueue: WGPUQueueDescriptor
 	val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
@@ -164,9 +165,9 @@ expect value class WGPUFragmentState(val handler: NativeAddress) {
 	var module: WGPUShaderModule?
 	var entryPoint: CString?
 	var constantCount: ULong
-	var constants: Long
+	var constants: ArrayHolder<WGPUConstantEntry>?
 	var targetCount: ULong
-	var targets: Long
+	var targets: ArrayHolder<WGPUColorTargetState>?
 }
 
 expect value class WGPUFuture(val handler: NativeAddress) {
@@ -248,7 +249,7 @@ expect value class WGPUOrigin3D(val handler: NativeAddress) {
 expect value class WGPUPipelineLayoutDescriptor(val handler: NativeAddress) {
 	var label: CString?
 	var bindGroupLayoutCount: ULong
-	var bindGroupLayouts: Long
+	var bindGroupLayouts: ArrayHolder<WGPUBindGroupLayout>?
 }
 
 expect value class WGPUPrimitiveState(val handler: NativeAddress) {
@@ -263,7 +264,7 @@ expect value class WGPUProgrammableStageDescriptor(val handler: NativeAddress) {
 	var module: WGPUShaderModule?
 	var entryPoint: CString?
 	var constantCount: ULong
-	var constants: Long
+	var constants: ArrayHolder<WGPUConstantEntry>?
 }
 
 expect value class WGPUQuerySetDescriptor(val handler: NativeAddress) {
@@ -283,7 +284,7 @@ expect value class WGPURenderBundleDescriptor(val handler: NativeAddress) {
 expect value class WGPURenderBundleEncoderDescriptor(val handler: NativeAddress) {
 	var label: CString?
 	var colorFormatCount: ULong
-	var colorFormats: Long
+	var colorFormats: ArrayHolder<WGPUTextureFormat>?
 	var depthStencilFormat: WGPUTextureFormat
 	var sampleCount: UInt
 	var depthReadOnly: Boolean
@@ -314,7 +315,7 @@ expect value class WGPURenderPassDepthStencilAttachment(val handler: NativeAddre
 expect value class WGPURenderPassDescriptor(val handler: NativeAddress) {
 	var label: CString?
 	var colorAttachmentCount: ULong
-	var colorAttachments: Long
+	var colorAttachments: ArrayHolder<WGPURenderPassColorAttachment>?
 	var depthStencilAttachment: WGPURenderPassDepthStencilAttachment?
 	var occlusionQuerySet: WGPUQuerySet?
 	var timestampWrites: WGPURenderPassTimestampWrites?
@@ -402,11 +403,11 @@ expect value class WGPUSupportedLimits(val handler: NativeAddress) {
 expect value class WGPUSurfaceCapabilities(val handler: NativeAddress) {
 	var usages: ULong
 	var formatCount: ULong
-	var formats: Long
+	var formats: ArrayHolder<WGPUTextureFormat>?
 	var presentModeCount: ULong
-	var presentModes: Long
+	var presentModes: ArrayHolder<WGPUPresentMode>?
 	var alphaModeCount: ULong
-	var alphaModes: Long
+	var alphaModes: ArrayHolder<WGPUCompositeAlphaMode>?
 }
 
 expect value class WGPUSurfaceConfiguration(val handler: NativeAddress) {
@@ -416,7 +417,7 @@ expect value class WGPUSurfaceConfiguration(val handler: NativeAddress) {
 	var width: UInt
 	var height: UInt
 	var viewFormatCount: ULong
-	var viewFormats: Long
+	var viewFormats: ArrayHolder<WGPUTextureFormat>?
 	var alphaMode: WGPUCompositeAlphaMode
 	var presentMode: WGPUPresentMode
 }
@@ -479,7 +480,7 @@ expect value class WGPUTextureDescriptor(val handler: NativeAddress) {
 	var mipLevelCount: UInt
 	var sampleCount: UInt
 	var viewFormatCount: ULong
-	var viewFormats: Long
+	var viewFormats: ArrayHolder<WGPUTextureFormat>?
 }
 
 expect value class WGPUTextureViewDescriptor(val handler: NativeAddress) {
@@ -504,16 +505,16 @@ expect value class WGPUVertexBufferLayout(val handler: NativeAddress) {
 	var arrayStride: ULong
 	var stepMode: WGPUVertexStepMode
 	var attributeCount: ULong
-	var attributes: Long
+	var attributes: ArrayHolder<WGPUVertexAttribute>?
 }
 
 expect value class WGPUVertexState(val handler: NativeAddress) {
 	var module: WGPUShaderModule?
 	var entryPoint: CString?
 	var constantCount: ULong
-	var constants: Long
+	var constants: ArrayHolder<WGPUConstantEntry>?
 	var bufferCount: ULong
-	var buffers: Long
+	var buffers: ArrayHolder<WGPUVertexBufferLayout>?
 }
 
 expect value class WGPUChainedStruct(val handler: NativeAddress) {

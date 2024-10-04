@@ -36,9 +36,10 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
             Triple(
                 it.name.convertToKotlinVariableName(),
                 it.type.toCType(it.pointer != null),
-                if (it.type.toCType(it.pointer != null) is CLibraryModel.Reference &&
+                if (it.type.toCType(it.pointer != null) is CLibraryModel.Array ||
+                    (it.type.toCType(it.pointer != null) is CLibraryModel.Reference &&
                     it.type.toCType(it.pointer != null) !is CLibraryModel.Reference.Enumeration &&
-                    it.type.toCType(it.pointer != null) !is CLibraryModel.Reference.StructureField
+                    it.type.toCType(it.pointer != null) !is CLibraryModel.Reference.StructureField)
                 ) "?" else ""
             ).let {
                 when (it.second) {

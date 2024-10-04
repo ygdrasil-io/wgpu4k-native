@@ -16,6 +16,7 @@ private val header = """
     
     import ffi.CString
     import ffi.NativeAddress
+    import ffi.ArrayHolder
     
     
     

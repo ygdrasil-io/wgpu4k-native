@@ -4,6 +4,7 @@ package webgpu
 import ffi.NativeAddress
 import ffi.CallbackHolder
 import ffi.CString
+import ffi.ArrayHolder
 
 @JvmInline
 actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
@@ -55,7 +56,7 @@ actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var entries: Long
+	actual var entries: ArrayHolder<WGPUBindGroupEntry>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -99,7 +100,7 @@ actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var entries: Long
+	actual var entries: ArrayHolder<WGPUBindGroupLayoutEntry>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -243,7 +244,7 @@ actual value class WGPUCompilationInfo(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var messages: Long
+	actual var messages: ArrayHolder<WGPUCompilationMessage>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -393,7 +394,7 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var requiredFeatures: Long
+	actual var requiredFeatures: ArrayHolder<WGPUFeatureName>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -439,7 +440,7 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var constants: Long
+	actual var constants: ArrayHolder<WGPUConstantEntry>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -447,7 +448,7 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var targets: Long
+	actual var targets: ArrayHolder<WGPUColorTargetState>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -687,7 +688,7 @@ actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddres
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var bindGroupLayouts: Long
+	actual var bindGroupLayouts: ArrayHolder<WGPUBindGroupLayout>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -731,7 +732,7 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var constants: Long
+	actual var constants: ArrayHolder<WGPUConstantEntry>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -779,7 +780,7 @@ actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeA
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var colorFormats: Long
+	actual var colorFormats: ArrayHolder<WGPUTextureFormat>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -877,7 +878,7 @@ actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var colorAttachments: Long
+	actual var colorAttachments: ArrayHolder<WGPURenderPassColorAttachment>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1107,7 +1108,7 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var formats: Long
+	actual var formats: ArrayHolder<WGPUTextureFormat>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1115,7 +1116,7 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var presentModes: Long
+	actual var presentModes: ArrayHolder<WGPUPresentMode>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1123,7 +1124,7 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var alphaModes: Long
+	actual var alphaModes: ArrayHolder<WGPUCompositeAlphaMode>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1155,7 +1156,7 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var viewFormats: Long
+	actual var viewFormats: ArrayHolder<WGPUTextureFormat>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1317,7 +1318,7 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var viewFormats: Long
+	actual var viewFormats: ArrayHolder<WGPUTextureFormat>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1393,7 +1394,7 @@ actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var attributes: Long
+	actual var attributes: ArrayHolder<WGPUVertexAttribute>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1413,7 +1414,7 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var constants: Long
+	actual var constants: ArrayHolder<WGPUConstantEntry>?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1421,7 +1422,7 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var buffers: Long
+	actual var buffers: ArrayHolder<WGPUVertexBufferLayout>?
 		get() = TODO()
 		set(newValue) = TODO()
 

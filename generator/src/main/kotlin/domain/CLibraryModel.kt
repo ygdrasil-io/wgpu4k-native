@@ -56,7 +56,7 @@ data class CLibraryModel(
 internal fun CLibraryModel.Type.toFunctionKotlinType(): String = when (this) {
     is CLibraryModel.Reference.Callback -> "CallbackHolder<${name}>"
     is CLibraryModel.Reference -> name
-    is CLibraryModel.Array -> "Long"
+    is CLibraryModel.Array -> "ArrayHolder<${subType.toFunctionKotlinType()}>"
     is CLibraryModel.Primitive -> this.toPrimitiveKotlinType()
 }
 

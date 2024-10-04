@@ -27,6 +27,7 @@ private val header = """
     import ffi.NativeAddress
     import ffi.CallbackHolder
     import ffi.CString
+    import ffi.ArrayHolder
     
     
 """.trimIndent()
@@ -40,6 +41,7 @@ private val headerNative = """
     import ffi.CallbackHolder
     import ffi.CString
     import ffi.toCString
+    import ffi.ArrayHolder
     import kotlinx.cinterop.ExperimentalForeignApi
     import kotlinx.cinterop.pointed
     import kotlinx.cinterop.toCPointer
@@ -99,7 +101,11 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                     -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
                         "?.takeIf {it != 0L}" +
                         "?.let { CallbackHolder<${type.name}>(it) }"
-                else -> "TODO()"
+
+                is CLibraryModel.Array
+                    -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { ArrayHolder<${type.subType.toFunctionKotlinType()}>(it) }"
             }.let { appendText("\t\tget() = $it\n") }
             // Setter
             when (type) {
@@ -125,12 +131,13 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                     -> nativeAccessor +
                         "?.let { it.${name} = newValue?.handler?.toCPointer() }"
                 is CLibraryModel.Reference.Callback
-                    -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
-                        "?.takeIf {it != 0L}" +
-                        "?.let { CallbackHolder<${type.name}>(it) }"
-                else -> " TODO()"
-            }.takeIf { variableType == "var" }
-                ?.let { appendText("\t\tset(newValue) { $it } \n\n") }
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue?.handler?.toCPointer() }"
+                is CLibraryModel.Array
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue?.handler?.toCPointer() }"
+                is CLibraryModel.Reference.StructureField -> null
+            }?.let { appendText("\t\tset(newValue) { $it } \n\n") }
         }
         appendText("}\n\n")
     }

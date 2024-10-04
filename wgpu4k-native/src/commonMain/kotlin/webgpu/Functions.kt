@@ -3,6 +3,7 @@ package webgpu
 
 import ffi.CString
 import ffi.NativeAddress
+import ffi.ArrayHolder
 
 
 fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor): WGPUInstance = TODO()
@@ -42,7 +43,7 @@ fun wgpuComputePassEncoderInsertDebugMarker(handler: WGPUComputePassEncoder, mar
 fun wgpuComputePassEncoderPopDebugGroup(handler: WGPUComputePassEncoder): Unit = TODO()
 fun wgpuComputePassEncoderPushDebugGroup(handler: WGPUComputePassEncoder, groupLabel: CString): Unit = TODO()
 fun wgpuComputePassEncoderSetPipeline(handler: WGPUComputePassEncoder, pipeline: WGPUComputePipeline): Unit = TODO()
-fun wgpuComputePassEncoderSetBindGroup(handler: WGPUComputePassEncoder, groupIndex: UInt, group: WGPUBindGroup, dynamicOffsets: Long): Unit = TODO()
+fun wgpuComputePassEncoderSetBindGroup(handler: WGPUComputePassEncoder, groupIndex: UInt, group: WGPUBindGroup, dynamicOffsets: ArrayHolder<UInt>): Unit = TODO()
 fun wgpuComputePassEncoderDispatchWorkgroups(handler: WGPUComputePassEncoder, workgroupCountX: UInt, workgroupCountY: UInt, workgroupCountZ: UInt): Unit = TODO()
 fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(handler: WGPUComputePassEncoder, indirectBuffer: WGPUBuffer, indirectOffset: ULong): Unit = TODO()
 fun wgpuComputePassEncoderEnd(handler: WGPUComputePassEncoder): Unit = TODO()
@@ -81,14 +82,14 @@ fun wgpuQuerySetSetLabel(handler: WGPUQuerySet, label: CString): Unit = TODO()
 fun wgpuQuerySetGetType(handler: WGPUQuerySet): WGPUQueryType = TODO()
 fun wgpuQuerySetGetCount(handler: WGPUQuerySet): UInt = TODO()
 fun wgpuQuerySetDestroy(handler: WGPUQuerySet): Unit = TODO()
-fun wgpuQueueSubmit(handler: WGPUQueue, commands: Long): Unit = TODO()
+fun wgpuQueueSubmit(handler: WGPUQueue, commands: ArrayHolder<WGPUCommandBuffer>): Unit = TODO()
 fun wgpuQueueOnSubmittedWorkDone(handler: WGPUQueue): Unit = TODO()
 fun wgpuQueueWriteBuffer(handler: WGPUQueue, buffer: WGPUBuffer, bufferOffset: ULong, data: NativeAddress, size: ULong): Unit = TODO()
 fun wgpuQueueWriteTexture(handler: WGPUQueue, destination: WGPUImageCopyTexture, data: NativeAddress, dataSize: ULong, dataLayout: WGPUTextureDataLayout, writeSize: WGPUExtent3D): Unit = TODO()
 fun wgpuQueueSetLabel(handler: WGPUQueue, label: CString): Unit = TODO()
 fun wgpuRenderBundleSetLabel(handler: WGPURenderBundle, label: CString): Unit = TODO()
 fun wgpuRenderBundleEncoderSetPipeline(handler: WGPURenderBundleEncoder, pipeline: WGPURenderPipeline): Unit = TODO()
-fun wgpuRenderBundleEncoderSetBindGroup(handler: WGPURenderBundleEncoder, groupIndex: UInt, group: WGPUBindGroup, dynamicOffsets: Long): Unit = TODO()
+fun wgpuRenderBundleEncoderSetBindGroup(handler: WGPURenderBundleEncoder, groupIndex: UInt, group: WGPUBindGroup, dynamicOffsets: ArrayHolder<UInt>): Unit = TODO()
 fun wgpuRenderBundleEncoderDraw(handler: WGPURenderBundleEncoder, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit = TODO()
 fun wgpuRenderBundleEncoderDrawIndexed(handler: WGPURenderBundleEncoder, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit = TODO()
 fun wgpuRenderBundleEncoderDrawIndirect(handler: WGPURenderBundleEncoder, indirectBuffer: WGPUBuffer, indirectOffset: ULong): Unit = TODO()
@@ -101,12 +102,12 @@ fun wgpuRenderBundleEncoderSetIndexBuffer(handler: WGPURenderBundleEncoder, buff
 fun wgpuRenderBundleEncoderFinish(handler: WGPURenderBundleEncoder, descriptor: WGPURenderBundleDescriptor): WGPURenderBundle = TODO()
 fun wgpuRenderBundleEncoderSetLabel(handler: WGPURenderBundleEncoder, label: CString): Unit = TODO()
 fun wgpuRenderPassEncoderSetPipeline(handler: WGPURenderPassEncoder, pipeline: WGPURenderPipeline): Unit = TODO()
-fun wgpuRenderPassEncoderSetBindGroup(handler: WGPURenderPassEncoder, groupIndex: UInt, group: WGPUBindGroup, dynamicOffsets: Long): Unit = TODO()
+fun wgpuRenderPassEncoderSetBindGroup(handler: WGPURenderPassEncoder, groupIndex: UInt, group: WGPUBindGroup, dynamicOffsets: ArrayHolder<UInt>): Unit = TODO()
 fun wgpuRenderPassEncoderDraw(handler: WGPURenderPassEncoder, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit = TODO()
 fun wgpuRenderPassEncoderDrawIndexed(handler: WGPURenderPassEncoder, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit = TODO()
 fun wgpuRenderPassEncoderDrawIndirect(handler: WGPURenderPassEncoder, indirectBuffer: WGPUBuffer, indirectOffset: ULong): Unit = TODO()
 fun wgpuRenderPassEncoderDrawIndexedIndirect(handler: WGPURenderPassEncoder, indirectBuffer: WGPUBuffer, indirectOffset: ULong): Unit = TODO()
-fun wgpuRenderPassEncoderExecuteBundles(handler: WGPURenderPassEncoder, bundles: Long): Unit = TODO()
+fun wgpuRenderPassEncoderExecuteBundles(handler: WGPURenderPassEncoder, bundles: ArrayHolder<WGPURenderBundle>): Unit = TODO()
 fun wgpuRenderPassEncoderInsertDebugMarker(handler: WGPURenderPassEncoder, markerLabel: CString): Unit = TODO()
 fun wgpuRenderPassEncoderPopDebugGroup(handler: WGPURenderPassEncoder): Unit = TODO()
 fun wgpuRenderPassEncoderPushDebugGroup(handler: WGPURenderPassEncoder, groupLabel: CString): Unit = TODO()
