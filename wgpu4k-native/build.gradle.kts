@@ -7,7 +7,8 @@ plugins {
     id("com.android.library")
 }
 
-val buildNativeResourcesDirectory = project.file("build").resolve("native")
+//val buildNativeResourcesDirectory = project.file("build").resolve("native")
+val buildNativeResourcesDirectory = project.file("..").resolve("headers")
 
 kotlin {
 
