@@ -85,6 +85,14 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                     -> "$nativeAccessor?.${name}?.toLong()" +
                         "?.takeIf {it != 0L}" +
                         "?.let { ${type.name}(it) }"
+                is CLibraryModel.Reference.StructureField
+                    -> "$nativeAccessor?.${name}?.rawPtr?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { ${type.name}(it) } ?: error(\"pointer of $structureName is null\")"
+                is CLibraryModel.Reference.Structure
+                    -> "$nativeAccessor?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { ${type.name}(it) }"
                 is CLibraryModel.Reference.Callback
                     -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
                         "?.takeIf {it != 0L}" +
@@ -109,6 +117,9 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                     -> nativeAccessor +
                         "?.let { it.${name} = newValue }"
                 is CLibraryModel.Reference.Pointer
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue?.handler?.toCPointer() }"
+                is CLibraryModel.Reference.Structure
                     -> nativeAccessor +
                         "?.let { it.${name} = newValue?.handler?.toCPointer() }"
                 is CLibraryModel.Reference.Callback

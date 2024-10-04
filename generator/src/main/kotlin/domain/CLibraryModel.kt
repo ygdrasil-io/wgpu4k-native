@@ -20,6 +20,7 @@ data class CLibraryModel(
         class Pointer(name: String) : Reference(name)
         class Callback(name: String) : Reference(name)
         class Structure(name: String) : Reference(name)
+        class StructureField(name: String) : Reference(name)
         class Enumeration(name: String) : Reference(name)
         object CString : Reference("CString")
     }
@@ -74,14 +75,16 @@ internal fun CLibraryModel.Primitive.toPrimitiveKotlinType(): String = when (thi
 internal fun String?.toCType(isPointer: Boolean = false): CLibraryModel.Type {
     return when {
         this == null -> CLibraryModel.Primitive.Void
-        startsWith("struct.")
-            -> return CLibraryModel.Reference.Structure(split(".").last().convertToKotlinClassName())
+        startsWith("struct.") -> when (isPointer) {
+            true -> CLibraryModel.Reference.Structure(split(".").last().convertToKotlinClassName())
+            else -> CLibraryModel.Reference.StructureField(split(".").last().convertToKotlinClassName())
+        }
         startsWith("object.")
-            -> return CLibraryModel.Reference.Pointer(split(".").last().convertToKotlinClassName())
+            -> CLibraryModel.Reference.Pointer(split(".").last().convertToKotlinClassName())
         startsWith("enum.")
-            -> return CLibraryModel.Reference.Enumeration(split(".").last().convertToKotlinClassName())
+            -> CLibraryModel.Reference.Enumeration(split(".").last().convertToKotlinClassName())
         startsWith("callback.")
-            -> return CLibraryModel.Reference.Structure(split(".").last().convertToKotlinCallbackStructureName())
+            -> CLibraryModel.Reference.StructureField(split(".").last().convertToKotlinCallbackStructureName())
         startsWith("bitflag.") -> CLibraryModel.Primitive.UInt64
         equals("string") -> CLibraryModel.Reference.CString
         equals("bool") -> CLibraryModel.Primitive.Bool
