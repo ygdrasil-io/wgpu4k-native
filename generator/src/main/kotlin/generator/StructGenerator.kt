@@ -26,6 +26,7 @@ private val header = """
     
     import ffi.NativeAddress
     import ffi.CallbackHolder
+    import ffi.CString
     
     
 """.trimIndent()
@@ -37,6 +38,8 @@ private val headerNative = """
         
     import ffi.NativeAddress
     import ffi.CallbackHolder
+    import ffi.CString
+    import ffi.toCString
     import kotlinx.cinterop.ExperimentalForeignApi
     import kotlinx.cinterop.pointed
     import kotlinx.cinterop.toCPointer
@@ -70,7 +73,7 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                 is CLibraryModel.Primitive
                     -> "$nativeAccessor?.${name} ?: error(\"pointer of $structureName is null\")"
                 is CLibraryModel.Reference.CString
-                    -> "$nativeAccessor?.${name}?.toKString()"
+                    -> "$nativeAccessor?.${name}?.toCString()"
                 is CLibraryModel.Reference.Pointer
                     -> "$nativeAccessor?.${name}?.toLong()" +
                         "?.takeIf {it != 0L}" +
@@ -83,6 +86,9 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
             }.let { appendText("\t\tget() = $it\n") }
             // Setter
             when (type) {
+                is CLibraryModel.Reference.CString
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue?.handler?.toCPointer() }"
                 is CLibraryModel.Primitive
                     -> nativeAccessor +
                         "?.let { it.${name} = newValue }"

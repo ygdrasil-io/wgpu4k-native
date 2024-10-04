@@ -14,6 +14,7 @@ private val header = """
     $disclamer
     package webgpu
     
+    import ffi.CString
     
 """.trimIndent()
 

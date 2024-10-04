@@ -20,7 +20,7 @@ data class CLibraryModel(
         class Callback(name: String) : Reference(name)
         class Structure(name: String) : Reference(name)
         class Enumeration(name: String) : Reference(name)
-        object CString : Reference("String")
+        object CString : Reference("CString")
     }
 
     class Array(val subType: Type) : Type

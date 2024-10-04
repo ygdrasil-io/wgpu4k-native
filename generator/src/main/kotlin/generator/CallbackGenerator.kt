@@ -17,6 +17,7 @@ private val header = """
     package webgpu
     
     import ffi.Callback
+    import ffi.CString
     
     
 """.trimIndent()
