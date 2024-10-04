@@ -1,5 +1,8 @@
 package ffi
 
+import kotlin.jvm.JvmInline
+
 interface Callback
 
-data class CallbackHolder<T: Callback>(val handler: Long)
+@JvmInline
+value  class CallbackHolder<T: Callback>(val handler: Long)
