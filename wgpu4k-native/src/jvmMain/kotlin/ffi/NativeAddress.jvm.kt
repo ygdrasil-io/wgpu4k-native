@@ -1,3 +1,3 @@
 package ffi
 
-actual class NativeAddress
+actual typealias NativeAddress = Long

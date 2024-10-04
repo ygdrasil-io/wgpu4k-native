@@ -37,6 +37,36 @@ private val header = """
     
 """.trimIndent()
 
+private val headerJvm = """
+    $disclamer
+    package webgpu
+    
+    import ffi.NativeAddress
+    import ffi.CallbackHolder
+    import ffi.CString
+    import ffi.ArrayHolder
+    import ffi.C_LONG
+    import ffi.C_POINTER
+    import java.lang.foreign.MemoryLayout.structLayout
+    
+    
+""".trimIndent()
+
+private val headerAndroid = """
+    $disclamer
+    package webgpu
+    
+    import ffi.NativeAddress
+    import ffi.CallbackHolder
+    import ffi.CString
+    import ffi.ArrayHolder
+    import ffi.C_LONG
+    import ffi.C_POINTER
+    import java.lang.foreign.MemoryLayout.Companion.structLayout
+    
+    
+""".trimIndent()
+
 private val headerNative = """
     $disclamer
     @file:OptIn(ExperimentalForeignApi::class)
@@ -149,7 +179,8 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
 }
 
 internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure>) {
-    writeText(header)
+    if (absolutePath.contains("android")) writeText(headerAndroid) else writeText(headerJvm)
+
     structures.forEach {
         val structureName = it.name
         appendText("@JvmInline\n")
@@ -170,6 +201,29 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
             }.let { appendText("\t\tget() = $it\n") }
             if (variableType == "var") appendText("\t\tset(newValue) = TODO()\n\n")
         }
+
+        // Generate layout
+        appendText("\tcompanion object {\n")
+        appendText("\t\tprivate val `\$LAYOUT` = structLayout(\n")
+
+        appendText("\t\t).withName(\"$structureName\")\n")
+        appendText("\t}\n")
+        /*
+        	fun allocate(allocator: SegmentAllocator): MemorySegment {
+		return allocator.allocate(`$LAYOUT`)
+	}
+
+	companion object {
+		private val `$LAYOUT` = structLayout(
+			C_POINTER.withName("nextInChain"),
+			C_POINTER.withName("label"),
+			C_POINTER.withName("layout"),
+			C_LONG.withName("entryCount"),
+			C_POINTER.withName("entries")
+		).withName("WGPUBindGroupDescriptor")
+	}
+         */
+
         appendText("}\n\n")
     }
 }

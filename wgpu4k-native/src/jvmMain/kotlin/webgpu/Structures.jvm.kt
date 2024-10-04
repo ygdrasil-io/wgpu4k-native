@@ -5,6 +5,9 @@ import ffi.NativeAddress
 import ffi.CallbackHolder
 import ffi.CString
 import ffi.ArrayHolder
+import ffi.C_LONG
+import ffi.C_POINTER
+import java.lang.foreign.MemoryLayout.structLayout
 
 @JvmInline
 actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
@@ -40,6 +43,10 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUAdapterInfo")
+	}
 }
 
 @JvmInline
@@ -60,6 +67,10 @@ actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUBindGroupDescriptor")
+	}
 }
 
 @JvmInline
@@ -88,6 +99,10 @@ actual value class WGPUBindGroupEntry(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUBindGroupEntry")
+	}
 }
 
 @JvmInline
@@ -104,6 +119,10 @@ actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUBindGroupLayoutDescriptor")
+	}
 }
 
 @JvmInline
@@ -124,6 +143,10 @@ actual value class WGPUBindGroupLayoutEntry(actual val handler: NativeAddress) {
 		get() = TODO()
 	actual val storageTexture: WGPUStorageTextureBindingLayout
 		get() = TODO()
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUBindGroupLayoutEntry")
+	}
 }
 
 @JvmInline
@@ -140,6 +163,10 @@ actual value class WGPUBlendComponent(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUBlendComponent")
+	}
 }
 
 @JvmInline
@@ -148,6 +175,10 @@ actual value class WGPUBlendState(actual val handler: NativeAddress) {
 		get() = TODO()
 	actual val alpha: WGPUBlendComponent
 		get() = TODO()
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUBlendState")
+	}
 }
 
 @JvmInline
@@ -164,6 +195,10 @@ actual value class WGPUBufferBindingLayout(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUBufferBindingLayout")
+	}
 }
 
 @JvmInline
@@ -184,6 +219,10 @@ actual value class WGPUBufferDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUBufferDescriptor")
+	}
 }
 
 @JvmInline
@@ -204,6 +243,10 @@ actual value class WGPUColor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUColor")
+	}
 }
 
 @JvmInline
@@ -220,6 +263,10 @@ actual value class WGPUColorTargetState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUColorTargetState")
+	}
 }
 
 @JvmInline
@@ -228,6 +275,10 @@ actual value class WGPUCommandBufferDescriptor(actual val handler: NativeAddress
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUCommandBufferDescriptor")
+	}
 }
 
 @JvmInline
@@ -236,6 +287,10 @@ actual value class WGPUCommandEncoderDescriptor(actual val handler: NativeAddres
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUCommandEncoderDescriptor")
+	}
 }
 
 @JvmInline
@@ -248,6 +303,10 @@ actual value class WGPUCompilationInfo(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUCompilationInfo")
+	}
 }
 
 @JvmInline
@@ -288,6 +347,10 @@ actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUCompilationMessage")
+	}
 }
 
 @JvmInline
@@ -300,6 +363,10 @@ actual value class WGPUComputePassDescriptor(actual val handler: NativeAddress) 
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUComputePassDescriptor")
+	}
 }
 
 @JvmInline
@@ -316,6 +383,10 @@ actual value class WGPUComputePassTimestampWrites(actual val handler: NativeAddr
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUComputePassTimestampWrites")
+	}
 }
 
 @JvmInline
@@ -330,6 +401,10 @@ actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddre
 
 	actual val compute: WGPUProgrammableStageDescriptor
 		get() = TODO()
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUComputePipelineDescriptor")
+	}
 }
 
 @JvmInline
@@ -342,6 +417,10 @@ actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUConstantEntry")
+	}
 }
 
 @JvmInline
@@ -382,6 +461,10 @@ actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUDepthStencilState")
+	}
 }
 
 @JvmInline
@@ -408,6 +491,10 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 	actual val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
 		get() = TODO()
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUDeviceDescriptor")
+	}
 }
 
 @JvmInline
@@ -424,6 +511,10 @@ actual value class WGPUExtent3D(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUExtent3D")
+	}
 }
 
 @JvmInline
@@ -452,6 +543,10 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUFragmentState")
+	}
 }
 
 @JvmInline
@@ -460,6 +555,10 @@ actual value class WGPUFuture(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUFuture")
+	}
 }
 
 @JvmInline
@@ -470,6 +569,10 @@ actual value class WGPUFutureWaitInfo(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUFutureWaitInfo")
+	}
 }
 
 @JvmInline
@@ -480,6 +583,10 @@ actual value class WGPUImageCopyBuffer(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUImageCopyBuffer")
+	}
 }
 
 @JvmInline
@@ -498,12 +605,20 @@ actual value class WGPUImageCopyTexture(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUImageCopyTexture")
+	}
 }
 
 @JvmInline
 actual value class WGPUInstanceDescriptor(actual val handler: NativeAddress) {
 	actual val features: WGPUInstanceFeatures
 		get() = TODO()
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUInstanceDescriptor")
+	}
 }
 
 @JvmInline
@@ -516,6 +631,10 @@ actual value class WGPUInstanceFeatures(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUInstanceFeatures")
+	}
 }
 
 @JvmInline
@@ -644,6 +763,10 @@ actual value class WGPULimits(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPULimits")
+	}
 }
 
 @JvmInline
@@ -660,6 +783,10 @@ actual value class WGPUMultisampleState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUMultisampleState")
+	}
 }
 
 @JvmInline
@@ -676,6 +803,10 @@ actual value class WGPUOrigin3D(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUOrigin3D")
+	}
 }
 
 @JvmInline
@@ -692,6 +823,10 @@ actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddres
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUPipelineLayoutDescriptor")
+	}
 }
 
 @JvmInline
@@ -716,6 +851,10 @@ actual value class WGPUPrimitiveState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUPrimitiveState")
+	}
 }
 
 @JvmInline
@@ -736,6 +875,10 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUProgrammableStageDescriptor")
+	}
 }
 
 @JvmInline
@@ -752,6 +895,10 @@ actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUQuerySetDescriptor")
+	}
 }
 
 @JvmInline
@@ -760,6 +907,10 @@ actual value class WGPUQueueDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUQueueDescriptor")
+	}
 }
 
 @JvmInline
@@ -768,6 +919,10 @@ actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress)
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPURenderBundleDescriptor")
+	}
 }
 
 @JvmInline
@@ -800,6 +955,10 @@ actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeA
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPURenderBundleEncoderDescriptor")
+	}
 }
 
 @JvmInline
@@ -826,6 +985,10 @@ actual value class WGPURenderPassColorAttachment(actual val handler: NativeAddre
 
 	actual val clearValue: WGPUColor
 		get() = TODO()
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPURenderPassColorAttachment")
+	}
 }
 
 @JvmInline
@@ -866,6 +1029,10 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPURenderPassDepthStencilAttachment")
+	}
 }
 
 @JvmInline
@@ -894,6 +1061,10 @@ actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPURenderPassDescriptor")
+	}
 }
 
 @JvmInline
@@ -902,6 +1073,10 @@ actual value class WGPURenderPassMaxDrawCount(actual val handler: NativeAddress)
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPURenderPassMaxDrawCount")
+	}
 }
 
 @JvmInline
@@ -918,6 +1093,10 @@ actual value class WGPURenderPassTimestampWrites(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPURenderPassTimestampWrites")
+	}
 }
 
 @JvmInline
@@ -944,6 +1123,10 @@ actual value class WGPURenderPipelineDescriptor(actual val handler: NativeAddres
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPURenderPipelineDescriptor")
+	}
 }
 
 @JvmInline
@@ -964,12 +1147,20 @@ actual value class WGPURequestAdapterOptions(actual val handler: NativeAddress) 
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPURequestAdapterOptions")
+	}
 }
 
 @JvmInline
 actual value class WGPURequiredLimits(actual val handler: NativeAddress) {
 	actual val limits: WGPULimits
 		get() = TODO()
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPURequiredLimits")
+	}
 }
 
 @JvmInline
@@ -978,6 +1169,10 @@ actual value class WGPUSamplerBindingLayout(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSamplerBindingLayout")
+	}
 }
 
 @JvmInline
@@ -1026,6 +1221,10 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSamplerDescriptor")
+	}
 }
 
 @JvmInline
@@ -1034,6 +1233,10 @@ actual value class WGPUShaderModuleDescriptor(actual val handler: NativeAddress)
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUShaderModuleDescriptor")
+	}
 }
 
 @JvmInline
@@ -1046,6 +1249,10 @@ actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUShaderSourceSPIRV")
+	}
 }
 
 @JvmInline
@@ -1054,6 +1261,10 @@ actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUShaderSourceWGSL")
+	}
 }
 
 @JvmInline
@@ -1074,6 +1285,10 @@ actual value class WGPUStencilFaceState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUStencilFaceState")
+	}
 }
 
 @JvmInline
@@ -1090,12 +1305,20 @@ actual value class WGPUStorageTextureBindingLayout(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUStorageTextureBindingLayout")
+	}
 }
 
 @JvmInline
 actual value class WGPUSupportedLimits(actual val handler: NativeAddress) {
 	actual val limits: WGPULimits
 		get() = TODO()
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSupportedLimits")
+	}
 }
 
 @JvmInline
@@ -1128,6 +1351,10 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSurfaceCapabilities")
+	}
 }
 
 @JvmInline
@@ -1168,6 +1395,10 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSurfaceConfiguration")
+	}
 }
 
 @JvmInline
@@ -1176,6 +1407,10 @@ actual value class WGPUSurfaceDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSurfaceDescriptor")
+	}
 }
 
 @JvmInline
@@ -1184,6 +1419,10 @@ actual value class WGPUSurfaceSourceAndroidNativeWindow(actual val handler: Nati
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSurfaceSourceAndroidNativeWindow")
+	}
 }
 
 @JvmInline
@@ -1192,6 +1431,10 @@ actual value class WGPUSurfaceSourceMetalLayer(actual val handler: NativeAddress
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSurfaceSourceMetalLayer")
+	}
 }
 
 @JvmInline
@@ -1204,6 +1447,10 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSurfaceSourceWaylandSurface")
+	}
 }
 
 @JvmInline
@@ -1216,6 +1463,10 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddres
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSurfaceSourceWindowsHWND")
+	}
 }
 
 @JvmInline
@@ -1228,6 +1479,10 @@ actual value class WGPUSurfaceSourceXCBWindow(actual val handler: NativeAddress)
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSurfaceSourceXCBWindow")
+	}
 }
 
 @JvmInline
@@ -1240,6 +1495,10 @@ actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSurfaceSourceXlibWindow")
+	}
 }
 
 @JvmInline
@@ -1252,6 +1511,10 @@ actual value class WGPUSurfaceTexture(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUSurfaceTexture")
+	}
 }
 
 @JvmInline
@@ -1268,6 +1531,10 @@ actual value class WGPUTextureBindingLayout(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUTextureBindingLayout")
+	}
 }
 
 @JvmInline
@@ -1284,6 +1551,10 @@ actual value class WGPUTextureDataLayout(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUTextureDataLayout")
+	}
 }
 
 @JvmInline
@@ -1322,6 +1593,10 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUTextureDescriptor")
+	}
 }
 
 @JvmInline
@@ -1362,6 +1637,10 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUTextureViewDescriptor")
+	}
 }
 
 @JvmInline
@@ -1378,6 +1657,10 @@ actual value class WGPUVertexAttribute(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUVertexAttribute")
+	}
 }
 
 @JvmInline
@@ -1398,6 +1681,10 @@ actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUVertexBufferLayout")
+	}
 }
 
 @JvmInline
@@ -1426,6 +1713,10 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUVertexState")
+	}
 }
 
 @JvmInline
@@ -1438,6 +1729,10 @@ actual value class WGPUChainedStruct(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUChainedStruct")
+	}
 }
 
 @JvmInline
@@ -1450,6 +1745,10 @@ actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUChainedStructOut")
+	}
 }
 
 @JvmInline
@@ -1470,6 +1769,10 @@ actual value class WGPUBufferMapCallbackInfo(actual val handler: NativeAddress) 
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUBufferMapCallbackInfo")
+	}
 }
 
 @JvmInline
@@ -1490,6 +1793,10 @@ actual value class WGPUCompilationInfoCallbackInfo(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUCompilationInfoCallbackInfo")
+	}
 }
 
 @JvmInline
@@ -1510,6 +1817,10 @@ actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual val handler
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUCreateComputePipelineAsyncCallbackInfo")
+	}
 }
 
 @JvmInline
@@ -1530,6 +1841,10 @@ actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual val handler:
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUCreateRenderPipelineAsyncCallbackInfo")
+	}
 }
 
 @JvmInline
@@ -1550,6 +1865,10 @@ actual value class WGPUDeviceLostCallbackInfo(actual val handler: NativeAddress)
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUDeviceLostCallbackInfo")
+	}
 }
 
 @JvmInline
@@ -1570,6 +1889,10 @@ actual value class WGPUPopErrorScopeCallbackInfo(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUPopErrorScopeCallbackInfo")
+	}
 }
 
 @JvmInline
@@ -1590,6 +1913,10 @@ actual value class WGPUQueueWorkDoneCallbackInfo(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUQueueWorkDoneCallbackInfo")
+	}
 }
 
 @JvmInline
@@ -1610,6 +1937,10 @@ actual value class WGPURequestAdapterCallbackInfo(actual val handler: NativeAddr
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPURequestAdapterCallbackInfo")
+	}
 }
 
 @JvmInline
@@ -1630,6 +1961,10 @@ actual value class WGPURequestDeviceCallbackInfo(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPURequestDeviceCallbackInfo")
+	}
 }
 
 @JvmInline
@@ -1650,5 +1985,9 @@ actual value class WGPUUncapturedErrorCallbackInfo(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
+	companion object {
+		private val `$LAYOUT` = structLayout(
+		).withName("WGPUUncapturedErrorCallbackInfo")
+	}
 }
 
