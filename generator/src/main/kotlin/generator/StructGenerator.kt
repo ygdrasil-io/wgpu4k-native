@@ -54,7 +54,8 @@ internal fun File.generateCommonStructures(structures: List<CLibraryModel.Struct
     structures.forEach {
         appendText("expect value class ${it.name}(val handler: NativeAddress) {\n")
         it.members.forEach { (name, type, optional) ->
-            appendText("\tvar $name: ${type.toFunctionKotlinType()}$optional\n")
+            val variableType = type.generateVariableType()
+            appendText("\t$variableType $name: ${type.toFunctionKotlinType()}$optional\n")
         }
         appendText("}\n\n")
     }
@@ -66,8 +67,9 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
         val structureName = it.name
         appendText("actual value class $structureName(actual val handler: NativeAddress) {\n")
         it.members.forEach { (name, type, optional) ->
+            val variableType = type.generateVariableType()
             val nativeAccessor = "handler.toCPointer<webgpu.native.$structureName>()?.pointed"
-            appendText("\tactual var $name: ${type.toFunctionKotlinType()}$optional\n")
+            appendText("\tactual $variableType $name: ${type.toFunctionKotlinType()}$optional\n")
             // Getter
             when (type) {
                 is CLibraryModel.Reference.OpaquePointer
@@ -127,7 +129,8 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                         "?.takeIf {it != 0L}" +
                         "?.let { CallbackHolder<${type.name}>(it) }"
                 else -> " TODO()"
-            }.let { appendText("\t\tset(newValue) { $it } \n\n") }
+            }.takeIf { variableType == "var" }
+                ?.let { appendText("\t\tset(newValue) { $it } \n\n") }
         }
         appendText("}\n\n")
     }
@@ -140,7 +143,8 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
         appendText("@JvmInline\n")
         appendText("actual value class $structureName(actual val handler: NativeAddress) {\n")
         it.members.forEach { (name, type, optional) ->
-            appendText("\tactual var $name: ${type.toFunctionKotlinType()}$optional\n")
+            val variableType = type.generateVariableType()
+            appendText("\tactual $variableType $name: ${type.toFunctionKotlinType()}$optional\n")
             when (type) {
                 /*is CLibraryModel.Reference.Pointer
                     -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
@@ -152,8 +156,13 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
                         "?.let { CallbackHolder(it) }"*/
                 else -> "TODO()"
             }.let { appendText("\t\tget() = $it\n") }
-            appendText("\t\tset(newValue) = TODO()\n\n")
+            if (variableType == "var") appendText("\t\tset(newValue) = TODO()\n\n")
         }
         appendText("}\n\n")
     }
+}
+
+private fun CLibraryModel.Type.generateVariableType(): String = when(this) {
+    is CLibraryModel.Reference.StructureField -> "val"
+    else -> "var"
 }

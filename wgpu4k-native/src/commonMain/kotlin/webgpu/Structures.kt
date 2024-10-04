@@ -39,10 +39,10 @@ expect value class WGPUBindGroupLayoutDescriptor(val handler: NativeAddress) {
 expect value class WGPUBindGroupLayoutEntry(val handler: NativeAddress) {
 	var binding: UInt
 	var visibility: ULong
-	var buffer: WGPUBufferBindingLayout
-	var sampler: WGPUSamplerBindingLayout
-	var texture: WGPUTextureBindingLayout
-	var storageTexture: WGPUStorageTextureBindingLayout
+	val buffer: WGPUBufferBindingLayout
+	val sampler: WGPUSamplerBindingLayout
+	val texture: WGPUTextureBindingLayout
+	val storageTexture: WGPUStorageTextureBindingLayout
 }
 
 expect value class WGPUBlendComponent(val handler: NativeAddress) {
@@ -52,8 +52,8 @@ expect value class WGPUBlendComponent(val handler: NativeAddress) {
 }
 
 expect value class WGPUBlendState(val handler: NativeAddress) {
-	var color: WGPUBlendComponent
-	var alpha: WGPUBlendComponent
+	val color: WGPUBlendComponent
+	val alpha: WGPUBlendComponent
 }
 
 expect value class WGPUBufferBindingLayout(val handler: NativeAddress) {
@@ -120,7 +120,7 @@ expect value class WGPUComputePassTimestampWrites(val handler: NativeAddress) {
 expect value class WGPUComputePipelineDescriptor(val handler: NativeAddress) {
 	var label: CString?
 	var layout: WGPUPipelineLayout?
-	var compute: WGPUProgrammableStageDescriptor
+	val compute: WGPUProgrammableStageDescriptor
 }
 
 expect value class WGPUConstantEntry(val handler: NativeAddress) {
@@ -132,8 +132,8 @@ expect value class WGPUDepthStencilState(val handler: NativeAddress) {
 	var format: WGPUTextureFormat
 	var depthWriteEnabled: WGPUOptionalBool
 	var depthCompare: WGPUCompareFunction
-	var stencilFront: WGPUStencilFaceState
-	var stencilBack: WGPUStencilFaceState
+	val stencilFront: WGPUStencilFaceState
+	val stencilBack: WGPUStencilFaceState
 	var stencilReadMask: UInt
 	var stencilWriteMask: UInt
 	var depthBias: Int
@@ -145,9 +145,9 @@ expect value class WGPUDeviceDescriptor(val handler: NativeAddress) {
 	var label: CString?
 	var requiredFeatures: Long
 	var requiredLimits: WGPURequiredLimits?
-	var defaultQueue: WGPUQueueDescriptor
-	var deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
-	var uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
+	val defaultQueue: WGPUQueueDescriptor
+	val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
+	val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
 }
 
 expect value class WGPUExtent3D(val handler: NativeAddress) {
@@ -168,24 +168,24 @@ expect value class WGPUFuture(val handler: NativeAddress) {
 }
 
 expect value class WGPUFutureWaitInfo(val handler: NativeAddress) {
-	var future: WGPUFuture
+	val future: WGPUFuture
 	var completed: Boolean
 }
 
 expect value class WGPUImageCopyBuffer(val handler: NativeAddress) {
-	var layout: WGPUTextureDataLayout
+	val layout: WGPUTextureDataLayout
 	var buffer: WGPUBuffer?
 }
 
 expect value class WGPUImageCopyTexture(val handler: NativeAddress) {
 	var texture: WGPUTexture?
 	var mipLevel: UInt
-	var origin: WGPUOrigin3D
+	val origin: WGPUOrigin3D
 	var aspect: WGPUTextureAspect
 }
 
 expect value class WGPUInstanceDescriptor(val handler: NativeAddress) {
-	var features: WGPUInstanceFeatures
+	val features: WGPUInstanceFeatures
 }
 
 expect value class WGPUInstanceFeatures(val handler: NativeAddress) {
@@ -287,7 +287,7 @@ expect value class WGPURenderPassColorAttachment(val handler: NativeAddress) {
 	var resolveTarget: WGPUTextureView?
 	var loadOp: WGPULoadOp
 	var storeOp: WGPUStoreOp
-	var clearValue: WGPUColor
+	val clearValue: WGPUColor
 }
 
 expect value class WGPURenderPassDepthStencilAttachment(val handler: NativeAddress) {
@@ -323,10 +323,10 @@ expect value class WGPURenderPassTimestampWrites(val handler: NativeAddress) {
 expect value class WGPURenderPipelineDescriptor(val handler: NativeAddress) {
 	var label: CString?
 	var layout: WGPUPipelineLayout?
-	var vertex: WGPUVertexState
-	var primitive: WGPUPrimitiveState
+	val vertex: WGPUVertexState
+	val primitive: WGPUPrimitiveState
 	var depthStencil: WGPUDepthStencilState?
-	var multisample: WGPUMultisampleState
+	val multisample: WGPUMultisampleState
 	var fragment: WGPUFragmentState?
 }
 
@@ -338,7 +338,7 @@ expect value class WGPURequestAdapterOptions(val handler: NativeAddress) {
 }
 
 expect value class WGPURequiredLimits(val handler: NativeAddress) {
-	var limits: WGPULimits
+	val limits: WGPULimits
 }
 
 expect value class WGPUSamplerBindingLayout(val handler: NativeAddress) {
@@ -386,7 +386,7 @@ expect value class WGPUStorageTextureBindingLayout(val handler: NativeAddress) {
 }
 
 expect value class WGPUSupportedLimits(val handler: NativeAddress) {
-	var limits: WGPULimits
+	val limits: WGPULimits
 }
 
 expect value class WGPUSurfaceCapabilities(val handler: NativeAddress) {
@@ -460,7 +460,7 @@ expect value class WGPUTextureDescriptor(val handler: NativeAddress) {
 	var label: CString?
 	var usage: ULong
 	var dimension: WGPUTextureDimension
-	var size: WGPUExtent3D
+	val size: WGPUExtent3D
 	var format: WGPUTextureFormat
 	var mipLevelCount: UInt
 	var sampleCount: UInt
