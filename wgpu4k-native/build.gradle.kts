@@ -7,8 +7,10 @@ plugins {
     id("com.android.library")
 }
 
-//val buildNativeResourcesDirectory = project.file("build").resolve("native")
-val buildNativeResourcesDirectory = project.file("..").resolve("headers")
+val buildNativeResourcesDirectory = project.file("build").resolve("native")
+val buildNativeResourcesDirectory2 = project.file("..").resolve("headers")
+
+print(buildNativeResourcesDirectory2.resolve("wgpu.h").absolutePath)
 
 kotlin {
 
@@ -41,7 +43,7 @@ kotlin {
         val main by target.compilations.getting {
             cinterops.create("webgpu") {
                 packageName = "webgpu.native"
-                header(buildNativeResourcesDirectory.resolve("wgpu.h"))
+                header(buildNativeResourcesDirectory2.resolve("wgpu.h"))
             }
         }
     }
@@ -95,8 +97,8 @@ configureDownloadTasks {
 
     /*** Macos ***/
     download("wgpu-macos-aarch64-release.zip") {
-        extract("webgpu.h", buildNativeResourcesDirectory.resolve("webgpu.h"))
-        extract("wgpu.h", buildNativeResourcesDirectory.resolve("wgpu.h"))
+        //extract("webgpu.h", buildNativeResourcesDirectory.resolve("webgpu.h"))
+        //extract("wgpu.h", buildNativeResourcesDirectory.resolve("wgpu.h"))
         extract("libwgpu_native.a", buildNativeResourcesDirectory.resolve("darwin-aarch64").resolve("libWGPU.a"))
     }
     download("wgpu-macos-x86_64-release.zip") {

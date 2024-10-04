@@ -146,8 +146,8 @@ expect value class WGPUDeviceDescriptor(val handler: NativeAddress) {
 	var requiredFeatures: Long
 	var requiredLimits: WGPURequiredLimits?
 	var defaultQueue: WGPUQueueDescriptor?
-	var deviceLostCallbackInfo: CallbackHolder<WGPUDeviceLostCallbackInfo>?
-	var uncapturedErrorCallbackInfo: CallbackHolder<WGPUUncapturedErrorCallbackInfo>?
+	var deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo?
+	var uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo?
 }
 
 expect value class WGPUExtent3D(val handler: NativeAddress) {
@@ -506,5 +506,75 @@ expect value class WGPUChainedStruct(val handler: NativeAddress) {
 expect value class WGPUChainedStructOut(val handler: NativeAddress) {
 	var next: WGPUChainedStructOut?
 	var sType: WGPUSType
+}
+
+expect value class WGPUBufferMapCallbackInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var callback: CallbackHolder<WGPUBufferMapCallback>?
+	var userData1: Long?
+	var userData2: Long?
+}
+
+expect value class WGPUCompilationInfoCallbackInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var callback: CallbackHolder<WGPUCompilationInfoCallback>?
+	var userData1: Long?
+	var userData2: Long?
+}
+
+expect value class WGPUCreateComputePipelineAsyncCallbackInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var callback: CallbackHolder<WGPUCreateComputePipelineAsyncCallback>?
+	var userData1: Long?
+	var userData2: Long?
+}
+
+expect value class WGPUCreateRenderPipelineAsyncCallbackInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var callback: CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>?
+	var userData1: Long?
+	var userData2: Long?
+}
+
+expect value class WGPUDeviceLostCallbackInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var callback: CallbackHolder<WGPUDeviceLostCallback>?
+	var userData1: Long?
+	var userData2: Long?
+}
+
+expect value class WGPUPopErrorScopeCallbackInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
+	var userData1: Long?
+	var userData2: Long?
+}
+
+expect value class WGPUQueueWorkDoneCallbackInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var callback: CallbackHolder<WGPUQueueWorkDoneCallback>?
+	var userData1: Long?
+	var userData2: Long?
+}
+
+expect value class WGPURequestAdapterCallbackInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var callback: CallbackHolder<WGPURequestAdapterCallback>?
+	var userData1: Long?
+	var userData2: Long?
+}
+
+expect value class WGPURequestDeviceCallbackInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var callback: CallbackHolder<WGPURequestDeviceCallback>?
+	var userData1: Long?
+	var userData2: Long?
+}
+
+expect value class WGPUUncapturedErrorCallbackInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
+	var userData1: Long?
+	var userData2: Long?
 }
 

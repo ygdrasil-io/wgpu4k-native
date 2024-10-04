@@ -3,6 +3,8 @@
 
 #include "webgpu.h"
 
+typedef int WGPUShaderStageFlags;
+
 typedef enum WGPUNativeSType {
     // Start at 0003 since that's allocated range for wgpu-native
     WGPUSType_DeviceExtras = 0x00030001,

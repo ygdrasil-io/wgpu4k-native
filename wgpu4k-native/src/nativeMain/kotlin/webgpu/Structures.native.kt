@@ -393,13 +393,13 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) {  TODO() } 
 
-	actual var deviceLostCallbackInfo: CallbackHolder<WGPUDeviceLostCallbackInfo>?
-		get() = handler.toCPointer<webgpu.native.WGPUDeviceDescriptor>()?.pointed?.deviceLostCallbackInfo?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) }
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUDeviceDescriptor>()?.pointed?.deviceLostCallbackInfo?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) } } 
+	actual var deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo?
+		get() = TODO()
+		set(newValue) {  TODO() } 
 
-	actual var uncapturedErrorCallbackInfo: CallbackHolder<WGPUUncapturedErrorCallbackInfo>?
-		get() = handler.toCPointer<webgpu.native.WGPUDeviceDescriptor>()?.pointed?.uncapturedErrorCallbackInfo?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) }
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUDeviceDescriptor>()?.pointed?.uncapturedErrorCallbackInfo?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) } } 
+	actual var uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo?
+		get() = TODO()
+		set(newValue) {  TODO() } 
 
 }
 
@@ -1355,6 +1355,196 @@ actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
 	actual var sType: WGPUSType
 		get() = TODO()
 		set(newValue) {  TODO() } 
+
+}
+
+actual value class WGPUBufferMapCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) {  TODO() } 
+
+	actual var callback: CallbackHolder<WGPUBufferMapCallback>?
+		get() = handler.toCPointer<webgpu.native.WGPUBufferMapCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUBufferMapCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) } } 
+
+	actual var userData1: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUBufferMapCallbackInfo>()?.pointed?.userData1 ?: error("pointer of WGPUBufferMapCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUBufferMapCallbackInfo>()?.pointed?.let { it.userData1 = newValue } } 
+
+	actual var userData2: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUBufferMapCallbackInfo>()?.pointed?.userData2 ?: error("pointer of WGPUBufferMapCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUBufferMapCallbackInfo>()?.pointed?.let { it.userData2 = newValue } } 
+
+}
+
+actual value class WGPUCompilationInfoCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) {  TODO() } 
+
+	actual var callback: CallbackHolder<WGPUCompilationInfoCallback>?
+		get() = handler.toCPointer<webgpu.native.WGPUCompilationInfoCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUCompilationInfoCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) } } 
+
+	actual var userData1: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUCompilationInfoCallbackInfo>()?.pointed?.userData1 ?: error("pointer of WGPUCompilationInfoCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUCompilationInfoCallbackInfo>()?.pointed?.let { it.userData1 = newValue } } 
+
+	actual var userData2: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUCompilationInfoCallbackInfo>()?.pointed?.userData2 ?: error("pointer of WGPUCompilationInfoCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUCompilationInfoCallbackInfo>()?.pointed?.let { it.userData2 = newValue } } 
+
+}
+
+actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) {  TODO() } 
+
+	actual var callback: CallbackHolder<WGPUCreateComputePipelineAsyncCallback>?
+		get() = handler.toCPointer<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) } } 
+
+	actual var userData1: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo>()?.pointed?.userData1 ?: error("pointer of WGPUCreateComputePipelineAsyncCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo>()?.pointed?.let { it.userData1 = newValue } } 
+
+	actual var userData2: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo>()?.pointed?.userData2 ?: error("pointer of WGPUCreateComputePipelineAsyncCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo>()?.pointed?.let { it.userData2 = newValue } } 
+
+}
+
+actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) {  TODO() } 
+
+	actual var callback: CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>?
+		get() = handler.toCPointer<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) } } 
+
+	actual var userData1: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>()?.pointed?.userData1 ?: error("pointer of WGPUCreateRenderPipelineAsyncCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>()?.pointed?.let { it.userData1 = newValue } } 
+
+	actual var userData2: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>()?.pointed?.userData2 ?: error("pointer of WGPUCreateRenderPipelineAsyncCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>()?.pointed?.let { it.userData2 = newValue } } 
+
+}
+
+actual value class WGPUDeviceLostCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) {  TODO() } 
+
+	actual var callback: CallbackHolder<WGPUDeviceLostCallback>?
+		get() = handler.toCPointer<webgpu.native.WGPUDeviceLostCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUDeviceLostCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) } } 
+
+	actual var userData1: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUDeviceLostCallbackInfo>()?.pointed?.userData1 ?: error("pointer of WGPUDeviceLostCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUDeviceLostCallbackInfo>()?.pointed?.let { it.userData1 = newValue } } 
+
+	actual var userData2: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUDeviceLostCallbackInfo>()?.pointed?.userData2 ?: error("pointer of WGPUDeviceLostCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUDeviceLostCallbackInfo>()?.pointed?.let { it.userData2 = newValue } } 
+
+}
+
+actual value class WGPUPopErrorScopeCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) {  TODO() } 
+
+	actual var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
+		get() = handler.toCPointer<webgpu.native.WGPUPopErrorScopeCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUPopErrorScopeCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) } } 
+
+	actual var userData1: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUPopErrorScopeCallbackInfo>()?.pointed?.userData1 ?: error("pointer of WGPUPopErrorScopeCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUPopErrorScopeCallbackInfo>()?.pointed?.let { it.userData1 = newValue } } 
+
+	actual var userData2: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUPopErrorScopeCallbackInfo>()?.pointed?.userData2 ?: error("pointer of WGPUPopErrorScopeCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUPopErrorScopeCallbackInfo>()?.pointed?.let { it.userData2 = newValue } } 
+
+}
+
+actual value class WGPUQueueWorkDoneCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) {  TODO() } 
+
+	actual var callback: CallbackHolder<WGPUQueueWorkDoneCallback>?
+		get() = handler.toCPointer<webgpu.native.WGPUQueueWorkDoneCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUQueueWorkDoneCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) } } 
+
+	actual var userData1: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUQueueWorkDoneCallbackInfo>()?.pointed?.userData1 ?: error("pointer of WGPUQueueWorkDoneCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUQueueWorkDoneCallbackInfo>()?.pointed?.let { it.userData1 = newValue } } 
+
+	actual var userData2: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUQueueWorkDoneCallbackInfo>()?.pointed?.userData2 ?: error("pointer of WGPUQueueWorkDoneCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUQueueWorkDoneCallbackInfo>()?.pointed?.let { it.userData2 = newValue } } 
+
+}
+
+actual value class WGPURequestAdapterCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) {  TODO() } 
+
+	actual var callback: CallbackHolder<WGPURequestAdapterCallback>?
+		get() = handler.toCPointer<webgpu.native.WGPURequestAdapterCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURequestAdapterCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) } } 
+
+	actual var userData1: Long?
+		get() = handler.toCPointer<webgpu.native.WGPURequestAdapterCallbackInfo>()?.pointed?.userData1 ?: error("pointer of WGPURequestAdapterCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURequestAdapterCallbackInfo>()?.pointed?.let { it.userData1 = newValue } } 
+
+	actual var userData2: Long?
+		get() = handler.toCPointer<webgpu.native.WGPURequestAdapterCallbackInfo>()?.pointed?.userData2 ?: error("pointer of WGPURequestAdapterCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURequestAdapterCallbackInfo>()?.pointed?.let { it.userData2 = newValue } } 
+
+}
+
+actual value class WGPURequestDeviceCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) {  TODO() } 
+
+	actual var callback: CallbackHolder<WGPURequestDeviceCallback>?
+		get() = handler.toCPointer<webgpu.native.WGPURequestDeviceCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURequestDeviceCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) } } 
+
+	actual var userData1: Long?
+		get() = handler.toCPointer<webgpu.native.WGPURequestDeviceCallbackInfo>()?.pointed?.userData1 ?: error("pointer of WGPURequestDeviceCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURequestDeviceCallbackInfo>()?.pointed?.let { it.userData1 = newValue } } 
+
+	actual var userData2: Long?
+		get() = handler.toCPointer<webgpu.native.WGPURequestDeviceCallbackInfo>()?.pointed?.userData2 ?: error("pointer of WGPURequestDeviceCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPURequestDeviceCallbackInfo>()?.pointed?.let { it.userData2 = newValue } } 
+
+}
+
+actual value class WGPUUncapturedErrorCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) {  TODO() } 
+
+	actual var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
+		get() = handler.toCPointer<webgpu.native.WGPUUncapturedErrorCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUUncapturedErrorCallbackInfo>()?.pointed?.callback?.toLong()?.takeIf {it != 0L}?.let { CallbackHolder(it) } } 
+
+	actual var userData1: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUUncapturedErrorCallbackInfo>()?.pointed?.userData1 ?: error("pointer of WGPUUncapturedErrorCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUUncapturedErrorCallbackInfo>()?.pointed?.let { it.userData1 = newValue } } 
+
+	actual var userData2: Long?
+		get() = handler.toCPointer<webgpu.native.WGPUUncapturedErrorCallbackInfo>()?.pointed?.userData2 ?: error("pointer of WGPUUncapturedErrorCallbackInfo is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUUncapturedErrorCallbackInfo>()?.pointed?.let { it.userData2 = newValue } } 
 
 }
 

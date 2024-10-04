@@ -1,6 +1,7 @@
 package domain
 
 import convertToKotlinCallbackName
+import convertToKotlinCallbackStructureName
 import convertToKotlinClassName
 
 
@@ -80,7 +81,7 @@ internal fun String?.toCType(): CLibraryModel.Type {
         startsWith("enum.")
             -> return CLibraryModel.Reference.Enumeration(split(".").last().convertToKotlinClassName())
         startsWith("callback.")
-            -> return CLibraryModel.Reference.Callback(split(".").last().convertToKotlinCallbackName())
+            -> return CLibraryModel.Reference.Structure(split(".").last().convertToKotlinCallbackStructureName())
         startsWith("bitflag.") -> CLibraryModel.Primitive.UInt64
         equals("string") -> CLibraryModel.Reference.CString
         equals("bool") -> CLibraryModel.Primitive.Bool

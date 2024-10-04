@@ -9,7 +9,8 @@ internal fun String.convertToKotlinVariableName() = split("_")
     }
     .joinToString("")
 
-internal fun String.convertToKotlinCallbackName() = "${this}_callback_info".convertToKotlinClassName()
+internal fun String.convertToKotlinCallbackStructureName() = "${this}_callback_info".convertToKotlinClassName()
+internal fun String.convertToKotlinCallbackName() = "${this}_callback".convertToKotlinClassName()
 
 internal fun String.convertToKotlinClassName() = split("_")
     .map { component -> component.replaceFirstChar { it.uppercase() } }

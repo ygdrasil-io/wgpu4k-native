@@ -407,11 +407,11 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var deviceLostCallbackInfo: CallbackHolder<WGPUDeviceLostCallbackInfo>?
+	actual var deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	actual var uncapturedErrorCallbackInfo: CallbackHolder<WGPUUncapturedErrorCallbackInfo>?
+	actual var uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo?
 		get() = TODO()
 		set(newValue) = TODO()
 
@@ -1420,6 +1420,206 @@ actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual var sType: WGPUSType
+		get() = TODO()
+		set(newValue) = TODO()
+
+}
+
+@JvmInline
+actual value class WGPUBufferMapCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var callback: CallbackHolder<WGPUBufferMapCallback>?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData1: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData2: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+}
+
+@JvmInline
+actual value class WGPUCompilationInfoCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var callback: CallbackHolder<WGPUCompilationInfoCallback>?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData1: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData2: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+}
+
+@JvmInline
+actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var callback: CallbackHolder<WGPUCreateComputePipelineAsyncCallback>?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData1: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData2: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+}
+
+@JvmInline
+actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var callback: CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData1: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData2: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+}
+
+@JvmInline
+actual value class WGPUDeviceLostCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var callback: CallbackHolder<WGPUDeviceLostCallback>?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData1: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData2: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+}
+
+@JvmInline
+actual value class WGPUPopErrorScopeCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData1: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData2: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+}
+
+@JvmInline
+actual value class WGPUQueueWorkDoneCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var callback: CallbackHolder<WGPUQueueWorkDoneCallback>?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData1: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData2: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+}
+
+@JvmInline
+actual value class WGPURequestAdapterCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var callback: CallbackHolder<WGPURequestAdapterCallback>?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData1: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData2: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+}
+
+@JvmInline
+actual value class WGPURequestDeviceCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var callback: CallbackHolder<WGPURequestDeviceCallback>?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData1: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData2: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+}
+
+@JvmInline
+actual value class WGPUUncapturedErrorCallbackInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStruct?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData1: Long?
+		get() = TODO()
+		set(newValue) = TODO()
+
+	actual var userData2: Long?
 		get() = TODO()
 		set(newValue) = TODO()
 

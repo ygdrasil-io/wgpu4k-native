@@ -1,6 +1,7 @@
 package converter
 
 import convertToKotlinCallbackName
+import convertToKotlinCallbackStructureName
 import convertToKotlinClassName
 import convertToKotlinFunctionName
 import convertToKotlinVariableName
@@ -31,10 +32,12 @@ internal fun YamlModel.toCModel(): Pair<YamlModel, CLibraryModel> {
 private fun YamlModel.generateCLibraryStructures() = structs.map {
     CLibraryModel.Structure(
         it.name.convertToKotlinClassName(),
-        it.members.map { Triple(
-            it.name.convertToKotlinVariableName(),
-            it.type.toCType(),
-            if (it.type.toCType() is CLibraryModel.Reference) "?" else "")
+        it.members.map {
+            Triple(
+                it.name.convertToKotlinVariableName(),
+                it.type.toCType(),
+                if (it.type.toCType() is CLibraryModel.Reference) "?" else ""
+            )
         }
     )
 } + listOf(
@@ -50,7 +53,17 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
             Triple("sType", CLibraryModel.Reference.Enumeration("WGPUSType"), "")
         )
     )
-)
+) + callbacks.map {
+    val name = it.name.convertToKotlinCallbackStructureName()
+    CLibraryModel.Structure(
+        name, listOf(
+            Triple("nextInChain", CLibraryModel.Reference.Structure("WGPUChainedStruct"), "?"),
+            Triple("callback", CLibraryModel.Reference.Callback(it.name.convertToKotlinCallbackName()), "?"),
+            Triple("userData1", CLibraryModel.Primitive.Int64, "?"),
+            Triple("userData2", CLibraryModel.Primitive.Int64, "?")
+        )
+    )
+}
 
 private fun YamlModel.convertToCLibraryEnumerations() =
     enums.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName()) } +
