@@ -4,7 +4,9 @@ import com.sun.jna.Pointer
 import ffi.toAddress
 import java.util.function.Consumer
 
-class MemorySegment(val pointer: Pointer, val size: Long) {
+class MemorySegment(val pointer: Pointer, val size: Long = -1) {
+
+    constructor(address: Long, size: Long = -1) : this(Pointer(address), size)
 
     fun get(layout: ValueLayout.OfDouble?, offest: Long ) : Double {
         return pointer.getDouble(offest)

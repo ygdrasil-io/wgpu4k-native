@@ -92,7 +92,7 @@ internal fun CLibraryModel.Type.toJvmNativeType(): String = when (this) {
     is CLibraryModel.Primitive.Int32 -> "Int"
     is CLibraryModel.Primitive.Int64 -> "Long"
     is CLibraryModel.Primitive.Void -> "Unit"
-    CLibraryModel.Primitive.Bool -> "Boolean"
+    CLibraryModel.Primitive.Bool -> "UInt"
     CLibraryModel.Primitive.UInt64 -> "ULong"
     CLibraryModel.Primitive.Float64 -> "Double"
     CLibraryModel.Primitive.Float32 -> "Float"
@@ -105,5 +105,5 @@ internal fun CLibraryModel.Type.toJvmNativeType(): String = when (this) {
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer,
     is CLibraryModel.Reference.Structure,
-    is CLibraryModel.Reference.StructureField -> "NativeAddress"
+    is CLibraryModel.Reference.StructureField -> "java.lang.foreign.MemorySegment?"
 }

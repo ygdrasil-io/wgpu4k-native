@@ -34,6 +34,7 @@ private val header = """
     import ffi.CString
     import ffi.NativeAddress
     import ffi.ArrayHolder
+    import ffi.adapt
     
     
     
@@ -154,7 +155,7 @@ private fun File.writeJvmFunction(function: CLibraryModel.Function) {
     when (function.returnType) {
         is CLibraryModel.Reference.Enumeration -> null
         is CLibraryModel.Reference -> {
-            "?.let(::${function.returnType.name})"
+            "?.let(::NativeAddress)?.let(::${function.returnType.name})"
         }
         is CLibraryModel.Primitive.Bool -> ".toBoolean()\n"
         else -> null
@@ -167,7 +168,7 @@ private fun CLibraryModel.Type.toJvmArgCall(name: String) = when(this) {
     is CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Enumeration -> name
     is CLibraryModel.Array,
-    is CLibraryModel.Reference -> "$name?.handler"
+    is CLibraryModel.Reference -> "$name?.handler.adapt()"
     else -> name
 }
 
