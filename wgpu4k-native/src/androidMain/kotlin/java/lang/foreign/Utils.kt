@@ -3,7 +3,7 @@ package java.lang.foreign
 import com.sun.jna.Memory
 import com.sun.jna.Pointer
 
-internal fun Pointer.toAddress() = Pointer.nativeValue(this)
+fun Pointer.toAddress() = Pointer.nativeValue(this)
 
 class JnaArena: AutoCloseable {
     private val autoCloseableMemory = mutableListOf<AutoCloseable>()

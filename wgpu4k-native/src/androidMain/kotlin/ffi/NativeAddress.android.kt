@@ -1,3 +1,5 @@
 package ffi
 
-actual typealias NativeAddress = Long
+import java.lang.foreign.MemorySegment
+
+actual typealias NativeAddress = MemorySegment

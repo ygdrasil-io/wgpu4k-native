@@ -51,6 +51,7 @@ private val headerJvm = """
     import ffi.C_INT
     import ffi.C_FLOAT
     import ffi.C_DOUBLE
+    import java.lang.foreign.AddressLayout
     import java.lang.foreign.MemoryLayout.structLayout
     
     
@@ -70,6 +71,7 @@ private val headerAndroid = """
     import ffi.C_INT
     import ffi.C_FLOAT
     import ffi.C_DOUBLE
+    import java.lang.foreign.AddressLayout
     import java.lang.foreign.MemoryLayout.Companion.structLayout
     
     
@@ -180,19 +182,21 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                     -> nativeAccessor +
                         "?.let { it.${name} = newValue?.handler?.toCPointer() }"
                 is CLibraryModel.Reference.StructureField -> null
-            }?.let { appendText("\t\tset(newValue) { $it } \n\n") }
+            }?.let { appendText("\t\tset(newValue) { $it } \n\n") } ?: appendText("\n")
         }
         appendText("}\n\n")
     }
 }
 
 internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure>) {
-    if (absolutePath.contains("android")) writeText(headerAndroid) else writeText(headerJvm)
+    val isAndroid = absolutePath.contains("android")
+    if (isAndroid) writeText(headerAndroid) else writeText(headerJvm)
 
     structures.forEach {
         val structureName = it.name
         appendText("@JvmInline\n")
         appendText("actual value class $structureName(actual val handler: NativeAddress) {\n")
+
         it.members.forEach { (name, type, optional) ->
             val variableType = type.generateVariableType()
             appendText("\tactual $variableType $name: ${type.toFunctionKotlinType()}$optional\n")
@@ -205,15 +209,35 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
                     -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
                         "?.takeIf {it != 0L}" +
                         "?.let { CallbackHolder(it) }"*/
-                else -> "TODO()"
+                is CLibraryModel.Array,
+                CLibraryModel.Primitive.Bool,
+                CLibraryModel.Primitive.Float32,
+                CLibraryModel.Primitive.Float64,
+                CLibraryModel.Primitive.Int32,
+                CLibraryModel.Primitive.Int64,
+                CLibraryModel.Primitive.UInt16,
+                CLibraryModel.Primitive.UInt32,
+                CLibraryModel.Primitive.UInt64,
+                CLibraryModel.Primitive.Void,
+                CLibraryModel.Reference.CString,
+                is CLibraryModel.Reference.Callback,
+                is CLibraryModel.Reference.Enumeration,
+                CLibraryModel.Reference.OpaquePointer,
+                is CLibraryModel.Reference.Pointer,
+                is CLibraryModel.Reference.Structure, -> "TODO()"
+
+                is CLibraryModel.Reference.StructureField -> "get(\"$name\", 0L).let(::${type.name})"
+                //"handler.get((AddressLayout)`\$LAYOUT`.select(groupElement(\"nextInChain\"), 0)"
             }.let { appendText("\t\tget() = $it\n") }
-            if (variableType == "var") appendText("\t\tset(newValue) = TODO()\n\n")
+            if (variableType == "var") appendText("\t\tset(newValue) = TODO()\n\n") else appendText("\n")
+
         }
+
+        appendHelperFunctions(isAndroid)
 
         // Generate layout
         appendText("\tcompanion object {\n")
         appendText("\t\tinternal val `\$LAYOUT` = structLayout(\n")
-
         it.members.map { (name, type, _) ->
             when (type) {
                 CLibraryModel.Reference.OpaquePointer,
@@ -262,6 +286,40 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
 
         appendText("}\n\n")
     }
+}
+
+fun File.appendHelperFunctions(isAndroid: Boolean) {
+    appendText("\tprivate fun getLayout(name: String)\n")
+    appendText("\t\t= WGPUStorageTextureBindingLayout.`\$LAYOUT`.withName(name) as AddressLayout\n")
+    appendText("\n")
+    if (isAndroid) {
+        appendText("\tprivate fun get(name: String, offset: Long)\n")
+        appendText("\t\t= handler.get(getLayout(name), offset)\n")
+    } else {
+        appendText("\tprivate fun get(name: String, offset: Long)\n")
+        appendText("\t\t= handler.handler.get(getLayout(name), offset).let(::NativeAddress)\n")
+    }
+    appendText("\n")
+}
+
+private fun CLibraryModel.Type.getOffsetSize() = when(this) {
+    is CLibraryModel.Array -> 0L
+    CLibraryModel.Primitive.Bool -> 0L
+    CLibraryModel.Primitive.Float32 -> 0L
+    CLibraryModel.Primitive.Float64 -> 0L
+    CLibraryModel.Primitive.Int32 -> 0L
+    CLibraryModel.Primitive.Int64 -> 0L
+    CLibraryModel.Primitive.UInt16 -> 0L
+    CLibraryModel.Primitive.UInt32 -> 0L
+    CLibraryModel.Primitive.UInt64 -> 0L
+    CLibraryModel.Primitive.Void -> 0L
+    CLibraryModel.Reference.CString -> 0L
+    is CLibraryModel.Reference.Callback -> 0L
+    is CLibraryModel.Reference.Enumeration -> 0L
+    CLibraryModel.Reference.OpaquePointer -> 0L
+    is CLibraryModel.Reference.Pointer -> 0L
+    is CLibraryModel.Reference.Structure -> 0L
+    is CLibraryModel.Reference.StructureField -> null
 }
 
 private fun CLibraryModel.Type.generateVariableType(): String = when(this) {
