@@ -8,6 +8,10 @@ actual class MemoryAllocator : AutoCloseable {
 
     val allocator: SegmentAllocator = SegmentAllocator(arena)
 
+    actual fun allocate(sizeInByte: Long): NativeAddress {
+        return allocator.allocate(sizeInByte)
+    }
+
     actual override fun close() {
         arena.close()
     }

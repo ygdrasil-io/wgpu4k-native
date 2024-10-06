@@ -7,6 +7,9 @@ value class SegmentAllocator(internal val arena: JnaArena) {
     fun allocate(layout: ValueLayout): MemorySegment = MemorySegment(arena.allocate(layout.size), layout.size)
         .also { it.fillWithZero() }
 
+    fun allocate(size: Long): MemorySegment = MemorySegment(arena.allocate(size), size)
+        .also { it.fillWithZero() }
+
     fun allocate(layout: ValueLayout, size: Long): MemorySegment =
         MemorySegment(arena.allocate(layout.size * size), layout.size * size)
 

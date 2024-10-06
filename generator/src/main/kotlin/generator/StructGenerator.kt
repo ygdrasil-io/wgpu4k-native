@@ -33,6 +33,7 @@ private val header = """
     import ffi.CallbackHolder
     import ffi.CString
     import ffi.ArrayHolder
+    import ffi.MemoryAllocator
     
     
 """.trimIndent()
@@ -52,6 +53,7 @@ private val headerJvm = """
     import ffi.C_FLOAT
     import ffi.C_DOUBLE
     import ffi.CStructure
+    import ffi.MemoryAllocator
     import java.lang.foreign.AddressLayout
     import java.lang.foreign.MemoryLayout.structLayout
     
@@ -73,6 +75,7 @@ private val headerAndroid = """
     import ffi.C_FLOAT
     import ffi.C_DOUBLE
     import ffi.CStructure
+    import ffi.MemoryAllocator
     import java.lang.foreign.AddressLayout
     import java.lang.foreign.MemoryLayout.Companion.structLayout
     
@@ -89,11 +92,13 @@ private val headerNative = """
     import ffi.CString
     import ffi.toCString
     import ffi.ArrayHolder
+    import ffi.MemoryAllocator
     import kotlinx.cinterop.ExperimentalForeignApi
     import kotlinx.cinterop.pointed
     import kotlinx.cinterop.toCPointer
     import kotlinx.cinterop.toKString
     import kotlinx.cinterop.toLong
+    import kotlinx.cinterop.sizeOf
     
     
 """.trimIndent()
@@ -101,11 +106,15 @@ private val headerNative = """
 internal fun File.generateCommonStructures(structures: List<CLibraryModel.Structure>) {
     writeText(header)
     structures.forEach {
-        appendText("expect value class ${it.name}(val handler: NativeAddress) {\n")
+        val structureName = it.name
+        appendText("expect value class $structureName(val handler: NativeAddress) {\n")
         it.members.forEach { (name, type, optional) ->
             val variableType = type.generateVariableType()
             appendText("\t$variableType $name: ${type.toFunctionKotlinType()}$optional\n")
         }
+        appendText("\tcompanion object {\n")
+        appendText("\t\tfun allocate(allocator: MemoryAllocator): $structureName\n")
+        appendText("\t}\n")
         appendText("}\n\n")
     }
 }
@@ -186,6 +195,14 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                 is CLibraryModel.Reference.StructureField -> null
             }?.let { appendText("\t\tset(newValue) { $it } \n\n") } ?: appendText("\n")
         }
+        appendText("\tactual companion object {\n")
+
+        appendText("\t\tactual fun allocate(allocator: MemoryAllocator): $structureName {\n")
+        appendText("\t\t\treturn allocator.allocate(sizeOf<webgpu.native.$structureName>())\n")
+        appendText("\t\t\t\t.let(::$structureName)\n")
+        appendText("\t\t}\n")
+        appendText("\t}\n")
+
         appendText("}\n\n")
     }
 }
@@ -244,9 +261,14 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
                 is CLibraryModel.Reference.StructureField -> null
             }?.let { appendText("\t\tset(newValue) = $it\n\n") } ?: appendText("\n")
         }
+        appendText("\tactual companion object {\n")
+
+        appendText("\t\tactual fun allocate(allocator: MemoryAllocator): $structureName {\n")
+        appendText("\t\t\treturn allocator.allocate(LAYOUT.byteSize())\n")
+        appendText("\t\t\t\t.let(::$structureName)\n")
+        appendText("\t\t}\n")
 
         // Generate layout
-        appendText("\tcompanion object {\n")
         appendText("\t\tinternal val LAYOUT = structLayout(\n")
         it.members.map { (name, type, _) ->
             when (type) {
@@ -292,11 +314,6 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
             .let(::appendText)
 
         appendText("\t}\n")
-        /*
-        	fun allocate(allocator: SegmentAllocator): MemorySegment {
-		return allocator.allocate(`$LAYOUT`)
-	}
-         */
 
         appendText("}\n\n")
     }

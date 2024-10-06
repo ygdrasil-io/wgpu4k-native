@@ -13,7 +13,6 @@ import ffi.C_FLOAT
 import ffi.C_DOUBLE
 import ffi.CStructure
 import ffi.MemoryAllocator
-import ffi.MemorySegment
 import java.lang.foreign.AddressLayout
 import java.lang.foreign.MemoryLayout.structLayout
 
@@ -52,6 +51,10 @@ actual value class WGPUAdapterInfo(actual override val handler: NativeAddress) :
 		set(newValue) = set(deviceIDLayout, deviceIDOffset, newValue)
 
 	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUAdapterInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUAdapterInfo)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("vendor"),
 			C_POINTER.withName("architecture"),
@@ -87,12 +90,6 @@ actual value class WGPUAdapterInfo(actual override val handler: NativeAddress) :
 		val deviceIDOffset = 4L + vendorIDOffset
 		val deviceIDLayout = LAYOUT.withName("deviceID")
 
-		actual fun allocate(allocator: MemoryAllocator): WGPUAdapterInfo {
-			return allocator.allocator.allocate(LAYOUT)
-				.let(::MemorySegment)
-				.let(::WGPUAdapterInfo)
-		}
-
 	}
 }
 
@@ -114,7 +111,11 @@ actual value class WGPUBindGroupDescriptor(actual override val handler: NativeAd
 		get() = get(entriesLayout, entriesOffset).let(::ArrayHolder)
 		set(newValue) = set(entriesLayout, entriesOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUBindGroupDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_POINTER.withName("layout"),
@@ -163,7 +164,11 @@ actual value class WGPUBindGroupEntry(actual override val handler: NativeAddress
 		get() = get(textureViewLayout, textureViewOffset).let(::WGPUTextureView)
 		set(newValue) = set(textureViewLayout, textureViewOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupEntry {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUBindGroupEntry)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("binding"),
 			C_POINTER.withName("buffer"),
@@ -208,7 +213,11 @@ actual value class WGPUBindGroupLayoutDescriptor(actual override val handler: Na
 		get() = get(entriesLayout, entriesOffset).let(::ArrayHolder)
 		set(newValue) = set(entriesLayout, entriesOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupLayoutDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUBindGroupLayoutDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("entryCount"),
@@ -249,7 +258,11 @@ actual value class WGPUBindGroupLayoutEntry(actual override val handler: NativeA
 	actual val storageTexture: WGPUStorageTextureBindingLayout
 		get() = get(storageTextureLayout, storageTextureOffset).let(::WGPUStorageTextureBindingLayout)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupLayoutEntry {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUBindGroupLayoutEntry)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("binding"),
 			C_LONG.withName("visibility"),
@@ -294,7 +307,11 @@ actual value class WGPUBlendComponent(actual override val handler: NativeAddress
 		get() = getUInt(dstFactorLayout, dstFactorOffset)
 		set(newValue) = set(dstFactorLayout, dstFactorOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUBlendComponent {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUBlendComponent)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("operation"),
 			C_INT.withName("srcFactor"),
@@ -321,7 +338,11 @@ actual value class WGPUBlendState(actual override val handler: NativeAddress) : 
 	actual val alpha: WGPUBlendComponent
 		get() = get(alphaLayout, alphaOffset).let(::WGPUBlendComponent)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUBlendState {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUBlendState)
+		}
 		internal val LAYOUT = structLayout(
 			WGPUBlendComponent.LAYOUT.withName("color"),
 			WGPUBlendComponent.LAYOUT.withName("alpha")
@@ -350,7 +371,11 @@ actual value class WGPUBufferBindingLayout(actual override val handler: NativeAd
 		get() = getULong(minBindingSizeLayout, minBindingSizeOffset)
 		set(newValue) = set(minBindingSizeLayout, minBindingSizeOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUBufferBindingLayout {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUBufferBindingLayout)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("type"),
 			C_INT.withName("hasDynamicOffset"),
@@ -387,7 +412,11 @@ actual value class WGPUBufferDescriptor(actual override val handler: NativeAddre
 		get() = getInt(mappedAtCreationLayout, mappedAtCreationOffset).toBoolean()
 		set(newValue) = set(mappedAtCreationLayout, mappedAtCreationOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUBufferDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUBufferDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("usage"),
@@ -428,7 +457,11 @@ actual value class WGPUColor(actual override val handler: NativeAddress) : CStru
 		get() = getDouble(aLayout, aOffset)
 		set(newValue) = set(aLayout, aOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUColor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUColor)
+		}
 		internal val LAYOUT = structLayout(
 			C_DOUBLE.withName("r"),
 			C_DOUBLE.withName("g"),
@@ -465,7 +498,11 @@ actual value class WGPUColorTargetState(actual override val handler: NativeAddre
 		get() = getULong(writeMaskLayout, writeMaskOffset)
 		set(newValue) = set(writeMaskLayout, writeMaskOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUColorTargetState {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUColorTargetState)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("format"),
 			C_POINTER.withName("blend"),
@@ -490,7 +527,11 @@ actual value class WGPUCommandBufferDescriptor(actual override val handler: Nati
 		get() = get(labelLayout, labelOffset).let(::CString)
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUCommandBufferDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUCommandBufferDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label")
 		).withName("WGPUCommandBufferDescriptor")
@@ -507,7 +548,11 @@ actual value class WGPUCommandEncoderDescriptor(actual override val handler: Nat
 		get() = get(labelLayout, labelOffset).let(::CString)
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUCommandEncoderDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUCommandEncoderDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label")
 		).withName("WGPUCommandEncoderDescriptor")
@@ -528,7 +573,11 @@ actual value class WGPUCompilationInfo(actual override val handler: NativeAddres
 		get() = get(messagesLayout, messagesOffset).let(::ArrayHolder)
 		set(newValue) = set(messagesLayout, messagesOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUCompilationInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUCompilationInfo)
+		}
 		internal val LAYOUT = structLayout(
 			C_LONG.withName("messageCount"),
 			C_POINTER.withName("messages")
@@ -581,7 +630,11 @@ actual value class WGPUCompilationMessage(actual override val handler: NativeAdd
 		get() = getULong(utf16LengthLayout, utf16LengthOffset)
 		set(newValue) = set(utf16LengthLayout, utf16LengthOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUCompilationMessage {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUCompilationMessage)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("message"),
 			C_INT.withName("type"),
@@ -634,7 +687,11 @@ actual value class WGPUComputePassDescriptor(actual override val handler: Native
 		get() = get(timestampWritesLayout, timestampWritesOffset).let(::WGPUComputePassTimestampWrites)
 		set(newValue) = set(timestampWritesLayout, timestampWritesOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUComputePassDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUComputePassDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_POINTER.withName("timestampWrites")
@@ -663,7 +720,11 @@ actual value class WGPUComputePassTimestampWrites(actual override val handler: N
 		get() = getUInt(endOfPassWriteIndexLayout, endOfPassWriteIndexOffset)
 		set(newValue) = set(endOfPassWriteIndexLayout, endOfPassWriteIndexOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUComputePassTimestampWrites {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUComputePassTimestampWrites)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("querySet"),
 			C_INT.withName("beginningOfPassWriteIndex"),
@@ -695,7 +756,11 @@ actual value class WGPUComputePipelineDescriptor(actual override val handler: Na
 	actual val compute: WGPUProgrammableStageDescriptor
 		get() = get(computeLayout, computeOffset).let(::WGPUProgrammableStageDescriptor)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUComputePipelineDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUComputePipelineDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_POINTER.withName("layout"),
@@ -724,7 +789,11 @@ actual value class WGPUConstantEntry(actual override val handler: NativeAddress)
 		get() = getDouble(valueLayout, valueOffset)
 		set(newValue) = set(valueLayout, valueOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUConstantEntry {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUConstantEntry)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("key"),
 			C_DOUBLE.withName("value")
@@ -779,7 +848,11 @@ actual value class WGPUDepthStencilState(actual override val handler: NativeAddr
 		get() = getFloat(depthBiasClampLayout, depthBiasClampOffset)
 		set(newValue) = set(depthBiasClampLayout, depthBiasClampOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUDepthStencilState {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUDepthStencilState)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("format"),
 			C_INT.withName("depthWriteEnabled"),
@@ -853,7 +926,11 @@ actual value class WGPUDeviceDescriptor(actual override val handler: NativeAddre
 	actual val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
 		get() = get(uncapturedErrorCallbackInfoLayout, uncapturedErrorCallbackInfoOffset).let(::WGPUUncapturedErrorCallbackInfo)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUDeviceDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUDeviceDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("requiredFeatureCount"),
@@ -902,7 +979,11 @@ actual value class WGPUExtent3D(actual override val handler: NativeAddress) : CS
 		get() = getUInt(depthOrArrayLayersLayout, depthOrArrayLayersOffset)
 		set(newValue) = set(depthOrArrayLayersLayout, depthOrArrayLayersOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUExtent3D {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUExtent3D)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("width"),
 			C_INT.withName("height"),
@@ -947,7 +1028,11 @@ actual value class WGPUFragmentState(actual override val handler: NativeAddress)
 		get() = get(targetsLayout, targetsOffset).let(::ArrayHolder)
 		set(newValue) = set(targetsLayout, targetsOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUFragmentState {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUFragmentState)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("module"),
 			C_POINTER.withName("entryPoint"),
@@ -984,7 +1069,11 @@ actual value class WGPUFuture(actual override val handler: NativeAddress) : CStr
 		get() = getULong(idLayout, idOffset)
 		set(newValue) = set(idLayout, idOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUFuture {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUFuture)
+		}
 		internal val LAYOUT = structLayout(
 			C_LONG.withName("id")
 		).withName("WGPUFuture")
@@ -1004,7 +1093,11 @@ actual value class WGPUFutureWaitInfo(actual override val handler: NativeAddress
 		get() = getInt(completedLayout, completedOffset).toBoolean()
 		set(newValue) = set(completedLayout, completedOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUFutureWaitInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUFutureWaitInfo)
+		}
 		internal val LAYOUT = structLayout(
 			WGPUFuture.LAYOUT.withName("future"),
 			C_INT.withName("completed")
@@ -1028,7 +1121,11 @@ actual value class WGPUImageCopyBuffer(actual override val handler: NativeAddres
 		get() = get(bufferLayout, bufferOffset).let(::WGPUBuffer)
 		set(newValue) = set(bufferLayout, bufferOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUImageCopyBuffer {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUImageCopyBuffer)
+		}
 		internal val LAYOUT = structLayout(
 			WGPUTextureDataLayout.LAYOUT.withName("layout"),
 			C_POINTER.withName("buffer")
@@ -1060,7 +1157,11 @@ actual value class WGPUImageCopyTexture(actual override val handler: NativeAddre
 		get() = getUInt(aspectLayout, aspectOffset)
 		set(newValue) = set(aspectLayout, aspectOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUImageCopyTexture {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUImageCopyTexture)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("texture"),
 			C_INT.withName("mipLevel"),
@@ -1088,7 +1189,11 @@ actual value class WGPUInstanceDescriptor(actual override val handler: NativeAdd
 	actual val features: WGPUInstanceFeatures
 		get() = get(featuresLayout, featuresOffset).let(::WGPUInstanceFeatures)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUInstanceDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			WGPUInstanceFeatures.LAYOUT.withName("features")
 		).withName("WGPUInstanceDescriptor")
@@ -1109,7 +1214,11 @@ actual value class WGPUInstanceFeatures(actual override val handler: NativeAddre
 		get() = getULong(timedWaitAnyMaxCountLayout, timedWaitAnyMaxCountOffset)
 		set(newValue) = set(timedWaitAnyMaxCountLayout, timedWaitAnyMaxCountOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceFeatures {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUInstanceFeatures)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("timedWaitAnyEnable"),
 			C_LONG.withName("timedWaitAnyMaxCount")
@@ -1250,7 +1359,11 @@ actual value class WGPULimits(actual override val handler: NativeAddress) : CStr
 		get() = getUInt(maxComputeWorkgroupsPerDimensionLayout, maxComputeWorkgroupsPerDimensionOffset)
 		set(newValue) = set(maxComputeWorkgroupsPerDimensionLayout, maxComputeWorkgroupsPerDimensionOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPULimits {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPULimits)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("maxTextureDimension1D"),
 			C_INT.withName("maxTextureDimension2D"),
@@ -1395,7 +1508,11 @@ actual value class WGPUMultisampleState(actual override val handler: NativeAddre
 		get() = getInt(alphaToCoverageEnabledLayout, alphaToCoverageEnabledOffset).toBoolean()
 		set(newValue) = set(alphaToCoverageEnabledLayout, alphaToCoverageEnabledOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUMultisampleState {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUMultisampleState)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("count"),
 			C_INT.withName("mask"),
@@ -1428,7 +1545,11 @@ actual value class WGPUOrigin3D(actual override val handler: NativeAddress) : CS
 		get() = getUInt(zLayout, zOffset)
 		set(newValue) = set(zLayout, zOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUOrigin3D {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUOrigin3D)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("x"),
 			C_INT.withName("y"),
@@ -1461,7 +1582,11 @@ actual value class WGPUPipelineLayoutDescriptor(actual override val handler: Nat
 		get() = get(bindGroupLayoutsLayout, bindGroupLayoutsOffset).let(::ArrayHolder)
 		set(newValue) = set(bindGroupLayoutsLayout, bindGroupLayoutsOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUPipelineLayoutDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUPipelineLayoutDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("bindGroupLayoutCount"),
@@ -1502,7 +1627,11 @@ actual value class WGPUPrimitiveState(actual override val handler: NativeAddress
 		get() = getInt(unclippedDepthLayout, unclippedDepthOffset).toBoolean()
 		set(newValue) = set(unclippedDepthLayout, unclippedDepthOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUPrimitiveState {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUPrimitiveState)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("topology"),
 			C_INT.withName("stripIndexFormat"),
@@ -1547,7 +1676,11 @@ actual value class WGPUProgrammableStageDescriptor(actual override val handler: 
 		get() = get(constantsLayout, constantsOffset).let(::ArrayHolder)
 		set(newValue) = set(constantsLayout, constantsOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUProgrammableStageDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUProgrammableStageDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("module"),
 			C_POINTER.withName("entryPoint"),
@@ -1584,7 +1717,11 @@ actual value class WGPUQuerySetDescriptor(actual override val handler: NativeAdd
 		get() = getUInt(countLayout, countOffset)
 		set(newValue) = set(countLayout, countOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUQuerySetDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUQuerySetDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_INT.withName("type"),
@@ -1609,7 +1746,11 @@ actual value class WGPUQueueDescriptor(actual override val handler: NativeAddres
 		get() = get(labelLayout, labelOffset).let(::CString)
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUQueueDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUQueueDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label")
 		).withName("WGPUQueueDescriptor")
@@ -1626,7 +1767,11 @@ actual value class WGPURenderBundleDescriptor(actual override val handler: Nativ
 		get() = get(labelLayout, labelOffset).let(::CString)
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPURenderBundleDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPURenderBundleDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label")
 		).withName("WGPURenderBundleDescriptor")
@@ -1667,7 +1812,11 @@ actual value class WGPURenderBundleEncoderDescriptor(actual override val handler
 		get() = getInt(stencilReadOnlyLayout, stencilReadOnlyOffset).toBoolean()
 		set(newValue) = set(stencilReadOnlyLayout, stencilReadOnlyOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPURenderBundleEncoderDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPURenderBundleEncoderDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("colorFormatCount"),
@@ -1727,7 +1876,11 @@ actual value class WGPURenderPassColorAttachment(actual override val handler: Na
 	actual val clearValue: WGPUColor
 		get() = get(clearValueLayout, clearValueOffset).let(::WGPUColor)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassColorAttachment {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPURenderPassColorAttachment)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("view"),
 			C_INT.withName("depthSlice"),
@@ -1796,7 +1949,11 @@ actual value class WGPURenderPassDepthStencilAttachment(actual override val hand
 		get() = getInt(stencilReadOnlyLayout, stencilReadOnlyOffset).toBoolean()
 		set(newValue) = set(stencilReadOnlyLayout, stencilReadOnlyOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassDepthStencilAttachment {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPURenderPassDepthStencilAttachment)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("view"),
 			C_INT.withName("depthLoadOp"),
@@ -1865,7 +2022,11 @@ actual value class WGPURenderPassDescriptor(actual override val handler: NativeA
 		get() = get(timestampWritesLayout, timestampWritesOffset).let(::WGPURenderPassTimestampWrites)
 		set(newValue) = set(timestampWritesLayout, timestampWritesOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPURenderPassDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("colorAttachmentCount"),
@@ -1902,7 +2063,11 @@ actual value class WGPURenderPassMaxDrawCount(actual override val handler: Nativ
 		get() = getULong(maxDrawCountLayout, maxDrawCountOffset)
 		set(newValue) = set(maxDrawCountLayout, maxDrawCountOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassMaxDrawCount {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPURenderPassMaxDrawCount)
+		}
 		internal val LAYOUT = structLayout(
 			C_LONG.withName("maxDrawCount")
 		).withName("WGPURenderPassMaxDrawCount")
@@ -1927,7 +2092,11 @@ actual value class WGPURenderPassTimestampWrites(actual override val handler: Na
 		get() = getUInt(endOfPassWriteIndexLayout, endOfPassWriteIndexOffset)
 		set(newValue) = set(endOfPassWriteIndexLayout, endOfPassWriteIndexOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassTimestampWrites {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPURenderPassTimestampWrites)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("querySet"),
 			C_INT.withName("beginningOfPassWriteIndex"),
@@ -1973,7 +2142,11 @@ actual value class WGPURenderPipelineDescriptor(actual override val handler: Nat
 		get() = get(fragmentLayout, fragmentOffset).let(::WGPUFragmentState)
 		set(newValue) = set(fragmentLayout, fragmentOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPURenderPipelineDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPURenderPipelineDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_POINTER.withName("layout"),
@@ -2026,7 +2199,11 @@ actual value class WGPURequestAdapterOptions(actual override val handler: Native
 		get() = getInt(forceFallbackAdapterLayout, forceFallbackAdapterOffset).toBoolean()
 		set(newValue) = set(forceFallbackAdapterLayout, forceFallbackAdapterOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPURequestAdapterOptions {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPURequestAdapterOptions)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("compatibleSurface"),
 			C_INT.withName("powerPreference"),
@@ -2054,7 +2231,11 @@ actual value class WGPURequiredLimits(actual override val handler: NativeAddress
 	actual val limits: WGPULimits
 		get() = get(limitsLayout, limitsOffset).let(::WGPULimits)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPURequiredLimits {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPURequiredLimits)
+		}
 		internal val LAYOUT = structLayout(
 			WGPULimits.LAYOUT.withName("limits")
 		).withName("WGPURequiredLimits")
@@ -2071,7 +2252,11 @@ actual value class WGPUSamplerBindingLayout(actual override val handler: NativeA
 		get() = getUInt(typeLayout, typeOffset)
 		set(newValue) = set(typeLayout, typeOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSamplerBindingLayout {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSamplerBindingLayout)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("type")
 		).withName("WGPUSamplerBindingLayout")
@@ -2128,7 +2313,11 @@ actual value class WGPUSamplerDescriptor(actual override val handler: NativeAddr
 		get() = getUShort(maxAnisotropyLayout, maxAnisotropyOffset)
 		set(newValue) = set(maxAnisotropyLayout, maxAnisotropyOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSamplerDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSamplerDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_INT.withName("addressModeU"),
@@ -2185,7 +2374,11 @@ actual value class WGPUShaderModuleDescriptor(actual override val handler: Nativ
 		get() = get(labelLayout, labelOffset).let(::CString)
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUShaderModuleDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUShaderModuleDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label")
 		).withName("WGPUShaderModuleDescriptor")
@@ -2206,7 +2399,11 @@ actual value class WGPUShaderSourceSPIRV(actual override val handler: NativeAddr
 		get() = get(codeLayout, codeOffset)
 		set(newValue) = set(codeLayout, codeOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUShaderSourceSPIRV {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUShaderSourceSPIRV)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("codeSize"),
 			C_POINTER.withName("code")
@@ -2227,7 +2424,11 @@ actual value class WGPUShaderSourceWGSL(actual override val handler: NativeAddre
 		get() = get(codeLayout, codeOffset).let(::CString)
 		set(newValue) = set(codeLayout, codeOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUShaderSourceWGSL {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUShaderSourceWGSL)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("code")
 		).withName("WGPUShaderSourceWGSL")
@@ -2256,7 +2457,11 @@ actual value class WGPUStencilFaceState(actual override val handler: NativeAddre
 		get() = getUInt(passOpLayout, passOpOffset)
 		set(newValue) = set(passOpLayout, passOpOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUStencilFaceState {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUStencilFaceState)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("compare"),
 			C_INT.withName("failOp"),
@@ -2293,7 +2498,11 @@ actual value class WGPUStorageTextureBindingLayout(actual override val handler: 
 		get() = getUInt(viewDimensionLayout, viewDimensionOffset)
 		set(newValue) = set(viewDimensionLayout, viewDimensionOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUStorageTextureBindingLayout {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUStorageTextureBindingLayout)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("access"),
 			C_INT.withName("format"),
@@ -2317,7 +2526,11 @@ actual value class WGPUSupportedLimits(actual override val handler: NativeAddres
 	actual val limits: WGPULimits
 		get() = get(limitsLayout, limitsOffset).let(::WGPULimits)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSupportedLimits {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSupportedLimits)
+		}
 		internal val LAYOUT = structLayout(
 			WGPULimits.LAYOUT.withName("limits")
 		).withName("WGPUSupportedLimits")
@@ -2358,7 +2571,11 @@ actual value class WGPUSurfaceCapabilities(actual override val handler: NativeAd
 		get() = get(alphaModesLayout, alphaModesOffset).let(::ArrayHolder)
 		set(newValue) = set(alphaModesLayout, alphaModesOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceCapabilities {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSurfaceCapabilities)
+		}
 		internal val LAYOUT = structLayout(
 			C_LONG.withName("usages"),
 			C_LONG.withName("formatCount"),
@@ -2431,7 +2648,11 @@ actual value class WGPUSurfaceConfiguration(actual override val handler: NativeA
 		get() = getUInt(presentModeLayout, presentModeOffset)
 		set(newValue) = set(presentModeLayout, presentModeOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceConfiguration {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSurfaceConfiguration)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("device"),
 			C_INT.withName("format"),
@@ -2480,7 +2701,11 @@ actual value class WGPUSurfaceDescriptor(actual override val handler: NativeAddr
 		get() = get(labelLayout, labelOffset).let(::CString)
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSurfaceDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label")
 		).withName("WGPUSurfaceDescriptor")
@@ -2497,7 +2722,11 @@ actual value class WGPUSurfaceSourceAndroidNativeWindow(actual override val hand
 		get() = get(windowLayout, windowOffset)
 		set(newValue) = set(windowLayout, windowOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceAndroidNativeWindow {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSurfaceSourceAndroidNativeWindow)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("window")
 		).withName("WGPUSurfaceSourceAndroidNativeWindow")
@@ -2514,7 +2743,11 @@ actual value class WGPUSurfaceSourceMetalLayer(actual override val handler: Nati
 		get() = get(layerLayout, layerOffset)
 		set(newValue) = set(layerLayout, layerOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceMetalLayer {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSurfaceSourceMetalLayer)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("layer")
 		).withName("WGPUSurfaceSourceMetalLayer")
@@ -2535,7 +2768,11 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual override val handler: 
 		get() = get(surfaceLayout, surfaceOffset)
 		set(newValue) = set(surfaceLayout, surfaceOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceWaylandSurface {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSurfaceSourceWaylandSurface)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("display"),
 			C_POINTER.withName("surface")
@@ -2560,7 +2797,11 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual override val handler: Nat
 		get() = get(hwndLayout, hwndOffset)
 		set(newValue) = set(hwndLayout, hwndOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceWindowsHWND {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSurfaceSourceWindowsHWND)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("hinstance"),
 			C_POINTER.withName("hwnd")
@@ -2585,7 +2826,11 @@ actual value class WGPUSurfaceSourceXCBWindow(actual override val handler: Nativ
 		get() = getUInt(windowLayout, windowOffset)
 		set(newValue) = set(windowLayout, windowOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceXCBWindow {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSurfaceSourceXCBWindow)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("connection"),
 			C_INT.withName("window")
@@ -2610,7 +2855,11 @@ actual value class WGPUSurfaceSourceXlibWindow(actual override val handler: Nati
 		get() = getULong(windowLayout, windowOffset)
 		set(newValue) = set(windowLayout, windowOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceXlibWindow {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSurfaceSourceXlibWindow)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("display"),
 			C_LONG.withName("window")
@@ -2635,7 +2884,11 @@ actual value class WGPUSurfaceTexture(actual override val handler: NativeAddress
 		get() = getUInt(statusLayout, statusOffset)
 		set(newValue) = set(statusLayout, statusOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceTexture {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUSurfaceTexture)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("texture"),
 			C_INT.withName("status")
@@ -2664,7 +2917,11 @@ actual value class WGPUTextureBindingLayout(actual override val handler: NativeA
 		get() = getInt(multisampledLayout, multisampledOffset).toBoolean()
 		set(newValue) = set(multisampledLayout, multisampledOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUTextureBindingLayout {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUTextureBindingLayout)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("sampleType"),
 			C_INT.withName("viewDimension"),
@@ -2697,7 +2954,11 @@ actual value class WGPUTextureDataLayout(actual override val handler: NativeAddr
 		get() = getUInt(rowsPerImageLayout, rowsPerImageOffset)
 		set(newValue) = set(rowsPerImageLayout, rowsPerImageOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUTextureDataLayout {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUTextureDataLayout)
+		}
 		internal val LAYOUT = structLayout(
 			C_LONG.withName("offset"),
 			C_INT.withName("bytesPerRow"),
@@ -2753,7 +3014,11 @@ actual value class WGPUTextureDescriptor(actual override val handler: NativeAddr
 		get() = get(viewFormatsLayout, viewFormatsOffset).let(::ArrayHolder)
 		set(newValue) = set(viewFormatsLayout, viewFormatsOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUTextureDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUTextureDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("usage"),
@@ -2834,7 +3099,11 @@ actual value class WGPUTextureViewDescriptor(actual override val handler: Native
 		get() = getULong(usageLayout, usageOffset)
 		set(newValue) = set(usageLayout, usageOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUTextureViewDescriptor {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUTextureViewDescriptor)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_INT.withName("format"),
@@ -2891,7 +3160,11 @@ actual value class WGPUVertexAttribute(actual override val handler: NativeAddres
 		get() = getUInt(shaderLocationLayout, shaderLocationOffset)
 		set(newValue) = set(shaderLocationLayout, shaderLocationOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUVertexAttribute {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUVertexAttribute)
+		}
 		internal val LAYOUT = structLayout(
 			C_INT.withName("format"),
 			C_LONG.withName("offset"),
@@ -2928,7 +3201,11 @@ actual value class WGPUVertexBufferLayout(actual override val handler: NativeAdd
 		get() = get(attributesLayout, attributesOffset).let(::ArrayHolder)
 		set(newValue) = set(attributesLayout, attributesOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUVertexBufferLayout {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUVertexBufferLayout)
+		}
 		internal val LAYOUT = structLayout(
 			C_LONG.withName("arrayStride"),
 			C_INT.withName("stepMode"),
@@ -2977,7 +3254,11 @@ actual value class WGPUVertexState(actual override val handler: NativeAddress) :
 		get() = get(buffersLayout, buffersOffset).let(::ArrayHolder)
 		set(newValue) = set(buffersLayout, buffersOffset, newValue?.handler)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUVertexState {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUVertexState)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("module"),
 			C_POINTER.withName("entryPoint"),
@@ -3018,7 +3299,11 @@ actual value class WGPUChainedStruct(actual override val handler: NativeAddress)
 		get() = getUInt(sTypeLayout, sTypeOffset)
 		set(newValue) = set(sTypeLayout, sTypeOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUChainedStruct {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUChainedStruct)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("next"),
 			C_INT.withName("sType")
@@ -3043,7 +3328,11 @@ actual value class WGPUChainedStructOut(actual override val handler: NativeAddre
 		get() = getUInt(sTypeLayout, sTypeOffset)
 		set(newValue) = set(sTypeLayout, sTypeOffset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUChainedStructOut {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUChainedStructOut)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("next"),
 			C_INT.withName("sType")
@@ -3076,7 +3365,11 @@ actual value class WGPUBufferMapCallbackInfo(actual override val handler: Native
 		get() = get(userdata2Layout, userdata2Offset)
 		set(newValue) = set(userdata2Layout, userdata2Offset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUBufferMapCallbackInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUBufferMapCallbackInfo)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
@@ -3117,7 +3410,11 @@ actual value class WGPUCompilationInfoCallbackInfo(actual override val handler: 
 		get() = get(userdata2Layout, userdata2Offset)
 		set(newValue) = set(userdata2Layout, userdata2Offset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUCompilationInfoCallbackInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUCompilationInfoCallbackInfo)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
@@ -3158,7 +3455,11 @@ actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual override va
 		get() = get(userdata2Layout, userdata2Offset)
 		set(newValue) = set(userdata2Layout, userdata2Offset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUCreateComputePipelineAsyncCallbackInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUCreateComputePipelineAsyncCallbackInfo)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
@@ -3199,7 +3500,11 @@ actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual override val
 		get() = get(userdata2Layout, userdata2Offset)
 		set(newValue) = set(userdata2Layout, userdata2Offset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUCreateRenderPipelineAsyncCallbackInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUCreateRenderPipelineAsyncCallbackInfo)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
@@ -3240,7 +3545,11 @@ actual value class WGPUDeviceLostCallbackInfo(actual override val handler: Nativ
 		get() = get(userdata2Layout, userdata2Offset)
 		set(newValue) = set(userdata2Layout, userdata2Offset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUDeviceLostCallbackInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUDeviceLostCallbackInfo)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
@@ -3281,7 +3590,11 @@ actual value class WGPUPopErrorScopeCallbackInfo(actual override val handler: Na
 		get() = get(userdata2Layout, userdata2Offset)
 		set(newValue) = set(userdata2Layout, userdata2Offset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUPopErrorScopeCallbackInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUPopErrorScopeCallbackInfo)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
@@ -3322,7 +3635,11 @@ actual value class WGPUQueueWorkDoneCallbackInfo(actual override val handler: Na
 		get() = get(userdata2Layout, userdata2Offset)
 		set(newValue) = set(userdata2Layout, userdata2Offset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUQueueWorkDoneCallbackInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUQueueWorkDoneCallbackInfo)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
@@ -3363,7 +3680,11 @@ actual value class WGPURequestAdapterCallbackInfo(actual override val handler: N
 		get() = get(userdata2Layout, userdata2Offset)
 		set(newValue) = set(userdata2Layout, userdata2Offset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPURequestAdapterCallbackInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPURequestAdapterCallbackInfo)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
@@ -3404,7 +3725,11 @@ actual value class WGPURequestDeviceCallbackInfo(actual override val handler: Na
 		get() = get(userdata2Layout, userdata2Offset)
 		set(newValue) = set(userdata2Layout, userdata2Offset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPURequestDeviceCallbackInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPURequestDeviceCallbackInfo)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
@@ -3445,7 +3770,11 @@ actual value class WGPUUncapturedErrorCallbackInfo(actual override val handler: 
 		get() = get(userdata2Layout, userdata2Offset)
 		set(newValue) = set(userdata2Layout, userdata2Offset, newValue)
 
-	companion object {
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUUncapturedErrorCallbackInfo {
+			return allocator.allocate(LAYOUT.byteSize())
+				.let(::WGPUUncapturedErrorCallbackInfo)
+		}
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),

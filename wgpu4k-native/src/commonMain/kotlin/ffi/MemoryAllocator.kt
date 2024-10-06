@@ -5,6 +5,8 @@ import kotlin.contracts.contract
 
 expect class MemoryAllocator() : AutoCloseable {
 
+    fun allocate(sizeInByte: Long): NativeAddress
+
     override fun close()
 }
 

@@ -6,7 +6,7 @@ import io.kotest.matchers.shouldBe
 
 class SimpleTest : FreeSpec ({
 
-    "just a test" {
+    "simple mapping test" {
 
         memoryScope {scope ->
             val info = WGPUAdapterInfo.allocate(scope)
