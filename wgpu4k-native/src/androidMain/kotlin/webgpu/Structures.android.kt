@@ -49,13 +49,13 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("vendor"),
 			C_POINTER.withName("architecture"),
 			C_POINTER.withName("device"),
@@ -65,6 +65,15 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 			C_INT.withName("vendorID"),
 			C_INT.withName("deviceID")
 		).withName("WGPUAdapterInfo")
+
+		val vendorOffset = 0L
+		val architectureOffset = 8L + vendorOffset
+		val deviceOffset = 8L + architectureOffset
+		val descriptionOffset = 8L + deviceOffset
+		val backendTypeOffset = 8L + descriptionOffset
+		val adapterTypeOffset = 4L + backendTypeOffset
+		val vendorIDOffset = 4L + adapterTypeOffset
+		val deviceIDOffset = 4L + vendorIDOffset
 	}
 }
 
@@ -87,18 +96,23 @@ actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_POINTER.withName("layout"),
 			C_LONG.withName("entryCount"),
 			C_POINTER.withName("entries")
 		).withName("WGPUBindGroupDescriptor")
+
+		val labelOffset = 0L
+		val layoutOffset = 8L + labelOffset
+		val entryCountOffset = 8L + layoutOffset
+		val entriesOffset = 8L + entryCountOffset
 	}
 }
 
@@ -129,13 +143,13 @@ actual value class WGPUBindGroupEntry(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("binding"),
 			C_POINTER.withName("buffer"),
 			C_LONG.withName("offset"),
@@ -143,6 +157,13 @@ actual value class WGPUBindGroupEntry(actual val handler: NativeAddress) {
 			C_POINTER.withName("sampler"),
 			C_POINTER.withName("textureView")
 		).withName("WGPUBindGroupEntry")
+
+		val bindingOffset = 0L
+		val bufferOffset = 4L + bindingOffset
+		val offsetOffset = 8L + bufferOffset
+		val sizeOffset = 8L + offsetOffset
+		val samplerOffset = 8L + sizeOffset
+		val textureViewOffset = 8L + samplerOffset
 	}
 }
 
@@ -161,17 +182,21 @@ actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddre
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("entryCount"),
 			C_POINTER.withName("entries")
 		).withName("WGPUBindGroupLayoutDescriptor")
+
+		val labelOffset = 0L
+		val entryCountOffset = 8L + labelOffset
+		val entriesOffset = 8L + entryCountOffset
 	}
 }
 
@@ -186,32 +211,39 @@ actual value class WGPUBindGroupLayoutEntry(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual val buffer: WGPUBufferBindingLayout
-		get() = get("buffer", 0L).let(::WGPUBufferBindingLayout)
+		get() = get("buffer", bufferOffset).let(::WGPUBufferBindingLayout)
 
 	actual val sampler: WGPUSamplerBindingLayout
-		get() = get("sampler", 0L).let(::WGPUSamplerBindingLayout)
+		get() = get("sampler", samplerOffset).let(::WGPUSamplerBindingLayout)
 
 	actual val texture: WGPUTextureBindingLayout
-		get() = get("texture", 0L).let(::WGPUTextureBindingLayout)
+		get() = get("texture", textureOffset).let(::WGPUTextureBindingLayout)
 
 	actual val storageTexture: WGPUStorageTextureBindingLayout
-		get() = get("storageTexture", 0L).let(::WGPUStorageTextureBindingLayout)
+		get() = get("storageTexture", storageTextureOffset).let(::WGPUStorageTextureBindingLayout)
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("binding"),
 			C_LONG.withName("visibility"),
-			WGPUBufferBindingLayout.`$LAYOUT`.withName("buffer"),
-			WGPUSamplerBindingLayout.`$LAYOUT`.withName("sampler"),
-			WGPUTextureBindingLayout.`$LAYOUT`.withName("texture"),
-			WGPUStorageTextureBindingLayout.`$LAYOUT`.withName("storageTexture")
+			WGPUBufferBindingLayout.LAYOUT.withName("buffer"),
+			WGPUSamplerBindingLayout.LAYOUT.withName("sampler"),
+			WGPUTextureBindingLayout.LAYOUT.withName("texture"),
+			WGPUStorageTextureBindingLayout.LAYOUT.withName("storageTexture")
 		).withName("WGPUBindGroupLayoutEntry")
+
+		val bindingOffset = 0L
+		val visibilityOffset = 4L + bindingOffset
+		val bufferOffset = 8L + visibilityOffset
+		val samplerOffset = LAYOUT.withName("buffer").byteSize() + bufferOffset
+		val textureOffset = LAYOUT.withName("sampler").byteSize() + samplerOffset
+		val storageTextureOffset = LAYOUT.withName("texture").byteSize() + textureOffset
 	}
 }
 
@@ -230,39 +262,46 @@ actual value class WGPUBlendComponent(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("operation"),
 			C_INT.withName("srcFactor"),
 			C_INT.withName("dstFactor")
 		).withName("WGPUBlendComponent")
+
+		val operationOffset = 0L
+		val srcFactorOffset = 4L + operationOffset
+		val dstFactorOffset = 4L + srcFactorOffset
 	}
 }
 
 @JvmInline
 actual value class WGPUBlendState(actual val handler: NativeAddress) {
 	actual val color: WGPUBlendComponent
-		get() = get("color", 0L).let(::WGPUBlendComponent)
+		get() = get("color", colorOffset).let(::WGPUBlendComponent)
 
 	actual val alpha: WGPUBlendComponent
-		get() = get("alpha", 0L).let(::WGPUBlendComponent)
+		get() = get("alpha", alphaOffset).let(::WGPUBlendComponent)
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
-			WGPUBlendComponent.`$LAYOUT`.withName("color"),
-			WGPUBlendComponent.`$LAYOUT`.withName("alpha")
+		internal val LAYOUT = structLayout(
+			WGPUBlendComponent.LAYOUT.withName("color"),
+			WGPUBlendComponent.LAYOUT.withName("alpha")
 		).withName("WGPUBlendState")
+
+		val colorOffset = 0L
+		val alphaOffset = LAYOUT.withName("color").byteSize() + colorOffset
 	}
 }
 
@@ -281,17 +320,21 @@ actual value class WGPUBufferBindingLayout(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("type"),
 			C_INT.withName("hasDynamicOffset"),
 			C_LONG.withName("minBindingSize")
 		).withName("WGPUBufferBindingLayout")
+
+		val typeOffset = 0L
+		val hasDynamicOffsetOffset = 4L + typeOffset
+		val minBindingSizeOffset = 4L + hasDynamicOffsetOffset
 	}
 }
 
@@ -314,18 +357,23 @@ actual value class WGPUBufferDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("usage"),
 			C_LONG.withName("size"),
 			C_INT.withName("mappedAtCreation")
 		).withName("WGPUBufferDescriptor")
+
+		val labelOffset = 0L
+		val usageOffset = 8L + labelOffset
+		val sizeOffset = 8L + usageOffset
+		val mappedAtCreationOffset = 8L + sizeOffset
 	}
 }
 
@@ -348,18 +396,23 @@ actual value class WGPUColor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_DOUBLE.withName("r"),
 			C_DOUBLE.withName("g"),
 			C_DOUBLE.withName("b"),
 			C_DOUBLE.withName("a")
 		).withName("WGPUColor")
+
+		val rOffset = 0L
+		val gOffset = 8L + rOffset
+		val bOffset = 8L + gOffset
+		val aOffset = 8L + bOffset
 	}
 }
 
@@ -378,17 +431,21 @@ actual value class WGPUColorTargetState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("format"),
 			C_POINTER.withName("blend"),
 			C_LONG.withName("writeMask")
 		).withName("WGPUColorTargetState")
+
+		val formatOffset = 0L
+		val blendOffset = 4L + formatOffset
+		val writeMaskOffset = 8L + blendOffset
 	}
 }
 
@@ -399,15 +456,17 @@ actual value class WGPUCommandBufferDescriptor(actual val handler: NativeAddress
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label")
 		).withName("WGPUCommandBufferDescriptor")
+
+		val labelOffset = 0L
 	}
 }
 
@@ -418,15 +477,17 @@ actual value class WGPUCommandEncoderDescriptor(actual val handler: NativeAddres
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label")
 		).withName("WGPUCommandEncoderDescriptor")
+
+		val labelOffset = 0L
 	}
 }
 
@@ -441,16 +502,19 @@ actual value class WGPUCompilationInfo(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_LONG.withName("messageCount"),
 			C_POINTER.withName("messages")
 		).withName("WGPUCompilationInfo")
+
+		val messageCountOffset = 0L
+		val messagesOffset = 8L + messageCountOffset
 	}
 }
 
@@ -493,13 +557,13 @@ actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("message"),
 			C_INT.withName("type"),
 			C_LONG.withName("lineNum"),
@@ -510,6 +574,16 @@ actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
 			C_LONG.withName("utf16Offset"),
 			C_LONG.withName("utf16Length")
 		).withName("WGPUCompilationMessage")
+
+		val messageOffset = 0L
+		val typeOffset = 8L + messageOffset
+		val lineNumOffset = 4L + typeOffset
+		val linePosOffset = 8L + lineNumOffset
+		val offsetOffset = 8L + linePosOffset
+		val lengthOffset = 8L + offsetOffset
+		val utf16LinePosOffset = 8L + lengthOffset
+		val utf16OffsetOffset = 8L + utf16LinePosOffset
+		val utf16LengthOffset = 8L + utf16OffsetOffset
 	}
 }
 
@@ -524,16 +598,19 @@ actual value class WGPUComputePassDescriptor(actual val handler: NativeAddress) 
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_POINTER.withName("timestampWrites")
 		).withName("WGPUComputePassDescriptor")
+
+		val labelOffset = 0L
+		val timestampWritesOffset = 8L + labelOffset
 	}
 }
 
@@ -552,17 +629,21 @@ actual value class WGPUComputePassTimestampWrites(actual val handler: NativeAddr
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("querySet"),
 			C_INT.withName("beginningOfPassWriteIndex"),
 			C_INT.withName("endOfPassWriteIndex")
 		).withName("WGPUComputePassTimestampWrites")
+
+		val querySetOffset = 0L
+		val beginningOfPassWriteIndexOffset = 8L + querySetOffset
+		val endOfPassWriteIndexOffset = 4L + beginningOfPassWriteIndexOffset
 	}
 }
 
@@ -577,20 +658,24 @@ actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddre
 		set(newValue) = TODO()
 
 	actual val compute: WGPUProgrammableStageDescriptor
-		get() = get("compute", 0L).let(::WGPUProgrammableStageDescriptor)
+		get() = get("compute", computeOffset).let(::WGPUProgrammableStageDescriptor)
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_POINTER.withName("layout"),
-			WGPUProgrammableStageDescriptor.`$LAYOUT`.withName("compute")
+			WGPUProgrammableStageDescriptor.LAYOUT.withName("compute")
 		).withName("WGPUComputePipelineDescriptor")
+
+		val labelOffset = 0L
+		val layoutOffset = 8L + labelOffset
+		val computeOffset = 8L + layoutOffset
 	}
 }
 
@@ -605,16 +690,19 @@ actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("key"),
 			C_DOUBLE.withName("value")
 		).withName("WGPUConstantEntry")
+
+		val keyOffset = 0L
+		val valueOffset = 8L + keyOffset
 	}
 }
 
@@ -633,10 +721,10 @@ actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual val stencilFront: WGPUStencilFaceState
-		get() = get("stencilFront", 0L).let(::WGPUStencilFaceState)
+		get() = get("stencilFront", stencilFrontOffset).let(::WGPUStencilFaceState)
 
 	actual val stencilBack: WGPUStencilFaceState
-		get() = get("stencilBack", 0L).let(::WGPUStencilFaceState)
+		get() = get("stencilBack", stencilBackOffset).let(::WGPUStencilFaceState)
 
 	actual var stencilReadMask: UInt
 		get() = TODO()
@@ -659,24 +747,35 @@ actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("format"),
 			C_INT.withName("depthWriteEnabled"),
 			C_INT.withName("depthCompare"),
-			WGPUStencilFaceState.`$LAYOUT`.withName("stencilFront"),
-			WGPUStencilFaceState.`$LAYOUT`.withName("stencilBack"),
+			WGPUStencilFaceState.LAYOUT.withName("stencilFront"),
+			WGPUStencilFaceState.LAYOUT.withName("stencilBack"),
 			C_INT.withName("stencilReadMask"),
 			C_INT.withName("stencilWriteMask"),
 			C_INT.withName("depthBias"),
 			C_FLOAT.withName("depthBiasSlopeScale"),
 			C_FLOAT.withName("depthBiasClamp")
 		).withName("WGPUDepthStencilState")
+
+		val formatOffset = 0L
+		val depthWriteEnabledOffset = 4L + formatOffset
+		val depthCompareOffset = 4L + depthWriteEnabledOffset
+		val stencilFrontOffset = 4L + depthCompareOffset
+		val stencilBackOffset = LAYOUT.withName("stencilFront").byteSize() + stencilFrontOffset
+		val stencilReadMaskOffset = LAYOUT.withName("stencilBack").byteSize() + stencilBackOffset
+		val stencilWriteMaskOffset = 4L + stencilReadMaskOffset
+		val depthBiasOffset = 4L + stencilWriteMaskOffset
+		val depthBiasSlopeScaleOffset = 4L + depthBiasOffset
+		val depthBiasClampOffset = 4L + depthBiasSlopeScaleOffset
 	}
 }
 
@@ -699,30 +798,38 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual val defaultQueue: WGPUQueueDescriptor
-		get() = get("defaultQueue", 0L).let(::WGPUQueueDescriptor)
+		get() = get("defaultQueue", defaultQueueOffset).let(::WGPUQueueDescriptor)
 
 	actual val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
-		get() = get("deviceLostCallbackInfo", 0L).let(::WGPUDeviceLostCallbackInfo)
+		get() = get("deviceLostCallbackInfo", deviceLostCallbackInfoOffset).let(::WGPUDeviceLostCallbackInfo)
 
 	actual val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
-		get() = get("uncapturedErrorCallbackInfo", 0L).let(::WGPUUncapturedErrorCallbackInfo)
+		get() = get("uncapturedErrorCallbackInfo", uncapturedErrorCallbackInfoOffset).let(::WGPUUncapturedErrorCallbackInfo)
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("requiredFeatureCount"),
 			C_POINTER.withName("requiredFeatures"),
 			C_POINTER.withName("requiredLimits"),
-			WGPUQueueDescriptor.`$LAYOUT`.withName("defaultQueue"),
-			WGPUDeviceLostCallbackInfo.`$LAYOUT`.withName("deviceLostCallbackInfo"),
-			WGPUUncapturedErrorCallbackInfo.`$LAYOUT`.withName("uncapturedErrorCallbackInfo")
+			WGPUQueueDescriptor.LAYOUT.withName("defaultQueue"),
+			WGPUDeviceLostCallbackInfo.LAYOUT.withName("deviceLostCallbackInfo"),
+			WGPUUncapturedErrorCallbackInfo.LAYOUT.withName("uncapturedErrorCallbackInfo")
 		).withName("WGPUDeviceDescriptor")
+
+		val labelOffset = 0L
+		val requiredFeatureCountOffset = 8L + labelOffset
+		val requiredFeaturesOffset = 8L + requiredFeatureCountOffset
+		val requiredLimitsOffset = 8L + requiredFeaturesOffset
+		val defaultQueueOffset = 8L + requiredLimitsOffset
+		val deviceLostCallbackInfoOffset = LAYOUT.withName("defaultQueue").byteSize() + defaultQueueOffset
+		val uncapturedErrorCallbackInfoOffset = LAYOUT.withName("deviceLostCallbackInfo").byteSize() + deviceLostCallbackInfoOffset
 	}
 }
 
@@ -741,17 +848,21 @@ actual value class WGPUExtent3D(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("width"),
 			C_INT.withName("height"),
 			C_INT.withName("depthOrArrayLayers")
 		).withName("WGPUExtent3D")
+
+		val widthOffset = 0L
+		val heightOffset = 4L + widthOffset
+		val depthOrArrayLayersOffset = 4L + heightOffset
 	}
 }
 
@@ -782,13 +893,13 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("module"),
 			C_POINTER.withName("entryPoint"),
 			C_LONG.withName("constantCount"),
@@ -796,6 +907,13 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 			C_LONG.withName("targetCount"),
 			C_POINTER.withName("targets")
 		).withName("WGPUFragmentState")
+
+		val moduleOffset = 0L
+		val entryPointOffset = 8L + moduleOffset
+		val constantCountOffset = 8L + entryPointOffset
+		val constantsOffset = 8L + constantCountOffset
+		val targetCountOffset = 8L + constantsOffset
+		val targetsOffset = 8L + targetCountOffset
 	}
 }
 
@@ -806,61 +924,69 @@ actual value class WGPUFuture(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_LONG.withName("id")
 		).withName("WGPUFuture")
+
+		val idOffset = 0L
 	}
 }
 
 @JvmInline
 actual value class WGPUFutureWaitInfo(actual val handler: NativeAddress) {
 	actual val future: WGPUFuture
-		get() = get("future", 0L).let(::WGPUFuture)
+		get() = get("future", futureOffset).let(::WGPUFuture)
 
 	actual var completed: Boolean
 		get() = TODO()
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
-			WGPUFuture.`$LAYOUT`.withName("future"),
+		internal val LAYOUT = structLayout(
+			WGPUFuture.LAYOUT.withName("future"),
 			C_INT.withName("completed")
 		).withName("WGPUFutureWaitInfo")
+
+		val futureOffset = 0L
+		val completedOffset = LAYOUT.withName("future").byteSize() + futureOffset
 	}
 }
 
 @JvmInline
 actual value class WGPUImageCopyBuffer(actual val handler: NativeAddress) {
 	actual val layout: WGPUTextureDataLayout
-		get() = get("layout", 0L).let(::WGPUTextureDataLayout)
+		get() = get("layout", layoutOffset).let(::WGPUTextureDataLayout)
 
 	actual var buffer: WGPUBuffer?
 		get() = TODO()
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
-			WGPUTextureDataLayout.`$LAYOUT`.withName("layout"),
+		internal val LAYOUT = structLayout(
+			WGPUTextureDataLayout.LAYOUT.withName("layout"),
 			C_POINTER.withName("buffer")
 		).withName("WGPUImageCopyBuffer")
+
+		val layoutOffset = 0L
+		val bufferOffset = LAYOUT.withName("layout").byteSize() + layoutOffset
 	}
 }
 
@@ -875,43 +1001,50 @@ actual value class WGPUImageCopyTexture(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual val origin: WGPUOrigin3D
-		get() = get("origin", 0L).let(::WGPUOrigin3D)
+		get() = get("origin", originOffset).let(::WGPUOrigin3D)
 
 	actual var aspect: WGPUTextureAspect
 		get() = TODO()
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("texture"),
 			C_INT.withName("mipLevel"),
-			WGPUOrigin3D.`$LAYOUT`.withName("origin"),
+			WGPUOrigin3D.LAYOUT.withName("origin"),
 			C_INT.withName("aspect")
 		).withName("WGPUImageCopyTexture")
+
+		val textureOffset = 0L
+		val mipLevelOffset = 8L + textureOffset
+		val originOffset = 4L + mipLevelOffset
+		val aspectOffset = LAYOUT.withName("origin").byteSize() + originOffset
 	}
 }
 
 @JvmInline
 actual value class WGPUInstanceDescriptor(actual val handler: NativeAddress) {
 	actual val features: WGPUInstanceFeatures
-		get() = get("features", 0L).let(::WGPUInstanceFeatures)
+		get() = get("features", featuresOffset).let(::WGPUInstanceFeatures)
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
-			WGPUInstanceFeatures.`$LAYOUT`.withName("features")
+		internal val LAYOUT = structLayout(
+			WGPUInstanceFeatures.LAYOUT.withName("features")
 		).withName("WGPUInstanceDescriptor")
+
+		val featuresOffset = 0L
 	}
 }
 
@@ -926,16 +1059,19 @@ actual value class WGPUInstanceFeatures(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("timedWaitAnyEnable"),
 			C_LONG.withName("timedWaitAnyMaxCount")
 		).withName("WGPUInstanceFeatures")
+
+		val timedWaitAnyEnableOffset = 0L
+		val timedWaitAnyMaxCountOffset = 4L + timedWaitAnyEnableOffset
 	}
 }
 
@@ -1066,13 +1202,13 @@ actual value class WGPULimits(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("maxTextureDimension1D"),
 			C_INT.withName("maxTextureDimension2D"),
 			C_INT.withName("maxTextureDimension3D"),
@@ -1105,6 +1241,38 @@ actual value class WGPULimits(actual val handler: NativeAddress) {
 			C_INT.withName("maxComputeWorkgroupSizeZ"),
 			C_INT.withName("maxComputeWorkgroupsPerDimension")
 		).withName("WGPULimits")
+
+		val maxTextureDimension1DOffset = 0L
+		val maxTextureDimension2DOffset = 4L + maxTextureDimension1DOffset
+		val maxTextureDimension3DOffset = 4L + maxTextureDimension2DOffset
+		val maxTextureArrayLayersOffset = 4L + maxTextureDimension3DOffset
+		val maxBindGroupsOffset = 4L + maxTextureArrayLayersOffset
+		val maxBindGroupsPlusVertexBuffersOffset = 4L + maxBindGroupsOffset
+		val maxBindingsPerBindGroupOffset = 4L + maxBindGroupsPlusVertexBuffersOffset
+		val maxDynamicUniformBuffersPerPipelineLayoutOffset = 4L + maxBindingsPerBindGroupOffset
+		val maxDynamicStorageBuffersPerPipelineLayoutOffset = 4L + maxDynamicUniformBuffersPerPipelineLayoutOffset
+		val maxSampledTexturesPerShaderStageOffset = 4L + maxDynamicStorageBuffersPerPipelineLayoutOffset
+		val maxSamplersPerShaderStageOffset = 4L + maxSampledTexturesPerShaderStageOffset
+		val maxStorageBuffersPerShaderStageOffset = 4L + maxSamplersPerShaderStageOffset
+		val maxStorageTexturesPerShaderStageOffset = 4L + maxStorageBuffersPerShaderStageOffset
+		val maxUniformBuffersPerShaderStageOffset = 4L + maxStorageTexturesPerShaderStageOffset
+		val maxUniformBufferBindingSizeOffset = 4L + maxUniformBuffersPerShaderStageOffset
+		val maxStorageBufferBindingSizeOffset = 8L + maxUniformBufferBindingSizeOffset
+		val minUniformBufferOffsetAlignmentOffset = 8L + maxStorageBufferBindingSizeOffset
+		val minStorageBufferOffsetAlignmentOffset = 4L + minUniformBufferOffsetAlignmentOffset
+		val maxVertexBuffersOffset = 4L + minStorageBufferOffsetAlignmentOffset
+		val maxBufferSizeOffset = 4L + maxVertexBuffersOffset
+		val maxVertexAttributesOffset = 8L + maxBufferSizeOffset
+		val maxVertexBufferArrayStrideOffset = 4L + maxVertexAttributesOffset
+		val maxInterStageShaderVariablesOffset = 4L + maxVertexBufferArrayStrideOffset
+		val maxColorAttachmentsOffset = 4L + maxInterStageShaderVariablesOffset
+		val maxColorAttachmentBytesPerSampleOffset = 4L + maxColorAttachmentsOffset
+		val maxComputeWorkgroupStorageSizeOffset = 4L + maxColorAttachmentBytesPerSampleOffset
+		val maxComputeInvocationsPerWorkgroupOffset = 4L + maxComputeWorkgroupStorageSizeOffset
+		val maxComputeWorkgroupSizeXOffset = 4L + maxComputeInvocationsPerWorkgroupOffset
+		val maxComputeWorkgroupSizeYOffset = 4L + maxComputeWorkgroupSizeXOffset
+		val maxComputeWorkgroupSizeZOffset = 4L + maxComputeWorkgroupSizeYOffset
+		val maxComputeWorkgroupsPerDimensionOffset = 4L + maxComputeWorkgroupSizeZOffset
 	}
 }
 
@@ -1123,17 +1291,21 @@ actual value class WGPUMultisampleState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("count"),
 			C_INT.withName("mask"),
 			C_INT.withName("alphaToCoverageEnabled")
 		).withName("WGPUMultisampleState")
+
+		val countOffset = 0L
+		val maskOffset = 4L + countOffset
+		val alphaToCoverageEnabledOffset = 4L + maskOffset
 	}
 }
 
@@ -1152,17 +1324,21 @@ actual value class WGPUOrigin3D(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("x"),
 			C_INT.withName("y"),
 			C_INT.withName("z")
 		).withName("WGPUOrigin3D")
+
+		val xOffset = 0L
+		val yOffset = 4L + xOffset
+		val zOffset = 4L + yOffset
 	}
 }
 
@@ -1181,17 +1357,21 @@ actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddres
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("bindGroupLayoutCount"),
 			C_POINTER.withName("bindGroupLayouts")
 		).withName("WGPUPipelineLayoutDescriptor")
+
+		val labelOffset = 0L
+		val bindGroupLayoutCountOffset = 8L + labelOffset
+		val bindGroupLayoutsOffset = 8L + bindGroupLayoutCountOffset
 	}
 }
 
@@ -1218,19 +1398,25 @@ actual value class WGPUPrimitiveState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("topology"),
 			C_INT.withName("stripIndexFormat"),
 			C_INT.withName("frontFace"),
 			C_INT.withName("cullMode"),
 			C_INT.withName("unclippedDepth")
 		).withName("WGPUPrimitiveState")
+
+		val topologyOffset = 0L
+		val stripIndexFormatOffset = 4L + topologyOffset
+		val frontFaceOffset = 4L + stripIndexFormatOffset
+		val cullModeOffset = 4L + frontFaceOffset
+		val unclippedDepthOffset = 4L + cullModeOffset
 	}
 }
 
@@ -1253,18 +1439,23 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("module"),
 			C_POINTER.withName("entryPoint"),
 			C_LONG.withName("constantCount"),
 			C_POINTER.withName("constants")
 		).withName("WGPUProgrammableStageDescriptor")
+
+		val moduleOffset = 0L
+		val entryPointOffset = 8L + moduleOffset
+		val constantCountOffset = 8L + entryPointOffset
+		val constantsOffset = 8L + constantCountOffset
 	}
 }
 
@@ -1283,17 +1474,21 @@ actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_INT.withName("type"),
 			C_INT.withName("count")
 		).withName("WGPUQuerySetDescriptor")
+
+		val labelOffset = 0L
+		val typeOffset = 8L + labelOffset
+		val countOffset = 4L + typeOffset
 	}
 }
 
@@ -1304,15 +1499,17 @@ actual value class WGPUQueueDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label")
 		).withName("WGPUQueueDescriptor")
+
+		val labelOffset = 0L
 	}
 }
 
@@ -1323,15 +1520,17 @@ actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress)
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label")
 		).withName("WGPURenderBundleDescriptor")
+
+		val labelOffset = 0L
 	}
 }
 
@@ -1366,13 +1565,13 @@ actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeA
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("colorFormatCount"),
 			C_POINTER.withName("colorFormats"),
@@ -1381,6 +1580,14 @@ actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeA
 			C_INT.withName("depthReadOnly"),
 			C_INT.withName("stencilReadOnly")
 		).withName("WGPURenderBundleEncoderDescriptor")
+
+		val labelOffset = 0L
+		val colorFormatCountOffset = 8L + labelOffset
+		val colorFormatsOffset = 8L + colorFormatCountOffset
+		val depthStencilFormatOffset = 8L + colorFormatsOffset
+		val sampleCountOffset = 4L + depthStencilFormatOffset
+		val depthReadOnlyOffset = 4L + sampleCountOffset
+		val stencilReadOnlyOffset = 4L + depthReadOnlyOffset
 	}
 }
 
@@ -1407,23 +1614,30 @@ actual value class WGPURenderPassColorAttachment(actual val handler: NativeAddre
 		set(newValue) = TODO()
 
 	actual val clearValue: WGPUColor
-		get() = get("clearValue", 0L).let(::WGPUColor)
+		get() = get("clearValue", clearValueOffset).let(::WGPUColor)
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("view"),
 			C_INT.withName("depthSlice"),
 			C_POINTER.withName("resolveTarget"),
 			C_INT.withName("loadOp"),
 			C_INT.withName("storeOp"),
-			WGPUColor.`$LAYOUT`.withName("clearValue")
+			WGPUColor.LAYOUT.withName("clearValue")
 		).withName("WGPURenderPassColorAttachment")
+
+		val viewOffset = 0L
+		val depthSliceOffset = 8L + viewOffset
+		val resolveTargetOffset = 4L + depthSliceOffset
+		val loadOpOffset = 8L + resolveTargetOffset
+		val storeOpOffset = 4L + loadOpOffset
+		val clearValueOffset = 4L + storeOpOffset
 	}
 }
 
@@ -1466,13 +1680,13 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("view"),
 			C_INT.withName("depthLoadOp"),
 			C_INT.withName("depthStoreOp"),
@@ -1483,6 +1697,16 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 			C_INT.withName("stencilClearValue"),
 			C_INT.withName("stencilReadOnly")
 		).withName("WGPURenderPassDepthStencilAttachment")
+
+		val viewOffset = 0L
+		val depthLoadOpOffset = 8L + viewOffset
+		val depthStoreOpOffset = 4L + depthLoadOpOffset
+		val depthClearValueOffset = 4L + depthStoreOpOffset
+		val depthReadOnlyOffset = 4L + depthClearValueOffset
+		val stencilLoadOpOffset = 4L + depthReadOnlyOffset
+		val stencilStoreOpOffset = 4L + stencilLoadOpOffset
+		val stencilClearValueOffset = 4L + stencilStoreOpOffset
+		val stencilReadOnlyOffset = 4L + stencilClearValueOffset
 	}
 }
 
@@ -1513,13 +1737,13 @@ actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("colorAttachmentCount"),
 			C_POINTER.withName("colorAttachments"),
@@ -1527,6 +1751,13 @@ actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
 			C_POINTER.withName("occlusionQuerySet"),
 			C_POINTER.withName("timestampWrites")
 		).withName("WGPURenderPassDescriptor")
+
+		val labelOffset = 0L
+		val colorAttachmentCountOffset = 8L + labelOffset
+		val colorAttachmentsOffset = 8L + colorAttachmentCountOffset
+		val depthStencilAttachmentOffset = 8L + colorAttachmentsOffset
+		val occlusionQuerySetOffset = 8L + depthStencilAttachmentOffset
+		val timestampWritesOffset = 8L + occlusionQuerySetOffset
 	}
 }
 
@@ -1537,15 +1768,17 @@ actual value class WGPURenderPassMaxDrawCount(actual val handler: NativeAddress)
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_LONG.withName("maxDrawCount")
 		).withName("WGPURenderPassMaxDrawCount")
+
+		val maxDrawCountOffset = 0L
 	}
 }
 
@@ -1564,17 +1797,21 @@ actual value class WGPURenderPassTimestampWrites(actual val handler: NativeAddre
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("querySet"),
 			C_INT.withName("beginningOfPassWriteIndex"),
 			C_INT.withName("endOfPassWriteIndex")
 		).withName("WGPURenderPassTimestampWrites")
+
+		val querySetOffset = 0L
+		val beginningOfPassWriteIndexOffset = 8L + querySetOffset
+		val endOfPassWriteIndexOffset = 4L + beginningOfPassWriteIndexOffset
 	}
 }
 
@@ -1589,38 +1826,46 @@ actual value class WGPURenderPipelineDescriptor(actual val handler: NativeAddres
 		set(newValue) = TODO()
 
 	actual val vertex: WGPUVertexState
-		get() = get("vertex", 0L).let(::WGPUVertexState)
+		get() = get("vertex", vertexOffset).let(::WGPUVertexState)
 
 	actual val primitive: WGPUPrimitiveState
-		get() = get("primitive", 0L).let(::WGPUPrimitiveState)
+		get() = get("primitive", primitiveOffset).let(::WGPUPrimitiveState)
 
 	actual var depthStencil: WGPUDepthStencilState?
 		get() = TODO()
 		set(newValue) = TODO()
 
 	actual val multisample: WGPUMultisampleState
-		get() = get("multisample", 0L).let(::WGPUMultisampleState)
+		get() = get("multisample", multisampleOffset).let(::WGPUMultisampleState)
 
 	actual var fragment: WGPUFragmentState?
 		get() = TODO()
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_POINTER.withName("layout"),
-			WGPUVertexState.`$LAYOUT`.withName("vertex"),
-			WGPUPrimitiveState.`$LAYOUT`.withName("primitive"),
+			WGPUVertexState.LAYOUT.withName("vertex"),
+			WGPUPrimitiveState.LAYOUT.withName("primitive"),
 			C_POINTER.withName("depthStencil"),
-			WGPUMultisampleState.`$LAYOUT`.withName("multisample"),
+			WGPUMultisampleState.LAYOUT.withName("multisample"),
 			C_POINTER.withName("fragment")
 		).withName("WGPURenderPipelineDescriptor")
+
+		val labelOffset = 0L
+		val layoutOffset = 8L + labelOffset
+		val vertexOffset = 8L + layoutOffset
+		val primitiveOffset = LAYOUT.withName("vertex").byteSize() + vertexOffset
+		val depthStencilOffset = LAYOUT.withName("primitive").byteSize() + primitiveOffset
+		val multisampleOffset = 8L + depthStencilOffset
+		val fragmentOffset = LAYOUT.withName("multisample").byteSize() + multisampleOffset
 	}
 }
 
@@ -1643,36 +1888,43 @@ actual value class WGPURequestAdapterOptions(actual val handler: NativeAddress) 
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("compatibleSurface"),
 			C_INT.withName("powerPreference"),
 			C_INT.withName("backendType"),
 			C_INT.withName("forceFallbackAdapter")
 		).withName("WGPURequestAdapterOptions")
+
+		val compatibleSurfaceOffset = 0L
+		val powerPreferenceOffset = 8L + compatibleSurfaceOffset
+		val backendTypeOffset = 4L + powerPreferenceOffset
+		val forceFallbackAdapterOffset = 4L + backendTypeOffset
 	}
 }
 
 @JvmInline
 actual value class WGPURequiredLimits(actual val handler: NativeAddress) {
 	actual val limits: WGPULimits
-		get() = get("limits", 0L).let(::WGPULimits)
+		get() = get("limits", limitsOffset).let(::WGPULimits)
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
-			WGPULimits.`$LAYOUT`.withName("limits")
+		internal val LAYOUT = structLayout(
+			WGPULimits.LAYOUT.withName("limits")
 		).withName("WGPURequiredLimits")
+
+		val limitsOffset = 0L
 	}
 }
 
@@ -1683,15 +1935,17 @@ actual value class WGPUSamplerBindingLayout(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("type")
 		).withName("WGPUSamplerBindingLayout")
+
+		val typeOffset = 0L
 	}
 }
 
@@ -1742,13 +1996,13 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_INT.withName("addressModeU"),
 			C_INT.withName("addressModeV"),
@@ -1761,6 +2015,18 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 			C_INT.withName("compare"),
 			C_SHORT.withName("maxAnisotropy")
 		).withName("WGPUSamplerDescriptor")
+
+		val labelOffset = 0L
+		val addressModeUOffset = 8L + labelOffset
+		val addressModeVOffset = 4L + addressModeUOffset
+		val addressModeWOffset = 4L + addressModeVOffset
+		val magFilterOffset = 4L + addressModeWOffset
+		val minFilterOffset = 4L + magFilterOffset
+		val mipmapFilterOffset = 4L + minFilterOffset
+		val lodMinClampOffset = 4L + mipmapFilterOffset
+		val lodMaxClampOffset = 4L + lodMinClampOffset
+		val compareOffset = 4L + lodMaxClampOffset
+		val maxAnisotropyOffset = 4L + compareOffset
 	}
 }
 
@@ -1771,15 +2037,17 @@ actual value class WGPUShaderModuleDescriptor(actual val handler: NativeAddress)
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label")
 		).withName("WGPUShaderModuleDescriptor")
+
+		val labelOffset = 0L
 	}
 }
 
@@ -1794,16 +2062,19 @@ actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("codeSize"),
 			C_POINTER.withName("code")
 		).withName("WGPUShaderSourceSPIRV")
+
+		val codeSizeOffset = 0L
+		val codeOffset = 4L + codeSizeOffset
 	}
 }
 
@@ -1814,15 +2085,17 @@ actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("code")
 		).withName("WGPUShaderSourceWGSL")
+
+		val codeOffset = 0L
 	}
 }
 
@@ -1845,18 +2118,23 @@ actual value class WGPUStencilFaceState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("compare"),
 			C_INT.withName("failOp"),
 			C_INT.withName("depthFailOp"),
 			C_INT.withName("passOp")
 		).withName("WGPUStencilFaceState")
+
+		val compareOffset = 0L
+		val failOpOffset = 4L + compareOffset
+		val depthFailOpOffset = 4L + failOpOffset
+		val passOpOffset = 4L + depthFailOpOffset
 	}
 }
 
@@ -1875,35 +2153,41 @@ actual value class WGPUStorageTextureBindingLayout(actual val handler: NativeAdd
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("access"),
 			C_INT.withName("format"),
 			C_INT.withName("viewDimension")
 		).withName("WGPUStorageTextureBindingLayout")
+
+		val accessOffset = 0L
+		val formatOffset = 4L + accessOffset
+		val viewDimensionOffset = 4L + formatOffset
 	}
 }
 
 @JvmInline
 actual value class WGPUSupportedLimits(actual val handler: NativeAddress) {
 	actual val limits: WGPULimits
-		get() = get("limits", 0L).let(::WGPULimits)
+		get() = get("limits", limitsOffset).let(::WGPULimits)
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
-			WGPULimits.`$LAYOUT`.withName("limits")
+		internal val LAYOUT = structLayout(
+			WGPULimits.LAYOUT.withName("limits")
 		).withName("WGPUSupportedLimits")
+
+		val limitsOffset = 0L
 	}
 }
 
@@ -1938,13 +2222,13 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_LONG.withName("usages"),
 			C_LONG.withName("formatCount"),
 			C_POINTER.withName("formats"),
@@ -1953,6 +2237,14 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 			C_LONG.withName("alphaModeCount"),
 			C_POINTER.withName("alphaModes")
 		).withName("WGPUSurfaceCapabilities")
+
+		val usagesOffset = 0L
+		val formatCountOffset = 8L + usagesOffset
+		val formatsOffset = 8L + formatCountOffset
+		val presentModeCountOffset = 8L + formatsOffset
+		val presentModesOffset = 8L + presentModeCountOffset
+		val alphaModeCountOffset = 8L + presentModesOffset
+		val alphaModesOffset = 8L + alphaModeCountOffset
 	}
 }
 
@@ -1995,13 +2287,13 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("device"),
 			C_INT.withName("format"),
 			C_LONG.withName("usage"),
@@ -2012,6 +2304,16 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 			C_INT.withName("alphaMode"),
 			C_INT.withName("presentMode")
 		).withName("WGPUSurfaceConfiguration")
+
+		val deviceOffset = 0L
+		val formatOffset = 8L + deviceOffset
+		val usageOffset = 4L + formatOffset
+		val widthOffset = 8L + usageOffset
+		val heightOffset = 4L + widthOffset
+		val viewFormatCountOffset = 4L + heightOffset
+		val viewFormatsOffset = 8L + viewFormatCountOffset
+		val alphaModeOffset = 8L + viewFormatsOffset
+		val presentModeOffset = 4L + alphaModeOffset
 	}
 }
 
@@ -2022,15 +2324,17 @@ actual value class WGPUSurfaceDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label")
 		).withName("WGPUSurfaceDescriptor")
+
+		val labelOffset = 0L
 	}
 }
 
@@ -2041,15 +2345,17 @@ actual value class WGPUSurfaceSourceAndroidNativeWindow(actual val handler: Nati
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("window")
 		).withName("WGPUSurfaceSourceAndroidNativeWindow")
+
+		val windowOffset = 0L
 	}
 }
 
@@ -2060,15 +2366,17 @@ actual value class WGPUSurfaceSourceMetalLayer(actual val handler: NativeAddress
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("layer")
 		).withName("WGPUSurfaceSourceMetalLayer")
+
+		val layerOffset = 0L
 	}
 }
 
@@ -2083,16 +2391,19 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAdd
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("display"),
 			C_POINTER.withName("surface")
 		).withName("WGPUSurfaceSourceWaylandSurface")
+
+		val displayOffset = 0L
+		val surfaceOffset = 8L + displayOffset
 	}
 }
 
@@ -2107,16 +2418,19 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddres
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("hinstance"),
 			C_POINTER.withName("hwnd")
 		).withName("WGPUSurfaceSourceWindowsHWND")
+
+		val hinstanceOffset = 0L
+		val hwndOffset = 8L + hinstanceOffset
 	}
 }
 
@@ -2131,16 +2445,19 @@ actual value class WGPUSurfaceSourceXCBWindow(actual val handler: NativeAddress)
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("connection"),
 			C_INT.withName("window")
 		).withName("WGPUSurfaceSourceXCBWindow")
+
+		val connectionOffset = 0L
+		val windowOffset = 8L + connectionOffset
 	}
 }
 
@@ -2155,16 +2472,19 @@ actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("display"),
 			C_LONG.withName("window")
 		).withName("WGPUSurfaceSourceXlibWindow")
+
+		val displayOffset = 0L
+		val windowOffset = 8L + displayOffset
 	}
 }
 
@@ -2179,16 +2499,19 @@ actual value class WGPUSurfaceTexture(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("texture"),
 			C_INT.withName("status")
 		).withName("WGPUSurfaceTexture")
+
+		val textureOffset = 0L
+		val statusOffset = 8L + textureOffset
 	}
 }
 
@@ -2207,17 +2530,21 @@ actual value class WGPUTextureBindingLayout(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("sampleType"),
 			C_INT.withName("viewDimension"),
 			C_INT.withName("multisampled")
 		).withName("WGPUTextureBindingLayout")
+
+		val sampleTypeOffset = 0L
+		val viewDimensionOffset = 4L + sampleTypeOffset
+		val multisampledOffset = 4L + viewDimensionOffset
 	}
 }
 
@@ -2236,17 +2563,21 @@ actual value class WGPUTextureDataLayout(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_LONG.withName("offset"),
 			C_INT.withName("bytesPerRow"),
 			C_INT.withName("rowsPerImage")
 		).withName("WGPUTextureDataLayout")
+
+		val offsetOffset = 0L
+		val bytesPerRowOffset = 8L + offsetOffset
+		val rowsPerImageOffset = 4L + bytesPerRowOffset
 	}
 }
 
@@ -2265,7 +2596,7 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual val size: WGPUExtent3D
-		get() = get("size", 0L).let(::WGPUExtent3D)
+		get() = get("size", sizeOffset).let(::WGPUExtent3D)
 
 	actual var format: WGPUTextureFormat
 		get() = TODO()
@@ -2288,23 +2619,33 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_LONG.withName("usage"),
 			C_INT.withName("dimension"),
-			WGPUExtent3D.`$LAYOUT`.withName("size"),
+			WGPUExtent3D.LAYOUT.withName("size"),
 			C_INT.withName("format"),
 			C_INT.withName("mipLevelCount"),
 			C_INT.withName("sampleCount"),
 			C_LONG.withName("viewFormatCount"),
 			C_POINTER.withName("viewFormats")
 		).withName("WGPUTextureDescriptor")
+
+		val labelOffset = 0L
+		val usageOffset = 8L + labelOffset
+		val dimensionOffset = 8L + usageOffset
+		val sizeOffset = 4L + dimensionOffset
+		val formatOffset = LAYOUT.withName("size").byteSize() + sizeOffset
+		val mipLevelCountOffset = 4L + formatOffset
+		val sampleCountOffset = 4L + mipLevelCountOffset
+		val viewFormatCountOffset = 4L + sampleCountOffset
+		val viewFormatsOffset = 8L + viewFormatCountOffset
 	}
 }
 
@@ -2347,13 +2688,13 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("label"),
 			C_INT.withName("format"),
 			C_INT.withName("dimension"),
@@ -2364,6 +2705,16 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 			C_INT.withName("aspect"),
 			C_LONG.withName("usage")
 		).withName("WGPUTextureViewDescriptor")
+
+		val labelOffset = 0L
+		val formatOffset = 8L + labelOffset
+		val dimensionOffset = 4L + formatOffset
+		val baseMipLevelOffset = 4L + dimensionOffset
+		val mipLevelCountOffset = 4L + baseMipLevelOffset
+		val baseArrayLayerOffset = 4L + mipLevelCountOffset
+		val arrayLayerCountOffset = 4L + baseArrayLayerOffset
+		val aspectOffset = 4L + arrayLayerCountOffset
+		val usageOffset = 4L + aspectOffset
 	}
 }
 
@@ -2382,17 +2733,21 @@ actual value class WGPUVertexAttribute(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_INT.withName("format"),
 			C_LONG.withName("offset"),
 			C_INT.withName("shaderLocation")
 		).withName("WGPUVertexAttribute")
+
+		val formatOffset = 0L
+		val offsetOffset = 4L + formatOffset
+		val shaderLocationOffset = 8L + offsetOffset
 	}
 }
 
@@ -2415,18 +2770,23 @@ actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_LONG.withName("arrayStride"),
 			C_INT.withName("stepMode"),
 			C_LONG.withName("attributeCount"),
 			C_POINTER.withName("attributes")
 		).withName("WGPUVertexBufferLayout")
+
+		val arrayStrideOffset = 0L
+		val stepModeOffset = 8L + arrayStrideOffset
+		val attributeCountOffset = 4L + stepModeOffset
+		val attributesOffset = 8L + attributeCountOffset
 	}
 }
 
@@ -2457,13 +2817,13 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("module"),
 			C_POINTER.withName("entryPoint"),
 			C_LONG.withName("constantCount"),
@@ -2471,6 +2831,13 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 			C_LONG.withName("bufferCount"),
 			C_POINTER.withName("buffers")
 		).withName("WGPUVertexState")
+
+		val moduleOffset = 0L
+		val entryPointOffset = 8L + moduleOffset
+		val constantCountOffset = 8L + entryPointOffset
+		val constantsOffset = 8L + constantCountOffset
+		val bufferCountOffset = 8L + constantsOffset
+		val buffersOffset = 8L + bufferCountOffset
 	}
 }
 
@@ -2485,16 +2852,19 @@ actual value class WGPUChainedStruct(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("next"),
 			C_INT.withName("sType")
 		).withName("WGPUChainedStruct")
+
+		val nextOffset = 0L
+		val sTypeOffset = 8L + nextOffset
 	}
 }
 
@@ -2509,16 +2879,19 @@ actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("next"),
 			C_INT.withName("sType")
 		).withName("WGPUChainedStructOut")
+
+		val nextOffset = 0L
+		val sTypeOffset = 8L + nextOffset
 	}
 }
 
@@ -2541,18 +2914,23 @@ actual value class WGPUBufferMapCallbackInfo(actual val handler: NativeAddress) 
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
 			C_POINTER.withName("userdata1"),
 			C_POINTER.withName("userdata2")
 		).withName("WGPUBufferMapCallbackInfo")
+
+		val nextInChainOffset = 0L
+		val callbackOffset = 8L + nextInChainOffset
+		val userdata1Offset = 8L + callbackOffset
+		val userdata2Offset = 8L + userdata1Offset
 	}
 }
 
@@ -2575,18 +2953,23 @@ actual value class WGPUCompilationInfoCallbackInfo(actual val handler: NativeAdd
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
 			C_POINTER.withName("userdata1"),
 			C_POINTER.withName("userdata2")
 		).withName("WGPUCompilationInfoCallbackInfo")
+
+		val nextInChainOffset = 0L
+		val callbackOffset = 8L + nextInChainOffset
+		val userdata1Offset = 8L + callbackOffset
+		val userdata2Offset = 8L + userdata1Offset
 	}
 }
 
@@ -2609,18 +2992,23 @@ actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual val handler
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
 			C_POINTER.withName("userdata1"),
 			C_POINTER.withName("userdata2")
 		).withName("WGPUCreateComputePipelineAsyncCallbackInfo")
+
+		val nextInChainOffset = 0L
+		val callbackOffset = 8L + nextInChainOffset
+		val userdata1Offset = 8L + callbackOffset
+		val userdata2Offset = 8L + userdata1Offset
 	}
 }
 
@@ -2643,18 +3031,23 @@ actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual val handler:
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
 			C_POINTER.withName("userdata1"),
 			C_POINTER.withName("userdata2")
 		).withName("WGPUCreateRenderPipelineAsyncCallbackInfo")
+
+		val nextInChainOffset = 0L
+		val callbackOffset = 8L + nextInChainOffset
+		val userdata1Offset = 8L + callbackOffset
+		val userdata2Offset = 8L + userdata1Offset
 	}
 }
 
@@ -2677,18 +3070,23 @@ actual value class WGPUDeviceLostCallbackInfo(actual val handler: NativeAddress)
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
 			C_POINTER.withName("userdata1"),
 			C_POINTER.withName("userdata2")
 		).withName("WGPUDeviceLostCallbackInfo")
+
+		val nextInChainOffset = 0L
+		val callbackOffset = 8L + nextInChainOffset
+		val userdata1Offset = 8L + callbackOffset
+		val userdata2Offset = 8L + userdata1Offset
 	}
 }
 
@@ -2711,18 +3109,23 @@ actual value class WGPUPopErrorScopeCallbackInfo(actual val handler: NativeAddre
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
 			C_POINTER.withName("userdata1"),
 			C_POINTER.withName("userdata2")
 		).withName("WGPUPopErrorScopeCallbackInfo")
+
+		val nextInChainOffset = 0L
+		val callbackOffset = 8L + nextInChainOffset
+		val userdata1Offset = 8L + callbackOffset
+		val userdata2Offset = 8L + userdata1Offset
 	}
 }
 
@@ -2745,18 +3148,23 @@ actual value class WGPUQueueWorkDoneCallbackInfo(actual val handler: NativeAddre
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
 			C_POINTER.withName("userdata1"),
 			C_POINTER.withName("userdata2")
 		).withName("WGPUQueueWorkDoneCallbackInfo")
+
+		val nextInChainOffset = 0L
+		val callbackOffset = 8L + nextInChainOffset
+		val userdata1Offset = 8L + callbackOffset
+		val userdata2Offset = 8L + userdata1Offset
 	}
 }
 
@@ -2779,18 +3187,23 @@ actual value class WGPURequestAdapterCallbackInfo(actual val handler: NativeAddr
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
 			C_POINTER.withName("userdata1"),
 			C_POINTER.withName("userdata2")
 		).withName("WGPURequestAdapterCallbackInfo")
+
+		val nextInChainOffset = 0L
+		val callbackOffset = 8L + nextInChainOffset
+		val userdata1Offset = 8L + callbackOffset
+		val userdata2Offset = 8L + userdata1Offset
 	}
 }
 
@@ -2813,18 +3226,23 @@ actual value class WGPURequestDeviceCallbackInfo(actual val handler: NativeAddre
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
 			C_POINTER.withName("userdata1"),
 			C_POINTER.withName("userdata2")
 		).withName("WGPURequestDeviceCallbackInfo")
+
+		val nextInChainOffset = 0L
+		val callbackOffset = 8L + nextInChainOffset
+		val userdata1Offset = 8L + callbackOffset
+		val userdata2Offset = 8L + userdata1Offset
 	}
 }
 
@@ -2847,18 +3265,23 @@ actual value class WGPUUncapturedErrorCallbackInfo(actual val handler: NativeAdd
 		set(newValue) = TODO()
 
 	private fun getLayout(name: String)
-		= WGPUStorageTextureBindingLayout.`$LAYOUT`.withName(name) as AddressLayout
+		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
 
 	private fun get(name: String, offset: Long)
 		= handler.get(getLayout(name), offset)
 
 	companion object {
-		internal val `$LAYOUT` = structLayout(
+		internal val LAYOUT = structLayout(
 			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("callback"),
 			C_POINTER.withName("userdata1"),
 			C_POINTER.withName("userdata2")
 		).withName("WGPUUncapturedErrorCallbackInfo")
+
+		val nextInChainOffset = 0L
+		val callbackOffset = 8L + nextInChainOffset
+		val userdata1Offset = 8L + callbackOffset
+		val userdata2Offset = 8L + userdata1Offset
 	}
 }
 
