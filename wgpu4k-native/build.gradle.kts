@@ -5,6 +5,7 @@ plugins {
     id(libs.plugins.kotlin.multiplatform.get().pluginId)
     id("publish")
     id("com.android.library")
+    alias(libs.plugins.kotest)
 }
 
 val buildNativeResourcesDirectory = project.file("build").resolve("native")
@@ -87,6 +88,8 @@ kotlin {
             dependencies {
                 implementation(libs.kotest.runner.junit5)
                 implementation(libs.kotlin.reflect)
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
             }
         }
     }
@@ -195,4 +198,24 @@ fun filesToCopy() = listOf(
             to jniBasePath().resolve("x86_64")
 )
 
+if (Platform.os == Os.MacOs) {
+    tasks.findByName("linkDebugTestMingwX64")?.apply { enabled = false }
+    tasks.findByName("mingwX64Test")?.apply { enabled = false }
+}
+
+tasks.named<Test>("jvmTest") {
+    useJUnitPlatform()
+    filter {
+        isFailOnNoMatchingTests = false
+    }
+    testLogging {
+        showExceptions = true
+        showStandardStreams = true
+        events = setOf(
+            org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+            org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
+        )
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    }
+}
 

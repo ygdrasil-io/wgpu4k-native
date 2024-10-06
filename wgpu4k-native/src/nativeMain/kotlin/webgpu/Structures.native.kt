@@ -7,11 +7,12 @@ import ffi.CallbackHolder
 import ffi.CString
 import ffi.toCString
 import ffi.ArrayHolder
+import ffi.MemoryAllocator
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.pointed
 import kotlinx.cinterop.toCPointer
-import kotlinx.cinterop.toKString
 import kotlinx.cinterop.toLong
+import kotlinx.cinterop.alloc
 
 actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 	actual var vendor: CString?
@@ -44,8 +45,16 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 
 	actual var deviceID: UInt
 		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.deviceID ?: error("pointer of WGPUAdapterInfo is null")
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.let { it.deviceID = newValue } } 
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.let { it.deviceID = newValue } }
 
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUAdapterInfo {
+			return allocator.allocator.alloc<webgpu.native.WGPUAdapterInfo>()
+				.rawPtr.toLong()
+				.let(::WGPUAdapterInfo)
+		}
+
+	}
 }
 
 actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {

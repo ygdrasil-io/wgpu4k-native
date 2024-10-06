@@ -12,6 +12,7 @@ import ffi.C_INT
 import ffi.C_FLOAT
 import ffi.C_DOUBLE
 import ffi.CStructure
+import ffi.MemoryAllocator
 import java.lang.foreign.AddressLayout
 import java.lang.foreign.MemoryLayout.Companion.structLayout
 
@@ -49,7 +50,13 @@ actual value class WGPUAdapterInfo(actual override val handler: NativeAddress) :
 		get() = getUInt(deviceIDLayout, deviceIDOffset)
 		set(newValue) = set(deviceIDLayout, deviceIDOffset, newValue)
 
-	companion object {
+	actual companion object {
+
+		actual fun allocate(allocator: MemoryAllocator): WGPUAdapterInfo {
+			return allocator.allocator.allocate(LAYOUT)
+				.let(::WGPUAdapterInfo)
+		}
+
 		internal val LAYOUT = structLayout(
 			C_POINTER.withName("vendor"),
 			C_POINTER.withName("architecture"),

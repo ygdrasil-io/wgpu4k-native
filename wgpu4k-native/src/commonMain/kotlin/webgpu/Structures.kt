@@ -5,6 +5,7 @@ import ffi.NativeAddress
 import ffi.CallbackHolder
 import ffi.CString
 import ffi.ArrayHolder
+import ffi.MemoryAllocator
 
 expect value class WGPUAdapterInfo(val handler: NativeAddress) {
 	var vendor: CString?
@@ -15,6 +16,10 @@ expect value class WGPUAdapterInfo(val handler: NativeAddress) {
 	var adapterType: WGPUAdapterType
 	var vendorID: UInt
 	var deviceID: UInt
+
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUAdapterInfo
+	}
 }
 
 expect value class WGPUBindGroupDescriptor(val handler: NativeAddress) {
