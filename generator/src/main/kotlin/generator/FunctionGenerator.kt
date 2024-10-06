@@ -32,7 +32,7 @@ internal fun File.generateCommonFunctions(functions: List<CLibraryModel.Function
 
 }
 
-fun File.writeFunction(function: CLibraryModel.Function) {
+private fun File.writeFunction(function: CLibraryModel.Function) {
     val name = function.name
     val returnType = function.returnType.toFunctionKotlinType()
     val args = function.args

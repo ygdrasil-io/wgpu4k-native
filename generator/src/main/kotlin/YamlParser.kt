@@ -1,9 +1,11 @@
 import com.charleskorn.kaml.Yaml
 import converter.toCModel
 import domain.YamlModel
+import generator.androidNativeFunctionsMainFile
 import generator.callbackCommonMainFile
 import generator.enumerationCommonMainFile
 import generator.functionsCommonMainFile
+import generator.generateAndroidNativeFunctions
 import generator.generateCallback
 import generator.generateCommonEnumerations
 import generator.generateCommonFunctions
@@ -48,6 +50,8 @@ fun main() {
     typesCommonMainFile.generateTypesCommonMain(webgpuCModel.pointers)
 
     callbackCommonMainFile.generateCallback(webgpuCModel.callbacks)
+
+    androidNativeFunctionsMainFile.generateAndroidNativeFunctions(webgpuCModel.functions)
 
     functionsCommonMainFile.generateCommonFunctions(webgpuCModel.functions)
 
