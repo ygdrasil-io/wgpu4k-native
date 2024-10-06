@@ -1,5 +1,8 @@
 package ffi
 
+import java.lang.foreign.Linker
+import java.lang.foreign.MemorySegment
+import java.lang.foreign.SymbolLookup
 import java.lang.foreign.ValueLayout
 
 val C_BOOL: ValueLayout = ValueLayout.JAVA_BOOLEAN
@@ -11,3 +14,11 @@ val C_FLOAT: ValueLayout = ValueLayout.JAVA_FLOAT
 val C_DOUBLE: ValueLayout = ValueLayout.JAVA_DOUBLE
 val C_POINTER: ValueLayout = ValueLayout.ADDRESS
 val C_LONG: ValueLayout = ValueLayout.JAVA_LONG
+
+private val SYMBOL_LOOKUP = SymbolLookup.loaderLookup()
+    .or(Linker.nativeLinker().defaultLookup())
+
+internal fun findOrThrow(symbol: String): MemorySegment {
+    return SYMBOL_LOOKUP.find(symbol)
+        .orElseThrow { UnsatisfiedLinkError("unresolved symbol: $symbol") }
+}

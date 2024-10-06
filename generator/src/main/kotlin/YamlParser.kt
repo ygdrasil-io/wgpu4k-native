@@ -10,9 +10,11 @@ import generator.generateCallback
 import generator.generateCommonEnumerations
 import generator.generateCommonFunctions
 import generator.generateCommonStructures
+import generator.generateJvmNativeFunctions
 import generator.generateJvmStructures
 import generator.generateNativeStructures
 import generator.generateTypesCommonMain
+import generator.jvmNativeFunctionsMainFile
 import generator.structuresAndroidMainFile
 import generator.structuresCommonMainFile
 import generator.structuresJvmMainFile
@@ -52,6 +54,7 @@ fun main() {
     callbackCommonMainFile.generateCallback(webgpuCModel.callbacks)
 
     androidNativeFunctionsMainFile.generateAndroidNativeFunctions(webgpuCModel.functions)
+    jvmNativeFunctionsMainFile.generateJvmNativeFunctions(webgpuCModel.functions)
 
     functionsCommonMainFile.generateCommonFunctions(webgpuCModel.functions)
 
