@@ -76,6 +76,19 @@ kotlin {
                 implementation("${jna.module.group}:${jna.module.name}:${jna.versionConstraint}:@aar")
             }
         }
+
+        commonTest {
+            dependencies {
+                implementation(libs.bundles.kotest)
+            }
+        }
+
+        jvmTest {
+            dependencies {
+                implementation(libs.kotest.runner.junit5)
+                implementation(libs.kotlin.reflect)
+            }
+        }
     }
 }
 
