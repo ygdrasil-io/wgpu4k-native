@@ -7,6 +7,10 @@ import ffi.CString
 import ffi.ArrayHolder
 import ffi.C_LONG
 import ffi.C_POINTER
+import ffi.C_SHORT
+import ffi.C_INT
+import ffi.C_FLOAT
+import ffi.C_DOUBLE
 import java.lang.foreign.MemoryLayout.structLayout
 
 @JvmInline
@@ -44,7 +48,15 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("vendor"),
+			C_POINTER.withName("architecture"),
+			C_POINTER.withName("device"),
+			C_POINTER.withName("description"),
+			C_INT.withName("backendType"),
+			C_INT.withName("adapterType"),
+			C_INT.withName("vendorID"),
+			C_INT.withName("deviceID")
 		).withName("WGPUAdapterInfo")
 	}
 }
@@ -68,7 +80,11 @@ actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_POINTER.withName("layout"),
+			C_LONG.withName("entryCount"),
+			C_POINTER.withName("entries")
 		).withName("WGPUBindGroupDescriptor")
 	}
 }
@@ -100,7 +116,13 @@ actual value class WGPUBindGroupEntry(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("binding"),
+			C_POINTER.withName("buffer"),
+			C_LONG.withName("offset"),
+			C_LONG.withName("size"),
+			C_POINTER.withName("sampler"),
+			C_POINTER.withName("textureView")
 		).withName("WGPUBindGroupEntry")
 	}
 }
@@ -120,7 +142,10 @@ actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddre
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_LONG.withName("entryCount"),
+			C_POINTER.withName("entries")
 		).withName("WGPUBindGroupLayoutDescriptor")
 	}
 }
@@ -144,7 +169,13 @@ actual value class WGPUBindGroupLayoutEntry(actual val handler: NativeAddress) {
 	actual val storageTexture: WGPUStorageTextureBindingLayout
 		get() = TODO()
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("binding"),
+			C_LONG.withName("visibility"),
+			WGPUBufferBindingLayout.`$LAYOUT`.withName("buffer"),
+			WGPUSamplerBindingLayout.`$LAYOUT`.withName("sampler"),
+			WGPUTextureBindingLayout.`$LAYOUT`.withName("texture"),
+			WGPUStorageTextureBindingLayout.`$LAYOUT`.withName("storageTexture")
 		).withName("WGPUBindGroupLayoutEntry")
 	}
 }
@@ -164,7 +195,10 @@ actual value class WGPUBlendComponent(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("operation"),
+			C_INT.withName("srcFactor"),
+			C_INT.withName("dstFactor")
 		).withName("WGPUBlendComponent")
 	}
 }
@@ -176,7 +210,9 @@ actual value class WGPUBlendState(actual val handler: NativeAddress) {
 	actual val alpha: WGPUBlendComponent
 		get() = TODO()
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			WGPUBlendComponent.`$LAYOUT`.withName("color"),
+			WGPUBlendComponent.`$LAYOUT`.withName("alpha")
 		).withName("WGPUBlendState")
 	}
 }
@@ -196,7 +232,10 @@ actual value class WGPUBufferBindingLayout(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("type"),
+			C_INT.withName("hasDynamicOffset"),
+			C_LONG.withName("minBindingSize")
 		).withName("WGPUBufferBindingLayout")
 	}
 }
@@ -220,7 +259,11 @@ actual value class WGPUBufferDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_LONG.withName("usage"),
+			C_LONG.withName("size"),
+			C_INT.withName("mappedAtCreation")
 		).withName("WGPUBufferDescriptor")
 	}
 }
@@ -244,7 +287,11 @@ actual value class WGPUColor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_DOUBLE.withName("r"),
+			C_DOUBLE.withName("g"),
+			C_DOUBLE.withName("b"),
+			C_DOUBLE.withName("a")
 		).withName("WGPUColor")
 	}
 }
@@ -264,7 +311,10 @@ actual value class WGPUColorTargetState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("format"),
+			C_POINTER.withName("blend"),
+			C_LONG.withName("writeMask")
 		).withName("WGPUColorTargetState")
 	}
 }
@@ -276,7 +326,8 @@ actual value class WGPUCommandBufferDescriptor(actual val handler: NativeAddress
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label")
 		).withName("WGPUCommandBufferDescriptor")
 	}
 }
@@ -288,7 +339,8 @@ actual value class WGPUCommandEncoderDescriptor(actual val handler: NativeAddres
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label")
 		).withName("WGPUCommandEncoderDescriptor")
 	}
 }
@@ -304,7 +356,9 @@ actual value class WGPUCompilationInfo(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_LONG.withName("messageCount"),
+			C_POINTER.withName("messages")
 		).withName("WGPUCompilationInfo")
 	}
 }
@@ -348,7 +402,16 @@ actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("message"),
+			C_INT.withName("type"),
+			C_LONG.withName("lineNum"),
+			C_LONG.withName("linePos"),
+			C_LONG.withName("offset"),
+			C_LONG.withName("length"),
+			C_LONG.withName("utf16LinePos"),
+			C_LONG.withName("utf16Offset"),
+			C_LONG.withName("utf16Length")
 		).withName("WGPUCompilationMessage")
 	}
 }
@@ -364,7 +427,9 @@ actual value class WGPUComputePassDescriptor(actual val handler: NativeAddress) 
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_POINTER.withName("timestampWrites")
 		).withName("WGPUComputePassDescriptor")
 	}
 }
@@ -384,7 +449,10 @@ actual value class WGPUComputePassTimestampWrites(actual val handler: NativeAddr
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("querySet"),
+			C_INT.withName("beginningOfPassWriteIndex"),
+			C_INT.withName("endOfPassWriteIndex")
 		).withName("WGPUComputePassTimestampWrites")
 	}
 }
@@ -402,7 +470,10 @@ actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddre
 	actual val compute: WGPUProgrammableStageDescriptor
 		get() = TODO()
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_POINTER.withName("layout"),
+			WGPUProgrammableStageDescriptor.`$LAYOUT`.withName("compute")
 		).withName("WGPUComputePipelineDescriptor")
 	}
 }
@@ -418,7 +489,9 @@ actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("key"),
+			C_DOUBLE.withName("value")
 		).withName("WGPUConstantEntry")
 	}
 }
@@ -462,7 +535,17 @@ actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("format"),
+			C_INT.withName("depthWriteEnabled"),
+			C_INT.withName("depthCompare"),
+			WGPUStencilFaceState.`$LAYOUT`.withName("stencilFront"),
+			WGPUStencilFaceState.`$LAYOUT`.withName("stencilBack"),
+			C_INT.withName("stencilReadMask"),
+			C_INT.withName("stencilWriteMask"),
+			C_INT.withName("depthBias"),
+			C_FLOAT.withName("depthBiasSlopeScale"),
+			C_FLOAT.withName("depthBiasClamp")
 		).withName("WGPUDepthStencilState")
 	}
 }
@@ -492,7 +575,14 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 	actual val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
 		get() = TODO()
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_LONG.withName("requiredFeatureCount"),
+			C_POINTER.withName("requiredFeatures"),
+			C_POINTER.withName("requiredLimits"),
+			WGPUQueueDescriptor.`$LAYOUT`.withName("defaultQueue"),
+			WGPUDeviceLostCallbackInfo.`$LAYOUT`.withName("deviceLostCallbackInfo"),
+			WGPUUncapturedErrorCallbackInfo.`$LAYOUT`.withName("uncapturedErrorCallbackInfo")
 		).withName("WGPUDeviceDescriptor")
 	}
 }
@@ -512,7 +602,10 @@ actual value class WGPUExtent3D(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("width"),
+			C_INT.withName("height"),
+			C_INT.withName("depthOrArrayLayers")
 		).withName("WGPUExtent3D")
 	}
 }
@@ -544,7 +637,13 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("module"),
+			C_POINTER.withName("entryPoint"),
+			C_LONG.withName("constantCount"),
+			C_POINTER.withName("constants"),
+			C_LONG.withName("targetCount"),
+			C_POINTER.withName("targets")
 		).withName("WGPUFragmentState")
 	}
 }
@@ -556,7 +655,8 @@ actual value class WGPUFuture(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_LONG.withName("id")
 		).withName("WGPUFuture")
 	}
 }
@@ -570,7 +670,9 @@ actual value class WGPUFutureWaitInfo(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			WGPUFuture.`$LAYOUT`.withName("future"),
+			C_INT.withName("completed")
 		).withName("WGPUFutureWaitInfo")
 	}
 }
@@ -584,7 +686,9 @@ actual value class WGPUImageCopyBuffer(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			WGPUTextureDataLayout.`$LAYOUT`.withName("layout"),
+			C_POINTER.withName("buffer")
 		).withName("WGPUImageCopyBuffer")
 	}
 }
@@ -606,7 +710,11 @@ actual value class WGPUImageCopyTexture(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("texture"),
+			C_INT.withName("mipLevel"),
+			WGPUOrigin3D.`$LAYOUT`.withName("origin"),
+			C_INT.withName("aspect")
 		).withName("WGPUImageCopyTexture")
 	}
 }
@@ -616,7 +724,8 @@ actual value class WGPUInstanceDescriptor(actual val handler: NativeAddress) {
 	actual val features: WGPUInstanceFeatures
 		get() = TODO()
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			WGPUInstanceFeatures.`$LAYOUT`.withName("features")
 		).withName("WGPUInstanceDescriptor")
 	}
 }
@@ -632,7 +741,9 @@ actual value class WGPUInstanceFeatures(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("timedWaitAnyEnable"),
+			C_LONG.withName("timedWaitAnyMaxCount")
 		).withName("WGPUInstanceFeatures")
 	}
 }
@@ -764,7 +875,38 @@ actual value class WGPULimits(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("maxTextureDimension1D"),
+			C_INT.withName("maxTextureDimension2D"),
+			C_INT.withName("maxTextureDimension3D"),
+			C_INT.withName("maxTextureArrayLayers"),
+			C_INT.withName("maxBindGroups"),
+			C_INT.withName("maxBindGroupsPlusVertexBuffers"),
+			C_INT.withName("maxBindingsPerBindGroup"),
+			C_INT.withName("maxDynamicUniformBuffersPerPipelineLayout"),
+			C_INT.withName("maxDynamicStorageBuffersPerPipelineLayout"),
+			C_INT.withName("maxSampledTexturesPerShaderStage"),
+			C_INT.withName("maxSamplersPerShaderStage"),
+			C_INT.withName("maxStorageBuffersPerShaderStage"),
+			C_INT.withName("maxStorageTexturesPerShaderStage"),
+			C_INT.withName("maxUniformBuffersPerShaderStage"),
+			C_LONG.withName("maxUniformBufferBindingSize"),
+			C_LONG.withName("maxStorageBufferBindingSize"),
+			C_INT.withName("minUniformBufferOffsetAlignment"),
+			C_INT.withName("minStorageBufferOffsetAlignment"),
+			C_INT.withName("maxVertexBuffers"),
+			C_LONG.withName("maxBufferSize"),
+			C_INT.withName("maxVertexAttributes"),
+			C_INT.withName("maxVertexBufferArrayStride"),
+			C_INT.withName("maxInterStageShaderVariables"),
+			C_INT.withName("maxColorAttachments"),
+			C_INT.withName("maxColorAttachmentBytesPerSample"),
+			C_INT.withName("maxComputeWorkgroupStorageSize"),
+			C_INT.withName("maxComputeInvocationsPerWorkgroup"),
+			C_INT.withName("maxComputeWorkgroupSizeX"),
+			C_INT.withName("maxComputeWorkgroupSizeY"),
+			C_INT.withName("maxComputeWorkgroupSizeZ"),
+			C_INT.withName("maxComputeWorkgroupsPerDimension")
 		).withName("WGPULimits")
 	}
 }
@@ -784,7 +926,10 @@ actual value class WGPUMultisampleState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("count"),
+			C_INT.withName("mask"),
+			C_INT.withName("alphaToCoverageEnabled")
 		).withName("WGPUMultisampleState")
 	}
 }
@@ -804,7 +949,10 @@ actual value class WGPUOrigin3D(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("x"),
+			C_INT.withName("y"),
+			C_INT.withName("z")
 		).withName("WGPUOrigin3D")
 	}
 }
@@ -824,7 +972,10 @@ actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddres
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_LONG.withName("bindGroupLayoutCount"),
+			C_POINTER.withName("bindGroupLayouts")
 		).withName("WGPUPipelineLayoutDescriptor")
 	}
 }
@@ -852,7 +1003,12 @@ actual value class WGPUPrimitiveState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("topology"),
+			C_INT.withName("stripIndexFormat"),
+			C_INT.withName("frontFace"),
+			C_INT.withName("cullMode"),
+			C_INT.withName("unclippedDepth")
 		).withName("WGPUPrimitiveState")
 	}
 }
@@ -876,7 +1032,11 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("module"),
+			C_POINTER.withName("entryPoint"),
+			C_LONG.withName("constantCount"),
+			C_POINTER.withName("constants")
 		).withName("WGPUProgrammableStageDescriptor")
 	}
 }
@@ -896,7 +1056,10 @@ actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_INT.withName("type"),
+			C_INT.withName("count")
 		).withName("WGPUQuerySetDescriptor")
 	}
 }
@@ -908,7 +1071,8 @@ actual value class WGPUQueueDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label")
 		).withName("WGPUQueueDescriptor")
 	}
 }
@@ -920,7 +1084,8 @@ actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress)
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label")
 		).withName("WGPURenderBundleDescriptor")
 	}
 }
@@ -956,7 +1121,14 @@ actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeA
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_LONG.withName("colorFormatCount"),
+			C_POINTER.withName("colorFormats"),
+			C_INT.withName("depthStencilFormat"),
+			C_INT.withName("sampleCount"),
+			C_INT.withName("depthReadOnly"),
+			C_INT.withName("stencilReadOnly")
 		).withName("WGPURenderBundleEncoderDescriptor")
 	}
 }
@@ -986,7 +1158,13 @@ actual value class WGPURenderPassColorAttachment(actual val handler: NativeAddre
 	actual val clearValue: WGPUColor
 		get() = TODO()
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("view"),
+			C_INT.withName("depthSlice"),
+			C_POINTER.withName("resolveTarget"),
+			C_INT.withName("loadOp"),
+			C_INT.withName("storeOp"),
+			WGPUColor.`$LAYOUT`.withName("clearValue")
 		).withName("WGPURenderPassColorAttachment")
 	}
 }
@@ -1030,7 +1208,16 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("view"),
+			C_INT.withName("depthLoadOp"),
+			C_INT.withName("depthStoreOp"),
+			C_FLOAT.withName("depthClearValue"),
+			C_INT.withName("depthReadOnly"),
+			C_INT.withName("stencilLoadOp"),
+			C_INT.withName("stencilStoreOp"),
+			C_INT.withName("stencilClearValue"),
+			C_INT.withName("stencilReadOnly")
 		).withName("WGPURenderPassDepthStencilAttachment")
 	}
 }
@@ -1062,7 +1249,13 @@ actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_LONG.withName("colorAttachmentCount"),
+			C_POINTER.withName("colorAttachments"),
+			C_POINTER.withName("depthStencilAttachment"),
+			C_POINTER.withName("occlusionQuerySet"),
+			C_POINTER.withName("timestampWrites")
 		).withName("WGPURenderPassDescriptor")
 	}
 }
@@ -1074,7 +1267,8 @@ actual value class WGPURenderPassMaxDrawCount(actual val handler: NativeAddress)
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_LONG.withName("maxDrawCount")
 		).withName("WGPURenderPassMaxDrawCount")
 	}
 }
@@ -1094,7 +1288,10 @@ actual value class WGPURenderPassTimestampWrites(actual val handler: NativeAddre
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("querySet"),
+			C_INT.withName("beginningOfPassWriteIndex"),
+			C_INT.withName("endOfPassWriteIndex")
 		).withName("WGPURenderPassTimestampWrites")
 	}
 }
@@ -1124,7 +1321,14 @@ actual value class WGPURenderPipelineDescriptor(actual val handler: NativeAddres
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_POINTER.withName("layout"),
+			WGPUVertexState.`$LAYOUT`.withName("vertex"),
+			WGPUPrimitiveState.`$LAYOUT`.withName("primitive"),
+			C_POINTER.withName("depthStencil"),
+			WGPUMultisampleState.`$LAYOUT`.withName("multisample"),
+			C_POINTER.withName("fragment")
 		).withName("WGPURenderPipelineDescriptor")
 	}
 }
@@ -1148,7 +1352,11 @@ actual value class WGPURequestAdapterOptions(actual val handler: NativeAddress) 
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("compatibleSurface"),
+			C_INT.withName("powerPreference"),
+			C_INT.withName("backendType"),
+			C_INT.withName("forceFallbackAdapter")
 		).withName("WGPURequestAdapterOptions")
 	}
 }
@@ -1158,7 +1366,8 @@ actual value class WGPURequiredLimits(actual val handler: NativeAddress) {
 	actual val limits: WGPULimits
 		get() = TODO()
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			WGPULimits.`$LAYOUT`.withName("limits")
 		).withName("WGPURequiredLimits")
 	}
 }
@@ -1170,7 +1379,8 @@ actual value class WGPUSamplerBindingLayout(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("type")
 		).withName("WGPUSamplerBindingLayout")
 	}
 }
@@ -1222,7 +1432,18 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_INT.withName("addressModeU"),
+			C_INT.withName("addressModeV"),
+			C_INT.withName("addressModeW"),
+			C_INT.withName("magFilter"),
+			C_INT.withName("minFilter"),
+			C_INT.withName("mipmapFilter"),
+			C_FLOAT.withName("lodMinClamp"),
+			C_FLOAT.withName("lodMaxClamp"),
+			C_INT.withName("compare"),
+			C_SHORT.withName("maxAnisotropy")
 		).withName("WGPUSamplerDescriptor")
 	}
 }
@@ -1234,7 +1455,8 @@ actual value class WGPUShaderModuleDescriptor(actual val handler: NativeAddress)
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label")
 		).withName("WGPUShaderModuleDescriptor")
 	}
 }
@@ -1250,7 +1472,9 @@ actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("codeSize"),
+			C_POINTER.withName("code")
 		).withName("WGPUShaderSourceSPIRV")
 	}
 }
@@ -1262,7 +1486,8 @@ actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("code")
 		).withName("WGPUShaderSourceWGSL")
 	}
 }
@@ -1286,7 +1511,11 @@ actual value class WGPUStencilFaceState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("compare"),
+			C_INT.withName("failOp"),
+			C_INT.withName("depthFailOp"),
+			C_INT.withName("passOp")
 		).withName("WGPUStencilFaceState")
 	}
 }
@@ -1306,7 +1535,10 @@ actual value class WGPUStorageTextureBindingLayout(actual val handler: NativeAdd
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("access"),
+			C_INT.withName("format"),
+			C_INT.withName("viewDimension")
 		).withName("WGPUStorageTextureBindingLayout")
 	}
 }
@@ -1316,7 +1548,8 @@ actual value class WGPUSupportedLimits(actual val handler: NativeAddress) {
 	actual val limits: WGPULimits
 		get() = TODO()
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			WGPULimits.`$LAYOUT`.withName("limits")
 		).withName("WGPUSupportedLimits")
 	}
 }
@@ -1352,7 +1585,14 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_LONG.withName("usages"),
+			C_LONG.withName("formatCount"),
+			C_POINTER.withName("formats"),
+			C_LONG.withName("presentModeCount"),
+			C_POINTER.withName("presentModes"),
+			C_LONG.withName("alphaModeCount"),
+			C_POINTER.withName("alphaModes")
 		).withName("WGPUSurfaceCapabilities")
 	}
 }
@@ -1396,7 +1636,16 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("device"),
+			C_INT.withName("format"),
+			C_LONG.withName("usage"),
+			C_INT.withName("width"),
+			C_INT.withName("height"),
+			C_LONG.withName("viewFormatCount"),
+			C_POINTER.withName("viewFormats"),
+			C_INT.withName("alphaMode"),
+			C_INT.withName("presentMode")
 		).withName("WGPUSurfaceConfiguration")
 	}
 }
@@ -1408,7 +1657,8 @@ actual value class WGPUSurfaceDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label")
 		).withName("WGPUSurfaceDescriptor")
 	}
 }
@@ -1420,7 +1670,8 @@ actual value class WGPUSurfaceSourceAndroidNativeWindow(actual val handler: Nati
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("window")
 		).withName("WGPUSurfaceSourceAndroidNativeWindow")
 	}
 }
@@ -1432,7 +1683,8 @@ actual value class WGPUSurfaceSourceMetalLayer(actual val handler: NativeAddress
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("layer")
 		).withName("WGPUSurfaceSourceMetalLayer")
 	}
 }
@@ -1448,7 +1700,9 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAdd
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("display"),
+			C_POINTER.withName("surface")
 		).withName("WGPUSurfaceSourceWaylandSurface")
 	}
 }
@@ -1464,7 +1718,9 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddres
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("hinstance"),
+			C_POINTER.withName("hwnd")
 		).withName("WGPUSurfaceSourceWindowsHWND")
 	}
 }
@@ -1480,7 +1736,9 @@ actual value class WGPUSurfaceSourceXCBWindow(actual val handler: NativeAddress)
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("connection"),
+			C_INT.withName("window")
 		).withName("WGPUSurfaceSourceXCBWindow")
 	}
 }
@@ -1496,7 +1754,9 @@ actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("display"),
+			C_LONG.withName("window")
 		).withName("WGPUSurfaceSourceXlibWindow")
 	}
 }
@@ -1512,7 +1772,9 @@ actual value class WGPUSurfaceTexture(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("texture"),
+			C_INT.withName("status")
 		).withName("WGPUSurfaceTexture")
 	}
 }
@@ -1532,7 +1794,10 @@ actual value class WGPUTextureBindingLayout(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("sampleType"),
+			C_INT.withName("viewDimension"),
+			C_INT.withName("multisampled")
 		).withName("WGPUTextureBindingLayout")
 	}
 }
@@ -1552,7 +1817,10 @@ actual value class WGPUTextureDataLayout(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_LONG.withName("offset"),
+			C_INT.withName("bytesPerRow"),
+			C_INT.withName("rowsPerImage")
 		).withName("WGPUTextureDataLayout")
 	}
 }
@@ -1594,7 +1862,16 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_LONG.withName("usage"),
+			C_INT.withName("dimension"),
+			WGPUExtent3D.`$LAYOUT`.withName("size"),
+			C_INT.withName("format"),
+			C_INT.withName("mipLevelCount"),
+			C_INT.withName("sampleCount"),
+			C_LONG.withName("viewFormatCount"),
+			C_POINTER.withName("viewFormats")
 		).withName("WGPUTextureDescriptor")
 	}
 }
@@ -1638,7 +1915,16 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("label"),
+			C_INT.withName("format"),
+			C_INT.withName("dimension"),
+			C_INT.withName("baseMipLevel"),
+			C_INT.withName("mipLevelCount"),
+			C_INT.withName("baseArrayLayer"),
+			C_INT.withName("arrayLayerCount"),
+			C_INT.withName("aspect"),
+			C_LONG.withName("usage")
 		).withName("WGPUTextureViewDescriptor")
 	}
 }
@@ -1658,7 +1944,10 @@ actual value class WGPUVertexAttribute(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_INT.withName("format"),
+			C_LONG.withName("offset"),
+			C_INT.withName("shaderLocation")
 		).withName("WGPUVertexAttribute")
 	}
 }
@@ -1682,7 +1971,11 @@ actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_LONG.withName("arrayStride"),
+			C_INT.withName("stepMode"),
+			C_LONG.withName("attributeCount"),
+			C_POINTER.withName("attributes")
 		).withName("WGPUVertexBufferLayout")
 	}
 }
@@ -1714,7 +2007,13 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("module"),
+			C_POINTER.withName("entryPoint"),
+			C_LONG.withName("constantCount"),
+			C_POINTER.withName("constants"),
+			C_LONG.withName("bufferCount"),
+			C_POINTER.withName("buffers")
 		).withName("WGPUVertexState")
 	}
 }
@@ -1730,7 +2029,9 @@ actual value class WGPUChainedStruct(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("next"),
+			C_INT.withName("sType")
 		).withName("WGPUChainedStruct")
 	}
 }
@@ -1746,7 +2047,9 @@ actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("next"),
+			C_INT.withName("sType")
 		).withName("WGPUChainedStructOut")
 	}
 }
@@ -1770,7 +2073,11 @@ actual value class WGPUBufferMapCallbackInfo(actual val handler: NativeAddress) 
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("nextInChain"),
+			C_POINTER.withName("callback"),
+			C_POINTER.withName("userdata1"),
+			C_POINTER.withName("userdata2")
 		).withName("WGPUBufferMapCallbackInfo")
 	}
 }
@@ -1794,7 +2101,11 @@ actual value class WGPUCompilationInfoCallbackInfo(actual val handler: NativeAdd
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("nextInChain"),
+			C_POINTER.withName("callback"),
+			C_POINTER.withName("userdata1"),
+			C_POINTER.withName("userdata2")
 		).withName("WGPUCompilationInfoCallbackInfo")
 	}
 }
@@ -1818,7 +2129,11 @@ actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual val handler
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("nextInChain"),
+			C_POINTER.withName("callback"),
+			C_POINTER.withName("userdata1"),
+			C_POINTER.withName("userdata2")
 		).withName("WGPUCreateComputePipelineAsyncCallbackInfo")
 	}
 }
@@ -1842,7 +2157,11 @@ actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual val handler:
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("nextInChain"),
+			C_POINTER.withName("callback"),
+			C_POINTER.withName("userdata1"),
+			C_POINTER.withName("userdata2")
 		).withName("WGPUCreateRenderPipelineAsyncCallbackInfo")
 	}
 }
@@ -1866,7 +2185,11 @@ actual value class WGPUDeviceLostCallbackInfo(actual val handler: NativeAddress)
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("nextInChain"),
+			C_POINTER.withName("callback"),
+			C_POINTER.withName("userdata1"),
+			C_POINTER.withName("userdata2")
 		).withName("WGPUDeviceLostCallbackInfo")
 	}
 }
@@ -1890,7 +2213,11 @@ actual value class WGPUPopErrorScopeCallbackInfo(actual val handler: NativeAddre
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("nextInChain"),
+			C_POINTER.withName("callback"),
+			C_POINTER.withName("userdata1"),
+			C_POINTER.withName("userdata2")
 		).withName("WGPUPopErrorScopeCallbackInfo")
 	}
 }
@@ -1914,7 +2241,11 @@ actual value class WGPUQueueWorkDoneCallbackInfo(actual val handler: NativeAddre
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("nextInChain"),
+			C_POINTER.withName("callback"),
+			C_POINTER.withName("userdata1"),
+			C_POINTER.withName("userdata2")
 		).withName("WGPUQueueWorkDoneCallbackInfo")
 	}
 }
@@ -1938,7 +2269,11 @@ actual value class WGPURequestAdapterCallbackInfo(actual val handler: NativeAddr
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("nextInChain"),
+			C_POINTER.withName("callback"),
+			C_POINTER.withName("userdata1"),
+			C_POINTER.withName("userdata2")
 		).withName("WGPURequestAdapterCallbackInfo")
 	}
 }
@@ -1962,7 +2297,11 @@ actual value class WGPURequestDeviceCallbackInfo(actual val handler: NativeAddre
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("nextInChain"),
+			C_POINTER.withName("callback"),
+			C_POINTER.withName("userdata1"),
+			C_POINTER.withName("userdata2")
 		).withName("WGPURequestDeviceCallbackInfo")
 	}
 }
@@ -1986,7 +2325,11 @@ actual value class WGPUUncapturedErrorCallbackInfo(actual val handler: NativeAdd
 		set(newValue) = TODO()
 
 	companion object {
-		private val `$LAYOUT` = structLayout(
+		internal val `$LAYOUT` = structLayout(
+			C_POINTER.withName("nextInChain"),
+			C_POINTER.withName("callback"),
+			C_POINTER.withName("userdata1"),
+			C_POINTER.withName("userdata2")
 		).withName("WGPUUncapturedErrorCallbackInfo")
 	}
 }

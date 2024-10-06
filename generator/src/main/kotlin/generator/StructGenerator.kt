@@ -47,6 +47,10 @@ private val headerJvm = """
     import ffi.ArrayHolder
     import ffi.C_LONG
     import ffi.C_POINTER
+    import ffi.C_SHORT
+    import ffi.C_INT
+    import ffi.C_FLOAT
+    import ffi.C_DOUBLE
     import java.lang.foreign.MemoryLayout.structLayout
     
     
@@ -62,6 +66,10 @@ private val headerAndroid = """
     import ffi.ArrayHolder
     import ffi.C_LONG
     import ffi.C_POINTER
+    import ffi.C_SHORT
+    import ffi.C_INT
+    import ffi.C_FLOAT
+    import ffi.C_DOUBLE
     import java.lang.foreign.MemoryLayout.Companion.structLayout
     
     
@@ -204,8 +212,36 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
 
         // Generate layout
         appendText("\tcompanion object {\n")
-        appendText("\t\tprivate val `\$LAYOUT` = structLayout(\n")
+        appendText("\t\tinternal val `\$LAYOUT` = structLayout(\n")
 
+        it.members.map { (name, type, _) ->
+            when (type) {
+                CLibraryModel.Reference.OpaquePointer,
+                is CLibraryModel.Reference.Pointer,
+                CLibraryModel.Reference.CString,
+                is CLibraryModel.Array,
+                is CLibraryModel.Reference.Callback,
+                CLibraryModel.Primitive.Void,
+                is CLibraryModel.Reference.Structure -> "C_POINTER"
+
+                CLibraryModel.Primitive.UInt16 -> "C_SHORT"
+
+                CLibraryModel.Primitive.Bool,
+                CLibraryModel.Primitive.UInt32,
+                CLibraryModel.Primitive.Int32 -> "C_INT"
+
+                CLibraryModel.Primitive.UInt64,
+                CLibraryModel.Primitive.Int64 -> "C_LONG"
+
+                CLibraryModel.Primitive.Float32 -> "C_FLOAT"
+                CLibraryModel.Primitive.Float64 -> "C_DOUBLE"
+
+                is CLibraryModel.Reference.Enumeration -> "C_INT"
+                is CLibraryModel.Reference.StructureField -> "${type.name}.`\$LAYOUT`"
+            }.let { "\t\t\t$it.withName(\"${name}\")" }
+        }.joinToString(",\n")
+            .let { "$it\n" }
+            .let(::appendText)
         appendText("\t\t).withName(\"$structureName\")\n")
         appendText("\t}\n")
         /*
