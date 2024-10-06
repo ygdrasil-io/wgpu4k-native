@@ -25,9 +25,19 @@ val functionsAndroidMainFile = androidMainBasePath
     .resolve("webgpu")
     .resolve("Functions.android.kt")
 
-
-
 private val header = """
+    $disclamer
+    package webgpu
+    
+    import ffi.CString
+    import ffi.NativeAddress
+    import ffi.ArrayHolder
+    
+    
+    
+""".trimIndent()
+
+private val jvmHeader = """
     $disclamer
     package webgpu
     
@@ -132,7 +142,7 @@ private fun File.writeNativeFunction(function: CLibraryModel.Function) {
 
 internal fun File.generateJvmFunctions(functions: List<CLibraryModel.Function>) {
 
-    writeText(header)
+    writeText(jvmHeader)
 
     functions.forEach { function ->
         writeJvmFunction(function)
@@ -165,7 +175,7 @@ private fun File.writeJvmFunction(function: CLibraryModel.Function) {
 }
 
 private fun CLibraryModel.Type.toJvmArgCall(name: String) = when(this) {
-    is CLibraryModel.Reference.OpaquePointer,
+    is CLibraryModel.Reference.OpaquePointer -> "$name.adapt()"
     is CLibraryModel.Reference.Enumeration -> name
     is CLibraryModel.Array,
     is CLibraryModel.Reference -> "$name?.handler.adapt()"

@@ -271,10 +271,10 @@ actual fun wgpuQueueOnSubmittedWorkDone(handler: WGPUQueue?): Unit?
 	 = Functions.wgpuQueueOnSubmittedWorkDone(handler?.handler.adapt())
 
 actual fun wgpuQueueWriteBuffer(handler: WGPUQueue?, buffer: WGPUBuffer?, bufferOffset: ULong, data: NativeAddress?, size: ULong): Unit?
-	 = Functions.wgpuQueueWriteBuffer(handler?.handler.adapt(), buffer?.handler.adapt(), bufferOffset, data, size)
+	 = Functions.wgpuQueueWriteBuffer(handler?.handler.adapt(), buffer?.handler.adapt(), bufferOffset, data.adapt(), size)
 
 actual fun wgpuQueueWriteTexture(handler: WGPUQueue?, destination: WGPUImageCopyTexture?, data: NativeAddress?, dataSize: ULong, dataLayout: WGPUTextureDataLayout?, writeSize: WGPUExtent3D?): Unit?
-	 = Functions.wgpuQueueWriteTexture(handler?.handler.adapt(), destination?.handler.adapt(), data, dataSize, dataLayout?.handler.adapt(), writeSize?.handler.adapt())
+	 = Functions.wgpuQueueWriteTexture(handler?.handler.adapt(), destination?.handler.adapt(), data.adapt(), dataSize, dataLayout?.handler.adapt(), writeSize?.handler.adapt())
 
 actual fun wgpuQueueSetLabel(handler: WGPUQueue?, label: CString?): Unit?
 	 = Functions.wgpuQueueSetLabel(handler?.handler.adapt(), label?.handler.adapt())

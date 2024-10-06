@@ -4,7 +4,6 @@ package webgpu
 import ffi.CString
 import ffi.NativeAddress
 import ffi.ArrayHolder
-import ffi.adapt
 
 
 expect fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance?
