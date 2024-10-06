@@ -1,6 +1,7 @@
 package java.lang.foreign
 
 import com.sun.jna.Pointer
+import ffi.toAddress
 import java.util.function.Consumer
 
 class MemorySegment(val pointer: Pointer, val size: Long) {

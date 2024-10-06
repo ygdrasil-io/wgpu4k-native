@@ -1,6 +1,5 @@
 package ffi
 
-import java.lang.foreign.JnaArena
 import java.lang.foreign.SegmentAllocator
 
 actual class MemoryAllocator : AutoCloseable {
