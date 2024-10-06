@@ -13,8 +13,8 @@ object Functions {
 	external fun wgpuCreateInstance(descriptor: NativeAddress): NativeAddress
 	external fun wgpuGetInstanceFeatures(features: NativeAddress): Unit
 	external fun wgpuAdapterGetLimits(handler: NativeAddress, limits: NativeAddress): Boolean
-	external fun wgpuAdapterHasFeature(handler: NativeAddress, feature: NativeAddress): Boolean
-	external fun wgpuAdapterEnumerateFeatures(handler: NativeAddress, features: NativeAddress): ULong
+	external fun wgpuAdapterHasFeature(handler: NativeAddress, feature: UInt): Boolean
+	external fun wgpuAdapterEnumerateFeatures(handler: NativeAddress, features: UInt): ULong
 	external fun wgpuAdapterGetInfo(handler: NativeAddress, info: NativeAddress): Unit
 	external fun wgpuAdapterRequestDevice(handler: NativeAddress, descriptor: NativeAddress): Unit
 	external fun wgpuBindGroupSetLabel(handler: NativeAddress, label: NativeAddress): Unit
@@ -25,7 +25,7 @@ object Functions {
 	external fun wgpuBufferSetLabel(handler: NativeAddress, label: NativeAddress): Unit
 	external fun wgpuBufferGetUsage(handler: NativeAddress): ULong
 	external fun wgpuBufferGetSize(handler: NativeAddress): ULong
-	external fun wgpuBufferGetMapState(handler: NativeAddress): NativeAddress
+	external fun wgpuBufferGetMapState(handler: NativeAddress): UInt
 	external fun wgpuBufferUnmap(handler: NativeAddress): Unit
 	external fun wgpuBufferDestroy(handler: NativeAddress): Unit
 	external fun wgpuCommandBufferSetLabel(handler: NativeAddress, label: NativeAddress): Unit
@@ -70,20 +70,20 @@ object Functions {
 	external fun wgpuDeviceCreateTexture(handler: NativeAddress, descriptor: NativeAddress): NativeAddress
 	external fun wgpuDeviceDestroy(handler: NativeAddress): Unit
 	external fun wgpuDeviceGetLimits(handler: NativeAddress, limits: NativeAddress): Boolean
-	external fun wgpuDeviceHasFeature(handler: NativeAddress, feature: NativeAddress): Boolean
-	external fun wgpuDeviceEnumerateFeatures(handler: NativeAddress, features: NativeAddress): ULong
+	external fun wgpuDeviceHasFeature(handler: NativeAddress, feature: UInt): Boolean
+	external fun wgpuDeviceEnumerateFeatures(handler: NativeAddress, features: UInt): ULong
 	external fun wgpuDeviceGetQueue(handler: NativeAddress): NativeAddress
-	external fun wgpuDevicePushErrorScope(handler: NativeAddress, filter: NativeAddress): Unit
+	external fun wgpuDevicePushErrorScope(handler: NativeAddress, filter: UInt): Unit
 	external fun wgpuDevicePopErrorScope(handler: NativeAddress): Unit
 	external fun wgpuDeviceSetLabel(handler: NativeAddress, label: NativeAddress): Unit
 	external fun wgpuInstanceCreateSurface(handler: NativeAddress, descriptor: NativeAddress): NativeAddress
-	external fun wgpuInstanceHasWGSLLanguageFeature(handler: NativeAddress, feature: NativeAddress): Boolean
+	external fun wgpuInstanceHasWGSLLanguageFeature(handler: NativeAddress, feature: UInt): Boolean
 	external fun wgpuInstanceProcessEvents(handler: NativeAddress): Unit
 	external fun wgpuInstanceRequestAdapter(handler: NativeAddress, options: NativeAddress): Unit
-	external fun wgpuInstanceWaitAny(handler: NativeAddress, futureCount: ULong, futures: NativeAddress, timeoutNS: ULong): NativeAddress
+	external fun wgpuInstanceWaitAny(handler: NativeAddress, futureCount: ULong, futures: NativeAddress, timeoutNS: ULong): UInt
 	external fun wgpuPipelineLayoutSetLabel(handler: NativeAddress, label: NativeAddress): Unit
 	external fun wgpuQuerySetSetLabel(handler: NativeAddress, label: NativeAddress): Unit
-	external fun wgpuQuerySetGetType(handler: NativeAddress): NativeAddress
+	external fun wgpuQuerySetGetType(handler: NativeAddress): UInt
 	external fun wgpuQuerySetGetCount(handler: NativeAddress): UInt
 	external fun wgpuQuerySetDestroy(handler: NativeAddress): Unit
 	external fun wgpuQueueSubmit(handler: NativeAddress, commands: NativeAddress): Unit
@@ -102,7 +102,7 @@ object Functions {
 	external fun wgpuRenderBundleEncoderPopDebugGroup(handler: NativeAddress): Unit
 	external fun wgpuRenderBundleEncoderPushDebugGroup(handler: NativeAddress, groupLabel: NativeAddress): Unit
 	external fun wgpuRenderBundleEncoderSetVertexBuffer(handler: NativeAddress, slot: UInt, buffer: NativeAddress, offset: ULong, size: ULong): Unit
-	external fun wgpuRenderBundleEncoderSetIndexBuffer(handler: NativeAddress, buffer: NativeAddress, format: NativeAddress, offset: ULong, size: ULong): Unit
+	external fun wgpuRenderBundleEncoderSetIndexBuffer(handler: NativeAddress, buffer: NativeAddress, format: UInt, offset: ULong, size: ULong): Unit
 	external fun wgpuRenderBundleEncoderFinish(handler: NativeAddress, descriptor: NativeAddress): NativeAddress
 	external fun wgpuRenderBundleEncoderSetLabel(handler: NativeAddress, label: NativeAddress): Unit
 	external fun wgpuRenderPassEncoderSetPipeline(handler: NativeAddress, pipeline: NativeAddress): Unit
@@ -120,7 +120,7 @@ object Functions {
 	external fun wgpuRenderPassEncoderSetViewport(handler: NativeAddress, x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float): Unit
 	external fun wgpuRenderPassEncoderSetScissorRect(handler: NativeAddress, x: UInt, y: UInt, width: UInt, height: UInt): Unit
 	external fun wgpuRenderPassEncoderSetVertexBuffer(handler: NativeAddress, slot: UInt, buffer: NativeAddress, offset: ULong, size: ULong): Unit
-	external fun wgpuRenderPassEncoderSetIndexBuffer(handler: NativeAddress, buffer: NativeAddress, format: NativeAddress, offset: ULong, size: ULong): Unit
+	external fun wgpuRenderPassEncoderSetIndexBuffer(handler: NativeAddress, buffer: NativeAddress, format: UInt, offset: ULong, size: ULong): Unit
 	external fun wgpuRenderPassEncoderBeginOcclusionQuery(handler: NativeAddress, queryIndex: UInt): Unit
 	external fun wgpuRenderPassEncoderEndOcclusionQuery(handler: NativeAddress): Unit
 	external fun wgpuRenderPassEncoderEnd(handler: NativeAddress): Unit
@@ -143,8 +143,8 @@ object Functions {
 	external fun wgpuTextureGetDepthOrArrayLayers(handler: NativeAddress): UInt
 	external fun wgpuTextureGetMipLevelCount(handler: NativeAddress): UInt
 	external fun wgpuTextureGetSampleCount(handler: NativeAddress): UInt
-	external fun wgpuTextureGetDimension(handler: NativeAddress): NativeAddress
-	external fun wgpuTextureGetFormat(handler: NativeAddress): NativeAddress
+	external fun wgpuTextureGetDimension(handler: NativeAddress): UInt
+	external fun wgpuTextureGetFormat(handler: NativeAddress): UInt
 	external fun wgpuTextureGetUsage(handler: NativeAddress): ULong
 	external fun wgpuTextureDestroy(handler: NativeAddress): Unit
 	external fun wgpuTextureViewSetLabel(handler: NativeAddress, label: NativeAddress): Unit

@@ -22,6 +22,7 @@ private val header = """
     import ffi.C_INT
     import ffi.C_LONG
     import ffi.C_FLOAT
+    import ffi.NativeAddress
     import java.lang.foreign.FunctionDescriptor
     
     
@@ -70,6 +71,7 @@ private fun CLibraryModel.Function.generateDescriptor(): String {
 internal fun CLibraryModel.Type.toJvmDescriptorType(): String = when (this) {
     CLibraryModel.Primitive.Bool,
     CLibraryModel.Primitive.UInt32,
+    is CLibraryModel.Reference.Enumeration,
     is CLibraryModel.Primitive.Int32 -> "C_INT"
     is CLibraryModel.Primitive.Int64,
     CLibraryModel.Primitive.UInt64 -> "C_LONG"
@@ -80,7 +82,6 @@ internal fun CLibraryModel.Type.toJvmDescriptorType(): String = when (this) {
     is CLibraryModel.Array,
     CLibraryModel.Reference.CString,
     is CLibraryModel.Reference.Callback,
-    is CLibraryModel.Reference.Enumeration,
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer,
     is CLibraryModel.Reference.Structure,
@@ -95,14 +96,14 @@ internal fun CLibraryModel.Type.toJvmNativeType(): String = when (this) {
     CLibraryModel.Primitive.UInt64 -> "ULong"
     CLibraryModel.Primitive.Float64 -> "Double"
     CLibraryModel.Primitive.Float32 -> "Float"
+    is CLibraryModel.Reference.Enumeration,
     CLibraryModel.Primitive.UInt32 -> "UInt"
     CLibraryModel.Primitive.UInt16 -> "UShort"
     is CLibraryModel.Array,
     CLibraryModel.Reference.CString,
     is CLibraryModel.Reference.Callback,
-    is CLibraryModel.Reference.Enumeration,
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer,
     is CLibraryModel.Reference.Structure,
-    is CLibraryModel.Reference.StructureField -> "MemorySegment"
+    is CLibraryModel.Reference.StructureField -> "NativeAddress"
 }

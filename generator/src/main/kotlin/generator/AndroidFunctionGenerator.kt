@@ -54,12 +54,12 @@ internal fun CLibraryModel.Type.toAndroidNativeType(): String = when (this) {
     CLibraryModel.Primitive.UInt64 -> "ULong"
     CLibraryModel.Primitive.Float64 -> "Double"
     CLibraryModel.Primitive.Float32 -> "Float"
+    is CLibraryModel.Reference.Enumeration,
     CLibraryModel.Primitive.UInt32 -> "UInt"
     CLibraryModel.Primitive.UInt16 -> "UShort"
     is CLibraryModel.Array,
     CLibraryModel.Reference.CString,
     is CLibraryModel.Reference.Callback,
-    is CLibraryModel.Reference.Enumeration,
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer,
     is CLibraryModel.Reference.Structure,
