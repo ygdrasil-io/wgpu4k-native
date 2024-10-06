@@ -51,6 +51,7 @@ private val headerJvm = """
     import ffi.C_INT
     import ffi.C_FLOAT
     import ffi.C_DOUBLE
+    import ffi.CStructure
     import java.lang.foreign.AddressLayout
     import java.lang.foreign.MemoryLayout.structLayout
     
@@ -71,6 +72,7 @@ private val headerAndroid = """
     import ffi.C_INT
     import ffi.C_FLOAT
     import ffi.C_DOUBLE
+    import ffi.CStructure
     import java.lang.foreign.AddressLayout
     import java.lang.foreign.MemoryLayout.Companion.structLayout
     
@@ -195,21 +197,13 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
     structures.forEach {
         val structureName = it.name
         appendText("@JvmInline\n")
-        appendText("actual value class $structureName(actual val handler: NativeAddress) {\n")
+        appendText("actual value class $structureName(actual override val handler: NativeAddress) : CStructure {\n")
 
         it.members.forEach { (name, type, optional) ->
             val variableType = type.generateVariableType()
             appendText("\tactual $variableType $name: ${type.toFunctionKotlinType()}$optional\n")
             when (type) {
                 is CLibraryModel.Array,
-                CLibraryModel.Primitive.Bool,
-                CLibraryModel.Primitive.Float32,
-                CLibraryModel.Primitive.Float64,
-                CLibraryModel.Primitive.Int32,
-                CLibraryModel.Primitive.Int64,
-                CLibraryModel.Primitive.UInt16,
-                CLibraryModel.Primitive.UInt32,
-                CLibraryModel.Primitive.UInt64,
                 CLibraryModel.Primitive.Void,
                 CLibraryModel.Reference.CString,
                 is CLibraryModel.Reference.Callback,
@@ -218,13 +212,23 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
                 is CLibraryModel.Reference.Pointer,
                 is CLibraryModel.Reference.Structure, -> "TODO()"
 
+                CLibraryModel.Primitive.Float32,
+                CLibraryModel.Primitive.Float64,
+                CLibraryModel.Primitive.Int64,
+                CLibraryModel.Primitive.UInt16,
+                CLibraryModel.Primitive.UInt64, -> "TODO()"
+
+                CLibraryModel.Primitive.Bool -> "getInt(\"$name\", ${name}Offset).toBoolean()"
+                CLibraryModel.Primitive.Int32 -> "getInt(\"$name\", ${name}Offset)"
+                CLibraryModel.Primitive.UInt32 -> "getUInt(\"$name\", ${name}Offset)"
+
                 is CLibraryModel.Reference.StructureField -> "get(\"$name\", ${name}Offset).let(::${type.name})"
             }.let { appendText("\t\tget() = $it\n") }
             if (variableType == "var") appendText("\t\tset(newValue) = TODO()\n\n") else appendText("\n")
 
         }
 
-        appendHelperFunctions(isAndroid)
+        appendHelperFunctions()
 
         // Generate layout
         appendText("\tcompanion object {\n")
@@ -282,17 +286,9 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
     }
 }
 
-fun File.appendHelperFunctions(isAndroid: Boolean) {
-    appendText("\tprivate fun getLayout(name: String)\n")
+fun File.appendHelperFunctions() {
+    appendText("\toverride fun getLayout(name: String)\n")
     appendText("\t\t= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout\n")
-    appendText("\n")
-    if (isAndroid) {
-        appendText("\tprivate fun get(name: String, offset: Long)\n")
-        appendText("\t\t= handler.get(getLayout(name), offset)\n")
-    } else {
-        appendText("\tprivate fun get(name: String, offset: Long)\n")
-        appendText("\t\t= handler.handler.get(getLayout(name), offset).let(::NativeAddress)\n")
-    }
     appendText("\n")
 }
 

@@ -11,11 +11,12 @@ import ffi.C_SHORT
 import ffi.C_INT
 import ffi.C_FLOAT
 import ffi.C_DOUBLE
+import ffi.CStructure
 import java.lang.foreign.AddressLayout
 import java.lang.foreign.MemoryLayout.Companion.structLayout
 
 @JvmInline
-actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
+actual value class WGPUAdapterInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var vendor: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -41,18 +42,15 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual var vendorID: UInt
-		get() = TODO()
+		get() = getUInt("vendorID", vendorIDOffset)
 		set(newValue) = TODO()
 
 	actual var deviceID: UInt
-		get() = TODO()
+		get() = getUInt("deviceID", deviceIDOffset)
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -78,7 +76,7 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUBindGroupDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -95,11 +93,8 @@ actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -117,9 +112,9 @@ actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUBindGroupEntry(actual val handler: NativeAddress) {
+actual value class WGPUBindGroupEntry(actual override val handler: NativeAddress) : CStructure {
 	actual var binding: UInt
-		get() = TODO()
+		get() = getUInt("binding", bindingOffset)
 		set(newValue) = TODO()
 
 	actual var buffer: WGPUBuffer?
@@ -142,11 +137,8 @@ actual value class WGPUBindGroupEntry(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -168,7 +160,7 @@ actual value class WGPUBindGroupEntry(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUBindGroupLayoutDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -181,11 +173,8 @@ actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -201,9 +190,9 @@ actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddre
 }
 
 @JvmInline
-actual value class WGPUBindGroupLayoutEntry(actual val handler: NativeAddress) {
+actual value class WGPUBindGroupLayoutEntry(actual override val handler: NativeAddress) : CStructure {
 	actual var binding: UInt
-		get() = TODO()
+		get() = getUInt("binding", bindingOffset)
 		set(newValue) = TODO()
 
 	actual var visibility: ULong
@@ -222,11 +211,8 @@ actual value class WGPUBindGroupLayoutEntry(actual val handler: NativeAddress) {
 	actual val storageTexture: WGPUStorageTextureBindingLayout
 		get() = get("storageTexture", storageTextureOffset).let(::WGPUStorageTextureBindingLayout)
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -248,7 +234,7 @@ actual value class WGPUBindGroupLayoutEntry(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUBlendComponent(actual val handler: NativeAddress) {
+actual value class WGPUBlendComponent(actual override val handler: NativeAddress) : CStructure {
 	actual var operation: WGPUBlendOperation
 		get() = TODO()
 		set(newValue) = TODO()
@@ -261,11 +247,8 @@ actual value class WGPUBlendComponent(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -281,18 +264,15 @@ actual value class WGPUBlendComponent(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUBlendState(actual val handler: NativeAddress) {
+actual value class WGPUBlendState(actual override val handler: NativeAddress) : CStructure {
 	actual val color: WGPUBlendComponent
 		get() = get("color", colorOffset).let(::WGPUBlendComponent)
 
 	actual val alpha: WGPUBlendComponent
 		get() = get("alpha", alphaOffset).let(::WGPUBlendComponent)
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -306,24 +286,21 @@ actual value class WGPUBlendState(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUBufferBindingLayout(actual val handler: NativeAddress) {
+actual value class WGPUBufferBindingLayout(actual override val handler: NativeAddress) : CStructure {
 	actual var type: WGPUBufferBindingType
 		get() = TODO()
 		set(newValue) = TODO()
 
 	actual var hasDynamicOffset: Boolean
-		get() = TODO()
+		get() = getInt("hasDynamicOffset", hasDynamicOffsetOffset).toBoolean()
 		set(newValue) = TODO()
 
 	actual var minBindingSize: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -339,7 +316,7 @@ actual value class WGPUBufferBindingLayout(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUBufferDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUBufferDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -353,14 +330,11 @@ actual value class WGPUBufferDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual var mappedAtCreation: Boolean
-		get() = TODO()
+		get() = getInt("mappedAtCreation", mappedAtCreationOffset).toBoolean()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -378,7 +352,7 @@ actual value class WGPUBufferDescriptor(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUColor(actual val handler: NativeAddress) {
+actual value class WGPUColor(actual override val handler: NativeAddress) : CStructure {
 	actual var r: Double
 		get() = TODO()
 		set(newValue) = TODO()
@@ -395,11 +369,8 @@ actual value class WGPUColor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -417,7 +388,7 @@ actual value class WGPUColor(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUColorTargetState(actual val handler: NativeAddress) {
+actual value class WGPUColorTargetState(actual override val handler: NativeAddress) : CStructure {
 	actual var format: WGPUTextureFormat
 		get() = TODO()
 		set(newValue) = TODO()
@@ -430,11 +401,8 @@ actual value class WGPUColorTargetState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -450,16 +418,13 @@ actual value class WGPUColorTargetState(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUCommandBufferDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUCommandBufferDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -471,16 +436,13 @@ actual value class WGPUCommandBufferDescriptor(actual val handler: NativeAddress
 }
 
 @JvmInline
-actual value class WGPUCommandEncoderDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUCommandEncoderDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -492,7 +454,7 @@ actual value class WGPUCommandEncoderDescriptor(actual val handler: NativeAddres
 }
 
 @JvmInline
-actual value class WGPUCompilationInfo(actual val handler: NativeAddress) {
+actual value class WGPUCompilationInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var messageCount: ULong
 		get() = TODO()
 		set(newValue) = TODO()
@@ -501,11 +463,8 @@ actual value class WGPUCompilationInfo(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -519,7 +478,7 @@ actual value class WGPUCompilationInfo(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
+actual value class WGPUCompilationMessage(actual override val handler: NativeAddress) : CStructure {
 	actual var message: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -556,11 +515,8 @@ actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -588,7 +544,7 @@ actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUComputePassDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUComputePassDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -597,11 +553,8 @@ actual value class WGPUComputePassDescriptor(actual val handler: NativeAddress) 
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -615,24 +568,21 @@ actual value class WGPUComputePassDescriptor(actual val handler: NativeAddress) 
 }
 
 @JvmInline
-actual value class WGPUComputePassTimestampWrites(actual val handler: NativeAddress) {
+actual value class WGPUComputePassTimestampWrites(actual override val handler: NativeAddress) : CStructure {
 	actual var querySet: WGPUQuerySet?
 		get() = TODO()
 		set(newValue) = TODO()
 
 	actual var beginningOfPassWriteIndex: UInt
-		get() = TODO()
+		get() = getUInt("beginningOfPassWriteIndex", beginningOfPassWriteIndexOffset)
 		set(newValue) = TODO()
 
 	actual var endOfPassWriteIndex: UInt
-		get() = TODO()
+		get() = getUInt("endOfPassWriteIndex", endOfPassWriteIndexOffset)
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -648,7 +598,7 @@ actual value class WGPUComputePassTimestampWrites(actual val handler: NativeAddr
 }
 
 @JvmInline
-actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUComputePipelineDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -660,11 +610,8 @@ actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddre
 	actual val compute: WGPUProgrammableStageDescriptor
 		get() = get("compute", computeOffset).let(::WGPUProgrammableStageDescriptor)
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -680,7 +627,7 @@ actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddre
 }
 
 @JvmInline
-actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
+actual value class WGPUConstantEntry(actual override val handler: NativeAddress) : CStructure {
 	actual var key: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -689,11 +636,8 @@ actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -707,7 +651,7 @@ actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
+actual value class WGPUDepthStencilState(actual override val handler: NativeAddress) : CStructure {
 	actual var format: WGPUTextureFormat
 		get() = TODO()
 		set(newValue) = TODO()
@@ -727,15 +671,15 @@ actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
 		get() = get("stencilBack", stencilBackOffset).let(::WGPUStencilFaceState)
 
 	actual var stencilReadMask: UInt
-		get() = TODO()
+		get() = getUInt("stencilReadMask", stencilReadMaskOffset)
 		set(newValue) = TODO()
 
 	actual var stencilWriteMask: UInt
-		get() = TODO()
+		get() = getUInt("stencilWriteMask", stencilWriteMaskOffset)
 		set(newValue) = TODO()
 
 	actual var depthBias: Int
-		get() = TODO()
+		get() = getInt("depthBias", depthBiasOffset)
 		set(newValue) = TODO()
 
 	actual var depthBiasSlopeScale: Float
@@ -746,11 +690,8 @@ actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -780,7 +721,7 @@ actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUDeviceDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -806,11 +747,8 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 	actual val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
 		get() = get("uncapturedErrorCallbackInfo", uncapturedErrorCallbackInfoOffset).let(::WGPUUncapturedErrorCallbackInfo)
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -834,24 +772,21 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUExtent3D(actual val handler: NativeAddress) {
+actual value class WGPUExtent3D(actual override val handler: NativeAddress) : CStructure {
 	actual var width: UInt
-		get() = TODO()
+		get() = getUInt("width", widthOffset)
 		set(newValue) = TODO()
 
 	actual var height: UInt
-		get() = TODO()
+		get() = getUInt("height", heightOffset)
 		set(newValue) = TODO()
 
 	actual var depthOrArrayLayers: UInt
-		get() = TODO()
+		get() = getUInt("depthOrArrayLayers", depthOrArrayLayersOffset)
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -867,7 +802,7 @@ actual value class WGPUExtent3D(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUFragmentState(actual val handler: NativeAddress) {
+actual value class WGPUFragmentState(actual override val handler: NativeAddress) : CStructure {
 	actual var module: WGPUShaderModule?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -892,11 +827,8 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -918,16 +850,13 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUFuture(actual val handler: NativeAddress) {
+actual value class WGPUFuture(actual override val handler: NativeAddress) : CStructure {
 	actual var id: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -939,19 +868,16 @@ actual value class WGPUFuture(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUFutureWaitInfo(actual val handler: NativeAddress) {
+actual value class WGPUFutureWaitInfo(actual override val handler: NativeAddress) : CStructure {
 	actual val future: WGPUFuture
 		get() = get("future", futureOffset).let(::WGPUFuture)
 
 	actual var completed: Boolean
-		get() = TODO()
+		get() = getInt("completed", completedOffset).toBoolean()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -965,7 +891,7 @@ actual value class WGPUFutureWaitInfo(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUImageCopyBuffer(actual val handler: NativeAddress) {
+actual value class WGPUImageCopyBuffer(actual override val handler: NativeAddress) : CStructure {
 	actual val layout: WGPUTextureDataLayout
 		get() = get("layout", layoutOffset).let(::WGPUTextureDataLayout)
 
@@ -973,11 +899,8 @@ actual value class WGPUImageCopyBuffer(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -991,13 +914,13 @@ actual value class WGPUImageCopyBuffer(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUImageCopyTexture(actual val handler: NativeAddress) {
+actual value class WGPUImageCopyTexture(actual override val handler: NativeAddress) : CStructure {
 	actual var texture: WGPUTexture?
 		get() = TODO()
 		set(newValue) = TODO()
 
 	actual var mipLevel: UInt
-		get() = TODO()
+		get() = getUInt("mipLevel", mipLevelOffset)
 		set(newValue) = TODO()
 
 	actual val origin: WGPUOrigin3D
@@ -1007,11 +930,8 @@ actual value class WGPUImageCopyTexture(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1029,15 +949,12 @@ actual value class WGPUImageCopyTexture(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUInstanceDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUInstanceDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual val features: WGPUInstanceFeatures
 		get() = get("features", featuresOffset).let(::WGPUInstanceFeatures)
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1049,20 +966,17 @@ actual value class WGPUInstanceDescriptor(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUInstanceFeatures(actual val handler: NativeAddress) {
+actual value class WGPUInstanceFeatures(actual override val handler: NativeAddress) : CStructure {
 	actual var timedWaitAnyEnable: Boolean
-		get() = TODO()
+		get() = getInt("timedWaitAnyEnable", timedWaitAnyEnableOffset).toBoolean()
 		set(newValue) = TODO()
 
 	actual var timedWaitAnyMaxCount: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1076,61 +990,61 @@ actual value class WGPUInstanceFeatures(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPULimits(actual val handler: NativeAddress) {
+actual value class WGPULimits(actual override val handler: NativeAddress) : CStructure {
 	actual var maxTextureDimension1D: UInt
-		get() = TODO()
+		get() = getUInt("maxTextureDimension1D", maxTextureDimension1DOffset)
 		set(newValue) = TODO()
 
 	actual var maxTextureDimension2D: UInt
-		get() = TODO()
+		get() = getUInt("maxTextureDimension2D", maxTextureDimension2DOffset)
 		set(newValue) = TODO()
 
 	actual var maxTextureDimension3D: UInt
-		get() = TODO()
+		get() = getUInt("maxTextureDimension3D", maxTextureDimension3DOffset)
 		set(newValue) = TODO()
 
 	actual var maxTextureArrayLayers: UInt
-		get() = TODO()
+		get() = getUInt("maxTextureArrayLayers", maxTextureArrayLayersOffset)
 		set(newValue) = TODO()
 
 	actual var maxBindGroups: UInt
-		get() = TODO()
+		get() = getUInt("maxBindGroups", maxBindGroupsOffset)
 		set(newValue) = TODO()
 
 	actual var maxBindGroupsPlusVertexBuffers: UInt
-		get() = TODO()
+		get() = getUInt("maxBindGroupsPlusVertexBuffers", maxBindGroupsPlusVertexBuffersOffset)
 		set(newValue) = TODO()
 
 	actual var maxBindingsPerBindGroup: UInt
-		get() = TODO()
+		get() = getUInt("maxBindingsPerBindGroup", maxBindingsPerBindGroupOffset)
 		set(newValue) = TODO()
 
 	actual var maxDynamicUniformBuffersPerPipelineLayout: UInt
-		get() = TODO()
+		get() = getUInt("maxDynamicUniformBuffersPerPipelineLayout", maxDynamicUniformBuffersPerPipelineLayoutOffset)
 		set(newValue) = TODO()
 
 	actual var maxDynamicStorageBuffersPerPipelineLayout: UInt
-		get() = TODO()
+		get() = getUInt("maxDynamicStorageBuffersPerPipelineLayout", maxDynamicStorageBuffersPerPipelineLayoutOffset)
 		set(newValue) = TODO()
 
 	actual var maxSampledTexturesPerShaderStage: UInt
-		get() = TODO()
+		get() = getUInt("maxSampledTexturesPerShaderStage", maxSampledTexturesPerShaderStageOffset)
 		set(newValue) = TODO()
 
 	actual var maxSamplersPerShaderStage: UInt
-		get() = TODO()
+		get() = getUInt("maxSamplersPerShaderStage", maxSamplersPerShaderStageOffset)
 		set(newValue) = TODO()
 
 	actual var maxStorageBuffersPerShaderStage: UInt
-		get() = TODO()
+		get() = getUInt("maxStorageBuffersPerShaderStage", maxStorageBuffersPerShaderStageOffset)
 		set(newValue) = TODO()
 
 	actual var maxStorageTexturesPerShaderStage: UInt
-		get() = TODO()
+		get() = getUInt("maxStorageTexturesPerShaderStage", maxStorageTexturesPerShaderStageOffset)
 		set(newValue) = TODO()
 
 	actual var maxUniformBuffersPerShaderStage: UInt
-		get() = TODO()
+		get() = getUInt("maxUniformBuffersPerShaderStage", maxUniformBuffersPerShaderStageOffset)
 		set(newValue) = TODO()
 
 	actual var maxUniformBufferBindingSize: ULong
@@ -1142,15 +1056,15 @@ actual value class WGPULimits(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual var minUniformBufferOffsetAlignment: UInt
-		get() = TODO()
+		get() = getUInt("minUniformBufferOffsetAlignment", minUniformBufferOffsetAlignmentOffset)
 		set(newValue) = TODO()
 
 	actual var minStorageBufferOffsetAlignment: UInt
-		get() = TODO()
+		get() = getUInt("minStorageBufferOffsetAlignment", minStorageBufferOffsetAlignmentOffset)
 		set(newValue) = TODO()
 
 	actual var maxVertexBuffers: UInt
-		get() = TODO()
+		get() = getUInt("maxVertexBuffers", maxVertexBuffersOffset)
 		set(newValue) = TODO()
 
 	actual var maxBufferSize: ULong
@@ -1158,54 +1072,51 @@ actual value class WGPULimits(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual var maxVertexAttributes: UInt
-		get() = TODO()
+		get() = getUInt("maxVertexAttributes", maxVertexAttributesOffset)
 		set(newValue) = TODO()
 
 	actual var maxVertexBufferArrayStride: UInt
-		get() = TODO()
+		get() = getUInt("maxVertexBufferArrayStride", maxVertexBufferArrayStrideOffset)
 		set(newValue) = TODO()
 
 	actual var maxInterStageShaderVariables: UInt
-		get() = TODO()
+		get() = getUInt("maxInterStageShaderVariables", maxInterStageShaderVariablesOffset)
 		set(newValue) = TODO()
 
 	actual var maxColorAttachments: UInt
-		get() = TODO()
+		get() = getUInt("maxColorAttachments", maxColorAttachmentsOffset)
 		set(newValue) = TODO()
 
 	actual var maxColorAttachmentBytesPerSample: UInt
-		get() = TODO()
+		get() = getUInt("maxColorAttachmentBytesPerSample", maxColorAttachmentBytesPerSampleOffset)
 		set(newValue) = TODO()
 
 	actual var maxComputeWorkgroupStorageSize: UInt
-		get() = TODO()
+		get() = getUInt("maxComputeWorkgroupStorageSize", maxComputeWorkgroupStorageSizeOffset)
 		set(newValue) = TODO()
 
 	actual var maxComputeInvocationsPerWorkgroup: UInt
-		get() = TODO()
+		get() = getUInt("maxComputeInvocationsPerWorkgroup", maxComputeInvocationsPerWorkgroupOffset)
 		set(newValue) = TODO()
 
 	actual var maxComputeWorkgroupSizeX: UInt
-		get() = TODO()
+		get() = getUInt("maxComputeWorkgroupSizeX", maxComputeWorkgroupSizeXOffset)
 		set(newValue) = TODO()
 
 	actual var maxComputeWorkgroupSizeY: UInt
-		get() = TODO()
+		get() = getUInt("maxComputeWorkgroupSizeY", maxComputeWorkgroupSizeYOffset)
 		set(newValue) = TODO()
 
 	actual var maxComputeWorkgroupSizeZ: UInt
-		get() = TODO()
+		get() = getUInt("maxComputeWorkgroupSizeZ", maxComputeWorkgroupSizeZOffset)
 		set(newValue) = TODO()
 
 	actual var maxComputeWorkgroupsPerDimension: UInt
-		get() = TODO()
+		get() = getUInt("maxComputeWorkgroupsPerDimension", maxComputeWorkgroupsPerDimensionOffset)
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1277,24 +1188,21 @@ actual value class WGPULimits(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUMultisampleState(actual val handler: NativeAddress) {
+actual value class WGPUMultisampleState(actual override val handler: NativeAddress) : CStructure {
 	actual var count: UInt
-		get() = TODO()
+		get() = getUInt("count", countOffset)
 		set(newValue) = TODO()
 
 	actual var mask: UInt
-		get() = TODO()
+		get() = getUInt("mask", maskOffset)
 		set(newValue) = TODO()
 
 	actual var alphaToCoverageEnabled: Boolean
-		get() = TODO()
+		get() = getInt("alphaToCoverageEnabled", alphaToCoverageEnabledOffset).toBoolean()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1310,24 +1218,21 @@ actual value class WGPUMultisampleState(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUOrigin3D(actual val handler: NativeAddress) {
+actual value class WGPUOrigin3D(actual override val handler: NativeAddress) : CStructure {
 	actual var x: UInt
-		get() = TODO()
+		get() = getUInt("x", xOffset)
 		set(newValue) = TODO()
 
 	actual var y: UInt
-		get() = TODO()
+		get() = getUInt("y", yOffset)
 		set(newValue) = TODO()
 
 	actual var z: UInt
-		get() = TODO()
+		get() = getUInt("z", zOffset)
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1343,7 +1248,7 @@ actual value class WGPUOrigin3D(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUPipelineLayoutDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -1356,11 +1261,8 @@ actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddres
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1376,7 +1278,7 @@ actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddres
 }
 
 @JvmInline
-actual value class WGPUPrimitiveState(actual val handler: NativeAddress) {
+actual value class WGPUPrimitiveState(actual override val handler: NativeAddress) : CStructure {
 	actual var topology: WGPUPrimitiveTopology
 		get() = TODO()
 		set(newValue) = TODO()
@@ -1394,14 +1296,11 @@ actual value class WGPUPrimitiveState(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual var unclippedDepth: Boolean
-		get() = TODO()
+		get() = getInt("unclippedDepth", unclippedDepthOffset).toBoolean()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1421,7 +1320,7 @@ actual value class WGPUPrimitiveState(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUProgrammableStageDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var module: WGPUShaderModule?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -1438,11 +1337,8 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1460,7 +1356,7 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 }
 
 @JvmInline
-actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUQuerySetDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -1470,14 +1366,11 @@ actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual var count: UInt
-		get() = TODO()
+		get() = getUInt("count", countOffset)
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1493,16 +1386,13 @@ actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUQueueDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUQueueDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1514,16 +1404,13 @@ actual value class WGPUQueueDescriptor(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress) {
+actual value class WGPURenderBundleDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1535,7 +1422,7 @@ actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress)
 }
 
 @JvmInline
-actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeAddress) {
+actual value class WGPURenderBundleEncoderDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -1553,22 +1440,19 @@ actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeA
 		set(newValue) = TODO()
 
 	actual var sampleCount: UInt
-		get() = TODO()
+		get() = getUInt("sampleCount", sampleCountOffset)
 		set(newValue) = TODO()
 
 	actual var depthReadOnly: Boolean
-		get() = TODO()
+		get() = getInt("depthReadOnly", depthReadOnlyOffset).toBoolean()
 		set(newValue) = TODO()
 
 	actual var stencilReadOnly: Boolean
-		get() = TODO()
+		get() = getInt("stencilReadOnly", stencilReadOnlyOffset).toBoolean()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1592,13 +1476,13 @@ actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeA
 }
 
 @JvmInline
-actual value class WGPURenderPassColorAttachment(actual val handler: NativeAddress) {
+actual value class WGPURenderPassColorAttachment(actual override val handler: NativeAddress) : CStructure {
 	actual var view: WGPUTextureView?
 		get() = TODO()
 		set(newValue) = TODO()
 
 	actual var depthSlice: UInt
-		get() = TODO()
+		get() = getUInt("depthSlice", depthSliceOffset)
 		set(newValue) = TODO()
 
 	actual var resolveTarget: WGPUTextureView?
@@ -1616,11 +1500,8 @@ actual value class WGPURenderPassColorAttachment(actual val handler: NativeAddre
 	actual val clearValue: WGPUColor
 		get() = get("clearValue", clearValueOffset).let(::WGPUColor)
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1642,7 +1523,7 @@ actual value class WGPURenderPassColorAttachment(actual val handler: NativeAddre
 }
 
 @JvmInline
-actual value class WGPURenderPassDepthStencilAttachment(actual val handler: NativeAddress) {
+actual value class WGPURenderPassDepthStencilAttachment(actual override val handler: NativeAddress) : CStructure {
 	actual var view: WGPUTextureView?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -1660,7 +1541,7 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 		set(newValue) = TODO()
 
 	actual var depthReadOnly: Boolean
-		get() = TODO()
+		get() = getInt("depthReadOnly", depthReadOnlyOffset).toBoolean()
 		set(newValue) = TODO()
 
 	actual var stencilLoadOp: WGPULoadOp
@@ -1672,18 +1553,15 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 		set(newValue) = TODO()
 
 	actual var stencilClearValue: UInt
-		get() = TODO()
+		get() = getUInt("stencilClearValue", stencilClearValueOffset)
 		set(newValue) = TODO()
 
 	actual var stencilReadOnly: Boolean
-		get() = TODO()
+		get() = getInt("stencilReadOnly", stencilReadOnlyOffset).toBoolean()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1711,7 +1589,7 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 }
 
 @JvmInline
-actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
+actual value class WGPURenderPassDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -1736,11 +1614,8 @@ actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1762,16 +1637,13 @@ actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPURenderPassMaxDrawCount(actual val handler: NativeAddress) {
+actual value class WGPURenderPassMaxDrawCount(actual override val handler: NativeAddress) : CStructure {
 	actual var maxDrawCount: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1783,24 +1655,21 @@ actual value class WGPURenderPassMaxDrawCount(actual val handler: NativeAddress)
 }
 
 @JvmInline
-actual value class WGPURenderPassTimestampWrites(actual val handler: NativeAddress) {
+actual value class WGPURenderPassTimestampWrites(actual override val handler: NativeAddress) : CStructure {
 	actual var querySet: WGPUQuerySet?
 		get() = TODO()
 		set(newValue) = TODO()
 
 	actual var beginningOfPassWriteIndex: UInt
-		get() = TODO()
+		get() = getUInt("beginningOfPassWriteIndex", beginningOfPassWriteIndexOffset)
 		set(newValue) = TODO()
 
 	actual var endOfPassWriteIndex: UInt
-		get() = TODO()
+		get() = getUInt("endOfPassWriteIndex", endOfPassWriteIndexOffset)
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1816,7 +1685,7 @@ actual value class WGPURenderPassTimestampWrites(actual val handler: NativeAddre
 }
 
 @JvmInline
-actual value class WGPURenderPipelineDescriptor(actual val handler: NativeAddress) {
+actual value class WGPURenderPipelineDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -1842,11 +1711,8 @@ actual value class WGPURenderPipelineDescriptor(actual val handler: NativeAddres
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1870,7 +1736,7 @@ actual value class WGPURenderPipelineDescriptor(actual val handler: NativeAddres
 }
 
 @JvmInline
-actual value class WGPURequestAdapterOptions(actual val handler: NativeAddress) {
+actual value class WGPURequestAdapterOptions(actual override val handler: NativeAddress) : CStructure {
 	actual var compatibleSurface: WGPUSurface?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -1884,14 +1750,11 @@ actual value class WGPURequestAdapterOptions(actual val handler: NativeAddress) 
 		set(newValue) = TODO()
 
 	actual var forceFallbackAdapter: Boolean
-		get() = TODO()
+		get() = getInt("forceFallbackAdapter", forceFallbackAdapterOffset).toBoolean()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1909,15 +1772,12 @@ actual value class WGPURequestAdapterOptions(actual val handler: NativeAddress) 
 }
 
 @JvmInline
-actual value class WGPURequiredLimits(actual val handler: NativeAddress) {
+actual value class WGPURequiredLimits(actual override val handler: NativeAddress) : CStructure {
 	actual val limits: WGPULimits
 		get() = get("limits", limitsOffset).let(::WGPULimits)
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1929,16 +1789,13 @@ actual value class WGPURequiredLimits(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUSamplerBindingLayout(actual val handler: NativeAddress) {
+actual value class WGPUSamplerBindingLayout(actual override val handler: NativeAddress) : CStructure {
 	actual var type: WGPUSamplerBindingType
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -1950,7 +1807,7 @@ actual value class WGPUSamplerBindingLayout(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUSamplerDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -1995,11 +1852,8 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2031,16 +1885,13 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUShaderModuleDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUShaderModuleDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2052,20 +1903,17 @@ actual value class WGPUShaderModuleDescriptor(actual val handler: NativeAddress)
 }
 
 @JvmInline
-actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
+actual value class WGPUShaderSourceSPIRV(actual override val handler: NativeAddress) : CStructure {
 	actual var codeSize: UInt
-		get() = TODO()
+		get() = getUInt("codeSize", codeSizeOffset)
 		set(newValue) = TODO()
 
 	actual var code: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2079,16 +1927,13 @@ actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
+actual value class WGPUShaderSourceWGSL(actual override val handler: NativeAddress) : CStructure {
 	actual var code: CString?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2100,7 +1945,7 @@ actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUStencilFaceState(actual val handler: NativeAddress) {
+actual value class WGPUStencilFaceState(actual override val handler: NativeAddress) : CStructure {
 	actual var compare: WGPUCompareFunction
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2117,11 +1962,8 @@ actual value class WGPUStencilFaceState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2139,7 +1981,7 @@ actual value class WGPUStencilFaceState(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUStorageTextureBindingLayout(actual val handler: NativeAddress) {
+actual value class WGPUStorageTextureBindingLayout(actual override val handler: NativeAddress) : CStructure {
 	actual var access: WGPUStorageTextureAccess
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2152,11 +1994,8 @@ actual value class WGPUStorageTextureBindingLayout(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2172,15 +2011,12 @@ actual value class WGPUStorageTextureBindingLayout(actual val handler: NativeAdd
 }
 
 @JvmInline
-actual value class WGPUSupportedLimits(actual val handler: NativeAddress) {
+actual value class WGPUSupportedLimits(actual override val handler: NativeAddress) : CStructure {
 	actual val limits: WGPULimits
 		get() = get("limits", limitsOffset).let(::WGPULimits)
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2192,7 +2028,7 @@ actual value class WGPUSupportedLimits(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
+actual value class WGPUSurfaceCapabilities(actual override val handler: NativeAddress) : CStructure {
 	actual var usages: ULong
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2221,11 +2057,8 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2249,7 +2082,7 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
+actual value class WGPUSurfaceConfiguration(actual override val handler: NativeAddress) : CStructure {
 	actual var device: WGPUDevice?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2263,11 +2096,11 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual var width: UInt
-		get() = TODO()
+		get() = getUInt("width", widthOffset)
 		set(newValue) = TODO()
 
 	actual var height: UInt
-		get() = TODO()
+		get() = getUInt("height", heightOffset)
 		set(newValue) = TODO()
 
 	actual var viewFormatCount: ULong
@@ -2286,11 +2119,8 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2318,16 +2148,13 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUSurfaceDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUSurfaceDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2339,16 +2166,13 @@ actual value class WGPUSurfaceDescriptor(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUSurfaceSourceAndroidNativeWindow(actual val handler: NativeAddress) {
+actual value class WGPUSurfaceSourceAndroidNativeWindow(actual override val handler: NativeAddress) : CStructure {
 	actual var window: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2360,16 +2184,13 @@ actual value class WGPUSurfaceSourceAndroidNativeWindow(actual val handler: Nati
 }
 
 @JvmInline
-actual value class WGPUSurfaceSourceMetalLayer(actual val handler: NativeAddress) {
+actual value class WGPUSurfaceSourceMetalLayer(actual override val handler: NativeAddress) : CStructure {
 	actual var layer: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2381,7 +2202,7 @@ actual value class WGPUSurfaceSourceMetalLayer(actual val handler: NativeAddress
 }
 
 @JvmInline
-actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAddress) {
+actual value class WGPUSurfaceSourceWaylandSurface(actual override val handler: NativeAddress) : CStructure {
 	actual var display: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2390,11 +2211,8 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2408,7 +2226,7 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAdd
 }
 
 @JvmInline
-actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddress) {
+actual value class WGPUSurfaceSourceWindowsHWND(actual override val handler: NativeAddress) : CStructure {
 	actual var hinstance: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2417,11 +2235,8 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddres
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2435,20 +2250,17 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddres
 }
 
 @JvmInline
-actual value class WGPUSurfaceSourceXCBWindow(actual val handler: NativeAddress) {
+actual value class WGPUSurfaceSourceXCBWindow(actual override val handler: NativeAddress) : CStructure {
 	actual var connection: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
 
 	actual var window: UInt
-		get() = TODO()
+		get() = getUInt("window", windowOffset)
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2462,7 +2274,7 @@ actual value class WGPUSurfaceSourceXCBWindow(actual val handler: NativeAddress)
 }
 
 @JvmInline
-actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress) {
+actual value class WGPUSurfaceSourceXlibWindow(actual override val handler: NativeAddress) : CStructure {
 	actual var display: NativeAddress?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2471,11 +2283,8 @@ actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2489,7 +2298,7 @@ actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress
 }
 
 @JvmInline
-actual value class WGPUSurfaceTexture(actual val handler: NativeAddress) {
+actual value class WGPUSurfaceTexture(actual override val handler: NativeAddress) : CStructure {
 	actual var texture: WGPUTexture?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2498,11 +2307,8 @@ actual value class WGPUSurfaceTexture(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2516,7 +2322,7 @@ actual value class WGPUSurfaceTexture(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUTextureBindingLayout(actual val handler: NativeAddress) {
+actual value class WGPUTextureBindingLayout(actual override val handler: NativeAddress) : CStructure {
 	actual var sampleType: WGPUTextureSampleType
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2526,14 +2332,11 @@ actual value class WGPUTextureBindingLayout(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual var multisampled: Boolean
-		get() = TODO()
+		get() = getInt("multisampled", multisampledOffset).toBoolean()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2549,24 +2352,21 @@ actual value class WGPUTextureBindingLayout(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUTextureDataLayout(actual val handler: NativeAddress) {
+actual value class WGPUTextureDataLayout(actual override val handler: NativeAddress) : CStructure {
 	actual var offset: ULong
 		get() = TODO()
 		set(newValue) = TODO()
 
 	actual var bytesPerRow: UInt
-		get() = TODO()
+		get() = getUInt("bytesPerRow", bytesPerRowOffset)
 		set(newValue) = TODO()
 
 	actual var rowsPerImage: UInt
-		get() = TODO()
+		get() = getUInt("rowsPerImage", rowsPerImageOffset)
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2582,7 +2382,7 @@ actual value class WGPUTextureDataLayout(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUTextureDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2603,11 +2403,11 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual var mipLevelCount: UInt
-		get() = TODO()
+		get() = getUInt("mipLevelCount", mipLevelCountOffset)
 		set(newValue) = TODO()
 
 	actual var sampleCount: UInt
-		get() = TODO()
+		get() = getUInt("sampleCount", sampleCountOffset)
 		set(newValue) = TODO()
 
 	actual var viewFormatCount: ULong
@@ -2618,11 +2418,8 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2650,7 +2447,7 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) {
+actual value class WGPUTextureViewDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual var label: CString?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2664,19 +2461,19 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 		set(newValue) = TODO()
 
 	actual var baseMipLevel: UInt
-		get() = TODO()
+		get() = getUInt("baseMipLevel", baseMipLevelOffset)
 		set(newValue) = TODO()
 
 	actual var mipLevelCount: UInt
-		get() = TODO()
+		get() = getUInt("mipLevelCount", mipLevelCountOffset)
 		set(newValue) = TODO()
 
 	actual var baseArrayLayer: UInt
-		get() = TODO()
+		get() = getUInt("baseArrayLayer", baseArrayLayerOffset)
 		set(newValue) = TODO()
 
 	actual var arrayLayerCount: UInt
-		get() = TODO()
+		get() = getUInt("arrayLayerCount", arrayLayerCountOffset)
 		set(newValue) = TODO()
 
 	actual var aspect: WGPUTextureAspect
@@ -2687,11 +2484,8 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2719,7 +2513,7 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 }
 
 @JvmInline
-actual value class WGPUVertexAttribute(actual val handler: NativeAddress) {
+actual value class WGPUVertexAttribute(actual override val handler: NativeAddress) : CStructure {
 	actual var format: WGPUVertexFormat
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2729,14 +2523,11 @@ actual value class WGPUVertexAttribute(actual val handler: NativeAddress) {
 		set(newValue) = TODO()
 
 	actual var shaderLocation: UInt
-		get() = TODO()
+		get() = getUInt("shaderLocation", shaderLocationOffset)
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2752,7 +2543,7 @@ actual value class WGPUVertexAttribute(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
+actual value class WGPUVertexBufferLayout(actual override val handler: NativeAddress) : CStructure {
 	actual var arrayStride: ULong
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2769,11 +2560,8 @@ actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2791,7 +2579,7 @@ actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUVertexState(actual val handler: NativeAddress) {
+actual value class WGPUVertexState(actual override val handler: NativeAddress) : CStructure {
 	actual var module: WGPUShaderModule?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2816,11 +2604,8 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2842,7 +2627,7 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUChainedStruct(actual val handler: NativeAddress) {
+actual value class WGPUChainedStruct(actual override val handler: NativeAddress) : CStructure {
 	actual var next: WGPUChainedStruct?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2851,11 +2636,8 @@ actual value class WGPUChainedStruct(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2869,7 +2651,7 @@ actual value class WGPUChainedStruct(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
+actual value class WGPUChainedStructOut(actual override val handler: NativeAddress) : CStructure {
 	actual var next: WGPUChainedStructOut?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2878,11 +2660,8 @@ actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2896,7 +2675,7 @@ actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
 }
 
 @JvmInline
-actual value class WGPUBufferMapCallbackInfo(actual val handler: NativeAddress) {
+actual value class WGPUBufferMapCallbackInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var nextInChain: WGPUChainedStruct?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2913,11 +2692,8 @@ actual value class WGPUBufferMapCallbackInfo(actual val handler: NativeAddress) 
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2935,7 +2711,7 @@ actual value class WGPUBufferMapCallbackInfo(actual val handler: NativeAddress) 
 }
 
 @JvmInline
-actual value class WGPUCompilationInfoCallbackInfo(actual val handler: NativeAddress) {
+actual value class WGPUCompilationInfoCallbackInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var nextInChain: WGPUChainedStruct?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2952,11 +2728,8 @@ actual value class WGPUCompilationInfoCallbackInfo(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -2974,7 +2747,7 @@ actual value class WGPUCompilationInfoCallbackInfo(actual val handler: NativeAdd
 }
 
 @JvmInline
-actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual val handler: NativeAddress) {
+actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var nextInChain: WGPUChainedStruct?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -2991,11 +2764,8 @@ actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual val handler
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -3013,7 +2783,7 @@ actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual val handler
 }
 
 @JvmInline
-actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual val handler: NativeAddress) {
+actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var nextInChain: WGPUChainedStruct?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -3030,11 +2800,8 @@ actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual val handler:
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -3052,7 +2819,7 @@ actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual val handler:
 }
 
 @JvmInline
-actual value class WGPUDeviceLostCallbackInfo(actual val handler: NativeAddress) {
+actual value class WGPUDeviceLostCallbackInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var nextInChain: WGPUChainedStruct?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -3069,11 +2836,8 @@ actual value class WGPUDeviceLostCallbackInfo(actual val handler: NativeAddress)
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -3091,7 +2855,7 @@ actual value class WGPUDeviceLostCallbackInfo(actual val handler: NativeAddress)
 }
 
 @JvmInline
-actual value class WGPUPopErrorScopeCallbackInfo(actual val handler: NativeAddress) {
+actual value class WGPUPopErrorScopeCallbackInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var nextInChain: WGPUChainedStruct?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -3108,11 +2872,8 @@ actual value class WGPUPopErrorScopeCallbackInfo(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -3130,7 +2891,7 @@ actual value class WGPUPopErrorScopeCallbackInfo(actual val handler: NativeAddre
 }
 
 @JvmInline
-actual value class WGPUQueueWorkDoneCallbackInfo(actual val handler: NativeAddress) {
+actual value class WGPUQueueWorkDoneCallbackInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var nextInChain: WGPUChainedStruct?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -3147,11 +2908,8 @@ actual value class WGPUQueueWorkDoneCallbackInfo(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -3169,7 +2927,7 @@ actual value class WGPUQueueWorkDoneCallbackInfo(actual val handler: NativeAddre
 }
 
 @JvmInline
-actual value class WGPURequestAdapterCallbackInfo(actual val handler: NativeAddress) {
+actual value class WGPURequestAdapterCallbackInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var nextInChain: WGPUChainedStruct?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -3186,11 +2944,8 @@ actual value class WGPURequestAdapterCallbackInfo(actual val handler: NativeAddr
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -3208,7 +2963,7 @@ actual value class WGPURequestAdapterCallbackInfo(actual val handler: NativeAddr
 }
 
 @JvmInline
-actual value class WGPURequestDeviceCallbackInfo(actual val handler: NativeAddress) {
+actual value class WGPURequestDeviceCallbackInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var nextInChain: WGPUChainedStruct?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -3225,11 +2980,8 @@ actual value class WGPURequestDeviceCallbackInfo(actual val handler: NativeAddre
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
@@ -3247,7 +2999,7 @@ actual value class WGPURequestDeviceCallbackInfo(actual val handler: NativeAddre
 }
 
 @JvmInline
-actual value class WGPUUncapturedErrorCallbackInfo(actual val handler: NativeAddress) {
+actual value class WGPUUncapturedErrorCallbackInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var nextInChain: WGPUChainedStruct?
 		get() = TODO()
 		set(newValue) = TODO()
@@ -3264,11 +3016,8 @@ actual value class WGPUUncapturedErrorCallbackInfo(actual val handler: NativeAdd
 		get() = TODO()
 		set(newValue) = TODO()
 
-	private fun getLayout(name: String)
+	override fun getLayout(name: String)
 		= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout
-
-	private fun get(name: String, offset: Long)
-		= handler.get(getLayout(name), offset)
 
 	companion object {
 		internal val LAYOUT = structLayout(
