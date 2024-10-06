@@ -5,4 +5,4 @@ import kotlin.jvm.JvmInline
 interface Callback
 
 @JvmInline
-value  class CallbackHolder<T: Callback>(val handler: Long)
+value  class CallbackHolder<T: Callback>(val handler: NativeAddress)

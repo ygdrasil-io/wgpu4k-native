@@ -202,6 +202,7 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
         it.members.forEach { (name, type, optional) ->
             val variableType = type.generateVariableType()
             appendText("\tactual $variableType $name: ${type.toFunctionKotlinType()}$optional\n")
+            // Getter
             when (type) {
                 is CLibraryModel.Array,
                 CLibraryModel.Primitive.Void,
@@ -224,8 +225,29 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
 
                 is CLibraryModel.Reference.StructureField -> "get(\"$name\", ${name}Offset).let(::${type.name})"
             }.let { appendText("\t\tget() = $it\n") }
-            if (variableType == "var") appendText("\t\tset(newValue) = TODO()\n\n") else appendText("\n")
 
+            // Setter
+            when (type) {
+                CLibraryModel.Primitive.Void,
+                is CLibraryModel.Reference.Enumeration,
+                CLibraryModel.Reference.OpaquePointer,
+                CLibraryModel.Primitive.Float32,
+                CLibraryModel.Primitive.Float64,
+                CLibraryModel.Primitive.Int64,
+                CLibraryModel.Primitive.UInt16,
+                CLibraryModel.Primitive.UInt64,
+                CLibraryModel.Primitive.Bool,
+                CLibraryModel.Primitive.Int32,
+                CLibraryModel.Primitive.UInt32 -> "set(\"$name\", ${name}Offset, newValue)"
+
+                is CLibraryModel.Reference.Callback,
+                CLibraryModel.Reference.CString,
+                is CLibraryModel.Reference.Structure,
+                is CLibraryModel.Array,
+                is CLibraryModel.Reference.Pointer -> "set(\"$name\", ${name}Offset, newValue?.handler)"
+
+                is CLibraryModel.Reference.StructureField -> null
+            }?.let { appendText("\t\tset(newValue) = $it\n\n") } ?: appendText("\n")
         }
 
         appendHelperFunctions(structureName)
