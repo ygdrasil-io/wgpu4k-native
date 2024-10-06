@@ -250,8 +250,6 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
             }?.let { appendText("\t\tset(newValue) = $it\n\n") } ?: appendText("\n")
         }
 
-        appendHelperFunctions(structureName)
-
         // Generate layout
         appendText("\tcompanion object {\n")
         appendText("\t\tinternal val LAYOUT = structLayout(\n")
@@ -307,12 +305,6 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
 
         appendText("}\n\n")
     }
-}
-
-fun File.appendHelperFunctions(structureName: String) {
-    appendText("\toverride fun getLayout(name: String)\n")
-    appendText("\t\t= $structureName.LAYOUT.withName(name) as AddressLayout\n")
-    appendText("\n")
 }
 
 private fun CLibraryModel.Type.getOffsetSize() = when(this) {

@@ -5,11 +5,7 @@ import java.lang.foreign.AddressLayout
 import java.lang.foreign.StructLayout
 import java.lang.foreign.ValueLayout
 
-interface AddressProvider {
-    fun getLayout(name: String) : AddressLayout
-}
-
-interface CStructure : AddressProvider {
+interface CStructure {
     val handler: NativeAddress
 
     fun get(layout: StructLayout, offset: Long)
