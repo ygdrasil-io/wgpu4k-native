@@ -58,6 +58,7 @@ private val nativeHeader = """
     import ffi.CString
     import ffi.NativeAddress
     import ffi.ArrayHolder
+    import ffi.adapt
     import kotlinx.cinterop.ExperimentalForeignApi
     import kotlinx.cinterop.toCPointer
     
@@ -85,7 +86,6 @@ private fun File.writeFunction(function: CLibraryModel.Function) {
 }
 
 private fun CLibraryModel.Type.optionalReturnType(): String = when (this) {
-    CLibraryModel.Primitive.Void,
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer,
     is CLibraryModel.Reference.Structure,
@@ -96,6 +96,7 @@ private fun CLibraryModel.Type.optionalReturnType(): String = when (this) {
 }
 
 private fun CLibraryModel.Type.optional(): String = when (this) {
+    CLibraryModel.Primitive.Void,
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer,
     is CLibraryModel.Reference.Structure,
@@ -125,19 +126,20 @@ private fun File.writeNativeFunction(function: CLibraryModel.Function) {
     val argsCall = function.args
         .map { (name, type) -> type.toNativeArgCall(name) }
         .joinToString(", ")
-    appendText("actual fun $name($args): $returnType\n")
-    appendText("\t = webgpu.native.$name($argsCall)\n")
+    appendText("actual fun $name($args): $returnType {\n")
+    appendText("\t ${if (function.returnType is CLibraryModel.Primitive.Void) "" else "return "}webgpu.native.$name($argsCall)\n")
 
     when (function.returnType) {
         is CLibraryModel.Reference.Enumeration -> null
+        is CLibraryModel.Reference.OpaquePointer -> "?.rawValue?.toLong()"
         is CLibraryModel.Reference -> {
             "?.rawValue?.toLong()?.let(::${function.returnType.name})"
         }
-        is CLibraryModel.Primitive.Bool -> ".toBoolean()\n"
+        is CLibraryModel.Primitive.Bool -> ".toBoolean()"
         else -> null
     }?.let { appendText("\t\t$it\n") }
 
-    appendText("\n")
+    appendText("}\n")
 }
 
 internal fun File.generateJvmFunctions(functions: List<CLibraryModel.Function>) {
@@ -164,10 +166,11 @@ private fun File.writeJvmFunction(function: CLibraryModel.Function) {
 
     when (function.returnType) {
         is CLibraryModel.Reference.Enumeration -> null
+        is CLibraryModel.Reference.OpaquePointer -> "?.let(::NativeAddress)"
         is CLibraryModel.Reference -> {
             "?.let(::NativeAddress)?.let(::${function.returnType.name})"
         }
-        is CLibraryModel.Primitive.Bool -> ".toBoolean()\n"
+        is CLibraryModel.Primitive.Bool -> ".toBoolean()"
         else -> null
     }?.let { appendText("\t\t$it\n") }
 
@@ -183,7 +186,8 @@ private fun CLibraryModel.Type.toJvmArgCall(name: String) = when(this) {
 }
 
 private fun CLibraryModel.Type.toNativeArgCall(name: String) = when(this) {
-    is CLibraryModel.Reference.OpaquePointer,
+    is CLibraryModel.Reference.CString -> "$name?.toKString()"
+    is CLibraryModel.Reference.OpaquePointer -> "$name?.adapt()"
     is CLibraryModel.Reference.Enumeration -> name
     is CLibraryModel.Array,
     is CLibraryModel.Reference -> "$name?.handler?.toCPointer()"

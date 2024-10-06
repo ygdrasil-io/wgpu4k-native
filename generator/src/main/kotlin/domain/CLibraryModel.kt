@@ -81,23 +81,43 @@ internal fun String?.toCType(isPointer: Boolean = false): CLibraryModel.Type {
         }
         startsWith("object.")
             -> CLibraryModel.Reference.Pointer(split(".").last().convertToKotlinClassName())
-        startsWith("enum.")
-            -> CLibraryModel.Reference.Enumeration(split(".").last().convertToKotlinClassName())
+        startsWith("enum.") -> when (isPointer) {
+            true -> CLibraryModel.Reference.OpaquePointer
+            else -> CLibraryModel.Reference.Enumeration(split(".").last().convertToKotlinClassName())
+        }
         startsWith("callback.")
             -> CLibraryModel.Reference.StructureField(split(".").last().convertToKotlinCallbackStructureName())
         startsWith("bitflag.") -> CLibraryModel.Primitive.UInt64
         equals("string") -> CLibraryModel.Reference.CString
         equals("bool") -> CLibraryModel.Primitive.Bool
-        equals("usize") -> CLibraryModel.Primitive.UInt64
-        equals("uint64") -> CLibraryModel.Primitive.UInt64
+        equals("usize") -> when (isPointer) {
+            true -> CLibraryModel.Reference.OpaquePointer
+            else -> CLibraryModel.Primitive.UInt64
+        }
+        equals("uint64") -> when (isPointer) {
+            true -> CLibraryModel.Reference.OpaquePointer
+            else -> CLibraryModel.Primitive.UInt64
+        }
         equals("uint32") ->  when (isPointer) {
             true -> CLibraryModel.Reference.OpaquePointer
             else -> CLibraryModel.Primitive.UInt32
         }
-        equals("uint16") -> CLibraryModel.Primitive.UInt16
-        equals("int32") -> CLibraryModel.Primitive.Int32
-        equals("float32") -> CLibraryModel.Primitive.Float32
-        equals("float64") -> CLibraryModel.Primitive.Float64
+        equals("uint16") -> when (isPointer) {
+            true -> CLibraryModel.Reference.OpaquePointer
+            else -> CLibraryModel.Primitive.UInt16
+        }
+        equals("int32") -> when (isPointer) {
+            true -> CLibraryModel.Reference.OpaquePointer
+            else -> CLibraryModel.Primitive.Int32
+        }
+        equals("float32") -> when (isPointer) {
+            true -> CLibraryModel.Reference.OpaquePointer
+            else -> CLibraryModel.Primitive.Float32
+        }
+        equals("float64") -> when (isPointer) {
+            true -> CLibraryModel.Reference.OpaquePointer
+            else -> CLibraryModel.Primitive.Float64
+        }
         equals("c_void") -> when (isPointer) {
             true -> CLibraryModel.Reference.OpaquePointer
             else -> CLibraryModel.Primitive.Void

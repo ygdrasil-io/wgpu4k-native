@@ -6,9 +6,9 @@ import convertToKotlinClassName
 import convertToKotlinFunctionName
 import convertToKotlinVariableName
 import domain.CLibraryModel
+import domain.CLibraryModel.Type
 import domain.YamlModel
 import domain.toCType
-
 
 internal fun YamlModel.toCModel(): Pair<YamlModel, CLibraryModel> {
     val pointers = convertToPointer()
@@ -38,8 +38,8 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
                 it.type.toCType(it.pointer != null),
                 if (it.type.toCType(it.pointer != null) is CLibraryModel.Array ||
                     (it.type.toCType(it.pointer != null) is CLibraryModel.Reference &&
-                    it.type.toCType(it.pointer != null) !is CLibraryModel.Reference.Enumeration &&
-                    it.type.toCType(it.pointer != null) !is CLibraryModel.Reference.StructureField)
+                            it.type.toCType(it.pointer != null) !is CLibraryModel.Reference.Enumeration &&
+                            it.type.toCType(it.pointer != null) !is CLibraryModel.Reference.StructureField)
                 ) "?" else ""
             ).let {
                 when (it.second) {
@@ -47,6 +47,7 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
                         it.generateArrayCounter(),
                         it
                     )
+
                     else -> listOf(it)
                 }
             }
@@ -85,8 +86,11 @@ private fun YamlModel.convertToCLibraryEnumerations() =
 private fun YamlModel.convertToCLibraryFunctions() = functions.map {
     CLibraryModel.Function(
         it.name.convertToKotlinFunctionName(),
-        it.returns.let { it?.type }.toCType(),
-        it.args.map { it.name.convertToKotlinVariableName() to it.type.toCType(it.pointer != null) }
+         it.returns.let { it?.type }.toCType(it.returns?.pointer != null),
+        // Uncomnent when success to handle structure filed
+        /*if (it.callback != null) CLibraryModel.Reference.StructureField("WGPUFuture") else it.returns.let { it?.type }
+            .toCType(it.returns?.pointer != null),*/
+        it.args.map { it.name.convertToKotlinVariableName() to it.type.toCType(it.pointer != null) } + it.callback.injectCallbackInfoStructure()
     )
 } + objects.flatMap { reference ->
     reference.methods.map {
@@ -94,10 +98,18 @@ private fun YamlModel.convertToCLibraryFunctions() = functions.map {
         val args = listOf(YamlModel.Function.Arg("handler", "", "object.${reference.name}")) + it.args
         CLibraryModel.Function(
             name,
-            it.returns.let { it?.type }.toCType(),
-            args.map { it.name.convertToKotlinVariableName() to it.type.toCType(it.pointer != null) }
+            it.returns.let { it?.type }.toCType(it.returns?.pointer != null),
+            // Uncomnent when success to handle structure filed
+            /*if (it.callback != null) CLibraryModel.Reference.StructureField("WGPUFuture") else it.returns.let { it?.type }
+                .toCType(it.returns?.pointer != null),*/
+            args.map { it.name.convertToKotlinVariableName() to it.type.toCType(it.pointer != null) } + it.callback.injectCallbackInfoStructure()
         )
     }
+}
+
+private fun String?.injectCallbackInfoStructure(): List<Pair<String, Type>> = when {
+    this != null -> listOf("callbackInfo" to CLibraryModel.Reference.StructureField(split(".")[1].convertToKotlinCallbackStructureName()))
+    else -> emptyList()
 }
 
 private fun YamlModel.convertToPointer(): List<CLibraryModel.Pointer> {

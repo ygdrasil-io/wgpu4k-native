@@ -14,14 +14,14 @@ object Functions {
 	external fun wgpuGetInstanceFeatures(features: Long): Unit
 	external fun wgpuAdapterGetLimits(handler: Long, limits: Long): UInt
 	external fun wgpuAdapterHasFeature(handler: Long, feature: UInt): UInt
-	external fun wgpuAdapterEnumerateFeatures(handler: Long, features: UInt): ULong
+	external fun wgpuAdapterEnumerateFeatures(handler: Long, features: Long): ULong
 	external fun wgpuAdapterGetInfo(handler: Long, info: Long): Unit
-	external fun wgpuAdapterRequestDevice(handler: Long, descriptor: Long): Unit
+	external fun wgpuAdapterRequestDevice(handler: Long, descriptor: Long, callbackInfo: Long): Unit
 	external fun wgpuBindGroupSetLabel(handler: Long, label: Long): Unit
 	external fun wgpuBindGroupLayoutSetLabel(handler: Long, label: Long): Unit
-	external fun wgpuBufferMapAsync(handler: Long, mode: ULong, offset: ULong, size: ULong): Unit
-	external fun wgpuBufferGetMappedRange(handler: Long, offset: ULong, size: ULong): Unit
-	external fun wgpuBufferGetConstMappedRange(handler: Long, offset: ULong, size: ULong): Unit
+	external fun wgpuBufferMapAsync(handler: Long, mode: ULong, offset: ULong, size: ULong, callbackInfo: Long): Unit
+	external fun wgpuBufferGetMappedRange(handler: Long, offset: ULong, size: ULong): Long
+	external fun wgpuBufferGetConstMappedRange(handler: Long, offset: ULong, size: ULong): Long
 	external fun wgpuBufferSetLabel(handler: Long, label: Long): Unit
 	external fun wgpuBufferGetUsage(handler: Long): ULong
 	external fun wgpuBufferGetSize(handler: Long): ULong
@@ -59,10 +59,10 @@ object Functions {
 	external fun wgpuDeviceCreateBuffer(handler: Long, descriptor: Long): Long
 	external fun wgpuDeviceCreateCommandEncoder(handler: Long, descriptor: Long): Long
 	external fun wgpuDeviceCreateComputePipeline(handler: Long, descriptor: Long): Long
-	external fun wgpuDeviceCreateComputePipelineAsync(handler: Long, descriptor: Long): Unit
+	external fun wgpuDeviceCreateComputePipelineAsync(handler: Long, descriptor: Long, callbackInfo: Long): Unit
 	external fun wgpuDeviceCreatePipelineLayout(handler: Long, descriptor: Long): Long
 	external fun wgpuDeviceCreateQuerySet(handler: Long, descriptor: Long): Long
-	external fun wgpuDeviceCreateRenderPipelineAsync(handler: Long, descriptor: Long): Unit
+	external fun wgpuDeviceCreateRenderPipelineAsync(handler: Long, descriptor: Long, callbackInfo: Long): Unit
 	external fun wgpuDeviceCreateRenderBundleEncoder(handler: Long, descriptor: Long): Long
 	external fun wgpuDeviceCreateRenderPipeline(handler: Long, descriptor: Long): Long
 	external fun wgpuDeviceCreateSampler(handler: Long, descriptor: Long): Long
@@ -71,15 +71,15 @@ object Functions {
 	external fun wgpuDeviceDestroy(handler: Long): Unit
 	external fun wgpuDeviceGetLimits(handler: Long, limits: Long): UInt
 	external fun wgpuDeviceHasFeature(handler: Long, feature: UInt): UInt
-	external fun wgpuDeviceEnumerateFeatures(handler: Long, features: UInt): ULong
+	external fun wgpuDeviceEnumerateFeatures(handler: Long, features: Long): ULong
 	external fun wgpuDeviceGetQueue(handler: Long): Long
 	external fun wgpuDevicePushErrorScope(handler: Long, filter: UInt): Unit
-	external fun wgpuDevicePopErrorScope(handler: Long): Unit
+	external fun wgpuDevicePopErrorScope(handler: Long, callbackInfo: Long): Unit
 	external fun wgpuDeviceSetLabel(handler: Long, label: Long): Unit
 	external fun wgpuInstanceCreateSurface(handler: Long, descriptor: Long): Long
 	external fun wgpuInstanceHasWGSLLanguageFeature(handler: Long, feature: UInt): UInt
 	external fun wgpuInstanceProcessEvents(handler: Long): Unit
-	external fun wgpuInstanceRequestAdapter(handler: Long, options: Long): Unit
+	external fun wgpuInstanceRequestAdapter(handler: Long, options: Long, callbackInfo: Long): Unit
 	external fun wgpuInstanceWaitAny(handler: Long, futureCount: ULong, futures: Long, timeoutNS: ULong): UInt
 	external fun wgpuPipelineLayoutSetLabel(handler: Long, label: Long): Unit
 	external fun wgpuQuerySetSetLabel(handler: Long, label: Long): Unit
@@ -87,7 +87,7 @@ object Functions {
 	external fun wgpuQuerySetGetCount(handler: Long): UInt
 	external fun wgpuQuerySetDestroy(handler: Long): Unit
 	external fun wgpuQueueSubmit(handler: Long, commands: Long): Unit
-	external fun wgpuQueueOnSubmittedWorkDone(handler: Long): Unit
+	external fun wgpuQueueOnSubmittedWorkDone(handler: Long, callbackInfo: Long): Unit
 	external fun wgpuQueueWriteBuffer(handler: Long, buffer: Long, bufferOffset: ULong, data: Long, size: ULong): Unit
 	external fun wgpuQueueWriteTexture(handler: Long, destination: Long, data: Long, dataSize: ULong, dataLayout: Long, writeSize: Long): Unit
 	external fun wgpuQueueSetLabel(handler: Long, label: Long): Unit
@@ -128,7 +128,7 @@ object Functions {
 	external fun wgpuRenderPipelineGetBindGroupLayout(handler: Long, groupIndex: UInt): Long
 	external fun wgpuRenderPipelineSetLabel(handler: Long, label: Long): Unit
 	external fun wgpuSamplerSetLabel(handler: Long, label: Long): Unit
-	external fun wgpuShaderModuleGetCompilationInfo(handler: Long): Unit
+	external fun wgpuShaderModuleGetCompilationInfo(handler: Long, callbackInfo: Long): Unit
 	external fun wgpuShaderModuleSetLabel(handler: Long, label: Long): Unit
 	external fun wgpuSurfaceConfigure(handler: Long, config: Long): Unit
 	external fun wgpuSurfaceGetCapabilities(handler: Long, adapter: Long, capabilities: Long): UInt
