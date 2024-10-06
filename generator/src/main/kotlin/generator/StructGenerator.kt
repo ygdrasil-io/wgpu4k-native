@@ -204,26 +204,21 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
             appendText("\tactual $variableType $name: ${type.toFunctionKotlinType()}$optional\n")
             // Getter
             when (type) {
-                is CLibraryModel.Array,
                 CLibraryModel.Primitive.Void,
-                CLibraryModel.Reference.CString,
-                is CLibraryModel.Reference.Callback,
-                is CLibraryModel.Reference.Enumeration,
-                CLibraryModel.Reference.OpaquePointer,
-                is CLibraryModel.Reference.Pointer,
-                is CLibraryModel.Reference.Structure, -> "TODO()"
-
+                CLibraryModel.Reference.OpaquePointer, -> "get(${name}Layout, ${name}Offset)"
+                CLibraryModel.Reference.CString,-> "get(${name}Layout, ${name}Offset).let(::CString)"
+                is CLibraryModel.Array, -> "get(${name}Layout, ${name}Offset).let(::ArrayHolder)"
+                is CLibraryModel.Reference.Callback -> "get(${name}Layout, ${name}Offset).let(::CallbackHolder)"
                 CLibraryModel.Primitive.Float32 -> "getFloat(${name}Layout, ${name}Offset)"
                 CLibraryModel.Primitive.Float64 -> "getDouble(${name}Layout, ${name}Offset)"
                 CLibraryModel.Primitive.Int64 -> "getLong(${name}Layout, ${name}Offset)"
                 CLibraryModel.Primitive.UInt16 -> "getUShort(${name}Layout, ${name}Offset)"
                 CLibraryModel.Primitive.UInt64 -> "getULong(${name}Layout, ${name}Offset)"
-
                 CLibraryModel.Primitive.Bool -> "getInt(${name}Layout, ${name}Offset).toBoolean()"
                 CLibraryModel.Primitive.Int32 -> "getInt(${name}Layout, ${name}Offset)"
+                is CLibraryModel.Reference.Enumeration,
                 CLibraryModel.Primitive.UInt32 -> "getUInt(${name}Layout, ${name}Offset)"
-
-                is CLibraryModel.Reference.StructureField -> "get(${name}Layout, ${name}Offset).let(::${type.name})"
+                is CLibraryModel.Reference -> "get(${name}Layout, ${name}Offset).let(::${type.name})"
             }.let { appendText("\t\tget() = $it\n") }
 
             // Setter
