@@ -42,11 +42,11 @@ actual value class WGPUAdapterInfo(actual override val handler: NativeAddress) :
 		set(newValue) = set(adapterTypeLayout, adapterTypeOffset, newValue)
 
 	actual var vendorID: UInt
-		get() = getUInt("vendorID", vendorIDOffset)
+		get() = getUInt(vendorIDLayout, vendorIDOffset)
 		set(newValue) = set(vendorIDLayout, vendorIDOffset, newValue)
 
 	actual var deviceID: UInt
-		get() = getUInt("deviceID", deviceIDOffset)
+		get() = getUInt(deviceIDLayout, deviceIDOffset)
 		set(newValue) = set(deviceIDLayout, deviceIDOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -102,7 +102,7 @@ actual value class WGPUBindGroupDescriptor(actual override val handler: NativeAd
 		set(newValue) = set(layoutLayout, layoutOffset, newValue?.handler)
 
 	actual var entryCount: ULong
-		get() = getULong("entryCount", entryCountOffset)
+		get() = getULong(entryCountLayout, entryCountOffset)
 		set(newValue) = set(entryCountLayout, entryCountOffset, newValue)
 
 	actual var entries: ArrayHolder<WGPUBindGroupEntry>?
@@ -138,7 +138,7 @@ actual value class WGPUBindGroupDescriptor(actual override val handler: NativeAd
 @JvmInline
 actual value class WGPUBindGroupEntry(actual override val handler: NativeAddress) : CStructure {
 	actual var binding: UInt
-		get() = getUInt("binding", bindingOffset)
+		get() = getUInt(bindingLayout, bindingOffset)
 		set(newValue) = set(bindingLayout, bindingOffset, newValue)
 
 	actual var buffer: WGPUBuffer?
@@ -146,11 +146,11 @@ actual value class WGPUBindGroupEntry(actual override val handler: NativeAddress
 		set(newValue) = set(bufferLayout, bufferOffset, newValue?.handler)
 
 	actual var offset: ULong
-		get() = getULong("offset", offsetOffset)
+		get() = getULong(offsetLayout, offsetOffset)
 		set(newValue) = set(offsetLayout, offsetOffset, newValue)
 
 	actual var size: ULong
-		get() = getULong("size", sizeOffset)
+		get() = getULong(sizeLayout, sizeOffset)
 		set(newValue) = set(sizeLayout, sizeOffset, newValue)
 
 	actual var sampler: WGPUSampler?
@@ -202,7 +202,7 @@ actual value class WGPUBindGroupLayoutDescriptor(actual override val handler: Na
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
 	actual var entryCount: ULong
-		get() = getULong("entryCount", entryCountOffset)
+		get() = getULong(entryCountLayout, entryCountOffset)
 		set(newValue) = set(entryCountLayout, entryCountOffset, newValue)
 
 	actual var entries: ArrayHolder<WGPUBindGroupLayoutEntry>?
@@ -234,24 +234,24 @@ actual value class WGPUBindGroupLayoutDescriptor(actual override val handler: Na
 @JvmInline
 actual value class WGPUBindGroupLayoutEntry(actual override val handler: NativeAddress) : CStructure {
 	actual var binding: UInt
-		get() = getUInt("binding", bindingOffset)
+		get() = getUInt(bindingLayout, bindingOffset)
 		set(newValue) = set(bindingLayout, bindingOffset, newValue)
 
 	actual var visibility: ULong
-		get() = getULong("visibility", visibilityOffset)
+		get() = getULong(visibilityLayout, visibilityOffset)
 		set(newValue) = set(visibilityLayout, visibilityOffset, newValue)
 
 	actual val buffer: WGPUBufferBindingLayout
-		get() = get("buffer", bufferOffset).let(::WGPUBufferBindingLayout)
+		get() = get(bufferLayout, bufferOffset).let(::WGPUBufferBindingLayout)
 
 	actual val sampler: WGPUSamplerBindingLayout
-		get() = get("sampler", samplerOffset).let(::WGPUSamplerBindingLayout)
+		get() = get(samplerLayout, samplerOffset).let(::WGPUSamplerBindingLayout)
 
 	actual val texture: WGPUTextureBindingLayout
-		get() = get("texture", textureOffset).let(::WGPUTextureBindingLayout)
+		get() = get(textureLayout, textureOffset).let(::WGPUTextureBindingLayout)
 
 	actual val storageTexture: WGPUStorageTextureBindingLayout
-		get() = get("storageTexture", storageTextureOffset).let(::WGPUStorageTextureBindingLayout)
+		get() = get(storageTextureLayout, storageTextureOffset).let(::WGPUStorageTextureBindingLayout)
 
 	override fun getLayout(name: String)
 		= WGPUBindGroupLayoutEntry.LAYOUT.withName(name) as AddressLayout
@@ -326,10 +326,10 @@ actual value class WGPUBlendComponent(actual override val handler: NativeAddress
 @JvmInline
 actual value class WGPUBlendState(actual override val handler: NativeAddress) : CStructure {
 	actual val color: WGPUBlendComponent
-		get() = get("color", colorOffset).let(::WGPUBlendComponent)
+		get() = get(colorLayout, colorOffset).let(::WGPUBlendComponent)
 
 	actual val alpha: WGPUBlendComponent
-		get() = get("alpha", alphaOffset).let(::WGPUBlendComponent)
+		get() = get(alphaLayout, alphaOffset).let(::WGPUBlendComponent)
 
 	override fun getLayout(name: String)
 		= WGPUBlendState.LAYOUT.withName(name) as AddressLayout
@@ -356,11 +356,11 @@ actual value class WGPUBufferBindingLayout(actual override val handler: NativeAd
 		set(newValue) = set(typeLayout, typeOffset, newValue)
 
 	actual var hasDynamicOffset: Boolean
-		get() = getInt("hasDynamicOffset", hasDynamicOffsetOffset).toBoolean()
+		get() = getInt(hasDynamicOffsetLayout, hasDynamicOffsetOffset).toBoolean()
 		set(newValue) = set(hasDynamicOffsetLayout, hasDynamicOffsetOffset, newValue)
 
 	actual var minBindingSize: ULong
-		get() = getULong("minBindingSize", minBindingSizeOffset)
+		get() = getULong(minBindingSizeLayout, minBindingSizeOffset)
 		set(newValue) = set(minBindingSizeLayout, minBindingSizeOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -392,15 +392,15 @@ actual value class WGPUBufferDescriptor(actual override val handler: NativeAddre
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
 	actual var usage: ULong
-		get() = getULong("usage", usageOffset)
+		get() = getULong(usageLayout, usageOffset)
 		set(newValue) = set(usageLayout, usageOffset, newValue)
 
 	actual var size: ULong
-		get() = getULong("size", sizeOffset)
+		get() = getULong(sizeLayout, sizeOffset)
 		set(newValue) = set(sizeLayout, sizeOffset, newValue)
 
 	actual var mappedAtCreation: Boolean
-		get() = getInt("mappedAtCreation", mappedAtCreationOffset).toBoolean()
+		get() = getInt(mappedAtCreationLayout, mappedAtCreationOffset).toBoolean()
 		set(newValue) = set(mappedAtCreationLayout, mappedAtCreationOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -432,19 +432,19 @@ actual value class WGPUBufferDescriptor(actual override val handler: NativeAddre
 @JvmInline
 actual value class WGPUColor(actual override val handler: NativeAddress) : CStructure {
 	actual var r: Double
-		get() = getDouble("r", rOffset)
+		get() = getDouble(rLayout, rOffset)
 		set(newValue) = set(rLayout, rOffset, newValue)
 
 	actual var g: Double
-		get() = getDouble("g", gOffset)
+		get() = getDouble(gLayout, gOffset)
 		set(newValue) = set(gLayout, gOffset, newValue)
 
 	actual var b: Double
-		get() = getDouble("b", bOffset)
+		get() = getDouble(bLayout, bOffset)
 		set(newValue) = set(bLayout, bOffset, newValue)
 
 	actual var a: Double
-		get() = getDouble("a", aOffset)
+		get() = getDouble(aLayout, aOffset)
 		set(newValue) = set(aLayout, aOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -484,7 +484,7 @@ actual value class WGPUColorTargetState(actual override val handler: NativeAddre
 		set(newValue) = set(blendLayout, blendOffset, newValue?.handler)
 
 	actual var writeMask: ULong
-		get() = getULong("writeMask", writeMaskOffset)
+		get() = getULong(writeMaskLayout, writeMaskOffset)
 		set(newValue) = set(writeMaskLayout, writeMaskOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -552,7 +552,7 @@ actual value class WGPUCommandEncoderDescriptor(actual override val handler: Nat
 @JvmInline
 actual value class WGPUCompilationInfo(actual override val handler: NativeAddress) : CStructure {
 	actual var messageCount: ULong
-		get() = getULong("messageCount", messageCountOffset)
+		get() = getULong(messageCountLayout, messageCountOffset)
 		set(newValue) = set(messageCountLayout, messageCountOffset, newValue)
 
 	actual var messages: ArrayHolder<WGPUCompilationMessage>?
@@ -588,31 +588,31 @@ actual value class WGPUCompilationMessage(actual override val handler: NativeAdd
 		set(newValue) = set(typeLayout, typeOffset, newValue)
 
 	actual var lineNum: ULong
-		get() = getULong("lineNum", lineNumOffset)
+		get() = getULong(lineNumLayout, lineNumOffset)
 		set(newValue) = set(lineNumLayout, lineNumOffset, newValue)
 
 	actual var linePos: ULong
-		get() = getULong("linePos", linePosOffset)
+		get() = getULong(linePosLayout, linePosOffset)
 		set(newValue) = set(linePosLayout, linePosOffset, newValue)
 
 	actual var offset: ULong
-		get() = getULong("offset", offsetOffset)
+		get() = getULong(offsetLayout, offsetOffset)
 		set(newValue) = set(offsetLayout, offsetOffset, newValue)
 
 	actual var length: ULong
-		get() = getULong("length", lengthOffset)
+		get() = getULong(lengthLayout, lengthOffset)
 		set(newValue) = set(lengthLayout, lengthOffset, newValue)
 
 	actual var utf16LinePos: ULong
-		get() = getULong("utf16LinePos", utf16LinePosOffset)
+		get() = getULong(utf16LinePosLayout, utf16LinePosOffset)
 		set(newValue) = set(utf16LinePosLayout, utf16LinePosOffset, newValue)
 
 	actual var utf16Offset: ULong
-		get() = getULong("utf16Offset", utf16OffsetOffset)
+		get() = getULong(utf16OffsetLayout, utf16OffsetOffset)
 		set(newValue) = set(utf16OffsetLayout, utf16OffsetOffset, newValue)
 
 	actual var utf16Length: ULong
-		get() = getULong("utf16Length", utf16LengthOffset)
+		get() = getULong(utf16LengthLayout, utf16LengthOffset)
 		set(newValue) = set(utf16LengthLayout, utf16LengthOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -696,11 +696,11 @@ actual value class WGPUComputePassTimestampWrites(actual override val handler: N
 		set(newValue) = set(querySetLayout, querySetOffset, newValue?.handler)
 
 	actual var beginningOfPassWriteIndex: UInt
-		get() = getUInt("beginningOfPassWriteIndex", beginningOfPassWriteIndexOffset)
+		get() = getUInt(beginningOfPassWriteIndexLayout, beginningOfPassWriteIndexOffset)
 		set(newValue) = set(beginningOfPassWriteIndexLayout, beginningOfPassWriteIndexOffset, newValue)
 
 	actual var endOfPassWriteIndex: UInt
-		get() = getUInt("endOfPassWriteIndex", endOfPassWriteIndexOffset)
+		get() = getUInt(endOfPassWriteIndexLayout, endOfPassWriteIndexOffset)
 		set(newValue) = set(endOfPassWriteIndexLayout, endOfPassWriteIndexOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -736,7 +736,7 @@ actual value class WGPUComputePipelineDescriptor(actual override val handler: Na
 		set(newValue) = set(layoutLayout, layoutOffset, newValue?.handler)
 
 	actual val compute: WGPUProgrammableStageDescriptor
-		get() = get("compute", computeOffset).let(::WGPUProgrammableStageDescriptor)
+		get() = get(computeLayout, computeOffset).let(::WGPUProgrammableStageDescriptor)
 
 	override fun getLayout(name: String)
 		= WGPUComputePipelineDescriptor.LAYOUT.withName(name) as AddressLayout
@@ -767,7 +767,7 @@ actual value class WGPUConstantEntry(actual override val handler: NativeAddress)
 		set(newValue) = set(keyLayout, keyOffset, newValue?.handler)
 
 	actual var value: Double
-		get() = getDouble("value", valueOffset)
+		get() = getDouble(valueLayout, valueOffset)
 		set(newValue) = set(valueLayout, valueOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -803,29 +803,29 @@ actual value class WGPUDepthStencilState(actual override val handler: NativeAddr
 		set(newValue) = set(depthCompareLayout, depthCompareOffset, newValue)
 
 	actual val stencilFront: WGPUStencilFaceState
-		get() = get("stencilFront", stencilFrontOffset).let(::WGPUStencilFaceState)
+		get() = get(stencilFrontLayout, stencilFrontOffset).let(::WGPUStencilFaceState)
 
 	actual val stencilBack: WGPUStencilFaceState
-		get() = get("stencilBack", stencilBackOffset).let(::WGPUStencilFaceState)
+		get() = get(stencilBackLayout, stencilBackOffset).let(::WGPUStencilFaceState)
 
 	actual var stencilReadMask: UInt
-		get() = getUInt("stencilReadMask", stencilReadMaskOffset)
+		get() = getUInt(stencilReadMaskLayout, stencilReadMaskOffset)
 		set(newValue) = set(stencilReadMaskLayout, stencilReadMaskOffset, newValue)
 
 	actual var stencilWriteMask: UInt
-		get() = getUInt("stencilWriteMask", stencilWriteMaskOffset)
+		get() = getUInt(stencilWriteMaskLayout, stencilWriteMaskOffset)
 		set(newValue) = set(stencilWriteMaskLayout, stencilWriteMaskOffset, newValue)
 
 	actual var depthBias: Int
-		get() = getInt("depthBias", depthBiasOffset)
+		get() = getInt(depthBiasLayout, depthBiasOffset)
 		set(newValue) = set(depthBiasLayout, depthBiasOffset, newValue)
 
 	actual var depthBiasSlopeScale: Float
-		get() = getFloat("depthBiasSlopeScale", depthBiasSlopeScaleOffset)
+		get() = getFloat(depthBiasSlopeScaleLayout, depthBiasSlopeScaleOffset)
 		set(newValue) = set(depthBiasSlopeScaleLayout, depthBiasSlopeScaleOffset, newValue)
 
 	actual var depthBiasClamp: Float
-		get() = getFloat("depthBiasClamp", depthBiasClampOffset)
+		get() = getFloat(depthBiasClampLayout, depthBiasClampOffset)
 		set(newValue) = set(depthBiasClampLayout, depthBiasClampOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -885,7 +885,7 @@ actual value class WGPUDeviceDescriptor(actual override val handler: NativeAddre
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
 	actual var requiredFeatureCount: ULong
-		get() = getULong("requiredFeatureCount", requiredFeatureCountOffset)
+		get() = getULong(requiredFeatureCountLayout, requiredFeatureCountOffset)
 		set(newValue) = set(requiredFeatureCountLayout, requiredFeatureCountOffset, newValue)
 
 	actual var requiredFeatures: ArrayHolder<WGPUFeatureName>?
@@ -897,13 +897,13 @@ actual value class WGPUDeviceDescriptor(actual override val handler: NativeAddre
 		set(newValue) = set(requiredLimitsLayout, requiredLimitsOffset, newValue?.handler)
 
 	actual val defaultQueue: WGPUQueueDescriptor
-		get() = get("defaultQueue", defaultQueueOffset).let(::WGPUQueueDescriptor)
+		get() = get(defaultQueueLayout, defaultQueueOffset).let(::WGPUQueueDescriptor)
 
 	actual val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
-		get() = get("deviceLostCallbackInfo", deviceLostCallbackInfoOffset).let(::WGPUDeviceLostCallbackInfo)
+		get() = get(deviceLostCallbackInfoLayout, deviceLostCallbackInfoOffset).let(::WGPUDeviceLostCallbackInfo)
 
 	actual val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
-		get() = get("uncapturedErrorCallbackInfo", uncapturedErrorCallbackInfoOffset).let(::WGPUUncapturedErrorCallbackInfo)
+		get() = get(uncapturedErrorCallbackInfoLayout, uncapturedErrorCallbackInfoOffset).let(::WGPUUncapturedErrorCallbackInfo)
 
 	override fun getLayout(name: String)
 		= WGPUDeviceDescriptor.LAYOUT.withName(name) as AddressLayout
@@ -946,15 +946,15 @@ actual value class WGPUDeviceDescriptor(actual override val handler: NativeAddre
 @JvmInline
 actual value class WGPUExtent3D(actual override val handler: NativeAddress) : CStructure {
 	actual var width: UInt
-		get() = getUInt("width", widthOffset)
+		get() = getUInt(widthLayout, widthOffset)
 		set(newValue) = set(widthLayout, widthOffset, newValue)
 
 	actual var height: UInt
-		get() = getUInt("height", heightOffset)
+		get() = getUInt(heightLayout, heightOffset)
 		set(newValue) = set(heightLayout, heightOffset, newValue)
 
 	actual var depthOrArrayLayers: UInt
-		get() = getUInt("depthOrArrayLayers", depthOrArrayLayersOffset)
+		get() = getUInt(depthOrArrayLayersLayout, depthOrArrayLayersOffset)
 		set(newValue) = set(depthOrArrayLayersLayout, depthOrArrayLayersOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -990,7 +990,7 @@ actual value class WGPUFragmentState(actual override val handler: NativeAddress)
 		set(newValue) = set(entryPointLayout, entryPointOffset, newValue?.handler)
 
 	actual var constantCount: ULong
-		get() = getULong("constantCount", constantCountOffset)
+		get() = getULong(constantCountLayout, constantCountOffset)
 		set(newValue) = set(constantCountLayout, constantCountOffset, newValue)
 
 	actual var constants: ArrayHolder<WGPUConstantEntry>?
@@ -998,7 +998,7 @@ actual value class WGPUFragmentState(actual override val handler: NativeAddress)
 		set(newValue) = set(constantsLayout, constantsOffset, newValue?.handler)
 
 	actual var targetCount: ULong
-		get() = getULong("targetCount", targetCountOffset)
+		get() = getULong(targetCountLayout, targetCountOffset)
 		set(newValue) = set(targetCountLayout, targetCountOffset, newValue)
 
 	actual var targets: ArrayHolder<WGPUColorTargetState>?
@@ -1042,7 +1042,7 @@ actual value class WGPUFragmentState(actual override val handler: NativeAddress)
 @JvmInline
 actual value class WGPUFuture(actual override val handler: NativeAddress) : CStructure {
 	actual var id: ULong
-		get() = getULong("id", idOffset)
+		get() = getULong(idLayout, idOffset)
 		set(newValue) = set(idLayout, idOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -1062,10 +1062,10 @@ actual value class WGPUFuture(actual override val handler: NativeAddress) : CStr
 @JvmInline
 actual value class WGPUFutureWaitInfo(actual override val handler: NativeAddress) : CStructure {
 	actual val future: WGPUFuture
-		get() = get("future", futureOffset).let(::WGPUFuture)
+		get() = get(futureLayout, futureOffset).let(::WGPUFuture)
 
 	actual var completed: Boolean
-		get() = getInt("completed", completedOffset).toBoolean()
+		get() = getInt(completedLayout, completedOffset).toBoolean()
 		set(newValue) = set(completedLayout, completedOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -1089,7 +1089,7 @@ actual value class WGPUFutureWaitInfo(actual override val handler: NativeAddress
 @JvmInline
 actual value class WGPUImageCopyBuffer(actual override val handler: NativeAddress) : CStructure {
 	actual val layout: WGPUTextureDataLayout
-		get() = get("layout", layoutOffset).let(::WGPUTextureDataLayout)
+		get() = get(layoutLayout, layoutOffset).let(::WGPUTextureDataLayout)
 
 	actual var buffer: WGPUBuffer?
 		get() = TODO()
@@ -1120,11 +1120,11 @@ actual value class WGPUImageCopyTexture(actual override val handler: NativeAddre
 		set(newValue) = set(textureLayout, textureOffset, newValue?.handler)
 
 	actual var mipLevel: UInt
-		get() = getUInt("mipLevel", mipLevelOffset)
+		get() = getUInt(mipLevelLayout, mipLevelOffset)
 		set(newValue) = set(mipLevelLayout, mipLevelOffset, newValue)
 
 	actual val origin: WGPUOrigin3D
-		get() = get("origin", originOffset).let(::WGPUOrigin3D)
+		get() = get(originLayout, originOffset).let(::WGPUOrigin3D)
 
 	actual var aspect: WGPUTextureAspect
 		get() = TODO()
@@ -1159,7 +1159,7 @@ actual value class WGPUImageCopyTexture(actual override val handler: NativeAddre
 @JvmInline
 actual value class WGPUInstanceDescriptor(actual override val handler: NativeAddress) : CStructure {
 	actual val features: WGPUInstanceFeatures
-		get() = get("features", featuresOffset).let(::WGPUInstanceFeatures)
+		get() = get(featuresLayout, featuresOffset).let(::WGPUInstanceFeatures)
 
 	override fun getLayout(name: String)
 		= WGPUInstanceDescriptor.LAYOUT.withName(name) as AddressLayout
@@ -1178,11 +1178,11 @@ actual value class WGPUInstanceDescriptor(actual override val handler: NativeAdd
 @JvmInline
 actual value class WGPUInstanceFeatures(actual override val handler: NativeAddress) : CStructure {
 	actual var timedWaitAnyEnable: Boolean
-		get() = getInt("timedWaitAnyEnable", timedWaitAnyEnableOffset).toBoolean()
+		get() = getInt(timedWaitAnyEnableLayout, timedWaitAnyEnableOffset).toBoolean()
 		set(newValue) = set(timedWaitAnyEnableLayout, timedWaitAnyEnableOffset, newValue)
 
 	actual var timedWaitAnyMaxCount: ULong
-		get() = getULong("timedWaitAnyMaxCount", timedWaitAnyMaxCountOffset)
+		get() = getULong(timedWaitAnyMaxCountLayout, timedWaitAnyMaxCountOffset)
 		set(newValue) = set(timedWaitAnyMaxCountLayout, timedWaitAnyMaxCountOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -1206,127 +1206,127 @@ actual value class WGPUInstanceFeatures(actual override val handler: NativeAddre
 @JvmInline
 actual value class WGPULimits(actual override val handler: NativeAddress) : CStructure {
 	actual var maxTextureDimension1D: UInt
-		get() = getUInt("maxTextureDimension1D", maxTextureDimension1DOffset)
+		get() = getUInt(maxTextureDimension1DLayout, maxTextureDimension1DOffset)
 		set(newValue) = set(maxTextureDimension1DLayout, maxTextureDimension1DOffset, newValue)
 
 	actual var maxTextureDimension2D: UInt
-		get() = getUInt("maxTextureDimension2D", maxTextureDimension2DOffset)
+		get() = getUInt(maxTextureDimension2DLayout, maxTextureDimension2DOffset)
 		set(newValue) = set(maxTextureDimension2DLayout, maxTextureDimension2DOffset, newValue)
 
 	actual var maxTextureDimension3D: UInt
-		get() = getUInt("maxTextureDimension3D", maxTextureDimension3DOffset)
+		get() = getUInt(maxTextureDimension3DLayout, maxTextureDimension3DOffset)
 		set(newValue) = set(maxTextureDimension3DLayout, maxTextureDimension3DOffset, newValue)
 
 	actual var maxTextureArrayLayers: UInt
-		get() = getUInt("maxTextureArrayLayers", maxTextureArrayLayersOffset)
+		get() = getUInt(maxTextureArrayLayersLayout, maxTextureArrayLayersOffset)
 		set(newValue) = set(maxTextureArrayLayersLayout, maxTextureArrayLayersOffset, newValue)
 
 	actual var maxBindGroups: UInt
-		get() = getUInt("maxBindGroups", maxBindGroupsOffset)
+		get() = getUInt(maxBindGroupsLayout, maxBindGroupsOffset)
 		set(newValue) = set(maxBindGroupsLayout, maxBindGroupsOffset, newValue)
 
 	actual var maxBindGroupsPlusVertexBuffers: UInt
-		get() = getUInt("maxBindGroupsPlusVertexBuffers", maxBindGroupsPlusVertexBuffersOffset)
+		get() = getUInt(maxBindGroupsPlusVertexBuffersLayout, maxBindGroupsPlusVertexBuffersOffset)
 		set(newValue) = set(maxBindGroupsPlusVertexBuffersLayout, maxBindGroupsPlusVertexBuffersOffset, newValue)
 
 	actual var maxBindingsPerBindGroup: UInt
-		get() = getUInt("maxBindingsPerBindGroup", maxBindingsPerBindGroupOffset)
+		get() = getUInt(maxBindingsPerBindGroupLayout, maxBindingsPerBindGroupOffset)
 		set(newValue) = set(maxBindingsPerBindGroupLayout, maxBindingsPerBindGroupOffset, newValue)
 
 	actual var maxDynamicUniformBuffersPerPipelineLayout: UInt
-		get() = getUInt("maxDynamicUniformBuffersPerPipelineLayout", maxDynamicUniformBuffersPerPipelineLayoutOffset)
+		get() = getUInt(maxDynamicUniformBuffersPerPipelineLayoutLayout, maxDynamicUniformBuffersPerPipelineLayoutOffset)
 		set(newValue) = set(maxDynamicUniformBuffersPerPipelineLayoutLayout, maxDynamicUniformBuffersPerPipelineLayoutOffset, newValue)
 
 	actual var maxDynamicStorageBuffersPerPipelineLayout: UInt
-		get() = getUInt("maxDynamicStorageBuffersPerPipelineLayout", maxDynamicStorageBuffersPerPipelineLayoutOffset)
+		get() = getUInt(maxDynamicStorageBuffersPerPipelineLayoutLayout, maxDynamicStorageBuffersPerPipelineLayoutOffset)
 		set(newValue) = set(maxDynamicStorageBuffersPerPipelineLayoutLayout, maxDynamicStorageBuffersPerPipelineLayoutOffset, newValue)
 
 	actual var maxSampledTexturesPerShaderStage: UInt
-		get() = getUInt("maxSampledTexturesPerShaderStage", maxSampledTexturesPerShaderStageOffset)
+		get() = getUInt(maxSampledTexturesPerShaderStageLayout, maxSampledTexturesPerShaderStageOffset)
 		set(newValue) = set(maxSampledTexturesPerShaderStageLayout, maxSampledTexturesPerShaderStageOffset, newValue)
 
 	actual var maxSamplersPerShaderStage: UInt
-		get() = getUInt("maxSamplersPerShaderStage", maxSamplersPerShaderStageOffset)
+		get() = getUInt(maxSamplersPerShaderStageLayout, maxSamplersPerShaderStageOffset)
 		set(newValue) = set(maxSamplersPerShaderStageLayout, maxSamplersPerShaderStageOffset, newValue)
 
 	actual var maxStorageBuffersPerShaderStage: UInt
-		get() = getUInt("maxStorageBuffersPerShaderStage", maxStorageBuffersPerShaderStageOffset)
+		get() = getUInt(maxStorageBuffersPerShaderStageLayout, maxStorageBuffersPerShaderStageOffset)
 		set(newValue) = set(maxStorageBuffersPerShaderStageLayout, maxStorageBuffersPerShaderStageOffset, newValue)
 
 	actual var maxStorageTexturesPerShaderStage: UInt
-		get() = getUInt("maxStorageTexturesPerShaderStage", maxStorageTexturesPerShaderStageOffset)
+		get() = getUInt(maxStorageTexturesPerShaderStageLayout, maxStorageTexturesPerShaderStageOffset)
 		set(newValue) = set(maxStorageTexturesPerShaderStageLayout, maxStorageTexturesPerShaderStageOffset, newValue)
 
 	actual var maxUniformBuffersPerShaderStage: UInt
-		get() = getUInt("maxUniformBuffersPerShaderStage", maxUniformBuffersPerShaderStageOffset)
+		get() = getUInt(maxUniformBuffersPerShaderStageLayout, maxUniformBuffersPerShaderStageOffset)
 		set(newValue) = set(maxUniformBuffersPerShaderStageLayout, maxUniformBuffersPerShaderStageOffset, newValue)
 
 	actual var maxUniformBufferBindingSize: ULong
-		get() = getULong("maxUniformBufferBindingSize", maxUniformBufferBindingSizeOffset)
+		get() = getULong(maxUniformBufferBindingSizeLayout, maxUniformBufferBindingSizeOffset)
 		set(newValue) = set(maxUniformBufferBindingSizeLayout, maxUniformBufferBindingSizeOffset, newValue)
 
 	actual var maxStorageBufferBindingSize: ULong
-		get() = getULong("maxStorageBufferBindingSize", maxStorageBufferBindingSizeOffset)
+		get() = getULong(maxStorageBufferBindingSizeLayout, maxStorageBufferBindingSizeOffset)
 		set(newValue) = set(maxStorageBufferBindingSizeLayout, maxStorageBufferBindingSizeOffset, newValue)
 
 	actual var minUniformBufferOffsetAlignment: UInt
-		get() = getUInt("minUniformBufferOffsetAlignment", minUniformBufferOffsetAlignmentOffset)
+		get() = getUInt(minUniformBufferOffsetAlignmentLayout, minUniformBufferOffsetAlignmentOffset)
 		set(newValue) = set(minUniformBufferOffsetAlignmentLayout, minUniformBufferOffsetAlignmentOffset, newValue)
 
 	actual var minStorageBufferOffsetAlignment: UInt
-		get() = getUInt("minStorageBufferOffsetAlignment", minStorageBufferOffsetAlignmentOffset)
+		get() = getUInt(minStorageBufferOffsetAlignmentLayout, minStorageBufferOffsetAlignmentOffset)
 		set(newValue) = set(minStorageBufferOffsetAlignmentLayout, minStorageBufferOffsetAlignmentOffset, newValue)
 
 	actual var maxVertexBuffers: UInt
-		get() = getUInt("maxVertexBuffers", maxVertexBuffersOffset)
+		get() = getUInt(maxVertexBuffersLayout, maxVertexBuffersOffset)
 		set(newValue) = set(maxVertexBuffersLayout, maxVertexBuffersOffset, newValue)
 
 	actual var maxBufferSize: ULong
-		get() = getULong("maxBufferSize", maxBufferSizeOffset)
+		get() = getULong(maxBufferSizeLayout, maxBufferSizeOffset)
 		set(newValue) = set(maxBufferSizeLayout, maxBufferSizeOffset, newValue)
 
 	actual var maxVertexAttributes: UInt
-		get() = getUInt("maxVertexAttributes", maxVertexAttributesOffset)
+		get() = getUInt(maxVertexAttributesLayout, maxVertexAttributesOffset)
 		set(newValue) = set(maxVertexAttributesLayout, maxVertexAttributesOffset, newValue)
 
 	actual var maxVertexBufferArrayStride: UInt
-		get() = getUInt("maxVertexBufferArrayStride", maxVertexBufferArrayStrideOffset)
+		get() = getUInt(maxVertexBufferArrayStrideLayout, maxVertexBufferArrayStrideOffset)
 		set(newValue) = set(maxVertexBufferArrayStrideLayout, maxVertexBufferArrayStrideOffset, newValue)
 
 	actual var maxInterStageShaderVariables: UInt
-		get() = getUInt("maxInterStageShaderVariables", maxInterStageShaderVariablesOffset)
+		get() = getUInt(maxInterStageShaderVariablesLayout, maxInterStageShaderVariablesOffset)
 		set(newValue) = set(maxInterStageShaderVariablesLayout, maxInterStageShaderVariablesOffset, newValue)
 
 	actual var maxColorAttachments: UInt
-		get() = getUInt("maxColorAttachments", maxColorAttachmentsOffset)
+		get() = getUInt(maxColorAttachmentsLayout, maxColorAttachmentsOffset)
 		set(newValue) = set(maxColorAttachmentsLayout, maxColorAttachmentsOffset, newValue)
 
 	actual var maxColorAttachmentBytesPerSample: UInt
-		get() = getUInt("maxColorAttachmentBytesPerSample", maxColorAttachmentBytesPerSampleOffset)
+		get() = getUInt(maxColorAttachmentBytesPerSampleLayout, maxColorAttachmentBytesPerSampleOffset)
 		set(newValue) = set(maxColorAttachmentBytesPerSampleLayout, maxColorAttachmentBytesPerSampleOffset, newValue)
 
 	actual var maxComputeWorkgroupStorageSize: UInt
-		get() = getUInt("maxComputeWorkgroupStorageSize", maxComputeWorkgroupStorageSizeOffset)
+		get() = getUInt(maxComputeWorkgroupStorageSizeLayout, maxComputeWorkgroupStorageSizeOffset)
 		set(newValue) = set(maxComputeWorkgroupStorageSizeLayout, maxComputeWorkgroupStorageSizeOffset, newValue)
 
 	actual var maxComputeInvocationsPerWorkgroup: UInt
-		get() = getUInt("maxComputeInvocationsPerWorkgroup", maxComputeInvocationsPerWorkgroupOffset)
+		get() = getUInt(maxComputeInvocationsPerWorkgroupLayout, maxComputeInvocationsPerWorkgroupOffset)
 		set(newValue) = set(maxComputeInvocationsPerWorkgroupLayout, maxComputeInvocationsPerWorkgroupOffset, newValue)
 
 	actual var maxComputeWorkgroupSizeX: UInt
-		get() = getUInt("maxComputeWorkgroupSizeX", maxComputeWorkgroupSizeXOffset)
+		get() = getUInt(maxComputeWorkgroupSizeXLayout, maxComputeWorkgroupSizeXOffset)
 		set(newValue) = set(maxComputeWorkgroupSizeXLayout, maxComputeWorkgroupSizeXOffset, newValue)
 
 	actual var maxComputeWorkgroupSizeY: UInt
-		get() = getUInt("maxComputeWorkgroupSizeY", maxComputeWorkgroupSizeYOffset)
+		get() = getUInt(maxComputeWorkgroupSizeYLayout, maxComputeWorkgroupSizeYOffset)
 		set(newValue) = set(maxComputeWorkgroupSizeYLayout, maxComputeWorkgroupSizeYOffset, newValue)
 
 	actual var maxComputeWorkgroupSizeZ: UInt
-		get() = getUInt("maxComputeWorkgroupSizeZ", maxComputeWorkgroupSizeZOffset)
+		get() = getUInt(maxComputeWorkgroupSizeZLayout, maxComputeWorkgroupSizeZOffset)
 		set(newValue) = set(maxComputeWorkgroupSizeZLayout, maxComputeWorkgroupSizeZOffset, newValue)
 
 	actual var maxComputeWorkgroupsPerDimension: UInt
-		get() = getUInt("maxComputeWorkgroupsPerDimension", maxComputeWorkgroupsPerDimensionOffset)
+		get() = getUInt(maxComputeWorkgroupsPerDimensionLayout, maxComputeWorkgroupsPerDimensionOffset)
 		set(newValue) = set(maxComputeWorkgroupsPerDimensionLayout, maxComputeWorkgroupsPerDimensionOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -1466,15 +1466,15 @@ actual value class WGPULimits(actual override val handler: NativeAddress) : CStr
 @JvmInline
 actual value class WGPUMultisampleState(actual override val handler: NativeAddress) : CStructure {
 	actual var count: UInt
-		get() = getUInt("count", countOffset)
+		get() = getUInt(countLayout, countOffset)
 		set(newValue) = set(countLayout, countOffset, newValue)
 
 	actual var mask: UInt
-		get() = getUInt("mask", maskOffset)
+		get() = getUInt(maskLayout, maskOffset)
 		set(newValue) = set(maskLayout, maskOffset, newValue)
 
 	actual var alphaToCoverageEnabled: Boolean
-		get() = getInt("alphaToCoverageEnabled", alphaToCoverageEnabledOffset).toBoolean()
+		get() = getInt(alphaToCoverageEnabledLayout, alphaToCoverageEnabledOffset).toBoolean()
 		set(newValue) = set(alphaToCoverageEnabledLayout, alphaToCoverageEnabledOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -1502,15 +1502,15 @@ actual value class WGPUMultisampleState(actual override val handler: NativeAddre
 @JvmInline
 actual value class WGPUOrigin3D(actual override val handler: NativeAddress) : CStructure {
 	actual var x: UInt
-		get() = getUInt("x", xOffset)
+		get() = getUInt(xLayout, xOffset)
 		set(newValue) = set(xLayout, xOffset, newValue)
 
 	actual var y: UInt
-		get() = getUInt("y", yOffset)
+		get() = getUInt(yLayout, yOffset)
 		set(newValue) = set(yLayout, yOffset, newValue)
 
 	actual var z: UInt
-		get() = getUInt("z", zOffset)
+		get() = getUInt(zLayout, zOffset)
 		set(newValue) = set(zLayout, zOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -1542,7 +1542,7 @@ actual value class WGPUPipelineLayoutDescriptor(actual override val handler: Nat
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
 	actual var bindGroupLayoutCount: ULong
-		get() = getULong("bindGroupLayoutCount", bindGroupLayoutCountOffset)
+		get() = getULong(bindGroupLayoutCountLayout, bindGroupLayoutCountOffset)
 		set(newValue) = set(bindGroupLayoutCountLayout, bindGroupLayoutCountOffset, newValue)
 
 	actual var bindGroupLayouts: ArrayHolder<WGPUBindGroupLayout>?
@@ -1590,7 +1590,7 @@ actual value class WGPUPrimitiveState(actual override val handler: NativeAddress
 		set(newValue) = set(cullModeLayout, cullModeOffset, newValue)
 
 	actual var unclippedDepth: Boolean
-		get() = getInt("unclippedDepth", unclippedDepthOffset).toBoolean()
+		get() = getInt(unclippedDepthLayout, unclippedDepthOffset).toBoolean()
 		set(newValue) = set(unclippedDepthLayout, unclippedDepthOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -1634,7 +1634,7 @@ actual value class WGPUProgrammableStageDescriptor(actual override val handler: 
 		set(newValue) = set(entryPointLayout, entryPointOffset, newValue?.handler)
 
 	actual var constantCount: ULong
-		get() = getULong("constantCount", constantCountOffset)
+		get() = getULong(constantCountLayout, constantCountOffset)
 		set(newValue) = set(constantCountLayout, constantCountOffset, newValue)
 
 	actual var constants: ArrayHolder<WGPUConstantEntry>?
@@ -1678,7 +1678,7 @@ actual value class WGPUQuerySetDescriptor(actual override val handler: NativeAdd
 		set(newValue) = set(typeLayout, typeOffset, newValue)
 
 	actual var count: UInt
-		get() = getUInt("count", countOffset)
+		get() = getUInt(countLayout, countOffset)
 		set(newValue) = set(countLayout, countOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -1750,7 +1750,7 @@ actual value class WGPURenderBundleEncoderDescriptor(actual override val handler
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
 	actual var colorFormatCount: ULong
-		get() = getULong("colorFormatCount", colorFormatCountOffset)
+		get() = getULong(colorFormatCountLayout, colorFormatCountOffset)
 		set(newValue) = set(colorFormatCountLayout, colorFormatCountOffset, newValue)
 
 	actual var colorFormats: ArrayHolder<WGPUTextureFormat>?
@@ -1762,15 +1762,15 @@ actual value class WGPURenderBundleEncoderDescriptor(actual override val handler
 		set(newValue) = set(depthStencilFormatLayout, depthStencilFormatOffset, newValue)
 
 	actual var sampleCount: UInt
-		get() = getUInt("sampleCount", sampleCountOffset)
+		get() = getUInt(sampleCountLayout, sampleCountOffset)
 		set(newValue) = set(sampleCountLayout, sampleCountOffset, newValue)
 
 	actual var depthReadOnly: Boolean
-		get() = getInt("depthReadOnly", depthReadOnlyOffset).toBoolean()
+		get() = getInt(depthReadOnlyLayout, depthReadOnlyOffset).toBoolean()
 		set(newValue) = set(depthReadOnlyLayout, depthReadOnlyOffset, newValue)
 
 	actual var stencilReadOnly: Boolean
-		get() = getInt("stencilReadOnly", stencilReadOnlyOffset).toBoolean()
+		get() = getInt(stencilReadOnlyLayout, stencilReadOnlyOffset).toBoolean()
 		set(newValue) = set(stencilReadOnlyLayout, stencilReadOnlyOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -1818,7 +1818,7 @@ actual value class WGPURenderPassColorAttachment(actual override val handler: Na
 		set(newValue) = set(viewLayout, viewOffset, newValue?.handler)
 
 	actual var depthSlice: UInt
-		get() = getUInt("depthSlice", depthSliceOffset)
+		get() = getUInt(depthSliceLayout, depthSliceOffset)
 		set(newValue) = set(depthSliceLayout, depthSliceOffset, newValue)
 
 	actual var resolveTarget: WGPUTextureView?
@@ -1834,7 +1834,7 @@ actual value class WGPURenderPassColorAttachment(actual override val handler: Na
 		set(newValue) = set(storeOpLayout, storeOpOffset, newValue)
 
 	actual val clearValue: WGPUColor
-		get() = get("clearValue", clearValueOffset).let(::WGPUColor)
+		get() = get(clearValueLayout, clearValueOffset).let(::WGPUColor)
 
 	override fun getLayout(name: String)
 		= WGPURenderPassColorAttachment.LAYOUT.withName(name) as AddressLayout
@@ -1885,11 +1885,11 @@ actual value class WGPURenderPassDepthStencilAttachment(actual override val hand
 		set(newValue) = set(depthStoreOpLayout, depthStoreOpOffset, newValue)
 
 	actual var depthClearValue: Float
-		get() = getFloat("depthClearValue", depthClearValueOffset)
+		get() = getFloat(depthClearValueLayout, depthClearValueOffset)
 		set(newValue) = set(depthClearValueLayout, depthClearValueOffset, newValue)
 
 	actual var depthReadOnly: Boolean
-		get() = getInt("depthReadOnly", depthReadOnlyOffset).toBoolean()
+		get() = getInt(depthReadOnlyLayout, depthReadOnlyOffset).toBoolean()
 		set(newValue) = set(depthReadOnlyLayout, depthReadOnlyOffset, newValue)
 
 	actual var stencilLoadOp: WGPULoadOp
@@ -1901,11 +1901,11 @@ actual value class WGPURenderPassDepthStencilAttachment(actual override val hand
 		set(newValue) = set(stencilStoreOpLayout, stencilStoreOpOffset, newValue)
 
 	actual var stencilClearValue: UInt
-		get() = getUInt("stencilClearValue", stencilClearValueOffset)
+		get() = getUInt(stencilClearValueLayout, stencilClearValueOffset)
 		set(newValue) = set(stencilClearValueLayout, stencilClearValueOffset, newValue)
 
 	actual var stencilReadOnly: Boolean
-		get() = getInt("stencilReadOnly", stencilReadOnlyOffset).toBoolean()
+		get() = getInt(stencilReadOnlyLayout, stencilReadOnlyOffset).toBoolean()
 		set(newValue) = set(stencilReadOnlyLayout, stencilReadOnlyOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -1961,7 +1961,7 @@ actual value class WGPURenderPassDescriptor(actual override val handler: NativeA
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
 	actual var colorAttachmentCount: ULong
-		get() = getULong("colorAttachmentCount", colorAttachmentCountOffset)
+		get() = getULong(colorAttachmentCountLayout, colorAttachmentCountOffset)
 		set(newValue) = set(colorAttachmentCountLayout, colorAttachmentCountOffset, newValue)
 
 	actual var colorAttachments: ArrayHolder<WGPURenderPassColorAttachment>?
@@ -2017,7 +2017,7 @@ actual value class WGPURenderPassDescriptor(actual override val handler: NativeA
 @JvmInline
 actual value class WGPURenderPassMaxDrawCount(actual override val handler: NativeAddress) : CStructure {
 	actual var maxDrawCount: ULong
-		get() = getULong("maxDrawCount", maxDrawCountOffset)
+		get() = getULong(maxDrawCountLayout, maxDrawCountOffset)
 		set(newValue) = set(maxDrawCountLayout, maxDrawCountOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -2041,11 +2041,11 @@ actual value class WGPURenderPassTimestampWrites(actual override val handler: Na
 		set(newValue) = set(querySetLayout, querySetOffset, newValue?.handler)
 
 	actual var beginningOfPassWriteIndex: UInt
-		get() = getUInt("beginningOfPassWriteIndex", beginningOfPassWriteIndexOffset)
+		get() = getUInt(beginningOfPassWriteIndexLayout, beginningOfPassWriteIndexOffset)
 		set(newValue) = set(beginningOfPassWriteIndexLayout, beginningOfPassWriteIndexOffset, newValue)
 
 	actual var endOfPassWriteIndex: UInt
-		get() = getUInt("endOfPassWriteIndex", endOfPassWriteIndexOffset)
+		get() = getUInt(endOfPassWriteIndexLayout, endOfPassWriteIndexOffset)
 		set(newValue) = set(endOfPassWriteIndexLayout, endOfPassWriteIndexOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -2081,17 +2081,17 @@ actual value class WGPURenderPipelineDescriptor(actual override val handler: Nat
 		set(newValue) = set(layoutLayout, layoutOffset, newValue?.handler)
 
 	actual val vertex: WGPUVertexState
-		get() = get("vertex", vertexOffset).let(::WGPUVertexState)
+		get() = get(vertexLayout, vertexOffset).let(::WGPUVertexState)
 
 	actual val primitive: WGPUPrimitiveState
-		get() = get("primitive", primitiveOffset).let(::WGPUPrimitiveState)
+		get() = get(primitiveLayout, primitiveOffset).let(::WGPUPrimitiveState)
 
 	actual var depthStencil: WGPUDepthStencilState?
 		get() = TODO()
 		set(newValue) = set(depthStencilLayout, depthStencilOffset, newValue?.handler)
 
 	actual val multisample: WGPUMultisampleState
-		get() = get("multisample", multisampleOffset).let(::WGPUMultisampleState)
+		get() = get(multisampleLayout, multisampleOffset).let(::WGPUMultisampleState)
 
 	actual var fragment: WGPUFragmentState?
 		get() = TODO()
@@ -2150,7 +2150,7 @@ actual value class WGPURequestAdapterOptions(actual override val handler: Native
 		set(newValue) = set(backendTypeLayout, backendTypeOffset, newValue)
 
 	actual var forceFallbackAdapter: Boolean
-		get() = getInt("forceFallbackAdapter", forceFallbackAdapterOffset).toBoolean()
+		get() = getInt(forceFallbackAdapterLayout, forceFallbackAdapterOffset).toBoolean()
 		set(newValue) = set(forceFallbackAdapterLayout, forceFallbackAdapterOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -2182,7 +2182,7 @@ actual value class WGPURequestAdapterOptions(actual override val handler: Native
 @JvmInline
 actual value class WGPURequiredLimits(actual override val handler: NativeAddress) : CStructure {
 	actual val limits: WGPULimits
-		get() = get("limits", limitsOffset).let(::WGPULimits)
+		get() = get(limitsLayout, limitsOffset).let(::WGPULimits)
 
 	override fun getLayout(name: String)
 		= WGPURequiredLimits.LAYOUT.withName(name) as AddressLayout
@@ -2249,11 +2249,11 @@ actual value class WGPUSamplerDescriptor(actual override val handler: NativeAddr
 		set(newValue) = set(mipmapFilterLayout, mipmapFilterOffset, newValue)
 
 	actual var lodMinClamp: Float
-		get() = getFloat("lodMinClamp", lodMinClampOffset)
+		get() = getFloat(lodMinClampLayout, lodMinClampOffset)
 		set(newValue) = set(lodMinClampLayout, lodMinClampOffset, newValue)
 
 	actual var lodMaxClamp: Float
-		get() = getFloat("lodMaxClamp", lodMaxClampOffset)
+		get() = getFloat(lodMaxClampLayout, lodMaxClampOffset)
 		set(newValue) = set(lodMaxClampLayout, lodMaxClampOffset, newValue)
 
 	actual var compare: WGPUCompareFunction
@@ -2261,7 +2261,7 @@ actual value class WGPUSamplerDescriptor(actual override val handler: NativeAddr
 		set(newValue) = set(compareLayout, compareOffset, newValue)
 
 	actual var maxAnisotropy: UShort
-		get() = getUShort("maxAnisotropy", maxAnisotropyOffset)
+		get() = getUShort(maxAnisotropyLayout, maxAnisotropyOffset)
 		set(newValue) = set(maxAnisotropyLayout, maxAnisotropyOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -2341,7 +2341,7 @@ actual value class WGPUShaderModuleDescriptor(actual override val handler: Nativ
 @JvmInline
 actual value class WGPUShaderSourceSPIRV(actual override val handler: NativeAddress) : CStructure {
 	actual var codeSize: UInt
-		get() = getUInt("codeSize", codeSizeOffset)
+		get() = getUInt(codeSizeLayout, codeSizeOffset)
 		set(newValue) = set(codeSizeLayout, codeSizeOffset, newValue)
 
 	actual var code: NativeAddress?
@@ -2469,7 +2469,7 @@ actual value class WGPUStorageTextureBindingLayout(actual override val handler: 
 @JvmInline
 actual value class WGPUSupportedLimits(actual override val handler: NativeAddress) : CStructure {
 	actual val limits: WGPULimits
-		get() = get("limits", limitsOffset).let(::WGPULimits)
+		get() = get(limitsLayout, limitsOffset).let(::WGPULimits)
 
 	override fun getLayout(name: String)
 		= WGPUSupportedLimits.LAYOUT.withName(name) as AddressLayout
@@ -2488,11 +2488,11 @@ actual value class WGPUSupportedLimits(actual override val handler: NativeAddres
 @JvmInline
 actual value class WGPUSurfaceCapabilities(actual override val handler: NativeAddress) : CStructure {
 	actual var usages: ULong
-		get() = getULong("usages", usagesOffset)
+		get() = getULong(usagesLayout, usagesOffset)
 		set(newValue) = set(usagesLayout, usagesOffset, newValue)
 
 	actual var formatCount: ULong
-		get() = getULong("formatCount", formatCountOffset)
+		get() = getULong(formatCountLayout, formatCountOffset)
 		set(newValue) = set(formatCountLayout, formatCountOffset, newValue)
 
 	actual var formats: ArrayHolder<WGPUTextureFormat>?
@@ -2500,7 +2500,7 @@ actual value class WGPUSurfaceCapabilities(actual override val handler: NativeAd
 		set(newValue) = set(formatsLayout, formatsOffset, newValue?.handler)
 
 	actual var presentModeCount: ULong
-		get() = getULong("presentModeCount", presentModeCountOffset)
+		get() = getULong(presentModeCountLayout, presentModeCountOffset)
 		set(newValue) = set(presentModeCountLayout, presentModeCountOffset, newValue)
 
 	actual var presentModes: ArrayHolder<WGPUPresentMode>?
@@ -2508,7 +2508,7 @@ actual value class WGPUSurfaceCapabilities(actual override val handler: NativeAd
 		set(newValue) = set(presentModesLayout, presentModesOffset, newValue?.handler)
 
 	actual var alphaModeCount: ULong
-		get() = getULong("alphaModeCount", alphaModeCountOffset)
+		get() = getULong(alphaModeCountLayout, alphaModeCountOffset)
 		set(newValue) = set(alphaModeCountLayout, alphaModeCountOffset, newValue)
 
 	actual var alphaModes: ArrayHolder<WGPUCompositeAlphaMode>?
@@ -2564,19 +2564,19 @@ actual value class WGPUSurfaceConfiguration(actual override val handler: NativeA
 		set(newValue) = set(formatLayout, formatOffset, newValue)
 
 	actual var usage: ULong
-		get() = getULong("usage", usageOffset)
+		get() = getULong(usageLayout, usageOffset)
 		set(newValue) = set(usageLayout, usageOffset, newValue)
 
 	actual var width: UInt
-		get() = getUInt("width", widthOffset)
+		get() = getUInt(widthLayout, widthOffset)
 		set(newValue) = set(widthLayout, widthOffset, newValue)
 
 	actual var height: UInt
-		get() = getUInt("height", heightOffset)
+		get() = getUInt(heightLayout, heightOffset)
 		set(newValue) = set(heightLayout, heightOffset, newValue)
 
 	actual var viewFormatCount: ULong
-		get() = getULong("viewFormatCount", viewFormatCountOffset)
+		get() = getULong(viewFormatCountLayout, viewFormatCountOffset)
 		set(newValue) = set(viewFormatCountLayout, viewFormatCountOffset, newValue)
 
 	actual var viewFormats: ArrayHolder<WGPUTextureFormat>?
@@ -2760,7 +2760,7 @@ actual value class WGPUSurfaceSourceXCBWindow(actual override val handler: Nativ
 		set(newValue) = set(connectionLayout, connectionOffset, newValue)
 
 	actual var window: UInt
-		get() = getUInt("window", windowOffset)
+		get() = getUInt(windowLayout, windowOffset)
 		set(newValue) = set(windowLayout, windowOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -2788,7 +2788,7 @@ actual value class WGPUSurfaceSourceXlibWindow(actual override val handler: Nati
 		set(newValue) = set(displayLayout, displayOffset, newValue)
 
 	actual var window: ULong
-		get() = getULong("window", windowOffset)
+		get() = getULong(windowLayout, windowOffset)
 		set(newValue) = set(windowLayout, windowOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -2848,7 +2848,7 @@ actual value class WGPUTextureBindingLayout(actual override val handler: NativeA
 		set(newValue) = set(viewDimensionLayout, viewDimensionOffset, newValue)
 
 	actual var multisampled: Boolean
-		get() = getInt("multisampled", multisampledOffset).toBoolean()
+		get() = getInt(multisampledLayout, multisampledOffset).toBoolean()
 		set(newValue) = set(multisampledLayout, multisampledOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -2876,15 +2876,15 @@ actual value class WGPUTextureBindingLayout(actual override val handler: NativeA
 @JvmInline
 actual value class WGPUTextureDataLayout(actual override val handler: NativeAddress) : CStructure {
 	actual var offset: ULong
-		get() = getULong("offset", offsetOffset)
+		get() = getULong(offsetLayout, offsetOffset)
 		set(newValue) = set(offsetLayout, offsetOffset, newValue)
 
 	actual var bytesPerRow: UInt
-		get() = getUInt("bytesPerRow", bytesPerRowOffset)
+		get() = getUInt(bytesPerRowLayout, bytesPerRowOffset)
 		set(newValue) = set(bytesPerRowLayout, bytesPerRowOffset, newValue)
 
 	actual var rowsPerImage: UInt
-		get() = getUInt("rowsPerImage", rowsPerImageOffset)
+		get() = getUInt(rowsPerImageLayout, rowsPerImageOffset)
 		set(newValue) = set(rowsPerImageLayout, rowsPerImageOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -2916,7 +2916,7 @@ actual value class WGPUTextureDescriptor(actual override val handler: NativeAddr
 		set(newValue) = set(labelLayout, labelOffset, newValue?.handler)
 
 	actual var usage: ULong
-		get() = getULong("usage", usageOffset)
+		get() = getULong(usageLayout, usageOffset)
 		set(newValue) = set(usageLayout, usageOffset, newValue)
 
 	actual var dimension: WGPUTextureDimension
@@ -2924,22 +2924,22 @@ actual value class WGPUTextureDescriptor(actual override val handler: NativeAddr
 		set(newValue) = set(dimensionLayout, dimensionOffset, newValue)
 
 	actual val size: WGPUExtent3D
-		get() = get("size", sizeOffset).let(::WGPUExtent3D)
+		get() = get(sizeLayout, sizeOffset).let(::WGPUExtent3D)
 
 	actual var format: WGPUTextureFormat
 		get() = TODO()
 		set(newValue) = set(formatLayout, formatOffset, newValue)
 
 	actual var mipLevelCount: UInt
-		get() = getUInt("mipLevelCount", mipLevelCountOffset)
+		get() = getUInt(mipLevelCountLayout, mipLevelCountOffset)
 		set(newValue) = set(mipLevelCountLayout, mipLevelCountOffset, newValue)
 
 	actual var sampleCount: UInt
-		get() = getUInt("sampleCount", sampleCountOffset)
+		get() = getUInt(sampleCountLayout, sampleCountOffset)
 		set(newValue) = set(sampleCountLayout, sampleCountOffset, newValue)
 
 	actual var viewFormatCount: ULong
-		get() = getULong("viewFormatCount", viewFormatCountOffset)
+		get() = getULong(viewFormatCountLayout, viewFormatCountOffset)
 		set(newValue) = set(viewFormatCountLayout, viewFormatCountOffset, newValue)
 
 	actual var viewFormats: ArrayHolder<WGPUTextureFormat>?
@@ -3007,19 +3007,19 @@ actual value class WGPUTextureViewDescriptor(actual override val handler: Native
 		set(newValue) = set(dimensionLayout, dimensionOffset, newValue)
 
 	actual var baseMipLevel: UInt
-		get() = getUInt("baseMipLevel", baseMipLevelOffset)
+		get() = getUInt(baseMipLevelLayout, baseMipLevelOffset)
 		set(newValue) = set(baseMipLevelLayout, baseMipLevelOffset, newValue)
 
 	actual var mipLevelCount: UInt
-		get() = getUInt("mipLevelCount", mipLevelCountOffset)
+		get() = getUInt(mipLevelCountLayout, mipLevelCountOffset)
 		set(newValue) = set(mipLevelCountLayout, mipLevelCountOffset, newValue)
 
 	actual var baseArrayLayer: UInt
-		get() = getUInt("baseArrayLayer", baseArrayLayerOffset)
+		get() = getUInt(baseArrayLayerLayout, baseArrayLayerOffset)
 		set(newValue) = set(baseArrayLayerLayout, baseArrayLayerOffset, newValue)
 
 	actual var arrayLayerCount: UInt
-		get() = getUInt("arrayLayerCount", arrayLayerCountOffset)
+		get() = getUInt(arrayLayerCountLayout, arrayLayerCountOffset)
 		set(newValue) = set(arrayLayerCountLayout, arrayLayerCountOffset, newValue)
 
 	actual var aspect: WGPUTextureAspect
@@ -3027,7 +3027,7 @@ actual value class WGPUTextureViewDescriptor(actual override val handler: Native
 		set(newValue) = set(aspectLayout, aspectOffset, newValue)
 
 	actual var usage: ULong
-		get() = getULong("usage", usageOffset)
+		get() = getULong(usageLayout, usageOffset)
 		set(newValue) = set(usageLayout, usageOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -3083,11 +3083,11 @@ actual value class WGPUVertexAttribute(actual override val handler: NativeAddres
 		set(newValue) = set(formatLayout, formatOffset, newValue)
 
 	actual var offset: ULong
-		get() = getULong("offset", offsetOffset)
+		get() = getULong(offsetLayout, offsetOffset)
 		set(newValue) = set(offsetLayout, offsetOffset, newValue)
 
 	actual var shaderLocation: UInt
-		get() = getUInt("shaderLocation", shaderLocationOffset)
+		get() = getUInt(shaderLocationLayout, shaderLocationOffset)
 		set(newValue) = set(shaderLocationLayout, shaderLocationOffset, newValue)
 
 	override fun getLayout(name: String)
@@ -3115,7 +3115,7 @@ actual value class WGPUVertexAttribute(actual override val handler: NativeAddres
 @JvmInline
 actual value class WGPUVertexBufferLayout(actual override val handler: NativeAddress) : CStructure {
 	actual var arrayStride: ULong
-		get() = getULong("arrayStride", arrayStrideOffset)
+		get() = getULong(arrayStrideLayout, arrayStrideOffset)
 		set(newValue) = set(arrayStrideLayout, arrayStrideOffset, newValue)
 
 	actual var stepMode: WGPUVertexStepMode
@@ -3123,7 +3123,7 @@ actual value class WGPUVertexBufferLayout(actual override val handler: NativeAdd
 		set(newValue) = set(stepModeLayout, stepModeOffset, newValue)
 
 	actual var attributeCount: ULong
-		get() = getULong("attributeCount", attributeCountOffset)
+		get() = getULong(attributeCountLayout, attributeCountOffset)
 		set(newValue) = set(attributeCountLayout, attributeCountOffset, newValue)
 
 	actual var attributes: ArrayHolder<WGPUVertexAttribute>?
@@ -3167,7 +3167,7 @@ actual value class WGPUVertexState(actual override val handler: NativeAddress) :
 		set(newValue) = set(entryPointLayout, entryPointOffset, newValue?.handler)
 
 	actual var constantCount: ULong
-		get() = getULong("constantCount", constantCountOffset)
+		get() = getULong(constantCountLayout, constantCountOffset)
 		set(newValue) = set(constantCountLayout, constantCountOffset, newValue)
 
 	actual var constants: ArrayHolder<WGPUConstantEntry>?
@@ -3175,7 +3175,7 @@ actual value class WGPUVertexState(actual override val handler: NativeAddress) :
 		set(newValue) = set(constantsLayout, constantsOffset, newValue?.handler)
 
 	actual var bufferCount: ULong
-		get() = getULong("bufferCount", bufferCountOffset)
+		get() = getULong(bufferCountLayout, bufferCountOffset)
 		set(newValue) = set(bufferCountLayout, bufferCountOffset, newValue)
 
 	actual var buffers: ArrayHolder<WGPUVertexBufferLayout>?

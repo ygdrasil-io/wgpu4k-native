@@ -18,29 +18,29 @@ interface AddressProvider {
 interface CStructure : AddressProvider {
     val handler: NativeAddress
 
-    fun get(name: String, offset: Long)
-            = handler.get(getLayout(name), offset)
+    fun get(layout: GroupLayout, offset: Long)
+            = handler.get(layout as AddressLayout, offset)
 
-    fun getUInt(name: String, offset: Long): UInt
-            = handler.get(getLayout(name) as ValueLayout.OfInt, offset).toUInt()
+    fun getUInt(layout: GroupLayout, offset: Long): UInt
+            = handler.get(JAVA_INT, offset).toUInt()
 
-    fun getInt(name: String, offset: Long): Int
-            = handler.get(getLayout(name) as ValueLayout.OfInt, offset)
+    fun getInt(layout: GroupLayout, offset: Long): Int
+            = handler.get(JAVA_INT, offset)
 
-    fun getULong(name: String, offset: Long): ULong
-            = handler.get(getLayout(name) as ValueLayout.OfLong, offset).toULong()
+    fun getULong(layout: GroupLayout, offset: Long): ULong
+            = handler.get(JAVA_LONG, offset).toULong()
 
-    fun getUShort(name: String, offset: Long): UShort
-            = handler.get(getLayout(name) as ValueLayout.OfShort, offset).toUShort()
+    fun getUShort(layout: GroupLayout, offset: Long): UShort
+            = handler.get(JAVA_SHORT, offset).toUShort()
 
-    fun getShort(name: String, offset: Long): Short
-            = handler.get(getLayout(name) as ValueLayout.OfShort, offset)
+    fun getShort(layout: GroupLayout, offset: Long): Short
+            = handler.get(JAVA_SHORT, offset)
 
-    fun getFloat(name: String, offset: Long): Float
-            = handler.get(getLayout(name) as ValueLayout.OfFloat, offset)
+    fun getFloat(layout: GroupLayout, offset: Long): Float
+            = handler.get(JAVA_FLOAT, offset)
 
-    fun getDouble(name: String, offset: Long): Double
-            = handler.get(getLayout(name) as ValueLayout.OfDouble, offset)
+    fun getDouble(layout: GroupLayout, offset: Long): Double
+            = handler.get(JAVA_DOUBLE, offset)
 
     fun set(layout: GroupLayout, offset: Long, address: NativeAddress?)
             = handler.set(layout as AddressLayout, offset, address ?: NULL)

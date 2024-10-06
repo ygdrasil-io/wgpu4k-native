@@ -213,17 +213,17 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
                 is CLibraryModel.Reference.Pointer,
                 is CLibraryModel.Reference.Structure, -> "TODO()"
 
-                CLibraryModel.Primitive.Float32 -> "getFloat(\"$name\", ${name}Offset)"
-                CLibraryModel.Primitive.Float64 -> "getDouble(\"$name\", ${name}Offset)"
-                CLibraryModel.Primitive.Int64 -> "getLong(\"$name\", ${name}Offset)"
-                CLibraryModel.Primitive.UInt16 -> "getUShort(\"$name\", ${name}Offset)"
-                CLibraryModel.Primitive.UInt64 -> "getULong(\"$name\", ${name}Offset)"
+                CLibraryModel.Primitive.Float32 -> "getFloat(${name}Layout, ${name}Offset)"
+                CLibraryModel.Primitive.Float64 -> "getDouble(${name}Layout, ${name}Offset)"
+                CLibraryModel.Primitive.Int64 -> "getLong(${name}Layout, ${name}Offset)"
+                CLibraryModel.Primitive.UInt16 -> "getUShort(${name}Layout, ${name}Offset)"
+                CLibraryModel.Primitive.UInt64 -> "getULong(${name}Layout, ${name}Offset)"
 
-                CLibraryModel.Primitive.Bool -> "getInt(\"$name\", ${name}Offset).toBoolean()"
-                CLibraryModel.Primitive.Int32 -> "getInt(\"$name\", ${name}Offset)"
-                CLibraryModel.Primitive.UInt32 -> "getUInt(\"$name\", ${name}Offset)"
+                CLibraryModel.Primitive.Bool -> "getInt(${name}Layout, ${name}Offset).toBoolean()"
+                CLibraryModel.Primitive.Int32 -> "getInt(${name}Layout, ${name}Offset)"
+                CLibraryModel.Primitive.UInt32 -> "getUInt(${name}Layout, ${name}Offset)"
 
-                is CLibraryModel.Reference.StructureField -> "get(\"$name\", ${name}Offset).let(::${type.name})"
+                is CLibraryModel.Reference.StructureField -> "get(${name}Layout, ${name}Offset).let(::${type.name})"
             }.let { appendText("\t\tget() = $it\n") }
 
             // Setter

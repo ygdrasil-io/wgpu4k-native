@@ -12,29 +12,29 @@ interface AddressProvider {
 interface CStructure : AddressProvider {
     val handler: NativeAddress
 
-    fun get(name: String, offset: Long)
-            = handler.handler.get(getLayout(name), offset).let(::NativeAddress)
+    fun get(layout: StructLayout, offset: Long)
+            = handler.handler.get(layout as AddressLayout, offset).let(::NativeAddress)
 
-    fun getUInt(name: String, offset: Long): UInt
-            = handler.handler.get(getLayout(name) as ValueLayout.OfInt, offset).toUInt()
+    fun getUInt(layout: StructLayout, offset: Long): UInt
+            = handler.handler.get(layout as ValueLayout.OfInt, offset).toUInt()
 
-    fun getInt(name: String, offset: Long): Int
-            = handler.handler.get(getLayout(name) as ValueLayout.OfInt, offset)
+    fun getInt(layout: StructLayout, offset: Long): Int
+            = handler.handler.get(layout as ValueLayout.OfInt, offset)
 
-    fun getULong(name: String, offset: Long): ULong
-            = handler.handler.get(getLayout(name) as ValueLayout.OfLong, offset).toULong()
+    fun getULong(layout: StructLayout, offset: Long): ULong
+            = handler.handler.get(layout as ValueLayout.OfLong, offset).toULong()
 
-    fun getUShort(name: String, offset: Long): UShort
-            = handler.handler.get(getLayout(name) as ValueLayout.OfShort, offset).toUShort()
+    fun getUShort(layout: StructLayout, offset: Long): UShort
+            = handler.handler.get(layout as ValueLayout.OfShort, offset).toUShort()
 
-    fun getShort(name: String, offset: Long): Short
-            = handler.handler.get(getLayout(name) as ValueLayout.OfShort, offset)
+    fun getShort(layout: StructLayout, offset: Long): Short
+            = handler.handler.get(layout as ValueLayout.OfShort, offset)
 
-    fun getFloat(name: String, offset: Long): Float
-            = handler.handler.get(getLayout(name) as ValueLayout.OfFloat, offset)
+    fun getFloat(layout: StructLayout, offset: Long): Float
+            = handler.handler.get(layout as ValueLayout.OfFloat, offset)
 
-    fun getDouble(name: String, offset: Long): Double
-            = handler.handler.get(getLayout(name) as ValueLayout.OfDouble, offset)
+    fun getDouble(layout: StructLayout, offset: Long): Double
+            = handler.handler.get(layout as ValueLayout.OfDouble, offset)
 
     fun set(layout: StructLayout, offset: Long, address: NativeAddress?)
             = handler.handler.set(layout as AddressLayout, offset, address?.handler)
