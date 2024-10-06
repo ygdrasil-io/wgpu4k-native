@@ -212,11 +212,11 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
                 is CLibraryModel.Reference.Pointer,
                 is CLibraryModel.Reference.Structure, -> "TODO()"
 
-                CLibraryModel.Primitive.Float32,
-                CLibraryModel.Primitive.Float64,
-                CLibraryModel.Primitive.Int64,
-                CLibraryModel.Primitive.UInt16,
-                CLibraryModel.Primitive.UInt64, -> "TODO()"
+                CLibraryModel.Primitive.Float32 -> "getFloat(\"$name\", ${name}Offset)"
+                CLibraryModel.Primitive.Float64 -> "getDouble(\"$name\", ${name}Offset)"
+                CLibraryModel.Primitive.Int64 -> "getLong(\"$name\", ${name}Offset)"
+                CLibraryModel.Primitive.UInt16 -> "getUShort(\"$name\", ${name}Offset)"
+                CLibraryModel.Primitive.UInt64 -> "getULong(\"$name\", ${name}Offset)"
 
                 CLibraryModel.Primitive.Bool -> "getInt(\"$name\", ${name}Offset).toBoolean()"
                 CLibraryModel.Primitive.Int32 -> "getInt(\"$name\", ${name}Offset)"
