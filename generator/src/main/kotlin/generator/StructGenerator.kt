@@ -238,13 +238,13 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
                 CLibraryModel.Primitive.UInt64,
                 CLibraryModel.Primitive.Bool,
                 CLibraryModel.Primitive.Int32,
-                CLibraryModel.Primitive.UInt32 -> "set(\"$name\", ${name}Offset, newValue)"
+                CLibraryModel.Primitive.UInt32 -> "set(${name}Layout, ${name}Offset, newValue)"
 
                 is CLibraryModel.Reference.Callback,
                 CLibraryModel.Reference.CString,
                 is CLibraryModel.Reference.Structure,
                 is CLibraryModel.Array,
-                is CLibraryModel.Reference.Pointer -> "set(\"$name\", ${name}Offset, newValue?.handler)"
+                is CLibraryModel.Reference.Pointer -> "set(${name}Layout, ${name}Offset, newValue?.handler)"
 
                 is CLibraryModel.Reference.StructureField -> null
             }?.let { appendText("\t\tset(newValue) = $it\n\n") } ?: appendText("\n")
@@ -290,7 +290,8 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
         var oldName: String? = null
         it.members.mapIndexed { index, (name, type, _), ->
             "val ${name}Offset = " + (offset?.let { "${it}L" } ?: "LAYOUT.withName(\"$oldName\").byteSize()") +
-                    (oldName?.let { " + ${oldName}Offset" } ?: "")
+                    (oldName?.let { " + ${oldName}Offset" } ?: "") + "\n" +
+                    "\t\tval ${name}Layout = LAYOUT.withName(\"$name\")\n"
                 .also { offset = type.getOffsetSize() }
                 .also { oldName = name }
         }.map { "\t\t$it\n" }

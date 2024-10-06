@@ -2,6 +2,7 @@ package ffi
 
 import webgpu.toInt
 import java.lang.foreign.AddressLayout
+import java.lang.foreign.StructLayout
 import java.lang.foreign.ValueLayout
 
 interface AddressProvider {
@@ -35,30 +36,30 @@ interface CStructure : AddressProvider {
     fun getDouble(name: String, offset: Long): Double
             = handler.handler.get(getLayout(name) as ValueLayout.OfDouble, offset)
 
-    fun set(name: String, offset: Long, address: NativeAddress?)
-            = handler.handler.set(getLayout(name), offset, address?.handler)
+    fun set(layout: StructLayout, offset: Long, address: NativeAddress?)
+            = handler.handler.set(layout as AddressLayout, offset, address?.handler)
 
-    fun set(name: String, offset: Long, value: UInt)
-            = handler.handler.set(getLayout(name) as ValueLayout.OfInt, offset, value.toInt())
+    fun set(layout: StructLayout, offset: Long, value: UInt)
+            = handler.handler.set(layout as ValueLayout.OfInt, offset, value.toInt())
 
-    fun set(name: String, offset: Long, value: Int)
-            = handler.handler.set(getLayout(name) as ValueLayout.OfInt, offset, value)
+    fun set(layout: StructLayout, offset: Long, value: Int)
+            = handler.handler.set(layout as ValueLayout.OfInt, offset, value)
 
-    fun set(name: String, offset: Long, value: Boolean)
-            = handler.handler.set(getLayout(name) as ValueLayout.OfInt, offset, value.toInt())
+    fun set(layout: StructLayout, offset: Long, value: Boolean)
+            = handler.handler.set(layout as ValueLayout.OfInt, offset, value.toInt())
 
-    fun set(name: String, offset: Long, value: ULong)
-            = handler.handler.set(getLayout(name) as ValueLayout.OfLong, offset, value.toLong())
+    fun set(layout: StructLayout, offset: Long, value: ULong)
+            = handler.handler.set(layout as ValueLayout.OfLong, offset, value.toLong())
 
-    fun set(name: String, offset: Long, value: UShort)
-            = handler.handler.set(getLayout(name) as ValueLayout.OfShort, offset, value.toShort())
+    fun set(layout: StructLayout, offset: Long, value: UShort)
+            = handler.handler.set(layout as ValueLayout.OfShort, offset, value.toShort())
 
-    fun set(name: String, offset: Long, value: Short)
-            = handler.handler.set(getLayout(name) as ValueLayout.OfShort, offset, value)
+    fun set(layout: StructLayout, offset: Long, value: Short)
+            = handler.handler.set(layout as ValueLayout.OfShort, offset, value)
 
-    fun set(name: String, offset: Long, value: Float)
-            = handler.handler.set(getLayout(name) as ValueLayout.OfFloat, offset, value)
+    fun set(layout: StructLayout, offset: Long, value: Float)
+            = handler.handler.set(layout as ValueLayout.OfFloat, offset, value)
 
-    fun set(name: String, offset: Long, value: Double)
-            = handler.handler.set(getLayout(name) as ValueLayout.OfDouble, offset, value)
+    fun set(layout: StructLayout, offset: Long, value: Double)
+            = handler.handler.set(layout as ValueLayout.OfDouble, offset, value)
 }

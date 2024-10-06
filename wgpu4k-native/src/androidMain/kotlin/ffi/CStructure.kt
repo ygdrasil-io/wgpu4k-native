@@ -2,8 +2,14 @@ package ffi
 
 import webgpu.toInt
 import java.lang.foreign.AddressLayout
+import java.lang.foreign.GroupLayout
 import java.lang.foreign.MemorySegment.Companion.NULL
 import java.lang.foreign.ValueLayout
+import java.lang.foreign.ValueLayout.Companion.JAVA_DOUBLE
+import java.lang.foreign.ValueLayout.Companion.JAVA_FLOAT
+import java.lang.foreign.ValueLayout.Companion.JAVA_INT
+import java.lang.foreign.ValueLayout.Companion.JAVA_LONG
+import java.lang.foreign.ValueLayout.Companion.JAVA_SHORT
 
 interface AddressProvider {
     fun getLayout(name: String) : AddressLayout
@@ -36,30 +42,30 @@ interface CStructure : AddressProvider {
     fun getDouble(name: String, offset: Long): Double
             = handler.get(getLayout(name) as ValueLayout.OfDouble, offset)
 
-    fun set(name: String, offset: Long, address: NativeAddress?)
-            = handler.set(getLayout(name), offset, address ?: NULL)
+    fun set(layout: GroupLayout, offset: Long, address: NativeAddress?)
+            = handler.set(layout as AddressLayout, offset, address ?: NULL)
 
-    fun set(name: String, offset: Long, value: UInt)
-            = handler.set(getLayout(name) as ValueLayout.OfInt, offset, value.toInt())
+    fun set(layout: GroupLayout, offset: Long, value: UInt)
+            = handler.set(JAVA_INT, offset, value.toInt())
 
-    fun set(name: String, offset: Long, value: Int)
-            = handler.set(getLayout(name) as ValueLayout.OfInt, offset, value)
+    fun set(layout: GroupLayout, offset: Long, value: Int)
+            = handler.set(JAVA_INT, offset, value)
 
-    fun set(name: String, offset: Long, value: Boolean)
-            = handler.set(getLayout(name) as ValueLayout.OfInt, offset, value.toInt())
+    fun set(layout: GroupLayout, offset: Long, value: Boolean)
+            = handler.set(JAVA_INT, offset, value.toInt())
 
-    fun set(name: String, offset: Long, value: ULong)
-            = handler.set(getLayout(name) as ValueLayout.OfLong, offset, value.toLong())
+    fun set(layout: GroupLayout, offset: Long, value: ULong)
+            = handler.set(JAVA_LONG, offset, value.toLong())
 
-    fun set(name: String, offset: Long, value: UShort)
-            = handler.set(getLayout(name) as ValueLayout.OfShort, offset, value.toShort())
+    fun set(layout: GroupLayout, offset: Long, value: UShort)
+            = handler.set(JAVA_SHORT, offset, value.toShort())
 
-    fun set(name: String, offset: Long, value: Short)
-            = handler.set(getLayout(name) as ValueLayout.OfShort, offset, value)
+    fun set(layout: GroupLayout, offset: Long, value: Short)
+            = handler.set(JAVA_SHORT, offset, value)
 
-    fun set(name: String, offset: Long, value: Float)
-            = handler.set(getLayout(name) as ValueLayout.OfFloat, offset, value)
+    fun set(layout: GroupLayout, offset: Long, value: Float)
+            = handler.set(JAVA_FLOAT, offset, value)
 
-    fun set(name: String, offset: Long, value: Double)
-            = handler.set(getLayout(name) as ValueLayout.OfDouble, offset, value)
+    fun set(layout: GroupLayout, offset: Long, value: Double)
+            = handler.set(JAVA_DOUBLE, offset, value)
 }
