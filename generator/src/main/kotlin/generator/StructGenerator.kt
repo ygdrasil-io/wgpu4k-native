@@ -228,7 +228,7 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
 
         }
 
-        appendHelperFunctions()
+        appendHelperFunctions(structureName)
 
         // Generate layout
         appendText("\tcompanion object {\n")
@@ -286,9 +286,9 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
     }
 }
 
-fun File.appendHelperFunctions() {
+fun File.appendHelperFunctions(structureName: String) {
     appendText("\toverride fun getLayout(name: String)\n")
-    appendText("\t\t= WGPUStorageTextureBindingLayout.LAYOUT.withName(name) as AddressLayout\n")
+    appendText("\t\t= $structureName.LAYOUT.withName(name) as AddressLayout\n")
     appendText("\n")
 }
 
