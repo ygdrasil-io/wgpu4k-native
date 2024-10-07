@@ -126,8 +126,8 @@ actual fun wgpuComputePassEncoderPushDebugGroup(handler: WGPUComputePassEncoder?
 actual fun wgpuComputePassEncoderSetPipeline(handler: WGPUComputePassEncoder?, pipeline: WGPUComputePipeline?): Unit
 	 = Functions.wgpuComputePassEncoderSetPipeline(handler?.handler.adapt(), pipeline?.handler.adapt())
 
-actual fun wgpuComputePassEncoderSetBindGroup(handler: WGPUComputePassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsets: ArrayHolder<UInt>?): Unit
-	 = Functions.wgpuComputePassEncoderSetBindGroup(handler?.handler.adapt(), groupIndex, group?.handler.adapt(), dynamicOffsets?.handler.adapt())
+actual fun wgpuComputePassEncoderSetBindGroup(handler: WGPUComputePassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: ArrayHolder<UInt>?): Unit
+	 = Functions.wgpuComputePassEncoderSetBindGroup(handler?.handler.adapt(), groupIndex, group?.handler.adapt(), dynamicOffsetCount, dynamicOffsets?.handler.adapt())
 
 actual fun wgpuComputePassEncoderDispatchWorkgroups(handler: WGPUComputePassEncoder?, workgroupCountX: UInt, workgroupCountY: UInt, workgroupCountZ: UInt): Unit
 	 = Functions.wgpuComputePassEncoderDispatchWorkgroups(handler?.handler.adapt(), workgroupCountX, workgroupCountY, workgroupCountZ)
@@ -261,8 +261,8 @@ actual fun wgpuQuerySetGetCount(handler: WGPUQuerySet?): UInt
 actual fun wgpuQuerySetDestroy(handler: WGPUQuerySet?): Unit
 	 = Functions.wgpuQuerySetDestroy(handler?.handler.adapt())
 
-actual fun wgpuQueueSubmit(handler: WGPUQueue?, commands: ArrayHolder<WGPUCommandBuffer>?): Unit
-	 = Functions.wgpuQueueSubmit(handler?.handler.adapt(), commands?.handler.adapt())
+actual fun wgpuQueueSubmit(handler: WGPUQueue?, commandCount: ULong, commands: ArrayHolder<WGPUCommandBuffer>?): Unit
+	 = Functions.wgpuQueueSubmit(handler?.handler.adapt(), commandCount, commands?.handler.adapt())
 
 actual fun wgpuQueueOnSubmittedWorkDone(handler: WGPUQueue?, callbackInfo: WGPUQueueWorkDoneCallbackInfo): Unit
 	 = Functions.wgpuQueueOnSubmittedWorkDone(handler?.handler.adapt(), callbackInfo?.handler.adapt())
@@ -282,8 +282,8 @@ actual fun wgpuRenderBundleSetLabel(handler: WGPURenderBundle?, label: CString?)
 actual fun wgpuRenderBundleEncoderSetPipeline(handler: WGPURenderBundleEncoder?, pipeline: WGPURenderPipeline?): Unit
 	 = Functions.wgpuRenderBundleEncoderSetPipeline(handler?.handler.adapt(), pipeline?.handler.adapt())
 
-actual fun wgpuRenderBundleEncoderSetBindGroup(handler: WGPURenderBundleEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsets: ArrayHolder<UInt>?): Unit
-	 = Functions.wgpuRenderBundleEncoderSetBindGroup(handler?.handler.adapt(), groupIndex, group?.handler.adapt(), dynamicOffsets?.handler.adapt())
+actual fun wgpuRenderBundleEncoderSetBindGroup(handler: WGPURenderBundleEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: ArrayHolder<UInt>?): Unit
+	 = Functions.wgpuRenderBundleEncoderSetBindGroup(handler?.handler.adapt(), groupIndex, group?.handler.adapt(), dynamicOffsetCount, dynamicOffsets?.handler.adapt())
 
 actual fun wgpuRenderBundleEncoderDraw(handler: WGPURenderBundleEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit
 	 = Functions.wgpuRenderBundleEncoderDraw(handler?.handler.adapt(), vertexCount, instanceCount, firstVertex, firstInstance)
@@ -322,8 +322,8 @@ actual fun wgpuRenderBundleEncoderSetLabel(handler: WGPURenderBundleEncoder?, la
 actual fun wgpuRenderPassEncoderSetPipeline(handler: WGPURenderPassEncoder?, pipeline: WGPURenderPipeline?): Unit
 	 = Functions.wgpuRenderPassEncoderSetPipeline(handler?.handler.adapt(), pipeline?.handler.adapt())
 
-actual fun wgpuRenderPassEncoderSetBindGroup(handler: WGPURenderPassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsets: ArrayHolder<UInt>?): Unit
-	 = Functions.wgpuRenderPassEncoderSetBindGroup(handler?.handler.adapt(), groupIndex, group?.handler.adapt(), dynamicOffsets?.handler.adapt())
+actual fun wgpuRenderPassEncoderSetBindGroup(handler: WGPURenderPassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: ArrayHolder<UInt>?): Unit
+	 = Functions.wgpuRenderPassEncoderSetBindGroup(handler?.handler.adapt(), groupIndex, group?.handler.adapt(), dynamicOffsetCount, dynamicOffsets?.handler.adapt())
 
 actual fun wgpuRenderPassEncoderDraw(handler: WGPURenderPassEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit
 	 = Functions.wgpuRenderPassEncoderDraw(handler?.handler.adapt(), vertexCount, instanceCount, firstVertex, firstInstance)
@@ -337,8 +337,8 @@ actual fun wgpuRenderPassEncoderDrawIndirect(handler: WGPURenderPassEncoder?, in
 actual fun wgpuRenderPassEncoderDrawIndexedIndirect(handler: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit
 	 = Functions.wgpuRenderPassEncoderDrawIndexedIndirect(handler?.handler.adapt(), indirectBuffer?.handler.adapt(), indirectOffset)
 
-actual fun wgpuRenderPassEncoderExecuteBundles(handler: WGPURenderPassEncoder?, bundles: ArrayHolder<WGPURenderBundle>?): Unit
-	 = Functions.wgpuRenderPassEncoderExecuteBundles(handler?.handler.adapt(), bundles?.handler.adapt())
+actual fun wgpuRenderPassEncoderExecuteBundles(handler: WGPURenderPassEncoder?, bundleCount: ULong, bundles: ArrayHolder<WGPURenderBundle>?): Unit
+	 = Functions.wgpuRenderPassEncoderExecuteBundles(handler?.handler.adapt(), bundleCount, bundles?.handler.adapt())
 
 actual fun wgpuRenderPassEncoderInsertDebugMarker(handler: WGPURenderPassEncoder?, markerLabel: CString?): Unit
 	 = Functions.wgpuRenderPassEncoderInsertDebugMarker(handler?.handler.adapt(), markerLabel?.handler.adapt())

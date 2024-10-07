@@ -409,13 +409,14 @@ object Functions {
 	private val wgpuComputePassEncoderSetPipelineHandlerAddress = findOrThrow("wgpuComputePassEncoderSetPipeline")
 	private val wgpuComputePassEncoderSetPipelineHandler = Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderSetPipelineHandlerAddress, wgpuComputePassEncoderSetPipelineHandlerDescription)
 
-	fun wgpuComputePassEncoderSetBindGroup(handler: java.lang.foreign.MemorySegment?, groupIndex: UInt, group: java.lang.foreign.MemorySegment?, dynamicOffsets: java.lang.foreign.MemorySegment?): Unit {
-		return wgpuComputePassEncoderSetBindGroupHandler.invokeExact(handler, groupIndex, group, dynamicOffsets) as Unit
+	fun wgpuComputePassEncoderSetBindGroup(handler: java.lang.foreign.MemorySegment?, groupIndex: UInt, group: java.lang.foreign.MemorySegment?, dynamicOffsetCount: ULong, dynamicOffsets: java.lang.foreign.MemorySegment?): Unit {
+		return wgpuComputePassEncoderSetBindGroupHandler.invokeExact(handler, groupIndex, group, dynamicOffsetCount, dynamicOffsets) as Unit
 	}
 	private val wgpuComputePassEncoderSetBindGroupHandlerDescription = FunctionDescriptor.ofVoid(
 			C_POINTER,
 			C_INT,
 			C_POINTER,
+			C_LONG,
 			C_POINTER
 		)
 	private val wgpuComputePassEncoderSetBindGroupHandlerAddress = findOrThrow("wgpuComputePassEncoderSetBindGroup")
@@ -824,11 +825,12 @@ object Functions {
 	private val wgpuQuerySetDestroyHandlerAddress = findOrThrow("wgpuQuerySetDestroy")
 	private val wgpuQuerySetDestroyHandler = Linker.nativeLinker().downcallHandle(wgpuQuerySetDestroyHandlerAddress, wgpuQuerySetDestroyHandlerDescription)
 
-	fun wgpuQueueSubmit(handler: java.lang.foreign.MemorySegment?, commands: java.lang.foreign.MemorySegment?): Unit {
-		return wgpuQueueSubmitHandler.invokeExact(handler, commands) as Unit
+	fun wgpuQueueSubmit(handler: java.lang.foreign.MemorySegment?, commandCount: ULong, commands: java.lang.foreign.MemorySegment?): Unit {
+		return wgpuQueueSubmitHandler.invokeExact(handler, commandCount, commands) as Unit
 	}
 	private val wgpuQueueSubmitHandlerDescription = FunctionDescriptor.ofVoid(
 			C_POINTER,
+			C_LONG,
 			C_POINTER
 		)
 	private val wgpuQueueSubmitHandlerAddress = findOrThrow("wgpuQueueSubmit")
@@ -901,13 +903,14 @@ object Functions {
 	private val wgpuRenderBundleEncoderSetPipelineHandlerAddress = findOrThrow("wgpuRenderBundleEncoderSetPipeline")
 	private val wgpuRenderBundleEncoderSetPipelineHandler = Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderSetPipelineHandlerAddress, wgpuRenderBundleEncoderSetPipelineHandlerDescription)
 
-	fun wgpuRenderBundleEncoderSetBindGroup(handler: java.lang.foreign.MemorySegment?, groupIndex: UInt, group: java.lang.foreign.MemorySegment?, dynamicOffsets: java.lang.foreign.MemorySegment?): Unit {
-		return wgpuRenderBundleEncoderSetBindGroupHandler.invokeExact(handler, groupIndex, group, dynamicOffsets) as Unit
+	fun wgpuRenderBundleEncoderSetBindGroup(handler: java.lang.foreign.MemorySegment?, groupIndex: UInt, group: java.lang.foreign.MemorySegment?, dynamicOffsetCount: ULong, dynamicOffsets: java.lang.foreign.MemorySegment?): Unit {
+		return wgpuRenderBundleEncoderSetBindGroupHandler.invokeExact(handler, groupIndex, group, dynamicOffsetCount, dynamicOffsets) as Unit
 	}
 	private val wgpuRenderBundleEncoderSetBindGroupHandlerDescription = FunctionDescriptor.ofVoid(
 			C_POINTER,
 			C_INT,
 			C_POINTER,
+			C_LONG,
 			C_POINTER
 		)
 	private val wgpuRenderBundleEncoderSetBindGroupHandlerAddress = findOrThrow("wgpuRenderBundleEncoderSetBindGroup")
@@ -1048,13 +1051,14 @@ object Functions {
 	private val wgpuRenderPassEncoderSetPipelineHandlerAddress = findOrThrow("wgpuRenderPassEncoderSetPipeline")
 	private val wgpuRenderPassEncoderSetPipelineHandler = Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetPipelineHandlerAddress, wgpuRenderPassEncoderSetPipelineHandlerDescription)
 
-	fun wgpuRenderPassEncoderSetBindGroup(handler: java.lang.foreign.MemorySegment?, groupIndex: UInt, group: java.lang.foreign.MemorySegment?, dynamicOffsets: java.lang.foreign.MemorySegment?): Unit {
-		return wgpuRenderPassEncoderSetBindGroupHandler.invokeExact(handler, groupIndex, group, dynamicOffsets) as Unit
+	fun wgpuRenderPassEncoderSetBindGroup(handler: java.lang.foreign.MemorySegment?, groupIndex: UInt, group: java.lang.foreign.MemorySegment?, dynamicOffsetCount: ULong, dynamicOffsets: java.lang.foreign.MemorySegment?): Unit {
+		return wgpuRenderPassEncoderSetBindGroupHandler.invokeExact(handler, groupIndex, group, dynamicOffsetCount, dynamicOffsets) as Unit
 	}
 	private val wgpuRenderPassEncoderSetBindGroupHandlerDescription = FunctionDescriptor.ofVoid(
 			C_POINTER,
 			C_INT,
 			C_POINTER,
+			C_LONG,
 			C_POINTER
 		)
 	private val wgpuRenderPassEncoderSetBindGroupHandlerAddress = findOrThrow("wgpuRenderPassEncoderSetBindGroup")
@@ -1109,11 +1113,12 @@ object Functions {
 	private val wgpuRenderPassEncoderDrawIndexedIndirectHandlerAddress = findOrThrow("wgpuRenderPassEncoderDrawIndexedIndirect")
 	private val wgpuRenderPassEncoderDrawIndexedIndirectHandler = Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderDrawIndexedIndirectHandlerAddress, wgpuRenderPassEncoderDrawIndexedIndirectHandlerDescription)
 
-	fun wgpuRenderPassEncoderExecuteBundles(handler: java.lang.foreign.MemorySegment?, bundles: java.lang.foreign.MemorySegment?): Unit {
-		return wgpuRenderPassEncoderExecuteBundlesHandler.invokeExact(handler, bundles) as Unit
+	fun wgpuRenderPassEncoderExecuteBundles(handler: java.lang.foreign.MemorySegment?, bundleCount: ULong, bundles: java.lang.foreign.MemorySegment?): Unit {
+		return wgpuRenderPassEncoderExecuteBundlesHandler.invokeExact(handler, bundleCount, bundles) as Unit
 	}
 	private val wgpuRenderPassEncoderExecuteBundlesHandlerDescription = FunctionDescriptor.ofVoid(
 			C_POINTER,
+			C_LONG,
 			C_POINTER
 		)
 	private val wgpuRenderPassEncoderExecuteBundlesHandlerAddress = findOrThrow("wgpuRenderPassEncoderExecuteBundles")

@@ -186,6 +186,7 @@ private fun CLibraryModel.Type.toJvmArgCall(name: String) = when(this) {
 }
 
 private fun CLibraryModel.Type.toNativeArgCall(name: String) = when(this) {
+    is CLibraryModel.Reference.StructureField -> "$name.toCValue()"
     is CLibraryModel.Reference.CString -> "$name?.toKString()"
     is CLibraryModel.Reference.OpaquePointer -> "$name?.adapt()"
     is CLibraryModel.Reference.Enumeration -> name

@@ -25,7 +25,7 @@ data class CLibraryModel(
         object CString : Reference("CString")
     }
 
-    class Array(val subType: Type) : Type
+    class Array(val subType: Type, val isMutable: Boolean) : Type
     sealed interface Primitive : Type {
         object Bool : Primitive
         object UInt32 : Primitive
@@ -72,7 +72,7 @@ internal fun CLibraryModel.Primitive.toPrimitiveKotlinType(): String = when (thi
     CLibraryModel.Primitive.UInt16 -> "UShort"
 }
 
-internal fun String?.toCType(isPointer: Boolean = false): CLibraryModel.Type {
+internal fun String?.toCType(isPointer: Boolean, isMutable: Boolean): CLibraryModel.Type {
     return when {
         this == null -> CLibraryModel.Primitive.Void
         startsWith("struct.") -> when (isPointer) {
@@ -122,7 +122,7 @@ internal fun String?.toCType(isPointer: Boolean = false): CLibraryModel.Type {
             true -> CLibraryModel.Reference.OpaquePointer
             else -> CLibraryModel.Primitive.Void
         }
-        startsWith("array<") -> CLibraryModel.Array(substring(6, length - 1).toCType())
+        startsWith("array<") -> CLibraryModel.Array(substring(6, length - 1).toCType(false, false), isMutable)
         else -> error("unknown type $this")
     }
 }

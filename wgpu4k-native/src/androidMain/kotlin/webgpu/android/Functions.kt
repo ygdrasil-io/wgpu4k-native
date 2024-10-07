@@ -47,7 +47,7 @@ object Functions {
 	external fun wgpuComputePassEncoderPopDebugGroup(handler: Long): Unit
 	external fun wgpuComputePassEncoderPushDebugGroup(handler: Long, groupLabel: Long): Unit
 	external fun wgpuComputePassEncoderSetPipeline(handler: Long, pipeline: Long): Unit
-	external fun wgpuComputePassEncoderSetBindGroup(handler: Long, groupIndex: UInt, group: Long, dynamicOffsets: Long): Unit
+	external fun wgpuComputePassEncoderSetBindGroup(handler: Long, groupIndex: UInt, group: Long, dynamicOffsetCount: ULong, dynamicOffsets: Long): Unit
 	external fun wgpuComputePassEncoderDispatchWorkgroups(handler: Long, workgroupCountX: UInt, workgroupCountY: UInt, workgroupCountZ: UInt): Unit
 	external fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(handler: Long, indirectBuffer: Long, indirectOffset: ULong): Unit
 	external fun wgpuComputePassEncoderEnd(handler: Long): Unit
@@ -86,14 +86,14 @@ object Functions {
 	external fun wgpuQuerySetGetType(handler: Long): UInt
 	external fun wgpuQuerySetGetCount(handler: Long): UInt
 	external fun wgpuQuerySetDestroy(handler: Long): Unit
-	external fun wgpuQueueSubmit(handler: Long, commands: Long): Unit
+	external fun wgpuQueueSubmit(handler: Long, commandCount: ULong, commands: Long): Unit
 	external fun wgpuQueueOnSubmittedWorkDone(handler: Long, callbackInfo: Long): Unit
 	external fun wgpuQueueWriteBuffer(handler: Long, buffer: Long, bufferOffset: ULong, data: Long, size: ULong): Unit
 	external fun wgpuQueueWriteTexture(handler: Long, destination: Long, data: Long, dataSize: ULong, dataLayout: Long, writeSize: Long): Unit
 	external fun wgpuQueueSetLabel(handler: Long, label: Long): Unit
 	external fun wgpuRenderBundleSetLabel(handler: Long, label: Long): Unit
 	external fun wgpuRenderBundleEncoderSetPipeline(handler: Long, pipeline: Long): Unit
-	external fun wgpuRenderBundleEncoderSetBindGroup(handler: Long, groupIndex: UInt, group: Long, dynamicOffsets: Long): Unit
+	external fun wgpuRenderBundleEncoderSetBindGroup(handler: Long, groupIndex: UInt, group: Long, dynamicOffsetCount: ULong, dynamicOffsets: Long): Unit
 	external fun wgpuRenderBundleEncoderDraw(handler: Long, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit
 	external fun wgpuRenderBundleEncoderDrawIndexed(handler: Long, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit
 	external fun wgpuRenderBundleEncoderDrawIndirect(handler: Long, indirectBuffer: Long, indirectOffset: ULong): Unit
@@ -106,12 +106,12 @@ object Functions {
 	external fun wgpuRenderBundleEncoderFinish(handler: Long, descriptor: Long): Long
 	external fun wgpuRenderBundleEncoderSetLabel(handler: Long, label: Long): Unit
 	external fun wgpuRenderPassEncoderSetPipeline(handler: Long, pipeline: Long): Unit
-	external fun wgpuRenderPassEncoderSetBindGroup(handler: Long, groupIndex: UInt, group: Long, dynamicOffsets: Long): Unit
+	external fun wgpuRenderPassEncoderSetBindGroup(handler: Long, groupIndex: UInt, group: Long, dynamicOffsetCount: ULong, dynamicOffsets: Long): Unit
 	external fun wgpuRenderPassEncoderDraw(handler: Long, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit
 	external fun wgpuRenderPassEncoderDrawIndexed(handler: Long, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit
 	external fun wgpuRenderPassEncoderDrawIndirect(handler: Long, indirectBuffer: Long, indirectOffset: ULong): Unit
 	external fun wgpuRenderPassEncoderDrawIndexedIndirect(handler: Long, indirectBuffer: Long, indirectOffset: ULong): Unit
-	external fun wgpuRenderPassEncoderExecuteBundles(handler: Long, bundles: Long): Unit
+	external fun wgpuRenderPassEncoderExecuteBundles(handler: Long, bundleCount: ULong, bundles: Long): Unit
 	external fun wgpuRenderPassEncoderInsertDebugMarker(handler: Long, markerLabel: Long): Unit
 	external fun wgpuRenderPassEncoderPopDebugGroup(handler: Long): Unit
 	external fun wgpuRenderPassEncoderPushDebugGroup(handler: Long, groupLabel: Long): Unit

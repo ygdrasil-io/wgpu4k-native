@@ -99,6 +99,7 @@ private val headerNative = """
     import kotlinx.cinterop.toKString
     import kotlinx.cinterop.toLong
     import kotlinx.cinterop.sizeOf
+    import kotlinx.cinterop.CValue
     
     
 """.trimIndent()
@@ -202,6 +203,11 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
         appendText("\t\t\t\t.let(::$structureName)\n")
         appendText("\t\t}\n")
         appendText("\t}\n")
+
+        appendText("\tfun toCValue(): CValue<webgpu.native.$structureName> {\n")
+        appendText("\t\tTODO(\"Not yet implemented\")\n")
+        appendText("\t}\n")
+
 
         appendText("}\n\n")
     }

@@ -14,6 +14,7 @@ import kotlinx.cinterop.toCPointer
 import kotlinx.cinterop.toKString
 import kotlinx.cinterop.toLong
 import kotlinx.cinterop.sizeOf
+import kotlinx.cinterop.CValue
 
 actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 	actual var vendor: CString?
@@ -54,6 +55,9 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 				.let(::WGPUAdapterInfo)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUAdapterInfo> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
@@ -78,6 +82,9 @@ actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUBindGroupDescriptor>())
 				.let(::WGPUBindGroupDescriptor)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUBindGroupDescriptor> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -112,6 +119,9 @@ actual value class WGPUBindGroupEntry(actual val handler: NativeAddress) {
 				.let(::WGPUBindGroupEntry)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUBindGroupEntry> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddress) {
@@ -132,6 +142,9 @@ actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddre
 			return allocator.allocate(sizeOf<webgpu.native.WGPUBindGroupLayoutDescriptor>())
 				.let(::WGPUBindGroupLayoutDescriptor)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUBindGroupLayoutDescriptor> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -162,6 +175,9 @@ actual value class WGPUBindGroupLayoutEntry(actual val handler: NativeAddress) {
 				.let(::WGPUBindGroupLayoutEntry)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUBindGroupLayoutEntry> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUBlendComponent(actual val handler: NativeAddress) {
@@ -183,6 +199,9 @@ actual value class WGPUBlendComponent(actual val handler: NativeAddress) {
 				.let(::WGPUBlendComponent)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUBlendComponent> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUBlendState(actual val handler: NativeAddress) {
@@ -197,6 +216,9 @@ actual value class WGPUBlendState(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUBlendState>())
 				.let(::WGPUBlendState)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUBlendState> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -218,6 +240,9 @@ actual value class WGPUBufferBindingLayout(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUBufferBindingLayout>())
 				.let(::WGPUBufferBindingLayout)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUBufferBindingLayout> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -244,6 +269,9 @@ actual value class WGPUBufferDescriptor(actual val handler: NativeAddress) {
 				.let(::WGPUBufferDescriptor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUBufferDescriptor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUColor(actual val handler: NativeAddress) {
@@ -269,6 +297,9 @@ actual value class WGPUColor(actual val handler: NativeAddress) {
 				.let(::WGPUColor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUColor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUColorTargetState(actual val handler: NativeAddress) {
@@ -290,6 +321,9 @@ actual value class WGPUColorTargetState(actual val handler: NativeAddress) {
 				.let(::WGPUColorTargetState)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUColorTargetState> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUCommandBufferDescriptor(actual val handler: NativeAddress) {
@@ -303,6 +337,9 @@ actual value class WGPUCommandBufferDescriptor(actual val handler: NativeAddress
 				.let(::WGPUCommandBufferDescriptor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUCommandBufferDescriptor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUCommandEncoderDescriptor(actual val handler: NativeAddress) {
@@ -315,6 +352,9 @@ actual value class WGPUCommandEncoderDescriptor(actual val handler: NativeAddres
 			return allocator.allocate(sizeOf<webgpu.native.WGPUCommandEncoderDescriptor>())
 				.let(::WGPUCommandEncoderDescriptor)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUCommandEncoderDescriptor> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -332,6 +372,9 @@ actual value class WGPUCompilationInfo(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUCompilationInfo>())
 				.let(::WGPUCompilationInfo)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUCompilationInfo> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -378,6 +421,9 @@ actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
 				.let(::WGPUCompilationMessage)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUCompilationMessage> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUComputePassDescriptor(actual val handler: NativeAddress) {
@@ -394,6 +440,9 @@ actual value class WGPUComputePassDescriptor(actual val handler: NativeAddress) 
 			return allocator.allocate(sizeOf<webgpu.native.WGPUComputePassDescriptor>())
 				.let(::WGPUComputePassDescriptor)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUComputePassDescriptor> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -416,6 +465,9 @@ actual value class WGPUComputePassTimestampWrites(actual val handler: NativeAddr
 				.let(::WGPUComputePassTimestampWrites)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUComputePassTimestampWrites> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddress) {
@@ -436,6 +488,9 @@ actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddre
 				.let(::WGPUComputePipelineDescriptor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUComputePipelineDescriptor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
@@ -452,6 +507,9 @@ actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUConstantEntry>())
 				.let(::WGPUConstantEntry)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUConstantEntry> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -500,6 +558,9 @@ actual value class WGPUDepthStencilState(actual val handler: NativeAddress) {
 				.let(::WGPUDepthStencilState)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUDepthStencilState> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
@@ -534,6 +595,9 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 				.let(::WGPUDeviceDescriptor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUDeviceDescriptor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUExtent3D(actual val handler: NativeAddress) {
@@ -554,6 +618,9 @@ actual value class WGPUExtent3D(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUExtent3D>())
 				.let(::WGPUExtent3D)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUExtent3D> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -588,6 +655,9 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 				.let(::WGPUFragmentState)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUFragmentState> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUFuture(actual val handler: NativeAddress) {
@@ -600,6 +670,9 @@ actual value class WGPUFuture(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUFuture>())
 				.let(::WGPUFuture)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUFuture> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -617,6 +690,9 @@ actual value class WGPUFutureWaitInfo(actual val handler: NativeAddress) {
 				.let(::WGPUFutureWaitInfo)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUFutureWaitInfo> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUImageCopyBuffer(actual val handler: NativeAddress) {
@@ -632,6 +708,9 @@ actual value class WGPUImageCopyBuffer(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUImageCopyBuffer>())
 				.let(::WGPUImageCopyBuffer)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUImageCopyBuffer> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -657,6 +736,9 @@ actual value class WGPUImageCopyTexture(actual val handler: NativeAddress) {
 				.let(::WGPUImageCopyTexture)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUImageCopyTexture> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUInstanceDescriptor(actual val handler: NativeAddress) {
@@ -668,6 +750,9 @@ actual value class WGPUInstanceDescriptor(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUInstanceDescriptor>())
 				.let(::WGPUInstanceDescriptor)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUInstanceDescriptor> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -685,6 +770,9 @@ actual value class WGPUInstanceFeatures(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUInstanceFeatures>())
 				.let(::WGPUInstanceFeatures)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUInstanceFeatures> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -819,6 +907,9 @@ actual value class WGPULimits(actual val handler: NativeAddress) {
 				.let(::WGPULimits)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPULimits> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUMultisampleState(actual val handler: NativeAddress) {
@@ -839,6 +930,9 @@ actual value class WGPUMultisampleState(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUMultisampleState>())
 				.let(::WGPUMultisampleState)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUMultisampleState> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -861,6 +955,9 @@ actual value class WGPUOrigin3D(actual val handler: NativeAddress) {
 				.let(::WGPUOrigin3D)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUOrigin3D> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddress) {
@@ -881,6 +978,9 @@ actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddres
 			return allocator.allocate(sizeOf<webgpu.native.WGPUPipelineLayoutDescriptor>())
 				.let(::WGPUPipelineLayoutDescriptor)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUPipelineLayoutDescriptor> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -911,6 +1011,9 @@ actual value class WGPUPrimitiveState(actual val handler: NativeAddress) {
 				.let(::WGPUPrimitiveState)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUPrimitiveState> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAddress) {
@@ -936,6 +1039,9 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 				.let(::WGPUProgrammableStageDescriptor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUProgrammableStageDescriptor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
@@ -957,6 +1063,9 @@ actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
 				.let(::WGPUQuerySetDescriptor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUQuerySetDescriptor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUQueueDescriptor(actual val handler: NativeAddress) {
@@ -970,6 +1079,9 @@ actual value class WGPUQueueDescriptor(actual val handler: NativeAddress) {
 				.let(::WGPUQueueDescriptor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUQueueDescriptor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress) {
@@ -982,6 +1094,9 @@ actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress)
 			return allocator.allocate(sizeOf<webgpu.native.WGPURenderBundleDescriptor>())
 				.let(::WGPURenderBundleDescriptor)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPURenderBundleDescriptor> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1020,6 +1135,9 @@ actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeA
 				.let(::WGPURenderBundleEncoderDescriptor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPURenderBundleEncoderDescriptor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPURenderPassColorAttachment(actual val handler: NativeAddress) {
@@ -1051,6 +1169,9 @@ actual value class WGPURenderPassColorAttachment(actual val handler: NativeAddre
 			return allocator.allocate(sizeOf<webgpu.native.WGPURenderPassColorAttachment>())
 				.let(::WGPURenderPassColorAttachment)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPURenderPassColorAttachment> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1097,6 +1218,9 @@ actual value class WGPURenderPassDepthStencilAttachment(actual val handler: Nati
 				.let(::WGPURenderPassDepthStencilAttachment)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPURenderPassDepthStencilAttachment> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
@@ -1130,6 +1254,9 @@ actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
 				.let(::WGPURenderPassDescriptor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPURenderPassDescriptor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPURenderPassMaxDrawCount(actual val handler: NativeAddress) {
@@ -1142,6 +1269,9 @@ actual value class WGPURenderPassMaxDrawCount(actual val handler: NativeAddress)
 			return allocator.allocate(sizeOf<webgpu.native.WGPURenderPassMaxDrawCount>())
 				.let(::WGPURenderPassMaxDrawCount)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPURenderPassMaxDrawCount> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1163,6 +1293,9 @@ actual value class WGPURenderPassTimestampWrites(actual val handler: NativeAddre
 			return allocator.allocate(sizeOf<webgpu.native.WGPURenderPassTimestampWrites>())
 				.let(::WGPURenderPassTimestampWrites)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPURenderPassTimestampWrites> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1198,6 +1331,9 @@ actual value class WGPURenderPipelineDescriptor(actual val handler: NativeAddres
 				.let(::WGPURenderPipelineDescriptor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPURenderPipelineDescriptor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPURequestAdapterOptions(actual val handler: NativeAddress) {
@@ -1223,6 +1359,9 @@ actual value class WGPURequestAdapterOptions(actual val handler: NativeAddress) 
 				.let(::WGPURequestAdapterOptions)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPURequestAdapterOptions> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPURequiredLimits(actual val handler: NativeAddress) {
@@ -1234,6 +1373,9 @@ actual value class WGPURequiredLimits(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPURequiredLimits>())
 				.let(::WGPURequiredLimits)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPURequiredLimits> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1247,6 +1389,9 @@ actual value class WGPUSamplerBindingLayout(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUSamplerBindingLayout>())
 				.let(::WGPUSamplerBindingLayout)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUSamplerBindingLayout> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1301,6 +1446,9 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 				.let(::WGPUSamplerDescriptor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUSamplerDescriptor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUShaderModuleDescriptor(actual val handler: NativeAddress) {
@@ -1313,6 +1461,9 @@ actual value class WGPUShaderModuleDescriptor(actual val handler: NativeAddress)
 			return allocator.allocate(sizeOf<webgpu.native.WGPUShaderModuleDescriptor>())
 				.let(::WGPUShaderModuleDescriptor)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUShaderModuleDescriptor> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1331,6 +1482,9 @@ actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
 				.let(::WGPUShaderSourceSPIRV)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUShaderSourceSPIRV> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
@@ -1343,6 +1497,9 @@ actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUShaderSourceWGSL>())
 				.let(::WGPUShaderSourceWGSL)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUShaderSourceWGSL> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1369,6 +1526,9 @@ actual value class WGPUStencilFaceState(actual val handler: NativeAddress) {
 				.let(::WGPUStencilFaceState)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUStencilFaceState> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUStorageTextureBindingLayout(actual val handler: NativeAddress) {
@@ -1390,6 +1550,9 @@ actual value class WGPUStorageTextureBindingLayout(actual val handler: NativeAdd
 				.let(::WGPUStorageTextureBindingLayout)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUStorageTextureBindingLayout> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUSupportedLimits(actual val handler: NativeAddress) {
@@ -1401,6 +1564,9 @@ actual value class WGPUSupportedLimits(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUSupportedLimits>())
 				.let(::WGPUSupportedLimits)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUSupportedLimits> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1438,6 +1604,9 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUSurfaceCapabilities>())
 				.let(::WGPUSurfaceCapabilities)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUSurfaceCapabilities> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1484,6 +1653,9 @@ actual value class WGPUSurfaceConfiguration(actual val handler: NativeAddress) {
 				.let(::WGPUSurfaceConfiguration)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUSurfaceConfiguration> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUSurfaceDescriptor(actual val handler: NativeAddress) {
@@ -1496,6 +1668,9 @@ actual value class WGPUSurfaceDescriptor(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUSurfaceDescriptor>())
 				.let(::WGPUSurfaceDescriptor)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUSurfaceDescriptor> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1510,6 +1685,9 @@ actual value class WGPUSurfaceSourceAndroidNativeWindow(actual val handler: Nati
 				.let(::WGPUSurfaceSourceAndroidNativeWindow)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUSurfaceSourceAndroidNativeWindow> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUSurfaceSourceMetalLayer(actual val handler: NativeAddress) {
@@ -1522,6 +1700,9 @@ actual value class WGPUSurfaceSourceMetalLayer(actual val handler: NativeAddress
 			return allocator.allocate(sizeOf<webgpu.native.WGPUSurfaceSourceMetalLayer>())
 				.let(::WGPUSurfaceSourceMetalLayer)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUSurfaceSourceMetalLayer> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1540,6 +1721,9 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAdd
 				.let(::WGPUSurfaceSourceWaylandSurface)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUSurfaceSourceWaylandSurface> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddress) {
@@ -1556,6 +1740,9 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddres
 			return allocator.allocate(sizeOf<webgpu.native.WGPUSurfaceSourceWindowsHWND>())
 				.let(::WGPUSurfaceSourceWindowsHWND)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUSurfaceSourceWindowsHWND> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1574,6 +1761,9 @@ actual value class WGPUSurfaceSourceXCBWindow(actual val handler: NativeAddress)
 				.let(::WGPUSurfaceSourceXCBWindow)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUSurfaceSourceXCBWindow> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress) {
@@ -1591,6 +1781,9 @@ actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress
 				.let(::WGPUSurfaceSourceXlibWindow)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUSurfaceSourceXlibWindow> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUSurfaceTexture(actual val handler: NativeAddress) {
@@ -1607,6 +1800,9 @@ actual value class WGPUSurfaceTexture(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUSurfaceTexture>())
 				.let(::WGPUSurfaceTexture)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUSurfaceTexture> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1629,6 +1825,9 @@ actual value class WGPUTextureBindingLayout(actual val handler: NativeAddress) {
 				.let(::WGPUTextureBindingLayout)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUTextureBindingLayout> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUTextureDataLayout(actual val handler: NativeAddress) {
@@ -1649,6 +1848,9 @@ actual value class WGPUTextureDataLayout(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUTextureDataLayout>())
 				.let(::WGPUTextureDataLayout)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUTextureDataLayout> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1693,6 +1895,9 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUTextureDescriptor>())
 				.let(::WGPUTextureDescriptor)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUTextureDescriptor> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1739,6 +1944,9 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 				.let(::WGPUTextureViewDescriptor)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUTextureViewDescriptor> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUVertexAttribute(actual val handler: NativeAddress) {
@@ -1759,6 +1967,9 @@ actual value class WGPUVertexAttribute(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUVertexAttribute>())
 				.let(::WGPUVertexAttribute)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUVertexAttribute> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1784,6 +1995,9 @@ actual value class WGPUVertexBufferLayout(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUVertexBufferLayout>())
 				.let(::WGPUVertexBufferLayout)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUVertexBufferLayout> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1818,6 +2032,9 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 				.let(::WGPUVertexState)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUVertexState> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUChainedStruct(actual val handler: NativeAddress) {
@@ -1835,6 +2052,9 @@ actual value class WGPUChainedStruct(actual val handler: NativeAddress) {
 				.let(::WGPUChainedStruct)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUChainedStruct> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
@@ -1851,6 +2071,9 @@ actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
 			return allocator.allocate(sizeOf<webgpu.native.WGPUChainedStructOut>())
 				.let(::WGPUChainedStructOut)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUChainedStructOut> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1877,6 +2100,9 @@ actual value class WGPUBufferMapCallbackInfo(actual val handler: NativeAddress) 
 				.let(::WGPUBufferMapCallbackInfo)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUBufferMapCallbackInfo> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUCompilationInfoCallbackInfo(actual val handler: NativeAddress) {
@@ -1901,6 +2127,9 @@ actual value class WGPUCompilationInfoCallbackInfo(actual val handler: NativeAdd
 			return allocator.allocate(sizeOf<webgpu.native.WGPUCompilationInfoCallbackInfo>())
 				.let(::WGPUCompilationInfoCallbackInfo)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUCompilationInfoCallbackInfo> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1927,6 +2156,9 @@ actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual val handler
 				.let(::WGPUCreateComputePipelineAsyncCallbackInfo)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual val handler: NativeAddress) {
@@ -1951,6 +2183,9 @@ actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual val handler:
 			return allocator.allocate(sizeOf<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>())
 				.let(::WGPUCreateRenderPipelineAsyncCallbackInfo)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -1977,6 +2212,9 @@ actual value class WGPUDeviceLostCallbackInfo(actual val handler: NativeAddress)
 				.let(::WGPUDeviceLostCallbackInfo)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUDeviceLostCallbackInfo> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUPopErrorScopeCallbackInfo(actual val handler: NativeAddress) {
@@ -2001,6 +2239,9 @@ actual value class WGPUPopErrorScopeCallbackInfo(actual val handler: NativeAddre
 			return allocator.allocate(sizeOf<webgpu.native.WGPUPopErrorScopeCallbackInfo>())
 				.let(::WGPUPopErrorScopeCallbackInfo)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUPopErrorScopeCallbackInfo> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -2027,6 +2268,9 @@ actual value class WGPUQueueWorkDoneCallbackInfo(actual val handler: NativeAddre
 				.let(::WGPUQueueWorkDoneCallbackInfo)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPUQueueWorkDoneCallbackInfo> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPURequestAdapterCallbackInfo(actual val handler: NativeAddress) {
@@ -2051,6 +2295,9 @@ actual value class WGPURequestAdapterCallbackInfo(actual val handler: NativeAddr
 			return allocator.allocate(sizeOf<webgpu.native.WGPURequestAdapterCallbackInfo>())
 				.let(::WGPURequestAdapterCallbackInfo)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPURequestAdapterCallbackInfo> {
+		TODO("Not yet implemented")
 	}
 }
 
@@ -2077,6 +2324,9 @@ actual value class WGPURequestDeviceCallbackInfo(actual val handler: NativeAddre
 				.let(::WGPURequestDeviceCallbackInfo)
 		}
 	}
+	fun toCValue(): CValue<webgpu.native.WGPURequestDeviceCallbackInfo> {
+		TODO("Not yet implemented")
+	}
 }
 
 actual value class WGPUUncapturedErrorCallbackInfo(actual val handler: NativeAddress) {
@@ -2101,6 +2351,9 @@ actual value class WGPUUncapturedErrorCallbackInfo(actual val handler: NativeAdd
 			return allocator.allocate(sizeOf<webgpu.native.WGPUUncapturedErrorCallbackInfo>())
 				.let(::WGPUUncapturedErrorCallbackInfo)
 		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUUncapturedErrorCallbackInfo> {
+		TODO("Not yet implemented")
 	}
 }
 
