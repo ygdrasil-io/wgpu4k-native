@@ -1,13 +1,11 @@
 import com.charleskorn.kaml.Yaml
 import converter.toCModel
 import domain.YamlModel
-import generator.androidNativeFunctionsMainFile
 import generator.callbackCommonMainFile
 import generator.enumerationCommonMainFile
-import generator.functionsAndroidMainFile
 import generator.functionsCommonMainFile
 import generator.functionsJvmMainFile
-import generator.functionsNativeMainFile
+import generator.generateAndroidFunctions
 import generator.generateAndroidNativeFunctions
 import generator.generateAndroidStructures
 import generator.generateCallback
@@ -17,7 +15,6 @@ import generator.generateCommonStructures
 import generator.generateJvmFunctions
 import generator.generateJvmNativeFunctions
 import generator.generateJvmStructures
-import generator.generateNativeFunctions
 import generator.generateNativeStructures
 import generator.generateTypesCommonMain
 import generator.jvmNativeFunctionsMainFile
@@ -58,22 +55,26 @@ fun main() {
 
     callbackCommonMainFile.generateCallback(webgpuCModel.callbacks)
 
-    androidNativeFunctionsMainFile.generateAndroidNativeFunctions(webgpuCModel.functions)
     jvmNativeFunctionsMainFile.generateJvmNativeFunctions(webgpuCModel.functions)
 
     functionsCommonMainFile.generateCommonFunctions(webgpuCModel.functions)
-    functionsNativeMainFile.generateNativeFunctions(webgpuCModel.functions)
+    //functionsNativeMainFile.generateNativeFunctions(webgpuCModel.functions)
     functionsJvmMainFile.generateJvmFunctions(webgpuCModel.functions)
-    functionsAndroidMainFile.generateJvmFunctions(webgpuCModel.functions)
 
     structuresCommonMainFile.generateCommonStructures(webgpuCModel.structures)
-    androidMainBasePath.generateAndroidStructures(webgpuCModel.structures)
+
 
 
     structuresJvmMainFile.generateJvmStructures(webgpuCModel.structures)
     structuresNativeMainFile.generateNativeStructures(webgpuCModel.structures)
 
     enumerationCommonMainFile.generateCommonEnumerations(webgpuCModel.enumerations)
+
+    androidMainBasePath.apply {
+        generateAndroidNativeFunctions(webgpuCModel.functions)
+        generateAndroidStructures(webgpuCModel.structures)
+        generateAndroidFunctions(webgpuCModel.functions)
+    }
 }
 
 
