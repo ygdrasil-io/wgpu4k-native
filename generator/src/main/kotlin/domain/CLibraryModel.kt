@@ -2,6 +2,7 @@ package domain
 
 import convertToKotlinCallbackStructureName
 import convertToKotlinClassName
+import converter.toPrimitiveKotlinType
 
 
 data class CLibraryModel(
@@ -35,8 +36,8 @@ data class CLibraryModel(
         object Int64 : Primitive
         object Float32 : Primitive
         object Float64 : Primitive
-        object Void : Primitive
     }
+    object Void : Type
 
     data class Pointer(val name: String)
     data class Function(val name: String, val returnType: Type, val args: List<Pair<String, Type>>)
@@ -58,23 +59,14 @@ internal fun CLibraryModel.Type.toFunctionKotlinType(): String = when (this) {
     is CLibraryModel.Reference -> name
     is CLibraryModel.Array -> "ArrayHolder<${subType.toFunctionKotlinType()}>"
     is CLibraryModel.Primitive -> this.toPrimitiveKotlinType()
+    CLibraryModel.Void -> "Unit"
 }
 
-internal fun CLibraryModel.Primitive.toPrimitiveKotlinType(): String = when (this) {
-    is CLibraryModel.Primitive.Int32 -> "Int"
-    is CLibraryModel.Primitive.Int64 -> "Long"
-    is CLibraryModel.Primitive.Void -> "Unit"
-    CLibraryModel.Primitive.Bool -> "Boolean"
-    CLibraryModel.Primitive.UInt64 -> "ULong"
-    CLibraryModel.Primitive.Float64 -> "Double"
-    CLibraryModel.Primitive.Float32 -> "Float"
-    CLibraryModel.Primitive.UInt32 -> "UInt"
-    CLibraryModel.Primitive.UInt16 -> "UShort"
-}
+
 
 internal fun String?.toCType(isPointer: Boolean, isMutable: Boolean): CLibraryModel.Type {
     return when {
-        this == null -> CLibraryModel.Primitive.Void
+        this == null -> CLibraryModel.Void
         startsWith("struct.") -> when (isPointer) {
             true -> CLibraryModel.Reference.Structure(split(".").last().convertToKotlinClassName())
             else -> CLibraryModel.Reference.StructureField(split(".").last().convertToKotlinClassName())
@@ -120,7 +112,7 @@ internal fun String?.toCType(isPointer: Boolean, isMutable: Boolean): CLibraryMo
         }
         equals("c_void") -> when (isPointer) {
             true -> CLibraryModel.Reference.OpaquePointer
-            else -> CLibraryModel.Primitive.Void
+            else -> CLibraryModel.Void
         }
         startsWith("array<") -> CLibraryModel.Array(substring(6, length - 1).toCType(false, false), isMutable)
         else -> error("unknown type $this")

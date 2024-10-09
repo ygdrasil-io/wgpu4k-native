@@ -9,6 +9,7 @@ import generator.functionsCommonMainFile
 import generator.functionsJvmMainFile
 import generator.functionsNativeMainFile
 import generator.generateAndroidNativeFunctions
+import generator.generateAndroidStructures
 import generator.generateCallback
 import generator.generateCommonEnumerations
 import generator.generateCommonFunctions
@@ -67,7 +68,11 @@ fun main() {
     functionsAndroidMainFile.generateJvmFunctions(webgpuCModel.functions)
 
     structuresCommonMainFile.generateCommonStructures(webgpuCModel.structures)
-    structuresAndroidMainFile.generateJvmStructures(webgpuCModel.structures)
+    structuresAndroidMainFile.apply {
+        generateJvmStructures(webgpuCModel.structures)
+        generateAndroidStructures(webgpuCModel.structures)
+    }
+
     structuresJvmMainFile.generateJvmStructures(webgpuCModel.structures)
     structuresNativeMainFile.generateNativeStructures(webgpuCModel.structures)
 

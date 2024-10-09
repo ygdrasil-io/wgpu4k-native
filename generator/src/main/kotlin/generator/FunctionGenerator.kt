@@ -96,7 +96,7 @@ private fun CLibraryModel.Type.optionalReturnType(): String = when (this) {
 }
 
 private fun CLibraryModel.Type.optional(): String = when (this) {
-    CLibraryModel.Primitive.Void,
+    CLibraryModel.Void,
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer,
     is CLibraryModel.Reference.Structure,
@@ -127,7 +127,7 @@ private fun File.writeNativeFunction(function: CLibraryModel.Function) {
         .map { (name, type) -> type.toNativeArgCall(name) }
         .joinToString(", ")
     appendText("actual fun $name($args): $returnType {\n")
-    appendText("\t ${if (function.returnType is CLibraryModel.Primitive.Void) "" else "return "}webgpu.native.$name($argsCall)\n")
+    appendText("\t ${if (function.returnType is CLibraryModel.Void) "" else "return "}webgpu.native.$name($argsCall)\n")
 
     when (function.returnType) {
         is CLibraryModel.Reference.Enumeration -> null

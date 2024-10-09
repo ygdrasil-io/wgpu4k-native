@@ -49,7 +49,7 @@ private fun File.writeFunction(function: CLibraryModel.Function) {
 internal fun CLibraryModel.Type.toAndroidNativeType(): String = when (this) {
     is CLibraryModel.Primitive.Int32 -> "Int"
     is CLibraryModel.Primitive.Int64 -> "Long"
-    is CLibraryModel.Primitive.Void -> "Unit"
+    is CLibraryModel.Void -> "Unit"
     CLibraryModel.Primitive.Bool -> "UInt"
     CLibraryModel.Primitive.UInt64 -> "ULong"
     CLibraryModel.Primitive.Float64 -> "Double"

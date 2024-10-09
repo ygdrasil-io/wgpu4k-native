@@ -2,6 +2,7 @@ package generator
 
 import androidMainBasePath
 import commonMainBasePath
+import converter.variableType
 import disclamer
 import domain.CLibraryModel
 import domain.toFunctionKotlinType
@@ -64,6 +65,7 @@ private val headerAndroid = """
     $disclamer
     package webgpu
     
+    import com.sun.jna.Pointer
     import ffi.NativeAddress
     import ffi.CallbackHolder
     import ffi.CString
@@ -76,6 +78,7 @@ private val headerAndroid = """
     import ffi.C_DOUBLE
     import ffi.CStructure
     import ffi.MemoryAllocator
+    import ffi.toAddress
     import java.lang.foreign.AddressLayout
     import java.lang.foreign.MemoryLayout.Companion.structLayout
     
@@ -110,7 +113,7 @@ internal fun File.generateCommonStructures(structures: List<CLibraryModel.Struct
         val structureName = it.name
         appendText("expect value class $structureName(val handler: NativeAddress) {\n")
         it.members.forEach { (name, type, optional) ->
-            val variableType = type.generateVariableType()
+            val variableType = type.variableType()
             appendText("\t$variableType $name: ${type.toFunctionKotlinType()}$optional\n")
         }
         appendText("\tcompanion object {\n")
@@ -126,7 +129,7 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
         val structureName = it.name
         appendText("actual value class $structureName(actual val handler: NativeAddress) {\n")
         it.members.forEach { (name, type, optional) ->
-            val variableType = type.generateVariableType()
+            val variableType = type.variableType()
             val nativeAccessor = "handler.toCPointer<webgpu.native.$structureName>()?.pointed"
             appendText("\tactual $variableType $name: ${type.toFunctionKotlinType()}$optional\n")
             // Getter
@@ -163,6 +166,8 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                     -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
                         "?.takeIf {it != 0L}" +
                         "?.let { ArrayHolder<${type.subType.toFunctionKotlinType()}>(it) }"
+
+                CLibraryModel.Void -> error("void is not allowed")
             }.let { appendText("\t\tget() = $it\n") }
             // Setter
             when (type) {
@@ -194,6 +199,8 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
                     -> nativeAccessor +
                         "?.let { it.${name} = newValue?.handler?.toCPointer() }"
                 is CLibraryModel.Reference.StructureField -> null
+
+                CLibraryModel.Void -> error("void is not allowed")
             }?.let { appendText("\t\tset(newValue) { $it } \n\n") } ?: appendText("\n")
         }
         appendText("\tactual companion object {\n")
@@ -223,11 +230,11 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
         appendText("actual value class $structureName(actual override val handler: NativeAddress) : CStructure {\n")
 
         it.members.forEach { (name, type, optional) ->
-            val variableType = type.generateVariableType()
+            val variableType = type.variableType()
             appendText("\tactual $variableType $name: ${type.toFunctionKotlinType()}$optional\n")
             // Getter
             when (type) {
-                CLibraryModel.Primitive.Void,
+                CLibraryModel.Void,
                 CLibraryModel.Reference.OpaquePointer, -> "get(${name}Layout, ${name}Offset)"
                 CLibraryModel.Reference.CString,-> "get(${name}Layout, ${name}Offset).let(::CString)"
                 is CLibraryModel.Array, -> "get(${name}Layout, ${name}Offset).let(::ArrayHolder)"
@@ -246,7 +253,7 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
 
             // Setter
             when (type) {
-                CLibraryModel.Primitive.Void,
+                CLibraryModel.Void,
                 is CLibraryModel.Reference.Enumeration,
                 CLibraryModel.Reference.OpaquePointer,
                 CLibraryModel.Primitive.Float32,
@@ -283,7 +290,7 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
                 CLibraryModel.Reference.CString,
                 is CLibraryModel.Array,
                 is CLibraryModel.Reference.Callback,
-                CLibraryModel.Primitive.Void,
+                CLibraryModel.Void,
                 is CLibraryModel.Reference.Structure -> "C_POINTER"
 
                 CLibraryModel.Primitive.UInt16 -> "C_SHORT"
@@ -331,7 +338,7 @@ private fun CLibraryModel.Type.getOffsetSize() = when(this) {
     CLibraryModel.Reference.CString,
     is CLibraryModel.Array,
     is CLibraryModel.Reference.Callback,
-    CLibraryModel.Primitive.Void,
+    CLibraryModel.Void,
     is CLibraryModel.Reference.Structure -> Long.SIZE_BYTES
 
     CLibraryModel.Primitive.UInt16 -> Short.SIZE_BYTES
@@ -350,7 +357,3 @@ private fun CLibraryModel.Type.getOffsetSize() = when(this) {
     is CLibraryModel.Reference.StructureField -> null
 }
 
-private fun CLibraryModel.Type.generateVariableType(): String = when(this) {
-    is CLibraryModel.Reference.StructureField -> "val"
-    else -> "var"
-}

@@ -62,7 +62,7 @@ private fun File.writeFunction(function: CLibraryModel.Function) {
 
 private fun CLibraryModel.Function.generateDescriptor(): String {
     return when (returnType) {
-        is CLibraryModel.Primitive.Void -> "FunctionDescriptor.ofVoid("
+        is CLibraryModel.Void -> "FunctionDescriptor.ofVoid("
         else -> "FunctionDescriptor.of(\n\t\t\t${returnType.toJvmDescriptorType()},"
     }.let { "$it\n" } + (args.map { (_, type) -> "\t\t\t${type.toJvmDescriptorType()}" }
     .joinToString(",\n", postfix = "\n\t\t)"))
@@ -78,7 +78,7 @@ internal fun CLibraryModel.Type.toJvmDescriptorType(): String = when (this) {
     CLibraryModel.Primitive.Float64 -> "C_DOUBLE"
     CLibraryModel.Primitive.Float32 -> "C_FLOAT"
     CLibraryModel.Primitive.UInt16 -> "C_SHORT"
-    is CLibraryModel.Primitive.Void,
+    is CLibraryModel.Void,
     is CLibraryModel.Array,
     CLibraryModel.Reference.CString,
     is CLibraryModel.Reference.Callback,
@@ -91,7 +91,7 @@ internal fun CLibraryModel.Type.toJvmDescriptorType(): String = when (this) {
 internal fun CLibraryModel.Type.toJvmNativeType(): String = when (this) {
     is CLibraryModel.Primitive.Int32 -> "Int"
     is CLibraryModel.Primitive.Int64 -> "Long"
-    is CLibraryModel.Primitive.Void -> "Unit"
+    is CLibraryModel.Void -> "Unit"
     CLibraryModel.Primitive.Bool -> "UInt"
     CLibraryModel.Primitive.UInt64 -> "ULong"
     CLibraryModel.Primitive.Float64 -> "Double"
