@@ -5,7 +5,6 @@ import converter.toPrimitiveDefaultValue
 import converter.toPrimitiveKotlinType
 import converter.variableType
 import domain.CLibraryModel
-import domain.toFunctionKotlinType
 
 
 fun CLibraryModel.Structure.toJnaStructure() = templateBuilder {

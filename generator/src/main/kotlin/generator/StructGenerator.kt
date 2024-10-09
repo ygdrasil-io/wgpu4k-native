@@ -2,6 +2,7 @@ package generator
 
 import androidMainBasePath
 import commonMainBasePath
+import converter.getOffsetSize
 import converter.variableType
 import disclamer
 import domain.CLibraryModel
@@ -332,28 +333,4 @@ internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure
     }
 }
 
-private fun CLibraryModel.Type.getOffsetSize() = when(this) {
-    CLibraryModel.Reference.OpaquePointer,
-    is CLibraryModel.Reference.Pointer,
-    CLibraryModel.Reference.CString,
-    is CLibraryModel.Array,
-    is CLibraryModel.Reference.Callback,
-    CLibraryModel.Void,
-    is CLibraryModel.Reference.Structure -> Long.SIZE_BYTES
-
-    CLibraryModel.Primitive.UInt16 -> Short.SIZE_BYTES
-
-    CLibraryModel.Primitive.Bool,
-    CLibraryModel.Primitive.UInt32,
-    CLibraryModel.Primitive.Int32 -> Int.SIZE_BYTES
-
-    CLibraryModel.Primitive.UInt64,
-    CLibraryModel.Primitive.Int64 -> Long.SIZE_BYTES
-
-    CLibraryModel.Primitive.Float32 -> Float.SIZE_BYTES
-    CLibraryModel.Primitive.Float64 -> Double.SIZE_BYTES
-
-    is CLibraryModel.Reference.Enumeration -> Int.SIZE_BYTES
-    is CLibraryModel.Reference.StructureField -> null
-}
 

@@ -20,7 +20,7 @@ class Builder(
         Builder(indent + 1).apply(run).toString()
             .also {textBuilder.append(it)}
 
-
+        textBuilder.append("\t".repeat(indent))
         textBuilder.append("}")
         newLine()
     }
