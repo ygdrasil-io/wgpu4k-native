@@ -11,6 +11,9 @@ fun CLibraryModel.Structure.toAndroidStructure() = templateBuilder {
     val structureName = name
     appendLine("@JvmInline")
     appendBlock("actual value class $structureName(actual override val handler: NativeAddress) : CStructure") {
+
+        appendLine("internal fun toCValue() = ${structureName}ByValue(handler.pointer.toAddress())")
+
         members.forEach { (name, type, optional) ->
 
             appendLine("actual ${type.variableType()} $name: ${type.toFunctionKotlinType()}$optional")
