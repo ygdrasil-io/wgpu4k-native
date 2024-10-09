@@ -10,7 +10,6 @@ private val headerAndroid = """
     $disclamer
     package webgpu
     
-    import com.sun.jna.Pointer
     import ffi.NativeAddress
     import ffi.CallbackHolder
     import ffi.CString
@@ -30,10 +29,13 @@ private val headerAndroid = """
     
 """.trimIndent()
 
-fun File.generateAndroidStructures(structures: List<CLibraryModel.Structure>) {
-    writeText(headerAndroid)
-    structures.map(CLibraryModel.Structure::toAndroidStructure)
-        .forEach(::appendText)
-    structures.map(CLibraryModel.Structure::toJnaStructure)
-        .forEach(::appendText)
-}
+fun File.generateAndroidStructures(structures: List<CLibraryModel.Structure>) = resolve("webgpu")
+    .resolve("Structures.android.kt").apply {
+        writeText(headerAndroid)
+        structures.map(CLibraryModel.Structure::toAndroidStructure)
+            .forEach(::appendText)
+        structures.map(CLibraryModel.Structure::toJnaStructure)
+            .forEach(::appendText)
+    }
+
+

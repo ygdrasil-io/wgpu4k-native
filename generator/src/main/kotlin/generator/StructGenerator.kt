@@ -15,10 +15,6 @@ val structuresCommonMainFile = commonMainBasePath
     .resolve("webgpu")
     .resolve("Structures.kt")
 
-val structuresAndroidMainFile = androidMainBasePath
-    .resolve("webgpu")
-    .resolve("Structures.android.kt")
-
 val structuresJvmMainFile = jvmMainBasePath
     .resolve("webgpu")
     .resolve("Structures.jvm.kt")
@@ -58,30 +54,6 @@ private val headerJvm = """
     import ffi.MemoryAllocator
     import java.lang.foreign.AddressLayout
     import java.lang.foreign.MemoryLayout.structLayout
-    
-    
-""".trimIndent()
-
-private val headerAndroid = """
-    $disclamer
-    package webgpu
-    
-    import com.sun.jna.Pointer
-    import ffi.NativeAddress
-    import ffi.CallbackHolder
-    import ffi.CString
-    import ffi.ArrayHolder
-    import ffi.C_LONG
-    import ffi.C_POINTER
-    import ffi.C_SHORT
-    import ffi.C_INT
-    import ffi.C_FLOAT
-    import ffi.C_DOUBLE
-    import ffi.CStructure
-    import ffi.MemoryAllocator
-    import ffi.toAddress
-    import java.lang.foreign.AddressLayout
-    import java.lang.foreign.MemoryLayout.Companion.structLayout
     
     
 """.trimIndent()
@@ -222,8 +194,7 @@ internal fun File.generateNativeStructures(structures: List<CLibraryModel.Struct
 }
 
 internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure>) {
-    val isAndroid = absolutePath.contains("android")
-    if (isAndroid) writeText(headerAndroid) else writeText(headerJvm)
+    writeText(headerJvm)
 
     structures.forEach {
         val structureName = it.name

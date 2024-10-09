@@ -21,7 +21,6 @@ import generator.generateNativeFunctions
 import generator.generateNativeStructures
 import generator.generateTypesCommonMain
 import generator.jvmNativeFunctionsMainFile
-import generator.structuresAndroidMainFile
 import generator.structuresCommonMainFile
 import generator.structuresJvmMainFile
 import generator.structuresNativeMainFile
@@ -68,10 +67,8 @@ fun main() {
     functionsAndroidMainFile.generateJvmFunctions(webgpuCModel.functions)
 
     structuresCommonMainFile.generateCommonStructures(webgpuCModel.structures)
-    structuresAndroidMainFile.apply {
-        generateJvmStructures(webgpuCModel.structures)
-        generateAndroidStructures(webgpuCModel.structures)
-    }
+    androidMainBasePath.generateAndroidStructures(webgpuCModel.structures)
+
 
     structuresJvmMainFile.generateJvmStructures(webgpuCModel.structures)
     structuresNativeMainFile.generateNativeStructures(webgpuCModel.structures)

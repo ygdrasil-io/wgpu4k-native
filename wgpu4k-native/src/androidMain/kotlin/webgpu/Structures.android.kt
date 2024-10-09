@@ -1,7 +1,6 @@
 // This file has been generated DO NOT EDIT !!!
 package webgpu
 
-import com.sun.jna.Pointer
 import ffi.NativeAddress
 import ffi.CallbackHolder
 import ffi.CString
@@ -3328,10 +3327,10 @@ internal class WGPUBindGroupLayoutDescriptorByValue(handler: Long) : com.sun.jna
 internal class WGPUBindGroupLayoutEntryByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var binding: Int = 0
 	@JvmField var visibility: Long = 0L
-	@JvmField val buffer: WGPUBufferBindingLayoutByValue = WGPUBufferBindingLayoutByValue(WGPUBindGroupLayoutEntry(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
-	@JvmField val sampler: WGPUSamplerBindingLayoutByValue = WGPUSamplerBindingLayoutByValue(WGPUBindGroupLayoutEntry(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
-	@JvmField val texture: WGPUTextureBindingLayoutByValue = WGPUTextureBindingLayoutByValue(WGPUBindGroupLayoutEntry(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
-	@JvmField val storageTexture: WGPUStorageTextureBindingLayoutByValue = WGPUStorageTextureBindingLayoutByValue(WGPUBindGroupLayoutEntry(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val buffer: WGPUBufferBindingLayoutByValue = WGPUBufferBindingLayoutByValue(WGPUBindGroupLayoutEntry(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val sampler: WGPUSamplerBindingLayoutByValue = WGPUSamplerBindingLayoutByValue(WGPUBindGroupLayoutEntry(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val texture: WGPUTextureBindingLayoutByValue = WGPUTextureBindingLayoutByValue(WGPUBindGroupLayoutEntry(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val storageTexture: WGPUStorageTextureBindingLayoutByValue = WGPUStorageTextureBindingLayoutByValue(WGPUBindGroupLayoutEntry(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	override fun getFieldOrder() = listOf("binding", "visibility", "buffer", "sampler", "texture", "storageTexture")
 }
 internal class WGPUBlendComponentByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
@@ -3341,8 +3340,8 @@ internal class WGPUBlendComponentByValue(handler: Long) : com.sun.jna.Structure(
 	override fun getFieldOrder() = listOf("operation", "srcFactor", "dstFactor")
 }
 internal class WGPUBlendStateByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
-	@JvmField val color: WGPUBlendComponentByValue = WGPUBlendComponentByValue(WGPUBlendState(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
-	@JvmField val alpha: WGPUBlendComponentByValue = WGPUBlendComponentByValue(WGPUBlendState(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val color: WGPUBlendComponentByValue = WGPUBlendComponentByValue(WGPUBlendState(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val alpha: WGPUBlendComponentByValue = WGPUBlendComponentByValue(WGPUBlendState(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	override fun getFieldOrder() = listOf("color", "alpha")
 }
 internal class WGPUBufferBindingLayoutByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
@@ -3410,7 +3409,7 @@ internal class WGPUComputePassTimestampWritesByValue(handler: Long) : com.sun.jn
 internal class WGPUComputePipelineDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var label: com.sun.jna.Pointer? = null
 	@JvmField var layout: com.sun.jna.Pointer? = null
-	@JvmField val compute: WGPUProgrammableStageDescriptorByValue = WGPUProgrammableStageDescriptorByValue(WGPUComputePipelineDescriptor(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val compute: WGPUProgrammableStageDescriptorByValue = WGPUProgrammableStageDescriptorByValue(WGPUComputePipelineDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	override fun getFieldOrder() = listOf("label", "layout", "compute")
 }
 internal class WGPUConstantEntryByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
@@ -3422,8 +3421,8 @@ internal class WGPUDepthStencilStateByValue(handler: Long) : com.sun.jna.Structu
 	@JvmField var format: com.sun.jna.Pointer? = null
 	@JvmField var depthWriteEnabled: com.sun.jna.Pointer? = null
 	@JvmField var depthCompare: com.sun.jna.Pointer? = null
-	@JvmField val stencilFront: WGPUStencilFaceStateByValue = WGPUStencilFaceStateByValue(WGPUDepthStencilState(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
-	@JvmField val stencilBack: WGPUStencilFaceStateByValue = WGPUStencilFaceStateByValue(WGPUDepthStencilState(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val stencilFront: WGPUStencilFaceStateByValue = WGPUStencilFaceStateByValue(WGPUDepthStencilState(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val stencilBack: WGPUStencilFaceStateByValue = WGPUStencilFaceStateByValue(WGPUDepthStencilState(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var stencilReadMask: Int = 0
 	@JvmField var stencilWriteMask: Int = 0
 	@JvmField var depthBias: Int = 0
@@ -3436,9 +3435,9 @@ internal class WGPUDeviceDescriptorByValue(handler: Long) : com.sun.jna.Structur
 	@JvmField var requiredFeatureCount: Long = 0L
 	@JvmField var requiredFeatures: com.sun.jna.Pointer? = null
 	@JvmField var requiredLimits: com.sun.jna.Pointer? = null
-	@JvmField val defaultQueue: WGPUQueueDescriptorByValue = WGPUQueueDescriptorByValue(WGPUDeviceDescriptor(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
-	@JvmField val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfoByValue = WGPUDeviceLostCallbackInfoByValue(WGPUDeviceDescriptor(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
-	@JvmField val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfoByValue = WGPUUncapturedErrorCallbackInfoByValue(WGPUDeviceDescriptor(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val defaultQueue: WGPUQueueDescriptorByValue = WGPUQueueDescriptorByValue(WGPUDeviceDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfoByValue = WGPUDeviceLostCallbackInfoByValue(WGPUDeviceDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfoByValue = WGPUUncapturedErrorCallbackInfoByValue(WGPUDeviceDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	override fun getFieldOrder() = listOf("label", "requiredFeatureCount", "requiredFeatures", "requiredLimits", "defaultQueue", "deviceLostCallbackInfo", "uncapturedErrorCallbackInfo")
 }
 internal class WGPUExtent3DByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
@@ -3461,24 +3460,24 @@ internal class WGPUFutureByValue(handler: Long) : com.sun.jna.Structure(com.sun.
 	override fun getFieldOrder() = listOf("id")
 }
 internal class WGPUFutureWaitInfoByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
-	@JvmField val future: WGPUFutureByValue = WGPUFutureByValue(WGPUFutureWaitInfo(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val future: WGPUFutureByValue = WGPUFutureByValue(WGPUFutureWaitInfo(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var completed: Int = 0
 	override fun getFieldOrder() = listOf("future", "completed")
 }
 internal class WGPUImageCopyBufferByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
-	@JvmField val layout: WGPUTextureDataLayoutByValue = WGPUTextureDataLayoutByValue(WGPUImageCopyBuffer(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val layout: WGPUTextureDataLayoutByValue = WGPUTextureDataLayoutByValue(WGPUImageCopyBuffer(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var buffer: com.sun.jna.Pointer? = null
 	override fun getFieldOrder() = listOf("layout", "buffer")
 }
 internal class WGPUImageCopyTextureByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var texture: com.sun.jna.Pointer? = null
 	@JvmField var mipLevel: Int = 0
-	@JvmField val origin: WGPUOrigin3DByValue = WGPUOrigin3DByValue(WGPUImageCopyTexture(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val origin: WGPUOrigin3DByValue = WGPUOrigin3DByValue(WGPUImageCopyTexture(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var aspect: com.sun.jna.Pointer? = null
 	override fun getFieldOrder() = listOf("texture", "mipLevel", "origin", "aspect")
 }
 internal class WGPUInstanceDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
-	@JvmField val features: WGPUInstanceFeaturesByValue = WGPUInstanceFeaturesByValue(WGPUInstanceDescriptor(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val features: WGPUInstanceFeaturesByValue = WGPUInstanceFeaturesByValue(WGPUInstanceDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	override fun getFieldOrder() = listOf("features")
 }
 internal class WGPUInstanceFeaturesByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
@@ -3583,7 +3582,7 @@ internal class WGPURenderPassColorAttachmentByValue(handler: Long) : com.sun.jna
 	@JvmField var resolveTarget: com.sun.jna.Pointer? = null
 	@JvmField var loadOp: com.sun.jna.Pointer? = null
 	@JvmField var storeOp: com.sun.jna.Pointer? = null
-	@JvmField val clearValue: WGPUColorByValue = WGPUColorByValue(WGPURenderPassColorAttachment(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val clearValue: WGPUColorByValue = WGPUColorByValue(WGPURenderPassColorAttachment(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	override fun getFieldOrder() = listOf("view", "depthSlice", "resolveTarget", "loadOp", "storeOp", "clearValue")
 }
 internal class WGPURenderPassDepthStencilAttachmentByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
@@ -3620,10 +3619,10 @@ internal class WGPURenderPassTimestampWritesByValue(handler: Long) : com.sun.jna
 internal class WGPURenderPipelineDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var label: com.sun.jna.Pointer? = null
 	@JvmField var layout: com.sun.jna.Pointer? = null
-	@JvmField val vertex: WGPUVertexStateByValue = WGPUVertexStateByValue(WGPURenderPipelineDescriptor(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
-	@JvmField val primitive: WGPUPrimitiveStateByValue = WGPUPrimitiveStateByValue(WGPURenderPipelineDescriptor(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val vertex: WGPUVertexStateByValue = WGPUVertexStateByValue(WGPURenderPipelineDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val primitive: WGPUPrimitiveStateByValue = WGPUPrimitiveStateByValue(WGPURenderPipelineDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var depthStencil: com.sun.jna.Pointer? = null
-	@JvmField val multisample: WGPUMultisampleStateByValue = WGPUMultisampleStateByValue(WGPURenderPipelineDescriptor(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val multisample: WGPUMultisampleStateByValue = WGPUMultisampleStateByValue(WGPURenderPipelineDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var fragment: com.sun.jna.Pointer? = null
 	override fun getFieldOrder() = listOf("label", "layout", "vertex", "primitive", "depthStencil", "multisample", "fragment")
 }
@@ -3635,7 +3634,7 @@ internal class WGPURequestAdapterOptionsByValue(handler: Long) : com.sun.jna.Str
 	override fun getFieldOrder() = listOf("compatibleSurface", "powerPreference", "backendType", "forceFallbackAdapter")
 }
 internal class WGPURequiredLimitsByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
-	@JvmField val limits: WGPULimitsByValue = WGPULimitsByValue(WGPURequiredLimits(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val limits: WGPULimitsByValue = WGPULimitsByValue(WGPURequiredLimits(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	override fun getFieldOrder() = listOf("limits")
 }
 internal class WGPUSamplerBindingLayoutByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
@@ -3683,7 +3682,7 @@ internal class WGPUStorageTextureBindingLayoutByValue(handler: Long) : com.sun.j
 	override fun getFieldOrder() = listOf("access", "format", "viewDimension")
 }
 internal class WGPUSupportedLimitsByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
-	@JvmField val limits: WGPULimitsByValue = WGPULimitsByValue(WGPUSupportedLimits(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val limits: WGPULimitsByValue = WGPULimitsByValue(WGPUSupportedLimits(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	override fun getFieldOrder() = listOf("limits")
 }
 internal class WGPUSurfaceCapabilitiesByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
@@ -3761,7 +3760,7 @@ internal class WGPUTextureDescriptorByValue(handler: Long) : com.sun.jna.Structu
 	@JvmField var label: com.sun.jna.Pointer? = null
 	@JvmField var usage: Long = 0L
 	@JvmField var dimension: com.sun.jna.Pointer? = null
-	@JvmField val size: WGPUExtent3DByValue = WGPUExtent3DByValue(WGPUTextureDescriptor(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())
+	@JvmField val size: WGPUExtent3DByValue = WGPUExtent3DByValue(WGPUTextureDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var format: com.sun.jna.Pointer? = null
 	@JvmField var mipLevelCount: Int = 0
 	@JvmField var sampleCount: Int = 0

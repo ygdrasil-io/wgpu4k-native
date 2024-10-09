@@ -25,7 +25,7 @@ private fun CLibraryModel.Type.toDefaultValue(structureName: String): String = w
     is CLibraryModel.Primitive.UInt32 -> "0"
     is CLibraryModel.Primitive.UInt16 -> "0"
     is CLibraryModel.Primitive -> toPrimitiveDefaultValue()
-    is CLibraryModel.Reference.StructureField -> "${name}ByValue($structureName(handler.let(::Pointer).let(::NativeAddress)).handler.pointer.toAddress())"
+    is CLibraryModel.Reference.StructureField -> "${name}ByValue($structureName(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())"
     //is CLibraryModel.Reference.Callback -> TODO()
     else -> "null"
 }
