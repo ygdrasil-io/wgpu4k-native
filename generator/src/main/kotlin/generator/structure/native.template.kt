@@ -1,0 +1,115 @@
+package generator.structure
+
+import builder.templateBuilder
+import converter.variableType
+import domain.CLibraryModel
+import domain.toFunctionKotlinType
+
+internal fun CLibraryModel.Structure.toNativeStructure() = templateBuilder {
+    appendBlock("actual value class $name(actual val handler: NativeAddress)") {
+        val structureName = name
+        members.forEach { (name, type, optional) ->
+            val variableType = type.variableType()
+            val nativeAccessor = "handler.toCPointer<webgpu.native.$structureName>()?.pointed"
+            appendLine("actual $variableType $name: ${type.toFunctionKotlinType()}$optional")
+            // Getter
+            when (type) {
+                is CLibraryModel.Reference.OpaquePointer
+                    -> "$nativeAccessor?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}"
+
+                is CLibraryModel.Reference.Enumeration
+                    -> "$nativeAccessor?.${name} ?: error(\"pointer of $structureName is null\")"
+
+                is CLibraryModel.Primitive.Bool
+                    -> "$nativeAccessor?.${name}?.toBoolean() ?: error(\"pointer of $structureName is null\")"
+
+                is CLibraryModel.Primitive
+                    -> "$nativeAccessor?.${name} ?: error(\"pointer of $structureName is null\")"
+
+                is CLibraryModel.Reference.CString
+                    -> "$nativeAccessor?.${name}?.toCString()"
+
+                is CLibraryModel.Reference.Pointer
+                    -> "$nativeAccessor?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { ${type.name}(it) }"
+
+                is CLibraryModel.Reference.StructureField
+                    -> "$nativeAccessor?.${name}?.rawPtr?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { ${type.name}(it) } ?: error(\"pointer of $structureName is null\")"
+
+                is CLibraryModel.Reference.Structure
+                    -> "$nativeAccessor?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { ${type.name}(it) }"
+
+                is CLibraryModel.Reference.Callback
+                    -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { CallbackHolder<${type.name}>(it) }"
+
+                is CLibraryModel.Array
+                    -> "handler.toCPointer<webgpu.native.$structureName>()?.pointed?.${name}?.toLong()" +
+                        "?.takeIf {it != 0L}" +
+                        "?.let { ArrayHolder<${type.subType.toFunctionKotlinType()}>(it) }"
+
+                CLibraryModel.Void -> error("void is not allowed")
+            }.let { appendLine("\tget() = $it") }
+            // Setter
+            when (type) {
+                is CLibraryModel.Reference.OpaquePointer
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue?.toCPointer() }"
+
+                is CLibraryModel.Reference.Enumeration
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue }"
+
+                is CLibraryModel.Reference.CString
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue?.handler?.toCPointer() }"
+
+                is CLibraryModel.Primitive.Bool
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue.toUInt() }"
+
+                is CLibraryModel.Primitive
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue }"
+
+                is CLibraryModel.Reference.Pointer
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue?.handler?.toCPointer() }"
+
+                is CLibraryModel.Reference.Structure
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue?.handler?.toCPointer() }"
+
+                is CLibraryModel.Reference.Callback
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue?.handler?.toCPointer() }"
+
+                is CLibraryModel.Array
+                    -> nativeAccessor +
+                        "?.let { it.${name} = newValue?.handler?.toCPointer() }"
+
+                is CLibraryModel.Reference.StructureField -> null
+
+                CLibraryModel.Void -> error("void is not allowed")
+            }?.let { appendLine("\tset(newValue) { $it } \n") } ?: newLine()
+        }
+        appendBlock("actual companion object") {
+            appendBlock("actual fun allocate(allocator: MemoryAllocator): $structureName") {
+                appendLine("return allocator.allocate(sizeOf<webgpu.native.$structureName>())")
+                appendLine("\t.let(::$structureName)")
+            }
+        }
+        appendBlock("fun toCValue(): CValue<webgpu.native.$structureName>") {
+            appendLine("TODO(\"Not yet implemented\")")
+
+        }
+    }
+    newLine()
+}
