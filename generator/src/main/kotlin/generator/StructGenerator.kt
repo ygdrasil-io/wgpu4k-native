@@ -77,6 +77,7 @@ private val headerNative = """
     import kotlinx.cinterop.toLong
     import kotlinx.cinterop.sizeOf
     import kotlinx.cinterop.CValue
+    import kotlinx.cinterop.cValue
     
     
 """.trimIndent()
