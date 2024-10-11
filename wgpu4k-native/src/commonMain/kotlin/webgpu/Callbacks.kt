@@ -3,10 +3,16 @@ package webgpu
 
 import ffi.Callback
 import ffi.CString
+import ffi.CallbackHolder
+import ffi.MemoryAllocator
 import ffi.NativeAddress
 
-interface WGPUBufferMapCallback : Callback {
+expect interface WGPUBufferMapCallback : Callback {
 	fun invoke(status: WGPUMapAsyncStatus, message: CString, userdata1: NativeAddress, userdata2: NativeAddress)
+
+	companion object {
+		fun allocate(allocator: MemoryAllocator, callback: WGPUBufferMapCallback): CallbackHolder<WGPUBufferMapCallback>
+	}
 }
 
 interface WGPUCompilationInfoCallback : Callback {

@@ -33,7 +33,7 @@ fun main() {
         ?: error("fail to create windows")
 
     //val glfwContext = glfwContextRenderer()
-    val instance = wgpuCreateInstance(null)
+    val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
 
     val adapter = memoryScope { scope ->
         val callbackInfo = WGPURequestAdapterCallbackInfo.allocate(scope)

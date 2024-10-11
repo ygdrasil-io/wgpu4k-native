@@ -1,6 +1,6 @@
 [versions]
-kotlin = "2.0.20"
-wgpu = "v22.1.0.2"
+kotlin = "2.0.21"
+wgpu = "v0.0.0.10"
 download = "5.6.0"
 jreleaser = "1.13.1"
 agp = "8.5.2"

@@ -1,8 +1,17 @@
 package ffi
 
-import kotlin.jvm.JvmInline
+private val callbackMap = mutableMapOf<NativeAddress, Callback>()
+
+internal fun registerCallback(address: NativeAddress, callback: Callback) {
+    callbackMap.set(address, callback)
+}
+
+internal inline fun <reified R : Callback> findCallback(address: NativeAddress): R? {
+    return callbackMap.get(address)?.let { it as? R }
+}
 
 interface Callback
 
-@JvmInline
-value  class CallbackHolder<T: Callback>(val handler: NativeAddress)
+expect class CallbackHolder<T: Callback> {
+    val handler: NativeAddress
+}
