@@ -116,7 +116,10 @@ private fun YamlModel.convertToCLibraryFunctions() : List<CLibraryModel.Function
         convertToCFunctionArgs(it.args, it.callback)
     )
 } + objects.flatMap { reference ->
-    reference.methods.map {
+    (listOf(
+        YamlModel.Function("release", "")
+    ) + reference.methods)
+        .map {
         val name = "${reference.name}_${it.name}".convertToKotlinFunctionName()
         val args = listOf(YamlModel.Function.Arg("handler", "", "object.${reference.name}")) + it.args
         CLibraryModel.Function(

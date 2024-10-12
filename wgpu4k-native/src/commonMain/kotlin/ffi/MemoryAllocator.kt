@@ -10,6 +10,11 @@ expect class MemoryAllocator() : AutoCloseable {
     fun allocate(sizeInByte: Long): NativeAddress
 
     override fun close()
+
+    fun bufferOf(value: Long): Buffer
+
+    fun allocateFrom(value: String): CString
+    fun bufferOfAddress(value: NativeAddress): Buffer
 }
 
 @OptIn(kotlin.contracts.ExperimentalContracts::class)

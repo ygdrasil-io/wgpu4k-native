@@ -29,18 +29,26 @@ import platform.AppKit.NSWindow
 import platform.QuartzCore.CAMetalLayer
 import webgpu.WGPUAdapter
 import webgpu.WGPUChainedStruct
+import webgpu.WGPUDevice
+import webgpu.WGPUDeviceDescriptor
 import webgpu.WGPUInstance
 import webgpu.WGPURequestAdapterCallback
 import webgpu.WGPURequestAdapterCallbackInfo
 import webgpu.WGPURequestAdapterOptions
 import webgpu.WGPURequestAdapterStatus
+import webgpu.WGPURequestDeviceCallback
+import webgpu.WGPURequestDeviceCallbackInfo
+import webgpu.WGPURequestDeviceStatus
 import webgpu.WGPUStringView
 import webgpu.WGPUSurface
+import webgpu.WGPUSurfaceConfiguration
 import webgpu.WGPUSurfaceDescriptor
 import webgpu.WGPUSurfaceSourceMetalLayer
+import webgpu.wgpuAdapterRequestDevice
 import webgpu.wgpuCreateInstance
 import webgpu.wgpuInstanceCreateSurface
 import webgpu.wgpuInstanceRequestAdapter
+import webgpu.wgpuSurfaceConfigure
 
 
 fun main() {
@@ -56,12 +64,66 @@ fun main() {
     val windowHandler = glfwCreateWindow(width, height, title, null, null)
         ?: error("fail to create windows")
 
-    //val glfwContext = glfwContextRenderer()
     val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
-
     val surface = getSurface(instance, windowHandler)
+    val adapter = getAdapter(surface, instance)
+    val device = getDevice(adapter)
+    configureSurface(device, width, height, surface)
 
-    val adapter = memoryScope { scope ->
+    val scene = HelloTriangleScene(device, 23u, surface)
+    scene.initialize()
+
+    glfwShowWindow(windowHandler)
+
+    while (glfwWindowShouldClose(windowHandler) != 1) {
+        scene.render()
+        glfwPollEvents()
+    }
+
+    glfwDestroyWindow(windowHandler)
+}
+
+private fun configureSurface(device: WGPUDevice, width: Int, height: Int, surface: WGPUSurface) {
+    memoryScope { scope ->
+        val configuration = WGPUSurfaceConfiguration.allocate(scope).apply {
+            this.device = device
+            format = 23u
+            usage = 16u
+            this.width = width.toUInt()
+            this.height = height.toUInt()
+        }
+        wgpuSurfaceConfigure(surface, configuration)
+    }
+}
+
+private fun getDevice(adapter: WGPUAdapter): WGPUDevice = memoryScope { scope ->
+    var fetchedDevice: WGPUDevice? = null
+
+    val callback = WGPURequestDeviceCallback.allocate(scope, object : WGPURequestDeviceCallback {
+        override fun invoke(
+            status: WGPURequestDeviceStatus,
+            device: WGPUDevice?,
+            message: WGPUStringView?,
+            userdata1: NativeAddress,
+            userdata2: NativeAddress
+        ) {
+            if (status != 1u && device == null) error("fail to get device")
+            fetchedDevice = device
+        }
+
+    })
+
+    val callbackInfo = WGPURequestDeviceCallbackInfo.allocate(scope).apply {
+        this.callback = callback
+        this.userdata2 = scope.bufferOf(callback.handler).handler
+    }
+
+    wgpuAdapterRequestDevice(adapter, null, callbackInfo)
+
+    fetchedDevice ?: error("fail to get device")
+}
+
+private fun getAdapter(surface: WGPUSurface, instance: WGPUInstance) = memoryScope { scope ->
         val callbackInfo = WGPURequestAdapterCallbackInfo.allocate(scope)
         val options = WGPURequestAdapterOptions.allocate(scope).apply {
             compatibleSurface = surface
@@ -92,17 +154,7 @@ fun main() {
     }
 
 
-
-    glfwShowWindow(windowHandler)
-
-    while (glfwWindowShouldClose(windowHandler) != 1) {
-        glfwPollEvents()
-    }
-
-    glfwDestroyWindow(windowHandler)
-}
-
-fun getSurface(instance: WGPUInstance, window: CPointer<GLFWwindow>): WGPUSurface {
+private fun getSurface(instance: WGPUInstance, window: CPointer<GLFWwindow>): WGPUSurface {
     val nsWindow = interpretObjCPointer<NSWindow>(glfwGetCocoaWindow(window)!!.rawValue)
     nsWindow.contentView()?.setWantsLayer(true)
     val layer = CAMetalLayer.layer()
@@ -111,7 +163,7 @@ fun getSurface(instance: WGPUInstance, window: CPointer<GLFWwindow>): WGPUSurfac
     return getSurfaceFromMetalLayer(instance, layerPointer) ?: error("fail to get surface on MacOs")
 }
 
-fun getSurfaceFromMetalLayer(instance: WGPUInstance, metalLayer: COpaquePointer): WGPUSurface? = memoryScope { scope ->
+private fun getSurfaceFromMetalLayer(instance: WGPUInstance, metalLayer: COpaquePointer): WGPUSurface? = memoryScope { scope ->
 
     val surfaceDescriptor = WGPUSurfaceDescriptor.allocate(scope).apply {
         nextInChain = WGPUSurfaceSourceMetalLayer.allocate(scope).apply {
