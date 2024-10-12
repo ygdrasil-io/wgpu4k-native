@@ -64,6 +64,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                 targetCount = 1u
                 targets = WGPUColorTargetState.allocate(scope).apply {
                     format = renderingContextFormat
+                    writeMask = 0x000000000000000Fu
                 }.let { ArrayHolder(it.handler) }
             }
 
@@ -95,8 +96,9 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                 view = frame
                 loadOp = 1u
                 storeOp = 1u
+                depthSlice = UInt.MAX_VALUE
                 clearValue.r = .0
-                clearValue.g = .0
+                clearValue.g = 1.0
                 clearValue.b = .0
                 clearValue.a = 1.0
             }.let { ArrayHolder(it.handler) }
@@ -124,16 +126,10 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
 // language=wgsl
 const val triangleVertexShader = """
 @vertex
-fn main(
-  @builtin(vertex_index) VertexIndex : u32
-) -> @builtin(position) vec4f {
-  var pos = array<vec2f, 3>(
-    vec2(0.0, 0.5),
-    vec2(-0.5, -0.5),
-    vec2(0.5, -0.5)
-  );
-
-  return vec4f(pos[VertexIndex], 0.0, 1.0);
+fn main(@builtin(vertex_index) in_vertex_index: u32) -> @builtin(position) vec4<f32> {
+    let x = f32(i32(in_vertex_index) - 1);
+    let y = f32(i32(in_vertex_index & 1u) * 2 - 1);
+    return vec4<f32>(x, y, 0.0, 1.0);
 }
 """
 
