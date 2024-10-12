@@ -1,20 +1,22 @@
 import com.charleskorn.kaml.Yaml
 import converter.toCModel
 import domain.YamlModel
-import generator.callbackCommonMainFile
 import generator.enumerationCommonMainFile
 import generator.functionsCommonMainFile
 import generator.functionsJvmMainFile
+import generator.generateAndroidCallback
 import generator.generateAndroidFunctions
 import generator.generateAndroidNativeFunctions
 import generator.generateAndroidStructures
-import generator.generateCallback
+import generator.generateCommonCallback
 import generator.generateCommonEnumerations
 import generator.generateCommonFunctions
 import generator.generateCommonStructures
+import generator.generateJvmCallback
 import generator.generateJvmFunctions
 import generator.generateJvmNativeFunctions
 import generator.generateJvmStructures
+import generator.generateNativeCallback
 import generator.generateNativeStructures
 import generator.generateTypesCommonMain
 import generator.jvmNativeFunctionsMainFile
@@ -53,7 +55,18 @@ fun main() {
 
     typesCommonMainFile.generateTypesCommonMain(webgpuCModel.pointers)
 
-    callbackCommonMainFile.generateCallback(webgpuCModel.callbacks)
+
+    commonMainBasePath.apply {
+        generateCommonCallback(webgpuCModel.callbacks)
+    }
+
+    jvmMainBasePath.apply {
+        generateJvmCallback(webgpuCModel.callbacks)
+    }
+
+    nativeMainBasePath.apply {
+        generateNativeCallback(webgpuCModel.callbacks)
+    }
 
     jvmNativeFunctionsMainFile.generateJvmNativeFunctions(webgpuCModel.functions)
 
@@ -71,8 +84,9 @@ fun main() {
     enumerationCommonMainFile.generateCommonEnumerations(webgpuCModel.enumerations)
 
     androidMainBasePath.apply {
-        generateAndroidNativeFunctions(webgpuCModel.functions)
+        generateAndroidCallback(webgpuCModel.callbacks)
         generateAndroidStructures(webgpuCModel.structures)
+        generateAndroidNativeFunctions(webgpuCModel.functions)
         generateAndroidFunctions(webgpuCModel.functions)
     }
 }

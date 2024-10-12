@@ -12,6 +12,19 @@ class Builder(
         newLine()
     }
 
+    fun appendBlock(text: String, args: String, run: Builder.() -> Unit) {
+        textBuilder.append("\t".repeat(indent))
+        textBuilder.append(text)
+        textBuilder.append(" { $args ->")
+        newLine()
+        Builder(indent + 1).apply(run).toString()
+            .also {textBuilder.append(it)}
+
+        textBuilder.append("\t".repeat(indent))
+        textBuilder.append("}")
+        newLine()
+    }
+
     fun appendBlock(text: String, run: Builder.() -> Unit) {
         textBuilder.append("\t".repeat(indent))
         textBuilder.append(text)
