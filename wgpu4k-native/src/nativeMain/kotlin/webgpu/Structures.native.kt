@@ -1971,6 +1971,9 @@ fun webgpu.native.WGPURenderPassDescriptor.adapt(structure: WGPURenderPassDescri
 }
 
 actual value class WGPURenderPassMaxDrawCount(actual val handler: NativeAddress) {
+	actual val chain: WGPUChainedStruct
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassMaxDrawCount>()?.pointed?.chain?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStruct(it) } ?: error("pointer of WGPURenderPassMaxDrawCount is null")
+
 	actual var maxDrawCount: ULong
 		get() = handler.toCPointer<webgpu.native.WGPURenderPassMaxDrawCount>()?.pointed?.maxDrawCount ?: error("pointer of WGPURenderPassMaxDrawCount is null")
 		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderPassMaxDrawCount>()?.pointed?.let { it.maxDrawCount = newValue } } 
@@ -1983,12 +1986,14 @@ actual value class WGPURenderPassMaxDrawCount(actual val handler: NativeAddress)
 	}
 	fun toCValue(): CValue<webgpu.native.WGPURenderPassMaxDrawCount> {
 		return cValue<webgpu.native.WGPURenderPassMaxDrawCount> {
+			chain.adapt(this@WGPURenderPassMaxDrawCount.chain)
 			maxDrawCount = this@WGPURenderPassMaxDrawCount.maxDrawCount
 		}
 	}
 }
 
 fun webgpu.native.WGPURenderPassMaxDrawCount.adapt(structure: WGPURenderPassMaxDrawCount) {
+	chain.adapt(structure.chain)
 	maxDrawCount = structure.maxDrawCount
 }
 
@@ -2302,6 +2307,9 @@ fun webgpu.native.WGPUShaderModuleDescriptor.adapt(structure: WGPUShaderModuleDe
 }
 
 actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
+	actual val chain: WGPUChainedStruct
+		get() = handler.toCPointer<webgpu.native.WGPUShaderSourceSPIRV>()?.pointed?.chain?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStruct(it) } ?: error("pointer of WGPUShaderSourceSPIRV is null")
+
 	actual var codeSize: UInt
 		get() = handler.toCPointer<webgpu.native.WGPUShaderSourceSPIRV>()?.pointed?.codeSize ?: error("pointer of WGPUShaderSourceSPIRV is null")
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUShaderSourceSPIRV>()?.pointed?.let { it.codeSize = newValue } } 
@@ -2318,6 +2326,7 @@ actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUShaderSourceSPIRV> {
 		return cValue<webgpu.native.WGPUShaderSourceSPIRV> {
+			chain.adapt(this@WGPUShaderSourceSPIRV.chain)
 			codeSize = this@WGPUShaderSourceSPIRV.codeSize
 			code = this@WGPUShaderSourceSPIRV.code?.toCPointer()
 		}
@@ -2325,11 +2334,15 @@ actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUShaderSourceSPIRV.adapt(structure: WGPUShaderSourceSPIRV) {
+	chain.adapt(structure.chain)
 	codeSize = structure.codeSize
 	code = structure.code?.toCPointer()
 }
 
 actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
+	actual val chain: WGPUChainedStruct
+		get() = handler.toCPointer<webgpu.native.WGPUShaderSourceWGSL>()?.pointed?.chain?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStruct(it) } ?: error("pointer of WGPUShaderSourceWGSL is null")
+
 	actual val code: WGPUStringView
 		get() = handler.toCPointer<webgpu.native.WGPUShaderSourceWGSL>()?.pointed?.code?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUShaderSourceWGSL is null")
 
@@ -2341,12 +2354,14 @@ actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUShaderSourceWGSL> {
 		return cValue<webgpu.native.WGPUShaderSourceWGSL> {
+			chain.adapt(this@WGPUShaderSourceWGSL.chain)
 			code.adapt(this@WGPUShaderSourceWGSL.code)
 		}
 	}
 }
 
 fun webgpu.native.WGPUShaderSourceWGSL.adapt(structure: WGPUShaderSourceWGSL) {
+	chain.adapt(structure.chain)
 	code.adapt(structure.code)
 }
 
@@ -2641,6 +2656,9 @@ fun webgpu.native.WGPUSurfaceDescriptor.adapt(structure: WGPUSurfaceDescriptor) 
 }
 
 actual value class WGPUSurfaceSourceAndroidNativeWindow(actual val handler: NativeAddress) {
+	actual val chain: WGPUChainedStruct
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceSourceAndroidNativeWindow>()?.pointed?.chain?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStruct(it) } ?: error("pointer of WGPUSurfaceSourceAndroidNativeWindow is null")
+
 	actual var window: NativeAddress?
 		get() = handler.toCPointer<webgpu.native.WGPUSurfaceSourceAndroidNativeWindow>()?.pointed?.window?.toLong()?.takeIf {it != 0L}
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceSourceAndroidNativeWindow>()?.pointed?.let { it.window = newValue?.toCPointer() } } 
@@ -2653,16 +2671,21 @@ actual value class WGPUSurfaceSourceAndroidNativeWindow(actual val handler: Nati
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUSurfaceSourceAndroidNativeWindow> {
 		return cValue<webgpu.native.WGPUSurfaceSourceAndroidNativeWindow> {
+			chain.adapt(this@WGPUSurfaceSourceAndroidNativeWindow.chain)
 			window = this@WGPUSurfaceSourceAndroidNativeWindow.window?.toCPointer()
 		}
 	}
 }
 
 fun webgpu.native.WGPUSurfaceSourceAndroidNativeWindow.adapt(structure: WGPUSurfaceSourceAndroidNativeWindow) {
+	chain.adapt(structure.chain)
 	window = structure.window?.toCPointer()
 }
 
 actual value class WGPUSurfaceSourceMetalLayer(actual val handler: NativeAddress) {
+	actual val chain: WGPUChainedStruct
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceSourceMetalLayer>()?.pointed?.chain?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStruct(it) } ?: error("pointer of WGPUSurfaceSourceMetalLayer is null")
+
 	actual var layer: NativeAddress?
 		get() = handler.toCPointer<webgpu.native.WGPUSurfaceSourceMetalLayer>()?.pointed?.layer?.toLong()?.takeIf {it != 0L}
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceSourceMetalLayer>()?.pointed?.let { it.layer = newValue?.toCPointer() } } 
@@ -2675,16 +2698,21 @@ actual value class WGPUSurfaceSourceMetalLayer(actual val handler: NativeAddress
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUSurfaceSourceMetalLayer> {
 		return cValue<webgpu.native.WGPUSurfaceSourceMetalLayer> {
+			chain.adapt(this@WGPUSurfaceSourceMetalLayer.chain)
 			layer = this@WGPUSurfaceSourceMetalLayer.layer?.toCPointer()
 		}
 	}
 }
 
 fun webgpu.native.WGPUSurfaceSourceMetalLayer.adapt(structure: WGPUSurfaceSourceMetalLayer) {
+	chain.adapt(structure.chain)
 	layer = structure.layer?.toCPointer()
 }
 
 actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAddress) {
+	actual val chain: WGPUChainedStruct
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceSourceWaylandSurface>()?.pointed?.chain?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStruct(it) } ?: error("pointer of WGPUSurfaceSourceWaylandSurface is null")
+
 	actual var display: NativeAddress?
 		get() = handler.toCPointer<webgpu.native.WGPUSurfaceSourceWaylandSurface>()?.pointed?.display?.toLong()?.takeIf {it != 0L}
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceSourceWaylandSurface>()?.pointed?.let { it.display = newValue?.toCPointer() } } 
@@ -2701,6 +2729,7 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAdd
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUSurfaceSourceWaylandSurface> {
 		return cValue<webgpu.native.WGPUSurfaceSourceWaylandSurface> {
+			chain.adapt(this@WGPUSurfaceSourceWaylandSurface.chain)
 			display = this@WGPUSurfaceSourceWaylandSurface.display?.toCPointer()
 			surface = this@WGPUSurfaceSourceWaylandSurface.surface?.toCPointer()
 		}
@@ -2708,11 +2737,15 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual val handler: NativeAdd
 }
 
 fun webgpu.native.WGPUSurfaceSourceWaylandSurface.adapt(structure: WGPUSurfaceSourceWaylandSurface) {
+	chain.adapt(structure.chain)
 	display = structure.display?.toCPointer()
 	surface = structure.surface?.toCPointer()
 }
 
 actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddress) {
+	actual val chain: WGPUChainedStruct
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceSourceWindowsHWND>()?.pointed?.chain?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStruct(it) } ?: error("pointer of WGPUSurfaceSourceWindowsHWND is null")
+
 	actual var hinstance: NativeAddress?
 		get() = handler.toCPointer<webgpu.native.WGPUSurfaceSourceWindowsHWND>()?.pointed?.hinstance?.toLong()?.takeIf {it != 0L}
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceSourceWindowsHWND>()?.pointed?.let { it.hinstance = newValue?.toCPointer() } } 
@@ -2729,6 +2762,7 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddres
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUSurfaceSourceWindowsHWND> {
 		return cValue<webgpu.native.WGPUSurfaceSourceWindowsHWND> {
+			chain.adapt(this@WGPUSurfaceSourceWindowsHWND.chain)
 			hinstance = this@WGPUSurfaceSourceWindowsHWND.hinstance?.toCPointer()
 			hwnd = this@WGPUSurfaceSourceWindowsHWND.hwnd?.toCPointer()
 		}
@@ -2736,11 +2770,15 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual val handler: NativeAddres
 }
 
 fun webgpu.native.WGPUSurfaceSourceWindowsHWND.adapt(structure: WGPUSurfaceSourceWindowsHWND) {
+	chain.adapt(structure.chain)
 	hinstance = structure.hinstance?.toCPointer()
 	hwnd = structure.hwnd?.toCPointer()
 }
 
 actual value class WGPUSurfaceSourceXCBWindow(actual val handler: NativeAddress) {
+	actual val chain: WGPUChainedStruct
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceSourceXCBWindow>()?.pointed?.chain?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStruct(it) } ?: error("pointer of WGPUSurfaceSourceXCBWindow is null")
+
 	actual var connection: NativeAddress?
 		get() = handler.toCPointer<webgpu.native.WGPUSurfaceSourceXCBWindow>()?.pointed?.connection?.toLong()?.takeIf {it != 0L}
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceSourceXCBWindow>()?.pointed?.let { it.connection = newValue?.toCPointer() } } 
@@ -2757,6 +2795,7 @@ actual value class WGPUSurfaceSourceXCBWindow(actual val handler: NativeAddress)
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUSurfaceSourceXCBWindow> {
 		return cValue<webgpu.native.WGPUSurfaceSourceXCBWindow> {
+			chain.adapt(this@WGPUSurfaceSourceXCBWindow.chain)
 			connection = this@WGPUSurfaceSourceXCBWindow.connection?.toCPointer()
 			window = this@WGPUSurfaceSourceXCBWindow.window
 		}
@@ -2764,11 +2803,15 @@ actual value class WGPUSurfaceSourceXCBWindow(actual val handler: NativeAddress)
 }
 
 fun webgpu.native.WGPUSurfaceSourceXCBWindow.adapt(structure: WGPUSurfaceSourceXCBWindow) {
+	chain.adapt(structure.chain)
 	connection = structure.connection?.toCPointer()
 	window = structure.window
 }
 
 actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress) {
+	actual val chain: WGPUChainedStruct
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceSourceXlibWindow>()?.pointed?.chain?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStruct(it) } ?: error("pointer of WGPUSurfaceSourceXlibWindow is null")
+
 	actual var display: NativeAddress?
 		get() = handler.toCPointer<webgpu.native.WGPUSurfaceSourceXlibWindow>()?.pointed?.display?.toLong()?.takeIf {it != 0L}
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceSourceXlibWindow>()?.pointed?.let { it.display = newValue?.toCPointer() } } 
@@ -2785,6 +2828,7 @@ actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUSurfaceSourceXlibWindow> {
 		return cValue<webgpu.native.WGPUSurfaceSourceXlibWindow> {
+			chain.adapt(this@WGPUSurfaceSourceXlibWindow.chain)
 			display = this@WGPUSurfaceSourceXlibWindow.display?.toCPointer()
 			window = this@WGPUSurfaceSourceXlibWindow.window
 		}
@@ -2792,6 +2836,7 @@ actual value class WGPUSurfaceSourceXlibWindow(actual val handler: NativeAddress
 }
 
 fun webgpu.native.WGPUSurfaceSourceXlibWindow.adapt(structure: WGPUSurfaceSourceXlibWindow) {
+	chain.adapt(structure.chain)
 	display = structure.display?.toCPointer()
 	window = structure.window
 }

@@ -32,6 +32,7 @@ import webgpu.WGPUChainedStruct
 import webgpu.WGPUInstance
 import webgpu.WGPURequestAdapterCallback
 import webgpu.WGPURequestAdapterCallbackInfo
+import webgpu.WGPURequestAdapterOptions
 import webgpu.WGPURequestAdapterStatus
 import webgpu.WGPUStringView
 import webgpu.WGPUSurface
@@ -62,6 +63,9 @@ fun main() {
 
     val adapter = memoryScope { scope ->
         val callbackInfo = WGPURequestAdapterCallbackInfo.allocate(scope)
+        val options = WGPURequestAdapterOptions.allocate(scope).apply {
+            compatibleSurface = surface
+        }
 
         var fetchedAdapter: WGPUAdapter? = null
 
@@ -82,7 +86,7 @@ fun main() {
         callbackInfo.callback = callback
         callbackInfo.userdata2 = scope.bufferOf(callback.handler).handler
 
-        wgpuInstanceRequestAdapter(instance, null, callbackInfo)
+        wgpuInstanceRequestAdapter(instance, options, callbackInfo)
 
         fetchedAdapter ?: error("fail to get adapter")
     }
@@ -111,7 +115,7 @@ fun getSurfaceFromMetalLayer(instance: WGPUInstance, metalLayer: COpaquePointer)
 
     val surfaceDescriptor = WGPUSurfaceDescriptor.allocate(scope).apply {
         nextInChain = WGPUSurfaceSourceMetalLayer.allocate(scope).apply {
-            //chain.sType = WGPUSType_SurfaceDescriptorFromMetalLayer
+            chain.sType = 0x00000004u
             layer = metalLayer.rawValue.toLong()
         }.let { WGPUChainedStruct(it.handler) }
     }

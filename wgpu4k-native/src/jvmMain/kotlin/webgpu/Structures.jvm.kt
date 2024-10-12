@@ -2285,6 +2285,9 @@ actual value class WGPURenderPassDescriptor(actual override val handler: NativeA
 
 @JvmInline
 actual value class WGPURenderPassMaxDrawCount(actual override val handler: NativeAddress) : CStructure {
+	actual val chain: WGPUChainedStruct
+		get() = get(chainLayout, chainOffset).let(::WGPUChainedStruct)
+
 	actual var maxDrawCount: ULong
 		get() = getULong(maxDrawCountLayout, maxDrawCountOffset)
 		set(newValue) = set(maxDrawCountLayout, maxDrawCountOffset, newValue)
@@ -2295,10 +2298,14 @@ actual value class WGPURenderPassMaxDrawCount(actual override val handler: Nativ
 				.let(::WGPURenderPassMaxDrawCount)
 		}
 		internal val LAYOUT = structLayout(
+			WGPUChainedStruct.LAYOUT.withName("chain"),
 			C_LONG.withName("maxDrawCount")
 		).withName("WGPURenderPassMaxDrawCount")
 
-		val maxDrawCountOffset = 0L
+		val chainOffset = 0L
+		val chainLayout = LAYOUT.withName("chain")
+
+		val maxDrawCountOffset = LAYOUT.withName("chain").byteSize() + chainOffset
 		val maxDrawCountLayout = LAYOUT.withName("maxDrawCount")
 
 	}
@@ -2662,6 +2669,9 @@ actual value class WGPUShaderModuleDescriptor(actual override val handler: Nativ
 
 @JvmInline
 actual value class WGPUShaderSourceSPIRV(actual override val handler: NativeAddress) : CStructure {
+	actual val chain: WGPUChainedStruct
+		get() = get(chainLayout, chainOffset).let(::WGPUChainedStruct)
+
 	actual var codeSize: UInt
 		get() = getUInt(codeSizeLayout, codeSizeOffset)
 		set(newValue) = set(codeSizeLayout, codeSizeOffset, newValue)
@@ -2676,11 +2686,15 @@ actual value class WGPUShaderSourceSPIRV(actual override val handler: NativeAddr
 				.let(::WGPUShaderSourceSPIRV)
 		}
 		internal val LAYOUT = structLayout(
+			WGPUChainedStruct.LAYOUT.withName("chain"),
 			C_INT.withName("codeSize"),
 			C_POINTER.withName("code")
 		).withName("WGPUShaderSourceSPIRV")
 
-		val codeSizeOffset = 0L
+		val chainOffset = 0L
+		val chainLayout = LAYOUT.withName("chain")
+
+		val codeSizeOffset = LAYOUT.withName("chain").byteSize() + chainOffset
 		val codeSizeLayout = LAYOUT.withName("codeSize")
 
 		val codeOffset = 4L + codeSizeOffset
@@ -2691,6 +2705,9 @@ actual value class WGPUShaderSourceSPIRV(actual override val handler: NativeAddr
 
 @JvmInline
 actual value class WGPUShaderSourceWGSL(actual override val handler: NativeAddress) : CStructure {
+	actual val chain: WGPUChainedStruct
+		get() = get(chainLayout, chainOffset).let(::WGPUChainedStruct)
+
 	actual val code: WGPUStringView
 		get() = get(codeLayout, codeOffset).let(::WGPUStringView)
 
@@ -2700,10 +2717,14 @@ actual value class WGPUShaderSourceWGSL(actual override val handler: NativeAddre
 				.let(::WGPUShaderSourceWGSL)
 		}
 		internal val LAYOUT = structLayout(
+			WGPUChainedStruct.LAYOUT.withName("chain"),
 			WGPUStringView.LAYOUT.withName("code")
 		).withName("WGPUShaderSourceWGSL")
 
-		val codeOffset = 0L
+		val chainOffset = 0L
+		val chainLayout = LAYOUT.withName("chain")
+
+		val codeOffset = LAYOUT.withName("chain").byteSize() + chainOffset
 		val codeLayout = LAYOUT.withName("code")
 
 	}
@@ -3040,6 +3061,9 @@ actual value class WGPUSurfaceDescriptor(actual override val handler: NativeAddr
 
 @JvmInline
 actual value class WGPUSurfaceSourceAndroidNativeWindow(actual override val handler: NativeAddress) : CStructure {
+	actual val chain: WGPUChainedStruct
+		get() = get(chainLayout, chainOffset).let(::WGPUChainedStruct)
+
 	actual var window: NativeAddress?
 		get() = get(windowLayout, windowOffset)
 		set(newValue) = set(windowLayout, windowOffset, newValue)
@@ -3050,10 +3074,14 @@ actual value class WGPUSurfaceSourceAndroidNativeWindow(actual override val hand
 				.let(::WGPUSurfaceSourceAndroidNativeWindow)
 		}
 		internal val LAYOUT = structLayout(
+			WGPUChainedStruct.LAYOUT.withName("chain"),
 			C_POINTER.withName("window")
 		).withName("WGPUSurfaceSourceAndroidNativeWindow")
 
-		val windowOffset = 0L
+		val chainOffset = 0L
+		val chainLayout = LAYOUT.withName("chain")
+
+		val windowOffset = LAYOUT.withName("chain").byteSize() + chainOffset
 		val windowLayout = LAYOUT.withName("window")
 
 	}
@@ -3061,6 +3089,9 @@ actual value class WGPUSurfaceSourceAndroidNativeWindow(actual override val hand
 
 @JvmInline
 actual value class WGPUSurfaceSourceMetalLayer(actual override val handler: NativeAddress) : CStructure {
+	actual val chain: WGPUChainedStruct
+		get() = get(chainLayout, chainOffset).let(::WGPUChainedStruct)
+
 	actual var layer: NativeAddress?
 		get() = get(layerLayout, layerOffset)
 		set(newValue) = set(layerLayout, layerOffset, newValue)
@@ -3071,10 +3102,14 @@ actual value class WGPUSurfaceSourceMetalLayer(actual override val handler: Nati
 				.let(::WGPUSurfaceSourceMetalLayer)
 		}
 		internal val LAYOUT = structLayout(
+			WGPUChainedStruct.LAYOUT.withName("chain"),
 			C_POINTER.withName("layer")
 		).withName("WGPUSurfaceSourceMetalLayer")
 
-		val layerOffset = 0L
+		val chainOffset = 0L
+		val chainLayout = LAYOUT.withName("chain")
+
+		val layerOffset = LAYOUT.withName("chain").byteSize() + chainOffset
 		val layerLayout = LAYOUT.withName("layer")
 
 	}
@@ -3082,6 +3117,9 @@ actual value class WGPUSurfaceSourceMetalLayer(actual override val handler: Nati
 
 @JvmInline
 actual value class WGPUSurfaceSourceWaylandSurface(actual override val handler: NativeAddress) : CStructure {
+	actual val chain: WGPUChainedStruct
+		get() = get(chainLayout, chainOffset).let(::WGPUChainedStruct)
+
 	actual var display: NativeAddress?
 		get() = get(displayLayout, displayOffset)
 		set(newValue) = set(displayLayout, displayOffset, newValue)
@@ -3096,11 +3134,15 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual override val handler: 
 				.let(::WGPUSurfaceSourceWaylandSurface)
 		}
 		internal val LAYOUT = structLayout(
+			WGPUChainedStruct.LAYOUT.withName("chain"),
 			C_POINTER.withName("display"),
 			C_POINTER.withName("surface")
 		).withName("WGPUSurfaceSourceWaylandSurface")
 
-		val displayOffset = 0L
+		val chainOffset = 0L
+		val chainLayout = LAYOUT.withName("chain")
+
+		val displayOffset = LAYOUT.withName("chain").byteSize() + chainOffset
 		val displayLayout = LAYOUT.withName("display")
 
 		val surfaceOffset = 8L + displayOffset
@@ -3111,6 +3153,9 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual override val handler: 
 
 @JvmInline
 actual value class WGPUSurfaceSourceWindowsHWND(actual override val handler: NativeAddress) : CStructure {
+	actual val chain: WGPUChainedStruct
+		get() = get(chainLayout, chainOffset).let(::WGPUChainedStruct)
+
 	actual var hinstance: NativeAddress?
 		get() = get(hinstanceLayout, hinstanceOffset)
 		set(newValue) = set(hinstanceLayout, hinstanceOffset, newValue)
@@ -3125,11 +3170,15 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual override val handler: Nat
 				.let(::WGPUSurfaceSourceWindowsHWND)
 		}
 		internal val LAYOUT = structLayout(
+			WGPUChainedStruct.LAYOUT.withName("chain"),
 			C_POINTER.withName("hinstance"),
 			C_POINTER.withName("hwnd")
 		).withName("WGPUSurfaceSourceWindowsHWND")
 
-		val hinstanceOffset = 0L
+		val chainOffset = 0L
+		val chainLayout = LAYOUT.withName("chain")
+
+		val hinstanceOffset = LAYOUT.withName("chain").byteSize() + chainOffset
 		val hinstanceLayout = LAYOUT.withName("hinstance")
 
 		val hwndOffset = 8L + hinstanceOffset
@@ -3140,6 +3189,9 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual override val handler: Nat
 
 @JvmInline
 actual value class WGPUSurfaceSourceXCBWindow(actual override val handler: NativeAddress) : CStructure {
+	actual val chain: WGPUChainedStruct
+		get() = get(chainLayout, chainOffset).let(::WGPUChainedStruct)
+
 	actual var connection: NativeAddress?
 		get() = get(connectionLayout, connectionOffset)
 		set(newValue) = set(connectionLayout, connectionOffset, newValue)
@@ -3154,11 +3206,15 @@ actual value class WGPUSurfaceSourceXCBWindow(actual override val handler: Nativ
 				.let(::WGPUSurfaceSourceXCBWindow)
 		}
 		internal val LAYOUT = structLayout(
+			WGPUChainedStruct.LAYOUT.withName("chain"),
 			C_POINTER.withName("connection"),
 			C_INT.withName("window")
 		).withName("WGPUSurfaceSourceXCBWindow")
 
-		val connectionOffset = 0L
+		val chainOffset = 0L
+		val chainLayout = LAYOUT.withName("chain")
+
+		val connectionOffset = LAYOUT.withName("chain").byteSize() + chainOffset
 		val connectionLayout = LAYOUT.withName("connection")
 
 		val windowOffset = 8L + connectionOffset
@@ -3169,6 +3225,9 @@ actual value class WGPUSurfaceSourceXCBWindow(actual override val handler: Nativ
 
 @JvmInline
 actual value class WGPUSurfaceSourceXlibWindow(actual override val handler: NativeAddress) : CStructure {
+	actual val chain: WGPUChainedStruct
+		get() = get(chainLayout, chainOffset).let(::WGPUChainedStruct)
+
 	actual var display: NativeAddress?
 		get() = get(displayLayout, displayOffset)
 		set(newValue) = set(displayLayout, displayOffset, newValue)
@@ -3183,11 +3242,15 @@ actual value class WGPUSurfaceSourceXlibWindow(actual override val handler: Nati
 				.let(::WGPUSurfaceSourceXlibWindow)
 		}
 		internal val LAYOUT = structLayout(
+			WGPUChainedStruct.LAYOUT.withName("chain"),
 			C_POINTER.withName("display"),
 			C_LONG.withName("window")
 		).withName("WGPUSurfaceSourceXlibWindow")
 
-		val displayOffset = 0L
+		val chainOffset = 0L
+		val chainLayout = LAYOUT.withName("chain")
+
+		val displayOffset = LAYOUT.withName("chain").byteSize() + chainOffset
 		val displayLayout = LAYOUT.withName("display")
 
 		val windowOffset = 8L + displayOffset

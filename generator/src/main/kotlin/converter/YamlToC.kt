@@ -37,6 +37,7 @@ internal fun YamlModel.toCModel(): CLibraryModel {
 private fun YamlModel.generateCLibraryStructures() = structs.map {
     val members = when  {
         it.type == "base_in" ->  listOf(YamlModel.Struct.Member("nextInChain", "", "struct.chained_struct", true, "mutable")) + it.members
+        it.type == "extension_in" ->  listOf(YamlModel.Struct.Member("chain", "", "struct.chained_struct")) + it.members
         else -> it.members
     }
 

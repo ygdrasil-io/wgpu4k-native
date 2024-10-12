@@ -480,6 +480,7 @@ expect value class WGPURenderPassDescriptor(val handler: NativeAddress) {
 }
 
 expect value class WGPURenderPassMaxDrawCount(val handler: NativeAddress) {
+	val chain: WGPUChainedStruct
 	var maxDrawCount: ULong
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPURenderPassMaxDrawCount
@@ -563,6 +564,7 @@ expect value class WGPUShaderModuleDescriptor(val handler: NativeAddress) {
 }
 
 expect value class WGPUShaderSourceSPIRV(val handler: NativeAddress) {
+	val chain: WGPUChainedStruct
 	var codeSize: UInt
 	var code: NativeAddress?
 	companion object {
@@ -571,6 +573,7 @@ expect value class WGPUShaderSourceSPIRV(val handler: NativeAddress) {
 }
 
 expect value class WGPUShaderSourceWGSL(val handler: NativeAddress) {
+	val chain: WGPUChainedStruct
 	val code: WGPUStringView
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUShaderSourceWGSL
@@ -650,6 +653,7 @@ expect value class WGPUSurfaceDescriptor(val handler: NativeAddress) {
 }
 
 expect value class WGPUSurfaceSourceAndroidNativeWindow(val handler: NativeAddress) {
+	val chain: WGPUChainedStruct
 	var window: NativeAddress?
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceAndroidNativeWindow
@@ -657,6 +661,7 @@ expect value class WGPUSurfaceSourceAndroidNativeWindow(val handler: NativeAddre
 }
 
 expect value class WGPUSurfaceSourceMetalLayer(val handler: NativeAddress) {
+	val chain: WGPUChainedStruct
 	var layer: NativeAddress?
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceMetalLayer
@@ -664,6 +669,7 @@ expect value class WGPUSurfaceSourceMetalLayer(val handler: NativeAddress) {
 }
 
 expect value class WGPUSurfaceSourceWaylandSurface(val handler: NativeAddress) {
+	val chain: WGPUChainedStruct
 	var display: NativeAddress?
 	var surface: NativeAddress?
 	companion object {
@@ -672,6 +678,7 @@ expect value class WGPUSurfaceSourceWaylandSurface(val handler: NativeAddress) {
 }
 
 expect value class WGPUSurfaceSourceWindowsHWND(val handler: NativeAddress) {
+	val chain: WGPUChainedStruct
 	var hinstance: NativeAddress?
 	var hwnd: NativeAddress?
 	companion object {
@@ -680,6 +687,7 @@ expect value class WGPUSurfaceSourceWindowsHWND(val handler: NativeAddress) {
 }
 
 expect value class WGPUSurfaceSourceXCBWindow(val handler: NativeAddress) {
+	val chain: WGPUChainedStruct
 	var connection: NativeAddress?
 	var window: UInt
 	companion object {
@@ -688,6 +696,7 @@ expect value class WGPUSurfaceSourceXCBWindow(val handler: NativeAddress) {
 }
 
 expect value class WGPUSurfaceSourceXlibWindow(val handler: NativeAddress) {
+	val chain: WGPUChainedStruct
 	var display: NativeAddress?
 	var window: ULong
 	companion object {
