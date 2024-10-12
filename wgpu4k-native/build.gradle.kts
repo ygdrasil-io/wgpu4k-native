@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.nio.file.Files
 
 plugins {
     id(libs.plugins.kotlin.multiplatform.get().pluginId)
@@ -9,9 +10,6 @@ plugins {
 }
 
 val buildNativeResourcesDirectory = project.file("build").resolve("native")
-val buildNativeResourcesDirectory2 = project.file("..").resolve("headers")
-
-print(buildNativeResourcesDirectory2.resolve("wgpu.h").absolutePath)
 
 kotlin {
 
@@ -51,7 +49,7 @@ kotlin {
         val main by target.compilations.getting {
             cinterops.create("webgpu") {
                 packageName = "webgpu.native"
-                header(buildNativeResourcesDirectory2.resolve("wgpu.h"))
+                header(buildNativeResourcesDirectory.resolve("wgpu.h"))
             }
         }
     }
@@ -120,8 +118,20 @@ configureDownloadTasks {
 
     /*** Macos ***/
     download("wgpu-macos-aarch64-release.zip") {
-        //extract("webgpu.h", buildNativeResourcesDirectory.resolve("webgpu.h"))
-        //extract("wgpu.h", buildNativeResourcesDirectory.resolve("wgpu.h"))
+        extract("include/webgpu/webgpu.h", buildNativeResourcesDirectory.resolve("webgpu.h")).doLast {
+            Files.move(
+                buildNativeResourcesDirectory.resolve("include").resolve("webgpu").resolve("webgpu.h").toPath(),
+                buildNativeResourcesDirectory.resolve("webgpu.h").toPath()
+            )
+            buildNativeResourcesDirectory.resolve("include").deleteRecursively()
+        }
+        extract("include/wgpu/wgpu.h", buildNativeResourcesDirectory.resolve("wgpu.h")).doLast {
+            Files.move(
+                buildNativeResourcesDirectory.resolve("include").resolve("wgpu").resolve("wgpu.h").toPath(),
+                buildNativeResourcesDirectory.resolve("wgpu.h").toPath()
+            )
+            buildNativeResourcesDirectory.resolve("include").deleteRecursively()
+        }
         extract("lib/libwgpu_native.a", buildNativeResourcesDirectory.resolve("darwin-aarch64").resolve("libWGPU.a"))
     }
     download("wgpu-macos-x86_64-release.zip") {
