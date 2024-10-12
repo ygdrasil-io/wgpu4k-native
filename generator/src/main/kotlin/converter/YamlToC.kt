@@ -35,9 +35,14 @@ internal fun YamlModel.toCModel(): CLibraryModel {
 }
 
 private fun YamlModel.generateCLibraryStructures() = structs.map {
+    val members = when  {
+        it.type == "base_in" ->  listOf(YamlModel.Struct.Member("nextInChain", "", "struct.chained_struct", true, "mutable")) + it.members
+        else -> it.members
+    }
+
     CLibraryModel.Structure(
         it.name.convertToKotlinClassName(),
-        it.members.flatMap {
+        members.flatMap {
             Triple(
                 it.name.convertToKotlinVariableName(),
                 it.type.toCType(it.pointer != null, it.pointer == "mutable"),

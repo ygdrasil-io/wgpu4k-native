@@ -84,6 +84,10 @@ actual value class WGPUAdapterInfo(actual override val handler: NativeAddress) :
 @JvmInline
 actual value class WGPUBindGroupDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUBindGroupDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -105,12 +109,15 @@ actual value class WGPUBindGroupDescriptor(actual override val handler: NativeAd
 				.let(::WGPUBindGroupDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_POINTER.withName("layout"),
 			C_LONG.withName("entryCount"),
 			C_POINTER.withName("entries"),
 		).withName("WGPUBindGroupDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val layoutOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val layoutLayout = LAYOUT.withName("layout")
@@ -123,6 +130,10 @@ actual value class WGPUBindGroupDescriptor(actual override val handler: NativeAd
 @JvmInline
 actual value class WGPUBindGroupEntry(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUBindGroupEntryByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var binding: UInt
 		get() = getUInt(bindingLayout, bindingOffset)
 		set(newValue) = set(bindingLayout, bindingOffset, newValue)
@@ -153,6 +164,7 @@ actual value class WGPUBindGroupEntry(actual override val handler: NativeAddress
 				.let(::WGPUBindGroupEntry)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_INT.withName("binding"),
 			C_POINTER.withName("buffer"),
 			C_LONG.withName("offset"),
@@ -160,7 +172,9 @@ actual value class WGPUBindGroupEntry(actual override val handler: NativeAddress
 			C_POINTER.withName("sampler"),
 			C_POINTER.withName("textureView"),
 		).withName("WGPUBindGroupEntry")
-		val bindingOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val bindingOffset = 8L + nextInChainOffset
 		val bindingLayout = LAYOUT.withName("binding")
 		val bufferOffset = 4L + bindingOffset
 		val bufferLayout = LAYOUT.withName("buffer")
@@ -177,6 +191,10 @@ actual value class WGPUBindGroupEntry(actual override val handler: NativeAddress
 @JvmInline
 actual value class WGPUBindGroupLayoutDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUBindGroupLayoutDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -194,11 +212,14 @@ actual value class WGPUBindGroupLayoutDescriptor(actual override val handler: Na
 				.let(::WGPUBindGroupLayoutDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_LONG.withName("entryCount"),
 			C_POINTER.withName("entries"),
 		).withName("WGPUBindGroupLayoutDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val entryCountOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val entryCountLayout = LAYOUT.withName("entryCount")
@@ -209,6 +230,10 @@ actual value class WGPUBindGroupLayoutDescriptor(actual override val handler: Na
 @JvmInline
 actual value class WGPUBindGroupLayoutEntry(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUBindGroupLayoutEntryByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var binding: UInt
 		get() = getUInt(bindingLayout, bindingOffset)
 		set(newValue) = set(bindingLayout, bindingOffset, newValue)
@@ -235,6 +260,7 @@ actual value class WGPUBindGroupLayoutEntry(actual override val handler: NativeA
 				.let(::WGPUBindGroupLayoutEntry)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_INT.withName("binding"),
 			C_LONG.withName("visibility"),
 			WGPUBufferBindingLayout.LAYOUT.withName("buffer"),
@@ -242,7 +268,9 @@ actual value class WGPUBindGroupLayoutEntry(actual override val handler: NativeA
 			WGPUTextureBindingLayout.LAYOUT.withName("texture"),
 			WGPUStorageTextureBindingLayout.LAYOUT.withName("storageTexture"),
 		).withName("WGPUBindGroupLayoutEntry")
-		val bindingOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val bindingOffset = 8L + nextInChainOffset
 		val bindingLayout = LAYOUT.withName("binding")
 		val visibilityOffset = 4L + bindingOffset
 		val visibilityLayout = LAYOUT.withName("visibility")
@@ -316,6 +344,10 @@ actual value class WGPUBlendState(actual override val handler: NativeAddress) : 
 @JvmInline
 actual value class WGPUBufferBindingLayout(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUBufferBindingLayoutByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var type: WGPUBufferBindingType
 		get() = getUInt(typeLayout, typeOffset)
 		set(newValue) = set(typeLayout, typeOffset, newValue)
@@ -334,11 +366,14 @@ actual value class WGPUBufferBindingLayout(actual override val handler: NativeAd
 				.let(::WGPUBufferBindingLayout)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_INT.withName("type"),
 			C_INT.withName("hasDynamicOffset"),
 			C_LONG.withName("minBindingSize"),
 		).withName("WGPUBufferBindingLayout")
-		val typeOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val typeOffset = 8L + nextInChainOffset
 		val typeLayout = LAYOUT.withName("type")
 		val hasDynamicOffsetOffset = 4L + typeOffset
 		val hasDynamicOffsetLayout = LAYOUT.withName("hasDynamicOffset")
@@ -349,6 +384,10 @@ actual value class WGPUBufferBindingLayout(actual override val handler: NativeAd
 @JvmInline
 actual value class WGPUBufferDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUBufferDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -370,12 +409,15 @@ actual value class WGPUBufferDescriptor(actual override val handler: NativeAddre
 				.let(::WGPUBufferDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_LONG.withName("usage"),
 			C_LONG.withName("size"),
 			C_INT.withName("mappedAtCreation"),
 		).withName("WGPUBufferDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val usageOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val usageLayout = LAYOUT.withName("usage")
@@ -428,6 +470,10 @@ actual value class WGPUColor(actual override val handler: NativeAddress) : CStru
 @JvmInline
 actual value class WGPUColorTargetState(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUColorTargetStateByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var format: WGPUTextureFormat
 		get() = getUInt(formatLayout, formatOffset)
 		set(newValue) = set(formatLayout, formatOffset, newValue)
@@ -446,11 +492,14 @@ actual value class WGPUColorTargetState(actual override val handler: NativeAddre
 				.let(::WGPUColorTargetState)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_INT.withName("format"),
 			C_POINTER.withName("blend"),
 			C_LONG.withName("writeMask"),
 		).withName("WGPUColorTargetState")
-		val formatOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val formatOffset = 8L + nextInChainOffset
 		val formatLayout = LAYOUT.withName("format")
 		val blendOffset = 4L + formatOffset
 		val blendLayout = LAYOUT.withName("blend")
@@ -461,6 +510,10 @@ actual value class WGPUColorTargetState(actual override val handler: NativeAddre
 @JvmInline
 actual value class WGPUCommandBufferDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUCommandBufferDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -470,15 +523,22 @@ actual value class WGPUCommandBufferDescriptor(actual override val handler: Nati
 				.let(::WGPUCommandBufferDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 		).withName("WGPUCommandBufferDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 	}
 }
 @JvmInline
 actual value class WGPUCommandEncoderDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUCommandEncoderDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -488,15 +548,22 @@ actual value class WGPUCommandEncoderDescriptor(actual override val handler: Nat
 				.let(::WGPUCommandEncoderDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 		).withName("WGPUCommandEncoderDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 	}
 }
 @JvmInline
 actual value class WGPUCompilationInfo(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUCompilationInfoByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var messageCount: ULong
 		get() = getULong(messageCountLayout, messageCountOffset)
 		set(newValue) = set(messageCountLayout, messageCountOffset, newValue)
@@ -511,10 +578,13 @@ actual value class WGPUCompilationInfo(actual override val handler: NativeAddres
 				.let(::WGPUCompilationInfo)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_LONG.withName("messageCount"),
 			C_POINTER.withName("messages"),
 		).withName("WGPUCompilationInfo")
-		val messageCountOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val messageCountOffset = 8L + nextInChainOffset
 		val messageCountLayout = LAYOUT.withName("messageCount")
 		val messagesOffset = 8L + messageCountOffset
 		val messagesLayout = LAYOUT.withName("messages")
@@ -523,6 +593,10 @@ actual value class WGPUCompilationInfo(actual override val handler: NativeAddres
 @JvmInline
 actual value class WGPUCompilationMessage(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUCompilationMessageByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val message: WGPUStringView
 		get() = get(messageLayout, messageOffset).let(::WGPUStringView)
 
@@ -564,6 +638,7 @@ actual value class WGPUCompilationMessage(actual override val handler: NativeAdd
 				.let(::WGPUCompilationMessage)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("message"),
 			C_INT.withName("type"),
 			C_LONG.withName("lineNum"),
@@ -574,7 +649,9 @@ actual value class WGPUCompilationMessage(actual override val handler: NativeAdd
 			C_LONG.withName("utf16Offset"),
 			C_LONG.withName("utf16Length"),
 		).withName("WGPUCompilationMessage")
-		val messageOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val messageOffset = 8L + nextInChainOffset
 		val messageLayout = LAYOUT.withName("message")
 		val typeOffset = LAYOUT.withName("message").byteSize() + messageOffset
 		val typeLayout = LAYOUT.withName("type")
@@ -597,6 +674,10 @@ actual value class WGPUCompilationMessage(actual override val handler: NativeAdd
 @JvmInline
 actual value class WGPUComputePassDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUComputePassDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -610,10 +691,13 @@ actual value class WGPUComputePassDescriptor(actual override val handler: Native
 				.let(::WGPUComputePassDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_POINTER.withName("timestampWrites"),
 		).withName("WGPUComputePassDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val timestampWritesOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val timestampWritesLayout = LAYOUT.withName("timestampWrites")
@@ -655,6 +739,10 @@ actual value class WGPUComputePassTimestampWrites(actual override val handler: N
 @JvmInline
 actual value class WGPUComputePipelineDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUComputePipelineDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -671,11 +759,14 @@ actual value class WGPUComputePipelineDescriptor(actual override val handler: Na
 				.let(::WGPUComputePipelineDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_POINTER.withName("layout"),
 			WGPUProgrammableStageDescriptor.LAYOUT.withName("compute"),
 		).withName("WGPUComputePipelineDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val layoutOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val layoutLayout = LAYOUT.withName("layout")
@@ -686,6 +777,10 @@ actual value class WGPUComputePipelineDescriptor(actual override val handler: Na
 @JvmInline
 actual value class WGPUConstantEntry(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUConstantEntryByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val key: WGPUStringView
 		get() = get(keyLayout, keyOffset).let(::WGPUStringView)
 
@@ -699,10 +794,13 @@ actual value class WGPUConstantEntry(actual override val handler: NativeAddress)
 				.let(::WGPUConstantEntry)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("key"),
 			C_DOUBLE.withName("value"),
 		).withName("WGPUConstantEntry")
-		val keyOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val keyOffset = 8L + nextInChainOffset
 		val keyLayout = LAYOUT.withName("key")
 		val valueOffset = LAYOUT.withName("key").byteSize() + keyOffset
 		val valueLayout = LAYOUT.withName("value")
@@ -711,6 +809,10 @@ actual value class WGPUConstantEntry(actual override val handler: NativeAddress)
 @JvmInline
 actual value class WGPUDepthStencilState(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUDepthStencilStateByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var format: WGPUTextureFormat
 		get() = getUInt(formatLayout, formatOffset)
 		set(newValue) = set(formatLayout, formatOffset, newValue)
@@ -755,6 +857,7 @@ actual value class WGPUDepthStencilState(actual override val handler: NativeAddr
 				.let(::WGPUDepthStencilState)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_INT.withName("format"),
 			C_INT.withName("depthWriteEnabled"),
 			C_INT.withName("depthCompare"),
@@ -766,7 +869,9 @@ actual value class WGPUDepthStencilState(actual override val handler: NativeAddr
 			C_FLOAT.withName("depthBiasSlopeScale"),
 			C_FLOAT.withName("depthBiasClamp"),
 		).withName("WGPUDepthStencilState")
-		val formatOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val formatOffset = 8L + nextInChainOffset
 		val formatLayout = LAYOUT.withName("format")
 		val depthWriteEnabledOffset = 4L + formatOffset
 		val depthWriteEnabledLayout = LAYOUT.withName("depthWriteEnabled")
@@ -791,6 +896,10 @@ actual value class WGPUDepthStencilState(actual override val handler: NativeAddr
 @JvmInline
 actual value class WGPUDeviceDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUDeviceDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -821,6 +930,7 @@ actual value class WGPUDeviceDescriptor(actual override val handler: NativeAddre
 				.let(::WGPUDeviceDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_LONG.withName("requiredFeatureCount"),
 			C_POINTER.withName("requiredFeatures"),
@@ -829,7 +939,9 @@ actual value class WGPUDeviceDescriptor(actual override val handler: NativeAddre
 			WGPUDeviceLostCallbackInfo.LAYOUT.withName("deviceLostCallbackInfo"),
 			WGPUUncapturedErrorCallbackInfo.LAYOUT.withName("uncapturedErrorCallbackInfo"),
 		).withName("WGPUDeviceDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val requiredFeatureCountOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val requiredFeatureCountLayout = LAYOUT.withName("requiredFeatureCount")
@@ -881,6 +993,10 @@ actual value class WGPUExtent3D(actual override val handler: NativeAddress) : CS
 @JvmInline
 actual value class WGPUFragmentState(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUFragmentStateByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var module: WGPUShaderModule?
 		get() = get(moduleLayout, moduleOffset).let(::WGPUShaderModule)
 		set(newValue) = set(moduleLayout, moduleOffset, newValue?.handler)
@@ -910,6 +1026,7 @@ actual value class WGPUFragmentState(actual override val handler: NativeAddress)
 				.let(::WGPUFragmentState)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("module"),
 			WGPUStringView.LAYOUT.withName("entryPoint"),
 			C_LONG.withName("constantCount"),
@@ -917,7 +1034,9 @@ actual value class WGPUFragmentState(actual override val handler: NativeAddress)
 			C_LONG.withName("targetCount"),
 			C_POINTER.withName("targets"),
 		).withName("WGPUFragmentState")
-		val moduleOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val moduleOffset = 8L + nextInChainOffset
 		val moduleLayout = LAYOUT.withName("module")
 		val entryPointOffset = 8L + moduleOffset
 		val entryPointLayout = LAYOUT.withName("entryPoint")
@@ -978,6 +1097,10 @@ actual value class WGPUFutureWaitInfo(actual override val handler: NativeAddress
 @JvmInline
 actual value class WGPUImageCopyBuffer(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUImageCopyBufferByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val layout: WGPUTextureDataLayout
 		get() = get(layoutLayout, layoutOffset).let(::WGPUTextureDataLayout)
 
@@ -991,10 +1114,13 @@ actual value class WGPUImageCopyBuffer(actual override val handler: NativeAddres
 				.let(::WGPUImageCopyBuffer)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUTextureDataLayout.LAYOUT.withName("layout"),
 			C_POINTER.withName("buffer"),
 		).withName("WGPUImageCopyBuffer")
-		val layoutOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val layoutOffset = 8L + nextInChainOffset
 		val layoutLayout = LAYOUT.withName("layout")
 		val bufferOffset = LAYOUT.withName("layout").byteSize() + layoutOffset
 		val bufferLayout = LAYOUT.withName("buffer")
@@ -1003,6 +1129,10 @@ actual value class WGPUImageCopyBuffer(actual override val handler: NativeAddres
 @JvmInline
 actual value class WGPUImageCopyTexture(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUImageCopyTextureByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var texture: WGPUTexture?
 		get() = get(textureLayout, textureOffset).let(::WGPUTexture)
 		set(newValue) = set(textureLayout, textureOffset, newValue?.handler)
@@ -1024,12 +1154,15 @@ actual value class WGPUImageCopyTexture(actual override val handler: NativeAddre
 				.let(::WGPUImageCopyTexture)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("texture"),
 			C_INT.withName("mipLevel"),
 			WGPUOrigin3D.LAYOUT.withName("origin"),
 			C_INT.withName("aspect"),
 		).withName("WGPUImageCopyTexture")
-		val textureOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val textureOffset = 8L + nextInChainOffset
 		val textureLayout = LAYOUT.withName("texture")
 		val mipLevelOffset = 8L + textureOffset
 		val mipLevelLayout = LAYOUT.withName("mipLevel")
@@ -1042,6 +1175,10 @@ actual value class WGPUImageCopyTexture(actual override val handler: NativeAddre
 @JvmInline
 actual value class WGPUInstanceDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUInstanceDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val features: WGPUInstanceFeatures
 		get() = get(featuresLayout, featuresOffset).let(::WGPUInstanceFeatures)
 
@@ -1051,15 +1188,22 @@ actual value class WGPUInstanceDescriptor(actual override val handler: NativeAdd
 				.let(::WGPUInstanceDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUInstanceFeatures.LAYOUT.withName("features"),
 		).withName("WGPUInstanceDescriptor")
-		val featuresOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val featuresOffset = 8L + nextInChainOffset
 		val featuresLayout = LAYOUT.withName("features")
 	}
 }
 @JvmInline
 actual value class WGPUInstanceFeatures(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUInstanceFeaturesByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var timedWaitAnyEnable: Boolean
 		get() = getInt(timedWaitAnyEnableLayout, timedWaitAnyEnableOffset).toBoolean()
 		set(newValue) = set(timedWaitAnyEnableLayout, timedWaitAnyEnableOffset, newValue)
@@ -1074,10 +1218,13 @@ actual value class WGPUInstanceFeatures(actual override val handler: NativeAddre
 				.let(::WGPUInstanceFeatures)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_INT.withName("timedWaitAnyEnable"),
 			C_LONG.withName("timedWaitAnyMaxCount"),
 		).withName("WGPUInstanceFeatures")
-		val timedWaitAnyEnableOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val timedWaitAnyEnableOffset = 8L + nextInChainOffset
 		val timedWaitAnyEnableLayout = LAYOUT.withName("timedWaitAnyEnable")
 		val timedWaitAnyMaxCountOffset = 4L + timedWaitAnyEnableOffset
 		val timedWaitAnyMaxCountLayout = LAYOUT.withName("timedWaitAnyMaxCount")
@@ -1315,6 +1462,10 @@ actual value class WGPULimits(actual override val handler: NativeAddress) : CStr
 @JvmInline
 actual value class WGPUMultisampleState(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUMultisampleStateByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var count: UInt
 		get() = getUInt(countLayout, countOffset)
 		set(newValue) = set(countLayout, countOffset, newValue)
@@ -1333,11 +1484,14 @@ actual value class WGPUMultisampleState(actual override val handler: NativeAddre
 				.let(::WGPUMultisampleState)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_INT.withName("count"),
 			C_INT.withName("mask"),
 			C_INT.withName("alphaToCoverageEnabled"),
 		).withName("WGPUMultisampleState")
-		val countOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val countOffset = 8L + nextInChainOffset
 		val countLayout = LAYOUT.withName("count")
 		val maskOffset = 4L + countOffset
 		val maskLayout = LAYOUT.withName("mask")
@@ -1381,6 +1535,10 @@ actual value class WGPUOrigin3D(actual override val handler: NativeAddress) : CS
 @JvmInline
 actual value class WGPUPipelineLayoutDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUPipelineLayoutDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -1398,11 +1556,14 @@ actual value class WGPUPipelineLayoutDescriptor(actual override val handler: Nat
 				.let(::WGPUPipelineLayoutDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_LONG.withName("bindGroupLayoutCount"),
 			C_POINTER.withName("bindGroupLayouts"),
 		).withName("WGPUPipelineLayoutDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val bindGroupLayoutCountOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val bindGroupLayoutCountLayout = LAYOUT.withName("bindGroupLayoutCount")
@@ -1413,6 +1574,10 @@ actual value class WGPUPipelineLayoutDescriptor(actual override val handler: Nat
 @JvmInline
 actual value class WGPUPrimitiveState(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUPrimitiveStateByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var topology: WGPUPrimitiveTopology
 		get() = getUInt(topologyLayout, topologyOffset)
 		set(newValue) = set(topologyLayout, topologyOffset, newValue)
@@ -1439,13 +1604,16 @@ actual value class WGPUPrimitiveState(actual override val handler: NativeAddress
 				.let(::WGPUPrimitiveState)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_INT.withName("topology"),
 			C_INT.withName("stripIndexFormat"),
 			C_INT.withName("frontFace"),
 			C_INT.withName("cullMode"),
 			C_INT.withName("unclippedDepth"),
 		).withName("WGPUPrimitiveState")
-		val topologyOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val topologyOffset = 8L + nextInChainOffset
 		val topologyLayout = LAYOUT.withName("topology")
 		val stripIndexFormatOffset = 4L + topologyOffset
 		val stripIndexFormatLayout = LAYOUT.withName("stripIndexFormat")
@@ -1460,6 +1628,10 @@ actual value class WGPUPrimitiveState(actual override val handler: NativeAddress
 @JvmInline
 actual value class WGPUProgrammableStageDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUProgrammableStageDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var module: WGPUShaderModule?
 		get() = get(moduleLayout, moduleOffset).let(::WGPUShaderModule)
 		set(newValue) = set(moduleLayout, moduleOffset, newValue?.handler)
@@ -1481,12 +1653,15 @@ actual value class WGPUProgrammableStageDescriptor(actual override val handler: 
 				.let(::WGPUProgrammableStageDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("module"),
 			WGPUStringView.LAYOUT.withName("entryPoint"),
 			C_LONG.withName("constantCount"),
 			C_POINTER.withName("constants"),
 		).withName("WGPUProgrammableStageDescriptor")
-		val moduleOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val moduleOffset = 8L + nextInChainOffset
 		val moduleLayout = LAYOUT.withName("module")
 		val entryPointOffset = 8L + moduleOffset
 		val entryPointLayout = LAYOUT.withName("entryPoint")
@@ -1499,6 +1674,10 @@ actual value class WGPUProgrammableStageDescriptor(actual override val handler: 
 @JvmInline
 actual value class WGPUQuerySetDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUQuerySetDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -1516,11 +1695,14 @@ actual value class WGPUQuerySetDescriptor(actual override val handler: NativeAdd
 				.let(::WGPUQuerySetDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_INT.withName("type"),
 			C_INT.withName("count"),
 		).withName("WGPUQuerySetDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val typeOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val typeLayout = LAYOUT.withName("type")
@@ -1531,6 +1713,10 @@ actual value class WGPUQuerySetDescriptor(actual override val handler: NativeAdd
 @JvmInline
 actual value class WGPUQueueDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUQueueDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -1540,15 +1726,22 @@ actual value class WGPUQueueDescriptor(actual override val handler: NativeAddres
 				.let(::WGPUQueueDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 		).withName("WGPUQueueDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 	}
 }
 @JvmInline
 actual value class WGPURenderBundleDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPURenderBundleDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -1558,15 +1751,22 @@ actual value class WGPURenderBundleDescriptor(actual override val handler: Nativ
 				.let(::WGPURenderBundleDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 		).withName("WGPURenderBundleDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 	}
 }
 @JvmInline
 actual value class WGPURenderBundleEncoderDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPURenderBundleEncoderDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -1600,6 +1800,7 @@ actual value class WGPURenderBundleEncoderDescriptor(actual override val handler
 				.let(::WGPURenderBundleEncoderDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_LONG.withName("colorFormatCount"),
 			C_POINTER.withName("colorFormats"),
@@ -1608,7 +1809,9 @@ actual value class WGPURenderBundleEncoderDescriptor(actual override val handler
 			C_INT.withName("depthReadOnly"),
 			C_INT.withName("stencilReadOnly"),
 		).withName("WGPURenderBundleEncoderDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val colorFormatCountOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val colorFormatCountLayout = LAYOUT.withName("colorFormatCount")
@@ -1627,6 +1830,10 @@ actual value class WGPURenderBundleEncoderDescriptor(actual override val handler
 @JvmInline
 actual value class WGPURenderPassColorAttachment(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPURenderPassColorAttachmentByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var view: WGPUTextureView?
 		get() = get(viewLayout, viewOffset).let(::WGPUTextureView)
 		set(newValue) = set(viewLayout, viewOffset, newValue?.handler)
@@ -1656,6 +1863,7 @@ actual value class WGPURenderPassColorAttachment(actual override val handler: Na
 				.let(::WGPURenderPassColorAttachment)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("view"),
 			C_INT.withName("depthSlice"),
 			C_POINTER.withName("resolveTarget"),
@@ -1663,7 +1871,9 @@ actual value class WGPURenderPassColorAttachment(actual override val handler: Na
 			C_INT.withName("storeOp"),
 			WGPUColor.LAYOUT.withName("clearValue"),
 		).withName("WGPURenderPassColorAttachment")
-		val viewOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val viewOffset = 8L + nextInChainOffset
 		val viewLayout = LAYOUT.withName("view")
 		val depthSliceOffset = 8L + viewOffset
 		val depthSliceLayout = LAYOUT.withName("depthSlice")
@@ -1755,6 +1965,10 @@ actual value class WGPURenderPassDepthStencilAttachment(actual override val hand
 @JvmInline
 actual value class WGPURenderPassDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPURenderPassDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -1784,6 +1998,7 @@ actual value class WGPURenderPassDescriptor(actual override val handler: NativeA
 				.let(::WGPURenderPassDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_LONG.withName("colorAttachmentCount"),
 			C_POINTER.withName("colorAttachments"),
@@ -1791,7 +2006,9 @@ actual value class WGPURenderPassDescriptor(actual override val handler: NativeA
 			C_POINTER.withName("occlusionQuerySet"),
 			C_POINTER.withName("timestampWrites"),
 		).withName("WGPURenderPassDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val colorAttachmentCountOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val colorAttachmentCountLayout = LAYOUT.withName("colorAttachmentCount")
@@ -1860,6 +2077,10 @@ actual value class WGPURenderPassTimestampWrites(actual override val handler: Na
 @JvmInline
 actual value class WGPURenderPipelineDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPURenderPipelineDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -1890,6 +2111,7 @@ actual value class WGPURenderPipelineDescriptor(actual override val handler: Nat
 				.let(::WGPURenderPipelineDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_POINTER.withName("layout"),
 			WGPUVertexState.LAYOUT.withName("vertex"),
@@ -1898,7 +2120,9 @@ actual value class WGPURenderPipelineDescriptor(actual override val handler: Nat
 			WGPUMultisampleState.LAYOUT.withName("multisample"),
 			C_POINTER.withName("fragment"),
 		).withName("WGPURenderPipelineDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val layoutOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val layoutLayout = LAYOUT.withName("layout")
@@ -1917,6 +2141,10 @@ actual value class WGPURenderPipelineDescriptor(actual override val handler: Nat
 @JvmInline
 actual value class WGPURequestAdapterOptions(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPURequestAdapterOptionsByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var compatibleSurface: WGPUSurface?
 		get() = get(compatibleSurfaceLayout, compatibleSurfaceOffset).let(::WGPUSurface)
 		set(newValue) = set(compatibleSurfaceLayout, compatibleSurfaceOffset, newValue?.handler)
@@ -1939,12 +2167,15 @@ actual value class WGPURequestAdapterOptions(actual override val handler: Native
 				.let(::WGPURequestAdapterOptions)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("compatibleSurface"),
 			C_INT.withName("powerPreference"),
 			C_INT.withName("backendType"),
 			C_INT.withName("forceFallbackAdapter"),
 		).withName("WGPURequestAdapterOptions")
-		val compatibleSurfaceOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val compatibleSurfaceOffset = 8L + nextInChainOffset
 		val compatibleSurfaceLayout = LAYOUT.withName("compatibleSurface")
 		val powerPreferenceOffset = 8L + compatibleSurfaceOffset
 		val powerPreferenceLayout = LAYOUT.withName("powerPreference")
@@ -1957,6 +2188,10 @@ actual value class WGPURequestAdapterOptions(actual override val handler: Native
 @JvmInline
 actual value class WGPURequiredLimits(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPURequiredLimitsByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val limits: WGPULimits
 		get() = get(limitsLayout, limitsOffset).let(::WGPULimits)
 
@@ -1966,15 +2201,22 @@ actual value class WGPURequiredLimits(actual override val handler: NativeAddress
 				.let(::WGPURequiredLimits)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPULimits.LAYOUT.withName("limits"),
 		).withName("WGPURequiredLimits")
-		val limitsOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val limitsOffset = 8L + nextInChainOffset
 		val limitsLayout = LAYOUT.withName("limits")
 	}
 }
 @JvmInline
 actual value class WGPUSamplerBindingLayout(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUSamplerBindingLayoutByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var type: WGPUSamplerBindingType
 		get() = getUInt(typeLayout, typeOffset)
 		set(newValue) = set(typeLayout, typeOffset, newValue)
@@ -1985,15 +2227,22 @@ actual value class WGPUSamplerBindingLayout(actual override val handler: NativeA
 				.let(::WGPUSamplerBindingLayout)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_INT.withName("type"),
 		).withName("WGPUSamplerBindingLayout")
-		val typeOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val typeOffset = 8L + nextInChainOffset
 		val typeLayout = LAYOUT.withName("type")
 	}
 }
 @JvmInline
 actual value class WGPUSamplerDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUSamplerDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -2043,6 +2292,7 @@ actual value class WGPUSamplerDescriptor(actual override val handler: NativeAddr
 				.let(::WGPUSamplerDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_INT.withName("addressModeU"),
 			C_INT.withName("addressModeV"),
@@ -2055,7 +2305,9 @@ actual value class WGPUSamplerDescriptor(actual override val handler: NativeAddr
 			C_INT.withName("compare"),
 			C_SHORT.withName("maxAnisotropy"),
 		).withName("WGPUSamplerDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val addressModeUOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val addressModeULayout = LAYOUT.withName("addressModeU")
@@ -2082,6 +2334,10 @@ actual value class WGPUSamplerDescriptor(actual override val handler: NativeAddr
 @JvmInline
 actual value class WGPUShaderModuleDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUShaderModuleDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -2091,9 +2347,12 @@ actual value class WGPUShaderModuleDescriptor(actual override val handler: Nativ
 				.let(::WGPUShaderModuleDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 		).withName("WGPUShaderModuleDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 	}
 }
@@ -2184,6 +2443,10 @@ actual value class WGPUStencilFaceState(actual override val handler: NativeAddre
 @JvmInline
 actual value class WGPUStorageTextureBindingLayout(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUStorageTextureBindingLayoutByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var access: WGPUStorageTextureAccess
 		get() = getUInt(accessLayout, accessOffset)
 		set(newValue) = set(accessLayout, accessOffset, newValue)
@@ -2202,11 +2465,14 @@ actual value class WGPUStorageTextureBindingLayout(actual override val handler: 
 				.let(::WGPUStorageTextureBindingLayout)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_INT.withName("access"),
 			C_INT.withName("format"),
 			C_INT.withName("viewDimension"),
 		).withName("WGPUStorageTextureBindingLayout")
-		val accessOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val accessOffset = 8L + nextInChainOffset
 		val accessLayout = LAYOUT.withName("access")
 		val formatOffset = 4L + accessOffset
 		val formatLayout = LAYOUT.withName("format")
@@ -2322,6 +2588,10 @@ actual value class WGPUSurfaceCapabilities(actual override val handler: NativeAd
 @JvmInline
 actual value class WGPUSurfaceConfiguration(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUSurfaceConfigurationByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var device: WGPUDevice?
 		get() = get(deviceLayout, deviceOffset).let(::WGPUDevice)
 		set(newValue) = set(deviceLayout, deviceOffset, newValue?.handler)
@@ -2364,6 +2634,7 @@ actual value class WGPUSurfaceConfiguration(actual override val handler: NativeA
 				.let(::WGPUSurfaceConfiguration)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("device"),
 			C_INT.withName("format"),
 			C_LONG.withName("usage"),
@@ -2374,7 +2645,9 @@ actual value class WGPUSurfaceConfiguration(actual override val handler: NativeA
 			C_INT.withName("alphaMode"),
 			C_INT.withName("presentMode"),
 		).withName("WGPUSurfaceConfiguration")
-		val deviceOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val deviceOffset = 8L + nextInChainOffset
 		val deviceLayout = LAYOUT.withName("device")
 		val formatOffset = 8L + deviceOffset
 		val formatLayout = LAYOUT.withName("format")
@@ -2397,6 +2670,10 @@ actual value class WGPUSurfaceConfiguration(actual override val handler: NativeA
 @JvmInline
 actual value class WGPUSurfaceDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUSurfaceDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -2406,9 +2683,12 @@ actual value class WGPUSurfaceDescriptor(actual override val handler: NativeAddr
 				.let(::WGPUSurfaceDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 		).withName("WGPUSurfaceDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 	}
 }
@@ -2583,6 +2863,10 @@ actual value class WGPUSurfaceTexture(actual override val handler: NativeAddress
 @JvmInline
 actual value class WGPUTextureBindingLayout(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUTextureBindingLayoutByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var sampleType: WGPUTextureSampleType
 		get() = getUInt(sampleTypeLayout, sampleTypeOffset)
 		set(newValue) = set(sampleTypeLayout, sampleTypeOffset, newValue)
@@ -2601,11 +2885,14 @@ actual value class WGPUTextureBindingLayout(actual override val handler: NativeA
 				.let(::WGPUTextureBindingLayout)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_INT.withName("sampleType"),
 			C_INT.withName("viewDimension"),
 			C_INT.withName("multisampled"),
 		).withName("WGPUTextureBindingLayout")
-		val sampleTypeOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val sampleTypeOffset = 8L + nextInChainOffset
 		val sampleTypeLayout = LAYOUT.withName("sampleType")
 		val viewDimensionOffset = 4L + sampleTypeOffset
 		val viewDimensionLayout = LAYOUT.withName("viewDimension")
@@ -2616,6 +2903,10 @@ actual value class WGPUTextureBindingLayout(actual override val handler: NativeA
 @JvmInline
 actual value class WGPUTextureDataLayout(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUTextureDataLayoutByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var offset: ULong
 		get() = getULong(offsetLayout, offsetOffset)
 		set(newValue) = set(offsetLayout, offsetOffset, newValue)
@@ -2634,11 +2925,14 @@ actual value class WGPUTextureDataLayout(actual override val handler: NativeAddr
 				.let(::WGPUTextureDataLayout)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_LONG.withName("offset"),
 			C_INT.withName("bytesPerRow"),
 			C_INT.withName("rowsPerImage"),
 		).withName("WGPUTextureDataLayout")
-		val offsetOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val offsetOffset = 8L + nextInChainOffset
 		val offsetLayout = LAYOUT.withName("offset")
 		val bytesPerRowOffset = 8L + offsetOffset
 		val bytesPerRowLayout = LAYOUT.withName("bytesPerRow")
@@ -2649,6 +2943,10 @@ actual value class WGPUTextureDataLayout(actual override val handler: NativeAddr
 @JvmInline
 actual value class WGPUTextureDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUTextureDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -2689,6 +2987,7 @@ actual value class WGPUTextureDescriptor(actual override val handler: NativeAddr
 				.let(::WGPUTextureDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_LONG.withName("usage"),
 			C_INT.withName("dimension"),
@@ -2699,7 +2998,9 @@ actual value class WGPUTextureDescriptor(actual override val handler: NativeAddr
 			C_LONG.withName("viewFormatCount"),
 			C_POINTER.withName("viewFormats"),
 		).withName("WGPUTextureDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val usageOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val usageLayout = LAYOUT.withName("usage")
@@ -2722,6 +3023,10 @@ actual value class WGPUTextureDescriptor(actual override val handler: NativeAddr
 @JvmInline
 actual value class WGPUTextureViewDescriptor(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUTextureViewDescriptorByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val label: WGPUStringView
 		get() = get(labelLayout, labelOffset).let(::WGPUStringView)
 
@@ -2763,6 +3068,7 @@ actual value class WGPUTextureViewDescriptor(actual override val handler: Native
 				.let(::WGPUTextureViewDescriptor)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 			C_INT.withName("format"),
 			C_INT.withName("dimension"),
@@ -2773,7 +3079,9 @@ actual value class WGPUTextureViewDescriptor(actual override val handler: Native
 			C_INT.withName("aspect"),
 			C_LONG.withName("usage"),
 		).withName("WGPUTextureViewDescriptor")
-		val labelOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val labelOffset = 8L + nextInChainOffset
 		val labelLayout = LAYOUT.withName("label")
 		val formatOffset = LAYOUT.withName("label").byteSize() + labelOffset
 		val formatLayout = LAYOUT.withName("format")
@@ -2869,6 +3177,10 @@ actual value class WGPUVertexBufferLayout(actual override val handler: NativeAdd
 @JvmInline
 actual value class WGPUVertexState(actual override val handler: NativeAddress) : CStructure {
 	internal fun toCValue() = WGPUVertexStateByValue(handler.pointer.toAddress())
+	actual var nextInChain: WGPUChainedStruct?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var module: WGPUShaderModule?
 		get() = get(moduleLayout, moduleOffset).let(::WGPUShaderModule)
 		set(newValue) = set(moduleLayout, moduleOffset, newValue?.handler)
@@ -2898,6 +3210,7 @@ actual value class WGPUVertexState(actual override val handler: NativeAddress) :
 				.let(::WGPUVertexState)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_POINTER.withName("module"),
 			WGPUStringView.LAYOUT.withName("entryPoint"),
 			C_LONG.withName("constantCount"),
@@ -2905,7 +3218,9 @@ actual value class WGPUVertexState(actual override val handler: NativeAddress) :
 			C_LONG.withName("bufferCount"),
 			C_POINTER.withName("buffers"),
 		).withName("WGPUVertexState")
-		val moduleOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+		val moduleOffset = 8L + nextInChainOffset
 		val moduleLayout = LAYOUT.withName("module")
 		val entryPointOffset = 8L + moduleOffset
 		val entryPointLayout = LAYOUT.withName("entryPoint")
@@ -3409,35 +3724,39 @@ internal class WGPUAdapterInfoByValue(handler: Long) : com.sun.jna.Structure(com
 	override fun getFieldOrder() = listOf("vendor", "architecture", "device", "description", "backendType", "adapterType", "vendorID", "deviceID")
 }
 internal class WGPUBindGroupDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUBindGroupDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var layout: com.sun.jna.Pointer? = null
 	@JvmField var entryCount: Long = 0L
 	@JvmField var entries: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("label", "layout", "entryCount", "entries")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "layout", "entryCount", "entries")
 }
 internal class WGPUBindGroupEntryByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var binding: Int = 0
 	@JvmField var buffer: com.sun.jna.Pointer? = null
 	@JvmField var offset: Long = 0L
 	@JvmField var size: Long = 0L
 	@JvmField var sampler: com.sun.jna.Pointer? = null
 	@JvmField var textureView: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("binding", "buffer", "offset", "size", "sampler", "textureView")
+	override fun getFieldOrder() = listOf("nextInChain", "binding", "buffer", "offset", "size", "sampler", "textureView")
 }
 internal class WGPUBindGroupLayoutDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUBindGroupLayoutDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var entryCount: Long = 0L
 	@JvmField var entries: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("label", "entryCount", "entries")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "entryCount", "entries")
 }
 internal class WGPUBindGroupLayoutEntryByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var binding: Int = 0
 	@JvmField var visibility: Long = 0L
 	@JvmField val buffer: WGPUBufferBindingLayoutByValue = WGPUBufferBindingLayoutByValue(WGPUBindGroupLayoutEntry(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField val sampler: WGPUSamplerBindingLayoutByValue = WGPUSamplerBindingLayoutByValue(WGPUBindGroupLayoutEntry(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField val texture: WGPUTextureBindingLayoutByValue = WGPUTextureBindingLayoutByValue(WGPUBindGroupLayoutEntry(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField val storageTexture: WGPUStorageTextureBindingLayoutByValue = WGPUStorageTextureBindingLayoutByValue(WGPUBindGroupLayoutEntry(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
-	override fun getFieldOrder() = listOf("binding", "visibility", "buffer", "sampler", "texture", "storageTexture")
+	override fun getFieldOrder() = listOf("nextInChain", "binding", "visibility", "buffer", "sampler", "texture", "storageTexture")
 }
 internal class WGPUBlendComponentByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var operation: com.sun.jna.Pointer? = null
@@ -3451,17 +3770,19 @@ internal class WGPUBlendStateByValue(handler: Long) : com.sun.jna.Structure(com.
 	override fun getFieldOrder() = listOf("color", "alpha")
 }
 internal class WGPUBufferBindingLayoutByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var type: com.sun.jna.Pointer? = null
 	@JvmField var hasDynamicOffset: Int = 0
 	@JvmField var minBindingSize: Long = 0L
-	override fun getFieldOrder() = listOf("type", "hasDynamicOffset", "minBindingSize")
+	override fun getFieldOrder() = listOf("nextInChain", "type", "hasDynamicOffset", "minBindingSize")
 }
 internal class WGPUBufferDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUBufferDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var usage: Long = 0L
 	@JvmField var size: Long = 0L
 	@JvmField var mappedAtCreation: Int = 0
-	override fun getFieldOrder() = listOf("label", "usage", "size", "mappedAtCreation")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "usage", "size", "mappedAtCreation")
 }
 internal class WGPUColorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var r: Double = 0.0
@@ -3471,25 +3792,30 @@ internal class WGPUColorByValue(handler: Long) : com.sun.jna.Structure(com.sun.j
 	override fun getFieldOrder() = listOf("r", "g", "b", "a")
 }
 internal class WGPUColorTargetStateByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var format: com.sun.jna.Pointer? = null
 	@JvmField var blend: com.sun.jna.Pointer? = null
 	@JvmField var writeMask: Long = 0L
-	override fun getFieldOrder() = listOf("format", "blend", "writeMask")
+	override fun getFieldOrder() = listOf("nextInChain", "format", "blend", "writeMask")
 }
 internal class WGPUCommandBufferDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUCommandBufferDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
-	override fun getFieldOrder() = listOf("label")
+	override fun getFieldOrder() = listOf("nextInChain", "label")
 }
 internal class WGPUCommandEncoderDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUCommandEncoderDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
-	override fun getFieldOrder() = listOf("label")
+	override fun getFieldOrder() = listOf("nextInChain", "label")
 }
 internal class WGPUCompilationInfoByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var messageCount: Long = 0L
 	@JvmField var messages: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("messageCount", "messages")
+	override fun getFieldOrder() = listOf("nextInChain", "messageCount", "messages")
 }
 internal class WGPUCompilationMessageByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val message: WGPUStringViewByValue = WGPUStringViewByValue(WGPUCompilationMessage(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var type: com.sun.jna.Pointer? = null
 	@JvmField var lineNum: Long = 0L
@@ -3499,12 +3825,13 @@ internal class WGPUCompilationMessageByValue(handler: Long) : com.sun.jna.Struct
 	@JvmField var utf16LinePos: Long = 0L
 	@JvmField var utf16Offset: Long = 0L
 	@JvmField var utf16Length: Long = 0L
-	override fun getFieldOrder() = listOf("message", "type", "lineNum", "linePos", "offset", "length", "utf16LinePos", "utf16Offset", "utf16Length")
+	override fun getFieldOrder() = listOf("nextInChain", "message", "type", "lineNum", "linePos", "offset", "length", "utf16LinePos", "utf16Offset", "utf16Length")
 }
 internal class WGPUComputePassDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUComputePassDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var timestampWrites: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("label", "timestampWrites")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "timestampWrites")
 }
 internal class WGPUComputePassTimestampWritesByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var querySet: com.sun.jna.Pointer? = null
@@ -3513,17 +3840,20 @@ internal class WGPUComputePassTimestampWritesByValue(handler: Long) : com.sun.jn
 	override fun getFieldOrder() = listOf("querySet", "beginningOfPassWriteIndex", "endOfPassWriteIndex")
 }
 internal class WGPUComputePipelineDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUComputePipelineDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var layout: com.sun.jna.Pointer? = null
 	@JvmField val compute: WGPUProgrammableStageDescriptorByValue = WGPUProgrammableStageDescriptorByValue(WGPUComputePipelineDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
-	override fun getFieldOrder() = listOf("label", "layout", "compute")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "layout", "compute")
 }
 internal class WGPUConstantEntryByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val key: WGPUStringViewByValue = WGPUStringViewByValue(WGPUConstantEntry(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var value: Double = 0.0
-	override fun getFieldOrder() = listOf("key", "value")
+	override fun getFieldOrder() = listOf("nextInChain", "key", "value")
 }
 internal class WGPUDepthStencilStateByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var format: com.sun.jna.Pointer? = null
 	@JvmField var depthWriteEnabled: com.sun.jna.Pointer? = null
 	@JvmField var depthCompare: com.sun.jna.Pointer? = null
@@ -3534,9 +3864,10 @@ internal class WGPUDepthStencilStateByValue(handler: Long) : com.sun.jna.Structu
 	@JvmField var depthBias: Int = 0
 	@JvmField var depthBiasSlopeScale: Float = 0f
 	@JvmField var depthBiasClamp: Float = 0f
-	override fun getFieldOrder() = listOf("format", "depthWriteEnabled", "depthCompare", "stencilFront", "stencilBack", "stencilReadMask", "stencilWriteMask", "depthBias", "depthBiasSlopeScale", "depthBiasClamp")
+	override fun getFieldOrder() = listOf("nextInChain", "format", "depthWriteEnabled", "depthCompare", "stencilFront", "stencilBack", "stencilReadMask", "stencilWriteMask", "depthBias", "depthBiasSlopeScale", "depthBiasClamp")
 }
 internal class WGPUDeviceDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUDeviceDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var requiredFeatureCount: Long = 0L
 	@JvmField var requiredFeatures: com.sun.jna.Pointer? = null
@@ -3544,7 +3875,7 @@ internal class WGPUDeviceDescriptorByValue(handler: Long) : com.sun.jna.Structur
 	@JvmField val defaultQueue: WGPUQueueDescriptorByValue = WGPUQueueDescriptorByValue(WGPUDeviceDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfoByValue = WGPUDeviceLostCallbackInfoByValue(WGPUDeviceDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfoByValue = WGPUUncapturedErrorCallbackInfoByValue(WGPUDeviceDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
-	override fun getFieldOrder() = listOf("label", "requiredFeatureCount", "requiredFeatures", "requiredLimits", "defaultQueue", "deviceLostCallbackInfo", "uncapturedErrorCallbackInfo")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "requiredFeatureCount", "requiredFeatures", "requiredLimits", "defaultQueue", "deviceLostCallbackInfo", "uncapturedErrorCallbackInfo")
 }
 internal class WGPUExtent3DByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var width: Int = 0
@@ -3553,13 +3884,14 @@ internal class WGPUExtent3DByValue(handler: Long) : com.sun.jna.Structure(com.su
 	override fun getFieldOrder() = listOf("width", "height", "depthOrArrayLayers")
 }
 internal class WGPUFragmentStateByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var module: com.sun.jna.Pointer? = null
 	@JvmField val entryPoint: WGPUStringViewByValue = WGPUStringViewByValue(WGPUFragmentState(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var constantCount: Long = 0L
 	@JvmField var constants: com.sun.jna.Pointer? = null
 	@JvmField var targetCount: Long = 0L
 	@JvmField var targets: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("module", "entryPoint", "constantCount", "constants", "targetCount", "targets")
+	override fun getFieldOrder() = listOf("nextInChain", "module", "entryPoint", "constantCount", "constants", "targetCount", "targets")
 }
 internal class WGPUFutureByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var id: Long = 0L
@@ -3571,25 +3903,29 @@ internal class WGPUFutureWaitInfoByValue(handler: Long) : com.sun.jna.Structure(
 	override fun getFieldOrder() = listOf("future", "completed")
 }
 internal class WGPUImageCopyBufferByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val layout: WGPUTextureDataLayoutByValue = WGPUTextureDataLayoutByValue(WGPUImageCopyBuffer(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var buffer: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("layout", "buffer")
+	override fun getFieldOrder() = listOf("nextInChain", "layout", "buffer")
 }
 internal class WGPUImageCopyTextureByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var texture: com.sun.jna.Pointer? = null
 	@JvmField var mipLevel: Int = 0
 	@JvmField val origin: WGPUOrigin3DByValue = WGPUOrigin3DByValue(WGPUImageCopyTexture(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var aspect: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("texture", "mipLevel", "origin", "aspect")
+	override fun getFieldOrder() = listOf("nextInChain", "texture", "mipLevel", "origin", "aspect")
 }
 internal class WGPUInstanceDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val features: WGPUInstanceFeaturesByValue = WGPUInstanceFeaturesByValue(WGPUInstanceDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
-	override fun getFieldOrder() = listOf("features")
+	override fun getFieldOrder() = listOf("nextInChain", "features")
 }
 internal class WGPUInstanceFeaturesByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var timedWaitAnyEnable: Int = 0
 	@JvmField var timedWaitAnyMaxCount: Long = 0L
-	override fun getFieldOrder() = listOf("timedWaitAnyEnable", "timedWaitAnyMaxCount")
+	override fun getFieldOrder() = listOf("nextInChain", "timedWaitAnyEnable", "timedWaitAnyMaxCount")
 }
 internal class WGPULimitsByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var maxTextureDimension1D: Int = 0
@@ -3626,10 +3962,11 @@ internal class WGPULimitsByValue(handler: Long) : com.sun.jna.Structure(com.sun.
 	override fun getFieldOrder() = listOf("maxTextureDimension1D", "maxTextureDimension2D", "maxTextureDimension3D", "maxTextureArrayLayers", "maxBindGroups", "maxBindGroupsPlusVertexBuffers", "maxBindingsPerBindGroup", "maxDynamicUniformBuffersPerPipelineLayout", "maxDynamicStorageBuffersPerPipelineLayout", "maxSampledTexturesPerShaderStage", "maxSamplersPerShaderStage", "maxStorageBuffersPerShaderStage", "maxStorageTexturesPerShaderStage", "maxUniformBuffersPerShaderStage", "maxUniformBufferBindingSize", "maxStorageBufferBindingSize", "minUniformBufferOffsetAlignment", "minStorageBufferOffsetAlignment", "maxVertexBuffers", "maxBufferSize", "maxVertexAttributes", "maxVertexBufferArrayStride", "maxInterStageShaderVariables", "maxColorAttachments", "maxColorAttachmentBytesPerSample", "maxComputeWorkgroupStorageSize", "maxComputeInvocationsPerWorkgroup", "maxComputeWorkgroupSizeX", "maxComputeWorkgroupSizeY", "maxComputeWorkgroupSizeZ", "maxComputeWorkgroupsPerDimension")
 }
 internal class WGPUMultisampleStateByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var count: Int = 0
 	@JvmField var mask: Int = 0
 	@JvmField var alphaToCoverageEnabled: Int = 0
-	override fun getFieldOrder() = listOf("count", "mask", "alphaToCoverageEnabled")
+	override fun getFieldOrder() = listOf("nextInChain", "count", "mask", "alphaToCoverageEnabled")
 }
 internal class WGPUOrigin3DByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var x: Int = 0
@@ -3638,41 +3975,48 @@ internal class WGPUOrigin3DByValue(handler: Long) : com.sun.jna.Structure(com.su
 	override fun getFieldOrder() = listOf("x", "y", "z")
 }
 internal class WGPUPipelineLayoutDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUPipelineLayoutDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var bindGroupLayoutCount: Long = 0L
 	@JvmField var bindGroupLayouts: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("label", "bindGroupLayoutCount", "bindGroupLayouts")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "bindGroupLayoutCount", "bindGroupLayouts")
 }
 internal class WGPUPrimitiveStateByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var topology: com.sun.jna.Pointer? = null
 	@JvmField var stripIndexFormat: com.sun.jna.Pointer? = null
 	@JvmField var frontFace: com.sun.jna.Pointer? = null
 	@JvmField var cullMode: com.sun.jna.Pointer? = null
 	@JvmField var unclippedDepth: Int = 0
-	override fun getFieldOrder() = listOf("topology", "stripIndexFormat", "frontFace", "cullMode", "unclippedDepth")
+	override fun getFieldOrder() = listOf("nextInChain", "topology", "stripIndexFormat", "frontFace", "cullMode", "unclippedDepth")
 }
 internal class WGPUProgrammableStageDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var module: com.sun.jna.Pointer? = null
 	@JvmField val entryPoint: WGPUStringViewByValue = WGPUStringViewByValue(WGPUProgrammableStageDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var constantCount: Long = 0L
 	@JvmField var constants: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("module", "entryPoint", "constantCount", "constants")
+	override fun getFieldOrder() = listOf("nextInChain", "module", "entryPoint", "constantCount", "constants")
 }
 internal class WGPUQuerySetDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUQuerySetDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var type: com.sun.jna.Pointer? = null
 	@JvmField var count: Int = 0
-	override fun getFieldOrder() = listOf("label", "type", "count")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "type", "count")
 }
 internal class WGPUQueueDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUQueueDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
-	override fun getFieldOrder() = listOf("label")
+	override fun getFieldOrder() = listOf("nextInChain", "label")
 }
 internal class WGPURenderBundleDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPURenderBundleDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
-	override fun getFieldOrder() = listOf("label")
+	override fun getFieldOrder() = listOf("nextInChain", "label")
 }
 internal class WGPURenderBundleEncoderDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPURenderBundleEncoderDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var colorFormatCount: Long = 0L
 	@JvmField var colorFormats: com.sun.jna.Pointer? = null
@@ -3680,16 +4024,17 @@ internal class WGPURenderBundleEncoderDescriptorByValue(handler: Long) : com.sun
 	@JvmField var sampleCount: Int = 0
 	@JvmField var depthReadOnly: Int = 0
 	@JvmField var stencilReadOnly: Int = 0
-	override fun getFieldOrder() = listOf("label", "colorFormatCount", "colorFormats", "depthStencilFormat", "sampleCount", "depthReadOnly", "stencilReadOnly")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "colorFormatCount", "colorFormats", "depthStencilFormat", "sampleCount", "depthReadOnly", "stencilReadOnly")
 }
 internal class WGPURenderPassColorAttachmentByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var view: com.sun.jna.Pointer? = null
 	@JvmField var depthSlice: Int = 0
 	@JvmField var resolveTarget: com.sun.jna.Pointer? = null
 	@JvmField var loadOp: com.sun.jna.Pointer? = null
 	@JvmField var storeOp: com.sun.jna.Pointer? = null
 	@JvmField val clearValue: WGPUColorByValue = WGPUColorByValue(WGPURenderPassColorAttachment(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
-	override fun getFieldOrder() = listOf("view", "depthSlice", "resolveTarget", "loadOp", "storeOp", "clearValue")
+	override fun getFieldOrder() = listOf("nextInChain", "view", "depthSlice", "resolveTarget", "loadOp", "storeOp", "clearValue")
 }
 internal class WGPURenderPassDepthStencilAttachmentByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var view: com.sun.jna.Pointer? = null
@@ -3704,13 +4049,14 @@ internal class WGPURenderPassDepthStencilAttachmentByValue(handler: Long) : com.
 	override fun getFieldOrder() = listOf("view", "depthLoadOp", "depthStoreOp", "depthClearValue", "depthReadOnly", "stencilLoadOp", "stencilStoreOp", "stencilClearValue", "stencilReadOnly")
 }
 internal class WGPURenderPassDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPURenderPassDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var colorAttachmentCount: Long = 0L
 	@JvmField var colorAttachments: com.sun.jna.Pointer? = null
 	@JvmField var depthStencilAttachment: com.sun.jna.Pointer? = null
 	@JvmField var occlusionQuerySet: com.sun.jna.Pointer? = null
 	@JvmField var timestampWrites: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("label", "colorAttachmentCount", "colorAttachments", "depthStencilAttachment", "occlusionQuerySet", "timestampWrites")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "colorAttachmentCount", "colorAttachments", "depthStencilAttachment", "occlusionQuerySet", "timestampWrites")
 }
 internal class WGPURenderPassMaxDrawCountByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var maxDrawCount: Long = 0L
@@ -3723,6 +4069,7 @@ internal class WGPURenderPassTimestampWritesByValue(handler: Long) : com.sun.jna
 	override fun getFieldOrder() = listOf("querySet", "beginningOfPassWriteIndex", "endOfPassWriteIndex")
 }
 internal class WGPURenderPipelineDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPURenderPipelineDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var layout: com.sun.jna.Pointer? = null
 	@JvmField val vertex: WGPUVertexStateByValue = WGPUVertexStateByValue(WGPURenderPipelineDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
@@ -3730,24 +4077,28 @@ internal class WGPURenderPipelineDescriptorByValue(handler: Long) : com.sun.jna.
 	@JvmField var depthStencil: com.sun.jna.Pointer? = null
 	@JvmField val multisample: WGPUMultisampleStateByValue = WGPUMultisampleStateByValue(WGPURenderPipelineDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var fragment: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("label", "layout", "vertex", "primitive", "depthStencil", "multisample", "fragment")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "layout", "vertex", "primitive", "depthStencil", "multisample", "fragment")
 }
 internal class WGPURequestAdapterOptionsByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var compatibleSurface: com.sun.jna.Pointer? = null
 	@JvmField var powerPreference: com.sun.jna.Pointer? = null
 	@JvmField var backendType: com.sun.jna.Pointer? = null
 	@JvmField var forceFallbackAdapter: Int = 0
-	override fun getFieldOrder() = listOf("compatibleSurface", "powerPreference", "backendType", "forceFallbackAdapter")
+	override fun getFieldOrder() = listOf("nextInChain", "compatibleSurface", "powerPreference", "backendType", "forceFallbackAdapter")
 }
 internal class WGPURequiredLimitsByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val limits: WGPULimitsByValue = WGPULimitsByValue(WGPURequiredLimits(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
-	override fun getFieldOrder() = listOf("limits")
+	override fun getFieldOrder() = listOf("nextInChain", "limits")
 }
 internal class WGPUSamplerBindingLayoutByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var type: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("type")
+	override fun getFieldOrder() = listOf("nextInChain", "type")
 }
 internal class WGPUSamplerDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUSamplerDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var addressModeU: com.sun.jna.Pointer? = null
 	@JvmField var addressModeV: com.sun.jna.Pointer? = null
@@ -3759,11 +4110,12 @@ internal class WGPUSamplerDescriptorByValue(handler: Long) : com.sun.jna.Structu
 	@JvmField var lodMaxClamp: Float = 0f
 	@JvmField var compare: com.sun.jna.Pointer? = null
 	@JvmField var maxAnisotropy: Short = 0
-	override fun getFieldOrder() = listOf("label", "addressModeU", "addressModeV", "addressModeW", "magFilter", "minFilter", "mipmapFilter", "lodMinClamp", "lodMaxClamp", "compare", "maxAnisotropy")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "addressModeU", "addressModeV", "addressModeW", "magFilter", "minFilter", "mipmapFilter", "lodMinClamp", "lodMaxClamp", "compare", "maxAnisotropy")
 }
 internal class WGPUShaderModuleDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUShaderModuleDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
-	override fun getFieldOrder() = listOf("label")
+	override fun getFieldOrder() = listOf("nextInChain", "label")
 }
 internal class WGPUShaderSourceSPIRVByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var codeSize: Int = 0
@@ -3782,10 +4134,11 @@ internal class WGPUStencilFaceStateByValue(handler: Long) : com.sun.jna.Structur
 	override fun getFieldOrder() = listOf("compare", "failOp", "depthFailOp", "passOp")
 }
 internal class WGPUStorageTextureBindingLayoutByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var access: com.sun.jna.Pointer? = null
 	@JvmField var format: com.sun.jna.Pointer? = null
 	@JvmField var viewDimension: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("access", "format", "viewDimension")
+	override fun getFieldOrder() = listOf("nextInChain", "access", "format", "viewDimension")
 }
 internal class WGPUSupportedFeaturesByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var featureCount: Long = 0L
@@ -3807,6 +4160,7 @@ internal class WGPUSurfaceCapabilitiesByValue(handler: Long) : com.sun.jna.Struc
 	override fun getFieldOrder() = listOf("usages", "formatCount", "formats", "presentModeCount", "presentModes", "alphaModeCount", "alphaModes")
 }
 internal class WGPUSurfaceConfigurationByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var device: com.sun.jna.Pointer? = null
 	@JvmField var format: com.sun.jna.Pointer? = null
 	@JvmField var usage: Long = 0L
@@ -3816,11 +4170,12 @@ internal class WGPUSurfaceConfigurationByValue(handler: Long) : com.sun.jna.Stru
 	@JvmField var viewFormats: com.sun.jna.Pointer? = null
 	@JvmField var alphaMode: com.sun.jna.Pointer? = null
 	@JvmField var presentMode: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("device", "format", "usage", "width", "height", "viewFormatCount", "viewFormats", "alphaMode", "presentMode")
+	override fun getFieldOrder() = listOf("nextInChain", "device", "format", "usage", "width", "height", "viewFormatCount", "viewFormats", "alphaMode", "presentMode")
 }
 internal class WGPUSurfaceDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUSurfaceDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
-	override fun getFieldOrder() = listOf("label")
+	override fun getFieldOrder() = listOf("nextInChain", "label")
 }
 internal class WGPUSurfaceSourceAndroidNativeWindowByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var window: com.sun.jna.Pointer? = null
@@ -3856,18 +4211,21 @@ internal class WGPUSurfaceTextureByValue(handler: Long) : com.sun.jna.Structure(
 	override fun getFieldOrder() = listOf("texture", "status")
 }
 internal class WGPUTextureBindingLayoutByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var sampleType: com.sun.jna.Pointer? = null
 	@JvmField var viewDimension: com.sun.jna.Pointer? = null
 	@JvmField var multisampled: Int = 0
-	override fun getFieldOrder() = listOf("sampleType", "viewDimension", "multisampled")
+	override fun getFieldOrder() = listOf("nextInChain", "sampleType", "viewDimension", "multisampled")
 }
 internal class WGPUTextureDataLayoutByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var offset: Long = 0L
 	@JvmField var bytesPerRow: Int = 0
 	@JvmField var rowsPerImage: Int = 0
-	override fun getFieldOrder() = listOf("offset", "bytesPerRow", "rowsPerImage")
+	override fun getFieldOrder() = listOf("nextInChain", "offset", "bytesPerRow", "rowsPerImage")
 }
 internal class WGPUTextureDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUTextureDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var usage: Long = 0L
 	@JvmField var dimension: com.sun.jna.Pointer? = null
@@ -3877,9 +4235,10 @@ internal class WGPUTextureDescriptorByValue(handler: Long) : com.sun.jna.Structu
 	@JvmField var sampleCount: Int = 0
 	@JvmField var viewFormatCount: Long = 0L
 	@JvmField var viewFormats: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("label", "usage", "dimension", "size", "format", "mipLevelCount", "sampleCount", "viewFormatCount", "viewFormats")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "usage", "dimension", "size", "format", "mipLevelCount", "sampleCount", "viewFormatCount", "viewFormats")
 }
 internal class WGPUTextureViewDescriptorByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField val label: WGPUStringViewByValue = WGPUStringViewByValue(WGPUTextureViewDescriptor(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var format: com.sun.jna.Pointer? = null
 	@JvmField var dimension: com.sun.jna.Pointer? = null
@@ -3889,7 +4248,7 @@ internal class WGPUTextureViewDescriptorByValue(handler: Long) : com.sun.jna.Str
 	@JvmField var arrayLayerCount: Int = 0
 	@JvmField var aspect: com.sun.jna.Pointer? = null
 	@JvmField var usage: Long = 0L
-	override fun getFieldOrder() = listOf("label", "format", "dimension", "baseMipLevel", "mipLevelCount", "baseArrayLayer", "arrayLayerCount", "aspect", "usage")
+	override fun getFieldOrder() = listOf("nextInChain", "label", "format", "dimension", "baseMipLevel", "mipLevelCount", "baseArrayLayer", "arrayLayerCount", "aspect", "usage")
 }
 internal class WGPUVertexAttributeByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var format: com.sun.jna.Pointer? = null
@@ -3905,13 +4264,14 @@ internal class WGPUVertexBufferLayoutByValue(handler: Long) : com.sun.jna.Struct
 	override fun getFieldOrder() = listOf("arrayStride", "stepMode", "attributeCount", "attributes")
 }
 internal class WGPUVertexStateByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
 	@JvmField var module: com.sun.jna.Pointer? = null
 	@JvmField val entryPoint: WGPUStringViewByValue = WGPUStringViewByValue(WGPUVertexState(handler.let{com.sun.jna.Pointer(it)}.let(::NativeAddress)).handler.pointer.toAddress())
 	@JvmField var constantCount: Long = 0L
 	@JvmField var constants: com.sun.jna.Pointer? = null
 	@JvmField var bufferCount: Long = 0L
 	@JvmField var buffers: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("module", "entryPoint", "constantCount", "constants", "bufferCount", "buffers")
+	override fun getFieldOrder() = listOf("nextInChain", "module", "entryPoint", "constantCount", "constants", "bufferCount", "buffers")
 }
 internal class WGPUChainedStructByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
 	@JvmField var next: com.sun.jna.Pointer? = null

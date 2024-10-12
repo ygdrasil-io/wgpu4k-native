@@ -73,7 +73,7 @@ fun main() {
     jvmNativeFunctionsMainFile.generateJvmNativeFunctions(webgpuCModel.functions)
 
     functionsCommonMainFile.generateCommonFunctions(webgpuCModel.functions)
-    functionsNativeMainFile.generateNativeFunctions(webgpuCModel.functions)
+    //functionsNativeMainFile.generateNativeFunctions(webgpuCModel.functions)
     functionsJvmMainFile.generateJvmFunctions(webgpuCModel.functions)
 
     structuresCommonMainFile.generateCommonStructures(webgpuCModel.structures)
