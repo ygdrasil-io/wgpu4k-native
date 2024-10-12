@@ -18,6 +18,10 @@ import java.lang.foreign.MemoryLayout.structLayout
 
 @JvmInline
 actual value class WGPUAdapterInfo(actual override val handler: NativeAddress) : CStructure {
+	actual var nextInChain: WGPUChainedStructOut?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStructOut)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val vendor: WGPUStringView
 		get() = get(vendorLayout, vendorOffset).let(::WGPUStringView)
 
@@ -52,6 +56,7 @@ actual value class WGPUAdapterInfo(actual override val handler: NativeAddress) :
 				.let(::WGPUAdapterInfo)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("vendor"),
 			WGPUStringView.LAYOUT.withName("architecture"),
 			WGPUStringView.LAYOUT.withName("device"),
@@ -62,7 +67,10 @@ actual value class WGPUAdapterInfo(actual override val handler: NativeAddress) :
 			C_INT.withName("deviceID")
 		).withName("WGPUAdapterInfo")
 
-		val vendorOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+
+		val vendorOffset = 8L + nextInChainOffset
 		val vendorLayout = LAYOUT.withName("vendor")
 
 		val architectureOffset = LAYOUT.withName("vendor").byteSize() + vendorOffset
@@ -2822,6 +2830,10 @@ actual value class WGPUStorageTextureBindingLayout(actual override val handler: 
 
 @JvmInline
 actual value class WGPUSupportedFeatures(actual override val handler: NativeAddress) : CStructure {
+	actual var nextInChain: WGPUChainedStructOut?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStructOut)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var featureCount: ULong
 		get() = getULong(featureCountLayout, featureCountOffset)
 		set(newValue) = set(featureCountLayout, featureCountOffset, newValue)
@@ -2836,11 +2848,15 @@ actual value class WGPUSupportedFeatures(actual override val handler: NativeAddr
 				.let(::WGPUSupportedFeatures)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_LONG.withName("featureCount"),
 			C_POINTER.withName("features")
 		).withName("WGPUSupportedFeatures")
 
-		val featureCountOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+
+		val featureCountOffset = 8L + nextInChainOffset
 		val featureCountLayout = LAYOUT.withName("featureCount")
 
 		val featuresOffset = 8L + featureCountOffset
@@ -2851,6 +2867,10 @@ actual value class WGPUSupportedFeatures(actual override val handler: NativeAddr
 
 @JvmInline
 actual value class WGPUSupportedLimits(actual override val handler: NativeAddress) : CStructure {
+	actual var nextInChain: WGPUChainedStructOut?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStructOut)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual val limits: WGPULimits
 		get() = get(limitsLayout, limitsOffset).let(::WGPULimits)
 
@@ -2860,10 +2880,14 @@ actual value class WGPUSupportedLimits(actual override val handler: NativeAddres
 				.let(::WGPUSupportedLimits)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			WGPULimits.LAYOUT.withName("limits")
 		).withName("WGPUSupportedLimits")
 
-		val limitsOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+
+		val limitsOffset = 8L + nextInChainOffset
 		val limitsLayout = LAYOUT.withName("limits")
 
 	}
@@ -2871,6 +2895,10 @@ actual value class WGPUSupportedLimits(actual override val handler: NativeAddres
 
 @JvmInline
 actual value class WGPUSurfaceCapabilities(actual override val handler: NativeAddress) : CStructure {
+	actual var nextInChain: WGPUChainedStructOut?
+		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStructOut)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+
 	actual var usages: ULong
 		get() = getULong(usagesLayout, usagesOffset)
 		set(newValue) = set(usagesLayout, usagesOffset, newValue)
@@ -2905,6 +2933,7 @@ actual value class WGPUSurfaceCapabilities(actual override val handler: NativeAd
 				.let(::WGPUSurfaceCapabilities)
 		}
 		internal val LAYOUT = structLayout(
+			C_POINTER.withName("nextInChain"),
 			C_LONG.withName("usages"),
 			C_LONG.withName("formatCount"),
 			C_POINTER.withName("formats"),
@@ -2914,7 +2943,10 @@ actual value class WGPUSurfaceCapabilities(actual override val handler: NativeAd
 			C_POINTER.withName("alphaModes")
 		).withName("WGPUSurfaceCapabilities")
 
-		val usagesOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = LAYOUT.withName("nextInChain")
+
+		val usagesOffset = 8L + nextInChainOffset
 		val usagesLayout = LAYOUT.withName("usages")
 
 		val formatCountOffset = 8L + usagesOffset

@@ -8,6 +8,7 @@ import ffi.ArrayHolder
 import ffi.MemoryAllocator
 
 expect value class WGPUAdapterInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStructOut?
 	val vendor: WGPUStringView
 	val architecture: WGPUStringView
 	val device: WGPUStringView
@@ -601,6 +602,7 @@ expect value class WGPUStorageTextureBindingLayout(val handler: NativeAddress) {
 }
 
 expect value class WGPUSupportedFeatures(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStructOut?
 	var featureCount: ULong
 	var features: ArrayHolder<WGPUFeatureName>?
 	companion object {
@@ -609,6 +611,7 @@ expect value class WGPUSupportedFeatures(val handler: NativeAddress) {
 }
 
 expect value class WGPUSupportedLimits(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStructOut?
 	val limits: WGPULimits
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUSupportedLimits
@@ -616,6 +619,7 @@ expect value class WGPUSupportedLimits(val handler: NativeAddress) {
 }
 
 expect value class WGPUSurfaceCapabilities(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStructOut?
 	var usages: ULong
 	var formatCount: ULong
 	var formats: ArrayHolder<WGPUTextureFormat>?

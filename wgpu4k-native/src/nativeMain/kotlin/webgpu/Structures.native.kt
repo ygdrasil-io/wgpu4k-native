@@ -18,6 +18,10 @@ import kotlinx.cinterop.CValue
 import kotlinx.cinterop.cValue
 
 actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStructOut?
+		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.nextInChain?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStructOut(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.let { it.nextInChain = newValue?.handler?.toCPointer() } } 
+
 	actual val vendor: WGPUStringView
 		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.vendor?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUAdapterInfo is null")
 
@@ -58,6 +62,7 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 			architecture.adapt(this@WGPUAdapterInfo.architecture)
 			device.adapt(this@WGPUAdapterInfo.device)
 			description.adapt(this@WGPUAdapterInfo.description)
+			nextInChain = this@WGPUAdapterInfo.nextInChain?.handler?.toCPointer()
 			backendType = this@WGPUAdapterInfo.backendType
 			adapterType = this@WGPUAdapterInfo.adapterType
 			vendorID = this@WGPUAdapterInfo.vendorID
@@ -71,6 +76,7 @@ fun webgpu.native.WGPUAdapterInfo.adapt(structure: WGPUAdapterInfo) {
 	architecture.adapt(structure.architecture)
 	device.adapt(structure.device)
 	description.adapt(structure.description)
+	nextInChain = structure.nextInChain?.handler?.toCPointer()
 	backendType = structure.backendType
 	adapterType = structure.adapterType
 	vendorID = structure.vendorID
@@ -2446,6 +2452,10 @@ fun webgpu.native.WGPUStorageTextureBindingLayout.adapt(structure: WGPUStorageTe
 }
 
 actual value class WGPUSupportedFeatures(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStructOut?
+		get() = handler.toCPointer<webgpu.native.WGPUSupportedFeatures>()?.pointed?.nextInChain?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStructOut(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSupportedFeatures>()?.pointed?.let { it.nextInChain = newValue?.handler?.toCPointer() } } 
+
 	actual var featureCount: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUSupportedFeatures>()?.pointed?.featureCount ?: error("pointer of WGPUSupportedFeatures is null")
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUSupportedFeatures>()?.pointed?.let { it.featureCount = newValue } } 
@@ -2462,6 +2472,7 @@ actual value class WGPUSupportedFeatures(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUSupportedFeatures> {
 		return cValue<webgpu.native.WGPUSupportedFeatures> {
+			nextInChain = this@WGPUSupportedFeatures.nextInChain?.handler?.toCPointer()
 			featureCount = this@WGPUSupportedFeatures.featureCount
 			features = this@WGPUSupportedFeatures.features?.handler?.toCPointer()
 		}
@@ -2469,11 +2480,16 @@ actual value class WGPUSupportedFeatures(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUSupportedFeatures.adapt(structure: WGPUSupportedFeatures) {
+	nextInChain = structure.nextInChain?.handler?.toCPointer()
 	featureCount = structure.featureCount
 	features = structure.features?.handler?.toCPointer()
 }
 
 actual value class WGPUSupportedLimits(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStructOut?
+		get() = handler.toCPointer<webgpu.native.WGPUSupportedLimits>()?.pointed?.nextInChain?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStructOut(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSupportedLimits>()?.pointed?.let { it.nextInChain = newValue?.handler?.toCPointer() } } 
+
 	actual val limits: WGPULimits
 		get() = handler.toCPointer<webgpu.native.WGPUSupportedLimits>()?.pointed?.limits?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPULimits(it) } ?: error("pointer of WGPUSupportedLimits is null")
 
@@ -2486,15 +2502,21 @@ actual value class WGPUSupportedLimits(actual val handler: NativeAddress) {
 	fun toCValue(): CValue<webgpu.native.WGPUSupportedLimits> {
 		return cValue<webgpu.native.WGPUSupportedLimits> {
 			limits.adapt(this@WGPUSupportedLimits.limits)
+			nextInChain = this@WGPUSupportedLimits.nextInChain?.handler?.toCPointer()
 		}
 	}
 }
 
 fun webgpu.native.WGPUSupportedLimits.adapt(structure: WGPUSupportedLimits) {
 	limits.adapt(structure.limits)
+	nextInChain = structure.nextInChain?.handler?.toCPointer()
 }
 
 actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
+	actual var nextInChain: WGPUChainedStructOut?
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceCapabilities>()?.pointed?.nextInChain?.toLong()?.takeIf {it != 0L}?.let { WGPUChainedStructOut(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceCapabilities>()?.pointed?.let { it.nextInChain = newValue?.handler?.toCPointer() } } 
+
 	actual var usages: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUSurfaceCapabilities>()?.pointed?.usages ?: error("pointer of WGPUSurfaceCapabilities is null")
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceCapabilities>()?.pointed?.let { it.usages = newValue } } 
@@ -2531,6 +2553,7 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUSurfaceCapabilities> {
 		return cValue<webgpu.native.WGPUSurfaceCapabilities> {
+			nextInChain = this@WGPUSurfaceCapabilities.nextInChain?.handler?.toCPointer()
 			usages = this@WGPUSurfaceCapabilities.usages
 			formatCount = this@WGPUSurfaceCapabilities.formatCount
 			formats = this@WGPUSurfaceCapabilities.formats?.handler?.toCPointer()
@@ -2543,6 +2566,7 @@ actual value class WGPUSurfaceCapabilities(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUSurfaceCapabilities.adapt(structure: WGPUSurfaceCapabilities) {
+	nextInChain = structure.nextInChain?.handler?.toCPointer()
 	usages = structure.usages
 	formatCount = structure.formatCount
 	formats = structure.formats?.handler?.toCPointer()
