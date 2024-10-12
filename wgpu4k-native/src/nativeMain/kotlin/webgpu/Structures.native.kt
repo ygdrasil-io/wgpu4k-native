@@ -18,21 +18,17 @@ import kotlinx.cinterop.CValue
 import kotlinx.cinterop.cValue
 
 actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
-	actual var vendor: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.vendor?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.let { it.vendor = newValue?.handler?.toCPointer() } } 
+	actual val vendor: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.vendor?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUAdapterInfo is null")
 
-	actual var architecture: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.architecture?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.let { it.architecture = newValue?.handler?.toCPointer() } } 
+	actual val architecture: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.architecture?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUAdapterInfo is null")
 
-	actual var device: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.device?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.let { it.device = newValue?.handler?.toCPointer() } } 
+	actual val device: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.device?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUAdapterInfo is null")
 
-	actual var description: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.description?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.let { it.description = newValue?.handler?.toCPointer() } } 
+	actual val description: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.description?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUAdapterInfo is null")
 
 	actual var backendType: WGPUBackendType
 		get() = handler.toCPointer<webgpu.native.WGPUAdapterInfo>()?.pointed?.backendType ?: error("pointer of WGPUAdapterInfo is null")
@@ -58,10 +54,10 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUAdapterInfo> {
 		return cValue<webgpu.native.WGPUAdapterInfo> {
-			vendor = this@WGPUAdapterInfo.vendor?.handler?.toCPointer()
-			architecture = this@WGPUAdapterInfo.architecture?.handler?.toCPointer()
-			device = this@WGPUAdapterInfo.device?.handler?.toCPointer()
-			description = this@WGPUAdapterInfo.description?.handler?.toCPointer()
+			vendor.adapt(this@WGPUAdapterInfo.vendor)
+			architecture.adapt(this@WGPUAdapterInfo.architecture)
+			device.adapt(this@WGPUAdapterInfo.device)
+			description.adapt(this@WGPUAdapterInfo.description)
 			backendType = this@WGPUAdapterInfo.backendType
 			adapterType = this@WGPUAdapterInfo.adapterType
 			vendorID = this@WGPUAdapterInfo.vendorID
@@ -71,10 +67,10 @@ actual value class WGPUAdapterInfo(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUAdapterInfo.adapt(structure: WGPUAdapterInfo) {
-	vendor = structure.vendor?.handler?.toCPointer()
-	architecture = structure.architecture?.handler?.toCPointer()
-	device = structure.device?.handler?.toCPointer()
-	description = structure.description?.handler?.toCPointer()
+	vendor.adapt(structure.vendor)
+	architecture.adapt(structure.architecture)
+	device.adapt(structure.device)
+	description.adapt(structure.description)
 	backendType = structure.backendType
 	adapterType = structure.adapterType
 	vendorID = structure.vendorID
@@ -82,9 +78,8 @@ fun webgpu.native.WGPUAdapterInfo.adapt(structure: WGPUAdapterInfo) {
 }
 
 actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUBindGroupDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUBindGroupDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUBindGroupDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUBindGroupDescriptor is null")
 
 	actual var layout: WGPUBindGroupLayout?
 		get() = handler.toCPointer<webgpu.native.WGPUBindGroupDescriptor>()?.pointed?.layout?.toLong()?.takeIf {it != 0L}?.let { WGPUBindGroupLayout(it) }
@@ -106,7 +101,7 @@ actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUBindGroupDescriptor> {
 		return cValue<webgpu.native.WGPUBindGroupDescriptor> {
-			label = this@WGPUBindGroupDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUBindGroupDescriptor.label)
 			layout = this@WGPUBindGroupDescriptor.layout?.handler?.toCPointer()
 			entryCount = this@WGPUBindGroupDescriptor.entryCount
 			entries = this@WGPUBindGroupDescriptor.entries?.handler?.toCPointer()
@@ -115,7 +110,7 @@ actual value class WGPUBindGroupDescriptor(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUBindGroupDescriptor.adapt(structure: WGPUBindGroupDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 	layout = structure.layout?.handler?.toCPointer()
 	entryCount = structure.entryCount
 	entries = structure.entries?.handler?.toCPointer()
@@ -174,9 +169,8 @@ fun webgpu.native.WGPUBindGroupEntry.adapt(structure: WGPUBindGroupEntry) {
 }
 
 actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUBindGroupLayoutDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUBindGroupLayoutDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUBindGroupLayoutDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUBindGroupLayoutDescriptor is null")
 
 	actual var entryCount: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUBindGroupLayoutDescriptor>()?.pointed?.entryCount ?: error("pointer of WGPUBindGroupLayoutDescriptor is null")
@@ -194,7 +188,7 @@ actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddre
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUBindGroupLayoutDescriptor> {
 		return cValue<webgpu.native.WGPUBindGroupLayoutDescriptor> {
-			label = this@WGPUBindGroupLayoutDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUBindGroupLayoutDescriptor.label)
 			entryCount = this@WGPUBindGroupLayoutDescriptor.entryCount
 			entries = this@WGPUBindGroupLayoutDescriptor.entries?.handler?.toCPointer()
 		}
@@ -202,7 +196,7 @@ actual value class WGPUBindGroupLayoutDescriptor(actual val handler: NativeAddre
 }
 
 fun webgpu.native.WGPUBindGroupLayoutDescriptor.adapt(structure: WGPUBindGroupLayoutDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 	entryCount = structure.entryCount
 	entries = structure.entries?.handler?.toCPointer()
 }
@@ -350,9 +344,8 @@ fun webgpu.native.WGPUBufferBindingLayout.adapt(structure: WGPUBufferBindingLayo
 }
 
 actual value class WGPUBufferDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUBufferDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUBufferDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUBufferDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUBufferDescriptor is null")
 
 	actual var usage: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUBufferDescriptor>()?.pointed?.usage ?: error("pointer of WGPUBufferDescriptor is null")
@@ -374,7 +367,7 @@ actual value class WGPUBufferDescriptor(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUBufferDescriptor> {
 		return cValue<webgpu.native.WGPUBufferDescriptor> {
-			label = this@WGPUBufferDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUBufferDescriptor.label)
 			usage = this@WGPUBufferDescriptor.usage
 			size = this@WGPUBufferDescriptor.size
 			mappedAtCreation = this@WGPUBufferDescriptor.mappedAtCreation.toUInt()
@@ -383,7 +376,7 @@ actual value class WGPUBufferDescriptor(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUBufferDescriptor.adapt(structure: WGPUBufferDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 	usage = structure.usage
 	size = structure.size
 	mappedAtCreation = structure.mappedAtCreation.toUInt()
@@ -464,9 +457,8 @@ fun webgpu.native.WGPUColorTargetState.adapt(structure: WGPUColorTargetState) {
 }
 
 actual value class WGPUCommandBufferDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUCommandBufferDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUCommandBufferDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUCommandBufferDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUCommandBufferDescriptor is null")
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUCommandBufferDescriptor {
@@ -476,19 +468,18 @@ actual value class WGPUCommandBufferDescriptor(actual val handler: NativeAddress
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUCommandBufferDescriptor> {
 		return cValue<webgpu.native.WGPUCommandBufferDescriptor> {
-			label = this@WGPUCommandBufferDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUCommandBufferDescriptor.label)
 		}
 	}
 }
 
 fun webgpu.native.WGPUCommandBufferDescriptor.adapt(structure: WGPUCommandBufferDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 }
 
 actual value class WGPUCommandEncoderDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUCommandEncoderDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUCommandEncoderDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUCommandEncoderDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUCommandEncoderDescriptor is null")
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUCommandEncoderDescriptor {
@@ -498,13 +489,13 @@ actual value class WGPUCommandEncoderDescriptor(actual val handler: NativeAddres
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUCommandEncoderDescriptor> {
 		return cValue<webgpu.native.WGPUCommandEncoderDescriptor> {
-			label = this@WGPUCommandEncoderDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUCommandEncoderDescriptor.label)
 		}
 	}
 }
 
 fun webgpu.native.WGPUCommandEncoderDescriptor.adapt(structure: WGPUCommandEncoderDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 }
 
 actual value class WGPUCompilationInfo(actual val handler: NativeAddress) {
@@ -536,9 +527,8 @@ fun webgpu.native.WGPUCompilationInfo.adapt(structure: WGPUCompilationInfo) {
 }
 
 actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
-	actual var message: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUCompilationMessage>()?.pointed?.message?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUCompilationMessage>()?.pointed?.let { it.message = newValue?.handler?.toCPointer() } } 
+	actual val message: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUCompilationMessage>()?.pointed?.message?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUCompilationMessage is null")
 
 	actual var type: WGPUCompilationMessageType
 		get() = handler.toCPointer<webgpu.native.WGPUCompilationMessage>()?.pointed?.type ?: error("pointer of WGPUCompilationMessage is null")
@@ -580,7 +570,7 @@ actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUCompilationMessage> {
 		return cValue<webgpu.native.WGPUCompilationMessage> {
-			message = this@WGPUCompilationMessage.message?.handler?.toCPointer()
+			message.adapt(this@WGPUCompilationMessage.message)
 			type = this@WGPUCompilationMessage.type
 			lineNum = this@WGPUCompilationMessage.lineNum
 			linePos = this@WGPUCompilationMessage.linePos
@@ -594,7 +584,7 @@ actual value class WGPUCompilationMessage(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUCompilationMessage.adapt(structure: WGPUCompilationMessage) {
-	message = structure.message?.handler?.toCPointer()
+	message.adapt(structure.message)
 	type = structure.type
 	lineNum = structure.lineNum
 	linePos = structure.linePos
@@ -606,9 +596,8 @@ fun webgpu.native.WGPUCompilationMessage.adapt(structure: WGPUCompilationMessage
 }
 
 actual value class WGPUComputePassDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUComputePassDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUComputePassDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUComputePassDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUComputePassDescriptor is null")
 
 	actual var timestampWrites: WGPUComputePassTimestampWrites?
 		get() = handler.toCPointer<webgpu.native.WGPUComputePassDescriptor>()?.pointed?.timestampWrites?.toLong()?.takeIf {it != 0L}?.let { WGPUComputePassTimestampWrites(it) }
@@ -622,14 +611,14 @@ actual value class WGPUComputePassDescriptor(actual val handler: NativeAddress) 
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUComputePassDescriptor> {
 		return cValue<webgpu.native.WGPUComputePassDescriptor> {
-			label = this@WGPUComputePassDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUComputePassDescriptor.label)
 			timestampWrites = this@WGPUComputePassDescriptor.timestampWrites?.handler?.toCPointer()
 		}
 	}
 }
 
 fun webgpu.native.WGPUComputePassDescriptor.adapt(structure: WGPUComputePassDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 	timestampWrites = structure.timestampWrites?.handler?.toCPointer()
 }
 
@@ -668,9 +657,8 @@ fun webgpu.native.WGPUComputePassTimestampWrites.adapt(structure: WGPUComputePas
 }
 
 actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUComputePipelineDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUComputePipelineDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUComputePipelineDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUComputePipelineDescriptor is null")
 
 	actual var layout: WGPUPipelineLayout?
 		get() = handler.toCPointer<webgpu.native.WGPUComputePipelineDescriptor>()?.pointed?.layout?.toLong()?.takeIf {it != 0L}?.let { WGPUPipelineLayout(it) }
@@ -687,23 +675,22 @@ actual value class WGPUComputePipelineDescriptor(actual val handler: NativeAddre
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUComputePipelineDescriptor> {
 		return cValue<webgpu.native.WGPUComputePipelineDescriptor> {
+			label.adapt(this@WGPUComputePipelineDescriptor.label)
 			compute.adapt(this@WGPUComputePipelineDescriptor.compute)
-			label = this@WGPUComputePipelineDescriptor.label?.handler?.toCPointer()
 			layout = this@WGPUComputePipelineDescriptor.layout?.handler?.toCPointer()
 		}
 	}
 }
 
 fun webgpu.native.WGPUComputePipelineDescriptor.adapt(structure: WGPUComputePipelineDescriptor) {
+	label.adapt(structure.label)
 	compute.adapt(structure.compute)
-	label = structure.label?.handler?.toCPointer()
 	layout = structure.layout?.handler?.toCPointer()
 }
 
 actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
-	actual var key: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUConstantEntry>()?.pointed?.key?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUConstantEntry>()?.pointed?.let { it.key = newValue?.handler?.toCPointer() } } 
+	actual val key: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUConstantEntry>()?.pointed?.key?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUConstantEntry is null")
 
 	actual var value: Double
 		get() = handler.toCPointer<webgpu.native.WGPUConstantEntry>()?.pointed?.value ?: error("pointer of WGPUConstantEntry is null")
@@ -717,14 +704,14 @@ actual value class WGPUConstantEntry(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUConstantEntry> {
 		return cValue<webgpu.native.WGPUConstantEntry> {
-			key = this@WGPUConstantEntry.key?.handler?.toCPointer()
+			key.adapt(this@WGPUConstantEntry.key)
 			value = this@WGPUConstantEntry.value
 		}
 	}
 }
 
 fun webgpu.native.WGPUConstantEntry.adapt(structure: WGPUConstantEntry) {
-	key = structure.key?.handler?.toCPointer()
+	key.adapt(structure.key)
 	value = structure.value
 }
 
@@ -803,9 +790,8 @@ fun webgpu.native.WGPUDepthStencilState.adapt(structure: WGPUDepthStencilState) 
 }
 
 actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUDeviceDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUDeviceDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUDeviceDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUDeviceDescriptor is null")
 
 	actual var requiredFeatureCount: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUDeviceDescriptor>()?.pointed?.requiredFeatureCount ?: error("pointer of WGPUDeviceDescriptor is null")
@@ -836,10 +822,10 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUDeviceDescriptor> {
 		return cValue<webgpu.native.WGPUDeviceDescriptor> {
+			label.adapt(this@WGPUDeviceDescriptor.label)
 			defaultQueue.adapt(this@WGPUDeviceDescriptor.defaultQueue)
 			deviceLostCallbackInfo.adapt(this@WGPUDeviceDescriptor.deviceLostCallbackInfo)
 			uncapturedErrorCallbackInfo.adapt(this@WGPUDeviceDescriptor.uncapturedErrorCallbackInfo)
-			label = this@WGPUDeviceDescriptor.label?.handler?.toCPointer()
 			requiredFeatureCount = this@WGPUDeviceDescriptor.requiredFeatureCount
 			requiredFeatures = this@WGPUDeviceDescriptor.requiredFeatures?.handler?.toCPointer()
 			requiredLimits = this@WGPUDeviceDescriptor.requiredLimits?.handler?.toCPointer()
@@ -848,10 +834,10 @@ actual value class WGPUDeviceDescriptor(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUDeviceDescriptor.adapt(structure: WGPUDeviceDescriptor) {
+	label.adapt(structure.label)
 	defaultQueue.adapt(structure.defaultQueue)
 	deviceLostCallbackInfo.adapt(structure.deviceLostCallbackInfo)
 	uncapturedErrorCallbackInfo.adapt(structure.uncapturedErrorCallbackInfo)
-	label = structure.label?.handler?.toCPointer()
 	requiredFeatureCount = structure.requiredFeatureCount
 	requiredFeatures = structure.requiredFeatures?.handler?.toCPointer()
 	requiredLimits = structure.requiredLimits?.handler?.toCPointer()
@@ -896,9 +882,8 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 		get() = handler.toCPointer<webgpu.native.WGPUFragmentState>()?.pointed?.module?.toLong()?.takeIf {it != 0L}?.let { WGPUShaderModule(it) }
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUFragmentState>()?.pointed?.let { it.module = newValue?.handler?.toCPointer() } } 
 
-	actual var entryPoint: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUFragmentState>()?.pointed?.entryPoint?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUFragmentState>()?.pointed?.let { it.entryPoint = newValue?.handler?.toCPointer() } } 
+	actual val entryPoint: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUFragmentState>()?.pointed?.entryPoint?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUFragmentState is null")
 
 	actual var constantCount: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUFragmentState>()?.pointed?.constantCount ?: error("pointer of WGPUFragmentState is null")
@@ -924,8 +909,8 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUFragmentState> {
 		return cValue<webgpu.native.WGPUFragmentState> {
+			entryPoint.adapt(this@WGPUFragmentState.entryPoint)
 			module = this@WGPUFragmentState.module?.handler?.toCPointer()
-			entryPoint = this@WGPUFragmentState.entryPoint?.handler?.toCPointer()
 			constantCount = this@WGPUFragmentState.constantCount
 			constants = this@WGPUFragmentState.constants?.handler?.toCPointer()
 			targetCount = this@WGPUFragmentState.targetCount
@@ -935,8 +920,8 @@ actual value class WGPUFragmentState(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUFragmentState.adapt(structure: WGPUFragmentState) {
+	entryPoint.adapt(structure.entryPoint)
 	module = structure.module?.handler?.toCPointer()
-	entryPoint = structure.entryPoint?.handler?.toCPointer()
 	constantCount = structure.constantCount
 	constants = structure.constants?.handler?.toCPointer()
 	targetCount = structure.targetCount
@@ -1378,9 +1363,8 @@ fun webgpu.native.WGPUOrigin3D.adapt(structure: WGPUOrigin3D) {
 }
 
 actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUPipelineLayoutDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUPipelineLayoutDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUPipelineLayoutDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUPipelineLayoutDescriptor is null")
 
 	actual var bindGroupLayoutCount: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUPipelineLayoutDescriptor>()?.pointed?.bindGroupLayoutCount ?: error("pointer of WGPUPipelineLayoutDescriptor is null")
@@ -1398,7 +1382,7 @@ actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddres
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUPipelineLayoutDescriptor> {
 		return cValue<webgpu.native.WGPUPipelineLayoutDescriptor> {
-			label = this@WGPUPipelineLayoutDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUPipelineLayoutDescriptor.label)
 			bindGroupLayoutCount = this@WGPUPipelineLayoutDescriptor.bindGroupLayoutCount
 			bindGroupLayouts = this@WGPUPipelineLayoutDescriptor.bindGroupLayouts?.handler?.toCPointer()
 		}
@@ -1406,7 +1390,7 @@ actual value class WGPUPipelineLayoutDescriptor(actual val handler: NativeAddres
 }
 
 fun webgpu.native.WGPUPipelineLayoutDescriptor.adapt(structure: WGPUPipelineLayoutDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 	bindGroupLayoutCount = structure.bindGroupLayoutCount
 	bindGroupLayouts = structure.bindGroupLayouts?.handler?.toCPointer()
 }
@@ -1462,9 +1446,8 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 		get() = handler.toCPointer<webgpu.native.WGPUProgrammableStageDescriptor>()?.pointed?.module?.toLong()?.takeIf {it != 0L}?.let { WGPUShaderModule(it) }
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUProgrammableStageDescriptor>()?.pointed?.let { it.module = newValue?.handler?.toCPointer() } } 
 
-	actual var entryPoint: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUProgrammableStageDescriptor>()?.pointed?.entryPoint?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUProgrammableStageDescriptor>()?.pointed?.let { it.entryPoint = newValue?.handler?.toCPointer() } } 
+	actual val entryPoint: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUProgrammableStageDescriptor>()?.pointed?.entryPoint?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUProgrammableStageDescriptor is null")
 
 	actual var constantCount: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUProgrammableStageDescriptor>()?.pointed?.constantCount ?: error("pointer of WGPUProgrammableStageDescriptor is null")
@@ -1482,8 +1465,8 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUProgrammableStageDescriptor> {
 		return cValue<webgpu.native.WGPUProgrammableStageDescriptor> {
+			entryPoint.adapt(this@WGPUProgrammableStageDescriptor.entryPoint)
 			module = this@WGPUProgrammableStageDescriptor.module?.handler?.toCPointer()
-			entryPoint = this@WGPUProgrammableStageDescriptor.entryPoint?.handler?.toCPointer()
 			constantCount = this@WGPUProgrammableStageDescriptor.constantCount
 			constants = this@WGPUProgrammableStageDescriptor.constants?.handler?.toCPointer()
 		}
@@ -1491,16 +1474,15 @@ actual value class WGPUProgrammableStageDescriptor(actual val handler: NativeAdd
 }
 
 fun webgpu.native.WGPUProgrammableStageDescriptor.adapt(structure: WGPUProgrammableStageDescriptor) {
+	entryPoint.adapt(structure.entryPoint)
 	module = structure.module?.handler?.toCPointer()
-	entryPoint = structure.entryPoint?.handler?.toCPointer()
 	constantCount = structure.constantCount
 	constants = structure.constants?.handler?.toCPointer()
 }
 
 actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUQuerySetDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUQuerySetDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUQuerySetDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUQuerySetDescriptor is null")
 
 	actual var type: WGPUQueryType
 		get() = handler.toCPointer<webgpu.native.WGPUQuerySetDescriptor>()?.pointed?.type ?: error("pointer of WGPUQuerySetDescriptor is null")
@@ -1518,7 +1500,7 @@ actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUQuerySetDescriptor> {
 		return cValue<webgpu.native.WGPUQuerySetDescriptor> {
-			label = this@WGPUQuerySetDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUQuerySetDescriptor.label)
 			type = this@WGPUQuerySetDescriptor.type
 			count = this@WGPUQuerySetDescriptor.count
 		}
@@ -1526,15 +1508,14 @@ actual value class WGPUQuerySetDescriptor(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUQuerySetDescriptor.adapt(structure: WGPUQuerySetDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 	type = structure.type
 	count = structure.count
 }
 
 actual value class WGPUQueueDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUQueueDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUQueueDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUQueueDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUQueueDescriptor is null")
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUQueueDescriptor {
@@ -1544,19 +1525,18 @@ actual value class WGPUQueueDescriptor(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUQueueDescriptor> {
 		return cValue<webgpu.native.WGPUQueueDescriptor> {
-			label = this@WGPUQueueDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUQueueDescriptor.label)
 		}
 	}
 }
 
 fun webgpu.native.WGPUQueueDescriptor.adapt(structure: WGPUQueueDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 }
 
 actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPURenderBundleDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderBundleDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPURenderBundleDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPURenderBundleDescriptor is null")
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderBundleDescriptor {
@@ -1566,19 +1546,18 @@ actual value class WGPURenderBundleDescriptor(actual val handler: NativeAddress)
 	}
 	fun toCValue(): CValue<webgpu.native.WGPURenderBundleDescriptor> {
 		return cValue<webgpu.native.WGPURenderBundleDescriptor> {
-			label = this@WGPURenderBundleDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPURenderBundleDescriptor.label)
 		}
 	}
 }
 
 fun webgpu.native.WGPURenderBundleDescriptor.adapt(structure: WGPURenderBundleDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 }
 
 actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPURenderBundleEncoderDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderBundleEncoderDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPURenderBundleEncoderDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPURenderBundleEncoderDescriptor is null")
 
 	actual var colorFormatCount: ULong
 		get() = handler.toCPointer<webgpu.native.WGPURenderBundleEncoderDescriptor>()?.pointed?.colorFormatCount ?: error("pointer of WGPURenderBundleEncoderDescriptor is null")
@@ -1612,7 +1591,7 @@ actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeA
 	}
 	fun toCValue(): CValue<webgpu.native.WGPURenderBundleEncoderDescriptor> {
 		return cValue<webgpu.native.WGPURenderBundleEncoderDescriptor> {
-			label = this@WGPURenderBundleEncoderDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPURenderBundleEncoderDescriptor.label)
 			colorFormatCount = this@WGPURenderBundleEncoderDescriptor.colorFormatCount
 			colorFormats = this@WGPURenderBundleEncoderDescriptor.colorFormats?.handler?.toCPointer()
 			depthStencilFormat = this@WGPURenderBundleEncoderDescriptor.depthStencilFormat
@@ -1624,7 +1603,7 @@ actual value class WGPURenderBundleEncoderDescriptor(actual val handler: NativeA
 }
 
 fun webgpu.native.WGPURenderBundleEncoderDescriptor.adapt(structure: WGPURenderBundleEncoderDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 	colorFormatCount = structure.colorFormatCount
 	colorFormats = structure.colorFormats?.handler?.toCPointer()
 	depthStencilFormat = structure.depthStencilFormat
@@ -1755,9 +1734,8 @@ fun webgpu.native.WGPURenderPassDepthStencilAttachment.adapt(structure: WGPURend
 }
 
 actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPURenderPassDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderPassDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPURenderPassDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPURenderPassDescriptor is null")
 
 	actual var colorAttachmentCount: ULong
 		get() = handler.toCPointer<webgpu.native.WGPURenderPassDescriptor>()?.pointed?.colorAttachmentCount ?: error("pointer of WGPURenderPassDescriptor is null")
@@ -1787,7 +1765,7 @@ actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPURenderPassDescriptor> {
 		return cValue<webgpu.native.WGPURenderPassDescriptor> {
-			label = this@WGPURenderPassDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPURenderPassDescriptor.label)
 			colorAttachmentCount = this@WGPURenderPassDescriptor.colorAttachmentCount
 			colorAttachments = this@WGPURenderPassDescriptor.colorAttachments?.handler?.toCPointer()
 			depthStencilAttachment = this@WGPURenderPassDescriptor.depthStencilAttachment?.handler?.toCPointer()
@@ -1798,7 +1776,7 @@ actual value class WGPURenderPassDescriptor(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPURenderPassDescriptor.adapt(structure: WGPURenderPassDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 	colorAttachmentCount = structure.colorAttachmentCount
 	colorAttachments = structure.colorAttachments?.handler?.toCPointer()
 	depthStencilAttachment = structure.depthStencilAttachment?.handler?.toCPointer()
@@ -1863,9 +1841,8 @@ fun webgpu.native.WGPURenderPassTimestampWrites.adapt(structure: WGPURenderPassT
 }
 
 actual value class WGPURenderPipelineDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPURenderPipelineDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPURenderPipelineDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPURenderPipelineDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPURenderPipelineDescriptor is null")
 
 	actual var layout: WGPUPipelineLayout?
 		get() = handler.toCPointer<webgpu.native.WGPURenderPipelineDescriptor>()?.pointed?.layout?.toLong()?.takeIf {it != 0L}?.let { WGPUPipelineLayout(it) }
@@ -1896,10 +1873,10 @@ actual value class WGPURenderPipelineDescriptor(actual val handler: NativeAddres
 	}
 	fun toCValue(): CValue<webgpu.native.WGPURenderPipelineDescriptor> {
 		return cValue<webgpu.native.WGPURenderPipelineDescriptor> {
+			label.adapt(this@WGPURenderPipelineDescriptor.label)
 			vertex.adapt(this@WGPURenderPipelineDescriptor.vertex)
 			primitive.adapt(this@WGPURenderPipelineDescriptor.primitive)
 			multisample.adapt(this@WGPURenderPipelineDescriptor.multisample)
-			label = this@WGPURenderPipelineDescriptor.label?.handler?.toCPointer()
 			layout = this@WGPURenderPipelineDescriptor.layout?.handler?.toCPointer()
 			depthStencil = this@WGPURenderPipelineDescriptor.depthStencil?.handler?.toCPointer()
 			fragment = this@WGPURenderPipelineDescriptor.fragment?.handler?.toCPointer()
@@ -1908,10 +1885,10 @@ actual value class WGPURenderPipelineDescriptor(actual val handler: NativeAddres
 }
 
 fun webgpu.native.WGPURenderPipelineDescriptor.adapt(structure: WGPURenderPipelineDescriptor) {
+	label.adapt(structure.label)
 	vertex.adapt(structure.vertex)
 	primitive.adapt(structure.primitive)
 	multisample.adapt(structure.multisample)
-	label = structure.label?.handler?.toCPointer()
 	layout = structure.layout?.handler?.toCPointer()
 	depthStencil = structure.depthStencil?.handler?.toCPointer()
 	fragment = structure.fragment?.handler?.toCPointer()
@@ -2001,9 +1978,8 @@ fun webgpu.native.WGPUSamplerBindingLayout.adapt(structure: WGPUSamplerBindingLa
 }
 
 actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUSamplerDescriptor is null")
 
 	actual var addressModeU: WGPUAddressMode
 		get() = handler.toCPointer<webgpu.native.WGPUSamplerDescriptor>()?.pointed?.addressModeU ?: error("pointer of WGPUSamplerDescriptor is null")
@@ -2053,7 +2029,7 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUSamplerDescriptor> {
 		return cValue<webgpu.native.WGPUSamplerDescriptor> {
-			label = this@WGPUSamplerDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUSamplerDescriptor.label)
 			addressModeU = this@WGPUSamplerDescriptor.addressModeU
 			addressModeV = this@WGPUSamplerDescriptor.addressModeV
 			addressModeW = this@WGPUSamplerDescriptor.addressModeW
@@ -2069,7 +2045,7 @@ actual value class WGPUSamplerDescriptor(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUSamplerDescriptor.adapt(structure: WGPUSamplerDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 	addressModeU = structure.addressModeU
 	addressModeV = structure.addressModeV
 	addressModeW = structure.addressModeW
@@ -2083,9 +2059,8 @@ fun webgpu.native.WGPUSamplerDescriptor.adapt(structure: WGPUSamplerDescriptor) 
 }
 
 actual value class WGPUShaderModuleDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUShaderModuleDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUShaderModuleDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUShaderModuleDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUShaderModuleDescriptor is null")
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUShaderModuleDescriptor {
@@ -2095,13 +2070,13 @@ actual value class WGPUShaderModuleDescriptor(actual val handler: NativeAddress)
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUShaderModuleDescriptor> {
 		return cValue<webgpu.native.WGPUShaderModuleDescriptor> {
-			label = this@WGPUShaderModuleDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUShaderModuleDescriptor.label)
 		}
 	}
 }
 
 fun webgpu.native.WGPUShaderModuleDescriptor.adapt(structure: WGPUShaderModuleDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 }
 
 actual value class WGPUShaderSourceSPIRV(actual val handler: NativeAddress) {
@@ -2133,9 +2108,8 @@ fun webgpu.native.WGPUShaderSourceSPIRV.adapt(structure: WGPUShaderSourceSPIRV) 
 }
 
 actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
-	actual var code: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUShaderSourceWGSL>()?.pointed?.code?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUShaderSourceWGSL>()?.pointed?.let { it.code = newValue?.handler?.toCPointer() } } 
+	actual val code: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUShaderSourceWGSL>()?.pointed?.code?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUShaderSourceWGSL is null")
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUShaderSourceWGSL {
@@ -2145,13 +2119,13 @@ actual value class WGPUShaderSourceWGSL(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUShaderSourceWGSL> {
 		return cValue<webgpu.native.WGPUShaderSourceWGSL> {
-			code = this@WGPUShaderSourceWGSL.code?.handler?.toCPointer()
+			code.adapt(this@WGPUShaderSourceWGSL.code)
 		}
 	}
 }
 
 fun webgpu.native.WGPUShaderSourceWGSL.adapt(structure: WGPUShaderSourceWGSL) {
-	code = structure.code?.handler?.toCPointer()
+	code.adapt(structure.code)
 }
 
 actual value class WGPUStencilFaceState(actual val handler: NativeAddress) {
@@ -2226,6 +2200,34 @@ fun webgpu.native.WGPUStorageTextureBindingLayout.adapt(structure: WGPUStorageTe
 	access = structure.access
 	format = structure.format
 	viewDimension = structure.viewDimension
+}
+
+actual value class WGPUSupportedFeatures(actual val handler: NativeAddress) {
+	actual var featureCount: ULong
+		get() = handler.toCPointer<webgpu.native.WGPUSupportedFeatures>()?.pointed?.featureCount ?: error("pointer of WGPUSupportedFeatures is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSupportedFeatures>()?.pointed?.let { it.featureCount = newValue } } 
+
+	actual var features: ArrayHolder<WGPUFeatureName>?
+		get() = handler.toCPointer<webgpu.native.WGPUSupportedFeatures>()?.pointed?.features?.toLong()?.takeIf {it != 0L}?.let { ArrayHolder<WGPUFeatureName>(it) }
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUSupportedFeatures>()?.pointed?.let { it.features = newValue?.handler?.toCPointer() } } 
+
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUSupportedFeatures {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUSupportedFeatures>())
+				.let(::WGPUSupportedFeatures)
+		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUSupportedFeatures> {
+		return cValue<webgpu.native.WGPUSupportedFeatures> {
+			featureCount = this@WGPUSupportedFeatures.featureCount
+			features = this@WGPUSupportedFeatures.features?.handler?.toCPointer()
+		}
+	}
+}
+
+fun webgpu.native.WGPUSupportedFeatures.adapt(structure: WGPUSupportedFeatures) {
+	featureCount = structure.featureCount
+	features = structure.features?.handler?.toCPointer()
 }
 
 actual value class WGPUSupportedLimits(actual val handler: NativeAddress) {
@@ -2378,9 +2380,8 @@ fun webgpu.native.WGPUSurfaceConfiguration.adapt(structure: WGPUSurfaceConfigura
 }
 
 actual value class WGPUSurfaceDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUSurfaceDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUSurfaceDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUSurfaceDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUSurfaceDescriptor is null")
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceDescriptor {
@@ -2390,13 +2391,13 @@ actual value class WGPUSurfaceDescriptor(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUSurfaceDescriptor> {
 		return cValue<webgpu.native.WGPUSurfaceDescriptor> {
-			label = this@WGPUSurfaceDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUSurfaceDescriptor.label)
 		}
 	}
 }
 
 fun webgpu.native.WGPUSurfaceDescriptor.adapt(structure: WGPUSurfaceDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 }
 
 actual value class WGPUSurfaceSourceAndroidNativeWindow(actual val handler: NativeAddress) {
@@ -2652,9 +2653,8 @@ fun webgpu.native.WGPUTextureDataLayout.adapt(structure: WGPUTextureDataLayout) 
 }
 
 actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUTextureDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUTextureDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUTextureDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUTextureDescriptor is null")
 
 	actual var usage: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUTextureDescriptor>()?.pointed?.usage ?: error("pointer of WGPUTextureDescriptor is null")
@@ -2695,8 +2695,8 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUTextureDescriptor> {
 		return cValue<webgpu.native.WGPUTextureDescriptor> {
+			label.adapt(this@WGPUTextureDescriptor.label)
 			size.adapt(this@WGPUTextureDescriptor.size)
-			label = this@WGPUTextureDescriptor.label?.handler?.toCPointer()
 			usage = this@WGPUTextureDescriptor.usage
 			dimension = this@WGPUTextureDescriptor.dimension
 			format = this@WGPUTextureDescriptor.format
@@ -2709,8 +2709,8 @@ actual value class WGPUTextureDescriptor(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUTextureDescriptor.adapt(structure: WGPUTextureDescriptor) {
+	label.adapt(structure.label)
 	size.adapt(structure.size)
-	label = structure.label?.handler?.toCPointer()
 	usage = structure.usage
 	dimension = structure.dimension
 	format = structure.format
@@ -2721,9 +2721,8 @@ fun webgpu.native.WGPUTextureDescriptor.adapt(structure: WGPUTextureDescriptor) 
 }
 
 actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) {
-	actual var label: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.label?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.let { it.label = newValue?.handler?.toCPointer() } } 
+	actual val label: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.label?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUTextureViewDescriptor is null")
 
 	actual var format: WGPUTextureFormat
 		get() = handler.toCPointer<webgpu.native.WGPUTextureViewDescriptor>()?.pointed?.format ?: error("pointer of WGPUTextureViewDescriptor is null")
@@ -2765,7 +2764,7 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUTextureViewDescriptor> {
 		return cValue<webgpu.native.WGPUTextureViewDescriptor> {
-			label = this@WGPUTextureViewDescriptor.label?.handler?.toCPointer()
+			label.adapt(this@WGPUTextureViewDescriptor.label)
 			format = this@WGPUTextureViewDescriptor.format
 			dimension = this@WGPUTextureViewDescriptor.dimension
 			baseMipLevel = this@WGPUTextureViewDescriptor.baseMipLevel
@@ -2779,7 +2778,7 @@ actual value class WGPUTextureViewDescriptor(actual val handler: NativeAddress) 
 }
 
 fun webgpu.native.WGPUTextureViewDescriptor.adapt(structure: WGPUTextureViewDescriptor) {
-	label = structure.label?.handler?.toCPointer()
+	label.adapt(structure.label)
 	format = structure.format
 	dimension = structure.dimension
 	baseMipLevel = structure.baseMipLevel
@@ -2869,9 +2868,8 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 		get() = handler.toCPointer<webgpu.native.WGPUVertexState>()?.pointed?.module?.toLong()?.takeIf {it != 0L}?.let { WGPUShaderModule(it) }
 		set(newValue) { handler.toCPointer<webgpu.native.WGPUVertexState>()?.pointed?.let { it.module = newValue?.handler?.toCPointer() } } 
 
-	actual var entryPoint: CString?
-		get() = handler.toCPointer<webgpu.native.WGPUVertexState>()?.pointed?.entryPoint?.toCString()
-		set(newValue) { handler.toCPointer<webgpu.native.WGPUVertexState>()?.pointed?.let { it.entryPoint = newValue?.handler?.toCPointer() } } 
+	actual val entryPoint: WGPUStringView
+		get() = handler.toCPointer<webgpu.native.WGPUVertexState>()?.pointed?.entryPoint?.rawPtr?.toLong()?.takeIf {it != 0L}?.let { WGPUStringView(it) } ?: error("pointer of WGPUVertexState is null")
 
 	actual var constantCount: ULong
 		get() = handler.toCPointer<webgpu.native.WGPUVertexState>()?.pointed?.constantCount ?: error("pointer of WGPUVertexState is null")
@@ -2897,8 +2895,8 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUVertexState> {
 		return cValue<webgpu.native.WGPUVertexState> {
+			entryPoint.adapt(this@WGPUVertexState.entryPoint)
 			module = this@WGPUVertexState.module?.handler?.toCPointer()
-			entryPoint = this@WGPUVertexState.entryPoint?.handler?.toCPointer()
 			constantCount = this@WGPUVertexState.constantCount
 			constants = this@WGPUVertexState.constants?.handler?.toCPointer()
 			bufferCount = this@WGPUVertexState.bufferCount
@@ -2908,8 +2906,8 @@ actual value class WGPUVertexState(actual val handler: NativeAddress) {
 }
 
 fun webgpu.native.WGPUVertexState.adapt(structure: WGPUVertexState) {
+	entryPoint.adapt(structure.entryPoint)
 	module = structure.module?.handler?.toCPointer()
-	entryPoint = structure.entryPoint?.handler?.toCPointer()
 	constantCount = structure.constantCount
 	constants = structure.constants?.handler?.toCPointer()
 	bufferCount = structure.bufferCount
@@ -2970,6 +2968,34 @@ actual value class WGPUChainedStructOut(actual val handler: NativeAddress) {
 fun webgpu.native.WGPUChainedStructOut.adapt(structure: WGPUChainedStructOut) {
 	next = structure.next?.handler?.toCPointer()
 	sType = structure.sType
+}
+
+actual value class WGPUStringView(actual val handler: NativeAddress) {
+	actual var data: CString?
+		get() = handler.toCPointer<webgpu.native.WGPUStringView>()?.pointed?.data?.toCString()
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUStringView>()?.pointed?.let { it.data = newValue?.handler?.toCPointer() } } 
+
+	actual var length: ULong
+		get() = handler.toCPointer<webgpu.native.WGPUStringView>()?.pointed?.length ?: error("pointer of WGPUStringView is null")
+		set(newValue) { handler.toCPointer<webgpu.native.WGPUStringView>()?.pointed?.let { it.length = newValue } } 
+
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator): WGPUStringView {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUStringView>())
+				.let(::WGPUStringView)
+		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUStringView> {
+		return cValue<webgpu.native.WGPUStringView> {
+			data = this@WGPUStringView.data?.handler?.toCPointer()
+			length = this@WGPUStringView.length
+		}
+	}
+}
+
+fun webgpu.native.WGPUStringView.adapt(structure: WGPUStringView) {
+	data = structure.data?.handler?.toCPointer()
+	length = structure.length
 }
 
 actual value class WGPUBufferMapCallbackInfo(actual val handler: NativeAddress) {

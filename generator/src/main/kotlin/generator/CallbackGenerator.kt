@@ -35,12 +35,13 @@ private val nativeHeader = """
     import ffi.NativeAddress
     import ffi.findCallback
     import ffi.registerCallback
+    import ffi.globalMemory
     import kotlinx.cinterop.COpaquePointer
+    import kotlinx.cinterop.useContents
     import kotlinx.cinterop.ExperimentalForeignApi
     import kotlinx.cinterop.LongVar
     import kotlinx.cinterop.pointed
     import kotlinx.cinterop.reinterpret
-    import kotlinx.cinterop.staticCFunction
     import kotlinx.cinterop.value
     
     

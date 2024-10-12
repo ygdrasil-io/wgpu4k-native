@@ -54,16 +54,16 @@ object Functions {
 	private val wgpuAdapterHasFeatureHandlerAddress = findOrThrow("wgpuAdapterHasFeature")
 	private val wgpuAdapterHasFeatureHandler = Linker.nativeLinker().downcallHandle(wgpuAdapterHasFeatureHandlerAddress, wgpuAdapterHasFeatureHandlerDescription)
 
-	fun wgpuAdapterEnumerateFeatures(handler: java.lang.foreign.MemorySegment?, features: java.lang.foreign.MemorySegment?): ULong {
-		return wgpuAdapterEnumerateFeaturesHandler.invokeExact(handler, features) as ULong
+	fun wgpuAdapterGetFeatures(handler: java.lang.foreign.MemorySegment?, features: java.lang.foreign.MemorySegment?): UInt {
+		return wgpuAdapterGetFeaturesHandler.invokeExact(handler, features) as UInt
 	}
-	private val wgpuAdapterEnumerateFeaturesHandlerDescription = FunctionDescriptor.of(
-			C_LONG,
+	private val wgpuAdapterGetFeaturesHandlerDescription = FunctionDescriptor.of(
+			C_INT,
 			C_POINTER,
 			C_POINTER
 		)
-	private val wgpuAdapterEnumerateFeaturesHandlerAddress = findOrThrow("wgpuAdapterEnumerateFeatures")
-	private val wgpuAdapterEnumerateFeaturesHandler = Linker.nativeLinker().downcallHandle(wgpuAdapterEnumerateFeaturesHandlerAddress, wgpuAdapterEnumerateFeaturesHandlerDescription)
+	private val wgpuAdapterGetFeaturesHandlerAddress = findOrThrow("wgpuAdapterGetFeatures")
+	private val wgpuAdapterGetFeaturesHandler = Linker.nativeLinker().downcallHandle(wgpuAdapterGetFeaturesHandlerAddress, wgpuAdapterGetFeaturesHandlerDescription)
 
 	fun wgpuAdapterGetInfo(handler: java.lang.foreign.MemorySegment?, info: java.lang.foreign.MemorySegment?): Unit {
 		return wgpuAdapterGetInfoHandler.invokeExact(handler, info) as Unit
@@ -670,16 +670,16 @@ object Functions {
 	private val wgpuDeviceHasFeatureHandlerAddress = findOrThrow("wgpuDeviceHasFeature")
 	private val wgpuDeviceHasFeatureHandler = Linker.nativeLinker().downcallHandle(wgpuDeviceHasFeatureHandlerAddress, wgpuDeviceHasFeatureHandlerDescription)
 
-	fun wgpuDeviceEnumerateFeatures(handler: java.lang.foreign.MemorySegment?, features: java.lang.foreign.MemorySegment?): ULong {
-		return wgpuDeviceEnumerateFeaturesHandler.invokeExact(handler, features) as ULong
+	fun wgpuDeviceGetFeatures(handler: java.lang.foreign.MemorySegment?, features: java.lang.foreign.MemorySegment?): UInt {
+		return wgpuDeviceGetFeaturesHandler.invokeExact(handler, features) as UInt
 	}
-	private val wgpuDeviceEnumerateFeaturesHandlerDescription = FunctionDescriptor.of(
-			C_LONG,
+	private val wgpuDeviceGetFeaturesHandlerDescription = FunctionDescriptor.of(
+			C_INT,
 			C_POINTER,
 			C_POINTER
 		)
-	private val wgpuDeviceEnumerateFeaturesHandlerAddress = findOrThrow("wgpuDeviceEnumerateFeatures")
-	private val wgpuDeviceEnumerateFeaturesHandler = Linker.nativeLinker().downcallHandle(wgpuDeviceEnumerateFeaturesHandlerAddress, wgpuDeviceEnumerateFeaturesHandlerDescription)
+	private val wgpuDeviceGetFeaturesHandlerAddress = findOrThrow("wgpuDeviceGetFeatures")
+	private val wgpuDeviceGetFeaturesHandler = Linker.nativeLinker().downcallHandle(wgpuDeviceGetFeaturesHandlerAddress, wgpuDeviceGetFeaturesHandlerDescription)
 
 	fun wgpuDeviceGetQueue(handler: java.lang.foreign.MemorySegment?): java.lang.foreign.MemorySegment? {
 		return wgpuDeviceGetQueueHandler.invokeExact(handler) as java.lang.foreign.MemorySegment?

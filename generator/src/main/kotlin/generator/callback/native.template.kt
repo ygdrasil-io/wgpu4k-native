@@ -21,7 +21,7 @@ fun CLibraryModel.Callback.toNativeCallback() = templateBuilder {
                 val argsCall = members
                     .map { (name, type) -> type.toNativeCallbackArgCall(name) }
                     .joinToString(", ")
-                appendBlock("val actualCallback = staticCFunction",  args) {
+                appendBlock("val actualCallback = kotlinx.cinterop.staticCFunction",  args) {
                     val lastArgName = members.last().first
                     appendLine("val address = $lastArgName?.reinterpret<LongVar>()?.pointed?.value ?: error(\"Missing callback address on last argument\")")
                     appendLine("val callback = findCallback<$callbackName>(address)")
@@ -40,6 +40,7 @@ fun CLibraryModel.Callback.toNativeCallback() = templateBuilder {
 private fun CLibraryModel.Type.toNativeCallbackArgCall(name: String): String = when (this) {
     is CLibraryModel.Reference.Enumeration,
     is CLibraryModel.Primitive -> name
+    is CLibraryModel.Reference.StructureField -> "$name.useContents { ${this.name}.allocate(globalMemory).also(::adapt) }"
     is CLibraryModel.Reference.Pointer -> "$name?.rawValue?.toLong()?.let(::${this.name})"
     is CLibraryModel.Reference.Structure -> "$name?.rawValue?.toLong()?.let(::${this.name})"
     CLibraryModel.Reference.CString -> "$name?.rawValue?.toLong()?.let(::CString)"
@@ -49,6 +50,7 @@ private fun CLibraryModel.Type.toNativeCallbackArgCall(name: String): String = w
 
 private fun CLibraryModel.Type.toNativeCallbackArg(): String = when (this) {
     is CLibraryModel.Primitive -> toFunctionKotlinType()
+    is CLibraryModel.Reference.StructureField -> "kotlinx.cinterop.CValue<webgpu.native.$name>"
     is CLibraryModel.Reference.Enumeration -> "UInt"
     CLibraryModel.Void -> error("unsupported type")
     else -> "COpaquePointer?"

@@ -4,6 +4,7 @@ import domain.YamlModel
 import generator.enumerationCommonMainFile
 import generator.functionsCommonMainFile
 import generator.functionsJvmMainFile
+import generator.functionsNativeMainFile
 import generator.generateAndroidCallback
 import generator.generateAndroidFunctions
 import generator.generateAndroidNativeFunctions
@@ -17,6 +18,7 @@ import generator.generateJvmFunctions
 import generator.generateJvmNativeFunctions
 import generator.generateJvmStructures
 import generator.generateNativeCallback
+import generator.generateNativeFunctions
 import generator.generateNativeStructures
 import generator.generateTypesCommonMain
 import generator.jvmNativeFunctionsMainFile
@@ -46,7 +48,7 @@ val nativeMainBasePath = sourceBasePath
 fun main() {
     println(File(".").absoluteFile)
 
-    val (_, webgpuCModel) = basePath.resolve("webgpu-headers")
+    val webgpuCModel = basePath.resolve("webgpu-headers")
         .resolve("webgpu.yml")
         .readText()
         .let { Yaml.default.decodeFromString(YamlModel.serializer(), it) }
@@ -71,7 +73,7 @@ fun main() {
     jvmNativeFunctionsMainFile.generateJvmNativeFunctions(webgpuCModel.functions)
 
     functionsCommonMainFile.generateCommonFunctions(webgpuCModel.functions)
-    //functionsNativeMainFile.generateNativeFunctions(webgpuCModel.functions)
+    functionsNativeMainFile.generateNativeFunctions(webgpuCModel.functions)
     functionsJvmMainFile.generateJvmFunctions(webgpuCModel.functions)
 
     structuresCommonMainFile.generateCommonStructures(webgpuCModel.structures)

@@ -3,6 +3,8 @@ package ffi
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
+val globalMemory = MemoryAllocator()
+
 expect class MemoryAllocator() : AutoCloseable {
 
     fun allocate(sizeInByte: Long): NativeAddress

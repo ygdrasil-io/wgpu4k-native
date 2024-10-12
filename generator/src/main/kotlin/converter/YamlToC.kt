@@ -10,7 +10,7 @@ import domain.CLibraryModel.Type
 import domain.YamlModel
 import domain.toCType
 
-internal fun YamlModel.toCModel(): Pair<YamlModel, CLibraryModel> {
+internal fun YamlModel.toCModel(): CLibraryModel {
     val pointers = convertToPointer()
     val functions = convertToCLibraryFunctions()
     val enumerations = convertToCLibraryEnumerations()
@@ -31,7 +31,7 @@ internal fun YamlModel.toCModel(): Pair<YamlModel, CLibraryModel> {
         )
     }
 
-    return this to CLibraryModel(pointers, functions, enumerations, structures, callbacks)
+    return CLibraryModel(pointers, functions, enumerations, structures, callbacks)
 }
 
 private fun YamlModel.generateCLibraryStructures() = structs.map {
@@ -75,6 +75,12 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
         "WGPUChainedStructOut", listOf(
             Triple("next", CLibraryModel.Reference.Structure("WGPUChainedStructOut"), "?"),
             Triple("sType", CLibraryModel.Reference.Enumeration("WGPUSType"), "")
+        )
+    ),
+    CLibraryModel.Structure(
+        "WGPUStringView", listOf(
+            Triple("data", CLibraryModel.Reference.CString, "?"),
+            Triple("length", CLibraryModel.Primitive.UInt64, "")
         )
     )
 ) + callbacks.map {

@@ -8,10 +8,10 @@ import ffi.ArrayHolder
 import ffi.MemoryAllocator
 
 expect value class WGPUAdapterInfo(val handler: NativeAddress) {
-	var vendor: CString?
-	var architecture: CString?
-	var device: CString?
-	var description: CString?
+	val vendor: WGPUStringView
+	val architecture: WGPUStringView
+	val device: WGPUStringView
+	val description: WGPUStringView
 	var backendType: WGPUBackendType
 	var adapterType: WGPUAdapterType
 	var vendorID: UInt
@@ -22,7 +22,7 @@ expect value class WGPUAdapterInfo(val handler: NativeAddress) {
 }
 
 expect value class WGPUBindGroupDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var layout: WGPUBindGroupLayout?
 	var entryCount: ULong
 	var entries: ArrayHolder<WGPUBindGroupEntry>?
@@ -44,7 +44,7 @@ expect value class WGPUBindGroupEntry(val handler: NativeAddress) {
 }
 
 expect value class WGPUBindGroupLayoutDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var entryCount: ULong
 	var entries: ArrayHolder<WGPUBindGroupLayoutEntry>?
 	companion object {
@@ -91,7 +91,7 @@ expect value class WGPUBufferBindingLayout(val handler: NativeAddress) {
 }
 
 expect value class WGPUBufferDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var usage: ULong
 	var size: ULong
 	var mappedAtCreation: Boolean
@@ -120,14 +120,14 @@ expect value class WGPUColorTargetState(val handler: NativeAddress) {
 }
 
 expect value class WGPUCommandBufferDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUCommandBufferDescriptor
 	}
 }
 
 expect value class WGPUCommandEncoderDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUCommandEncoderDescriptor
 	}
@@ -142,7 +142,7 @@ expect value class WGPUCompilationInfo(val handler: NativeAddress) {
 }
 
 expect value class WGPUCompilationMessage(val handler: NativeAddress) {
-	var message: CString?
+	val message: WGPUStringView
 	var type: WGPUCompilationMessageType
 	var lineNum: ULong
 	var linePos: ULong
@@ -157,7 +157,7 @@ expect value class WGPUCompilationMessage(val handler: NativeAddress) {
 }
 
 expect value class WGPUComputePassDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var timestampWrites: WGPUComputePassTimestampWrites?
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUComputePassDescriptor
@@ -174,7 +174,7 @@ expect value class WGPUComputePassTimestampWrites(val handler: NativeAddress) {
 }
 
 expect value class WGPUComputePipelineDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var layout: WGPUPipelineLayout?
 	val compute: WGPUProgrammableStageDescriptor
 	companion object {
@@ -183,7 +183,7 @@ expect value class WGPUComputePipelineDescriptor(val handler: NativeAddress) {
 }
 
 expect value class WGPUConstantEntry(val handler: NativeAddress) {
-	var key: CString?
+	val key: WGPUStringView
 	var value: Double
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUConstantEntry
@@ -207,7 +207,7 @@ expect value class WGPUDepthStencilState(val handler: NativeAddress) {
 }
 
 expect value class WGPUDeviceDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var requiredFeatureCount: ULong
 	var requiredFeatures: ArrayHolder<WGPUFeatureName>?
 	var requiredLimits: WGPURequiredLimits?
@@ -230,7 +230,7 @@ expect value class WGPUExtent3D(val handler: NativeAddress) {
 
 expect value class WGPUFragmentState(val handler: NativeAddress) {
 	var module: WGPUShaderModule?
-	var entryPoint: CString?
+	val entryPoint: WGPUStringView
 	var constantCount: ULong
 	var constants: ArrayHolder<WGPUConstantEntry>?
 	var targetCount: ULong
@@ -344,7 +344,7 @@ expect value class WGPUOrigin3D(val handler: NativeAddress) {
 }
 
 expect value class WGPUPipelineLayoutDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var bindGroupLayoutCount: ULong
 	var bindGroupLayouts: ArrayHolder<WGPUBindGroupLayout>?
 	companion object {
@@ -365,7 +365,7 @@ expect value class WGPUPrimitiveState(val handler: NativeAddress) {
 
 expect value class WGPUProgrammableStageDescriptor(val handler: NativeAddress) {
 	var module: WGPUShaderModule?
-	var entryPoint: CString?
+	val entryPoint: WGPUStringView
 	var constantCount: ULong
 	var constants: ArrayHolder<WGPUConstantEntry>?
 	companion object {
@@ -374,7 +374,7 @@ expect value class WGPUProgrammableStageDescriptor(val handler: NativeAddress) {
 }
 
 expect value class WGPUQuerySetDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var type: WGPUQueryType
 	var count: UInt
 	companion object {
@@ -383,21 +383,21 @@ expect value class WGPUQuerySetDescriptor(val handler: NativeAddress) {
 }
 
 expect value class WGPUQueueDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUQueueDescriptor
 	}
 }
 
 expect value class WGPURenderBundleDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPURenderBundleDescriptor
 	}
 }
 
 expect value class WGPURenderBundleEncoderDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var colorFormatCount: ULong
 	var colorFormats: ArrayHolder<WGPUTextureFormat>?
 	var depthStencilFormat: WGPUTextureFormat
@@ -437,7 +437,7 @@ expect value class WGPURenderPassDepthStencilAttachment(val handler: NativeAddre
 }
 
 expect value class WGPURenderPassDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var colorAttachmentCount: ULong
 	var colorAttachments: ArrayHolder<WGPURenderPassColorAttachment>?
 	var depthStencilAttachment: WGPURenderPassDepthStencilAttachment?
@@ -465,7 +465,7 @@ expect value class WGPURenderPassTimestampWrites(val handler: NativeAddress) {
 }
 
 expect value class WGPURenderPipelineDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var layout: WGPUPipelineLayout?
 	val vertex: WGPUVertexState
 	val primitive: WGPUPrimitiveState
@@ -502,7 +502,7 @@ expect value class WGPUSamplerBindingLayout(val handler: NativeAddress) {
 }
 
 expect value class WGPUSamplerDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var addressModeU: WGPUAddressMode
 	var addressModeV: WGPUAddressMode
 	var addressModeW: WGPUAddressMode
@@ -519,7 +519,7 @@ expect value class WGPUSamplerDescriptor(val handler: NativeAddress) {
 }
 
 expect value class WGPUShaderModuleDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUShaderModuleDescriptor
 	}
@@ -534,7 +534,7 @@ expect value class WGPUShaderSourceSPIRV(val handler: NativeAddress) {
 }
 
 expect value class WGPUShaderSourceWGSL(val handler: NativeAddress) {
-	var code: CString?
+	val code: WGPUStringView
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUShaderSourceWGSL
 	}
@@ -556,6 +556,14 @@ expect value class WGPUStorageTextureBindingLayout(val handler: NativeAddress) {
 	var viewDimension: WGPUTextureViewDimension
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUStorageTextureBindingLayout
+	}
+}
+
+expect value class WGPUSupportedFeatures(val handler: NativeAddress) {
+	var featureCount: ULong
+	var features: ArrayHolder<WGPUFeatureName>?
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUSupportedFeatures
 	}
 }
 
@@ -595,7 +603,7 @@ expect value class WGPUSurfaceConfiguration(val handler: NativeAddress) {
 }
 
 expect value class WGPUSurfaceDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUSurfaceDescriptor
 	}
@@ -674,7 +682,7 @@ expect value class WGPUTextureDataLayout(val handler: NativeAddress) {
 }
 
 expect value class WGPUTextureDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var usage: ULong
 	var dimension: WGPUTextureDimension
 	val size: WGPUExtent3D
@@ -689,7 +697,7 @@ expect value class WGPUTextureDescriptor(val handler: NativeAddress) {
 }
 
 expect value class WGPUTextureViewDescriptor(val handler: NativeAddress) {
-	var label: CString?
+	val label: WGPUStringView
 	var format: WGPUTextureFormat
 	var dimension: WGPUTextureViewDimension
 	var baseMipLevel: UInt
@@ -724,7 +732,7 @@ expect value class WGPUVertexBufferLayout(val handler: NativeAddress) {
 
 expect value class WGPUVertexState(val handler: NativeAddress) {
 	var module: WGPUShaderModule?
-	var entryPoint: CString?
+	val entryPoint: WGPUStringView
 	var constantCount: ULong
 	var constants: ArrayHolder<WGPUConstantEntry>?
 	var bufferCount: ULong
@@ -747,6 +755,14 @@ expect value class WGPUChainedStructOut(val handler: NativeAddress) {
 	var sType: WGPUSType
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUChainedStructOut
+	}
+}
+
+expect value class WGPUStringView(val handler: NativeAddress) {
+	var data: CString?
+	var length: ULong
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUStringView
 	}
 }
 

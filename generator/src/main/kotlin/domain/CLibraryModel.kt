@@ -86,7 +86,6 @@ internal fun String?.toCType(isPointer: Boolean, isMutable: Boolean): CLibraryMo
         startsWith("callback.")
             -> CLibraryModel.Reference.StructureField(split(".").last().convertToKotlinCallbackStructureName())
         startsWith("bitflag.") -> CLibraryModel.Primitive.UInt64
-        equals("string") -> CLibraryModel.Reference.CString
         equals("bool") -> CLibraryModel.Primitive.Bool
         equals("usize") -> when (isPointer) {
             true -> CLibraryModel.Reference.OpaquePointer
@@ -121,6 +120,10 @@ internal fun String?.toCType(isPointer: Boolean, isMutable: Boolean): CLibraryMo
             else -> CLibraryModel.Void
         }
         startsWith("array<") -> CLibraryModel.Array(substring(6, length - 1).toCType(false, false), isMutable)
+        isString() -> CLibraryModel.Reference.StructureField("WGPUStringView")
         else -> error("unknown type $this")
     }
 }
+
+private fun String.isString()
+    = equals("string") || equals("nullable_string") || equals("out_string") || equals("string_with_default_empty")

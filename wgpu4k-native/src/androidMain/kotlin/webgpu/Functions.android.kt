@@ -22,8 +22,8 @@ actual fun wgpuAdapterHasFeature(handler: WGPUAdapter?, feature: WGPUFeatureName
 	 = Functions.wgpuAdapterHasFeature(handler?.handler.adapt(), feature)
 	.toBoolean()
 
-actual fun wgpuAdapterEnumerateFeatures(handler: WGPUAdapter?, features: NativeAddress?): ULong
-	 = Functions.wgpuAdapterEnumerateFeatures(handler?.handler.adapt(), features.adapt())
+actual fun wgpuAdapterGetFeatures(handler: WGPUAdapter?, features: WGPUSupportedFeatures?): WGPUStatus
+	 = Functions.wgpuAdapterGetFeatures(handler?.handler.adapt(), features?.handler.adapt())
 
 actual fun wgpuAdapterGetInfo(handler: WGPUAdapter?, info: WGPUAdapterInfo?): Unit
 	 = Functions.wgpuAdapterGetInfo(handler?.handler.adapt(), info?.handler.adapt())
@@ -31,11 +31,11 @@ actual fun wgpuAdapterGetInfo(handler: WGPUAdapter?, info: WGPUAdapterInfo?): Un
 actual fun wgpuAdapterRequestDevice(handler: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): Unit
 	 = Functions.wgpuAdapterRequestDevice(handler?.handler.adapt(), descriptor?.handler.adapt(), callbackInfo.toCValue())
 
-actual fun wgpuBindGroupSetLabel(handler: WGPUBindGroup?, label: CString?): Unit
-	 = Functions.wgpuBindGroupSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuBindGroupSetLabel(handler: WGPUBindGroup?, label: WGPUStringView): Unit
+	 = Functions.wgpuBindGroupSetLabel(handler?.handler.adapt(), label.toCValue())
 
-actual fun wgpuBindGroupLayoutSetLabel(handler: WGPUBindGroupLayout?, label: CString?): Unit
-	 = Functions.wgpuBindGroupLayoutSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuBindGroupLayoutSetLabel(handler: WGPUBindGroupLayout?, label: WGPUStringView): Unit
+	 = Functions.wgpuBindGroupLayoutSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuBufferMapAsync(handler: WGPUBuffer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo): Unit
 	 = Functions.wgpuBufferMapAsync(handler?.handler.adapt(), mode, offset, size, callbackInfo.toCValue())
@@ -48,8 +48,8 @@ actual fun wgpuBufferGetConstMappedRange(handler: WGPUBuffer?, offset: ULong, si
 	 = Functions.wgpuBufferGetConstMappedRange(handler?.handler.adapt(), offset, size)
 	?.let(::NativeAddress)
 
-actual fun wgpuBufferSetLabel(handler: WGPUBuffer?, label: CString?): Unit
-	 = Functions.wgpuBufferSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuBufferSetLabel(handler: WGPUBuffer?, label: WGPUStringView): Unit
+	 = Functions.wgpuBufferSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuBufferGetUsage(handler: WGPUBuffer?): ULong
 	 = Functions.wgpuBufferGetUsage(handler?.handler.adapt())
@@ -66,8 +66,8 @@ actual fun wgpuBufferUnmap(handler: WGPUBuffer?): Unit
 actual fun wgpuBufferDestroy(handler: WGPUBuffer?): Unit
 	 = Functions.wgpuBufferDestroy(handler?.handler.adapt())
 
-actual fun wgpuCommandBufferSetLabel(handler: WGPUCommandBuffer?, label: CString?): Unit
-	 = Functions.wgpuCommandBufferSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuCommandBufferSetLabel(handler: WGPUCommandBuffer?, label: WGPUStringView): Unit
+	 = Functions.wgpuCommandBufferSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuCommandEncoderFinish(handler: WGPUCommandEncoder?, descriptor: WGPUCommandBufferDescriptor?): WGPUCommandBuffer?
 	 = Functions.wgpuCommandEncoderFinish(handler?.handler.adapt(), descriptor?.handler.adapt())
@@ -96,14 +96,14 @@ actual fun wgpuCommandEncoderCopyTextureToTexture(handler: WGPUCommandEncoder?, 
 actual fun wgpuCommandEncoderClearBuffer(handler: WGPUCommandEncoder?, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit
 	 = Functions.wgpuCommandEncoderClearBuffer(handler?.handler.adapt(), buffer?.handler.adapt(), offset, size)
 
-actual fun wgpuCommandEncoderInsertDebugMarker(handler: WGPUCommandEncoder?, markerLabel: CString?): Unit
-	 = Functions.wgpuCommandEncoderInsertDebugMarker(handler?.handler.adapt(), markerLabel?.handler.adapt())
+actual fun wgpuCommandEncoderInsertDebugMarker(handler: WGPUCommandEncoder?, markerLabel: WGPUStringView): Unit
+	 = Functions.wgpuCommandEncoderInsertDebugMarker(handler?.handler.adapt(), markerLabel.toCValue())
 
 actual fun wgpuCommandEncoderPopDebugGroup(handler: WGPUCommandEncoder?): Unit
 	 = Functions.wgpuCommandEncoderPopDebugGroup(handler?.handler.adapt())
 
-actual fun wgpuCommandEncoderPushDebugGroup(handler: WGPUCommandEncoder?, groupLabel: CString?): Unit
-	 = Functions.wgpuCommandEncoderPushDebugGroup(handler?.handler.adapt(), groupLabel?.handler.adapt())
+actual fun wgpuCommandEncoderPushDebugGroup(handler: WGPUCommandEncoder?, groupLabel: WGPUStringView): Unit
+	 = Functions.wgpuCommandEncoderPushDebugGroup(handler?.handler.adapt(), groupLabel.toCValue())
 
 actual fun wgpuCommandEncoderResolveQuerySet(handler: WGPUCommandEncoder?, querySet: WGPUQuerySet?, firstQuery: UInt, queryCount: UInt, destination: WGPUBuffer?, destinationOffset: ULong): Unit
 	 = Functions.wgpuCommandEncoderResolveQuerySet(handler?.handler.adapt(), querySet?.handler.adapt(), firstQuery, queryCount, destination?.handler.adapt(), destinationOffset)
@@ -111,17 +111,17 @@ actual fun wgpuCommandEncoderResolveQuerySet(handler: WGPUCommandEncoder?, query
 actual fun wgpuCommandEncoderWriteTimestamp(handler: WGPUCommandEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit
 	 = Functions.wgpuCommandEncoderWriteTimestamp(handler?.handler.adapt(), querySet?.handler.adapt(), queryIndex)
 
-actual fun wgpuCommandEncoderSetLabel(handler: WGPUCommandEncoder?, label: CString?): Unit
-	 = Functions.wgpuCommandEncoderSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuCommandEncoderSetLabel(handler: WGPUCommandEncoder?, label: WGPUStringView): Unit
+	 = Functions.wgpuCommandEncoderSetLabel(handler?.handler.adapt(), label.toCValue())
 
-actual fun wgpuComputePassEncoderInsertDebugMarker(handler: WGPUComputePassEncoder?, markerLabel: CString?): Unit
-	 = Functions.wgpuComputePassEncoderInsertDebugMarker(handler?.handler.adapt(), markerLabel?.handler.adapt())
+actual fun wgpuComputePassEncoderInsertDebugMarker(handler: WGPUComputePassEncoder?, markerLabel: WGPUStringView): Unit
+	 = Functions.wgpuComputePassEncoderInsertDebugMarker(handler?.handler.adapt(), markerLabel.toCValue())
 
 actual fun wgpuComputePassEncoderPopDebugGroup(handler: WGPUComputePassEncoder?): Unit
 	 = Functions.wgpuComputePassEncoderPopDebugGroup(handler?.handler.adapt())
 
-actual fun wgpuComputePassEncoderPushDebugGroup(handler: WGPUComputePassEncoder?, groupLabel: CString?): Unit
-	 = Functions.wgpuComputePassEncoderPushDebugGroup(handler?.handler.adapt(), groupLabel?.handler.adapt())
+actual fun wgpuComputePassEncoderPushDebugGroup(handler: WGPUComputePassEncoder?, groupLabel: WGPUStringView): Unit
+	 = Functions.wgpuComputePassEncoderPushDebugGroup(handler?.handler.adapt(), groupLabel.toCValue())
 
 actual fun wgpuComputePassEncoderSetPipeline(handler: WGPUComputePassEncoder?, pipeline: WGPUComputePipeline?): Unit
 	 = Functions.wgpuComputePassEncoderSetPipeline(handler?.handler.adapt(), pipeline?.handler.adapt())
@@ -138,15 +138,15 @@ actual fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(handler: WGPUCompute
 actual fun wgpuComputePassEncoderEnd(handler: WGPUComputePassEncoder?): Unit
 	 = Functions.wgpuComputePassEncoderEnd(handler?.handler.adapt())
 
-actual fun wgpuComputePassEncoderSetLabel(handler: WGPUComputePassEncoder?, label: CString?): Unit
-	 = Functions.wgpuComputePassEncoderSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuComputePassEncoderSetLabel(handler: WGPUComputePassEncoder?, label: WGPUStringView): Unit
+	 = Functions.wgpuComputePassEncoderSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuComputePipelineGetBindGroupLayout(handler: WGPUComputePipeline?, groupIndex: UInt): WGPUBindGroupLayout?
 	 = Functions.wgpuComputePipelineGetBindGroupLayout(handler?.handler.adapt(), groupIndex)
 	?.let(::NativeAddress)?.let(::WGPUBindGroupLayout)
 
-actual fun wgpuComputePipelineSetLabel(handler: WGPUComputePipeline?, label: CString?): Unit
-	 = Functions.wgpuComputePipelineSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuComputePipelineSetLabel(handler: WGPUComputePipeline?, label: WGPUStringView): Unit
+	 = Functions.wgpuComputePipelineSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuDeviceCreateBindGroup(handler: WGPUDevice?, descriptor: WGPUBindGroupDescriptor?): WGPUBindGroup?
 	 = Functions.wgpuDeviceCreateBindGroup(handler?.handler.adapt(), descriptor?.handler.adapt())
@@ -213,8 +213,8 @@ actual fun wgpuDeviceHasFeature(handler: WGPUDevice?, feature: WGPUFeatureName):
 	 = Functions.wgpuDeviceHasFeature(handler?.handler.adapt(), feature)
 	.toBoolean()
 
-actual fun wgpuDeviceEnumerateFeatures(handler: WGPUDevice?, features: NativeAddress?): ULong
-	 = Functions.wgpuDeviceEnumerateFeatures(handler?.handler.adapt(), features.adapt())
+actual fun wgpuDeviceGetFeatures(handler: WGPUDevice?, features: WGPUSupportedFeatures?): WGPUStatus
+	 = Functions.wgpuDeviceGetFeatures(handler?.handler.adapt(), features?.handler.adapt())
 
 actual fun wgpuDeviceGetQueue(handler: WGPUDevice?): WGPUQueue?
 	 = Functions.wgpuDeviceGetQueue(handler?.handler.adapt())
@@ -226,8 +226,8 @@ actual fun wgpuDevicePushErrorScope(handler: WGPUDevice?, filter: WGPUErrorFilte
 actual fun wgpuDevicePopErrorScope(handler: WGPUDevice?, callbackInfo: WGPUPopErrorScopeCallbackInfo): Unit
 	 = Functions.wgpuDevicePopErrorScope(handler?.handler.adapt(), callbackInfo.toCValue())
 
-actual fun wgpuDeviceSetLabel(handler: WGPUDevice?, label: CString?): Unit
-	 = Functions.wgpuDeviceSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuDeviceSetLabel(handler: WGPUDevice?, label: WGPUStringView): Unit
+	 = Functions.wgpuDeviceSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuInstanceCreateSurface(handler: WGPUInstance?, descriptor: WGPUSurfaceDescriptor?): WGPUSurface?
 	 = Functions.wgpuInstanceCreateSurface(handler?.handler.adapt(), descriptor?.handler.adapt())
@@ -246,11 +246,11 @@ actual fun wgpuInstanceRequestAdapter(handler: WGPUInstance?, options: WGPUReque
 actual fun wgpuInstanceWaitAny(handler: WGPUInstance?, futureCount: ULong, futures: WGPUFutureWaitInfo?, timeoutNS: ULong): WGPUWaitStatus
 	 = Functions.wgpuInstanceWaitAny(handler?.handler.adapt(), futureCount, futures?.handler.adapt(), timeoutNS)
 
-actual fun wgpuPipelineLayoutSetLabel(handler: WGPUPipelineLayout?, label: CString?): Unit
-	 = Functions.wgpuPipelineLayoutSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuPipelineLayoutSetLabel(handler: WGPUPipelineLayout?, label: WGPUStringView): Unit
+	 = Functions.wgpuPipelineLayoutSetLabel(handler?.handler.adapt(), label.toCValue())
 
-actual fun wgpuQuerySetSetLabel(handler: WGPUQuerySet?, label: CString?): Unit
-	 = Functions.wgpuQuerySetSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuQuerySetSetLabel(handler: WGPUQuerySet?, label: WGPUStringView): Unit
+	 = Functions.wgpuQuerySetSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuQuerySetGetType(handler: WGPUQuerySet?): WGPUQueryType
 	 = Functions.wgpuQuerySetGetType(handler?.handler.adapt())
@@ -273,11 +273,11 @@ actual fun wgpuQueueWriteBuffer(handler: WGPUQueue?, buffer: WGPUBuffer?, buffer
 actual fun wgpuQueueWriteTexture(handler: WGPUQueue?, destination: WGPUImageCopyTexture?, data: NativeAddress?, dataSize: ULong, dataLayout: WGPUTextureDataLayout?, writeSize: WGPUExtent3D?): Unit
 	 = Functions.wgpuQueueWriteTexture(handler?.handler.adapt(), destination?.handler.adapt(), data.adapt(), dataSize, dataLayout?.handler.adapt(), writeSize?.handler.adapt())
 
-actual fun wgpuQueueSetLabel(handler: WGPUQueue?, label: CString?): Unit
-	 = Functions.wgpuQueueSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuQueueSetLabel(handler: WGPUQueue?, label: WGPUStringView): Unit
+	 = Functions.wgpuQueueSetLabel(handler?.handler.adapt(), label.toCValue())
 
-actual fun wgpuRenderBundleSetLabel(handler: WGPURenderBundle?, label: CString?): Unit
-	 = Functions.wgpuRenderBundleSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuRenderBundleSetLabel(handler: WGPURenderBundle?, label: WGPUStringView): Unit
+	 = Functions.wgpuRenderBundleSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuRenderBundleEncoderSetPipeline(handler: WGPURenderBundleEncoder?, pipeline: WGPURenderPipeline?): Unit
 	 = Functions.wgpuRenderBundleEncoderSetPipeline(handler?.handler.adapt(), pipeline?.handler.adapt())
@@ -297,14 +297,14 @@ actual fun wgpuRenderBundleEncoderDrawIndirect(handler: WGPURenderBundleEncoder?
 actual fun wgpuRenderBundleEncoderDrawIndexedIndirect(handler: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit
 	 = Functions.wgpuRenderBundleEncoderDrawIndexedIndirect(handler?.handler.adapt(), indirectBuffer?.handler.adapt(), indirectOffset)
 
-actual fun wgpuRenderBundleEncoderInsertDebugMarker(handler: WGPURenderBundleEncoder?, markerLabel: CString?): Unit
-	 = Functions.wgpuRenderBundleEncoderInsertDebugMarker(handler?.handler.adapt(), markerLabel?.handler.adapt())
+actual fun wgpuRenderBundleEncoderInsertDebugMarker(handler: WGPURenderBundleEncoder?, markerLabel: WGPUStringView): Unit
+	 = Functions.wgpuRenderBundleEncoderInsertDebugMarker(handler?.handler.adapt(), markerLabel.toCValue())
 
 actual fun wgpuRenderBundleEncoderPopDebugGroup(handler: WGPURenderBundleEncoder?): Unit
 	 = Functions.wgpuRenderBundleEncoderPopDebugGroup(handler?.handler.adapt())
 
-actual fun wgpuRenderBundleEncoderPushDebugGroup(handler: WGPURenderBundleEncoder?, groupLabel: CString?): Unit
-	 = Functions.wgpuRenderBundleEncoderPushDebugGroup(handler?.handler.adapt(), groupLabel?.handler.adapt())
+actual fun wgpuRenderBundleEncoderPushDebugGroup(handler: WGPURenderBundleEncoder?, groupLabel: WGPUStringView): Unit
+	 = Functions.wgpuRenderBundleEncoderPushDebugGroup(handler?.handler.adapt(), groupLabel.toCValue())
 
 actual fun wgpuRenderBundleEncoderSetVertexBuffer(handler: WGPURenderBundleEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit
 	 = Functions.wgpuRenderBundleEncoderSetVertexBuffer(handler?.handler.adapt(), slot, buffer?.handler.adapt(), offset, size)
@@ -316,8 +316,8 @@ actual fun wgpuRenderBundleEncoderFinish(handler: WGPURenderBundleEncoder?, desc
 	 = Functions.wgpuRenderBundleEncoderFinish(handler?.handler.adapt(), descriptor?.handler.adapt())
 	?.let(::NativeAddress)?.let(::WGPURenderBundle)
 
-actual fun wgpuRenderBundleEncoderSetLabel(handler: WGPURenderBundleEncoder?, label: CString?): Unit
-	 = Functions.wgpuRenderBundleEncoderSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuRenderBundleEncoderSetLabel(handler: WGPURenderBundleEncoder?, label: WGPUStringView): Unit
+	 = Functions.wgpuRenderBundleEncoderSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuRenderPassEncoderSetPipeline(handler: WGPURenderPassEncoder?, pipeline: WGPURenderPipeline?): Unit
 	 = Functions.wgpuRenderPassEncoderSetPipeline(handler?.handler.adapt(), pipeline?.handler.adapt())
@@ -340,14 +340,14 @@ actual fun wgpuRenderPassEncoderDrawIndexedIndirect(handler: WGPURenderPassEncod
 actual fun wgpuRenderPassEncoderExecuteBundles(handler: WGPURenderPassEncoder?, bundleCount: ULong, bundles: ArrayHolder<WGPURenderBundle>?): Unit
 	 = Functions.wgpuRenderPassEncoderExecuteBundles(handler?.handler.adapt(), bundleCount, bundles?.handler.adapt())
 
-actual fun wgpuRenderPassEncoderInsertDebugMarker(handler: WGPURenderPassEncoder?, markerLabel: CString?): Unit
-	 = Functions.wgpuRenderPassEncoderInsertDebugMarker(handler?.handler.adapt(), markerLabel?.handler.adapt())
+actual fun wgpuRenderPassEncoderInsertDebugMarker(handler: WGPURenderPassEncoder?, markerLabel: WGPUStringView): Unit
+	 = Functions.wgpuRenderPassEncoderInsertDebugMarker(handler?.handler.adapt(), markerLabel.toCValue())
 
 actual fun wgpuRenderPassEncoderPopDebugGroup(handler: WGPURenderPassEncoder?): Unit
 	 = Functions.wgpuRenderPassEncoderPopDebugGroup(handler?.handler.adapt())
 
-actual fun wgpuRenderPassEncoderPushDebugGroup(handler: WGPURenderPassEncoder?, groupLabel: CString?): Unit
-	 = Functions.wgpuRenderPassEncoderPushDebugGroup(handler?.handler.adapt(), groupLabel?.handler.adapt())
+actual fun wgpuRenderPassEncoderPushDebugGroup(handler: WGPURenderPassEncoder?, groupLabel: WGPUStringView): Unit
+	 = Functions.wgpuRenderPassEncoderPushDebugGroup(handler?.handler.adapt(), groupLabel.toCValue())
 
 actual fun wgpuRenderPassEncoderSetStencilReference(handler: WGPURenderPassEncoder?, reference: UInt): Unit
 	 = Functions.wgpuRenderPassEncoderSetStencilReference(handler?.handler.adapt(), reference)
@@ -376,24 +376,24 @@ actual fun wgpuRenderPassEncoderEndOcclusionQuery(handler: WGPURenderPassEncoder
 actual fun wgpuRenderPassEncoderEnd(handler: WGPURenderPassEncoder?): Unit
 	 = Functions.wgpuRenderPassEncoderEnd(handler?.handler.adapt())
 
-actual fun wgpuRenderPassEncoderSetLabel(handler: WGPURenderPassEncoder?, label: CString?): Unit
-	 = Functions.wgpuRenderPassEncoderSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuRenderPassEncoderSetLabel(handler: WGPURenderPassEncoder?, label: WGPUStringView): Unit
+	 = Functions.wgpuRenderPassEncoderSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuRenderPipelineGetBindGroupLayout(handler: WGPURenderPipeline?, groupIndex: UInt): WGPUBindGroupLayout?
 	 = Functions.wgpuRenderPipelineGetBindGroupLayout(handler?.handler.adapt(), groupIndex)
 	?.let(::NativeAddress)?.let(::WGPUBindGroupLayout)
 
-actual fun wgpuRenderPipelineSetLabel(handler: WGPURenderPipeline?, label: CString?): Unit
-	 = Functions.wgpuRenderPipelineSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuRenderPipelineSetLabel(handler: WGPURenderPipeline?, label: WGPUStringView): Unit
+	 = Functions.wgpuRenderPipelineSetLabel(handler?.handler.adapt(), label.toCValue())
 
-actual fun wgpuSamplerSetLabel(handler: WGPUSampler?, label: CString?): Unit
-	 = Functions.wgpuSamplerSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuSamplerSetLabel(handler: WGPUSampler?, label: WGPUStringView): Unit
+	 = Functions.wgpuSamplerSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuShaderModuleGetCompilationInfo(handler: WGPUShaderModule?, callbackInfo: WGPUCompilationInfoCallbackInfo): Unit
 	 = Functions.wgpuShaderModuleGetCompilationInfo(handler?.handler.adapt(), callbackInfo.toCValue())
 
-actual fun wgpuShaderModuleSetLabel(handler: WGPUShaderModule?, label: CString?): Unit
-	 = Functions.wgpuShaderModuleSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuShaderModuleSetLabel(handler: WGPUShaderModule?, label: WGPUStringView): Unit
+	 = Functions.wgpuShaderModuleSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuSurfaceConfigure(handler: WGPUSurface?, config: WGPUSurfaceConfiguration?): Unit
 	 = Functions.wgpuSurfaceConfigure(handler?.handler.adapt(), config?.handler.adapt())
@@ -411,15 +411,15 @@ actual fun wgpuSurfacePresent(handler: WGPUSurface?): Unit
 actual fun wgpuSurfaceUnconfigure(handler: WGPUSurface?): Unit
 	 = Functions.wgpuSurfaceUnconfigure(handler?.handler.adapt())
 
-actual fun wgpuSurfaceSetLabel(handler: WGPUSurface?, label: CString?): Unit
-	 = Functions.wgpuSurfaceSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuSurfaceSetLabel(handler: WGPUSurface?, label: WGPUStringView): Unit
+	 = Functions.wgpuSurfaceSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuTextureCreateView(handler: WGPUTexture?, descriptor: WGPUTextureViewDescriptor?): WGPUTextureView?
 	 = Functions.wgpuTextureCreateView(handler?.handler.adapt(), descriptor?.handler.adapt())
 	?.let(::NativeAddress)?.let(::WGPUTextureView)
 
-actual fun wgpuTextureSetLabel(handler: WGPUTexture?, label: CString?): Unit
-	 = Functions.wgpuTextureSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuTextureSetLabel(handler: WGPUTexture?, label: WGPUStringView): Unit
+	 = Functions.wgpuTextureSetLabel(handler?.handler.adapt(), label.toCValue())
 
 actual fun wgpuTextureGetWidth(handler: WGPUTexture?): UInt
 	 = Functions.wgpuTextureGetWidth(handler?.handler.adapt())
@@ -448,6 +448,6 @@ actual fun wgpuTextureGetUsage(handler: WGPUTexture?): ULong
 actual fun wgpuTextureDestroy(handler: WGPUTexture?): Unit
 	 = Functions.wgpuTextureDestroy(handler?.handler.adapt())
 
-actual fun wgpuTextureViewSetLabel(handler: WGPUTextureView?, label: CString?): Unit
-	 = Functions.wgpuTextureViewSetLabel(handler?.handler.adapt(), label?.handler.adapt())
+actual fun wgpuTextureViewSetLabel(handler: WGPUTextureView?, label: WGPUStringView): Unit
+	 = Functions.wgpuTextureViewSetLabel(handler?.handler.adapt(), label.toCValue())
 
