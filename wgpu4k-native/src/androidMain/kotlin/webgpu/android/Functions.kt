@@ -164,6 +164,4 @@ internal interface FunctionsInterface: com.sun.jna.Library {
 	fun wgpuTextureViewRelease(handler: Long): Unit
 	fun wgpuTextureViewSetLabel(handler: Long, label: WGPUStringViewByValue): Unit
 }
-internal val Functions by lazy {
-	com.sun.jna.Native.load("wgpu4k", FunctionsInterface::class.java)
-}
+internal val Functions = com.sun.jna.Native.load("wgpu4k", FunctionsInterface::class.java)
