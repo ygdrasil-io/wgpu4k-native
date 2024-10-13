@@ -35,10 +35,28 @@ internal fun YamlModel.toCModel(): CLibraryModel {
 }
 
 private fun YamlModel.generateCLibraryStructures() = structs.map {
-    val members = when  {
-        it.type == "base_in" ->  listOf(YamlModel.Struct.Member("nextInChain", "", "struct.chained_struct", true, "mutable")) + it.members
-        it.type == "extension_in" ->  listOf(YamlModel.Struct.Member("chain", "", "struct.chained_struct")) + it.members
-        it.type == "base_out" ->  listOf(YamlModel.Struct.Member("nextInChain", "", "struct.chained_struct_out", true, "mutable")) + it.members
+    val members = when {
+        it.type == "base_in" -> listOf(
+            YamlModel.Struct.Member(
+                "nextInChain",
+                "",
+                "struct.chained_struct",
+                true,
+                "mutable"
+            )
+        ) + it.members
+
+        it.type == "extension_in" -> listOf(YamlModel.Struct.Member("chain", "", "struct.chained_struct")) + it.members
+        it.type == "base_out" -> listOf(
+            YamlModel.Struct.Member(
+                "nextInChain",
+                "",
+                "struct.chained_struct_out",
+                true,
+                "mutable"
+            )
+        ) + it.members
+
         it.type == "standalone" -> it.members
         else -> error("unsuported type ${it.type}")
     }
@@ -108,31 +126,34 @@ private fun YamlModel.convertToCLibraryEnumerations() =
             bitflags.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName()) }
 
 
-private fun YamlModel.convertToCLibraryFunctions() : List<CLibraryModel.Function> = functions.map {
-    CLibraryModel.Function(
-        it.name.convertToKotlinFunctionName(),
-        it.returns.let { it?.type }.toCType(it.returns?.pointer != null, it.returns?.pointer == "mutable"),
-        // Uncomnent when success to handle structure filed
-        /*if (it.callback != null) CLibraryModel.Reference.StructureField("WGPUFuture") else it.returns.let { it?.type }
-            .toCType(it.returns?.pointer != null),*/
-        convertToCFunctionArgs(it.args, it.callback)
-    )
-} + objects.flatMap { reference ->
-    (listOf(
-        YamlModel.Function("release", "")
-    ) + reference.methods)
-        .map {
-        val name = "${reference.name}_${it.name}".convertToKotlinFunctionName()
-        val args = listOf(YamlModel.Function.Arg("handler", "", "object.${reference.name}")) + it.args
+private fun YamlModel.convertToCLibraryFunctions(): List<CLibraryModel.Function> = functions
+    // TODO Skip until added to binding
+    .filter { it.name != "get_instance_features" }
+    .map {
         CLibraryModel.Function(
-            name,
+            it.name.convertToKotlinFunctionName(),
             it.returns.let { it?.type }.toCType(it.returns?.pointer != null, it.returns?.pointer == "mutable"),
             // Uncomnent when success to handle structure filed
             /*if (it.callback != null) CLibraryModel.Reference.StructureField("WGPUFuture") else it.returns.let { it?.type }
                 .toCType(it.returns?.pointer != null),*/
-            convertToCFunctionArgs(args, it.callback)
+            convertToCFunctionArgs(it.args, it.callback)
         )
-    }
+    } + objects.flatMap { reference ->
+    (listOf(
+        YamlModel.Function("release", "")
+    ) + reference.methods)
+        .map {
+            val name = "${reference.name}_${it.name}".convertToKotlinFunctionName()
+            val args = listOf(YamlModel.Function.Arg("handler", "", "object.${reference.name}")) + it.args
+            CLibraryModel.Function(
+                name,
+                it.returns.let { it?.type }.toCType(it.returns?.pointer != null, it.returns?.pointer == "mutable"),
+                // Uncomnent when success to handle structure filed
+                /*if (it.callback != null) CLibraryModel.Reference.StructureField("WGPUFuture") else it.returns.let { it?.type }
+                    .toCType(it.returns?.pointer != null),*/
+                convertToCFunctionArgs(args, it.callback)
+            )
+        }
 }
 
 fun convertToCFunctionArgs(args: List<YamlModel.Function.Arg>, callback: String?): List<Pair<String, Type>> {
@@ -140,13 +161,16 @@ fun convertToCFunctionArgs(args: List<YamlModel.Function.Arg>, callback: String?
         (arg.name.convertToKotlinVariableName() to arg.type.toCType(
             arg.pointer != null,
             arg.pointer == "mutable"
-        )).let { when(it.second) {
-            is CLibraryModel.Array -> listOf(
-                it.generateArrayCounter(),
-                it
-            )
-            else -> listOf(it)
-        } }
+        )).let {
+            when (it.second) {
+                is CLibraryModel.Array -> listOf(
+                    it.generateArrayCounter(),
+                    it
+                )
+
+                else -> listOf(it)
+            }
+        }
     } + callback.injectCallbackInfoStructure()
 }
 

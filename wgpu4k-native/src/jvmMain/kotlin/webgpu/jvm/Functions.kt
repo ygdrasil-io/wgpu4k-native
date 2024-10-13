@@ -23,15 +23,6 @@ object Functions {
 	private val wgpuCreateInstanceHandlerAddress = findOrThrow("wgpuCreateInstance")
 	private val wgpuCreateInstanceHandler = Linker.nativeLinker().downcallHandle(wgpuCreateInstanceHandlerAddress, wgpuCreateInstanceHandlerDescription)
 
-	fun wgpuGetInstanceFeatures(features: java.lang.foreign.MemorySegment?): Unit {
-		return wgpuGetInstanceFeaturesHandler.invokeExact(features) as Unit
-	}
-	private val wgpuGetInstanceFeaturesHandlerDescription = FunctionDescriptor.ofVoid(
-			C_POINTER
-		)
-	private val wgpuGetInstanceFeaturesHandlerAddress = findOrThrow("wgpuGetInstanceFeatures")
-	private val wgpuGetInstanceFeaturesHandler = Linker.nativeLinker().downcallHandle(wgpuGetInstanceFeaturesHandlerAddress, wgpuGetInstanceFeaturesHandlerDescription)
-
 	fun wgpuAdapterRelease(handler: java.lang.foreign.MemorySegment?): Unit {
 		return wgpuAdapterReleaseHandler.invokeExact(handler) as Unit
 	}

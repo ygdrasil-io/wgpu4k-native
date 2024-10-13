@@ -7,7 +7,6 @@ import ffi.ArrayHolder
 
 
 expect fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance?
-expect fun wgpuGetInstanceFeatures(features: WGPUInstanceFeatures?): Unit
 expect fun wgpuAdapterRelease(handler: WGPUAdapter?): Unit
 expect fun wgpuAdapterGetLimits(handler: WGPUAdapter?, limits: WGPUSupportedLimits?): Boolean
 expect fun wgpuAdapterHasFeature(handler: WGPUAdapter?, feature: WGPUFeatureName): Boolean

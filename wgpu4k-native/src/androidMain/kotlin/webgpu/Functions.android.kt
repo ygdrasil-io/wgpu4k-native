@@ -11,9 +11,6 @@ actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance
 	 = Functions.wgpuCreateInstance(descriptor?.handler.adapt())
 	?.let(::NativeAddress)?.let(::WGPUInstance)
 
-actual fun wgpuGetInstanceFeatures(features: WGPUInstanceFeatures?): Unit
-	 = Functions.wgpuGetInstanceFeatures(features?.handler.adapt())
-
 actual fun wgpuAdapterRelease(handler: WGPUAdapter?): Unit
 	 = Functions.wgpuAdapterRelease(handler?.handler.adapt())
 
@@ -260,10 +257,7 @@ actual fun wgpuInstanceRelease(handler: WGPUInstance?): Unit
 	 = Functions.wgpuInstanceRelease(handler?.handler.adapt())
 
 actual fun wgpuInstanceCreateSurface(handler: WGPUInstance?, descriptor: WGPUSurfaceDescriptor?): WGPUSurface?
-	 = Functions
-	.also { println("will call wgpuInstanceCreateSurface: ${handler?.handler.adapt()} ${descriptor?.handler.adapt()}") }
-		 .wgpuInstanceCreateSurface(handler?.handler.adapt(), descriptor?.handler.adapt())
-	.also { println("wgpuInstanceCreateSurface: $it") }
+	 = Functions.wgpuInstanceCreateSurface(handler?.handler.adapt(), descriptor?.handler.adapt())
 	?.let(::NativeAddress)?.let(::WGPUSurface)
 
 actual fun wgpuInstanceHasWGSLLanguageFeature(handler: WGPUInstance?, feature: WGPUWGSLFeatureName): Boolean

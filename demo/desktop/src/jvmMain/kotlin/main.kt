@@ -4,6 +4,7 @@ import com.sun.jna.Pointer
 import com.sun.jna.platform.win32.Kernel32
 import darwin.CAMetalLayer
 import darwin.NSWindow
+import ffi.LibraryLoader
 import ffi.NativeAddress
 import ffi.memoryScope
 import org.lwjgl.glfw.GLFW.*
@@ -36,6 +37,7 @@ fun main() {
     val height = 480
     val title = "GLFW+WebGPU"
 
+    LibraryLoader.load()
     glfwInit()
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)

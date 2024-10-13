@@ -10,6 +10,7 @@ plugins {
 }
 
 val buildNativeResourcesDirectory = project.file("build").resolve("native")
+val jvmLibResourcesDirectory = project.file("build").resolve("generated").resolve("resources")
 
 kotlin {
 
@@ -69,6 +70,12 @@ kotlin {
                 implementation(libs.bundles.kotest)
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+            }
+        }
+
+        jvmMain {
+            sourceSets {
+                resources.srcDirs(jvmLibResourcesDirectory.absolutePath)
             }
         }
 
@@ -147,22 +154,64 @@ configureDownloadTasks {
             buildNativeResourcesDirectory.resolve("include").deleteRecursively()
         }
         extract("lib/libwgpu_native.a", buildNativeResourcesDirectory.resolve("darwin-aarch64").resolve("libWGPU.a"))
+        extract("lib/libwgpu_native.dylib", jvmLibResourcesDirectory.resolve("darwin-aarch64").resolve("libWGPU.dylib")).doLast {
+            val basePath = jvmLibResourcesDirectory.resolve("darwin-aarch64")
+            Files.move(
+                basePath.resolve("lib").resolve("libWGPU.dylib").toPath(),
+                basePath.resolve("libWGPU.dylib").toPath()
+            )
+            basePath.resolve("lib").deleteRecursively()
+        }
     }
     download("wgpu-macos-x86_64-release.zip") {
         extract("lib/libwgpu_native.a", buildNativeResourcesDirectory.resolve("darwin-x64").resolve("libWGPU.a"))
+        extract("lib/libwgpu_native.dylib", jvmLibResourcesDirectory.resolve("darwin-x86-64").resolve("libWGPU.dylib")).doLast {
+            val basePath = jvmLibResourcesDirectory.resolve("darwin-x86-64")
+            Files.move(
+                basePath.resolve("lib").resolve("libWGPU.dylib").toPath(),
+                basePath.resolve("libWGPU.dylib").toPath()
+            )
+            basePath.resolve("lib").deleteRecursively()
+        }
     }
 
     /*** Windows ***/
     download("wgpu-windows-x86_64-gnu-release.zip") {
         extract("lib/libwgpu_native.a", buildNativeResourcesDirectory.resolve("windows-x64").resolve("wgpu.a"))
     }
+    download("wgpu-windows-x86_64-msvc-release.zip") {
+        extract("lib/wgpu_native.dll", jvmLibResourcesDirectory.resolve("win32-x86-64").resolve("WGPU.dll")).doLast {
+            val basePath = jvmLibResourcesDirectory.resolve("win32-x86-64")
+            Files.move(
+                basePath.resolve("lib").resolve("WGPU.dll").toPath(),
+                basePath.resolve("WGPU.dll").toPath()
+            )
+            basePath.resolve("lib").deleteRecursively()
+        }
+    }
 
     /*** Linux ***/
     download("wgpu-linux-x86_64-release.zip") {
         extract("lib/libwgpu_native.a", buildNativeResourcesDirectory.resolve("linux-x64").resolve("libWGPU.a"))
+        extract("lib/libwgpu_native.so", jvmLibResourcesDirectory.resolve("linux-x86-64").resolve("libWGPU.so")).doLast {
+            val basePath = jvmLibResourcesDirectory.resolve("linux-x86-64")
+            Files.move(
+                basePath.resolve("lib").resolve("libWGPU.so").toPath(),
+                basePath.resolve("libWGPU.so").toPath()
+            )
+            basePath.resolve("lib").deleteRecursively()
+        }
     }
     download("wgpu-linux-aarch64-release.zip") {
         extract("lib/libwgpu_native.a", buildNativeResourcesDirectory.resolve("linux-aarch64").resolve("libWGPU.a"))
+        extract("lib/libwgpu_native.so", jvmLibResourcesDirectory.resolve("linux-aarch64").resolve("libWGPU.so")).doLast {
+            val basePath = jvmLibResourcesDirectory.resolve("linux-aarch64")
+            Files.move(
+                basePath.resolve("lib").resolve("libWGPU.so").toPath(),
+                basePath.resolve("libWGPU.so").toPath()
+            )
+            basePath.resolve("lib").deleteRecursively()
+        }
     }
 
     /*** iOS ***/

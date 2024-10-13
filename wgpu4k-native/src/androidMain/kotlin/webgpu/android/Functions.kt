@@ -4,7 +4,6 @@ package webgpu
 
 internal interface FunctionsInterface: com.sun.jna.Library {
 	fun wgpuCreateInstance(descriptor: Long): Long
-	fun wgpuGetInstanceFeatures(features: Long): Unit
 	fun wgpuAdapterRelease(handler: Long): Unit
 	fun wgpuAdapterGetLimits(handler: Long, limits: Long): UInt
 	fun wgpuAdapterHasFeature(handler: Long, feature: UInt): UInt

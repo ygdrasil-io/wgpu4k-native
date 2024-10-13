@@ -11,9 +11,6 @@ actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance
 	 = Functions.wgpuCreateInstance(descriptor?.handler.adapt())
 		?.let(::NativeAddress)?.let(::WGPUInstance)
 
-actual fun wgpuGetInstanceFeatures(features: WGPUInstanceFeatures?): Unit
-	 = Functions.wgpuGetInstanceFeatures(features?.handler.adapt())
-
 actual fun wgpuAdapterRelease(handler: WGPUAdapter?): Unit
 	 = Functions.wgpuAdapterRelease(handler?.handler.adapt())
 

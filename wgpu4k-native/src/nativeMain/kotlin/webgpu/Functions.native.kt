@@ -15,9 +15,6 @@ actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance
 	 return webgpu.native.wgpuCreateInstance(descriptor?.handler?.toCPointer())
 		?.rawValue?.toLong()?.let(::WGPUInstance)
 }
-actual fun wgpuGetInstanceFeatures(features: WGPUInstanceFeatures?): Unit {
-	 webgpu.native.wgpuGetInstanceFeatures(features?.handler?.toCPointer())
-}
 actual fun wgpuAdapterRelease(handler: WGPUAdapter?): Unit {
 	 webgpu.native.wgpuAdapterRelease(handler?.handler?.toCPointer())
 }
