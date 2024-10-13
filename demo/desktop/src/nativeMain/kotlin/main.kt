@@ -27,6 +27,7 @@ import kotlinx.cinterop.objcPtr
 import kotlinx.cinterop.reinterpret
 import platform.AppKit.NSWindow
 import platform.QuartzCore.CAMetalLayer
+import webgpu.HelloTriangleScene
 import webgpu.WGPUAdapter
 import webgpu.WGPUChainedStruct
 import webgpu.WGPUDevice
@@ -44,6 +45,10 @@ import webgpu.WGPUSurface
 import webgpu.WGPUSurfaceConfiguration
 import webgpu.WGPUSurfaceDescriptor
 import webgpu.WGPUSurfaceSourceMetalLayer
+import webgpu.compatibleFormat
+import webgpu.configureSurface
+import webgpu.getAdapter
+import webgpu.getDevice
 import webgpu.wgpuAdapterRequestDevice
 import webgpu.wgpuCreateInstance
 import webgpu.wgpuInstanceCreateSurface
@@ -68,9 +73,10 @@ fun main() {
     val surface = getSurface(instance, windowHandler)
     val adapter = getAdapter(surface, instance)
     val device = getDevice(adapter)
-    configureSurface(device, width, height, surface)
+    val compatibleFormat = compatibleFormat(surface, adapter)
+    configureSurface(device, width, height, surface, compatibleFormat)
 
-    val scene = HelloTriangleScene(device, 23u, surface)
+    val scene = HelloTriangleScene(device, compatibleFormat, surface)
     scene.initialize()
 
     glfwShowWindow(windowHandler)
@@ -82,76 +88,6 @@ fun main() {
 
     glfwDestroyWindow(windowHandler)
 }
-
-private fun configureSurface(device: WGPUDevice, width: Int, height: Int, surface: WGPUSurface) {
-    memoryScope { scope ->
-        val configuration = WGPUSurfaceConfiguration.allocate(scope).apply {
-            this.device = device
-            format = 23u
-            usage = 16u
-            this.width = width.toUInt()
-            this.height = height.toUInt()
-        }
-        wgpuSurfaceConfigure(surface, configuration)
-    }
-}
-
-private fun getDevice(adapter: WGPUAdapter): WGPUDevice = memoryScope { scope ->
-    var fetchedDevice: WGPUDevice? = null
-
-    val callback = WGPURequestDeviceCallback.allocate(scope, object : WGPURequestDeviceCallback {
-        override fun invoke(
-            status: WGPURequestDeviceStatus,
-            device: WGPUDevice?,
-            message: WGPUStringView?,
-            userdata1: NativeAddress,
-            userdata2: NativeAddress
-        ) {
-            if (status != 1u && device == null) error("fail to get device")
-            fetchedDevice = device
-        }
-
-    })
-
-    val callbackInfo = WGPURequestDeviceCallbackInfo.allocate(scope).apply {
-        this.callback = callback
-        this.userdata2 = scope.bufferOf(callback.handler).handler
-    }
-
-    wgpuAdapterRequestDevice(adapter, null, callbackInfo)
-
-    fetchedDevice ?: error("fail to get device")
-}
-
-private fun getAdapter(surface: WGPUSurface, instance: WGPUInstance) = memoryScope { scope ->
-        val callbackInfo = WGPURequestAdapterCallbackInfo.allocate(scope)
-        val options = WGPURequestAdapterOptions.allocate(scope).apply {
-            compatibleSurface = surface
-        }
-
-        var fetchedAdapter: WGPUAdapter? = null
-
-        val callback = WGPURequestAdapterCallback.allocate(scope, object : WGPURequestAdapterCallback {
-            override fun invoke(
-                status: WGPURequestAdapterStatus,
-                adapter: WGPUAdapter?,
-                message: WGPUStringView?,
-                userdata1: NativeAddress,
-                userdata2: NativeAddress
-            ) {
-                if (status != 1u && adapter == null) error("fail to get adapter")
-                fetchedAdapter = adapter
-            }
-
-        })
-
-        callbackInfo.callback = callback
-        callbackInfo.userdata2 = scope.bufferOf(callback.handler).handler
-
-        wgpuInstanceRequestAdapter(instance, options, callbackInfo)
-
-        fetchedAdapter ?: error("fail to get adapter")
-    }
 
 
 private fun getSurface(instance: WGPUInstance, window: CPointer<GLFWwindow>): WGPUSurface {

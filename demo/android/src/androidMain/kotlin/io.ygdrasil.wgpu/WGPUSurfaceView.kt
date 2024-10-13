@@ -1,17 +1,28 @@
 package io.ygdrasil.wgpu
 
-import HelloTriangleScene
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import io.ygdrasil.wgpu.nativeWgpu4k.NativeWgpu4k
+import ffi.memoryScope
+import webgpu.HelloTriangleScene
+import webgpu.WGPUChainedStruct
+import webgpu.WGPUInstance
+import webgpu.WGPUSurface
+import webgpu.WGPUSurfaceDescriptor
+import webgpu.WGPUSurfaceSourceAndroidNativeWindow
+import webgpu.compatibleFormat
+import webgpu.configureSurface
+import webgpu.getAdapter
+import webgpu.getDevice
 import webgpu.wgpuCreateInstance
+import webgpu.wgpuInstanceCreateSurface
+import java.lang.foreign.MemorySegment
 
 class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
 
-    val scene: HelloTriangleScene? = null
+    var scene: HelloTriangleScene? = null
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -24,11 +35,14 @@ class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
     override fun surfaceCreated(surfaceHolder: SurfaceHolder) {
-        NativeWgpu4k.wgpuCreateInstance(0L)
         val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
+        val surface = getSurface(instance, holder)
+        val adapter = getAdapter(surface, instance)
+        val device = getDevice(adapter)
+        val compatibleFormat = compatibleFormat(surface, adapter)
+        configureSurface(device, width, height, surface, compatibleFormat)
 
-        println("instance: $instance")
-
+        scene = HelloTriangleScene(device, compatibleFormat, surface)
         scene?.initialize()
     }
 
@@ -43,4 +57,20 @@ class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
 
     override fun surfaceRedrawNeeded(holder: SurfaceHolder) {}
 
+}
+
+fun getSurface(
+    instance: WGPUInstance,
+    surfaceHolder: SurfaceHolder
+): WGPUSurface = memoryScope { scope ->
+    val nativeWindow = io.ygdrasil.nativeHelper.Helper.nativeWindowFromSurface(surfaceHolder.surface)
+
+    val surfaceDescriptor = WGPUSurfaceDescriptor.allocate(scope).apply {
+        nextInChain = WGPUSurfaceSourceAndroidNativeWindow.allocate(scope).apply {
+            chain.sType = 0x00000008u
+            window = MemorySegment(nativeWindow, 0)
+        }.let { WGPUChainedStruct(it.handler) }
+    }
+
+    wgpuInstanceCreateSurface(instance, surfaceDescriptor) ?: error("fail to create surface")
 }

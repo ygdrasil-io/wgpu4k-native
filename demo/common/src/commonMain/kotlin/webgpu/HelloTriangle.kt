@@ -1,35 +1,7 @@
+package webgpu
+
 import ffi.ArrayHolder
 import ffi.memoryScope
-import webgpu.WGPUChainedStruct
-import webgpu.WGPUColorTargetState
-import webgpu.WGPUDevice
-import webgpu.WGPUFragmentState
-import webgpu.WGPURenderPassColorAttachment
-import webgpu.WGPURenderPassDescriptor
-import webgpu.WGPURenderPipeline
-import webgpu.WGPURenderPipelineDescriptor
-import webgpu.WGPUShaderModuleDescriptor
-import webgpu.WGPUShaderSourceWGSL
-import webgpu.WGPUSurface
-import webgpu.WGPUSurfaceTexture
-import webgpu.wgpuCommandBufferRelease
-import webgpu.wgpuCommandEncoderBeginRenderPass
-import webgpu.wgpuCommandEncoderFinish
-import webgpu.wgpuCommandEncoderRelease
-import webgpu.wgpuDeviceCreateCommandEncoder
-import webgpu.wgpuDeviceCreateRenderPipeline
-import webgpu.wgpuDeviceCreateShaderModule
-import webgpu.wgpuDeviceGetQueue
-import webgpu.wgpuQueueSubmit
-import webgpu.wgpuRenderPassEncoderDraw
-import webgpu.wgpuRenderPassEncoderEnd
-import webgpu.wgpuRenderPassEncoderRelease
-import webgpu.wgpuRenderPassEncoderSetPipeline
-import webgpu.wgpuSurfaceGetCurrentTexture
-import webgpu.wgpuSurfacePresent
-import webgpu.wgpuTextureCreateView
-import webgpu.wgpuTextureRelease
-import webgpu.wgpuTextureViewRelease
 
 
 class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UInt, val surface: WGPUSurface) {
