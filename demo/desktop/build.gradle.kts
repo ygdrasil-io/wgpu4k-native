@@ -27,6 +27,10 @@ kotlin {
         }
     }
 
+    jvm {
+        withJava()
+    }
+
     sourceSets {
 
         commonMain {
@@ -37,7 +41,27 @@ kotlin {
 
         nativeMain {
             dependencies {
-                implementation("io.ygdrasil:glfw-native:0.0.1")
+                implementation(libs.ygdrasil.glfw.native)
+            }
+        }
+
+        jvmMain {
+            dependencies {
+                api(libs.rococoa)
+                api(libs.jnaPlatform)
+                val lwjglVersion = "3.3.3"
+                api("org.lwjgl:lwjgl:$lwjglVersion")
+                api("org.lwjgl:lwjgl-glfw:$lwjglVersion")
+                listOf(
+                    "natives-windows",
+                    "natives-macos",
+                    "natives-macos-arm64",
+                    "natives-linux",
+                    "natives-linux-arm64"
+                ).forEach { dependencyType ->
+                    runtimeOnly("org.lwjgl:lwjgl:$lwjglVersion:$dependencyType")
+                    runtimeOnly("org.lwjgl:lwjgl-glfw:$lwjglVersion:$dependencyType")
+                }
             }
         }
 
@@ -46,3 +70,24 @@ kotlin {
 
 }
 
+tasks.register<JavaExec>("runJvm") {
+    group = "run"
+    // TODO: find why the app is crashing sometimes
+    isIgnoreExitValue = true
+    mainClass = "MainKt"
+    jvmArgs(
+        if (Platform.os == Os.MacOs) {
+            listOf(
+                "-XstartOnFirstThread",
+                "--add-opens=java.base/java.lang=ALL-UNNAMED",
+                "--enable-native-access=ALL-UNNAMED"
+            )
+        } else {
+            listOf(
+                "--add-opens=java.base/java.lang=ALL-UNNAMED",
+                "--enable-native-access=ALL-UNNAMED"
+            )
+        }
+    )
+    classpath = sourceSets["main"].runtimeClasspath
+}

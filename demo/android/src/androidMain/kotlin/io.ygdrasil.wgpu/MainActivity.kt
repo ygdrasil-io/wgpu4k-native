@@ -3,12 +3,22 @@ package io.ygdrasil.wgpu
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.activity.ComponentActivity
+import ffi.memoryScope
+import webgpu.WGPUAdapterInfo
 
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        memoryScope {scope ->
+            val info = WGPUAdapterInfo.allocate(scope)
+
+            info.deviceID = 51u
+
+            assert(info.deviceID == 51u)
+        }
 
         val layoutParams = ViewGroup
             .LayoutParams(
