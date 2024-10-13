@@ -12,7 +12,7 @@ object NativeWgpu4k {
     external fun wgpuCreateInstance(descriptor: Long): Long
     external fun wgpuInstanceRelease(handler: Long)
     external fun wgpuInstanceCreateSurface(handler: Long, descriptor: Long): Long
-    external fun wgpuInstanceRequestAdapterNoCallback(handler: Long, descriptor: Long): Long
+    //external fun wgpuInstanceRequestAdapterNoCallback(handler: Long, descriptor: Long): Long
     /** TODO
      * external fun wgpuInstanceEnumerateAdapters
      * external fun wgpuInstanceHasWGSLLanguageFeature
@@ -395,7 +395,7 @@ object NativeWgpu4k {
 
     /*** Adapter ***/
     external fun wgpuAdapterRequestDevice(handler: Long, descriptor: Long, callback: Long, userdata: Long): Long
-    external fun wgpuAdapterRequestDeviceNoCallback(handler: Long, descriptor: Long): Long
+    //external fun wgpuAdapterRequestDeviceNoCallback(handler: Long, descriptor: Long): Long
     external fun wgpuAdapterRelease(handler: Long)
 
     external fun wgpuAdapterHasFeature(handler: Long, feature: Int): Int

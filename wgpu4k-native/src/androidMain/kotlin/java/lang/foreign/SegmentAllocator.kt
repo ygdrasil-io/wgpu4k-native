@@ -2,8 +2,7 @@ package java.lang.foreign
 
 import ffi.JnaArena
 
-@JvmInline
-value class SegmentAllocator(internal val arena: JnaArena) {
+class SegmentAllocator(internal val arena: JnaArena) {
     fun allocate(layout: ValueLayout): MemorySegment = MemorySegment(arena.allocate(layout.size), layout.size)
         .also { it.fillWithZero() }
 

@@ -7,6 +7,10 @@ agp = "8.5.2"
 jna = "5.15.0"
 kotest = "6.0.0.M1"
 
+# Android demo
+activityCompose = "1.9.2"
+android-native-helper = "0.0.1"
+
 [libraries]
 download = { module = "de.undercouch.download:de.undercouch.download.gradle.plugin", version.ref = "download" }
 kotlin-multiplatform = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -18,6 +22,11 @@ zip4j = { module = "net.lingala.zip4j:zip4j", version = "2.11.5" }
 android-library = { module = "com.android.library:com.android.library.gradle.plugin", version.ref = "agp" }
 jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 
+# Android demo
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+android-native-helper = { module = "io.ygdrasil:android-native-helper", version.ref = "android-native-helper" }
+
+
 # Tests
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
@@ -27,6 +36,7 @@ kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref =
 [plugins]
 kotest = { id = "io.kotest.multiplatform", version.ref = "kotest" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "agp" }
 
 [bundles]
 kotest = ["kotest-core", "kotest-assertions"]
