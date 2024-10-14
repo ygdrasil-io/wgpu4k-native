@@ -12,7 +12,10 @@ internal fun CLibraryModel.Structure.toJvmStructure() = templateBuilder {
     appendLine("@JvmInline")
     appendBlock("actual value class $structureName(actual override val handler: NativeAddress) : CStructure") {
 
-        members.forEach { (name, type, optional) ->
+        members.forEach { member ->
+            val name = member.name
+            val type = member.type
+            val optional = member.option
             val variableType = type.variableType()
             appendLine("actual $variableType $name: ${type.toFunctionKotlinType()}$optional")
             // Getter
@@ -33,7 +36,7 @@ internal fun CLibraryModel.Structure.toJvmStructure() = templateBuilder {
                 CLibraryModel.Primitive.Int32 -> "getInt(${name}Offset)"
                 is CLibraryModel.Reference.Enumeration,
                 CLibraryModel.Primitive.UInt32 -> "getUInt(${name}Offset)"
-
+                is CLibraryModel.Reference.StructureField -> "handler.handler.asSlice(${name}Offset, ${member.size}L).let(::NativeAddress).let(::${type.name})"
                 is CLibraryModel.Reference -> "get(${name}Layout, ${name}Offset).let(::${type.name})"
             }.let { appendLine("\tget() = $it") }
 

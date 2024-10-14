@@ -36,7 +36,7 @@ private fun CLibraryModel.Structure.updateSizeAndPadding(
         val padding = offset % alignment
         offset += size + padding
 
-        CLibraryModel.StructureField(member.name, member.type, member.option, size, alignment, padding)
+        CLibraryModel.StructureField(member.name, member.type, member.option, alignment, size, padding)
     }
 
     val padding = offset % structureAlignment
