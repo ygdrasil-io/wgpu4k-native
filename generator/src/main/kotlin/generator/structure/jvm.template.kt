@@ -69,20 +69,23 @@ internal fun CLibraryModel.Structure.toJvmStructure() = templateBuilder {
 
             // Generate layout
             appendLine("internal val LAYOUT = structLayout(")
-            members.map { (name, type, _) ->
+            members.forEach { (name, type, _, _, _, padding) ->
                 typeToLayout(type).let { "\t$it.withName(\"${name}\")," }
-            }.forEach(::appendLine)
+                    .let(::appendLine)
+                padding?.takeIf { it > 0 }
+                    ?.let { "MemoryLayout.paddingLayout($it)"}
+                    ?.let(::appendLine)
+            }
             appendLine(").withName(\"$structureName\")")
             newLine()
 
             // Write offset
             var offset: Int? = 0
             var oldName: String? = null
-            members.forEachIndexed { index, (name, type, _) ->
-                appendLine("val ${name}Offset = " + (offset?.let { "${it}L" } ?: "${oldName}Layout.byteSize()") +
-                        (oldName?.let { " + ${oldName}Offset" } ?: ""))
+            members.forEachIndexed { index, (name, type, _, _, size, padding) ->
+                appendLine("val ${name}Offset = $offset")
                 appendLine("val ${name}Layout = ${typeToLayout(type)}")
-                offset = type.getOffsetSize()
+                offset = (size ?: 0) + (padding ?: 0)
                 oldName = name
             }
         }

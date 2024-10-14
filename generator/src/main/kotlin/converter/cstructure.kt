@@ -25,7 +25,7 @@ private fun CLibraryModel.Structure.updateSizeAndPadding(
                 ?.updateSizeAndPadding(stack, processed)
 
             (processed.firstOrNull { it.name == member.type.name } ?: error("${member.type.name} should have been processed"))
-                .let { it.size to it.alignement }
+                .let { it.size to it.alignment }
         } else {
             member.size to member.alignment
         }

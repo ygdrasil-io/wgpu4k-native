@@ -7,6 +7,14 @@ import ffi.CString
 import ffi.ArrayHolder
 import ffi.MemoryAllocator
 
+expect value class WGPUStringView(val handler: NativeAddress) {
+	var data: CString?
+	var length: ULong
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUStringView
+	}
+}
+
 expect value class WGPUAdapterInfo(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStructOut?
 	val vendor: WGPUStringView
@@ -56,6 +64,44 @@ expect value class WGPUBindGroupLayoutDescriptor(val handler: NativeAddress) {
 	}
 }
 
+expect value class WGPUBufferBindingLayout(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var type: WGPUBufferBindingType
+	var hasDynamicOffset: Boolean
+	var minBindingSize: ULong
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUBufferBindingLayout
+	}
+}
+
+expect value class WGPUSamplerBindingLayout(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var type: WGPUSamplerBindingType
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUSamplerBindingLayout
+	}
+}
+
+expect value class WGPUTextureBindingLayout(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var sampleType: WGPUTextureSampleType
+	var viewDimension: WGPUTextureViewDimension
+	var multisampled: Boolean
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUTextureBindingLayout
+	}
+}
+
+expect value class WGPUStorageTextureBindingLayout(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var access: WGPUStorageTextureAccess
+	var format: WGPUTextureFormat
+	var viewDimension: WGPUTextureViewDimension
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUStorageTextureBindingLayout
+	}
+}
+
 expect value class WGPUBindGroupLayoutEntry(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var binding: UInt
@@ -83,16 +129,6 @@ expect value class WGPUBlendState(val handler: NativeAddress) {
 	val alpha: WGPUBlendComponent
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUBlendState
-	}
-}
-
-expect value class WGPUBufferBindingLayout(val handler: NativeAddress) {
-	var nextInChain: WGPUChainedStruct?
-	var type: WGPUBufferBindingType
-	var hasDynamicOffset: Boolean
-	var minBindingSize: ULong
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUBufferBindingLayout
 	}
 }
 
@@ -186,6 +222,17 @@ expect value class WGPUComputePassTimestampWrites(val handler: NativeAddress) {
 	}
 }
 
+expect value class WGPUProgrammableStageDescriptor(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var module: WGPUShaderModule?
+	val entryPoint: WGPUStringView
+	var constantCount: ULong
+	var constants: ArrayHolder<WGPUConstantEntry>?
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUProgrammableStageDescriptor
+	}
+}
+
 expect value class WGPUComputePipelineDescriptor(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	val label: WGPUStringView
@@ -205,6 +252,16 @@ expect value class WGPUConstantEntry(val handler: NativeAddress) {
 	}
 }
 
+expect value class WGPUStencilFaceState(val handler: NativeAddress) {
+	var compare: WGPUCompareFunction
+	var failOp: WGPUStencilOperation
+	var depthFailOp: WGPUStencilOperation
+	var passOp: WGPUStencilOperation
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUStencilFaceState
+	}
+}
+
 expect value class WGPUDepthStencilState(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var format: WGPUTextureFormat
@@ -219,6 +276,34 @@ expect value class WGPUDepthStencilState(val handler: NativeAddress) {
 	var depthBiasClamp: Float
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUDepthStencilState
+	}
+}
+
+expect value class WGPUQueueDescriptor(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	val label: WGPUStringView
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUQueueDescriptor
+	}
+}
+
+expect value class WGPUDeviceLostCallbackInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var callback: CallbackHolder<WGPUDeviceLostCallback>?
+	var userdata1: NativeAddress?
+	var userdata2: NativeAddress?
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUDeviceLostCallbackInfo
+	}
+}
+
+expect value class WGPUUncapturedErrorCallbackInfo(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
+	var userdata1: NativeAddress?
+	var userdata2: NativeAddress?
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUUncapturedErrorCallbackInfo
 	}
 }
 
@@ -273,12 +358,31 @@ expect value class WGPUFutureWaitInfo(val handler: NativeAddress) {
 	}
 }
 
+expect value class WGPUTextureDataLayout(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var offset: ULong
+	var bytesPerRow: UInt
+	var rowsPerImage: UInt
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUTextureDataLayout
+	}
+}
+
 expect value class WGPUImageCopyBuffer(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	val layout: WGPUTextureDataLayout
 	var buffer: WGPUBuffer?
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUImageCopyBuffer
+	}
+}
+
+expect value class WGPUOrigin3D(val handler: NativeAddress) {
+	var x: UInt
+	var y: UInt
+	var z: UInt
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUOrigin3D
 	}
 }
 
@@ -293,20 +397,20 @@ expect value class WGPUImageCopyTexture(val handler: NativeAddress) {
 	}
 }
 
-expect value class WGPUInstanceDescriptor(val handler: NativeAddress) {
-	var nextInChain: WGPUChainedStruct?
-	val features: WGPUInstanceFeatures
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUInstanceDescriptor
-	}
-}
-
 expect value class WGPUInstanceFeatures(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var timedWaitAnyEnable: Boolean
 	var timedWaitAnyMaxCount: ULong
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUInstanceFeatures
+	}
+}
+
+expect value class WGPUInstanceDescriptor(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	val features: WGPUInstanceFeatures
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUInstanceDescriptor
 	}
 }
 
@@ -357,15 +461,6 @@ expect value class WGPUMultisampleState(val handler: NativeAddress) {
 	}
 }
 
-expect value class WGPUOrigin3D(val handler: NativeAddress) {
-	var x: UInt
-	var y: UInt
-	var z: UInt
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUOrigin3D
-	}
-}
-
 expect value class WGPUPipelineLayoutDescriptor(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	val label: WGPUStringView
@@ -388,17 +483,6 @@ expect value class WGPUPrimitiveState(val handler: NativeAddress) {
 	}
 }
 
-expect value class WGPUProgrammableStageDescriptor(val handler: NativeAddress) {
-	var nextInChain: WGPUChainedStruct?
-	var module: WGPUShaderModule?
-	val entryPoint: WGPUStringView
-	var constantCount: ULong
-	var constants: ArrayHolder<WGPUConstantEntry>?
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUProgrammableStageDescriptor
-	}
-}
-
 expect value class WGPUQuerySetDescriptor(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	val label: WGPUStringView
@@ -406,14 +490,6 @@ expect value class WGPUQuerySetDescriptor(val handler: NativeAddress) {
 	var count: UInt
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUQuerySetDescriptor
-	}
-}
-
-expect value class WGPUQueueDescriptor(val handler: NativeAddress) {
-	var nextInChain: WGPUChainedStruct?
-	val label: WGPUStringView
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUQueueDescriptor
 	}
 }
 
@@ -480,6 +556,14 @@ expect value class WGPURenderPassDescriptor(val handler: NativeAddress) {
 	}
 }
 
+expect value class WGPUChainedStruct(val handler: NativeAddress) {
+	var next: WGPUChainedStruct?
+	var sType: WGPUSType
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUChainedStruct
+	}
+}
+
 expect value class WGPURenderPassMaxDrawCount(val handler: NativeAddress) {
 	val chain: WGPUChainedStruct
 	var maxDrawCount: ULong
@@ -494,6 +578,19 @@ expect value class WGPURenderPassTimestampWrites(val handler: NativeAddress) {
 	var endOfPassWriteIndex: UInt
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPURenderPassTimestampWrites
+	}
+}
+
+expect value class WGPUVertexState(val handler: NativeAddress) {
+	var nextInChain: WGPUChainedStruct?
+	var module: WGPUShaderModule?
+	val entryPoint: WGPUStringView
+	var constantCount: ULong
+	var constants: ArrayHolder<WGPUConstantEntry>?
+	var bufferCount: ULong
+	var buffers: ArrayHolder<WGPUVertexBufferLayout>?
+	companion object {
+		fun allocate(allocator: MemoryAllocator): WGPUVertexState
 	}
 }
 
@@ -527,14 +624,6 @@ expect value class WGPURequiredLimits(val handler: NativeAddress) {
 	val limits: WGPULimits
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPURequiredLimits
-	}
-}
-
-expect value class WGPUSamplerBindingLayout(val handler: NativeAddress) {
-	var nextInChain: WGPUChainedStruct?
-	var type: WGPUSamplerBindingType
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUSamplerBindingLayout
 	}
 }
 
@@ -578,26 +667,6 @@ expect value class WGPUShaderSourceWGSL(val handler: NativeAddress) {
 	val code: WGPUStringView
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUShaderSourceWGSL
-	}
-}
-
-expect value class WGPUStencilFaceState(val handler: NativeAddress) {
-	var compare: WGPUCompareFunction
-	var failOp: WGPUStencilOperation
-	var depthFailOp: WGPUStencilOperation
-	var passOp: WGPUStencilOperation
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUStencilFaceState
-	}
-}
-
-expect value class WGPUStorageTextureBindingLayout(val handler: NativeAddress) {
-	var nextInChain: WGPUChainedStruct?
-	var access: WGPUStorageTextureAccess
-	var format: WGPUTextureFormat
-	var viewDimension: WGPUTextureViewDimension
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUStorageTextureBindingLayout
 	}
 }
 
@@ -716,26 +785,6 @@ expect value class WGPUSurfaceTexture(val handler: NativeAddress) {
 	}
 }
 
-expect value class WGPUTextureBindingLayout(val handler: NativeAddress) {
-	var nextInChain: WGPUChainedStruct?
-	var sampleType: WGPUTextureSampleType
-	var viewDimension: WGPUTextureViewDimension
-	var multisampled: Boolean
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUTextureBindingLayout
-	}
-}
-
-expect value class WGPUTextureDataLayout(val handler: NativeAddress) {
-	var nextInChain: WGPUChainedStruct?
-	var offset: ULong
-	var bytesPerRow: UInt
-	var rowsPerImage: UInt
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUTextureDataLayout
-	}
-}
-
 expect value class WGPUTextureDescriptor(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	val label: WGPUStringView
@@ -787,40 +836,11 @@ expect value class WGPUVertexBufferLayout(val handler: NativeAddress) {
 	}
 }
 
-expect value class WGPUVertexState(val handler: NativeAddress) {
-	var nextInChain: WGPUChainedStruct?
-	var module: WGPUShaderModule?
-	val entryPoint: WGPUStringView
-	var constantCount: ULong
-	var constants: ArrayHolder<WGPUConstantEntry>?
-	var bufferCount: ULong
-	var buffers: ArrayHolder<WGPUVertexBufferLayout>?
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUVertexState
-	}
-}
-
-expect value class WGPUChainedStruct(val handler: NativeAddress) {
-	var next: WGPUChainedStruct?
-	var sType: WGPUSType
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUChainedStruct
-	}
-}
-
 expect value class WGPUChainedStructOut(val handler: NativeAddress) {
 	var next: WGPUChainedStructOut?
 	var sType: WGPUSType
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPUChainedStructOut
-	}
-}
-
-expect value class WGPUStringView(val handler: NativeAddress) {
-	var data: CString?
-	var length: ULong
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUStringView
 	}
 }
 
@@ -864,16 +884,6 @@ expect value class WGPUCreateRenderPipelineAsyncCallbackInfo(val handler: Native
 	}
 }
 
-expect value class WGPUDeviceLostCallbackInfo(val handler: NativeAddress) {
-	var nextInChain: WGPUChainedStruct?
-	var callback: CallbackHolder<WGPUDeviceLostCallback>?
-	var userdata1: NativeAddress?
-	var userdata2: NativeAddress?
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUDeviceLostCallbackInfo
-	}
-}
-
 expect value class WGPUPopErrorScopeCallbackInfo(val handler: NativeAddress) {
 	var nextInChain: WGPUChainedStruct?
 	var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
@@ -911,16 +921,6 @@ expect value class WGPURequestDeviceCallbackInfo(val handler: NativeAddress) {
 	var userdata2: NativeAddress?
 	companion object {
 		fun allocate(allocator: MemoryAllocator): WGPURequestDeviceCallbackInfo
-	}
-}
-
-expect value class WGPUUncapturedErrorCallbackInfo(val handler: NativeAddress) {
-	var nextInChain: WGPUChainedStruct?
-	var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
-	var userdata1: NativeAddress?
-	var userdata2: NativeAddress?
-	companion object {
-		fun allocate(allocator: MemoryAllocator): WGPUUncapturedErrorCallbackInfo
 	}
 }
 

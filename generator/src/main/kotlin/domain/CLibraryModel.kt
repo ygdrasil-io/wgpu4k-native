@@ -46,7 +46,7 @@ data class CLibraryModel(
         val name: String,
         val members: List<StructureField>,
         val size: Int? = null,
-        val alignement: Int? = null,
+        val alignment: Int? = null,
         val padding: Int? = null,
     )
 
