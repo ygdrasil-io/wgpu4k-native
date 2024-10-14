@@ -1,10 +1,10 @@
 package generator.structure
 
 import builder.templateBuilder
-import converter.getOffsetSize
 import converter.variableType
 import domain.CLibraryModel
 import domain.toFunctionKotlinType
+import domain.typeToJvmLayout
 
 internal fun CLibraryModel.Structure.toJvmStructure() = templateBuilder {
     val structureName = name
@@ -77,7 +77,7 @@ internal fun CLibraryModel.Structure.toJvmStructure() = templateBuilder {
                 padding?.takeIf { it > 0 }
                     ?.let { "\tMemoryLayout.paddingLayout($it),"}
                     ?.let(::appendLine)
-                typeToLayout(type).let { "\t$it.withName(\"${name}\")," }
+                typeToJvmLayout(type).let { "\t$it.withName(\"${name}\")," }
                     .let(::appendLine)
             }
 
@@ -92,34 +92,10 @@ internal fun CLibraryModel.Structure.toJvmStructure() = templateBuilder {
             members.forEachIndexed { index, member ->
                 offset += (member.padding ?: 0)
                 appendLine("val ${member.name}Offset = ${offset}L")
-                appendLine("val ${member.name}Layout = ${typeToLayout(member.type)}")
+                appendLine("val ${member.name}Layout = ${typeToJvmLayout(member.type)}")
                 offset += (member.size ?: 0)
             }
         }
     }
 }
 
-private fun typeToLayout(type: CLibraryModel.Type) = when (type) {
-    CLibraryModel.Reference.OpaquePointer,
-    is CLibraryModel.Reference.Pointer,
-    CLibraryModel.Reference.CString,
-    is CLibraryModel.Array,
-    is CLibraryModel.Reference.Callback,
-    CLibraryModel.Void,
-    is CLibraryModel.Reference.Structure -> "C_POINTER"
-
-    CLibraryModel.Primitive.UInt16 -> "C_SHORT"
-
-    CLibraryModel.Primitive.Bool,
-    CLibraryModel.Primitive.UInt32,
-    CLibraryModel.Primitive.Int32 -> "C_INT"
-
-    CLibraryModel.Primitive.UInt64,
-    CLibraryModel.Primitive.Int64 -> "C_LONG"
-
-    CLibraryModel.Primitive.Float32 -> "C_FLOAT"
-    CLibraryModel.Primitive.Float64 -> "C_DOUBLE"
-
-    is CLibraryModel.Reference.Enumeration -> "C_INT"
-    is CLibraryModel.Reference.StructureField -> "${type.name}.LAYOUT"
-}
