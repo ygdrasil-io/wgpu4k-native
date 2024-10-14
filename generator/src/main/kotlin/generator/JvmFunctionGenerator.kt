@@ -105,5 +105,5 @@ internal fun CLibraryModel.Type.toJvmNativeType(): String = when (this) {
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer,
     is CLibraryModel.Reference.Structure,
-    is CLibraryModel.Reference.StructureField -> "java.lang.foreign.MemorySegment?"
+    is CLibraryModel.Reference.StructureField -> "java.lang.foreign.MemorySegment"
 }

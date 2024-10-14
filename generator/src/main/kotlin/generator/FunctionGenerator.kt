@@ -21,10 +21,6 @@ val functionsJvmMainFile = jvmMainBasePath
     .resolve("webgpu")
     .resolve("Functions.jvm.kt")
 
-val functionsAndroidMainFile = androidMainBasePath
-    .resolve("webgpu")
-    .resolve("Functions.android.kt")
-
 private val header = """
     $disclamer
     package webgpu
@@ -178,10 +174,10 @@ private fun File.writeJvmFunction(function: CLibraryModel.Function) {
 }
 
 private fun CLibraryModel.Type.toJvmArgCall(name: String) = when(this) {
-    is CLibraryModel.Reference.OpaquePointer -> "$name.adapt()"
+    is CLibraryModel.Reference.OpaquePointer -> "$name.adapt() ?: java.lang.foreign.MemorySegment.NULL"
     is CLibraryModel.Reference.Enumeration -> name
     is CLibraryModel.Array,
-    is CLibraryModel.Reference -> "$name?.handler.adapt()"
+    is CLibraryModel.Reference -> "$name?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL"
     else -> name
 }
 
