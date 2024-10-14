@@ -55,6 +55,7 @@ private val headerJvm = """
     import ffi.CStructure
     import ffi.MemoryAllocator
     import java.lang.foreign.AddressLayout
+    import java.lang.foreign.MemoryLayout
     import java.lang.foreign.GroupLayout
     import java.lang.foreign.MemoryLayout.PathElement.groupElement
     import java.lang.foreign.MemoryLayout.structLayout

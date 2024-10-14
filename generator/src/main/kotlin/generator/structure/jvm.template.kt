@@ -8,6 +8,7 @@ import domain.toFunctionKotlinType
 
 internal fun CLibraryModel.Structure.toJvmStructure() = templateBuilder {
     val structureName = name
+    val structureSize = size ?: error("structure size should be know at this point")
     appendLine("@JvmInline")
     appendBlock("actual value class $structureName(actual override val handler: NativeAddress) : CStructure") {
 
@@ -63,7 +64,7 @@ internal fun CLibraryModel.Structure.toJvmStructure() = templateBuilder {
         appendBlock("actual companion object") {
 
             appendBlock("actual fun allocate(allocator: MemoryAllocator): $structureName") {
-                appendLine("return allocator.allocate(LAYOUT.byteSize())")
+                appendLine("return allocator.allocate(${structureSize}L)")
                 appendLine("\t.let(::$structureName)")
             }
 
@@ -73,20 +74,22 @@ internal fun CLibraryModel.Structure.toJvmStructure() = templateBuilder {
                 typeToLayout(type).let { "\t$it.withName(\"${name}\")," }
                     .let(::appendLine)
                 padding?.takeIf { it > 0 }
-                    ?.let { "MemoryLayout.paddingLayout($it)"}
+                    ?.let { "\tMemoryLayout.paddingLayout($it)"}
                     ?.let(::appendLine)
             }
+
+            padding?.takeIf { it > 0 }
+                ?.let { "\tMemoryLayout.paddingLayout($it)"}
+                ?.let(::appendLine)
             appendLine(").withName(\"$structureName\")")
             newLine()
 
             // Write offset
             var offset: Int? = 0
-            var oldName: String? = null
             members.forEachIndexed { index, (name, type, _, _, size, padding) ->
-                appendLine("val ${name}Offset = $offset")
+                appendLine("val ${name}Offset = ${offset}L")
                 appendLine("val ${name}Layout = ${typeToLayout(type)}")
                 offset = (size ?: 0) + (padding ?: 0)
-                oldName = name
             }
         }
     }
