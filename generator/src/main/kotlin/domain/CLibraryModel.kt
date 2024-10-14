@@ -44,7 +44,19 @@ data class CLibraryModel(
 
     data class Structure(
         val name: String,
-        val members: List<Triple<String, Type, String>>
+        val members: List<StructureField>,
+        val size: Int? = null,
+        val alignement: Int? = null,
+        val padding: Int? = null,
+    )
+
+    data class StructureField(
+        val name: String,
+        val type: Type,
+        val option: String,
+        val alignment: Int? = type.getSize(),
+        val size: Int? = type.getSize(),
+        val padding: Int? = null
     )
 
     data class Callback(
@@ -127,3 +139,23 @@ internal fun String?.toCType(isPointer: Boolean, isMutable: Boolean): CLibraryMo
 
 private fun String.isString()
     = equals("string") || equals("nullable_string") || equals("out_string") || equals("string_with_default_empty")
+
+fun CLibraryModel.Type.getSize(): Int? = when (this) {
+    is CLibraryModel.Array,
+    is CLibraryModel.Reference.Callback,
+    CLibraryModel.Reference.OpaquePointer,
+    is CLibraryModel.Reference.Pointer,
+    is CLibraryModel.Reference.Structure,
+    CLibraryModel.Primitive.UInt64,
+    CLibraryModel.Primitive.Float64,
+    CLibraryModel.Reference.CString,
+    CLibraryModel.Primitive.Int64 -> 8
+    CLibraryModel.Primitive.UInt16 -> 2
+    is CLibraryModel.Reference.Enumeration,
+    CLibraryModel.Primitive.Int32,
+    CLibraryModel.Primitive.Float32,
+    CLibraryModel.Primitive.Bool,
+    CLibraryModel.Primitive.UInt32 -> 4
+    is CLibraryModel.Reference.StructureField -> null
+    CLibraryModel.Void -> null
+}

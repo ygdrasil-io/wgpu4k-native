@@ -15,6 +15,7 @@ internal fun YamlModel.toCModel(): CLibraryModel {
     val functions = convertToCLibraryFunctions()
     val enumerations = convertToCLibraryEnumerations()
     val structures = generateCLibraryStructures()
+        .calculateSizeAndPadding()
     val callbacks = callbacks.map {
         CLibraryModel.Callback(
             it.name.convertToKotlinCallbackName(),
@@ -64,7 +65,7 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
     CLibraryModel.Structure(
         it.name.convertToKotlinClassName(),
         members.flatMap {
-            Triple(
+            CLibraryModel.StructureField(
                 it.name.convertToKotlinVariableName(),
                 it.type.toCType(it.pointer != null, it.pointer == "mutable"),
                 if (it.type.toCType(it.pointer != null, it.pointer == "mutable") is CLibraryModel.Array ||
@@ -79,7 +80,7 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
                             ) !is CLibraryModel.Reference.StructureField)
                 ) "?" else ""
             ).let {
-                when (it.second) {
+                when (it.type) {
                     is CLibraryModel.Array -> listOf(
                         it.generateArrayCounter(),
                         it
@@ -93,30 +94,30 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
 } + listOf(
     CLibraryModel.Structure(
         "WGPUChainedStruct", listOf(
-            Triple("next", CLibraryModel.Reference.Structure("WGPUChainedStruct"), "?"),
-            Triple("sType", CLibraryModel.Reference.Enumeration("WGPUSType"), "")
+            CLibraryModel.StructureField("next", CLibraryModel.Reference.Structure("WGPUChainedStruct"), "?"),
+            CLibraryModel.StructureField("sType", CLibraryModel.Reference.Enumeration("WGPUSType"), "")
         )
     ),
     CLibraryModel.Structure(
         "WGPUChainedStructOut", listOf(
-            Triple("next", CLibraryModel.Reference.Structure("WGPUChainedStructOut"), "?"),
-            Triple("sType", CLibraryModel.Reference.Enumeration("WGPUSType"), "")
+            CLibraryModel.StructureField("next", CLibraryModel.Reference.Structure("WGPUChainedStructOut"), "?"),
+            CLibraryModel.StructureField("sType", CLibraryModel.Reference.Enumeration("WGPUSType"), "")
         )
     ),
     CLibraryModel.Structure(
         "WGPUStringView", listOf(
-            Triple("data", CLibraryModel.Reference.CString, "?"),
-            Triple("length", CLibraryModel.Primitive.UInt64, "")
+            CLibraryModel.StructureField("data", CLibraryModel.Reference.CString, "?"),
+            CLibraryModel.StructureField("length", CLibraryModel.Primitive.UInt64, "")
         )
     )
 ) + callbacks.map {
     val name = it.name.convertToKotlinCallbackStructureName()
     CLibraryModel.Structure(
         name, listOf(
-            Triple("nextInChain", CLibraryModel.Reference.Structure("WGPUChainedStruct"), "?"),
-            Triple("callback", CLibraryModel.Reference.Callback(it.name.convertToKotlinCallbackName()), "?"),
-            Triple("userdata1", CLibraryModel.Reference.OpaquePointer, "?"),
-            Triple("userdata2", CLibraryModel.Reference.OpaquePointer, "?")
+            CLibraryModel.StructureField("nextInChain", CLibraryModel.Reference.Structure("WGPUChainedStruct"), "?"),
+            CLibraryModel.StructureField("callback", CLibraryModel.Reference.Callback(it.name.convertToKotlinCallbackName()), "?"),
+            CLibraryModel.StructureField("userdata1", CLibraryModel.Reference.OpaquePointer, "?"),
+            CLibraryModel.StructureField("userdata2", CLibraryModel.Reference.OpaquePointer, "?")
         )
     )
 }
@@ -174,8 +175,6 @@ fun convertToCFunctionArgs(args: List<YamlModel.Function.Arg>, callback: String?
     } + callback.injectCallbackInfoStructure()
 }
 
-//it.name.convertToKotlinVariableName() to
-
 private fun String?.injectCallbackInfoStructure(): List<Pair<String, Type>> = when {
     this != null -> listOf("callbackInfo" to CLibraryModel.Reference.StructureField(split(".")[1].convertToKotlinCallbackStructureName()))
     else -> emptyList()
@@ -187,12 +186,12 @@ private fun YamlModel.convertToPointer(): List<CLibraryModel.Pointer> {
     return pointers
 }
 
-private fun Triple<String, CLibraryModel.Type, String>.generateArrayCounter() = let { (name, _, _) ->
+private fun CLibraryModel.StructureField.generateArrayCounter() = let { (name, _, _) ->
     val newName = when {
         name.endsWith("ies") -> name.removeSuffix("ies") + "yCount"
         else -> name.removeSuffix("s") + "Count"
     }
-    Triple(newName, CLibraryModel.Primitive.UInt64, "")
+    CLibraryModel.StructureField(newName, CLibraryModel.Primitive.UInt64, "")
 }
 
 private fun Pair<String, CLibraryModel.Type>.generateArrayCounter() = let { (name, _) ->
@@ -201,4 +200,44 @@ private fun Pair<String, CLibraryModel.Type>.generateArrayCounter() = let { (nam
         else -> name.removeSuffix("s") + "Count"
     }
     newName to CLibraryModel.Primitive.UInt64
+}
+
+
+data class Field(val name: String, val size: Int, val alignment: Int)
+
+fun main() {
+
+    val fields = listOf(
+        Field("a", 8, 8),  // char a (1 byte, alignment 1)
+        Field("b", 4, 4),  // int b (4 bytes, alignment 4)
+        Field("c", 1, 1)   // char c (1 byte, alignment 1)
+    )
+
+    calculatePadding(fields)
+}
+
+fun calculatePadding(fields: List<Field>) {
+    var offset = 0
+    var totalSize = 0
+
+    println("Field\tOffset\tPadding")
+
+    for (field in fields) {
+        // Adjust offset to align with field's alignment
+        val alignmentOffset = (field.alignment - (offset % field.alignment)) % field.alignment
+        offset += alignmentOffset
+
+        println("${field.name}\t$offset\t$alignmentOffset")
+
+        offset += field.size
+        totalSize += field.size + alignmentOffset
+    }
+
+    // Align the total size to the largest alignment in the structure
+    val largestAlignment = fields.maxOf { it.alignment }
+    val finalPadding = (largestAlignment - (totalSize % largestAlignment)) % largestAlignment
+    totalSize += finalPadding
+
+    println("Total size (with padding): $totalSize")
+    println("Final padding: $finalPadding")
 }
