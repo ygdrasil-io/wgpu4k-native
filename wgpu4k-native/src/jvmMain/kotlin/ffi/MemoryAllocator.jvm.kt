@@ -6,7 +6,7 @@ import java.lang.foreign.ValueLayout
 
 actual class MemoryAllocator : AutoCloseable {
 
-    private val arena = Arena.ofConfined()
+    val arena = Arena.ofConfined()
     val allocator: SegmentAllocator
         get() = arena
 

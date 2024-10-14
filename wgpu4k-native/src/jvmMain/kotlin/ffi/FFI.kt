@@ -1,9 +1,12 @@
 package ffi
 
+import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.Linker
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.SymbolLookup
 import java.lang.foreign.ValueLayout
+import java.lang.invoke.MethodHandle
+import java.lang.invoke.MethodHandles
 
 val C_BOOL: ValueLayout = ValueLayout.JAVA_BOOLEAN
 val C_CHAR: ValueLayout = ValueLayout.JAVA_BYTE
@@ -21,4 +24,12 @@ private val SYMBOL_LOOKUP = SymbolLookup.loaderLookup()
 internal fun findOrThrow(symbol: String): MemorySegment {
     return SYMBOL_LOOKUP.find(symbol)
         .orElseThrow { UnsatisfiedLinkError("unresolved symbol: $symbol") }
+}
+
+fun upcallHandle(fi: Class<*>?, name: String?, fdesc: FunctionDescriptor): MethodHandle {
+    try {
+        return MethodHandles.lookup().findVirtual(fi, name, fdesc.toMethodType())
+    } catch (ex: ReflectiveOperationException) {
+        throw AssertionError(ex)
+    }
 }

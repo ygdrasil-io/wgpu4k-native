@@ -1,11 +1,17 @@
 // This file has been generated DO NOT EDIT !!!
 package webgpu
 
+import ffi.C_INT
+import ffi.C_POINTER
 import ffi.Callback
-import ffi.CString
 import ffi.CallbackHolder
 import ffi.MemoryAllocator
 import ffi.NativeAddress
+import ffi.upcallHandle
+import java.lang.foreign.FunctionDescriptor
+import java.lang.foreign.Linker
+import java.lang.foreign.MemorySegment
+import java.lang.invoke.MethodHandle
 
 actual interface WGPUBufferMapCallback : Callback {
 	actual fun invoke(status: WGPUMapAsyncStatus, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
@@ -57,9 +63,51 @@ actual interface WGPUQueueWorkDoneCallback : Callback {
 }
 
 actual interface WGPURequestAdapterCallback : Callback {
+
 	actual fun invoke(status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+
+	interface Function {
+		fun apply(status: Int, adapter: MemorySegment, message: MemorySegment, userdata1: MemorySegment, userdata2: MemorySegment)
+	}
+
+
 	actual companion object {
-		actual fun allocate(allocator: MemoryAllocator, callback: WGPURequestAdapterCallback): CallbackHolder<WGPURequestAdapterCallback> = TODO()
+		actual fun allocate(allocator: MemoryAllocator, callback: WGPURequestAdapterCallback): CallbackHolder<WGPURequestAdapterCallback> {
+			val function = object : Function {
+				override fun apply(
+					status: Int,
+					adapter: MemorySegment,
+					message: MemorySegment,
+					userdata1: MemorySegment,
+					userdata2: MemorySegment
+				) {
+					println("adapter $adapter, message $message, userdata1 $userdata1, userdata2 $userdata2")
+					callback.invoke(status.toUInt(), adapter.let(::NativeAddress).let(::WGPUAdapter), message.let(::NativeAddress).let(::WGPUStringView), userdata1.let(::NativeAddress), userdata2.let(::NativeAddress))
+				}
+			}
+
+			return Linker.nativeLinker().upcallStub(
+				handler.bindTo(function),
+				descriptor,
+				allocator.arena
+			).let(::NativeAddress)
+				.let(::CallbackHolder)
+
+		}
+
+		private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(
+			C_INT,
+			C_POINTER,
+			WGPUStringView.LAYOUT,
+			C_POINTER,
+			C_POINTER,
+		)
+
+		private val handler: MethodHandle = upcallHandle(
+			Function::class.java,
+			"apply",
+			descriptor
+		)
 	}
 }
 
