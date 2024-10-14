@@ -71,11 +71,11 @@ internal fun CLibraryModel.Structure.toJvmStructure() = templateBuilder {
             // Generate layout
             appendLine("internal val LAYOUT = structLayout(")
             members.forEach { (name, type, _, _, _, padding) ->
+                padding?.takeIf { it > 0 }
+                    ?.let { "\tMemoryLayout.paddingLayout($it),"}
+                    ?.let(::appendLine)
                 typeToLayout(type).let { "\t$it.withName(\"${name}\")," }
                     .let(::appendLine)
-                padding?.takeIf { it > 0 }
-                    ?.let { "\tMemoryLayout.paddingLayout($it)"}
-                    ?.let(::appendLine)
             }
 
             padding?.takeIf { it > 0 }
@@ -85,11 +85,12 @@ internal fun CLibraryModel.Structure.toJvmStructure() = templateBuilder {
             newLine()
 
             // Write offset
-            var offset: Int? = 0
-            members.forEachIndexed { index, (name, type, _, _, size, padding) ->
-                appendLine("val ${name}Offset = ${offset}L")
-                appendLine("val ${name}Layout = ${typeToLayout(type)}")
-                offset = (size ?: 0) + (padding ?: 0)
+            var offset = 0
+            members.forEachIndexed { index, member ->
+                offset += (member.padding ?: 0)
+                appendLine("val ${member.name}Offset = ${offset}L")
+                appendLine("val ${member.name}Layout = ${typeToLayout(member.type)}")
+                offset += (member.size ?: 0)
             }
         }
     }
