@@ -7,7 +7,8 @@ import ffi.memoryScope
 fun compatibleFormat(surface: WGPUSurface, adapter: WGPUAdapter): UInt = memoryScope { scope ->
     val surfaceCapabilities = WGPUSurfaceCapabilities.allocate(scope)
     wgpuSurfaceGetCapabilities(surface, adapter, surfaceCapabilities)
-    return surfaceCapabilities.formats?.handler?.let { Buffer(it, 0u) }?.readInt()?.toUInt()
+    if (surfaceCapabilities.formatCount == 0uL) error("no surface format")
+    return surfaceCapabilities.formats?.handler?.let { Buffer(it, Int.SIZE_BYTES.toULong() * surfaceCapabilities.formatCount) }?.readInt()?.toUInt()
         ?: error("no compatible format")
 }
 

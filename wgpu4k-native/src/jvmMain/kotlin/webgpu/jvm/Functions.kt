@@ -934,7 +934,7 @@ object Functions {
 	private val wgpuQueueReleaseHandler = Linker.nativeLinker().downcallHandle(wgpuQueueReleaseHandlerAddress, wgpuQueueReleaseHandlerDescription)
 
 	fun wgpuQueueSubmit(handler: java.lang.foreign.MemorySegment, commandCount: ULong, commands: java.lang.foreign.MemorySegment): Unit {
-		return wgpuQueueSubmitHandler.invokeExact(handler, commandCount, commands) as Unit
+		return wgpuQueueSubmitHandler.invokeExact(handler, commandCount.toLong(), commands) as Unit
 	}
 	private val wgpuQueueSubmitHandlerDescription = FunctionDescriptor.ofVoid(
 			C_POINTER,
@@ -1200,7 +1200,7 @@ object Functions {
 	private val wgpuRenderPassEncoderSetBindGroupHandler = Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetBindGroupHandlerAddress, wgpuRenderPassEncoderSetBindGroupHandlerDescription)
 
 	fun wgpuRenderPassEncoderDraw(handler: java.lang.foreign.MemorySegment, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit {
-		return wgpuRenderPassEncoderDrawHandler.invokeExact(handler, vertexCount, instanceCount, firstVertex, firstInstance) as Unit
+		return wgpuRenderPassEncoderDrawHandler.invokeExact(handler, vertexCount.toInt(), instanceCount.toInt(), firstVertex.toInt(), firstInstance.toInt()) as Unit
 	}
 	private val wgpuRenderPassEncoderDrawHandlerDescription = FunctionDescriptor.ofVoid(
 			C_POINTER,
@@ -1498,7 +1498,7 @@ object Functions {
 	private val wgpuSurfaceConfigureHandler = Linker.nativeLinker().downcallHandle(wgpuSurfaceConfigureHandlerAddress, wgpuSurfaceConfigureHandlerDescription)
 
 	fun wgpuSurfaceGetCapabilities(handler: java.lang.foreign.MemorySegment, adapter: java.lang.foreign.MemorySegment, capabilities: java.lang.foreign.MemorySegment): UInt {
-		return wgpuSurfaceGetCapabilitiesHandler.invokeExact(handler, adapter, capabilities) as UInt
+		return (wgpuSurfaceGetCapabilitiesHandler.invokeExact(handler, adapter, capabilities) as Int).toUInt()
 	}
 	private val wgpuSurfaceGetCapabilitiesHandlerDescription = FunctionDescriptor.of(
 			C_INT,

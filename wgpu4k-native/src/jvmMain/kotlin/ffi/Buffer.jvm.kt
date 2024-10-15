@@ -1,6 +1,11 @@
 package ffi
 
-actual class Buffer actual constructor(actual val handler: NativeAddress, actual val size: ULong) {
+import java.lang.foreign.ValueLayout
+
+actual class Buffer actual constructor(handler: NativeAddress, actual val size: ULong) {
+
+    actual val handler: NativeAddress = handler.handler.reinterpret(size.toLong()).let(::NativeAddress)
+
     actual fun readLong(): Long {
         TODO("Not yet implemented")
     }
@@ -15,9 +20,7 @@ actual class Buffer actual constructor(actual val handler: NativeAddress, actual
     actual fun writeFloat(value: Float) {
     }
 
-    actual fun readInt(): Int {
-        TODO("Not yet implemented")
-    }
+    actual fun readInt(): Int = handler.handler.get(ValueLayout.JAVA_INT, 0)
 
     actual fun writeInt(value: Int) {
     }
