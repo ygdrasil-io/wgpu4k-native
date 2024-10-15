@@ -5,10 +5,12 @@ import converter.getOffsetSize
 import converter.variableType
 import domain.CLibraryModel
 import domain.toFunctionKotlinType
+import domain.typeToJvmLayout
 import java.io.File
 
 fun CLibraryModel.Structure.toAndroidStructure() = templateBuilder {
     val structureName = name
+    val structureSize = size ?: error("structure size should be know at this point")
     appendLine("@JvmInline")
     appendBlock("actual value class $structureName(actual override val handler: NativeAddress) : CStructure") {
 
@@ -65,26 +67,33 @@ fun CLibraryModel.Structure.toAndroidStructure() = templateBuilder {
 
         appendBlock("actual companion object") {
             appendBlock("actual fun allocate(allocator: MemoryAllocator): $structureName") {
-                appendLine("return allocator.allocate(LAYOUT.byteSize())")
+                appendLine("return allocator.allocate(${structureSize}L)")
                 appendLine("\t.let(::$structureName)")
             }
 
             // Generate layout
             appendLine("internal val LAYOUT = structLayout(")
-            members.forEach { (name, type, _) ->
-                getLayout(type).let { "\t$it.withName(\"${name}\")," }
-                    .also(::appendLine)
+            members.forEach { (name, type, _, _, _, padding) ->
+                padding?.takeIf { it > 0 }
+                    ?.let { "\tMemoryLayout.paddingLayout($it),"}
+                    ?.let(::appendLine)
+                typeToJvmLayout(type).let { "\t$it.withName(\"${name}\")," }
+                    .let(::appendLine)
             }
+
+            padding?.takeIf { it > 0 }
+                ?.let { "\tMemoryLayout.paddingLayout($it)"}
+                ?.let(::appendLine)
             appendLine(").withName(\"$structureName\")")
+            newLine()
 
             // Write offset
-            var offset: Int? = 0
-            var oldName: String? = null
-            members.forEachIndexed { index, (name, type, _), ->
-                appendLine("val ${name}Offset = " + (offset?.let { "${it}L" } ?: "${oldName}Layout.byteSize()") + (oldName?.let { " + ${oldName}Offset" } ?: ""))
-                appendLine("val ${name}Layout = ${getLayout(type)}")
-                offset = type.getOffsetSize()
-                oldName = name
+            var offset = 0
+            members.forEachIndexed { index, member ->
+                offset += (member.padding ?: 0)
+                appendLine("val ${member.name}Offset = ${offset}L")
+                appendLine("val ${member.name}Layout = ${typeToJvmLayout(member.type)}")
+                offset += (member.size ?: 0)
             }
         }
 

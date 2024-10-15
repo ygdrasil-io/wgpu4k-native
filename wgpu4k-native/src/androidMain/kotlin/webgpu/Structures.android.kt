@@ -30,17 +30,18 @@ actual value class WGPUStringView(actual override val handler: NativeAddress) : 
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUStringView {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(16L)
 				.let(::WGPUStringView)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("data"),
-			C_LONG.withName("length"),
+			ffi.C_POINTER.withName("data"),
+			ffi.C_LONG.withName("length"),
 		).withName("WGPUStringView")
+
 		val dataOffset = 0L
-		val dataLayout = C_POINTER
-		val lengthOffset = 8L + dataOffset
-		val lengthLayout = C_LONG
+		val dataLayout = ffi.C_POINTER
+		val lengthOffset = 8L
+		val lengthLayout = ffi.C_LONG
 	}
 }
 @JvmInline
@@ -80,38 +81,39 @@ actual value class WGPUAdapterInfo(actual override val handler: NativeAddress) :
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUAdapterInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(88L)
 				.let(::WGPUAdapterInfo)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("vendor"),
 			WGPUStringView.LAYOUT.withName("architecture"),
 			WGPUStringView.LAYOUT.withName("device"),
 			WGPUStringView.LAYOUT.withName("description"),
-			C_INT.withName("backendType"),
-			C_INT.withName("adapterType"),
-			C_INT.withName("vendorID"),
-			C_INT.withName("deviceID"),
+			ffi.C_INT.withName("backendType"),
+			ffi.C_INT.withName("adapterType"),
+			ffi.C_INT.withName("vendorID"),
+			ffi.C_INT.withName("deviceID"),
 		).withName("WGPUAdapterInfo")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val vendorOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val vendorOffset = 8L
 		val vendorLayout = WGPUStringView.LAYOUT
-		val architectureOffset = vendorLayout.byteSize() + vendorOffset
+		val architectureOffset = 24L
 		val architectureLayout = WGPUStringView.LAYOUT
-		val deviceOffset = architectureLayout.byteSize() + architectureOffset
+		val deviceOffset = 40L
 		val deviceLayout = WGPUStringView.LAYOUT
-		val descriptionOffset = deviceLayout.byteSize() + deviceOffset
+		val descriptionOffset = 56L
 		val descriptionLayout = WGPUStringView.LAYOUT
-		val backendTypeOffset = descriptionLayout.byteSize() + descriptionOffset
-		val backendTypeLayout = C_INT
-		val adapterTypeOffset = 4L + backendTypeOffset
-		val adapterTypeLayout = C_INT
-		val vendorIDOffset = 4L + adapterTypeOffset
-		val vendorIDLayout = C_INT
-		val deviceIDOffset = 4L + vendorIDOffset
-		val deviceIDLayout = C_INT
+		val backendTypeOffset = 72L
+		val backendTypeLayout = ffi.C_INT
+		val adapterTypeOffset = 76L
+		val adapterTypeLayout = ffi.C_INT
+		val vendorIDOffset = 80L
+		val vendorIDLayout = ffi.C_INT
+		val deviceIDOffset = 84L
+		val deviceIDLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -138,26 +140,27 @@ actual value class WGPUBindGroupDescriptor(actual override val handler: NativeAd
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(48L)
 				.let(::WGPUBindGroupDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_POINTER.withName("layout"),
-			C_LONG.withName("entryCount"),
-			C_POINTER.withName("entries"),
+			ffi.C_POINTER.withName("layout"),
+			ffi.C_LONG.withName("entryCount"),
+			ffi.C_POINTER.withName("entries"),
 		).withName("WGPUBindGroupDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val layoutOffset = labelLayout.byteSize() + labelOffset
-		val layoutLayout = C_POINTER
-		val entryCountOffset = 8L + layoutOffset
-		val entryCountLayout = C_LONG
-		val entriesOffset = 8L + entryCountOffset
-		val entriesLayout = C_POINTER
+		val layoutOffset = 24L
+		val layoutLayout = ffi.C_POINTER
+		val entryCountOffset = 32L
+		val entryCountLayout = ffi.C_LONG
+		val entriesOffset = 40L
+		val entriesLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -193,32 +196,34 @@ actual value class WGPUBindGroupEntry(actual override val handler: NativeAddress
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupEntry {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(56L)
 				.let(::WGPUBindGroupEntry)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_INT.withName("binding"),
-			C_POINTER.withName("buffer"),
-			C_LONG.withName("offset"),
-			C_LONG.withName("size"),
-			C_POINTER.withName("sampler"),
-			C_POINTER.withName("textureView"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("binding"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_POINTER.withName("buffer"),
+			ffi.C_LONG.withName("offset"),
+			ffi.C_LONG.withName("size"),
+			ffi.C_POINTER.withName("sampler"),
+			ffi.C_POINTER.withName("textureView"),
 		).withName("WGPUBindGroupEntry")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val bindingOffset = 8L + nextInChainOffset
-		val bindingLayout = C_INT
-		val bufferOffset = 4L + bindingOffset
-		val bufferLayout = C_POINTER
-		val offsetOffset = 8L + bufferOffset
-		val offsetLayout = C_LONG
-		val sizeOffset = 8L + offsetOffset
-		val sizeLayout = C_LONG
-		val samplerOffset = 8L + sizeOffset
-		val samplerLayout = C_POINTER
-		val textureViewOffset = 8L + samplerOffset
-		val textureViewLayout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val bindingOffset = 8L
+		val bindingLayout = ffi.C_INT
+		val bufferOffset = 16L
+		val bufferLayout = ffi.C_POINTER
+		val offsetOffset = 24L
+		val offsetLayout = ffi.C_LONG
+		val sizeOffset = 32L
+		val sizeLayout = ffi.C_LONG
+		val samplerOffset = 40L
+		val samplerLayout = ffi.C_POINTER
+		val textureViewOffset = 48L
+		val textureViewLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -241,23 +246,24 @@ actual value class WGPUBindGroupLayoutDescriptor(actual override val handler: Na
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupLayoutDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(40L)
 				.let(::WGPUBindGroupLayoutDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_LONG.withName("entryCount"),
-			C_POINTER.withName("entries"),
+			ffi.C_LONG.withName("entryCount"),
+			ffi.C_POINTER.withName("entries"),
 		).withName("WGPUBindGroupLayoutDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val entryCountOffset = labelLayout.byteSize() + labelOffset
-		val entryCountLayout = C_LONG
-		val entriesOffset = 8L + entryCountOffset
-		val entriesLayout = C_POINTER
+		val entryCountOffset = 24L
+		val entryCountLayout = ffi.C_LONG
+		val entriesOffset = 32L
+		val entriesLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -281,23 +287,24 @@ actual value class WGPUBufferBindingLayout(actual override val handler: NativeAd
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUBufferBindingLayout {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUBufferBindingLayout)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_INT.withName("type"),
-			C_INT.withName("hasDynamicOffset"),
-			C_LONG.withName("minBindingSize"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("type"),
+			ffi.C_INT.withName("hasDynamicOffset"),
+			ffi.C_LONG.withName("minBindingSize"),
 		).withName("WGPUBufferBindingLayout")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val typeOffset = 8L + nextInChainOffset
-		val typeLayout = C_INT
-		val hasDynamicOffsetOffset = 4L + typeOffset
-		val hasDynamicOffsetLayout = C_INT
-		val minBindingSizeOffset = 4L + hasDynamicOffsetOffset
-		val minBindingSizeLayout = C_LONG
+		val nextInChainLayout = ffi.C_POINTER
+		val typeOffset = 8L
+		val typeLayout = ffi.C_INT
+		val hasDynamicOffsetOffset = 12L
+		val hasDynamicOffsetLayout = ffi.C_INT
+		val minBindingSizeOffset = 16L
+		val minBindingSizeLayout = ffi.C_LONG
 	}
 }
 @JvmInline
@@ -313,17 +320,19 @@ actual value class WGPUSamplerBindingLayout(actual override val handler: NativeA
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSamplerBindingLayout {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(16L)
 				.let(::WGPUSamplerBindingLayout)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_INT.withName("type"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("type"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUSamplerBindingLayout")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val typeOffset = 8L + nextInChainOffset
-		val typeLayout = C_INT
+		val nextInChainLayout = ffi.C_POINTER
+		val typeOffset = 8L
+		val typeLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -347,23 +356,25 @@ actual value class WGPUTextureBindingLayout(actual override val handler: NativeA
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUTextureBindingLayout {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUTextureBindingLayout)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_INT.withName("sampleType"),
-			C_INT.withName("viewDimension"),
-			C_INT.withName("multisampled"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("sampleType"),
+			ffi.C_INT.withName("viewDimension"),
+			ffi.C_INT.withName("multisampled"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUTextureBindingLayout")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val sampleTypeOffset = 8L + nextInChainOffset
-		val sampleTypeLayout = C_INT
-		val viewDimensionOffset = 4L + sampleTypeOffset
-		val viewDimensionLayout = C_INT
-		val multisampledOffset = 4L + viewDimensionOffset
-		val multisampledLayout = C_INT
+		val nextInChainLayout = ffi.C_POINTER
+		val sampleTypeOffset = 8L
+		val sampleTypeLayout = ffi.C_INT
+		val viewDimensionOffset = 12L
+		val viewDimensionLayout = ffi.C_INT
+		val multisampledOffset = 16L
+		val multisampledLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -387,23 +398,25 @@ actual value class WGPUStorageTextureBindingLayout(actual override val handler: 
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUStorageTextureBindingLayout {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUStorageTextureBindingLayout)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_INT.withName("access"),
-			C_INT.withName("format"),
-			C_INT.withName("viewDimension"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("access"),
+			ffi.C_INT.withName("format"),
+			ffi.C_INT.withName("viewDimension"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUStorageTextureBindingLayout")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val accessOffset = 8L + nextInChainOffset
-		val accessLayout = C_INT
-		val formatOffset = 4L + accessOffset
-		val formatLayout = C_INT
-		val viewDimensionOffset = 4L + formatOffset
-		val viewDimensionLayout = C_INT
+		val nextInChainLayout = ffi.C_POINTER
+		val accessOffset = 8L
+		val accessLayout = ffi.C_INT
+		val formatOffset = 12L
+		val formatLayout = ffi.C_INT
+		val viewDimensionOffset = 16L
+		val viewDimensionLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -435,31 +448,33 @@ actual value class WGPUBindGroupLayoutEntry(actual override val handler: NativeA
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupLayoutEntry {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(112L)
 				.let(::WGPUBindGroupLayoutEntry)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_INT.withName("binding"),
-			C_LONG.withName("visibility"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("binding"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_LONG.withName("visibility"),
 			WGPUBufferBindingLayout.LAYOUT.withName("buffer"),
 			WGPUSamplerBindingLayout.LAYOUT.withName("sampler"),
 			WGPUTextureBindingLayout.LAYOUT.withName("texture"),
 			WGPUStorageTextureBindingLayout.LAYOUT.withName("storageTexture"),
 		).withName("WGPUBindGroupLayoutEntry")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val bindingOffset = 8L + nextInChainOffset
-		val bindingLayout = C_INT
-		val visibilityOffset = 4L + bindingOffset
-		val visibilityLayout = C_LONG
-		val bufferOffset = 8L + visibilityOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val bindingOffset = 8L
+		val bindingLayout = ffi.C_INT
+		val visibilityOffset = 16L
+		val visibilityLayout = ffi.C_LONG
+		val bufferOffset = 24L
 		val bufferLayout = WGPUBufferBindingLayout.LAYOUT
-		val samplerOffset = bufferLayout.byteSize() + bufferOffset
+		val samplerOffset = 48L
 		val samplerLayout = WGPUSamplerBindingLayout.LAYOUT
-		val textureOffset = samplerLayout.byteSize() + samplerOffset
+		val textureOffset = 64L
 		val textureLayout = WGPUTextureBindingLayout.LAYOUT
-		val storageTextureOffset = textureLayout.byteSize() + textureOffset
+		val storageTextureOffset = 88L
 		val storageTextureLayout = WGPUStorageTextureBindingLayout.LAYOUT
 	}
 }
@@ -480,20 +495,21 @@ actual value class WGPUBlendComponent(actual override val handler: NativeAddress
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUBlendComponent {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(12L)
 				.let(::WGPUBlendComponent)
 		}
 		internal val LAYOUT = structLayout(
-			C_INT.withName("operation"),
-			C_INT.withName("srcFactor"),
-			C_INT.withName("dstFactor"),
+			ffi.C_INT.withName("operation"),
+			ffi.C_INT.withName("srcFactor"),
+			ffi.C_INT.withName("dstFactor"),
 		).withName("WGPUBlendComponent")
+
 		val operationOffset = 0L
-		val operationLayout = C_INT
-		val srcFactorOffset = 4L + operationOffset
-		val srcFactorLayout = C_INT
-		val dstFactorOffset = 4L + srcFactorOffset
-		val dstFactorLayout = C_INT
+		val operationLayout = ffi.C_INT
+		val srcFactorOffset = 4L
+		val srcFactorLayout = ffi.C_INT
+		val dstFactorOffset = 8L
+		val dstFactorLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -507,16 +523,17 @@ actual value class WGPUBlendState(actual override val handler: NativeAddress) : 
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUBlendState {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUBlendState)
 		}
 		internal val LAYOUT = structLayout(
 			WGPUBlendComponent.LAYOUT.withName("color"),
 			WGPUBlendComponent.LAYOUT.withName("alpha"),
 		).withName("WGPUBlendState")
+
 		val colorOffset = 0L
 		val colorLayout = WGPUBlendComponent.LAYOUT
-		val alphaOffset = colorLayout.byteSize() + colorOffset
+		val alphaOffset = 12L
 		val alphaLayout = WGPUBlendComponent.LAYOUT
 	}
 }
@@ -544,26 +561,28 @@ actual value class WGPUBufferDescriptor(actual override val handler: NativeAddre
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUBufferDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(48L)
 				.let(::WGPUBufferDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_LONG.withName("usage"),
-			C_LONG.withName("size"),
-			C_INT.withName("mappedAtCreation"),
+			ffi.C_LONG.withName("usage"),
+			ffi.C_LONG.withName("size"),
+			ffi.C_INT.withName("mappedAtCreation"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUBufferDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val usageOffset = labelLayout.byteSize() + labelOffset
-		val usageLayout = C_LONG
-		val sizeOffset = 8L + usageOffset
-		val sizeLayout = C_LONG
-		val mappedAtCreationOffset = 8L + sizeOffset
-		val mappedAtCreationLayout = C_INT
+		val usageOffset = 24L
+		val usageLayout = ffi.C_LONG
+		val sizeOffset = 32L
+		val sizeLayout = ffi.C_LONG
+		val mappedAtCreationOffset = 40L
+		val mappedAtCreationLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -587,23 +606,24 @@ actual value class WGPUColor(actual override val handler: NativeAddress) : CStru
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUColor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUColor)
 		}
 		internal val LAYOUT = structLayout(
-			C_DOUBLE.withName("r"),
-			C_DOUBLE.withName("g"),
-			C_DOUBLE.withName("b"),
-			C_DOUBLE.withName("a"),
+			ffi.C_DOUBLE.withName("r"),
+			ffi.C_DOUBLE.withName("g"),
+			ffi.C_DOUBLE.withName("b"),
+			ffi.C_DOUBLE.withName("a"),
 		).withName("WGPUColor")
+
 		val rOffset = 0L
-		val rLayout = C_DOUBLE
-		val gOffset = 8L + rOffset
-		val gLayout = C_DOUBLE
-		val bOffset = 8L + gOffset
-		val bLayout = C_DOUBLE
-		val aOffset = 8L + bOffset
-		val aLayout = C_DOUBLE
+		val rLayout = ffi.C_DOUBLE
+		val gOffset = 8L
+		val gLayout = ffi.C_DOUBLE
+		val bOffset = 16L
+		val bLayout = ffi.C_DOUBLE
+		val aOffset = 24L
+		val aLayout = ffi.C_DOUBLE
 	}
 }
 @JvmInline
@@ -627,23 +647,25 @@ actual value class WGPUColorTargetState(actual override val handler: NativeAddre
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUColorTargetState {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUColorTargetState)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_INT.withName("format"),
-			C_POINTER.withName("blend"),
-			C_LONG.withName("writeMask"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("format"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_POINTER.withName("blend"),
+			ffi.C_LONG.withName("writeMask"),
 		).withName("WGPUColorTargetState")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val formatOffset = 8L + nextInChainOffset
-		val formatLayout = C_INT
-		val blendOffset = 4L + formatOffset
-		val blendLayout = C_POINTER
-		val writeMaskOffset = 8L + blendOffset
-		val writeMaskLayout = C_LONG
+		val nextInChainLayout = ffi.C_POINTER
+		val formatOffset = 8L
+		val formatLayout = ffi.C_INT
+		val blendOffset = 16L
+		val blendLayout = ffi.C_POINTER
+		val writeMaskOffset = 24L
+		val writeMaskLayout = ffi.C_LONG
 	}
 }
 @JvmInline
@@ -658,16 +680,17 @@ actual value class WGPUCommandBufferDescriptor(actual override val handler: Nati
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUCommandBufferDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUCommandBufferDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 		).withName("WGPUCommandBufferDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
 	}
 }
@@ -683,16 +706,17 @@ actual value class WGPUCommandEncoderDescriptor(actual override val handler: Nat
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUCommandEncoderDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUCommandEncoderDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 		).withName("WGPUCommandEncoderDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
 	}
 }
@@ -713,20 +737,21 @@ actual value class WGPUCompilationInfo(actual override val handler: NativeAddres
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUCompilationInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUCompilationInfo)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_LONG.withName("messageCount"),
-			C_POINTER.withName("messages"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_LONG.withName("messageCount"),
+			ffi.C_POINTER.withName("messages"),
 		).withName("WGPUCompilationInfo")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val messageCountOffset = 8L + nextInChainOffset
-		val messageCountLayout = C_LONG
-		val messagesOffset = 8L + messageCountOffset
-		val messagesLayout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val messageCountOffset = 8L
+		val messageCountLayout = ffi.C_LONG
+		val messagesOffset = 16L
+		val messagesLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -773,41 +798,43 @@ actual value class WGPUCompilationMessage(actual override val handler: NativeAdd
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUCompilationMessage {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(88L)
 				.let(::WGPUCompilationMessage)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("message"),
-			C_INT.withName("type"),
-			C_LONG.withName("lineNum"),
-			C_LONG.withName("linePos"),
-			C_LONG.withName("offset"),
-			C_LONG.withName("length"),
-			C_LONG.withName("utf16LinePos"),
-			C_LONG.withName("utf16Offset"),
-			C_LONG.withName("utf16Length"),
+			ffi.C_INT.withName("type"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_LONG.withName("lineNum"),
+			ffi.C_LONG.withName("linePos"),
+			ffi.C_LONG.withName("offset"),
+			ffi.C_LONG.withName("length"),
+			ffi.C_LONG.withName("utf16LinePos"),
+			ffi.C_LONG.withName("utf16Offset"),
+			ffi.C_LONG.withName("utf16Length"),
 		).withName("WGPUCompilationMessage")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val messageOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val messageOffset = 8L
 		val messageLayout = WGPUStringView.LAYOUT
-		val typeOffset = messageLayout.byteSize() + messageOffset
-		val typeLayout = C_INT
-		val lineNumOffset = 4L + typeOffset
-		val lineNumLayout = C_LONG
-		val linePosOffset = 8L + lineNumOffset
-		val linePosLayout = C_LONG
-		val offsetOffset = 8L + linePosOffset
-		val offsetLayout = C_LONG
-		val lengthOffset = 8L + offsetOffset
-		val lengthLayout = C_LONG
-		val utf16LinePosOffset = 8L + lengthOffset
-		val utf16LinePosLayout = C_LONG
-		val utf16OffsetOffset = 8L + utf16LinePosOffset
-		val utf16OffsetLayout = C_LONG
-		val utf16LengthOffset = 8L + utf16OffsetOffset
-		val utf16LengthLayout = C_LONG
+		val typeOffset = 24L
+		val typeLayout = ffi.C_INT
+		val lineNumOffset = 32L
+		val lineNumLayout = ffi.C_LONG
+		val linePosOffset = 40L
+		val linePosLayout = ffi.C_LONG
+		val offsetOffset = 48L
+		val offsetLayout = ffi.C_LONG
+		val lengthOffset = 56L
+		val lengthLayout = ffi.C_LONG
+		val utf16LinePosOffset = 64L
+		val utf16LinePosLayout = ffi.C_LONG
+		val utf16OffsetOffset = 72L
+		val utf16OffsetLayout = ffi.C_LONG
+		val utf16LengthOffset = 80L
+		val utf16LengthLayout = ffi.C_LONG
 	}
 }
 @JvmInline
@@ -826,20 +853,21 @@ actual value class WGPUComputePassDescriptor(actual override val handler: Native
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUComputePassDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUComputePassDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_POINTER.withName("timestampWrites"),
+			ffi.C_POINTER.withName("timestampWrites"),
 		).withName("WGPUComputePassDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val timestampWritesOffset = labelLayout.byteSize() + labelOffset
-		val timestampWritesLayout = C_POINTER
+		val timestampWritesOffset = 24L
+		val timestampWritesLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -859,20 +887,21 @@ actual value class WGPUComputePassTimestampWrites(actual override val handler: N
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUComputePassTimestampWrites {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(16L)
 				.let(::WGPUComputePassTimestampWrites)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("querySet"),
-			C_INT.withName("beginningOfPassWriteIndex"),
-			C_INT.withName("endOfPassWriteIndex"),
+			ffi.C_POINTER.withName("querySet"),
+			ffi.C_INT.withName("beginningOfPassWriteIndex"),
+			ffi.C_INT.withName("endOfPassWriteIndex"),
 		).withName("WGPUComputePassTimestampWrites")
+
 		val querySetOffset = 0L
-		val querySetLayout = C_POINTER
-		val beginningOfPassWriteIndexOffset = 8L + querySetOffset
-		val beginningOfPassWriteIndexLayout = C_INT
-		val endOfPassWriteIndexOffset = 4L + beginningOfPassWriteIndexOffset
-		val endOfPassWriteIndexLayout = C_INT
+		val querySetLayout = ffi.C_POINTER
+		val beginningOfPassWriteIndexOffset = 8L
+		val beginningOfPassWriteIndexLayout = ffi.C_INT
+		val endOfPassWriteIndexOffset = 12L
+		val endOfPassWriteIndexLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -899,26 +928,27 @@ actual value class WGPUProgrammableStageDescriptor(actual override val handler: 
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUProgrammableStageDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(48L)
 				.let(::WGPUProgrammableStageDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("module"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("module"),
 			WGPUStringView.LAYOUT.withName("entryPoint"),
-			C_LONG.withName("constantCount"),
-			C_POINTER.withName("constants"),
+			ffi.C_LONG.withName("constantCount"),
+			ffi.C_POINTER.withName("constants"),
 		).withName("WGPUProgrammableStageDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val moduleOffset = 8L + nextInChainOffset
-		val moduleLayout = C_POINTER
-		val entryPointOffset = 8L + moduleOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val moduleOffset = 8L
+		val moduleLayout = ffi.C_POINTER
+		val entryPointOffset = 16L
 		val entryPointLayout = WGPUStringView.LAYOUT
-		val constantCountOffset = entryPointLayout.byteSize() + entryPointOffset
-		val constantCountLayout = C_LONG
-		val constantsOffset = 8L + constantCountOffset
-		val constantsLayout = C_POINTER
+		val constantCountOffset = 32L
+		val constantCountLayout = ffi.C_LONG
+		val constantsOffset = 40L
+		val constantsLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -940,22 +970,23 @@ actual value class WGPUComputePipelineDescriptor(actual override val handler: Na
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUComputePipelineDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(80L)
 				.let(::WGPUComputePipelineDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_POINTER.withName("layout"),
+			ffi.C_POINTER.withName("layout"),
 			WGPUProgrammableStageDescriptor.LAYOUT.withName("compute"),
 		).withName("WGPUComputePipelineDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val layoutOffset = labelLayout.byteSize() + labelOffset
-		val layoutLayout = C_POINTER
-		val computeOffset = 8L + layoutOffset
+		val layoutOffset = 24L
+		val layoutLayout = ffi.C_POINTER
+		val computeOffset = 32L
 		val computeLayout = WGPUProgrammableStageDescriptor.LAYOUT
 	}
 }
@@ -975,20 +1006,21 @@ actual value class WGPUConstantEntry(actual override val handler: NativeAddress)
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUConstantEntry {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUConstantEntry)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("key"),
-			C_DOUBLE.withName("value"),
+			ffi.C_DOUBLE.withName("value"),
 		).withName("WGPUConstantEntry")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val keyOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val keyOffset = 8L
 		val keyLayout = WGPUStringView.LAYOUT
-		val valueOffset = keyLayout.byteSize() + keyOffset
-		val valueLayout = C_DOUBLE
+		val valueOffset = 24L
+		val valueLayout = ffi.C_DOUBLE
 	}
 }
 @JvmInline
@@ -1012,23 +1044,24 @@ actual value class WGPUStencilFaceState(actual override val handler: NativeAddre
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUStencilFaceState {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(16L)
 				.let(::WGPUStencilFaceState)
 		}
 		internal val LAYOUT = structLayout(
-			C_INT.withName("compare"),
-			C_INT.withName("failOp"),
-			C_INT.withName("depthFailOp"),
-			C_INT.withName("passOp"),
+			ffi.C_INT.withName("compare"),
+			ffi.C_INT.withName("failOp"),
+			ffi.C_INT.withName("depthFailOp"),
+			ffi.C_INT.withName("passOp"),
 		).withName("WGPUStencilFaceState")
+
 		val compareOffset = 0L
-		val compareLayout = C_INT
-		val failOpOffset = 4L + compareOffset
-		val failOpLayout = C_INT
-		val depthFailOpOffset = 4L + failOpOffset
-		val depthFailOpLayout = C_INT
-		val passOpOffset = 4L + depthFailOpOffset
-		val passOpLayout = C_INT
+		val compareLayout = ffi.C_INT
+		val failOpOffset = 4L
+		val failOpLayout = ffi.C_INT
+		val depthFailOpOffset = 8L
+		val depthFailOpLayout = ffi.C_INT
+		val passOpOffset = 12L
+		val passOpLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -1078,44 +1111,45 @@ actual value class WGPUDepthStencilState(actual override val handler: NativeAddr
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUDepthStencilState {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(72L)
 				.let(::WGPUDepthStencilState)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_INT.withName("format"),
-			C_INT.withName("depthWriteEnabled"),
-			C_INT.withName("depthCompare"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("format"),
+			ffi.C_INT.withName("depthWriteEnabled"),
+			ffi.C_INT.withName("depthCompare"),
 			WGPUStencilFaceState.LAYOUT.withName("stencilFront"),
 			WGPUStencilFaceState.LAYOUT.withName("stencilBack"),
-			C_INT.withName("stencilReadMask"),
-			C_INT.withName("stencilWriteMask"),
-			C_INT.withName("depthBias"),
-			C_FLOAT.withName("depthBiasSlopeScale"),
-			C_FLOAT.withName("depthBiasClamp"),
+			ffi.C_INT.withName("stencilReadMask"),
+			ffi.C_INT.withName("stencilWriteMask"),
+			ffi.C_INT.withName("depthBias"),
+			ffi.C_FLOAT.withName("depthBiasSlopeScale"),
+			ffi.C_FLOAT.withName("depthBiasClamp"),
 		).withName("WGPUDepthStencilState")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val formatOffset = 8L + nextInChainOffset
-		val formatLayout = C_INT
-		val depthWriteEnabledOffset = 4L + formatOffset
-		val depthWriteEnabledLayout = C_INT
-		val depthCompareOffset = 4L + depthWriteEnabledOffset
-		val depthCompareLayout = C_INT
-		val stencilFrontOffset = 4L + depthCompareOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val formatOffset = 8L
+		val formatLayout = ffi.C_INT
+		val depthWriteEnabledOffset = 12L
+		val depthWriteEnabledLayout = ffi.C_INT
+		val depthCompareOffset = 16L
+		val depthCompareLayout = ffi.C_INT
+		val stencilFrontOffset = 20L
 		val stencilFrontLayout = WGPUStencilFaceState.LAYOUT
-		val stencilBackOffset = stencilFrontLayout.byteSize() + stencilFrontOffset
+		val stencilBackOffset = 36L
 		val stencilBackLayout = WGPUStencilFaceState.LAYOUT
-		val stencilReadMaskOffset = stencilBackLayout.byteSize() + stencilBackOffset
-		val stencilReadMaskLayout = C_INT
-		val stencilWriteMaskOffset = 4L + stencilReadMaskOffset
-		val stencilWriteMaskLayout = C_INT
-		val depthBiasOffset = 4L + stencilWriteMaskOffset
-		val depthBiasLayout = C_INT
-		val depthBiasSlopeScaleOffset = 4L + depthBiasOffset
-		val depthBiasSlopeScaleLayout = C_FLOAT
-		val depthBiasClampOffset = 4L + depthBiasSlopeScaleOffset
-		val depthBiasClampLayout = C_FLOAT
+		val stencilReadMaskOffset = 52L
+		val stencilReadMaskLayout = ffi.C_INT
+		val stencilWriteMaskOffset = 56L
+		val stencilWriteMaskLayout = ffi.C_INT
+		val depthBiasOffset = 60L
+		val depthBiasLayout = ffi.C_INT
+		val depthBiasSlopeScaleOffset = 64L
+		val depthBiasSlopeScaleLayout = ffi.C_FLOAT
+		val depthBiasClampOffset = 68L
+		val depthBiasClampLayout = ffi.C_FLOAT
 	}
 }
 @JvmInline
@@ -1130,16 +1164,17 @@ actual value class WGPUQueueDescriptor(actual override val handler: NativeAddres
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUQueueDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUQueueDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 		).withName("WGPUQueueDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
 	}
 }
@@ -1164,23 +1199,24 @@ actual value class WGPUDeviceLostCallbackInfo(actual override val handler: Nativ
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUDeviceLostCallbackInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUDeviceLostCallbackInfo)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("callback"),
-			C_POINTER.withName("userdata1"),
-			C_POINTER.withName("userdata2"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("callback"),
+			ffi.C_POINTER.withName("userdata1"),
+			ffi.C_POINTER.withName("userdata2"),
 		).withName("WGPUDeviceLostCallbackInfo")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val callbackOffset = 8L + nextInChainOffset
-		val callbackLayout = C_POINTER
-		val userdata1Offset = 8L + callbackOffset
-		val userdata1Layout = C_POINTER
-		val userdata2Offset = 8L + userdata1Offset
-		val userdata2Layout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val callbackOffset = 8L
+		val callbackLayout = ffi.C_POINTER
+		val userdata1Offset = 16L
+		val userdata1Layout = ffi.C_POINTER
+		val userdata2Offset = 24L
+		val userdata2Layout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -1204,23 +1240,24 @@ actual value class WGPUUncapturedErrorCallbackInfo(actual override val handler: 
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUUncapturedErrorCallbackInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUUncapturedErrorCallbackInfo)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("callback"),
-			C_POINTER.withName("userdata1"),
-			C_POINTER.withName("userdata2"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("callback"),
+			ffi.C_POINTER.withName("userdata1"),
+			ffi.C_POINTER.withName("userdata2"),
 		).withName("WGPUUncapturedErrorCallbackInfo")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val callbackOffset = 8L + nextInChainOffset
-		val callbackLayout = C_POINTER
-		val userdata1Offset = 8L + callbackOffset
-		val userdata1Layout = C_POINTER
-		val userdata2Offset = 8L + userdata1Offset
-		val userdata2Layout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val callbackOffset = 8L
+		val callbackLayout = ffi.C_POINTER
+		val userdata1Offset = 16L
+		val userdata1Layout = ffi.C_POINTER
+		val userdata2Offset = 24L
+		val userdata2Layout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -1256,34 +1293,35 @@ actual value class WGPUDeviceDescriptor(actual override val handler: NativeAddre
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUDeviceDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(136L)
 				.let(::WGPUDeviceDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_LONG.withName("requiredFeatureCount"),
-			C_POINTER.withName("requiredFeatures"),
-			C_POINTER.withName("requiredLimits"),
+			ffi.C_LONG.withName("requiredFeatureCount"),
+			ffi.C_POINTER.withName("requiredFeatures"),
+			ffi.C_POINTER.withName("requiredLimits"),
 			WGPUQueueDescriptor.LAYOUT.withName("defaultQueue"),
 			WGPUDeviceLostCallbackInfo.LAYOUT.withName("deviceLostCallbackInfo"),
 			WGPUUncapturedErrorCallbackInfo.LAYOUT.withName("uncapturedErrorCallbackInfo"),
 		).withName("WGPUDeviceDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val requiredFeatureCountOffset = labelLayout.byteSize() + labelOffset
-		val requiredFeatureCountLayout = C_LONG
-		val requiredFeaturesOffset = 8L + requiredFeatureCountOffset
-		val requiredFeaturesLayout = C_POINTER
-		val requiredLimitsOffset = 8L + requiredFeaturesOffset
-		val requiredLimitsLayout = C_POINTER
-		val defaultQueueOffset = 8L + requiredLimitsOffset
+		val requiredFeatureCountOffset = 24L
+		val requiredFeatureCountLayout = ffi.C_LONG
+		val requiredFeaturesOffset = 32L
+		val requiredFeaturesLayout = ffi.C_POINTER
+		val requiredLimitsOffset = 40L
+		val requiredLimitsLayout = ffi.C_POINTER
+		val defaultQueueOffset = 48L
 		val defaultQueueLayout = WGPUQueueDescriptor.LAYOUT
-		val deviceLostCallbackInfoOffset = defaultQueueLayout.byteSize() + defaultQueueOffset
+		val deviceLostCallbackInfoOffset = 72L
 		val deviceLostCallbackInfoLayout = WGPUDeviceLostCallbackInfo.LAYOUT
-		val uncapturedErrorCallbackInfoOffset = deviceLostCallbackInfoLayout.byteSize() + deviceLostCallbackInfoOffset
+		val uncapturedErrorCallbackInfoOffset = 104L
 		val uncapturedErrorCallbackInfoLayout = WGPUUncapturedErrorCallbackInfo.LAYOUT
 	}
 }
@@ -1304,20 +1342,21 @@ actual value class WGPUExtent3D(actual override val handler: NativeAddress) : CS
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUExtent3D {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(12L)
 				.let(::WGPUExtent3D)
 		}
 		internal val LAYOUT = structLayout(
-			C_INT.withName("width"),
-			C_INT.withName("height"),
-			C_INT.withName("depthOrArrayLayers"),
+			ffi.C_INT.withName("width"),
+			ffi.C_INT.withName("height"),
+			ffi.C_INT.withName("depthOrArrayLayers"),
 		).withName("WGPUExtent3D")
+
 		val widthOffset = 0L
-		val widthLayout = C_INT
-		val heightOffset = 4L + widthOffset
-		val heightLayout = C_INT
-		val depthOrArrayLayersOffset = 4L + heightOffset
-		val depthOrArrayLayersLayout = C_INT
+		val widthLayout = ffi.C_INT
+		val heightOffset = 4L
+		val heightLayout = ffi.C_INT
+		val depthOrArrayLayersOffset = 8L
+		val depthOrArrayLayersLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -1352,32 +1391,33 @@ actual value class WGPUFragmentState(actual override val handler: NativeAddress)
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUFragmentState {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(64L)
 				.let(::WGPUFragmentState)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("module"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("module"),
 			WGPUStringView.LAYOUT.withName("entryPoint"),
-			C_LONG.withName("constantCount"),
-			C_POINTER.withName("constants"),
-			C_LONG.withName("targetCount"),
-			C_POINTER.withName("targets"),
+			ffi.C_LONG.withName("constantCount"),
+			ffi.C_POINTER.withName("constants"),
+			ffi.C_LONG.withName("targetCount"),
+			ffi.C_POINTER.withName("targets"),
 		).withName("WGPUFragmentState")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val moduleOffset = 8L + nextInChainOffset
-		val moduleLayout = C_POINTER
-		val entryPointOffset = 8L + moduleOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val moduleOffset = 8L
+		val moduleLayout = ffi.C_POINTER
+		val entryPointOffset = 16L
 		val entryPointLayout = WGPUStringView.LAYOUT
-		val constantCountOffset = entryPointLayout.byteSize() + entryPointOffset
-		val constantCountLayout = C_LONG
-		val constantsOffset = 8L + constantCountOffset
-		val constantsLayout = C_POINTER
-		val targetCountOffset = 8L + constantsOffset
-		val targetCountLayout = C_LONG
-		val targetsOffset = 8L + targetCountOffset
-		val targetsLayout = C_POINTER
+		val constantCountOffset = 32L
+		val constantCountLayout = ffi.C_LONG
+		val constantsOffset = 40L
+		val constantsLayout = ffi.C_POINTER
+		val targetCountOffset = 48L
+		val targetCountLayout = ffi.C_LONG
+		val targetsOffset = 56L
+		val targetsLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -1389,14 +1429,15 @@ actual value class WGPUFuture(actual override val handler: NativeAddress) : CStr
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUFuture {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(8L)
 				.let(::WGPUFuture)
 		}
 		internal val LAYOUT = structLayout(
-			C_LONG.withName("id"),
+			ffi.C_LONG.withName("id"),
 		).withName("WGPUFuture")
+
 		val idOffset = 0L
-		val idLayout = C_LONG
+		val idLayout = ffi.C_LONG
 	}
 }
 @JvmInline
@@ -1411,17 +1452,19 @@ actual value class WGPUFutureWaitInfo(actual override val handler: NativeAddress
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUFutureWaitInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(16L)
 				.let(::WGPUFutureWaitInfo)
 		}
 		internal val LAYOUT = structLayout(
 			WGPUFuture.LAYOUT.withName("future"),
-			C_INT.withName("completed"),
+			ffi.C_INT.withName("completed"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUFutureWaitInfo")
+
 		val futureOffset = 0L
 		val futureLayout = WGPUFuture.LAYOUT
-		val completedOffset = futureLayout.byteSize() + futureOffset
-		val completedLayout = C_INT
+		val completedOffset = 8L
+		val completedLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -1445,23 +1488,24 @@ actual value class WGPUTextureDataLayout(actual override val handler: NativeAddr
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUTextureDataLayout {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUTextureDataLayout)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_LONG.withName("offset"),
-			C_INT.withName("bytesPerRow"),
-			C_INT.withName("rowsPerImage"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_LONG.withName("offset"),
+			ffi.C_INT.withName("bytesPerRow"),
+			ffi.C_INT.withName("rowsPerImage"),
 		).withName("WGPUTextureDataLayout")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val offsetOffset = 8L + nextInChainOffset
-		val offsetLayout = C_LONG
-		val bytesPerRowOffset = 8L + offsetOffset
-		val bytesPerRowLayout = C_INT
-		val rowsPerImageOffset = 4L + bytesPerRowOffset
-		val rowsPerImageLayout = C_INT
+		val nextInChainLayout = ffi.C_POINTER
+		val offsetOffset = 8L
+		val offsetLayout = ffi.C_LONG
+		val bytesPerRowOffset = 16L
+		val bytesPerRowLayout = ffi.C_INT
+		val rowsPerImageOffset = 20L
+		val rowsPerImageLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -1480,20 +1524,21 @@ actual value class WGPUImageCopyBuffer(actual override val handler: NativeAddres
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUImageCopyBuffer {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(40L)
 				.let(::WGPUImageCopyBuffer)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUTextureDataLayout.LAYOUT.withName("layout"),
-			C_POINTER.withName("buffer"),
+			ffi.C_POINTER.withName("buffer"),
 		).withName("WGPUImageCopyBuffer")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val layoutOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val layoutOffset = 8L
 		val layoutLayout = WGPUTextureDataLayout.LAYOUT
-		val bufferOffset = layoutLayout.byteSize() + layoutOffset
-		val bufferLayout = C_POINTER
+		val bufferOffset = 32L
+		val bufferLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -1513,20 +1558,21 @@ actual value class WGPUOrigin3D(actual override val handler: NativeAddress) : CS
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUOrigin3D {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(12L)
 				.let(::WGPUOrigin3D)
 		}
 		internal val LAYOUT = structLayout(
-			C_INT.withName("x"),
-			C_INT.withName("y"),
-			C_INT.withName("z"),
+			ffi.C_INT.withName("x"),
+			ffi.C_INT.withName("y"),
+			ffi.C_INT.withName("z"),
 		).withName("WGPUOrigin3D")
+
 		val xOffset = 0L
-		val xLayout = C_INT
-		val yOffset = 4L + xOffset
-		val yLayout = C_INT
-		val zOffset = 4L + yOffset
-		val zLayout = C_INT
+		val xLayout = ffi.C_INT
+		val yOffset = 4L
+		val yLayout = ffi.C_INT
+		val zOffset = 8L
+		val zLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -1553,26 +1599,28 @@ actual value class WGPUImageCopyTexture(actual override val handler: NativeAddre
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUImageCopyTexture {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(40L)
 				.let(::WGPUImageCopyTexture)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("texture"),
-			C_INT.withName("mipLevel"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("texture"),
+			ffi.C_INT.withName("mipLevel"),
 			WGPUOrigin3D.LAYOUT.withName("origin"),
-			C_INT.withName("aspect"),
+			ffi.C_INT.withName("aspect"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUImageCopyTexture")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val textureOffset = 8L + nextInChainOffset
-		val textureLayout = C_POINTER
-		val mipLevelOffset = 8L + textureOffset
-		val mipLevelLayout = C_INT
-		val originOffset = 4L + mipLevelOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val textureOffset = 8L
+		val textureLayout = ffi.C_POINTER
+		val mipLevelOffset = 16L
+		val mipLevelLayout = ffi.C_INT
+		val originOffset = 20L
 		val originLayout = WGPUOrigin3D.LAYOUT
-		val aspectOffset = originLayout.byteSize() + originOffset
-		val aspectLayout = C_INT
+		val aspectOffset = 32L
+		val aspectLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -1592,20 +1640,22 @@ actual value class WGPUInstanceFeatures(actual override val handler: NativeAddre
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceFeatures {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUInstanceFeatures)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_INT.withName("timedWaitAnyEnable"),
-			C_LONG.withName("timedWaitAnyMaxCount"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("timedWaitAnyEnable"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_LONG.withName("timedWaitAnyMaxCount"),
 		).withName("WGPUInstanceFeatures")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val timedWaitAnyEnableOffset = 8L + nextInChainOffset
-		val timedWaitAnyEnableLayout = C_INT
-		val timedWaitAnyMaxCountOffset = 4L + timedWaitAnyEnableOffset
-		val timedWaitAnyMaxCountLayout = C_LONG
+		val nextInChainLayout = ffi.C_POINTER
+		val timedWaitAnyEnableOffset = 8L
+		val timedWaitAnyEnableLayout = ffi.C_INT
+		val timedWaitAnyMaxCountOffset = 16L
+		val timedWaitAnyMaxCountLayout = ffi.C_LONG
 	}
 }
 @JvmInline
@@ -1620,16 +1670,17 @@ actual value class WGPUInstanceDescriptor(actual override val handler: NativeAdd
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUInstanceDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUInstanceFeatures.LAYOUT.withName("features"),
 		).withName("WGPUInstanceDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val featuresOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val featuresOffset = 8L
 		val featuresLayout = WGPUInstanceFeatures.LAYOUT
 	}
 }
@@ -1762,104 +1813,107 @@ actual value class WGPULimits(actual override val handler: NativeAddress) : CStr
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPULimits {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(144L)
 				.let(::WGPULimits)
 		}
 		internal val LAYOUT = structLayout(
-			C_INT.withName("maxTextureDimension1D"),
-			C_INT.withName("maxTextureDimension2D"),
-			C_INT.withName("maxTextureDimension3D"),
-			C_INT.withName("maxTextureArrayLayers"),
-			C_INT.withName("maxBindGroups"),
-			C_INT.withName("maxBindGroupsPlusVertexBuffers"),
-			C_INT.withName("maxBindingsPerBindGroup"),
-			C_INT.withName("maxDynamicUniformBuffersPerPipelineLayout"),
-			C_INT.withName("maxDynamicStorageBuffersPerPipelineLayout"),
-			C_INT.withName("maxSampledTexturesPerShaderStage"),
-			C_INT.withName("maxSamplersPerShaderStage"),
-			C_INT.withName("maxStorageBuffersPerShaderStage"),
-			C_INT.withName("maxStorageTexturesPerShaderStage"),
-			C_INT.withName("maxUniformBuffersPerShaderStage"),
-			C_LONG.withName("maxUniformBufferBindingSize"),
-			C_LONG.withName("maxStorageBufferBindingSize"),
-			C_INT.withName("minUniformBufferOffsetAlignment"),
-			C_INT.withName("minStorageBufferOffsetAlignment"),
-			C_INT.withName("maxVertexBuffers"),
-			C_LONG.withName("maxBufferSize"),
-			C_INT.withName("maxVertexAttributes"),
-			C_INT.withName("maxVertexBufferArrayStride"),
-			C_INT.withName("maxInterStageShaderVariables"),
-			C_INT.withName("maxColorAttachments"),
-			C_INT.withName("maxColorAttachmentBytesPerSample"),
-			C_INT.withName("maxComputeWorkgroupStorageSize"),
-			C_INT.withName("maxComputeInvocationsPerWorkgroup"),
-			C_INT.withName("maxComputeWorkgroupSizeX"),
-			C_INT.withName("maxComputeWorkgroupSizeY"),
-			C_INT.withName("maxComputeWorkgroupSizeZ"),
-			C_INT.withName("maxComputeWorkgroupsPerDimension"),
+			ffi.C_INT.withName("maxTextureDimension1D"),
+			ffi.C_INT.withName("maxTextureDimension2D"),
+			ffi.C_INT.withName("maxTextureDimension3D"),
+			ffi.C_INT.withName("maxTextureArrayLayers"),
+			ffi.C_INT.withName("maxBindGroups"),
+			ffi.C_INT.withName("maxBindGroupsPlusVertexBuffers"),
+			ffi.C_INT.withName("maxBindingsPerBindGroup"),
+			ffi.C_INT.withName("maxDynamicUniformBuffersPerPipelineLayout"),
+			ffi.C_INT.withName("maxDynamicStorageBuffersPerPipelineLayout"),
+			ffi.C_INT.withName("maxSampledTexturesPerShaderStage"),
+			ffi.C_INT.withName("maxSamplersPerShaderStage"),
+			ffi.C_INT.withName("maxStorageBuffersPerShaderStage"),
+			ffi.C_INT.withName("maxStorageTexturesPerShaderStage"),
+			ffi.C_INT.withName("maxUniformBuffersPerShaderStage"),
+			ffi.C_LONG.withName("maxUniformBufferBindingSize"),
+			ffi.C_LONG.withName("maxStorageBufferBindingSize"),
+			ffi.C_INT.withName("minUniformBufferOffsetAlignment"),
+			ffi.C_INT.withName("minStorageBufferOffsetAlignment"),
+			ffi.C_INT.withName("maxVertexBuffers"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_LONG.withName("maxBufferSize"),
+			ffi.C_INT.withName("maxVertexAttributes"),
+			ffi.C_INT.withName("maxVertexBufferArrayStride"),
+			ffi.C_INT.withName("maxInterStageShaderVariables"),
+			ffi.C_INT.withName("maxColorAttachments"),
+			ffi.C_INT.withName("maxColorAttachmentBytesPerSample"),
+			ffi.C_INT.withName("maxComputeWorkgroupStorageSize"),
+			ffi.C_INT.withName("maxComputeInvocationsPerWorkgroup"),
+			ffi.C_INT.withName("maxComputeWorkgroupSizeX"),
+			ffi.C_INT.withName("maxComputeWorkgroupSizeY"),
+			ffi.C_INT.withName("maxComputeWorkgroupSizeZ"),
+			ffi.C_INT.withName("maxComputeWorkgroupsPerDimension"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPULimits")
+
 		val maxTextureDimension1DOffset = 0L
-		val maxTextureDimension1DLayout = C_INT
-		val maxTextureDimension2DOffset = 4L + maxTextureDimension1DOffset
-		val maxTextureDimension2DLayout = C_INT
-		val maxTextureDimension3DOffset = 4L + maxTextureDimension2DOffset
-		val maxTextureDimension3DLayout = C_INT
-		val maxTextureArrayLayersOffset = 4L + maxTextureDimension3DOffset
-		val maxTextureArrayLayersLayout = C_INT
-		val maxBindGroupsOffset = 4L + maxTextureArrayLayersOffset
-		val maxBindGroupsLayout = C_INT
-		val maxBindGroupsPlusVertexBuffersOffset = 4L + maxBindGroupsOffset
-		val maxBindGroupsPlusVertexBuffersLayout = C_INT
-		val maxBindingsPerBindGroupOffset = 4L + maxBindGroupsPlusVertexBuffersOffset
-		val maxBindingsPerBindGroupLayout = C_INT
-		val maxDynamicUniformBuffersPerPipelineLayoutOffset = 4L + maxBindingsPerBindGroupOffset
-		val maxDynamicUniformBuffersPerPipelineLayoutLayout = C_INT
-		val maxDynamicStorageBuffersPerPipelineLayoutOffset = 4L + maxDynamicUniformBuffersPerPipelineLayoutOffset
-		val maxDynamicStorageBuffersPerPipelineLayoutLayout = C_INT
-		val maxSampledTexturesPerShaderStageOffset = 4L + maxDynamicStorageBuffersPerPipelineLayoutOffset
-		val maxSampledTexturesPerShaderStageLayout = C_INT
-		val maxSamplersPerShaderStageOffset = 4L + maxSampledTexturesPerShaderStageOffset
-		val maxSamplersPerShaderStageLayout = C_INT
-		val maxStorageBuffersPerShaderStageOffset = 4L + maxSamplersPerShaderStageOffset
-		val maxStorageBuffersPerShaderStageLayout = C_INT
-		val maxStorageTexturesPerShaderStageOffset = 4L + maxStorageBuffersPerShaderStageOffset
-		val maxStorageTexturesPerShaderStageLayout = C_INT
-		val maxUniformBuffersPerShaderStageOffset = 4L + maxStorageTexturesPerShaderStageOffset
-		val maxUniformBuffersPerShaderStageLayout = C_INT
-		val maxUniformBufferBindingSizeOffset = 4L + maxUniformBuffersPerShaderStageOffset
-		val maxUniformBufferBindingSizeLayout = C_LONG
-		val maxStorageBufferBindingSizeOffset = 8L + maxUniformBufferBindingSizeOffset
-		val maxStorageBufferBindingSizeLayout = C_LONG
-		val minUniformBufferOffsetAlignmentOffset = 8L + maxStorageBufferBindingSizeOffset
-		val minUniformBufferOffsetAlignmentLayout = C_INT
-		val minStorageBufferOffsetAlignmentOffset = 4L + minUniformBufferOffsetAlignmentOffset
-		val minStorageBufferOffsetAlignmentLayout = C_INT
-		val maxVertexBuffersOffset = 4L + minStorageBufferOffsetAlignmentOffset
-		val maxVertexBuffersLayout = C_INT
-		val maxBufferSizeOffset = 4L + maxVertexBuffersOffset
-		val maxBufferSizeLayout = C_LONG
-		val maxVertexAttributesOffset = 8L + maxBufferSizeOffset
-		val maxVertexAttributesLayout = C_INT
-		val maxVertexBufferArrayStrideOffset = 4L + maxVertexAttributesOffset
-		val maxVertexBufferArrayStrideLayout = C_INT
-		val maxInterStageShaderVariablesOffset = 4L + maxVertexBufferArrayStrideOffset
-		val maxInterStageShaderVariablesLayout = C_INT
-		val maxColorAttachmentsOffset = 4L + maxInterStageShaderVariablesOffset
-		val maxColorAttachmentsLayout = C_INT
-		val maxColorAttachmentBytesPerSampleOffset = 4L + maxColorAttachmentsOffset
-		val maxColorAttachmentBytesPerSampleLayout = C_INT
-		val maxComputeWorkgroupStorageSizeOffset = 4L + maxColorAttachmentBytesPerSampleOffset
-		val maxComputeWorkgroupStorageSizeLayout = C_INT
-		val maxComputeInvocationsPerWorkgroupOffset = 4L + maxComputeWorkgroupStorageSizeOffset
-		val maxComputeInvocationsPerWorkgroupLayout = C_INT
-		val maxComputeWorkgroupSizeXOffset = 4L + maxComputeInvocationsPerWorkgroupOffset
-		val maxComputeWorkgroupSizeXLayout = C_INT
-		val maxComputeWorkgroupSizeYOffset = 4L + maxComputeWorkgroupSizeXOffset
-		val maxComputeWorkgroupSizeYLayout = C_INT
-		val maxComputeWorkgroupSizeZOffset = 4L + maxComputeWorkgroupSizeYOffset
-		val maxComputeWorkgroupSizeZLayout = C_INT
-		val maxComputeWorkgroupsPerDimensionOffset = 4L + maxComputeWorkgroupSizeZOffset
-		val maxComputeWorkgroupsPerDimensionLayout = C_INT
+		val maxTextureDimension1DLayout = ffi.C_INT
+		val maxTextureDimension2DOffset = 4L
+		val maxTextureDimension2DLayout = ffi.C_INT
+		val maxTextureDimension3DOffset = 8L
+		val maxTextureDimension3DLayout = ffi.C_INT
+		val maxTextureArrayLayersOffset = 12L
+		val maxTextureArrayLayersLayout = ffi.C_INT
+		val maxBindGroupsOffset = 16L
+		val maxBindGroupsLayout = ffi.C_INT
+		val maxBindGroupsPlusVertexBuffersOffset = 20L
+		val maxBindGroupsPlusVertexBuffersLayout = ffi.C_INT
+		val maxBindingsPerBindGroupOffset = 24L
+		val maxBindingsPerBindGroupLayout = ffi.C_INT
+		val maxDynamicUniformBuffersPerPipelineLayoutOffset = 28L
+		val maxDynamicUniformBuffersPerPipelineLayoutLayout = ffi.C_INT
+		val maxDynamicStorageBuffersPerPipelineLayoutOffset = 32L
+		val maxDynamicStorageBuffersPerPipelineLayoutLayout = ffi.C_INT
+		val maxSampledTexturesPerShaderStageOffset = 36L
+		val maxSampledTexturesPerShaderStageLayout = ffi.C_INT
+		val maxSamplersPerShaderStageOffset = 40L
+		val maxSamplersPerShaderStageLayout = ffi.C_INT
+		val maxStorageBuffersPerShaderStageOffset = 44L
+		val maxStorageBuffersPerShaderStageLayout = ffi.C_INT
+		val maxStorageTexturesPerShaderStageOffset = 48L
+		val maxStorageTexturesPerShaderStageLayout = ffi.C_INT
+		val maxUniformBuffersPerShaderStageOffset = 52L
+		val maxUniformBuffersPerShaderStageLayout = ffi.C_INT
+		val maxUniformBufferBindingSizeOffset = 56L
+		val maxUniformBufferBindingSizeLayout = ffi.C_LONG
+		val maxStorageBufferBindingSizeOffset = 64L
+		val maxStorageBufferBindingSizeLayout = ffi.C_LONG
+		val minUniformBufferOffsetAlignmentOffset = 72L
+		val minUniformBufferOffsetAlignmentLayout = ffi.C_INT
+		val minStorageBufferOffsetAlignmentOffset = 76L
+		val minStorageBufferOffsetAlignmentLayout = ffi.C_INT
+		val maxVertexBuffersOffset = 80L
+		val maxVertexBuffersLayout = ffi.C_INT
+		val maxBufferSizeOffset = 88L
+		val maxBufferSizeLayout = ffi.C_LONG
+		val maxVertexAttributesOffset = 96L
+		val maxVertexAttributesLayout = ffi.C_INT
+		val maxVertexBufferArrayStrideOffset = 100L
+		val maxVertexBufferArrayStrideLayout = ffi.C_INT
+		val maxInterStageShaderVariablesOffset = 104L
+		val maxInterStageShaderVariablesLayout = ffi.C_INT
+		val maxColorAttachmentsOffset = 108L
+		val maxColorAttachmentsLayout = ffi.C_INT
+		val maxColorAttachmentBytesPerSampleOffset = 112L
+		val maxColorAttachmentBytesPerSampleLayout = ffi.C_INT
+		val maxComputeWorkgroupStorageSizeOffset = 116L
+		val maxComputeWorkgroupStorageSizeLayout = ffi.C_INT
+		val maxComputeInvocationsPerWorkgroupOffset = 120L
+		val maxComputeInvocationsPerWorkgroupLayout = ffi.C_INT
+		val maxComputeWorkgroupSizeXOffset = 124L
+		val maxComputeWorkgroupSizeXLayout = ffi.C_INT
+		val maxComputeWorkgroupSizeYOffset = 128L
+		val maxComputeWorkgroupSizeYLayout = ffi.C_INT
+		val maxComputeWorkgroupSizeZOffset = 132L
+		val maxComputeWorkgroupSizeZLayout = ffi.C_INT
+		val maxComputeWorkgroupsPerDimensionOffset = 136L
+		val maxComputeWorkgroupsPerDimensionLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -1883,23 +1937,25 @@ actual value class WGPUMultisampleState(actual override val handler: NativeAddre
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUMultisampleState {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUMultisampleState)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_INT.withName("count"),
-			C_INT.withName("mask"),
-			C_INT.withName("alphaToCoverageEnabled"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("count"),
+			ffi.C_INT.withName("mask"),
+			ffi.C_INT.withName("alphaToCoverageEnabled"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUMultisampleState")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val countOffset = 8L + nextInChainOffset
-		val countLayout = C_INT
-		val maskOffset = 4L + countOffset
-		val maskLayout = C_INT
-		val alphaToCoverageEnabledOffset = 4L + maskOffset
-		val alphaToCoverageEnabledLayout = C_INT
+		val nextInChainLayout = ffi.C_POINTER
+		val countOffset = 8L
+		val countLayout = ffi.C_INT
+		val maskOffset = 12L
+		val maskLayout = ffi.C_INT
+		val alphaToCoverageEnabledOffset = 16L
+		val alphaToCoverageEnabledLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -1922,23 +1978,24 @@ actual value class WGPUPipelineLayoutDescriptor(actual override val handler: Nat
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUPipelineLayoutDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(40L)
 				.let(::WGPUPipelineLayoutDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_LONG.withName("bindGroupLayoutCount"),
-			C_POINTER.withName("bindGroupLayouts"),
+			ffi.C_LONG.withName("bindGroupLayoutCount"),
+			ffi.C_POINTER.withName("bindGroupLayouts"),
 		).withName("WGPUPipelineLayoutDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val bindGroupLayoutCountOffset = labelLayout.byteSize() + labelOffset
-		val bindGroupLayoutCountLayout = C_LONG
-		val bindGroupLayoutsOffset = 8L + bindGroupLayoutCountOffset
-		val bindGroupLayoutsLayout = C_POINTER
+		val bindGroupLayoutCountOffset = 24L
+		val bindGroupLayoutCountLayout = ffi.C_LONG
+		val bindGroupLayoutsOffset = 32L
+		val bindGroupLayoutsLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -1970,29 +2027,31 @@ actual value class WGPUPrimitiveState(actual override val handler: NativeAddress
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUPrimitiveState {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUPrimitiveState)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_INT.withName("topology"),
-			C_INT.withName("stripIndexFormat"),
-			C_INT.withName("frontFace"),
-			C_INT.withName("cullMode"),
-			C_INT.withName("unclippedDepth"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("topology"),
+			ffi.C_INT.withName("stripIndexFormat"),
+			ffi.C_INT.withName("frontFace"),
+			ffi.C_INT.withName("cullMode"),
+			ffi.C_INT.withName("unclippedDepth"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUPrimitiveState")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val topologyOffset = 8L + nextInChainOffset
-		val topologyLayout = C_INT
-		val stripIndexFormatOffset = 4L + topologyOffset
-		val stripIndexFormatLayout = C_INT
-		val frontFaceOffset = 4L + stripIndexFormatOffset
-		val frontFaceLayout = C_INT
-		val cullModeOffset = 4L + frontFaceOffset
-		val cullModeLayout = C_INT
-		val unclippedDepthOffset = 4L + cullModeOffset
-		val unclippedDepthLayout = C_INT
+		val nextInChainLayout = ffi.C_POINTER
+		val topologyOffset = 8L
+		val topologyLayout = ffi.C_INT
+		val stripIndexFormatOffset = 12L
+		val stripIndexFormatLayout = ffi.C_INT
+		val frontFaceOffset = 16L
+		val frontFaceLayout = ffi.C_INT
+		val cullModeOffset = 20L
+		val cullModeLayout = ffi.C_INT
+		val unclippedDepthOffset = 24L
+		val unclippedDepthLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -2015,23 +2074,24 @@ actual value class WGPUQuerySetDescriptor(actual override val handler: NativeAdd
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUQuerySetDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUQuerySetDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_INT.withName("type"),
-			C_INT.withName("count"),
+			ffi.C_INT.withName("type"),
+			ffi.C_INT.withName("count"),
 		).withName("WGPUQuerySetDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val typeOffset = labelLayout.byteSize() + labelOffset
-		val typeLayout = C_INT
-		val countOffset = 4L + typeOffset
-		val countLayout = C_INT
+		val typeOffset = 24L
+		val typeLayout = ffi.C_INT
+		val countOffset = 28L
+		val countLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -2046,16 +2106,17 @@ actual value class WGPURenderBundleDescriptor(actual override val handler: Nativ
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderBundleDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPURenderBundleDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 		).withName("WGPURenderBundleDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
 	}
 }
@@ -2095,35 +2156,36 @@ actual value class WGPURenderBundleEncoderDescriptor(actual override val handler
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderBundleEncoderDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(56L)
 				.let(::WGPURenderBundleEncoderDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_LONG.withName("colorFormatCount"),
-			C_POINTER.withName("colorFormats"),
-			C_INT.withName("depthStencilFormat"),
-			C_INT.withName("sampleCount"),
-			C_INT.withName("depthReadOnly"),
-			C_INT.withName("stencilReadOnly"),
+			ffi.C_LONG.withName("colorFormatCount"),
+			ffi.C_POINTER.withName("colorFormats"),
+			ffi.C_INT.withName("depthStencilFormat"),
+			ffi.C_INT.withName("sampleCount"),
+			ffi.C_INT.withName("depthReadOnly"),
+			ffi.C_INT.withName("stencilReadOnly"),
 		).withName("WGPURenderBundleEncoderDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val colorFormatCountOffset = labelLayout.byteSize() + labelOffset
-		val colorFormatCountLayout = C_LONG
-		val colorFormatsOffset = 8L + colorFormatCountOffset
-		val colorFormatsLayout = C_POINTER
-		val depthStencilFormatOffset = 8L + colorFormatsOffset
-		val depthStencilFormatLayout = C_INT
-		val sampleCountOffset = 4L + depthStencilFormatOffset
-		val sampleCountLayout = C_INT
-		val depthReadOnlyOffset = 4L + sampleCountOffset
-		val depthReadOnlyLayout = C_INT
-		val stencilReadOnlyOffset = 4L + depthReadOnlyOffset
-		val stencilReadOnlyLayout = C_INT
+		val colorFormatCountOffset = 24L
+		val colorFormatCountLayout = ffi.C_LONG
+		val colorFormatsOffset = 32L
+		val colorFormatsLayout = ffi.C_POINTER
+		val depthStencilFormatOffset = 40L
+		val depthStencilFormatLayout = ffi.C_INT
+		val sampleCountOffset = 44L
+		val sampleCountLayout = ffi.C_INT
+		val depthReadOnlyOffset = 48L
+		val depthReadOnlyLayout = ffi.C_INT
+		val stencilReadOnlyOffset = 52L
+		val stencilReadOnlyLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -2158,31 +2220,33 @@ actual value class WGPURenderPassColorAttachment(actual override val handler: Na
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassColorAttachment {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(72L)
 				.let(::WGPURenderPassColorAttachment)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("view"),
-			C_INT.withName("depthSlice"),
-			C_POINTER.withName("resolveTarget"),
-			C_INT.withName("loadOp"),
-			C_INT.withName("storeOp"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("view"),
+			ffi.C_INT.withName("depthSlice"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_POINTER.withName("resolveTarget"),
+			ffi.C_INT.withName("loadOp"),
+			ffi.C_INT.withName("storeOp"),
 			WGPUColor.LAYOUT.withName("clearValue"),
 		).withName("WGPURenderPassColorAttachment")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val viewOffset = 8L + nextInChainOffset
-		val viewLayout = C_POINTER
-		val depthSliceOffset = 8L + viewOffset
-		val depthSliceLayout = C_INT
-		val resolveTargetOffset = 4L + depthSliceOffset
-		val resolveTargetLayout = C_POINTER
-		val loadOpOffset = 8L + resolveTargetOffset
-		val loadOpLayout = C_INT
-		val storeOpOffset = 4L + loadOpOffset
-		val storeOpLayout = C_INT
-		val clearValueOffset = 4L + storeOpOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val viewOffset = 8L
+		val viewLayout = ffi.C_POINTER
+		val depthSliceOffset = 16L
+		val depthSliceLayout = ffi.C_INT
+		val resolveTargetOffset = 24L
+		val resolveTargetLayout = ffi.C_POINTER
+		val loadOpOffset = 32L
+		val loadOpLayout = ffi.C_INT
+		val storeOpOffset = 36L
+		val storeOpLayout = ffi.C_INT
+		val clearValueOffset = 40L
 		val clearValueLayout = WGPUColor.LAYOUT
 	}
 }
@@ -2227,38 +2291,39 @@ actual value class WGPURenderPassDepthStencilAttachment(actual override val hand
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassDepthStencilAttachment {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(40L)
 				.let(::WGPURenderPassDepthStencilAttachment)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("view"),
-			C_INT.withName("depthLoadOp"),
-			C_INT.withName("depthStoreOp"),
-			C_FLOAT.withName("depthClearValue"),
-			C_INT.withName("depthReadOnly"),
-			C_INT.withName("stencilLoadOp"),
-			C_INT.withName("stencilStoreOp"),
-			C_INT.withName("stencilClearValue"),
-			C_INT.withName("stencilReadOnly"),
+			ffi.C_POINTER.withName("view"),
+			ffi.C_INT.withName("depthLoadOp"),
+			ffi.C_INT.withName("depthStoreOp"),
+			ffi.C_FLOAT.withName("depthClearValue"),
+			ffi.C_INT.withName("depthReadOnly"),
+			ffi.C_INT.withName("stencilLoadOp"),
+			ffi.C_INT.withName("stencilStoreOp"),
+			ffi.C_INT.withName("stencilClearValue"),
+			ffi.C_INT.withName("stencilReadOnly"),
 		).withName("WGPURenderPassDepthStencilAttachment")
+
 		val viewOffset = 0L
-		val viewLayout = C_POINTER
-		val depthLoadOpOffset = 8L + viewOffset
-		val depthLoadOpLayout = C_INT
-		val depthStoreOpOffset = 4L + depthLoadOpOffset
-		val depthStoreOpLayout = C_INT
-		val depthClearValueOffset = 4L + depthStoreOpOffset
-		val depthClearValueLayout = C_FLOAT
-		val depthReadOnlyOffset = 4L + depthClearValueOffset
-		val depthReadOnlyLayout = C_INT
-		val stencilLoadOpOffset = 4L + depthReadOnlyOffset
-		val stencilLoadOpLayout = C_INT
-		val stencilStoreOpOffset = 4L + stencilLoadOpOffset
-		val stencilStoreOpLayout = C_INT
-		val stencilClearValueOffset = 4L + stencilStoreOpOffset
-		val stencilClearValueLayout = C_INT
-		val stencilReadOnlyOffset = 4L + stencilClearValueOffset
-		val stencilReadOnlyLayout = C_INT
+		val viewLayout = ffi.C_POINTER
+		val depthLoadOpOffset = 8L
+		val depthLoadOpLayout = ffi.C_INT
+		val depthStoreOpOffset = 12L
+		val depthStoreOpLayout = ffi.C_INT
+		val depthClearValueOffset = 16L
+		val depthClearValueLayout = ffi.C_FLOAT
+		val depthReadOnlyOffset = 20L
+		val depthReadOnlyLayout = ffi.C_INT
+		val stencilLoadOpOffset = 24L
+		val stencilLoadOpLayout = ffi.C_INT
+		val stencilStoreOpOffset = 28L
+		val stencilStoreOpLayout = ffi.C_INT
+		val stencilClearValueOffset = 32L
+		val stencilClearValueLayout = ffi.C_INT
+		val stencilReadOnlyOffset = 36L
+		val stencilReadOnlyLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -2293,32 +2358,33 @@ actual value class WGPURenderPassDescriptor(actual override val handler: NativeA
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(64L)
 				.let(::WGPURenderPassDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_LONG.withName("colorAttachmentCount"),
-			C_POINTER.withName("colorAttachments"),
-			C_POINTER.withName("depthStencilAttachment"),
-			C_POINTER.withName("occlusionQuerySet"),
-			C_POINTER.withName("timestampWrites"),
+			ffi.C_LONG.withName("colorAttachmentCount"),
+			ffi.C_POINTER.withName("colorAttachments"),
+			ffi.C_POINTER.withName("depthStencilAttachment"),
+			ffi.C_POINTER.withName("occlusionQuerySet"),
+			ffi.C_POINTER.withName("timestampWrites"),
 		).withName("WGPURenderPassDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val colorAttachmentCountOffset = labelLayout.byteSize() + labelOffset
-		val colorAttachmentCountLayout = C_LONG
-		val colorAttachmentsOffset = 8L + colorAttachmentCountOffset
-		val colorAttachmentsLayout = C_POINTER
-		val depthStencilAttachmentOffset = 8L + colorAttachmentsOffset
-		val depthStencilAttachmentLayout = C_POINTER
-		val occlusionQuerySetOffset = 8L + depthStencilAttachmentOffset
-		val occlusionQuerySetLayout = C_POINTER
-		val timestampWritesOffset = 8L + occlusionQuerySetOffset
-		val timestampWritesLayout = C_POINTER
+		val colorAttachmentCountOffset = 24L
+		val colorAttachmentCountLayout = ffi.C_LONG
+		val colorAttachmentsOffset = 32L
+		val colorAttachmentsLayout = ffi.C_POINTER
+		val depthStencilAttachmentOffset = 40L
+		val depthStencilAttachmentLayout = ffi.C_POINTER
+		val occlusionQuerySetOffset = 48L
+		val occlusionQuerySetLayout = ffi.C_POINTER
+		val timestampWritesOffset = 56L
+		val timestampWritesLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -2334,17 +2400,19 @@ actual value class WGPUChainedStruct(actual override val handler: NativeAddress)
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUChainedStruct {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(16L)
 				.let(::WGPUChainedStruct)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("next"),
-			C_INT.withName("sType"),
+			ffi.C_POINTER.withName("next"),
+			ffi.C_INT.withName("sType"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUChainedStruct")
+
 		val nextOffset = 0L
-		val nextLayout = C_POINTER
-		val sTypeOffset = 8L + nextOffset
-		val sTypeLayout = C_INT
+		val nextLayout = ffi.C_POINTER
+		val sTypeOffset = 8L
+		val sTypeLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -2359,17 +2427,18 @@ actual value class WGPURenderPassMaxDrawCount(actual override val handler: Nativ
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassMaxDrawCount {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPURenderPassMaxDrawCount)
 		}
 		internal val LAYOUT = structLayout(
 			WGPUChainedStruct.LAYOUT.withName("chain"),
-			C_LONG.withName("maxDrawCount"),
+			ffi.C_LONG.withName("maxDrawCount"),
 		).withName("WGPURenderPassMaxDrawCount")
+
 		val chainOffset = 0L
 		val chainLayout = WGPUChainedStruct.LAYOUT
-		val maxDrawCountOffset = chainLayout.byteSize() + chainOffset
-		val maxDrawCountLayout = C_LONG
+		val maxDrawCountOffset = 16L
+		val maxDrawCountLayout = ffi.C_LONG
 	}
 }
 @JvmInline
@@ -2389,20 +2458,21 @@ actual value class WGPURenderPassTimestampWrites(actual override val handler: Na
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassTimestampWrites {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(16L)
 				.let(::WGPURenderPassTimestampWrites)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("querySet"),
-			C_INT.withName("beginningOfPassWriteIndex"),
-			C_INT.withName("endOfPassWriteIndex"),
+			ffi.C_POINTER.withName("querySet"),
+			ffi.C_INT.withName("beginningOfPassWriteIndex"),
+			ffi.C_INT.withName("endOfPassWriteIndex"),
 		).withName("WGPURenderPassTimestampWrites")
+
 		val querySetOffset = 0L
-		val querySetLayout = C_POINTER
-		val beginningOfPassWriteIndexOffset = 8L + querySetOffset
-		val beginningOfPassWriteIndexLayout = C_INT
-		val endOfPassWriteIndexOffset = 4L + beginningOfPassWriteIndexOffset
-		val endOfPassWriteIndexLayout = C_INT
+		val querySetLayout = ffi.C_POINTER
+		val beginningOfPassWriteIndexOffset = 8L
+		val beginningOfPassWriteIndexLayout = ffi.C_INT
+		val endOfPassWriteIndexOffset = 12L
+		val endOfPassWriteIndexLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -2437,32 +2507,33 @@ actual value class WGPUVertexState(actual override val handler: NativeAddress) :
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUVertexState {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(64L)
 				.let(::WGPUVertexState)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("module"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("module"),
 			WGPUStringView.LAYOUT.withName("entryPoint"),
-			C_LONG.withName("constantCount"),
-			C_POINTER.withName("constants"),
-			C_LONG.withName("bufferCount"),
-			C_POINTER.withName("buffers"),
+			ffi.C_LONG.withName("constantCount"),
+			ffi.C_POINTER.withName("constants"),
+			ffi.C_LONG.withName("bufferCount"),
+			ffi.C_POINTER.withName("buffers"),
 		).withName("WGPUVertexState")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val moduleOffset = 8L + nextInChainOffset
-		val moduleLayout = C_POINTER
-		val entryPointOffset = 8L + moduleOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val moduleOffset = 8L
+		val moduleLayout = ffi.C_POINTER
+		val entryPointOffset = 16L
 		val entryPointLayout = WGPUStringView.LAYOUT
-		val constantCountOffset = entryPointLayout.byteSize() + entryPointOffset
-		val constantCountLayout = C_LONG
-		val constantsOffset = 8L + constantCountOffset
-		val constantsLayout = C_POINTER
-		val bufferCountOffset = 8L + constantsOffset
-		val bufferCountLayout = C_LONG
-		val buffersOffset = 8L + bufferCountOffset
-		val buffersLayout = C_POINTER
+		val constantCountOffset = 32L
+		val constantCountLayout = ffi.C_LONG
+		val constantsOffset = 40L
+		val constantsLayout = ffi.C_POINTER
+		val bufferCountOffset = 48L
+		val bufferCountLayout = ffi.C_LONG
+		val buffersOffset = 56L
+		val buffersLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -2498,35 +2569,36 @@ actual value class WGPURenderPipelineDescriptor(actual override val handler: Nat
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderPipelineDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(168L)
 				.let(::WGPURenderPipelineDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_POINTER.withName("layout"),
+			ffi.C_POINTER.withName("layout"),
 			WGPUVertexState.LAYOUT.withName("vertex"),
 			WGPUPrimitiveState.LAYOUT.withName("primitive"),
-			C_POINTER.withName("depthStencil"),
+			ffi.C_POINTER.withName("depthStencil"),
 			WGPUMultisampleState.LAYOUT.withName("multisample"),
-			C_POINTER.withName("fragment"),
+			ffi.C_POINTER.withName("fragment"),
 		).withName("WGPURenderPipelineDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val layoutOffset = labelLayout.byteSize() + labelOffset
-		val layoutLayout = C_POINTER
-		val vertexOffset = 8L + layoutOffset
+		val layoutOffset = 24L
+		val layoutLayout = ffi.C_POINTER
+		val vertexOffset = 32L
 		val vertexLayout = WGPUVertexState.LAYOUT
-		val primitiveOffset = vertexLayout.byteSize() + vertexOffset
+		val primitiveOffset = 96L
 		val primitiveLayout = WGPUPrimitiveState.LAYOUT
-		val depthStencilOffset = primitiveLayout.byteSize() + primitiveOffset
-		val depthStencilLayout = C_POINTER
-		val multisampleOffset = 8L + depthStencilOffset
+		val depthStencilOffset = 128L
+		val depthStencilLayout = ffi.C_POINTER
+		val multisampleOffset = 136L
 		val multisampleLayout = WGPUMultisampleState.LAYOUT
-		val fragmentOffset = multisampleLayout.byteSize() + multisampleOffset
-		val fragmentLayout = C_POINTER
+		val fragmentOffset = 160L
+		val fragmentLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -2554,26 +2626,28 @@ actual value class WGPURequestAdapterOptions(actual override val handler: Native
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURequestAdapterOptions {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPURequestAdapterOptions)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("compatibleSurface"),
-			C_INT.withName("powerPreference"),
-			C_INT.withName("backendType"),
-			C_INT.withName("forceFallbackAdapter"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("compatibleSurface"),
+			ffi.C_INT.withName("powerPreference"),
+			ffi.C_INT.withName("backendType"),
+			ffi.C_INT.withName("forceFallbackAdapter"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPURequestAdapterOptions")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val compatibleSurfaceOffset = 8L + nextInChainOffset
-		val compatibleSurfaceLayout = C_POINTER
-		val powerPreferenceOffset = 8L + compatibleSurfaceOffset
-		val powerPreferenceLayout = C_INT
-		val backendTypeOffset = 4L + powerPreferenceOffset
-		val backendTypeLayout = C_INT
-		val forceFallbackAdapterOffset = 4L + backendTypeOffset
-		val forceFallbackAdapterLayout = C_INT
+		val nextInChainLayout = ffi.C_POINTER
+		val compatibleSurfaceOffset = 8L
+		val compatibleSurfaceLayout = ffi.C_POINTER
+		val powerPreferenceOffset = 16L
+		val powerPreferenceLayout = ffi.C_INT
+		val backendTypeOffset = 20L
+		val backendTypeLayout = ffi.C_INT
+		val forceFallbackAdapterOffset = 24L
+		val forceFallbackAdapterLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -2588,16 +2662,17 @@ actual value class WGPURequiredLimits(actual override val handler: NativeAddress
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURequiredLimits {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(152L)
 				.let(::WGPURequiredLimits)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPULimits.LAYOUT.withName("limits"),
 		).withName("WGPURequiredLimits")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val limitsOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val limitsOffset = 8L
 		val limitsLayout = WGPULimits.LAYOUT
 	}
 }
@@ -2653,47 +2728,49 @@ actual value class WGPUSamplerDescriptor(actual override val handler: NativeAddr
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSamplerDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(68L)
 				.let(::WGPUSamplerDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_INT.withName("addressModeU"),
-			C_INT.withName("addressModeV"),
-			C_INT.withName("addressModeW"),
-			C_INT.withName("magFilter"),
-			C_INT.withName("minFilter"),
-			C_INT.withName("mipmapFilter"),
-			C_FLOAT.withName("lodMinClamp"),
-			C_FLOAT.withName("lodMaxClamp"),
-			C_INT.withName("compare"),
-			C_SHORT.withName("maxAnisotropy"),
+			ffi.C_INT.withName("addressModeU"),
+			ffi.C_INT.withName("addressModeV"),
+			ffi.C_INT.withName("addressModeW"),
+			ffi.C_INT.withName("magFilter"),
+			ffi.C_INT.withName("minFilter"),
+			ffi.C_INT.withName("mipmapFilter"),
+			ffi.C_FLOAT.withName("lodMinClamp"),
+			ffi.C_FLOAT.withName("lodMaxClamp"),
+			ffi.C_INT.withName("compare"),
+			ffi.C_SHORT.withName("maxAnisotropy"),
+			MemoryLayout.paddingLayout(6)
 		).withName("WGPUSamplerDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val addressModeUOffset = labelLayout.byteSize() + labelOffset
-		val addressModeULayout = C_INT
-		val addressModeVOffset = 4L + addressModeUOffset
-		val addressModeVLayout = C_INT
-		val addressModeWOffset = 4L + addressModeVOffset
-		val addressModeWLayout = C_INT
-		val magFilterOffset = 4L + addressModeWOffset
-		val magFilterLayout = C_INT
-		val minFilterOffset = 4L + magFilterOffset
-		val minFilterLayout = C_INT
-		val mipmapFilterOffset = 4L + minFilterOffset
-		val mipmapFilterLayout = C_INT
-		val lodMinClampOffset = 4L + mipmapFilterOffset
-		val lodMinClampLayout = C_FLOAT
-		val lodMaxClampOffset = 4L + lodMinClampOffset
-		val lodMaxClampLayout = C_FLOAT
-		val compareOffset = 4L + lodMaxClampOffset
-		val compareLayout = C_INT
-		val maxAnisotropyOffset = 4L + compareOffset
-		val maxAnisotropyLayout = C_SHORT
+		val addressModeUOffset = 24L
+		val addressModeULayout = ffi.C_INT
+		val addressModeVOffset = 28L
+		val addressModeVLayout = ffi.C_INT
+		val addressModeWOffset = 32L
+		val addressModeWLayout = ffi.C_INT
+		val magFilterOffset = 36L
+		val magFilterLayout = ffi.C_INT
+		val minFilterOffset = 40L
+		val minFilterLayout = ffi.C_INT
+		val mipmapFilterOffset = 44L
+		val mipmapFilterLayout = ffi.C_INT
+		val lodMinClampOffset = 48L
+		val lodMinClampLayout = ffi.C_FLOAT
+		val lodMaxClampOffset = 52L
+		val lodMaxClampLayout = ffi.C_FLOAT
+		val compareOffset = 56L
+		val compareLayout = ffi.C_INT
+		val maxAnisotropyOffset = 60L
+		val maxAnisotropyLayout = ffi.C_SHORT
 	}
 }
 @JvmInline
@@ -2708,16 +2785,17 @@ actual value class WGPUShaderModuleDescriptor(actual override val handler: Nativ
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUShaderModuleDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUShaderModuleDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 		).withName("WGPUShaderModuleDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
 	}
 }
@@ -2737,20 +2815,22 @@ actual value class WGPUShaderSourceSPIRV(actual override val handler: NativeAddr
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUShaderSourceSPIRV {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUShaderSourceSPIRV)
 		}
 		internal val LAYOUT = structLayout(
 			WGPUChainedStruct.LAYOUT.withName("chain"),
-			C_INT.withName("codeSize"),
-			C_POINTER.withName("code"),
+			ffi.C_INT.withName("codeSize"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_POINTER.withName("code"),
 		).withName("WGPUShaderSourceSPIRV")
+
 		val chainOffset = 0L
 		val chainLayout = WGPUChainedStruct.LAYOUT
-		val codeSizeOffset = chainLayout.byteSize() + chainOffset
-		val codeSizeLayout = C_INT
-		val codeOffset = 4L + codeSizeOffset
-		val codeLayout = C_POINTER
+		val codeSizeOffset = 16L
+		val codeSizeLayout = ffi.C_INT
+		val codeOffset = 24L
+		val codeLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -2764,16 +2844,17 @@ actual value class WGPUShaderSourceWGSL(actual override val handler: NativeAddre
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUShaderSourceWGSL {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUShaderSourceWGSL)
 		}
 		internal val LAYOUT = structLayout(
 			WGPUChainedStruct.LAYOUT.withName("chain"),
 			WGPUStringView.LAYOUT.withName("code"),
 		).withName("WGPUShaderSourceWGSL")
+
 		val chainOffset = 0L
 		val chainLayout = WGPUChainedStruct.LAYOUT
-		val codeOffset = chainLayout.byteSize() + chainOffset
+		val codeOffset = 16L
 		val codeLayout = WGPUStringView.LAYOUT
 	}
 }
@@ -2794,20 +2875,21 @@ actual value class WGPUSupportedFeatures(actual override val handler: NativeAddr
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSupportedFeatures {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUSupportedFeatures)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_LONG.withName("featureCount"),
-			C_POINTER.withName("features"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_LONG.withName("featureCount"),
+			ffi.C_POINTER.withName("features"),
 		).withName("WGPUSupportedFeatures")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val featureCountOffset = 8L + nextInChainOffset
-		val featureCountLayout = C_LONG
-		val featuresOffset = 8L + featureCountOffset
-		val featuresLayout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val featureCountOffset = 8L
+		val featureCountLayout = ffi.C_LONG
+		val featuresOffset = 16L
+		val featuresLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -2822,16 +2904,17 @@ actual value class WGPUSupportedLimits(actual override val handler: NativeAddres
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSupportedLimits {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(152L)
 				.let(::WGPUSupportedLimits)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPULimits.LAYOUT.withName("limits"),
 		).withName("WGPUSupportedLimits")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val limitsOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val limitsOffset = 8L
 		val limitsLayout = WGPULimits.LAYOUT
 	}
 }
@@ -2872,35 +2955,36 @@ actual value class WGPUSurfaceCapabilities(actual override val handler: NativeAd
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceCapabilities {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(64L)
 				.let(::WGPUSurfaceCapabilities)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_LONG.withName("usages"),
-			C_LONG.withName("formatCount"),
-			C_POINTER.withName("formats"),
-			C_LONG.withName("presentModeCount"),
-			C_POINTER.withName("presentModes"),
-			C_LONG.withName("alphaModeCount"),
-			C_POINTER.withName("alphaModes"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_LONG.withName("usages"),
+			ffi.C_LONG.withName("formatCount"),
+			ffi.C_POINTER.withName("formats"),
+			ffi.C_LONG.withName("presentModeCount"),
+			ffi.C_POINTER.withName("presentModes"),
+			ffi.C_LONG.withName("alphaModeCount"),
+			ffi.C_POINTER.withName("alphaModes"),
 		).withName("WGPUSurfaceCapabilities")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val usagesOffset = 8L + nextInChainOffset
-		val usagesLayout = C_LONG
-		val formatCountOffset = 8L + usagesOffset
-		val formatCountLayout = C_LONG
-		val formatsOffset = 8L + formatCountOffset
-		val formatsLayout = C_POINTER
-		val presentModeCountOffset = 8L + formatsOffset
-		val presentModeCountLayout = C_LONG
-		val presentModesOffset = 8L + presentModeCountOffset
-		val presentModesLayout = C_POINTER
-		val alphaModeCountOffset = 8L + presentModesOffset
-		val alphaModeCountLayout = C_LONG
-		val alphaModesOffset = 8L + alphaModeCountOffset
-		val alphaModesLayout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val usagesOffset = 8L
+		val usagesLayout = ffi.C_LONG
+		val formatCountOffset = 16L
+		val formatCountLayout = ffi.C_LONG
+		val formatsOffset = 24L
+		val formatsLayout = ffi.C_POINTER
+		val presentModeCountOffset = 32L
+		val presentModeCountLayout = ffi.C_LONG
+		val presentModesOffset = 40L
+		val presentModesLayout = ffi.C_POINTER
+		val alphaModeCountOffset = 48L
+		val alphaModeCountLayout = ffi.C_LONG
+		val alphaModesOffset = 56L
+		val alphaModesLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -2948,41 +3032,43 @@ actual value class WGPUSurfaceConfiguration(actual override val handler: NativeA
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceConfiguration {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(64L)
 				.let(::WGPUSurfaceConfiguration)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("device"),
-			C_INT.withName("format"),
-			C_LONG.withName("usage"),
-			C_INT.withName("width"),
-			C_INT.withName("height"),
-			C_LONG.withName("viewFormatCount"),
-			C_POINTER.withName("viewFormats"),
-			C_INT.withName("alphaMode"),
-			C_INT.withName("presentMode"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("device"),
+			ffi.C_INT.withName("format"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_LONG.withName("usage"),
+			ffi.C_INT.withName("width"),
+			ffi.C_INT.withName("height"),
+			ffi.C_LONG.withName("viewFormatCount"),
+			ffi.C_POINTER.withName("viewFormats"),
+			ffi.C_INT.withName("alphaMode"),
+			ffi.C_INT.withName("presentMode"),
 		).withName("WGPUSurfaceConfiguration")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val deviceOffset = 8L + nextInChainOffset
-		val deviceLayout = C_POINTER
-		val formatOffset = 8L + deviceOffset
-		val formatLayout = C_INT
-		val usageOffset = 4L + formatOffset
-		val usageLayout = C_LONG
-		val widthOffset = 8L + usageOffset
-		val widthLayout = C_INT
-		val heightOffset = 4L + widthOffset
-		val heightLayout = C_INT
-		val viewFormatCountOffset = 4L + heightOffset
-		val viewFormatCountLayout = C_LONG
-		val viewFormatsOffset = 8L + viewFormatCountOffset
-		val viewFormatsLayout = C_POINTER
-		val alphaModeOffset = 8L + viewFormatsOffset
-		val alphaModeLayout = C_INT
-		val presentModeOffset = 4L + alphaModeOffset
-		val presentModeLayout = C_INT
+		val nextInChainLayout = ffi.C_POINTER
+		val deviceOffset = 8L
+		val deviceLayout = ffi.C_POINTER
+		val formatOffset = 16L
+		val formatLayout = ffi.C_INT
+		val usageOffset = 24L
+		val usageLayout = ffi.C_LONG
+		val widthOffset = 32L
+		val widthLayout = ffi.C_INT
+		val heightOffset = 36L
+		val heightLayout = ffi.C_INT
+		val viewFormatCountOffset = 40L
+		val viewFormatCountLayout = ffi.C_LONG
+		val viewFormatsOffset = 48L
+		val viewFormatsLayout = ffi.C_POINTER
+		val alphaModeOffset = 56L
+		val alphaModeLayout = ffi.C_INT
+		val presentModeOffset = 60L
+		val presentModeLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -2997,16 +3083,17 @@ actual value class WGPUSurfaceDescriptor(actual override val handler: NativeAddr
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUSurfaceDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
 		).withName("WGPUSurfaceDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
 	}
 }
@@ -3022,17 +3109,18 @@ actual value class WGPUSurfaceSourceAndroidNativeWindow(actual override val hand
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceAndroidNativeWindow {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUSurfaceSourceAndroidNativeWindow)
 		}
 		internal val LAYOUT = structLayout(
 			WGPUChainedStruct.LAYOUT.withName("chain"),
-			C_POINTER.withName("window"),
+			ffi.C_POINTER.withName("window"),
 		).withName("WGPUSurfaceSourceAndroidNativeWindow")
+
 		val chainOffset = 0L
 		val chainLayout = WGPUChainedStruct.LAYOUT
-		val windowOffset = chainLayout.byteSize() + chainOffset
-		val windowLayout = C_POINTER
+		val windowOffset = 16L
+		val windowLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3047,17 +3135,18 @@ actual value class WGPUSurfaceSourceMetalLayer(actual override val handler: Nati
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceMetalLayer {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUSurfaceSourceMetalLayer)
 		}
 		internal val LAYOUT = structLayout(
 			WGPUChainedStruct.LAYOUT.withName("chain"),
-			C_POINTER.withName("layer"),
+			ffi.C_POINTER.withName("layer"),
 		).withName("WGPUSurfaceSourceMetalLayer")
+
 		val chainOffset = 0L
 		val chainLayout = WGPUChainedStruct.LAYOUT
-		val layerOffset = chainLayout.byteSize() + chainOffset
-		val layerLayout = C_POINTER
+		val layerOffset = 16L
+		val layerLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3076,20 +3165,21 @@ actual value class WGPUSurfaceSourceWaylandSurface(actual override val handler: 
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceWaylandSurface {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUSurfaceSourceWaylandSurface)
 		}
 		internal val LAYOUT = structLayout(
 			WGPUChainedStruct.LAYOUT.withName("chain"),
-			C_POINTER.withName("display"),
-			C_POINTER.withName("surface"),
+			ffi.C_POINTER.withName("display"),
+			ffi.C_POINTER.withName("surface"),
 		).withName("WGPUSurfaceSourceWaylandSurface")
+
 		val chainOffset = 0L
 		val chainLayout = WGPUChainedStruct.LAYOUT
-		val displayOffset = chainLayout.byteSize() + chainOffset
-		val displayLayout = C_POINTER
-		val surfaceOffset = 8L + displayOffset
-		val surfaceLayout = C_POINTER
+		val displayOffset = 16L
+		val displayLayout = ffi.C_POINTER
+		val surfaceOffset = 24L
+		val surfaceLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3108,20 +3198,21 @@ actual value class WGPUSurfaceSourceWindowsHWND(actual override val handler: Nat
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceWindowsHWND {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUSurfaceSourceWindowsHWND)
 		}
 		internal val LAYOUT = structLayout(
 			WGPUChainedStruct.LAYOUT.withName("chain"),
-			C_POINTER.withName("hinstance"),
-			C_POINTER.withName("hwnd"),
+			ffi.C_POINTER.withName("hinstance"),
+			ffi.C_POINTER.withName("hwnd"),
 		).withName("WGPUSurfaceSourceWindowsHWND")
+
 		val chainOffset = 0L
 		val chainLayout = WGPUChainedStruct.LAYOUT
-		val hinstanceOffset = chainLayout.byteSize() + chainOffset
-		val hinstanceLayout = C_POINTER
-		val hwndOffset = 8L + hinstanceOffset
-		val hwndLayout = C_POINTER
+		val hinstanceOffset = 16L
+		val hinstanceLayout = ffi.C_POINTER
+		val hwndOffset = 24L
+		val hwndLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3140,20 +3231,22 @@ actual value class WGPUSurfaceSourceXCBWindow(actual override val handler: Nativ
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceXCBWindow {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUSurfaceSourceXCBWindow)
 		}
 		internal val LAYOUT = structLayout(
 			WGPUChainedStruct.LAYOUT.withName("chain"),
-			C_POINTER.withName("connection"),
-			C_INT.withName("window"),
+			ffi.C_POINTER.withName("connection"),
+			ffi.C_INT.withName("window"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUSurfaceSourceXCBWindow")
+
 		val chainOffset = 0L
 		val chainLayout = WGPUChainedStruct.LAYOUT
-		val connectionOffset = chainLayout.byteSize() + chainOffset
-		val connectionLayout = C_POINTER
-		val windowOffset = 8L + connectionOffset
-		val windowLayout = C_INT
+		val connectionOffset = 16L
+		val connectionLayout = ffi.C_POINTER
+		val windowOffset = 24L
+		val windowLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -3172,20 +3265,21 @@ actual value class WGPUSurfaceSourceXlibWindow(actual override val handler: Nati
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceXlibWindow {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUSurfaceSourceXlibWindow)
 		}
 		internal val LAYOUT = structLayout(
 			WGPUChainedStruct.LAYOUT.withName("chain"),
-			C_POINTER.withName("display"),
-			C_LONG.withName("window"),
+			ffi.C_POINTER.withName("display"),
+			ffi.C_LONG.withName("window"),
 		).withName("WGPUSurfaceSourceXlibWindow")
+
 		val chainOffset = 0L
 		val chainLayout = WGPUChainedStruct.LAYOUT
-		val displayOffset = chainLayout.byteSize() + chainOffset
-		val displayLayout = C_POINTER
-		val windowOffset = 8L + displayOffset
-		val windowLayout = C_LONG
+		val displayOffset = 16L
+		val displayLayout = ffi.C_POINTER
+		val windowOffset = 24L
+		val windowLayout = ffi.C_LONG
 	}
 }
 @JvmInline
@@ -3201,17 +3295,19 @@ actual value class WGPUSurfaceTexture(actual override val handler: NativeAddress
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceTexture {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(16L)
 				.let(::WGPUSurfaceTexture)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("texture"),
-			C_INT.withName("status"),
+			ffi.C_POINTER.withName("texture"),
+			ffi.C_INT.withName("status"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUSurfaceTexture")
+
 		val textureOffset = 0L
-		val textureLayout = C_POINTER
-		val statusOffset = 8L + textureOffset
-		val statusLayout = C_INT
+		val textureLayout = ffi.C_POINTER
+		val statusOffset = 8L
+		val statusLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -3257,41 +3353,43 @@ actual value class WGPUTextureDescriptor(actual override val handler: NativeAddr
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUTextureDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(80L)
 				.let(::WGPUTextureDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_LONG.withName("usage"),
-			C_INT.withName("dimension"),
+			ffi.C_LONG.withName("usage"),
+			ffi.C_INT.withName("dimension"),
 			WGPUExtent3D.LAYOUT.withName("size"),
-			C_INT.withName("format"),
-			C_INT.withName("mipLevelCount"),
-			C_INT.withName("sampleCount"),
-			C_LONG.withName("viewFormatCount"),
-			C_POINTER.withName("viewFormats"),
+			ffi.C_INT.withName("format"),
+			ffi.C_INT.withName("mipLevelCount"),
+			ffi.C_INT.withName("sampleCount"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_LONG.withName("viewFormatCount"),
+			ffi.C_POINTER.withName("viewFormats"),
 		).withName("WGPUTextureDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val usageOffset = labelLayout.byteSize() + labelOffset
-		val usageLayout = C_LONG
-		val dimensionOffset = 8L + usageOffset
-		val dimensionLayout = C_INT
-		val sizeOffset = 4L + dimensionOffset
+		val usageOffset = 24L
+		val usageLayout = ffi.C_LONG
+		val dimensionOffset = 32L
+		val dimensionLayout = ffi.C_INT
+		val sizeOffset = 36L
 		val sizeLayout = WGPUExtent3D.LAYOUT
-		val formatOffset = sizeLayout.byteSize() + sizeOffset
-		val formatLayout = C_INT
-		val mipLevelCountOffset = 4L + formatOffset
-		val mipLevelCountLayout = C_INT
-		val sampleCountOffset = 4L + mipLevelCountOffset
-		val sampleCountLayout = C_INT
-		val viewFormatCountOffset = 4L + sampleCountOffset
-		val viewFormatCountLayout = C_LONG
-		val viewFormatsOffset = 8L + viewFormatCountOffset
-		val viewFormatsLayout = C_POINTER
+		val formatOffset = 48L
+		val formatLayout = ffi.C_INT
+		val mipLevelCountOffset = 52L
+		val mipLevelCountLayout = ffi.C_INT
+		val sampleCountOffset = 56L
+		val sampleCountLayout = ffi.C_INT
+		val viewFormatCountOffset = 64L
+		val viewFormatCountLayout = ffi.C_LONG
+		val viewFormatsOffset = 72L
+		val viewFormatsLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3338,41 +3436,43 @@ actual value class WGPUTextureViewDescriptor(actual override val handler: Native
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUTextureViewDescriptor {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(64L)
 				.let(::WGPUTextureViewDescriptor)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("nextInChain"),
 			WGPUStringView.LAYOUT.withName("label"),
-			C_INT.withName("format"),
-			C_INT.withName("dimension"),
-			C_INT.withName("baseMipLevel"),
-			C_INT.withName("mipLevelCount"),
-			C_INT.withName("baseArrayLayer"),
-			C_INT.withName("arrayLayerCount"),
-			C_INT.withName("aspect"),
-			C_LONG.withName("usage"),
+			ffi.C_INT.withName("format"),
+			ffi.C_INT.withName("dimension"),
+			ffi.C_INT.withName("baseMipLevel"),
+			ffi.C_INT.withName("mipLevelCount"),
+			ffi.C_INT.withName("baseArrayLayer"),
+			ffi.C_INT.withName("arrayLayerCount"),
+			ffi.C_INT.withName("aspect"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_LONG.withName("usage"),
 		).withName("WGPUTextureViewDescriptor")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val labelOffset = 8L + nextInChainOffset
+		val nextInChainLayout = ffi.C_POINTER
+		val labelOffset = 8L
 		val labelLayout = WGPUStringView.LAYOUT
-		val formatOffset = labelLayout.byteSize() + labelOffset
-		val formatLayout = C_INT
-		val dimensionOffset = 4L + formatOffset
-		val dimensionLayout = C_INT
-		val baseMipLevelOffset = 4L + dimensionOffset
-		val baseMipLevelLayout = C_INT
-		val mipLevelCountOffset = 4L + baseMipLevelOffset
-		val mipLevelCountLayout = C_INT
-		val baseArrayLayerOffset = 4L + mipLevelCountOffset
-		val baseArrayLayerLayout = C_INT
-		val arrayLayerCountOffset = 4L + baseArrayLayerOffset
-		val arrayLayerCountLayout = C_INT
-		val aspectOffset = 4L + arrayLayerCountOffset
-		val aspectLayout = C_INT
-		val usageOffset = 4L + aspectOffset
-		val usageLayout = C_LONG
+		val formatOffset = 24L
+		val formatLayout = ffi.C_INT
+		val dimensionOffset = 28L
+		val dimensionLayout = ffi.C_INT
+		val baseMipLevelOffset = 32L
+		val baseMipLevelLayout = ffi.C_INT
+		val mipLevelCountOffset = 36L
+		val mipLevelCountLayout = ffi.C_INT
+		val baseArrayLayerOffset = 40L
+		val baseArrayLayerLayout = ffi.C_INT
+		val arrayLayerCountOffset = 44L
+		val arrayLayerCountLayout = ffi.C_INT
+		val aspectOffset = 48L
+		val aspectLayout = ffi.C_INT
+		val usageOffset = 56L
+		val usageLayout = ffi.C_LONG
 	}
 }
 @JvmInline
@@ -3392,20 +3492,23 @@ actual value class WGPUVertexAttribute(actual override val handler: NativeAddres
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUVertexAttribute {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(24L)
 				.let(::WGPUVertexAttribute)
 		}
 		internal val LAYOUT = structLayout(
-			C_INT.withName("format"),
-			C_LONG.withName("offset"),
-			C_INT.withName("shaderLocation"),
+			ffi.C_INT.withName("format"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_LONG.withName("offset"),
+			ffi.C_INT.withName("shaderLocation"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUVertexAttribute")
+
 		val formatOffset = 0L
-		val formatLayout = C_INT
-		val offsetOffset = 4L + formatOffset
-		val offsetLayout = C_LONG
-		val shaderLocationOffset = 8L + offsetOffset
-		val shaderLocationLayout = C_INT
+		val formatLayout = ffi.C_INT
+		val offsetOffset = 8L
+		val offsetLayout = ffi.C_LONG
+		val shaderLocationOffset = 16L
+		val shaderLocationLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -3429,23 +3532,25 @@ actual value class WGPUVertexBufferLayout(actual override val handler: NativeAdd
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUVertexBufferLayout {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUVertexBufferLayout)
 		}
 		internal val LAYOUT = structLayout(
-			C_LONG.withName("arrayStride"),
-			C_INT.withName("stepMode"),
-			C_LONG.withName("attributeCount"),
-			C_POINTER.withName("attributes"),
+			ffi.C_LONG.withName("arrayStride"),
+			ffi.C_INT.withName("stepMode"),
+			MemoryLayout.paddingLayout(4),
+			ffi.C_LONG.withName("attributeCount"),
+			ffi.C_POINTER.withName("attributes"),
 		).withName("WGPUVertexBufferLayout")
+
 		val arrayStrideOffset = 0L
-		val arrayStrideLayout = C_LONG
-		val stepModeOffset = 8L + arrayStrideOffset
-		val stepModeLayout = C_INT
-		val attributeCountOffset = 4L + stepModeOffset
-		val attributeCountLayout = C_LONG
-		val attributesOffset = 8L + attributeCountOffset
-		val attributesLayout = C_POINTER
+		val arrayStrideLayout = ffi.C_LONG
+		val stepModeOffset = 8L
+		val stepModeLayout = ffi.C_INT
+		val attributeCountOffset = 16L
+		val attributeCountLayout = ffi.C_LONG
+		val attributesOffset = 24L
+		val attributesLayout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3461,17 +3566,19 @@ actual value class WGPUChainedStructOut(actual override val handler: NativeAddre
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUChainedStructOut {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(16L)
 				.let(::WGPUChainedStructOut)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("next"),
-			C_INT.withName("sType"),
+			ffi.C_POINTER.withName("next"),
+			ffi.C_INT.withName("sType"),
+			MemoryLayout.paddingLayout(4)
 		).withName("WGPUChainedStructOut")
+
 		val nextOffset = 0L
-		val nextLayout = C_POINTER
-		val sTypeOffset = 8L + nextOffset
-		val sTypeLayout = C_INT
+		val nextLayout = ffi.C_POINTER
+		val sTypeOffset = 8L
+		val sTypeLayout = ffi.C_INT
 	}
 }
 @JvmInline
@@ -3495,23 +3602,24 @@ actual value class WGPUBufferMapCallbackInfo(actual override val handler: Native
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUBufferMapCallbackInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUBufferMapCallbackInfo)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("callback"),
-			C_POINTER.withName("userdata1"),
-			C_POINTER.withName("userdata2"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("callback"),
+			ffi.C_POINTER.withName("userdata1"),
+			ffi.C_POINTER.withName("userdata2"),
 		).withName("WGPUBufferMapCallbackInfo")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val callbackOffset = 8L + nextInChainOffset
-		val callbackLayout = C_POINTER
-		val userdata1Offset = 8L + callbackOffset
-		val userdata1Layout = C_POINTER
-		val userdata2Offset = 8L + userdata1Offset
-		val userdata2Layout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val callbackOffset = 8L
+		val callbackLayout = ffi.C_POINTER
+		val userdata1Offset = 16L
+		val userdata1Layout = ffi.C_POINTER
+		val userdata2Offset = 24L
+		val userdata2Layout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3535,23 +3643,24 @@ actual value class WGPUCompilationInfoCallbackInfo(actual override val handler: 
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUCompilationInfoCallbackInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUCompilationInfoCallbackInfo)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("callback"),
-			C_POINTER.withName("userdata1"),
-			C_POINTER.withName("userdata2"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("callback"),
+			ffi.C_POINTER.withName("userdata1"),
+			ffi.C_POINTER.withName("userdata2"),
 		).withName("WGPUCompilationInfoCallbackInfo")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val callbackOffset = 8L + nextInChainOffset
-		val callbackLayout = C_POINTER
-		val userdata1Offset = 8L + callbackOffset
-		val userdata1Layout = C_POINTER
-		val userdata2Offset = 8L + userdata1Offset
-		val userdata2Layout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val callbackOffset = 8L
+		val callbackLayout = ffi.C_POINTER
+		val userdata1Offset = 16L
+		val userdata1Layout = ffi.C_POINTER
+		val userdata2Offset = 24L
+		val userdata2Layout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3575,23 +3684,24 @@ actual value class WGPUCreateComputePipelineAsyncCallbackInfo(actual override va
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUCreateComputePipelineAsyncCallbackInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUCreateComputePipelineAsyncCallbackInfo)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("callback"),
-			C_POINTER.withName("userdata1"),
-			C_POINTER.withName("userdata2"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("callback"),
+			ffi.C_POINTER.withName("userdata1"),
+			ffi.C_POINTER.withName("userdata2"),
 		).withName("WGPUCreateComputePipelineAsyncCallbackInfo")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val callbackOffset = 8L + nextInChainOffset
-		val callbackLayout = C_POINTER
-		val userdata1Offset = 8L + callbackOffset
-		val userdata1Layout = C_POINTER
-		val userdata2Offset = 8L + userdata1Offset
-		val userdata2Layout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val callbackOffset = 8L
+		val callbackLayout = ffi.C_POINTER
+		val userdata1Offset = 16L
+		val userdata1Layout = ffi.C_POINTER
+		val userdata2Offset = 24L
+		val userdata2Layout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3615,23 +3725,24 @@ actual value class WGPUCreateRenderPipelineAsyncCallbackInfo(actual override val
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUCreateRenderPipelineAsyncCallbackInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUCreateRenderPipelineAsyncCallbackInfo)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("callback"),
-			C_POINTER.withName("userdata1"),
-			C_POINTER.withName("userdata2"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("callback"),
+			ffi.C_POINTER.withName("userdata1"),
+			ffi.C_POINTER.withName("userdata2"),
 		).withName("WGPUCreateRenderPipelineAsyncCallbackInfo")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val callbackOffset = 8L + nextInChainOffset
-		val callbackLayout = C_POINTER
-		val userdata1Offset = 8L + callbackOffset
-		val userdata1Layout = C_POINTER
-		val userdata2Offset = 8L + userdata1Offset
-		val userdata2Layout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val callbackOffset = 8L
+		val callbackLayout = ffi.C_POINTER
+		val userdata1Offset = 16L
+		val userdata1Layout = ffi.C_POINTER
+		val userdata2Offset = 24L
+		val userdata2Layout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3655,23 +3766,24 @@ actual value class WGPUPopErrorScopeCallbackInfo(actual override val handler: Na
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUPopErrorScopeCallbackInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUPopErrorScopeCallbackInfo)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("callback"),
-			C_POINTER.withName("userdata1"),
-			C_POINTER.withName("userdata2"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("callback"),
+			ffi.C_POINTER.withName("userdata1"),
+			ffi.C_POINTER.withName("userdata2"),
 		).withName("WGPUPopErrorScopeCallbackInfo")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val callbackOffset = 8L + nextInChainOffset
-		val callbackLayout = C_POINTER
-		val userdata1Offset = 8L + callbackOffset
-		val userdata1Layout = C_POINTER
-		val userdata2Offset = 8L + userdata1Offset
-		val userdata2Layout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val callbackOffset = 8L
+		val callbackLayout = ffi.C_POINTER
+		val userdata1Offset = 16L
+		val userdata1Layout = ffi.C_POINTER
+		val userdata2Offset = 24L
+		val userdata2Layout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3695,23 +3807,24 @@ actual value class WGPUQueueWorkDoneCallbackInfo(actual override val handler: Na
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPUQueueWorkDoneCallbackInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPUQueueWorkDoneCallbackInfo)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("callback"),
-			C_POINTER.withName("userdata1"),
-			C_POINTER.withName("userdata2"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("callback"),
+			ffi.C_POINTER.withName("userdata1"),
+			ffi.C_POINTER.withName("userdata2"),
 		).withName("WGPUQueueWorkDoneCallbackInfo")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val callbackOffset = 8L + nextInChainOffset
-		val callbackLayout = C_POINTER
-		val userdata1Offset = 8L + callbackOffset
-		val userdata1Layout = C_POINTER
-		val userdata2Offset = 8L + userdata1Offset
-		val userdata2Layout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val callbackOffset = 8L
+		val callbackLayout = ffi.C_POINTER
+		val userdata1Offset = 16L
+		val userdata1Layout = ffi.C_POINTER
+		val userdata2Offset = 24L
+		val userdata2Layout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3735,23 +3848,24 @@ actual value class WGPURequestAdapterCallbackInfo(actual override val handler: N
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURequestAdapterCallbackInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPURequestAdapterCallbackInfo)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("callback"),
-			C_POINTER.withName("userdata1"),
-			C_POINTER.withName("userdata2"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("callback"),
+			ffi.C_POINTER.withName("userdata1"),
+			ffi.C_POINTER.withName("userdata2"),
 		).withName("WGPURequestAdapterCallbackInfo")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val callbackOffset = 8L + nextInChainOffset
-		val callbackLayout = C_POINTER
-		val userdata1Offset = 8L + callbackOffset
-		val userdata1Layout = C_POINTER
-		val userdata2Offset = 8L + userdata1Offset
-		val userdata2Layout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val callbackOffset = 8L
+		val callbackLayout = ffi.C_POINTER
+		val userdata1Offset = 16L
+		val userdata1Layout = ffi.C_POINTER
+		val userdata2Offset = 24L
+		val userdata2Layout = ffi.C_POINTER
 	}
 }
 @JvmInline
@@ -3775,23 +3889,24 @@ actual value class WGPURequestDeviceCallbackInfo(actual override val handler: Na
 
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator): WGPURequestDeviceCallbackInfo {
-			return allocator.allocate(LAYOUT.byteSize())
+			return allocator.allocate(32L)
 				.let(::WGPURequestDeviceCallbackInfo)
 		}
 		internal val LAYOUT = structLayout(
-			C_POINTER.withName("nextInChain"),
-			C_POINTER.withName("callback"),
-			C_POINTER.withName("userdata1"),
-			C_POINTER.withName("userdata2"),
+			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_POINTER.withName("callback"),
+			ffi.C_POINTER.withName("userdata1"),
+			ffi.C_POINTER.withName("userdata2"),
 		).withName("WGPURequestDeviceCallbackInfo")
+
 		val nextInChainOffset = 0L
-		val nextInChainLayout = C_POINTER
-		val callbackOffset = 8L + nextInChainOffset
-		val callbackLayout = C_POINTER
-		val userdata1Offset = 8L + callbackOffset
-		val userdata1Layout = C_POINTER
-		val userdata2Offset = 8L + userdata1Offset
-		val userdata2Layout = C_POINTER
+		val nextInChainLayout = ffi.C_POINTER
+		val callbackOffset = 8L
+		val callbackLayout = ffi.C_POINTER
+		val userdata1Offset = 16L
+		val userdata1Layout = ffi.C_POINTER
+		val userdata2Offset = 24L
+		val userdata2Layout = ffi.C_POINTER
 	}
 }
 internal class WGPUStringViewByValue(handler: Long) : com.sun.jna.Structure(com.sun.jna.Pointer(handler)), com.sun.jna.Structure.ByValue {
