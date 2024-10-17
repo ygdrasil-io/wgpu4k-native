@@ -16,7 +16,7 @@ fun List<CLibraryModel.Function>.toAndroidFunctions() = templateBuilder {
             .map { (name, type) -> type.toJvmArgCall(name) }
             .joinToString(", ")
         appendLine("actual fun $name($args): $returnType")
-        appendLine("\t = Functions.$name($argsCall)")
+        appendLine("\t = webgpu.android.Functions.$name($argsCall)")
 
         when (function.returnType) {
             is CLibraryModel.Reference.Enumeration -> null

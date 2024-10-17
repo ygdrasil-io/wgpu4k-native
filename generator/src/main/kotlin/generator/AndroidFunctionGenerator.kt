@@ -8,7 +8,7 @@ import java.io.File
 
 private val jnaHeader = """
     $disclamer
-    package webgpu
+    package webgpu.android
 
     
     

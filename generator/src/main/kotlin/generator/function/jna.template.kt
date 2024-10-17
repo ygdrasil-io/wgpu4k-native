@@ -30,11 +30,12 @@ internal fun CLibraryModel.Type.toAndroidNativeType(): String = when (this) {
     is CLibraryModel.Reference.Enumeration,
     CLibraryModel.Primitive.UInt32 -> "UInt"
     CLibraryModel.Primitive.UInt16 -> "UShort"
-    is CLibraryModel.Reference.StructureField -> "${name}ByValue"
+    is CLibraryModel.Reference.StructureField -> "${name}.ByValue"
+    //is CLibraryModel.Reference.Structure -> "${name}.ByReference"
+    is CLibraryModel.Reference.Structure,
     is CLibraryModel.Array,
     CLibraryModel.Reference.CString,
     is CLibraryModel.Reference.Callback,
     CLibraryModel.Reference.OpaquePointer,
-    is CLibraryModel.Reference.Pointer,
-    is CLibraryModel.Reference.Structure -> "Long"
+    is CLibraryModel.Reference.Pointer -> "Long"
 }

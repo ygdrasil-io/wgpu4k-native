@@ -6,6 +6,15 @@ import generator.structure.toAndroidStructure
 import generator.structure.toJnaStructure
 import java.io.File
 
+private val headerAndroidJna = """
+    $disclamer
+    package webgpu.android
+    
+    import ffi.NativeAddress
+
+    
+""".trimIndent()
+
 private val headerAndroid = """
     $disclamer
     package webgpu
@@ -30,13 +39,18 @@ private val headerAndroid = """
     
 """.trimIndent()
 
-fun File.generateAndroidStructures(structures: List<CLibraryModel.Structure>) = resolve("webgpu")
-    .resolve("Structures.android.kt").apply {
+fun File.generateAndroidStructures(structures: List<CLibraryModel.Structure>) = resolve("webgpu").apply {
+    resolve("Structures.android.kt").apply {
         writeText(headerAndroid)
         structures.map(CLibraryModel.Structure::toAndroidStructure)
             .forEach(::appendText)
+    }
+    resolve("android").resolve("Structures.kt").apply {
+        writeText(headerAndroidJna)
         structures.map(CLibraryModel.Structure::toJnaStructure)
             .forEach(::appendText)
     }
+}
+
 
 

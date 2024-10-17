@@ -14,7 +14,7 @@ fun CLibraryModel.Structure.toAndroidStructure() = templateBuilder {
     appendLine("@JvmInline")
     appendBlock("actual value class $structureName(actual override val handler: NativeAddress) : CStructure") {
 
-        appendLine("internal fun toCValue() = ${structureName}ByValue(handler.pointer.toAddress())")
+        appendLine("internal fun toCValue() = webgpu.android.${structureName}.ByValue(handler.pointer)")
 
         members.forEach { (name, type, optional) ->
 
