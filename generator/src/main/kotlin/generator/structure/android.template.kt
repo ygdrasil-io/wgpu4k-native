@@ -25,6 +25,11 @@ fun CLibraryModel.Structure.toAndroidStructure() = templateBuilder {
         appendLine("actual val handler: NativeAddress")
         newLine()
         appendBlock("actual companion object") {
+            appendBlock("actual operator fun invoke(address: NativeAddress): $structureName") {
+                appendLine("return webgpu.android.$structureName.ByReference(address)")
+                appendLine("\t.let(::ByReference)")
+            }
+            newLine()
             appendBlock("actual fun allocate(allocator: MemoryAllocator): $structureName") {
                 appendLine("return $structureName.ByReference()")
                 appendLine("\t.also { allocator.register(it) }")

@@ -99,6 +99,7 @@ internal fun File.generateCommonStructures(structures: List<CLibraryModel.Struct
         appendText("\tval handler: NativeAddress\n")
 
         appendText("\tcompanion object {\n")
+        appendText("\t\toperator fun invoke(address: NativeAddress): $structureName\n")
         appendText("\t\tfun allocate(allocator: MemoryAllocator): $structureName\n")
         appendText("\t\tfun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, $structureName) -> Unit): ArrayHolder<$structureName>\n")
         appendText("\t}\n")

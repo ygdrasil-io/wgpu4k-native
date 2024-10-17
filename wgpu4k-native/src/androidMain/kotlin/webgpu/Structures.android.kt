@@ -60,6 +60,11 @@ actual interface WGPUStringView {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUStringView {
+			return webgpu.android.WGPUStringView.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUStringView {
 			return WGPUStringView.ByReference()
 				.also { allocator.register(it) }
@@ -175,6 +180,11 @@ actual interface WGPUAdapterInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUAdapterInfo {
+			return webgpu.android.WGPUAdapterInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUAdapterInfo {
 			return WGPUAdapterInfo.ByReference()
 				.also { allocator.register(it) }
@@ -260,6 +270,11 @@ actual interface WGPUBindGroupDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUBindGroupDescriptor {
+			return webgpu.android.WGPUBindGroupDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupDescriptor {
 			return WGPUBindGroupDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -365,6 +380,11 @@ actual interface WGPUBindGroupEntry {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUBindGroupEntry {
+			return webgpu.android.WGPUBindGroupEntry.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupEntry {
 			return WGPUBindGroupEntry.ByReference()
 				.also { allocator.register(it) }
@@ -441,6 +461,11 @@ actual interface WGPUBindGroupLayoutDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUBindGroupLayoutDescriptor {
+			return webgpu.android.WGPUBindGroupLayoutDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupLayoutDescriptor {
 			return WGPUBindGroupLayoutDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -519,6 +544,11 @@ actual interface WGPUBufferBindingLayout {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUBufferBindingLayout {
+			return webgpu.android.WGPUBufferBindingLayout.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUBufferBindingLayout {
 			return WGPUBufferBindingLayout.ByReference()
 				.also { allocator.register(it) }
@@ -579,6 +609,11 @@ actual interface WGPUSamplerBindingLayout {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSamplerBindingLayout {
+			return webgpu.android.WGPUSamplerBindingLayout.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSamplerBindingLayout {
 			return WGPUSamplerBindingLayout.ByReference()
 				.also { allocator.register(it) }
@@ -657,6 +692,11 @@ actual interface WGPUTextureBindingLayout {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUTextureBindingLayout {
+			return webgpu.android.WGPUTextureBindingLayout.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUTextureBindingLayout {
 			return WGPUTextureBindingLayout.ByReference()
 				.also { allocator.register(it) }
@@ -735,6 +775,11 @@ actual interface WGPUStorageTextureBindingLayout {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUStorageTextureBindingLayout {
+			return webgpu.android.WGPUStorageTextureBindingLayout.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUStorageTextureBindingLayout {
 			return WGPUStorageTextureBindingLayout.ByReference()
 				.also { allocator.register(it) }
@@ -832,6 +877,11 @@ actual interface WGPUBindGroupLayoutEntry {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUBindGroupLayoutEntry {
+			return webgpu.android.WGPUBindGroupLayoutEntry.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupLayoutEntry {
 			return WGPUBindGroupLayoutEntry.ByReference()
 				.also { allocator.register(it) }
@@ -901,6 +951,11 @@ actual interface WGPUBlendComponent {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUBlendComponent {
+			return webgpu.android.WGPUBlendComponent.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUBlendComponent {
 			return WGPUBlendComponent.ByReference()
 				.also { allocator.register(it) }
@@ -957,6 +1012,11 @@ actual interface WGPUBlendState {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUBlendState {
+			return webgpu.android.WGPUBlendState.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUBlendState {
 			return WGPUBlendState.ByReference()
 				.also { allocator.register(it) }
@@ -1042,6 +1102,11 @@ actual interface WGPUBufferDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUBufferDescriptor {
+			return webgpu.android.WGPUBufferDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUBufferDescriptor {
 			return WGPUBufferDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -1120,6 +1185,11 @@ actual interface WGPUColor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUColor {
+			return webgpu.android.WGPUColor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUColor {
 			return WGPUColor.ByReference()
 				.also { allocator.register(it) }
@@ -1198,6 +1268,11 @@ actual interface WGPUColorTargetState {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUColorTargetState {
+			return webgpu.android.WGPUColorTargetState.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUColorTargetState {
 			return WGPUColorTargetState.ByReference()
 				.also { allocator.register(it) }
@@ -1256,6 +1331,11 @@ actual interface WGPUCommandBufferDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUCommandBufferDescriptor {
+			return webgpu.android.WGPUCommandBufferDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUCommandBufferDescriptor {
 			return WGPUCommandBufferDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -1314,6 +1394,11 @@ actual interface WGPUCommandEncoderDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUCommandEncoderDescriptor {
+			return webgpu.android.WGPUCommandEncoderDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUCommandEncoderDescriptor {
 			return WGPUCommandEncoderDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -1383,6 +1468,11 @@ actual interface WGPUCompilationInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUCompilationInfo {
+			return webgpu.android.WGPUCompilationInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUCompilationInfo {
 			return WGPUCompilationInfo.ByReference()
 				.also { allocator.register(it) }
@@ -1513,6 +1603,11 @@ actual interface WGPUCompilationMessage {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUCompilationMessage {
+			return webgpu.android.WGPUCompilationMessage.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUCompilationMessage {
 			return WGPUCompilationMessage.ByReference()
 				.also { allocator.register(it) }
@@ -1580,6 +1675,11 @@ actual interface WGPUComputePassDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUComputePassDescriptor {
+			return webgpu.android.WGPUComputePassDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUComputePassDescriptor {
 			return WGPUComputePassDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -1649,6 +1749,11 @@ actual interface WGPUComputePassTimestampWrites {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUComputePassTimestampWrites {
+			return webgpu.android.WGPUComputePassTimestampWrites.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUComputePassTimestampWrites {
 			return WGPUComputePassTimestampWrites.ByReference()
 				.also { allocator.register(it) }
@@ -1734,6 +1839,11 @@ actual interface WGPUProgrammableStageDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUProgrammableStageDescriptor {
+			return webgpu.android.WGPUProgrammableStageDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUProgrammableStageDescriptor {
 			return WGPUProgrammableStageDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -1808,6 +1918,11 @@ actual interface WGPUComputePipelineDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUComputePipelineDescriptor {
+			return webgpu.android.WGPUComputePipelineDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUComputePipelineDescriptor {
 			return WGPUComputePipelineDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -1875,6 +1990,11 @@ actual interface WGPUConstantEntry {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUConstantEntry {
+			return webgpu.android.WGPUConstantEntry.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUConstantEntry {
 			return WGPUConstantEntry.ByReference()
 				.also { allocator.register(it) }
@@ -1953,6 +2073,11 @@ actual interface WGPUStencilFaceState {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUStencilFaceState {
+			return webgpu.android.WGPUStencilFaceState.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUStencilFaceState {
 			return WGPUStencilFaceState.ByReference()
 				.also { allocator.register(it) }
@@ -2090,6 +2215,11 @@ actual interface WGPUDepthStencilState {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUDepthStencilState {
+			return webgpu.android.WGPUDepthStencilState.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUDepthStencilState {
 			return WGPUDepthStencilState.ByReference()
 				.also { allocator.register(it) }
@@ -2148,6 +2278,11 @@ actual interface WGPUQueueDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUQueueDescriptor {
+			return webgpu.android.WGPUQueueDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUQueueDescriptor {
 			return WGPUQueueDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -2226,6 +2361,11 @@ actual interface WGPUDeviceLostCallbackInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUDeviceLostCallbackInfo {
+			return webgpu.android.WGPUDeviceLostCallbackInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUDeviceLostCallbackInfo {
 			return WGPUDeviceLostCallbackInfo.ByReference()
 				.also { allocator.register(it) }
@@ -2304,6 +2444,11 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUUncapturedErrorCallbackInfo {
+			return webgpu.android.WGPUUncapturedErrorCallbackInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUUncapturedErrorCallbackInfo {
 			return WGPUUncapturedErrorCallbackInfo.ByReference()
 				.also { allocator.register(it) }
@@ -2410,6 +2555,11 @@ actual interface WGPUDeviceDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUDeviceDescriptor {
+			return webgpu.android.WGPUDeviceDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUDeviceDescriptor {
 			return WGPUDeviceDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -2479,6 +2629,11 @@ actual interface WGPUExtent3D {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUExtent3D {
+			return webgpu.android.WGPUExtent3D.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUExtent3D {
 			return WGPUExtent3D.ByReference()
 				.also { allocator.register(it) }
@@ -2582,6 +2737,11 @@ actual interface WGPUFragmentState {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUFragmentState {
+			return webgpu.android.WGPUFragmentState.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUFragmentState {
 			return WGPUFragmentState.ByReference()
 				.also { allocator.register(it) }
@@ -2633,6 +2793,11 @@ actual interface WGPUFuture {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUFuture {
+			return webgpu.android.WGPUFuture.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUFuture {
 			return WGPUFuture.ByReference()
 				.also { allocator.register(it) }
@@ -2691,6 +2856,11 @@ actual interface WGPUFutureWaitInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUFutureWaitInfo {
+			return webgpu.android.WGPUFutureWaitInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUFutureWaitInfo {
 			return WGPUFutureWaitInfo.ByReference()
 				.also { allocator.register(it) }
@@ -2769,6 +2939,11 @@ actual interface WGPUTextureDataLayout {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUTextureDataLayout {
+			return webgpu.android.WGPUTextureDataLayout.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUTextureDataLayout {
 			return WGPUTextureDataLayout.ByReference()
 				.also { allocator.register(it) }
@@ -2836,6 +3011,11 @@ actual interface WGPUImageCopyBuffer {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUImageCopyBuffer {
+			return webgpu.android.WGPUImageCopyBuffer.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUImageCopyBuffer {
 			return WGPUImageCopyBuffer.ByReference()
 				.also { allocator.register(it) }
@@ -2905,6 +3085,11 @@ actual interface WGPUOrigin3D {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUOrigin3D {
+			return webgpu.android.WGPUOrigin3D.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUOrigin3D {
 			return WGPUOrigin3D.ByReference()
 				.also { allocator.register(it) }
@@ -2990,6 +3175,11 @@ actual interface WGPUImageCopyTexture {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUImageCopyTexture {
+			return webgpu.android.WGPUImageCopyTexture.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUImageCopyTexture {
 			return WGPUImageCopyTexture.ByReference()
 				.also { allocator.register(it) }
@@ -3059,6 +3249,11 @@ actual interface WGPUInstanceFeatures {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUInstanceFeatures {
+			return webgpu.android.WGPUInstanceFeatures.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceFeatures {
 			return WGPUInstanceFeatures.ByReference()
 				.also { allocator.register(it) }
@@ -3117,6 +3312,11 @@ actual interface WGPUInstanceDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUInstanceDescriptor {
+			return webgpu.android.WGPUInstanceDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceDescriptor {
 			return WGPUInstanceDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -3438,6 +3638,11 @@ actual interface WGPULimits {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPULimits {
+			return webgpu.android.WGPULimits.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPULimits {
 			return WGPULimits.ByReference()
 				.also { allocator.register(it) }
@@ -3516,6 +3721,11 @@ actual interface WGPUMultisampleState {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUMultisampleState {
+			return webgpu.android.WGPUMultisampleState.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUMultisampleState {
 			return WGPUMultisampleState.ByReference()
 				.also { allocator.register(it) }
@@ -3592,6 +3802,11 @@ actual interface WGPUPipelineLayoutDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUPipelineLayoutDescriptor {
+			return webgpu.android.WGPUPipelineLayoutDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUPipelineLayoutDescriptor {
 			return WGPUPipelineLayoutDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -3688,6 +3903,11 @@ actual interface WGPUPrimitiveState {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUPrimitiveState {
+			return webgpu.android.WGPUPrimitiveState.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUPrimitiveState {
 			return WGPUPrimitiveState.ByReference()
 				.also { allocator.register(it) }
@@ -3764,6 +3984,11 @@ actual interface WGPUQuerySetDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUQuerySetDescriptor {
+			return webgpu.android.WGPUQuerySetDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUQuerySetDescriptor {
 			return WGPUQuerySetDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -3822,6 +4047,11 @@ actual interface WGPURenderBundleDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPURenderBundleDescriptor {
+			return webgpu.android.WGPURenderBundleDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderBundleDescriptor {
 			return WGPURenderBundleDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -3934,6 +4164,11 @@ actual interface WGPURenderBundleEncoderDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPURenderBundleEncoderDescriptor {
+			return webgpu.android.WGPURenderBundleEncoderDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderBundleEncoderDescriptor {
 			return WGPURenderBundleEncoderDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -4037,6 +4272,11 @@ actual interface WGPURenderPassColorAttachment {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPURenderPassColorAttachment {
+			return webgpu.android.WGPURenderPassColorAttachment.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassColorAttachment {
 			return WGPURenderPassColorAttachment.ByReference()
 				.also { allocator.register(it) }
@@ -4160,6 +4400,11 @@ actual interface WGPURenderPassDepthStencilAttachment {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPURenderPassDepthStencilAttachment {
+			return webgpu.android.WGPURenderPassDepthStencilAttachment.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassDepthStencilAttachment {
 			return WGPURenderPassDepthStencilAttachment.ByReference()
 				.also { allocator.register(it) }
@@ -4263,6 +4508,11 @@ actual interface WGPURenderPassDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPURenderPassDescriptor {
+			return webgpu.android.WGPURenderPassDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassDescriptor {
 			return WGPURenderPassDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -4323,6 +4573,11 @@ actual interface WGPUChainedStruct {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUChainedStruct {
+			return webgpu.android.WGPUChainedStruct.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUChainedStruct {
 			return WGPUChainedStruct.ByReference()
 				.also { allocator.register(it) }
@@ -4381,6 +4636,11 @@ actual interface WGPURenderPassMaxDrawCount {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPURenderPassMaxDrawCount {
+			return webgpu.android.WGPURenderPassMaxDrawCount.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassMaxDrawCount {
 			return WGPURenderPassMaxDrawCount.ByReference()
 				.also { allocator.register(it) }
@@ -4450,6 +4710,11 @@ actual interface WGPURenderPassTimestampWrites {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPURenderPassTimestampWrites {
+			return webgpu.android.WGPURenderPassTimestampWrites.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderPassTimestampWrites {
 			return WGPURenderPassTimestampWrites.ByReference()
 				.also { allocator.register(it) }
@@ -4553,6 +4818,11 @@ actual interface WGPUVertexState {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUVertexState {
+			return webgpu.android.WGPUVertexState.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUVertexState {
 			return WGPUVertexState.ByReference()
 				.also { allocator.register(it) }
@@ -4659,6 +4929,11 @@ actual interface WGPURenderPipelineDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPURenderPipelineDescriptor {
+			return webgpu.android.WGPURenderPipelineDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPURenderPipelineDescriptor {
 			return WGPURenderPipelineDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -4746,6 +5021,11 @@ actual interface WGPURequestAdapterOptions {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPURequestAdapterOptions {
+			return webgpu.android.WGPURequestAdapterOptions.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPURequestAdapterOptions {
 			return WGPURequestAdapterOptions.ByReference()
 				.also { allocator.register(it) }
@@ -4804,6 +5084,11 @@ actual interface WGPURequiredLimits {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPURequiredLimits {
+			return webgpu.android.WGPURequiredLimits.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPURequiredLimits {
 			return WGPURequiredLimits.ByReference()
 				.also { allocator.register(it) }
@@ -4952,6 +5237,11 @@ actual interface WGPUSamplerDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSamplerDescriptor {
+			return webgpu.android.WGPUSamplerDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSamplerDescriptor {
 			return WGPUSamplerDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -5010,6 +5300,11 @@ actual interface WGPUShaderModuleDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUShaderModuleDescriptor {
+			return webgpu.android.WGPUShaderModuleDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUShaderModuleDescriptor {
 			return WGPUShaderModuleDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -5077,6 +5372,11 @@ actual interface WGPUShaderSourceSPIRV {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUShaderSourceSPIRV {
+			return webgpu.android.WGPUShaderSourceSPIRV.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUShaderSourceSPIRV {
 			return WGPUShaderSourceSPIRV.ByReference()
 				.also { allocator.register(it) }
@@ -5133,6 +5433,11 @@ actual interface WGPUShaderSourceWGSL {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUShaderSourceWGSL {
+			return webgpu.android.WGPUShaderSourceWGSL.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUShaderSourceWGSL {
 			return WGPUShaderSourceWGSL.ByReference()
 				.also { allocator.register(it) }
@@ -5202,6 +5507,11 @@ actual interface WGPUSupportedFeatures {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSupportedFeatures {
+			return webgpu.android.WGPUSupportedFeatures.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSupportedFeatures {
 			return WGPUSupportedFeatures.ByReference()
 				.also { allocator.register(it) }
@@ -5260,6 +5570,11 @@ actual interface WGPUSupportedLimits {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSupportedLimits {
+			return webgpu.android.WGPUSupportedLimits.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSupportedLimits {
 			return WGPUSupportedLimits.ByReference()
 				.also { allocator.register(it) }
@@ -5374,6 +5689,11 @@ actual interface WGPUSurfaceCapabilities {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSurfaceCapabilities {
+			return webgpu.android.WGPUSurfaceCapabilities.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceCapabilities {
 			return WGPUSurfaceCapabilities.ByReference()
 				.also { allocator.register(it) }
@@ -5506,6 +5826,11 @@ actual interface WGPUSurfaceConfiguration {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSurfaceConfiguration {
+			return webgpu.android.WGPUSurfaceConfiguration.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceConfiguration {
 			return WGPUSurfaceConfiguration.ByReference()
 				.also { allocator.register(it) }
@@ -5564,6 +5889,11 @@ actual interface WGPUSurfaceDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSurfaceDescriptor {
+			return webgpu.android.WGPUSurfaceDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceDescriptor {
 			return WGPUSurfaceDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -5622,6 +5952,11 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceAndroidNativeWindow {
+			return webgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceAndroidNativeWindow {
 			return WGPUSurfaceSourceAndroidNativeWindow.ByReference()
 				.also { allocator.register(it) }
@@ -5680,6 +6015,11 @@ actual interface WGPUSurfaceSourceMetalLayer {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceMetalLayer {
+			return webgpu.android.WGPUSurfaceSourceMetalLayer.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceMetalLayer {
 			return WGPUSurfaceSourceMetalLayer.ByReference()
 				.also { allocator.register(it) }
@@ -5747,6 +6087,11 @@ actual interface WGPUSurfaceSourceWaylandSurface {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceWaylandSurface {
+			return webgpu.android.WGPUSurfaceSourceWaylandSurface.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceWaylandSurface {
 			return WGPUSurfaceSourceWaylandSurface.ByReference()
 				.also { allocator.register(it) }
@@ -5814,6 +6159,11 @@ actual interface WGPUSurfaceSourceWindowsHWND {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceWindowsHWND {
+			return webgpu.android.WGPUSurfaceSourceWindowsHWND.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceWindowsHWND {
 			return WGPUSurfaceSourceWindowsHWND.ByReference()
 				.also { allocator.register(it) }
@@ -5881,6 +6231,11 @@ actual interface WGPUSurfaceSourceXCBWindow {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceXCBWindow {
+			return webgpu.android.WGPUSurfaceSourceXCBWindow.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceXCBWindow {
 			return WGPUSurfaceSourceXCBWindow.ByReference()
 				.also { allocator.register(it) }
@@ -5948,6 +6303,11 @@ actual interface WGPUSurfaceSourceXlibWindow {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceXlibWindow {
+			return webgpu.android.WGPUSurfaceSourceXlibWindow.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceXlibWindow {
 			return WGPUSurfaceSourceXlibWindow.ByReference()
 				.also { allocator.register(it) }
@@ -6008,6 +6368,11 @@ actual interface WGPUSurfaceTexture {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUSurfaceTexture {
+			return webgpu.android.WGPUSurfaceTexture.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceTexture {
 			return WGPUSurfaceTexture.ByReference()
 				.also { allocator.register(it) }
@@ -6136,6 +6501,11 @@ actual interface WGPUTextureDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUTextureDescriptor {
+			return webgpu.android.WGPUTextureDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUTextureDescriptor {
 			return WGPUTextureDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -6266,6 +6636,11 @@ actual interface WGPUTextureViewDescriptor {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUTextureViewDescriptor {
+			return webgpu.android.WGPUTextureViewDescriptor.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUTextureViewDescriptor {
 			return WGPUTextureViewDescriptor.ByReference()
 				.also { allocator.register(it) }
@@ -6335,6 +6710,11 @@ actual interface WGPUVertexAttribute {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUVertexAttribute {
+			return webgpu.android.WGPUVertexAttribute.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUVertexAttribute {
 			return WGPUVertexAttribute.ByReference()
 				.also { allocator.register(it) }
@@ -6413,6 +6793,11 @@ actual interface WGPUVertexBufferLayout {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUVertexBufferLayout {
+			return webgpu.android.WGPUVertexBufferLayout.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUVertexBufferLayout {
 			return WGPUVertexBufferLayout.ByReference()
 				.also { allocator.register(it) }
@@ -6473,6 +6858,11 @@ actual interface WGPUChainedStructOut {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUChainedStructOut {
+			return webgpu.android.WGPUChainedStructOut.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUChainedStructOut {
 			return WGPUChainedStructOut.ByReference()
 				.also { allocator.register(it) }
@@ -6551,6 +6941,11 @@ actual interface WGPUBufferMapCallbackInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUBufferMapCallbackInfo {
+			return webgpu.android.WGPUBufferMapCallbackInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUBufferMapCallbackInfo {
 			return WGPUBufferMapCallbackInfo.ByReference()
 				.also { allocator.register(it) }
@@ -6629,6 +7024,11 @@ actual interface WGPUCompilationInfoCallbackInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUCompilationInfoCallbackInfo {
+			return webgpu.android.WGPUCompilationInfoCallbackInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUCompilationInfoCallbackInfo {
 			return WGPUCompilationInfoCallbackInfo.ByReference()
 				.also { allocator.register(it) }
@@ -6707,6 +7107,11 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUCreateComputePipelineAsyncCallbackInfo {
+			return webgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUCreateComputePipelineAsyncCallbackInfo {
 			return WGPUCreateComputePipelineAsyncCallbackInfo.ByReference()
 				.also { allocator.register(it) }
@@ -6785,6 +7190,11 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUCreateRenderPipelineAsyncCallbackInfo {
+			return webgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUCreateRenderPipelineAsyncCallbackInfo {
 			return WGPUCreateRenderPipelineAsyncCallbackInfo.ByReference()
 				.also { allocator.register(it) }
@@ -6863,6 +7273,11 @@ actual interface WGPUPopErrorScopeCallbackInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUPopErrorScopeCallbackInfo {
+			return webgpu.android.WGPUPopErrorScopeCallbackInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUPopErrorScopeCallbackInfo {
 			return WGPUPopErrorScopeCallbackInfo.ByReference()
 				.also { allocator.register(it) }
@@ -6941,6 +7356,11 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUQueueWorkDoneCallbackInfo {
+			return webgpu.android.WGPUQueueWorkDoneCallbackInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPUQueueWorkDoneCallbackInfo {
 			return WGPUQueueWorkDoneCallbackInfo.ByReference()
 				.also { allocator.register(it) }
@@ -7019,6 +7439,11 @@ actual interface WGPURequestAdapterCallbackInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPURequestAdapterCallbackInfo {
+			return webgpu.android.WGPURequestAdapterCallbackInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPURequestAdapterCallbackInfo {
 			return WGPURequestAdapterCallbackInfo.ByReference()
 				.also { allocator.register(it) }
@@ -7097,6 +7522,11 @@ actual interface WGPURequestDeviceCallbackInfo {
 	actual val handler: NativeAddress
 
 	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPURequestDeviceCallbackInfo {
+			return webgpu.android.WGPURequestDeviceCallbackInfo.ByReference(address)
+				.let(::ByReference)
+		}
+
 		actual fun allocate(allocator: MemoryAllocator): WGPURequestDeviceCallbackInfo {
 			return WGPURequestDeviceCallbackInfo.ByReference()
 				.also { allocator.register(it) }
