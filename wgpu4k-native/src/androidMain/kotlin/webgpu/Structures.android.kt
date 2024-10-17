@@ -71,7 +71,7 @@ actual interface WGPUStringView {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUStringView) -> Unit): ArrayHolder<WGPUStringView> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUStringView.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUStringView.ByValue(
 					structure as webgpu.android.WGPUStringView.ByValue
@@ -191,7 +191,7 @@ actual interface WGPUAdapterInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUAdapterInfo) -> Unit): ArrayHolder<WGPUAdapterInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUAdapterInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUAdapterInfo.ByValue(
 					structure as webgpu.android.WGPUAdapterInfo.ByValue
@@ -281,7 +281,7 @@ actual interface WGPUBindGroupDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBindGroupDescriptor) -> Unit): ArrayHolder<WGPUBindGroupDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUBindGroupDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUBindGroupDescriptor.ByValue(
 					structure as webgpu.android.WGPUBindGroupDescriptor.ByValue
@@ -391,7 +391,7 @@ actual interface WGPUBindGroupEntry {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBindGroupEntry) -> Unit): ArrayHolder<WGPUBindGroupEntry> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUBindGroupEntry.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUBindGroupEntry.ByValue(
 					structure as webgpu.android.WGPUBindGroupEntry.ByValue
@@ -472,7 +472,7 @@ actual interface WGPUBindGroupLayoutDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBindGroupLayoutDescriptor) -> Unit): ArrayHolder<WGPUBindGroupLayoutDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUBindGroupLayoutDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUBindGroupLayoutDescriptor.ByValue(
 					structure as webgpu.android.WGPUBindGroupLayoutDescriptor.ByValue
@@ -555,7 +555,7 @@ actual interface WGPUBufferBindingLayout {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBufferBindingLayout) -> Unit): ArrayHolder<WGPUBufferBindingLayout> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUBufferBindingLayout.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUBufferBindingLayout.ByValue(
 					structure as webgpu.android.WGPUBufferBindingLayout.ByValue
@@ -620,7 +620,7 @@ actual interface WGPUSamplerBindingLayout {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSamplerBindingLayout) -> Unit): ArrayHolder<WGPUSamplerBindingLayout> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSamplerBindingLayout.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSamplerBindingLayout.ByValue(
 					structure as webgpu.android.WGPUSamplerBindingLayout.ByValue
@@ -703,7 +703,7 @@ actual interface WGPUTextureBindingLayout {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTextureBindingLayout) -> Unit): ArrayHolder<WGPUTextureBindingLayout> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUTextureBindingLayout.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUTextureBindingLayout.ByValue(
 					structure as webgpu.android.WGPUTextureBindingLayout.ByValue
@@ -786,7 +786,7 @@ actual interface WGPUStorageTextureBindingLayout {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUStorageTextureBindingLayout) -> Unit): ArrayHolder<WGPUStorageTextureBindingLayout> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUStorageTextureBindingLayout.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUStorageTextureBindingLayout.ByValue(
 					structure as webgpu.android.WGPUStorageTextureBindingLayout.ByValue
@@ -888,7 +888,7 @@ actual interface WGPUBindGroupLayoutEntry {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBindGroupLayoutEntry) -> Unit): ArrayHolder<WGPUBindGroupLayoutEntry> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUBindGroupLayoutEntry.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUBindGroupLayoutEntry.ByValue(
 					structure as webgpu.android.WGPUBindGroupLayoutEntry.ByValue
@@ -962,7 +962,7 @@ actual interface WGPUBlendComponent {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBlendComponent) -> Unit): ArrayHolder<WGPUBlendComponent> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUBlendComponent.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUBlendComponent.ByValue(
 					structure as webgpu.android.WGPUBlendComponent.ByValue
@@ -1023,7 +1023,7 @@ actual interface WGPUBlendState {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBlendState) -> Unit): ArrayHolder<WGPUBlendState> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUBlendState.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUBlendState.ByValue(
 					structure as webgpu.android.WGPUBlendState.ByValue
@@ -1113,7 +1113,7 @@ actual interface WGPUBufferDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBufferDescriptor) -> Unit): ArrayHolder<WGPUBufferDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUBufferDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUBufferDescriptor.ByValue(
 					structure as webgpu.android.WGPUBufferDescriptor.ByValue
@@ -1196,7 +1196,7 @@ actual interface WGPUColor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUColor) -> Unit): ArrayHolder<WGPUColor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUColor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUColor.ByValue(
 					structure as webgpu.android.WGPUColor.ByValue
@@ -1279,7 +1279,7 @@ actual interface WGPUColorTargetState {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUColorTargetState) -> Unit): ArrayHolder<WGPUColorTargetState> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUColorTargetState.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUColorTargetState.ByValue(
 					structure as webgpu.android.WGPUColorTargetState.ByValue
@@ -1342,7 +1342,7 @@ actual interface WGPUCommandBufferDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCommandBufferDescriptor) -> Unit): ArrayHolder<WGPUCommandBufferDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUCommandBufferDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUCommandBufferDescriptor.ByValue(
 					structure as webgpu.android.WGPUCommandBufferDescriptor.ByValue
@@ -1405,7 +1405,7 @@ actual interface WGPUCommandEncoderDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCommandEncoderDescriptor) -> Unit): ArrayHolder<WGPUCommandEncoderDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUCommandEncoderDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUCommandEncoderDescriptor.ByValue(
 					structure as webgpu.android.WGPUCommandEncoderDescriptor.ByValue
@@ -1479,7 +1479,7 @@ actual interface WGPUCompilationInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCompilationInfo) -> Unit): ArrayHolder<WGPUCompilationInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUCompilationInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUCompilationInfo.ByValue(
 					structure as webgpu.android.WGPUCompilationInfo.ByValue
@@ -1614,7 +1614,7 @@ actual interface WGPUCompilationMessage {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCompilationMessage) -> Unit): ArrayHolder<WGPUCompilationMessage> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUCompilationMessage.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUCompilationMessage.ByValue(
 					structure as webgpu.android.WGPUCompilationMessage.ByValue
@@ -1686,7 +1686,7 @@ actual interface WGPUComputePassDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUComputePassDescriptor) -> Unit): ArrayHolder<WGPUComputePassDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUComputePassDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUComputePassDescriptor.ByValue(
 					structure as webgpu.android.WGPUComputePassDescriptor.ByValue
@@ -1760,7 +1760,7 @@ actual interface WGPUComputePassTimestampWrites {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUComputePassTimestampWrites) -> Unit): ArrayHolder<WGPUComputePassTimestampWrites> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUComputePassTimestampWrites.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUComputePassTimestampWrites.ByValue(
 					structure as webgpu.android.WGPUComputePassTimestampWrites.ByValue
@@ -1850,7 +1850,7 @@ actual interface WGPUProgrammableStageDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUProgrammableStageDescriptor) -> Unit): ArrayHolder<WGPUProgrammableStageDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUProgrammableStageDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUProgrammableStageDescriptor.ByValue(
 					structure as webgpu.android.WGPUProgrammableStageDescriptor.ByValue
@@ -1929,7 +1929,7 @@ actual interface WGPUComputePipelineDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUComputePipelineDescriptor) -> Unit): ArrayHolder<WGPUComputePipelineDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUComputePipelineDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUComputePipelineDescriptor.ByValue(
 					structure as webgpu.android.WGPUComputePipelineDescriptor.ByValue
@@ -2001,7 +2001,7 @@ actual interface WGPUConstantEntry {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUConstantEntry) -> Unit): ArrayHolder<WGPUConstantEntry> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUConstantEntry.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUConstantEntry.ByValue(
 					structure as webgpu.android.WGPUConstantEntry.ByValue
@@ -2084,7 +2084,7 @@ actual interface WGPUStencilFaceState {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUStencilFaceState) -> Unit): ArrayHolder<WGPUStencilFaceState> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUStencilFaceState.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUStencilFaceState.ByValue(
 					structure as webgpu.android.WGPUStencilFaceState.ByValue
@@ -2226,7 +2226,7 @@ actual interface WGPUDepthStencilState {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUDepthStencilState) -> Unit): ArrayHolder<WGPUDepthStencilState> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUDepthStencilState.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUDepthStencilState.ByValue(
 					structure as webgpu.android.WGPUDepthStencilState.ByValue
@@ -2289,7 +2289,7 @@ actual interface WGPUQueueDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUQueueDescriptor) -> Unit): ArrayHolder<WGPUQueueDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUQueueDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUQueueDescriptor.ByValue(
 					structure as webgpu.android.WGPUQueueDescriptor.ByValue
@@ -2372,7 +2372,7 @@ actual interface WGPUDeviceLostCallbackInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUDeviceLostCallbackInfo) -> Unit): ArrayHolder<WGPUDeviceLostCallbackInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUDeviceLostCallbackInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUDeviceLostCallbackInfo.ByValue(
 					structure as webgpu.android.WGPUDeviceLostCallbackInfo.ByValue
@@ -2455,7 +2455,7 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUUncapturedErrorCallbackInfo) -> Unit): ArrayHolder<WGPUUncapturedErrorCallbackInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUUncapturedErrorCallbackInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUUncapturedErrorCallbackInfo.ByValue(
 					structure as webgpu.android.WGPUUncapturedErrorCallbackInfo.ByValue
@@ -2566,7 +2566,7 @@ actual interface WGPUDeviceDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUDeviceDescriptor) -> Unit): ArrayHolder<WGPUDeviceDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUDeviceDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUDeviceDescriptor.ByValue(
 					structure as webgpu.android.WGPUDeviceDescriptor.ByValue
@@ -2640,7 +2640,7 @@ actual interface WGPUExtent3D {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUExtent3D) -> Unit): ArrayHolder<WGPUExtent3D> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUExtent3D.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUExtent3D.ByValue(
 					structure as webgpu.android.WGPUExtent3D.ByValue
@@ -2748,7 +2748,7 @@ actual interface WGPUFragmentState {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUFragmentState) -> Unit): ArrayHolder<WGPUFragmentState> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUFragmentState.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUFragmentState.ByValue(
 					structure as webgpu.android.WGPUFragmentState.ByValue
@@ -2804,7 +2804,7 @@ actual interface WGPUFuture {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUFuture) -> Unit): ArrayHolder<WGPUFuture> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUFuture.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUFuture.ByValue(
 					structure as webgpu.android.WGPUFuture.ByValue
@@ -2867,7 +2867,7 @@ actual interface WGPUFutureWaitInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUFutureWaitInfo) -> Unit): ArrayHolder<WGPUFutureWaitInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUFutureWaitInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUFutureWaitInfo.ByValue(
 					structure as webgpu.android.WGPUFutureWaitInfo.ByValue
@@ -2950,7 +2950,7 @@ actual interface WGPUTextureDataLayout {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTextureDataLayout) -> Unit): ArrayHolder<WGPUTextureDataLayout> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUTextureDataLayout.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUTextureDataLayout.ByValue(
 					structure as webgpu.android.WGPUTextureDataLayout.ByValue
@@ -3022,7 +3022,7 @@ actual interface WGPUImageCopyBuffer {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUImageCopyBuffer) -> Unit): ArrayHolder<WGPUImageCopyBuffer> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUImageCopyBuffer.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUImageCopyBuffer.ByValue(
 					structure as webgpu.android.WGPUImageCopyBuffer.ByValue
@@ -3096,7 +3096,7 @@ actual interface WGPUOrigin3D {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUOrigin3D) -> Unit): ArrayHolder<WGPUOrigin3D> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUOrigin3D.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUOrigin3D.ByValue(
 					structure as webgpu.android.WGPUOrigin3D.ByValue
@@ -3186,7 +3186,7 @@ actual interface WGPUImageCopyTexture {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUImageCopyTexture) -> Unit): ArrayHolder<WGPUImageCopyTexture> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUImageCopyTexture.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUImageCopyTexture.ByValue(
 					structure as webgpu.android.WGPUImageCopyTexture.ByValue
@@ -3260,7 +3260,7 @@ actual interface WGPUInstanceFeatures {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceFeatures) -> Unit): ArrayHolder<WGPUInstanceFeatures> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUInstanceFeatures.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUInstanceFeatures.ByValue(
 					structure as webgpu.android.WGPUInstanceFeatures.ByValue
@@ -3323,7 +3323,7 @@ actual interface WGPUInstanceDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceDescriptor) -> Unit): ArrayHolder<WGPUInstanceDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUInstanceDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUInstanceDescriptor.ByValue(
 					structure as webgpu.android.WGPUInstanceDescriptor.ByValue
@@ -3649,7 +3649,7 @@ actual interface WGPULimits {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPULimits) -> Unit): ArrayHolder<WGPULimits> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPULimits.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPULimits.ByValue(
 					structure as webgpu.android.WGPULimits.ByValue
@@ -3732,7 +3732,7 @@ actual interface WGPUMultisampleState {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUMultisampleState) -> Unit): ArrayHolder<WGPUMultisampleState> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUMultisampleState.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUMultisampleState.ByValue(
 					structure as webgpu.android.WGPUMultisampleState.ByValue
@@ -3813,7 +3813,7 @@ actual interface WGPUPipelineLayoutDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUPipelineLayoutDescriptor) -> Unit): ArrayHolder<WGPUPipelineLayoutDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUPipelineLayoutDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUPipelineLayoutDescriptor.ByValue(
 					structure as webgpu.android.WGPUPipelineLayoutDescriptor.ByValue
@@ -3914,7 +3914,7 @@ actual interface WGPUPrimitiveState {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUPrimitiveState) -> Unit): ArrayHolder<WGPUPrimitiveState> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUPrimitiveState.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUPrimitiveState.ByValue(
 					structure as webgpu.android.WGPUPrimitiveState.ByValue
@@ -3995,7 +3995,7 @@ actual interface WGPUQuerySetDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUQuerySetDescriptor) -> Unit): ArrayHolder<WGPUQuerySetDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUQuerySetDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUQuerySetDescriptor.ByValue(
 					structure as webgpu.android.WGPUQuerySetDescriptor.ByValue
@@ -4058,7 +4058,7 @@ actual interface WGPURenderBundleDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderBundleDescriptor) -> Unit): ArrayHolder<WGPURenderBundleDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPURenderBundleDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPURenderBundleDescriptor.ByValue(
 					structure as webgpu.android.WGPURenderBundleDescriptor.ByValue
@@ -4175,7 +4175,7 @@ actual interface WGPURenderBundleEncoderDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderBundleEncoderDescriptor) -> Unit): ArrayHolder<WGPURenderBundleEncoderDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPURenderBundleEncoderDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPURenderBundleEncoderDescriptor.ByValue(
 					structure as webgpu.android.WGPURenderBundleEncoderDescriptor.ByValue
@@ -4283,7 +4283,7 @@ actual interface WGPURenderPassColorAttachment {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderPassColorAttachment) -> Unit): ArrayHolder<WGPURenderPassColorAttachment> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPURenderPassColorAttachment.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPURenderPassColorAttachment.ByValue(
 					structure as webgpu.android.WGPURenderPassColorAttachment.ByValue
@@ -4411,7 +4411,7 @@ actual interface WGPURenderPassDepthStencilAttachment {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderPassDepthStencilAttachment) -> Unit): ArrayHolder<WGPURenderPassDepthStencilAttachment> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPURenderPassDepthStencilAttachment.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPURenderPassDepthStencilAttachment.ByValue(
 					structure as webgpu.android.WGPURenderPassDepthStencilAttachment.ByValue
@@ -4519,7 +4519,7 @@ actual interface WGPURenderPassDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderPassDescriptor) -> Unit): ArrayHolder<WGPURenderPassDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPURenderPassDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPURenderPassDescriptor.ByValue(
 					structure as webgpu.android.WGPURenderPassDescriptor.ByValue
@@ -4584,7 +4584,7 @@ actual interface WGPUChainedStruct {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUChainedStruct) -> Unit): ArrayHolder<WGPUChainedStruct> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUChainedStruct.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUChainedStruct.ByValue(
 					structure as webgpu.android.WGPUChainedStruct.ByValue
@@ -4647,7 +4647,7 @@ actual interface WGPURenderPassMaxDrawCount {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderPassMaxDrawCount) -> Unit): ArrayHolder<WGPURenderPassMaxDrawCount> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPURenderPassMaxDrawCount.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPURenderPassMaxDrawCount.ByValue(
 					structure as webgpu.android.WGPURenderPassMaxDrawCount.ByValue
@@ -4721,7 +4721,7 @@ actual interface WGPURenderPassTimestampWrites {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderPassTimestampWrites) -> Unit): ArrayHolder<WGPURenderPassTimestampWrites> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPURenderPassTimestampWrites.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPURenderPassTimestampWrites.ByValue(
 					structure as webgpu.android.WGPURenderPassTimestampWrites.ByValue
@@ -4829,7 +4829,7 @@ actual interface WGPUVertexState {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUVertexState) -> Unit): ArrayHolder<WGPUVertexState> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUVertexState.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUVertexState.ByValue(
 					structure as webgpu.android.WGPUVertexState.ByValue
@@ -4940,7 +4940,7 @@ actual interface WGPURenderPipelineDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderPipelineDescriptor) -> Unit): ArrayHolder<WGPURenderPipelineDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPURenderPipelineDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPURenderPipelineDescriptor.ByValue(
 					structure as webgpu.android.WGPURenderPipelineDescriptor.ByValue
@@ -5095,7 +5095,7 @@ actual interface WGPURequiredLimits {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURequiredLimits) -> Unit): ArrayHolder<WGPURequiredLimits> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPURequiredLimits.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPURequiredLimits.ByValue(
 					structure as webgpu.android.WGPURequiredLimits.ByValue
@@ -5248,7 +5248,7 @@ actual interface WGPUSamplerDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSamplerDescriptor) -> Unit): ArrayHolder<WGPUSamplerDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSamplerDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSamplerDescriptor.ByValue(
 					structure as webgpu.android.WGPUSamplerDescriptor.ByValue
@@ -5311,7 +5311,7 @@ actual interface WGPUShaderModuleDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUShaderModuleDescriptor) -> Unit): ArrayHolder<WGPUShaderModuleDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUShaderModuleDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUShaderModuleDescriptor.ByValue(
 					structure as webgpu.android.WGPUShaderModuleDescriptor.ByValue
@@ -5383,7 +5383,7 @@ actual interface WGPUShaderSourceSPIRV {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUShaderSourceSPIRV) -> Unit): ArrayHolder<WGPUShaderSourceSPIRV> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUShaderSourceSPIRV.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUShaderSourceSPIRV.ByValue(
 					structure as webgpu.android.WGPUShaderSourceSPIRV.ByValue
@@ -5444,7 +5444,7 @@ actual interface WGPUShaderSourceWGSL {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUShaderSourceWGSL) -> Unit): ArrayHolder<WGPUShaderSourceWGSL> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUShaderSourceWGSL.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUShaderSourceWGSL.ByValue(
 					structure as webgpu.android.WGPUShaderSourceWGSL.ByValue
@@ -5518,7 +5518,7 @@ actual interface WGPUSupportedFeatures {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSupportedFeatures) -> Unit): ArrayHolder<WGPUSupportedFeatures> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSupportedFeatures.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSupportedFeatures.ByValue(
 					structure as webgpu.android.WGPUSupportedFeatures.ByValue
@@ -5581,7 +5581,7 @@ actual interface WGPUSupportedLimits {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSupportedLimits) -> Unit): ArrayHolder<WGPUSupportedLimits> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSupportedLimits.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSupportedLimits.ByValue(
 					structure as webgpu.android.WGPUSupportedLimits.ByValue
@@ -5700,7 +5700,7 @@ actual interface WGPUSurfaceCapabilities {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceCapabilities) -> Unit): ArrayHolder<WGPUSurfaceCapabilities> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSurfaceCapabilities.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSurfaceCapabilities.ByValue(
 					structure as webgpu.android.WGPUSurfaceCapabilities.ByValue
@@ -5837,7 +5837,7 @@ actual interface WGPUSurfaceConfiguration {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceConfiguration) -> Unit): ArrayHolder<WGPUSurfaceConfiguration> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSurfaceConfiguration.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSurfaceConfiguration.ByValue(
 					structure as webgpu.android.WGPUSurfaceConfiguration.ByValue
@@ -5900,7 +5900,7 @@ actual interface WGPUSurfaceDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceDescriptor) -> Unit): ArrayHolder<WGPUSurfaceDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSurfaceDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSurfaceDescriptor.ByValue(
 					structure as webgpu.android.WGPUSurfaceDescriptor.ByValue
@@ -5963,7 +5963,7 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceSourceAndroidNativeWindow) -> Unit): ArrayHolder<WGPUSurfaceSourceAndroidNativeWindow> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSurfaceSourceAndroidNativeWindow.ByValue(
 					structure as webgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByValue
@@ -6026,7 +6026,7 @@ actual interface WGPUSurfaceSourceMetalLayer {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceSourceMetalLayer) -> Unit): ArrayHolder<WGPUSurfaceSourceMetalLayer> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSurfaceSourceMetalLayer.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSurfaceSourceMetalLayer.ByValue(
 					structure as webgpu.android.WGPUSurfaceSourceMetalLayer.ByValue
@@ -6098,7 +6098,7 @@ actual interface WGPUSurfaceSourceWaylandSurface {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceSourceWaylandSurface) -> Unit): ArrayHolder<WGPUSurfaceSourceWaylandSurface> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSurfaceSourceWaylandSurface.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSurfaceSourceWaylandSurface.ByValue(
 					structure as webgpu.android.WGPUSurfaceSourceWaylandSurface.ByValue
@@ -6170,7 +6170,7 @@ actual interface WGPUSurfaceSourceWindowsHWND {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceSourceWindowsHWND) -> Unit): ArrayHolder<WGPUSurfaceSourceWindowsHWND> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSurfaceSourceWindowsHWND.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSurfaceSourceWindowsHWND.ByValue(
 					structure as webgpu.android.WGPUSurfaceSourceWindowsHWND.ByValue
@@ -6242,7 +6242,7 @@ actual interface WGPUSurfaceSourceXCBWindow {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceSourceXCBWindow) -> Unit): ArrayHolder<WGPUSurfaceSourceXCBWindow> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSurfaceSourceXCBWindow.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSurfaceSourceXCBWindow.ByValue(
 					structure as webgpu.android.WGPUSurfaceSourceXCBWindow.ByValue
@@ -6314,7 +6314,7 @@ actual interface WGPUSurfaceSourceXlibWindow {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceSourceXlibWindow) -> Unit): ArrayHolder<WGPUSurfaceSourceXlibWindow> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSurfaceSourceXlibWindow.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSurfaceSourceXlibWindow.ByValue(
 					structure as webgpu.android.WGPUSurfaceSourceXlibWindow.ByValue
@@ -6379,7 +6379,7 @@ actual interface WGPUSurfaceTexture {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceTexture) -> Unit): ArrayHolder<WGPUSurfaceTexture> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUSurfaceTexture.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUSurfaceTexture.ByValue(
 					structure as webgpu.android.WGPUSurfaceTexture.ByValue
@@ -6512,7 +6512,7 @@ actual interface WGPUTextureDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTextureDescriptor) -> Unit): ArrayHolder<WGPUTextureDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUTextureDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUTextureDescriptor.ByValue(
 					structure as webgpu.android.WGPUTextureDescriptor.ByValue
@@ -6647,7 +6647,7 @@ actual interface WGPUTextureViewDescriptor {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTextureViewDescriptor) -> Unit): ArrayHolder<WGPUTextureViewDescriptor> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUTextureViewDescriptor.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUTextureViewDescriptor.ByValue(
 					structure as webgpu.android.WGPUTextureViewDescriptor.ByValue
@@ -6721,7 +6721,7 @@ actual interface WGPUVertexAttribute {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUVertexAttribute) -> Unit): ArrayHolder<WGPUVertexAttribute> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUVertexAttribute.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUVertexAttribute.ByValue(
 					structure as webgpu.android.WGPUVertexAttribute.ByValue
@@ -6804,7 +6804,7 @@ actual interface WGPUVertexBufferLayout {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUVertexBufferLayout) -> Unit): ArrayHolder<WGPUVertexBufferLayout> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUVertexBufferLayout.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUVertexBufferLayout.ByValue(
 					structure as webgpu.android.WGPUVertexBufferLayout.ByValue
@@ -6869,7 +6869,7 @@ actual interface WGPUChainedStructOut {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUChainedStructOut) -> Unit): ArrayHolder<WGPUChainedStructOut> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUChainedStructOut.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUChainedStructOut.ByValue(
 					structure as webgpu.android.WGPUChainedStructOut.ByValue
@@ -6952,7 +6952,7 @@ actual interface WGPUBufferMapCallbackInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBufferMapCallbackInfo) -> Unit): ArrayHolder<WGPUBufferMapCallbackInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUBufferMapCallbackInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUBufferMapCallbackInfo.ByValue(
 					structure as webgpu.android.WGPUBufferMapCallbackInfo.ByValue
@@ -7035,7 +7035,7 @@ actual interface WGPUCompilationInfoCallbackInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCompilationInfoCallbackInfo) -> Unit): ArrayHolder<WGPUCompilationInfoCallbackInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUCompilationInfoCallbackInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUCompilationInfoCallbackInfo.ByValue(
 					structure as webgpu.android.WGPUCompilationInfoCallbackInfo.ByValue
@@ -7118,7 +7118,7 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCreateComputePipelineAsyncCallbackInfo) -> Unit): ArrayHolder<WGPUCreateComputePipelineAsyncCallbackInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUCreateComputePipelineAsyncCallbackInfo.ByValue(
 					structure as webgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByValue
@@ -7201,7 +7201,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCreateRenderPipelineAsyncCallbackInfo) -> Unit): ArrayHolder<WGPUCreateRenderPipelineAsyncCallbackInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue(
 					structure as webgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue
@@ -7284,7 +7284,7 @@ actual interface WGPUPopErrorScopeCallbackInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUPopErrorScopeCallbackInfo) -> Unit): ArrayHolder<WGPUPopErrorScopeCallbackInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUPopErrorScopeCallbackInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUPopErrorScopeCallbackInfo.ByValue(
 					structure as webgpu.android.WGPUPopErrorScopeCallbackInfo.ByValue
@@ -7367,7 +7367,7 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUQueueWorkDoneCallbackInfo) -> Unit): ArrayHolder<WGPUQueueWorkDoneCallbackInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPUQueueWorkDoneCallbackInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPUQueueWorkDoneCallbackInfo.ByValue(
 					structure as webgpu.android.WGPUQueueWorkDoneCallbackInfo.ByValue
@@ -7450,7 +7450,7 @@ actual interface WGPURequestAdapterCallbackInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURequestAdapterCallbackInfo) -> Unit): ArrayHolder<WGPURequestAdapterCallbackInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPURequestAdapterCallbackInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPURequestAdapterCallbackInfo.ByValue(
 					structure as webgpu.android.WGPURequestAdapterCallbackInfo.ByValue
@@ -7533,7 +7533,7 @@ actual interface WGPURequestDeviceCallbackInfo {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURequestDeviceCallbackInfo) -> Unit): ArrayHolder<WGPURequestDeviceCallbackInfo> {
-			val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())
+			val array = webgpu.android.WGPURequestDeviceCallbackInfo.ByValue().toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				provider(index.toUInt(), WGPURequestDeviceCallbackInfo.ByValue(
 					structure as webgpu.android.WGPURequestDeviceCallbackInfo.ByValue

@@ -36,7 +36,7 @@ fun CLibraryModel.Structure.toAndroidStructure() = templateBuilder {
             }
             newLine()
             appendBlock("actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  $structureName) -> Unit): ArrayHolder<$structureName>") {
-                appendLine("val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())")
+                appendLine("val array = webgpu.android.$structureName.ByValue().toArray(size.toInt())")
                 appendBlock("array.forEachIndexed", "index, structure") {
                     appendLine("provider(index.toUInt(), $structureName.ByValue(")
                     appendLine("\tstructure as webgpu.android.$structureName.ByValue")
