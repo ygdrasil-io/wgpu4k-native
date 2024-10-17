@@ -90,13 +90,17 @@ internal fun File.generateCommonStructures(structures: List<CLibraryModel.Struct
     writeText(header)
     structures.forEach {
         val structureName = it.name
-        appendText("expect value class $structureName(val handler: NativeAddress) {\n")
+        appendText("expect interface $structureName {\n")
         it.members.forEach { (name, type, optional) ->
             val variableType = type.variableType()
             appendText("\t$variableType $name: ${type.toFunctionKotlinType()}$optional\n")
         }
+
+        appendText("\tval handler: NativeAddress\n")
+
         appendText("\tcompanion object {\n")
         appendText("\t\tfun allocate(allocator: MemoryAllocator): $structureName\n")
+        appendText("\t\tfun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, $structureName) -> Unit): ArrayHolder<$structureName>\n")
         appendText("\t}\n")
         appendText("}\n\n")
     }

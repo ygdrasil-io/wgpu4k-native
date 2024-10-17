@@ -16,7 +16,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                     code.length = triangleVertexShader.length.toULong()
                     code.data = scope.allocateFrom(triangleVertexShader)
                     chain.sType = 0x00000002u
-                }.let { WGPUChainedStruct(it.handler) }
+                }.handler
             }.let { wgpuDeviceCreateShaderModule(device, it) } ?: error("fail to create shader module")
 
             vertex.entryPoint.data = scope.allocateFrom("main")
@@ -30,13 +30,13 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                         code.length = redFragmentShader.length.toULong()
                         code.data = scope.allocateFrom(redFragmentShader)
                         chain.sType = 0x00000002u
-                    }.let { WGPUChainedStruct(it.handler) }
+                    }.handler
                 }.let { wgpuDeviceCreateShaderModule(device, it) } ?: error("fail to create shader module")
 
                 targetCount = 1u
-                targets = WGPUColorTargetState.allocate(scope).apply {
-                    format = renderingContextFormat
-                    writeMask = 0x000000000000000Fu
+                targets = WGPUColorTargetState.allocateArray(scope, 1u) { index, structure ->
+                    structure.format = renderingContextFormat
+                    structure.writeMask = 0x000000000000000Fu
                 }.let { ArrayHolder(it.handler) }
             }
 
@@ -64,15 +64,15 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
 
         val renderPassEncoder = WGPURenderPassDescriptor.allocate(scope).apply {
             colorAttachmentCount = 1u
-            colorAttachments = WGPURenderPassColorAttachment.allocate(scope).apply {
-                view = frame
-                loadOp = 1u
-                storeOp = 1u
-                depthSlice = UInt.MAX_VALUE
-                clearValue.r = .0
-                clearValue.g = 1.0
-                clearValue.b = .0
-                clearValue.a = 1.0
+            colorAttachments = WGPURenderPassColorAttachment.allocateArray(scope, 1u) { index, structure ->
+                structure.view = frame
+                structure.loadOp = 1u
+                structure.storeOp = 1u
+                structure.depthSlice = UInt.MAX_VALUE
+                structure.clearValue.r = .0
+                structure.clearValue.g = 1.0
+                structure.clearValue.b = .0
+                structure.clearValue.a = 1.0
             }.let { ArrayHolder(it.handler) }
         }.let { wgpuCommandEncoderBeginRenderPass(commandEncoder, it) }
 

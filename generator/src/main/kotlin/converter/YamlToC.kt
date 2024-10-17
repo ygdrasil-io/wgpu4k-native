@@ -41,7 +41,7 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
             YamlModel.Struct.Member(
                 "nextInChain",
                 "",
-                "struct.chained_struct",
+                "c_void",
                 true,
                 "mutable"
             )
@@ -52,7 +52,7 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
             YamlModel.Struct.Member(
                 "nextInChain",
                 "",
-                "struct.chained_struct_out",
+                "c_void",
                 true,
                 "mutable"
             )

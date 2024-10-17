@@ -19,10 +19,10 @@ fun List<CLibraryModel.Function>.toAndroidFunctions() = templateBuilder {
         appendLine("\t = webgpu.android.Functions.$name($argsCall)")
 
         when (function.returnType) {
-            is CLibraryModel.Reference.Enumeration -> null
-            is CLibraryModel.Reference.OpaquePointer -> "?.let(::NativeAddress)"
+            is CLibraryModel.Reference.Enumeration,
+            is CLibraryModel.Reference.OpaquePointer -> null
             is CLibraryModel.Reference -> {
-                "?.let(::NativeAddress)?.let(::${function.returnType.name})"
+                "?.let(::${function.returnType.name})"
             }
             is CLibraryModel.Primitive.Bool -> ".toBoolean()"
             else -> null
@@ -35,10 +35,11 @@ fun List<CLibraryModel.Function>.toAndroidFunctions() = templateBuilder {
 
 private fun CLibraryModel.Type.toJvmArgCall(name: String) = when(this) {
     is CLibraryModel.Reference.StructureField -> "${name}.toCValue()"
-    is CLibraryModel.Reference.OpaquePointer -> "$name.adapt()"
+    is CLibraryModel.Reference.Structure -> "${name}?.toReference()"
+    is CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Enumeration -> name
     is CLibraryModel.Array,
-    is CLibraryModel.Reference -> "$name?.handler.adapt()"
+    is CLibraryModel.Reference -> "$name?.handler"
     else -> name
 }
 

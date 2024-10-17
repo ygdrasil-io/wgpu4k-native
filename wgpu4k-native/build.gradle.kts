@@ -61,7 +61,7 @@ kotlin {
         androidMain {
             dependencies {
                 val jna = libs.jna.get()
-                implementation("${jna.module.group}:${jna.module.name}:${jna.versionConstraint}:@aar")
+                api("${jna.module.group}:${jna.module.name}:${jna.versionConstraint}:@aar")
             }
         }
 

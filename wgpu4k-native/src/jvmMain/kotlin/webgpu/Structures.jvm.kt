@@ -46,9 +46,9 @@ actual value class WGPUStringView(actual override val handler: NativeAddress) : 
 }
 @JvmInline
 actual value class WGPUAdapterInfo(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStructOut?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStructOut)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val vendor: WGPUStringView
 		get() = handler.handler.asSlice(vendorOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual val architecture: WGPUStringView
@@ -109,9 +109,9 @@ actual value class WGPUAdapterInfo(actual override val handler: NativeAddress) :
 }
 @JvmInline
 actual value class WGPUBindGroupDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var layout: WGPUBindGroupLayout?
@@ -151,9 +151,9 @@ actual value class WGPUBindGroupDescriptor(actual override val handler: NativeAd
 }
 @JvmInline
 actual value class WGPUBindGroupEntry(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var binding: UInt
 		get() = getUInt(bindingOffset)
 		set(newValue) = set(bindingOffset, newValue)
@@ -207,9 +207,9 @@ actual value class WGPUBindGroupEntry(actual override val handler: NativeAddress
 }
 @JvmInline
 actual value class WGPUBindGroupLayoutDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var entryCount: ULong
@@ -243,9 +243,9 @@ actual value class WGPUBindGroupLayoutDescriptor(actual override val handler: Na
 }
 @JvmInline
 actual value class WGPUBufferBindingLayout(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var type: WGPUBufferBindingType
 		get() = getUInt(typeOffset)
 		set(newValue) = set(typeOffset, newValue)
@@ -280,9 +280,9 @@ actual value class WGPUBufferBindingLayout(actual override val handler: NativeAd
 }
 @JvmInline
 actual value class WGPUSamplerBindingLayout(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var type: WGPUSamplerBindingType
 		get() = getUInt(typeOffset)
 		set(newValue) = set(typeOffset, newValue)
@@ -306,9 +306,9 @@ actual value class WGPUSamplerBindingLayout(actual override val handler: NativeA
 }
 @JvmInline
 actual value class WGPUTextureBindingLayout(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var sampleType: WGPUTextureSampleType
 		get() = getUInt(sampleTypeOffset)
 		set(newValue) = set(sampleTypeOffset, newValue)
@@ -344,9 +344,9 @@ actual value class WGPUTextureBindingLayout(actual override val handler: NativeA
 }
 @JvmInline
 actual value class WGPUStorageTextureBindingLayout(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var access: WGPUStorageTextureAccess
 		get() = getUInt(accessOffset)
 		set(newValue) = set(accessOffset, newValue)
@@ -382,9 +382,9 @@ actual value class WGPUStorageTextureBindingLayout(actual override val handler: 
 }
 @JvmInline
 actual value class WGPUBindGroupLayoutEntry(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var binding: UInt
 		get() = getUInt(bindingOffset)
 		set(newValue) = set(bindingOffset, newValue)
@@ -488,9 +488,9 @@ actual value class WGPUBlendState(actual override val handler: NativeAddress) : 
 }
 @JvmInline
 actual value class WGPUBufferDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var usage: ULong
@@ -568,9 +568,9 @@ actual value class WGPUColor(actual override val handler: NativeAddress) : CStru
 }
 @JvmInline
 actual value class WGPUColorTargetState(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var format: WGPUTextureFormat
 		get() = getUInt(formatOffset)
 		set(newValue) = set(formatOffset, newValue)
@@ -606,9 +606,9 @@ actual value class WGPUColorTargetState(actual override val handler: NativeAddre
 }
 @JvmInline
 actual value class WGPUCommandBufferDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 
@@ -630,9 +630,9 @@ actual value class WGPUCommandBufferDescriptor(actual override val handler: Nati
 }
 @JvmInline
 actual value class WGPUCommandEncoderDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 
@@ -654,9 +654,9 @@ actual value class WGPUCommandEncoderDescriptor(actual override val handler: Nat
 }
 @JvmInline
 actual value class WGPUCompilationInfo(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var messageCount: ULong
 		get() = getULong(messageCountOffset)
 		set(newValue) = set(messageCountOffset, newValue)
@@ -685,9 +685,9 @@ actual value class WGPUCompilationInfo(actual override val handler: NativeAddres
 }
 @JvmInline
 actual value class WGPUCompilationMessage(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val message: WGPUStringView
 		get() = handler.handler.asSlice(messageOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var type: WGPUCompilationMessageType
@@ -758,9 +758,9 @@ actual value class WGPUCompilationMessage(actual override val handler: NativeAdd
 }
 @JvmInline
 actual value class WGPUComputePassDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var timestampWrites: WGPUComputePassTimestampWrites?
@@ -819,9 +819,9 @@ actual value class WGPUComputePassTimestampWrites(actual override val handler: N
 }
 @JvmInline
 actual value class WGPUProgrammableStageDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var module: WGPUShaderModule?
 		get() = get(moduleLayout, moduleOffset).let(::WGPUShaderModule)
 		set(newValue) = set(moduleLayout, moduleOffset, newValue?.handler)
@@ -861,9 +861,9 @@ actual value class WGPUProgrammableStageDescriptor(actual override val handler: 
 }
 @JvmInline
 actual value class WGPUComputePipelineDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var layout: WGPUPipelineLayout?
@@ -896,9 +896,9 @@ actual value class WGPUComputePipelineDescriptor(actual override val handler: Na
 }
 @JvmInline
 actual value class WGPUConstantEntry(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val key: WGPUStringView
 		get() = handler.handler.asSlice(keyOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var value: Double
@@ -963,9 +963,9 @@ actual value class WGPUStencilFaceState(actual override val handler: NativeAddre
 }
 @JvmInline
 actual value class WGPUDepthStencilState(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var format: WGPUTextureFormat
 		get() = getUInt(formatOffset)
 		set(newValue) = set(formatOffset, newValue)
@@ -1040,9 +1040,9 @@ actual value class WGPUDepthStencilState(actual override val handler: NativeAddr
 }
 @JvmInline
 actual value class WGPUQueueDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 
@@ -1138,9 +1138,9 @@ actual value class WGPUUncapturedErrorCallbackInfo(actual override val handler: 
 }
 @JvmInline
 actual value class WGPUDeviceDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var requiredFeatureCount: ULong
@@ -1226,9 +1226,9 @@ actual value class WGPUExtent3D(actual override val handler: NativeAddress) : CS
 }
 @JvmInline
 actual value class WGPUFragmentState(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var module: WGPUShaderModule?
 		get() = get(moduleLayout, moduleOffset).let(::WGPUShaderModule)
 		set(newValue) = set(moduleLayout, moduleOffset, newValue?.handler)
@@ -1324,9 +1324,9 @@ actual value class WGPUFutureWaitInfo(actual override val handler: NativeAddress
 }
 @JvmInline
 actual value class WGPUTextureDataLayout(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var offset: ULong
 		get() = getULong(offsetOffset)
 		set(newValue) = set(offsetOffset, newValue)
@@ -1361,9 +1361,9 @@ actual value class WGPUTextureDataLayout(actual override val handler: NativeAddr
 }
 @JvmInline
 actual value class WGPUImageCopyBuffer(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val layout: WGPUTextureDataLayout
 		get() = handler.handler.asSlice(layoutOffset, 24L).let(::NativeAddress).let(::WGPUTextureDataLayout)
 	actual var buffer: WGPUBuffer?
@@ -1422,9 +1422,9 @@ actual value class WGPUOrigin3D(actual override val handler: NativeAddress) : CS
 }
 @JvmInline
 actual value class WGPUImageCopyTexture(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var texture: WGPUTexture?
 		get() = get(textureLayout, textureOffset).let(::WGPUTexture)
 		set(newValue) = set(textureLayout, textureOffset, newValue?.handler)
@@ -1465,9 +1465,9 @@ actual value class WGPUImageCopyTexture(actual override val handler: NativeAddre
 }
 @JvmInline
 actual value class WGPUInstanceFeatures(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var timedWaitAnyEnable: Boolean
 		get() = getInt(timedWaitAnyEnableOffset).toBoolean()
 		set(newValue) = set(timedWaitAnyEnableOffset, newValue)
@@ -1497,9 +1497,9 @@ actual value class WGPUInstanceFeatures(actual override val handler: NativeAddre
 }
 @JvmInline
 actual value class WGPUInstanceDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val features: WGPUInstanceFeatures
 		get() = handler.handler.asSlice(featuresOffset, 24L).let(::NativeAddress).let(::WGPUInstanceFeatures)
 
@@ -1722,9 +1722,9 @@ actual value class WGPULimits(actual override val handler: NativeAddress) : CStr
 }
 @JvmInline
 actual value class WGPUMultisampleState(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var count: UInt
 		get() = getUInt(countOffset)
 		set(newValue) = set(countOffset, newValue)
@@ -1760,9 +1760,9 @@ actual value class WGPUMultisampleState(actual override val handler: NativeAddre
 }
 @JvmInline
 actual value class WGPUPipelineLayoutDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var bindGroupLayoutCount: ULong
@@ -1796,9 +1796,9 @@ actual value class WGPUPipelineLayoutDescriptor(actual override val handler: Nat
 }
 @JvmInline
 actual value class WGPUPrimitiveState(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var topology: WGPUPrimitiveTopology
 		get() = getUInt(topologyOffset)
 		set(newValue) = set(topologyOffset, newValue)
@@ -1846,9 +1846,9 @@ actual value class WGPUPrimitiveState(actual override val handler: NativeAddress
 }
 @JvmInline
 actual value class WGPUQuerySetDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var type: WGPUQueryType
@@ -1882,9 +1882,9 @@ actual value class WGPUQuerySetDescriptor(actual override val handler: NativeAdd
 }
 @JvmInline
 actual value class WGPURenderBundleDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 
@@ -1906,9 +1906,9 @@ actual value class WGPURenderBundleDescriptor(actual override val handler: Nativ
 }
 @JvmInline
 actual value class WGPURenderBundleEncoderDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var colorFormatCount: ULong
@@ -1966,9 +1966,9 @@ actual value class WGPURenderBundleEncoderDescriptor(actual override val handler
 }
 @JvmInline
 actual value class WGPURenderPassColorAttachment(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var view: WGPUTextureView?
 		get() = get(viewLayout, viewOffset).let(::WGPUTextureView)
 		set(newValue) = set(viewLayout, viewOffset, newValue?.handler)
@@ -2088,9 +2088,9 @@ actual value class WGPURenderPassDepthStencilAttachment(actual override val hand
 }
 @JvmInline
 actual value class WGPURenderPassDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var colorAttachmentCount: ULong
@@ -2223,9 +2223,9 @@ actual value class WGPURenderPassTimestampWrites(actual override val handler: Na
 }
 @JvmInline
 actual value class WGPUVertexState(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var module: WGPUShaderModule?
 		get() = get(moduleLayout, moduleOffset).let(::WGPUShaderModule)
 		set(newValue) = set(moduleLayout, moduleOffset, newValue?.handler)
@@ -2277,9 +2277,9 @@ actual value class WGPUVertexState(actual override val handler: NativeAddress) :
 }
 @JvmInline
 actual value class WGPURenderPipelineDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var layout: WGPUPipelineLayout?
@@ -2334,9 +2334,9 @@ actual value class WGPURenderPipelineDescriptor(actual override val handler: Nat
 }
 @JvmInline
 actual value class WGPURequestAdapterOptions(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var compatibleSurface: WGPUSurface?
 		get() = get(compatibleSurfaceLayout, compatibleSurfaceOffset).let(::WGPUSurface)
 		set(newValue) = set(compatibleSurfaceLayout, compatibleSurfaceOffset, newValue?.handler)
@@ -2378,9 +2378,9 @@ actual value class WGPURequestAdapterOptions(actual override val handler: Native
 }
 @JvmInline
 actual value class WGPURequiredLimits(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val limits: WGPULimits
 		get() = handler.handler.asSlice(limitsOffset, 144L).let(::NativeAddress).let(::WGPULimits)
 
@@ -2402,9 +2402,9 @@ actual value class WGPURequiredLimits(actual override val handler: NativeAddress
 }
 @JvmInline
 actual value class WGPUSamplerDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var addressModeU: WGPUAddressMode
@@ -2487,9 +2487,9 @@ actual value class WGPUSamplerDescriptor(actual override val handler: NativeAddr
 }
 @JvmInline
 actual value class WGPUShaderModuleDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 
@@ -2565,9 +2565,9 @@ actual value class WGPUShaderSourceWGSL(actual override val handler: NativeAddre
 }
 @JvmInline
 actual value class WGPUSupportedFeatures(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStructOut?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStructOut)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var featureCount: ULong
 		get() = getULong(featureCountOffset)
 		set(newValue) = set(featureCountOffset, newValue)
@@ -2596,9 +2596,9 @@ actual value class WGPUSupportedFeatures(actual override val handler: NativeAddr
 }
 @JvmInline
 actual value class WGPUSupportedLimits(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStructOut?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStructOut)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val limits: WGPULimits
 		get() = handler.handler.asSlice(limitsOffset, 144L).let(::NativeAddress).let(::WGPULimits)
 
@@ -2620,9 +2620,9 @@ actual value class WGPUSupportedLimits(actual override val handler: NativeAddres
 }
 @JvmInline
 actual value class WGPUSurfaceCapabilities(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStructOut?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStructOut)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var usages: ULong
 		get() = getULong(usagesOffset)
 		set(newValue) = set(usagesOffset, newValue)
@@ -2681,9 +2681,9 @@ actual value class WGPUSurfaceCapabilities(actual override val handler: NativeAd
 }
 @JvmInline
 actual value class WGPUSurfaceConfiguration(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual var device: WGPUDevice?
 		get() = get(deviceLayout, deviceOffset).let(::WGPUDevice)
 		set(newValue) = set(deviceLayout, deviceOffset, newValue?.handler)
@@ -2755,9 +2755,9 @@ actual value class WGPUSurfaceConfiguration(actual override val handler: NativeA
 }
 @JvmInline
 actual value class WGPUSurfaceDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 
@@ -2974,9 +2974,9 @@ actual value class WGPUSurfaceTexture(actual override val handler: NativeAddress
 }
 @JvmInline
 actual value class WGPUTextureDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var usage: ULong
@@ -3046,9 +3046,9 @@ actual value class WGPUTextureDescriptor(actual override val handler: NativeAddr
 }
 @JvmInline
 actual value class WGPUTextureViewDescriptor(actual override val handler: NativeAddress) : CStructure {
-	actual var nextInChain: WGPUChainedStruct?
-		get() = get(nextInChainLayout, nextInChainOffset).let(::WGPUChainedStruct)
-		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+	actual var nextInChain: NativeAddress?
+		get() = get(nextInChainLayout, nextInChainOffset)
+		set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 	actual val label: WGPUStringView
 		get() = handler.handler.asSlice(labelOffset, 16L).let(::NativeAddress).let(::WGPUStringView)
 	actual var format: WGPUTextureFormat

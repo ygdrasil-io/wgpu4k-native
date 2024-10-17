@@ -2,7 +2,7 @@ package ffi
 
 actual class Buffer actual constructor(actual val handler: NativeAddress, actual val size: ULong) {
     actual fun readLong(): Long {
-        return handler.pointer.getLong(0)
+        return handler.getLong(0)
     }
 
     actual fun writeLong(value: Long) {
@@ -16,7 +16,7 @@ actual class Buffer actual constructor(actual val handler: NativeAddress, actual
     }
 
     actual fun readInt(): Int {
-        return handler.pointer.getInt(0)
+        return handler.getInt(0)
     }
 
     actual fun writeInt(value: Int) {

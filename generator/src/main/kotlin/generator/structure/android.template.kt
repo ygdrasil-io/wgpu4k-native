@@ -1,127 +1,118 @@
 package generator.structure
 
+import builder.Builder
 import builder.templateBuilder
-import converter.getOffsetSize
 import converter.variableType
 import domain.CLibraryModel
 import domain.toFunctionKotlinType
-import domain.typeToJvmLayout
-import java.io.File
 
 fun CLibraryModel.Structure.toAndroidStructure() = templateBuilder {
     val structureName = name
     val structureSize = size ?: error("structure size should be know at this point")
-    appendLine("@JvmInline")
-    appendBlock("actual value class $structureName(actual override val handler: NativeAddress) : CStructure") {
+    appendBlock("actual interface $structureName") {
+        toAndroidImplementation(this@toAndroidStructure, "ByReference")
+        toAndroidImplementation(this@toAndroidStructure, "ByValue")
 
-        appendLine("internal fun toCValue() = webgpu.android.${structureName}.ByValue(handler.pointer)")
+        newLine()
+        appendLine("fun toCValue() = (this as ByReference).let{ webgpu.android.${structureName}.ByValue(handle) }")
+        appendLine("fun toReference() = (this as ByReference).handle")
 
+        newLine()
         members.forEach { (name, type, optional) ->
-
             appendLine("actual ${type.variableType()} $name: ${type.toFunctionKotlinType()}$optional")
+        }
+
+        appendLine("actual val handler: NativeAddress")
+        newLine()
+        appendBlock("actual companion object") {
+            appendBlock("actual fun allocate(allocator: MemoryAllocator): $structureName") {
+                appendLine("return $structureName.ByReference()")
+                appendLine("\t.also { allocator.register(it) }")
+            }
+            newLine()
+            appendBlock("actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  $structureName) -> Unit): ArrayHolder<$structureName>") {
+                appendLine("val array = webgpu.android.WGPURequestAdapterOptions.ByValue().toArray(size.toInt())")
+                appendBlock("array.forEachIndexed", "index, structure") {
+                    appendLine("provider(index.toUInt(), $structureName.ByValue(")
+                    appendLine("\tstructure as webgpu.android.$structureName.ByValue")
+                    appendLine("))")
+                }
+                appendLine("val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer")
+                appendLine("return ArrayHolder(pointer)")
+            }
+        }
+
+    }
+    newLine()
+}
+
+private fun Builder.toAndroidImplementation(structure: CLibraryModel.Structure, name: String) {
+    val structureName = structure.name
+    newLine()
+    appendBlock("class $name(val handle: webgpu.android.$structureName.$name = webgpu.android.$structureName.$name(com.sun.jna.Pointer.NULL)) : $structureName") {
+        structure.members.forEach { (name, type, optional) ->
+
+            appendLine("override ${type.variableType()} $name: ${type.toFunctionKotlinType()}$optional")
             // Getter
             when (type) {
                 CLibraryModel.Void,
-                CLibraryModel.Reference.OpaquePointer, -> "get(${name}Layout, ${name}Offset)"
-                CLibraryModel.Reference.CString,-> "get(${name}Layout, ${name}Offset).let(::CString)"
-                is CLibraryModel.Array, -> "get(${name}Layout, ${name}Offset).let(::ArrayHolder)"
-                is CLibraryModel.Reference.Callback -> "get(${name}Layout, ${name}Offset).let(::CallbackHolder)"
-                CLibraryModel.Primitive.Float32 -> "getFloat(${name}Offset)"
-                CLibraryModel.Primitive.Float64 -> "getDouble(${name}Offset)"
-                CLibraryModel.Primitive.Int64 -> "getLong(${name}Offset)"
-                CLibraryModel.Primitive.UInt16 -> "getUShort(${name}Offset)"
-                CLibraryModel.Primitive.UInt64 -> "getULong(${name}Offset)"
-                CLibraryModel.Primitive.Bool -> "getInt(${name}Offset).toBoolean()"
-                CLibraryModel.Primitive.Int32 -> "getInt(${name}Offset)"
-                is CLibraryModel.Reference.Enumeration,
-                CLibraryModel.Primitive.UInt32 -> "getUInt(${name}Offset)"
+                CLibraryModel.Reference.OpaquePointer,
+                    -> "handle.$name"
 
-                is CLibraryModel.Reference.StructureField -> "handler.asSlice(${name}Offset).let(::${type.name})"
-                is CLibraryModel.Reference -> "get(${name}Layout, ${name}Offset).let(::${type.name})"
+                CLibraryModel.Reference.CString -> "handle.$name?.let(::CString)"
+                is CLibraryModel.Array -> "handle.$name?.let(::ArrayHolder)"
+                is CLibraryModel.Reference.Callback -> "handle.$name?.let(::CallbackHolder)"
+                CLibraryModel.Primitive.Float32,
+                CLibraryModel.Primitive.Float64 -> "handle.$name"
+
+                CLibraryModel.Primitive.Int64 -> "handle.$name"
+                CLibraryModel.Primitive.Int32 -> "handle.$name"
+                CLibraryModel.Primitive.Bool -> "handle.$name.toBoolean()"
+                CLibraryModel.Primitive.UInt16 -> "handle.$name.toUShort()"
+                CLibraryModel.Primitive.UInt64 -> "handle.$name.toULong()"
+                is CLibraryModel.Reference.Enumeration,
+                CLibraryModel.Primitive.UInt32 -> "handle.$name.toUInt()"
+
+                is CLibraryModel.Reference.StructureField -> "handle.$name.let{ ${type.name}.ByValue(it) }"
+                is CLibraryModel.Reference.Structure -> "handle.$name?.let{ ${type.name}.ByReference(it) }"
+                is CLibraryModel.Reference -> "handle.$name?.let{ ${type.name}(it) }"
             }.let { appendLine("\tget() = $it") }
 
             // Setter
             when (type) {
                 CLibraryModel.Void,
-                is CLibraryModel.Reference.Enumeration,
                 CLibraryModel.Primitive.Float32,
                 CLibraryModel.Primitive.Float64,
                 CLibraryModel.Primitive.Int64,
-                CLibraryModel.Primitive.UInt16,
-                CLibraryModel.Primitive.UInt64,
-                CLibraryModel.Primitive.Bool,
-                CLibraryModel.Primitive.Int32,
-                CLibraryModel.Primitive.UInt32 -> "set(${name}Offset, newValue)"
+                CLibraryModel.Primitive.Int32 -> "handle.$name = newValue"
 
-                CLibraryModel.Reference.OpaquePointer -> "set(${name}Layout, ${name}Offset, newValue)"
+                CLibraryModel.Primitive.UInt16 -> "handle.$name = newValue.toShort()"
+                is CLibraryModel.Reference.Enumeration,
+                CLibraryModel.Primitive.Bool,
+                CLibraryModel.Primitive.UInt32 -> "handle.$name = newValue.toInt()"
+
+                CLibraryModel.Primitive.UInt64 -> "handle.$name = newValue.toLong()"
+
+                CLibraryModel.Reference.OpaquePointer -> "handle.$name = newValue"
                 is CLibraryModel.Reference.Callback,
                 CLibraryModel.Reference.CString,
-                is CLibraryModel.Reference.Structure,
-                is CLibraryModel.Array,
-                is CLibraryModel.Reference.Pointer -> "set(${name}Layout, ${name}Offset, newValue?.handler)"
+                is CLibraryModel.Reference.Pointer,
+                is CLibraryModel.Array -> "handle.$name = newValue?.handler"
+
+                is CLibraryModel.Reference.Structure -> "handle.$name = (newValue as? ${type.name}.ByReference)?.handle"
 
                 is CLibraryModel.Reference.StructureField -> null
-            }?.let { appendLine("\tset(newValue) = $it") }
+            }?.let { appendLine("\tset(newValue) { $it }") }
             newLine()
         }
 
-        appendBlock("actual companion object") {
-            appendBlock("actual fun allocate(allocator: MemoryAllocator): $structureName") {
-                appendLine("return allocator.allocate(${structureSize}L)")
-                appendLine("\t.let(::$structureName)")
-            }
-
-            // Generate layout
-            appendLine("internal val LAYOUT = structLayout(")
-            members.forEach { (name, type, _, _, _, padding) ->
-                padding?.takeIf { it > 0 }
-                    ?.let { "\tMemoryLayout.paddingLayout($it),"}
-                    ?.let(::appendLine)
-                typeToJvmLayout(type).let { "\t$it.withName(\"${name}\")," }
-                    .let(::appendLine)
-            }
-
-            padding?.takeIf { it > 0 }
-                ?.let { "\tMemoryLayout.paddingLayout($it)"}
-                ?.let(::appendLine)
-            appendLine(").withName(\"$structureName\")")
-            newLine()
-
-            // Write offset
-            var offset = 0
-            members.forEachIndexed { index, member ->
-                offset += (member.padding ?: 0)
-                appendLine("val ${member.name}Offset = ${offset}L")
-                appendLine("val ${member.name}Layout = ${typeToJvmLayout(member.type)}")
-                offset += (member.size ?: 0)
-            }
-        }
+        appendLine("override val handler: NativeAddress")
+        appendLine("\tget() {")
+        appendLine("\t\thandle.write()")
+        appendLine("\t\treturn handle.getPointer()")
+        appendLine("\t}")
 
     }
-}
 
-private fun getLayout(type: CLibraryModel.Type) = when (type) {
-    CLibraryModel.Reference.OpaquePointer,
-    is CLibraryModel.Reference.Pointer,
-    CLibraryModel.Reference.CString,
-    is CLibraryModel.Array,
-    is CLibraryModel.Reference.Callback,
-    CLibraryModel.Void,
-    is CLibraryModel.Reference.Structure -> "C_POINTER"
-
-    CLibraryModel.Primitive.UInt16 -> "C_SHORT"
-
-    CLibraryModel.Primitive.Bool,
-    CLibraryModel.Primitive.UInt32,
-    CLibraryModel.Primitive.Int32 -> "C_INT"
-
-    CLibraryModel.Primitive.UInt64,
-    CLibraryModel.Primitive.Int64 -> "C_LONG"
-
-    CLibraryModel.Primitive.Float32 -> "C_FLOAT"
-    CLibraryModel.Primitive.Float64 -> "C_DOUBLE"
-
-    is CLibraryModel.Reference.Enumeration -> "C_INT"
-    is CLibraryModel.Reference.StructureField -> "${type.name}.LAYOUT"
 }
 

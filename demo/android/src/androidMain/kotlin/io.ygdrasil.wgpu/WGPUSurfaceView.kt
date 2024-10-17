@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import com.sun.jna.Pointer
 import ffi.memoryScope
 import webgpu.HelloTriangleScene
 import webgpu.WGPUChainedStruct
@@ -68,8 +69,8 @@ fun getSurface(
     val surfaceDescriptor = WGPUSurfaceDescriptor.allocate(scope).apply {
         nextInChain = WGPUSurfaceSourceAndroidNativeWindow.allocate(scope).apply {
             chain.sType = 0x00000008u
-            window = MemorySegment(nativeWindow, 0)
-        }.let { WGPUChainedStruct(it.handler) }
+            window = Pointer(nativeWindow)
+        }.handler
     }
 
     wgpuInstanceCreateSurface(instance, surfaceDescriptor) ?: error("fail to create surface")

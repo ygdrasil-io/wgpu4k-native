@@ -3,164 +3,164 @@ package webgpu.android
 
 
 internal interface FunctionsInterface: com.sun.jna.Library {
-	fun wgpuCreateInstance(descriptor: Long): Long
-	fun wgpuAdapterRelease(handler: Long): Unit
-	fun wgpuAdapterGetLimits(handler: Long, limits: Long): UInt
-	fun wgpuAdapterHasFeature(handler: Long, feature: UInt): UInt
-	fun wgpuAdapterGetFeatures(handler: Long, features: Long): UInt
-	fun wgpuAdapterGetInfo(handler: Long, info: Long): Unit
-	fun wgpuAdapterRequestDevice(handler: Long, descriptor: Long, callbackInfo: WGPURequestDeviceCallbackInfo.ByValue): Unit
-	fun wgpuBindGroupRelease(handler: Long): Unit
-	fun wgpuBindGroupSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuBindGroupLayoutRelease(handler: Long): Unit
-	fun wgpuBindGroupLayoutSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuBufferRelease(handler: Long): Unit
-	fun wgpuBufferMapAsync(handler: Long, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo.ByValue): Unit
-	fun wgpuBufferGetMappedRange(handler: Long, offset: ULong, size: ULong): Long
-	fun wgpuBufferGetConstMappedRange(handler: Long, offset: ULong, size: ULong): Long
-	fun wgpuBufferSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuBufferGetUsage(handler: Long): ULong
-	fun wgpuBufferGetSize(handler: Long): ULong
-	fun wgpuBufferGetMapState(handler: Long): UInt
-	fun wgpuBufferUnmap(handler: Long): Unit
-	fun wgpuBufferDestroy(handler: Long): Unit
-	fun wgpuCommandBufferRelease(handler: Long): Unit
-	fun wgpuCommandBufferSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuCommandEncoderRelease(handler: Long): Unit
-	fun wgpuCommandEncoderFinish(handler: Long, descriptor: Long): Long
-	fun wgpuCommandEncoderBeginComputePass(handler: Long, descriptor: Long): Long
-	fun wgpuCommandEncoderBeginRenderPass(handler: Long, descriptor: Long): Long
-	fun wgpuCommandEncoderCopyBufferToBuffer(handler: Long, source: Long, sourceOffset: ULong, destination: Long, destinationOffset: ULong, size: ULong): Unit
-	fun wgpuCommandEncoderCopyBufferToTexture(handler: Long, source: Long, destination: Long, copySize: Long): Unit
-	fun wgpuCommandEncoderCopyTextureToBuffer(handler: Long, source: Long, destination: Long, copySize: Long): Unit
-	fun wgpuCommandEncoderCopyTextureToTexture(handler: Long, source: Long, destination: Long, copySize: Long): Unit
-	fun wgpuCommandEncoderClearBuffer(handler: Long, buffer: Long, offset: ULong, size: ULong): Unit
-	fun wgpuCommandEncoderInsertDebugMarker(handler: Long, markerLabel: WGPUStringView.ByValue): Unit
-	fun wgpuCommandEncoderPopDebugGroup(handler: Long): Unit
-	fun wgpuCommandEncoderPushDebugGroup(handler: Long, groupLabel: WGPUStringView.ByValue): Unit
-	fun wgpuCommandEncoderResolveQuerySet(handler: Long, querySet: Long, firstQuery: UInt, queryCount: UInt, destination: Long, destinationOffset: ULong): Unit
-	fun wgpuCommandEncoderWriteTimestamp(handler: Long, querySet: Long, queryIndex: UInt): Unit
-	fun wgpuCommandEncoderSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuComputePassEncoderRelease(handler: Long): Unit
-	fun wgpuComputePassEncoderInsertDebugMarker(handler: Long, markerLabel: WGPUStringView.ByValue): Unit
-	fun wgpuComputePassEncoderPopDebugGroup(handler: Long): Unit
-	fun wgpuComputePassEncoderPushDebugGroup(handler: Long, groupLabel: WGPUStringView.ByValue): Unit
-	fun wgpuComputePassEncoderSetPipeline(handler: Long, pipeline: Long): Unit
-	fun wgpuComputePassEncoderSetBindGroup(handler: Long, groupIndex: UInt, group: Long, dynamicOffsetCount: ULong, dynamicOffsets: Long): Unit
-	fun wgpuComputePassEncoderDispatchWorkgroups(handler: Long, workgroupCountX: UInt, workgroupCountY: UInt, workgroupCountZ: UInt): Unit
-	fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(handler: Long, indirectBuffer: Long, indirectOffset: ULong): Unit
-	fun wgpuComputePassEncoderEnd(handler: Long): Unit
-	fun wgpuComputePassEncoderSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuComputePipelineRelease(handler: Long): Unit
-	fun wgpuComputePipelineGetBindGroupLayout(handler: Long, groupIndex: UInt): Long
-	fun wgpuComputePipelineSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuDeviceRelease(handler: Long): Unit
-	fun wgpuDeviceCreateBindGroup(handler: Long, descriptor: Long): Long
-	fun wgpuDeviceCreateBindGroupLayout(handler: Long, descriptor: Long): Long
-	fun wgpuDeviceCreateBuffer(handler: Long, descriptor: Long): Long
-	fun wgpuDeviceCreateCommandEncoder(handler: Long, descriptor: Long): Long
-	fun wgpuDeviceCreateComputePipeline(handler: Long, descriptor: Long): Long
-	fun wgpuDeviceCreateComputePipelineAsync(handler: Long, descriptor: Long, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo.ByValue): Unit
-	fun wgpuDeviceCreatePipelineLayout(handler: Long, descriptor: Long): Long
-	fun wgpuDeviceCreateQuerySet(handler: Long, descriptor: Long): Long
-	fun wgpuDeviceCreateRenderPipelineAsync(handler: Long, descriptor: Long, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue): Unit
-	fun wgpuDeviceCreateRenderBundleEncoder(handler: Long, descriptor: Long): Long
-	fun wgpuDeviceCreateRenderPipeline(handler: Long, descriptor: Long): Long
-	fun wgpuDeviceCreateSampler(handler: Long, descriptor: Long): Long
-	fun wgpuDeviceCreateShaderModule(handler: Long, descriptor: Long): Long
-	fun wgpuDeviceCreateTexture(handler: Long, descriptor: Long): Long
-	fun wgpuDeviceDestroy(handler: Long): Unit
-	fun wgpuDeviceGetLimits(handler: Long, limits: Long): UInt
-	fun wgpuDeviceHasFeature(handler: Long, feature: UInt): UInt
-	fun wgpuDeviceGetFeatures(handler: Long, features: Long): UInt
-	fun wgpuDeviceGetQueue(handler: Long): Long
-	fun wgpuDevicePushErrorScope(handler: Long, filter: UInt): Unit
-	fun wgpuDevicePopErrorScope(handler: Long, callbackInfo: WGPUPopErrorScopeCallbackInfo.ByValue): Unit
-	fun wgpuDeviceSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuInstanceRelease(handler: Long): Unit
-	fun wgpuInstanceCreateSurface(handler: Long, descriptor: Long): Long
-	fun wgpuInstanceHasWGSLLanguageFeature(handler: Long, feature: UInt): UInt
-	fun wgpuInstanceProcessEvents(handler: Long): Unit
-	fun wgpuInstanceRequestAdapter(handler: Long, options: Long, callbackInfo: WGPURequestAdapterCallbackInfo.ByValue): Unit
-	fun wgpuInstanceWaitAny(handler: Long, futureCount: ULong, futures: Long, timeoutNS: ULong): UInt
-	fun wgpuPipelineLayoutRelease(handler: Long): Unit
-	fun wgpuPipelineLayoutSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuQuerySetRelease(handler: Long): Unit
-	fun wgpuQuerySetSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuQuerySetGetType(handler: Long): UInt
-	fun wgpuQuerySetGetCount(handler: Long): UInt
-	fun wgpuQuerySetDestroy(handler: Long): Unit
-	fun wgpuQueueRelease(handler: Long): Unit
-	fun wgpuQueueSubmit(handler: Long, commandCount: ULong, commands: Long): Unit
-	fun wgpuQueueOnSubmittedWorkDone(handler: Long, callbackInfo: WGPUQueueWorkDoneCallbackInfo.ByValue): Unit
-	fun wgpuQueueWriteBuffer(handler: Long, buffer: Long, bufferOffset: ULong, data: Long, size: ULong): Unit
-	fun wgpuQueueWriteTexture(handler: Long, destination: Long, data: Long, dataSize: ULong, dataLayout: Long, writeSize: Long): Unit
-	fun wgpuQueueSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuRenderBundleRelease(handler: Long): Unit
-	fun wgpuRenderBundleSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuRenderBundleEncoderRelease(handler: Long): Unit
-	fun wgpuRenderBundleEncoderSetPipeline(handler: Long, pipeline: Long): Unit
-	fun wgpuRenderBundleEncoderSetBindGroup(handler: Long, groupIndex: UInt, group: Long, dynamicOffsetCount: ULong, dynamicOffsets: Long): Unit
-	fun wgpuRenderBundleEncoderDraw(handler: Long, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit
-	fun wgpuRenderBundleEncoderDrawIndexed(handler: Long, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit
-	fun wgpuRenderBundleEncoderDrawIndirect(handler: Long, indirectBuffer: Long, indirectOffset: ULong): Unit
-	fun wgpuRenderBundleEncoderDrawIndexedIndirect(handler: Long, indirectBuffer: Long, indirectOffset: ULong): Unit
-	fun wgpuRenderBundleEncoderInsertDebugMarker(handler: Long, markerLabel: WGPUStringView.ByValue): Unit
-	fun wgpuRenderBundleEncoderPopDebugGroup(handler: Long): Unit
-	fun wgpuRenderBundleEncoderPushDebugGroup(handler: Long, groupLabel: WGPUStringView.ByValue): Unit
-	fun wgpuRenderBundleEncoderSetVertexBuffer(handler: Long, slot: UInt, buffer: Long, offset: ULong, size: ULong): Unit
-	fun wgpuRenderBundleEncoderSetIndexBuffer(handler: Long, buffer: Long, format: UInt, offset: ULong, size: ULong): Unit
-	fun wgpuRenderBundleEncoderFinish(handler: Long, descriptor: Long): Long
-	fun wgpuRenderBundleEncoderSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuRenderPassEncoderRelease(handler: Long): Unit
-	fun wgpuRenderPassEncoderSetPipeline(handler: Long, pipeline: Long): Unit
-	fun wgpuRenderPassEncoderSetBindGroup(handler: Long, groupIndex: UInt, group: Long, dynamicOffsetCount: ULong, dynamicOffsets: Long): Unit
-	fun wgpuRenderPassEncoderDraw(handler: Long, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit
-	fun wgpuRenderPassEncoderDrawIndexed(handler: Long, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit
-	fun wgpuRenderPassEncoderDrawIndirect(handler: Long, indirectBuffer: Long, indirectOffset: ULong): Unit
-	fun wgpuRenderPassEncoderDrawIndexedIndirect(handler: Long, indirectBuffer: Long, indirectOffset: ULong): Unit
-	fun wgpuRenderPassEncoderExecuteBundles(handler: Long, bundleCount: ULong, bundles: Long): Unit
-	fun wgpuRenderPassEncoderInsertDebugMarker(handler: Long, markerLabel: WGPUStringView.ByValue): Unit
-	fun wgpuRenderPassEncoderPopDebugGroup(handler: Long): Unit
-	fun wgpuRenderPassEncoderPushDebugGroup(handler: Long, groupLabel: WGPUStringView.ByValue): Unit
-	fun wgpuRenderPassEncoderSetStencilReference(handler: Long, reference: UInt): Unit
-	fun wgpuRenderPassEncoderSetBlendConstant(handler: Long, color: Long): Unit
-	fun wgpuRenderPassEncoderSetViewport(handler: Long, x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float): Unit
-	fun wgpuRenderPassEncoderSetScissorRect(handler: Long, x: UInt, y: UInt, width: UInt, height: UInt): Unit
-	fun wgpuRenderPassEncoderSetVertexBuffer(handler: Long, slot: UInt, buffer: Long, offset: ULong, size: ULong): Unit
-	fun wgpuRenderPassEncoderSetIndexBuffer(handler: Long, buffer: Long, format: UInt, offset: ULong, size: ULong): Unit
-	fun wgpuRenderPassEncoderBeginOcclusionQuery(handler: Long, queryIndex: UInt): Unit
-	fun wgpuRenderPassEncoderEndOcclusionQuery(handler: Long): Unit
-	fun wgpuRenderPassEncoderEnd(handler: Long): Unit
-	fun wgpuRenderPassEncoderSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuRenderPipelineRelease(handler: Long): Unit
-	fun wgpuRenderPipelineGetBindGroupLayout(handler: Long, groupIndex: UInt): Long
-	fun wgpuRenderPipelineSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuSamplerRelease(handler: Long): Unit
-	fun wgpuSamplerSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuShaderModuleRelease(handler: Long): Unit
-	fun wgpuShaderModuleGetCompilationInfo(handler: Long, callbackInfo: WGPUCompilationInfoCallbackInfo.ByValue): Unit
-	fun wgpuShaderModuleSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuSurfaceRelease(handler: Long): Unit
-	fun wgpuSurfaceConfigure(handler: Long, config: Long): Unit
-	fun wgpuSurfaceGetCapabilities(handler: Long, adapter: Long, capabilities: Long): UInt
-	fun wgpuSurfaceGetCurrentTexture(handler: Long, surfaceTexture: Long): Unit
-	fun wgpuSurfacePresent(handler: Long): Unit
-	fun wgpuSurfaceUnconfigure(handler: Long): Unit
-	fun wgpuSurfaceSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuTextureRelease(handler: Long): Unit
-	fun wgpuTextureCreateView(handler: Long, descriptor: Long): Long
-	fun wgpuTextureSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
-	fun wgpuTextureGetWidth(handler: Long): UInt
-	fun wgpuTextureGetHeight(handler: Long): UInt
-	fun wgpuTextureGetDepthOrArrayLayers(handler: Long): UInt
-	fun wgpuTextureGetMipLevelCount(handler: Long): UInt
-	fun wgpuTextureGetSampleCount(handler: Long): UInt
-	fun wgpuTextureGetDimension(handler: Long): UInt
-	fun wgpuTextureGetFormat(handler: Long): UInt
-	fun wgpuTextureGetUsage(handler: Long): ULong
-	fun wgpuTextureDestroy(handler: Long): Unit
-	fun wgpuTextureViewRelease(handler: Long): Unit
-	fun wgpuTextureViewSetLabel(handler: Long, label: WGPUStringView.ByValue): Unit
+	fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuAdapterRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuAdapterGetLimits(handler: com.sun.jna.Pointer?, limits: WGPUSupportedLimits.ByReference?): UInt
+	fun wgpuAdapterHasFeature(handler: com.sun.jna.Pointer?, feature: UInt): UInt
+	fun wgpuAdapterGetFeatures(handler: com.sun.jna.Pointer?, features: WGPUSupportedFeatures.ByReference?): UInt
+	fun wgpuAdapterGetInfo(handler: com.sun.jna.Pointer?, info: WGPUAdapterInfo.ByReference?): Unit
+	fun wgpuAdapterRequestDevice(handler: com.sun.jna.Pointer?, descriptor: WGPUDeviceDescriptor.ByReference?, callbackInfo: WGPURequestDeviceCallbackInfo.ByValue): Unit
+	fun wgpuBindGroupRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuBindGroupSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuBindGroupLayoutRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuBindGroupLayoutSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuBufferRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuBufferMapAsync(handler: com.sun.jna.Pointer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo.ByValue): Unit
+	fun wgpuBufferGetMappedRange(handler: com.sun.jna.Pointer?, offset: ULong, size: ULong): com.sun.jna.Pointer?
+	fun wgpuBufferGetConstMappedRange(handler: com.sun.jna.Pointer?, offset: ULong, size: ULong): com.sun.jna.Pointer?
+	fun wgpuBufferSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuBufferGetUsage(handler: com.sun.jna.Pointer?): ULong
+	fun wgpuBufferGetSize(handler: com.sun.jna.Pointer?): ULong
+	fun wgpuBufferGetMapState(handler: com.sun.jna.Pointer?): UInt
+	fun wgpuBufferUnmap(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuBufferDestroy(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuCommandBufferRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuCommandBufferSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuCommandEncoderRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuCommandEncoderFinish(handler: com.sun.jna.Pointer?, descriptor: WGPUCommandBufferDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuCommandEncoderBeginComputePass(handler: com.sun.jna.Pointer?, descriptor: WGPUComputePassDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuCommandEncoderBeginRenderPass(handler: com.sun.jna.Pointer?, descriptor: WGPURenderPassDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuCommandEncoderCopyBufferToBuffer(handler: com.sun.jna.Pointer?, source: com.sun.jna.Pointer?, sourceOffset: ULong, destination: com.sun.jna.Pointer?, destinationOffset: ULong, size: ULong): Unit
+	fun wgpuCommandEncoderCopyBufferToTexture(handler: com.sun.jna.Pointer?, source: WGPUImageCopyBuffer.ByReference?, destination: WGPUImageCopyTexture.ByReference?, copySize: WGPUExtent3D.ByReference?): Unit
+	fun wgpuCommandEncoderCopyTextureToBuffer(handler: com.sun.jna.Pointer?, source: WGPUImageCopyTexture.ByReference?, destination: WGPUImageCopyBuffer.ByReference?, copySize: WGPUExtent3D.ByReference?): Unit
+	fun wgpuCommandEncoderCopyTextureToTexture(handler: com.sun.jna.Pointer?, source: WGPUImageCopyTexture.ByReference?, destination: WGPUImageCopyTexture.ByReference?, copySize: WGPUExtent3D.ByReference?): Unit
+	fun wgpuCommandEncoderClearBuffer(handler: com.sun.jna.Pointer?, buffer: com.sun.jna.Pointer?, offset: ULong, size: ULong): Unit
+	fun wgpuCommandEncoderInsertDebugMarker(handler: com.sun.jna.Pointer?, markerLabel: WGPUStringView.ByValue): Unit
+	fun wgpuCommandEncoderPopDebugGroup(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuCommandEncoderPushDebugGroup(handler: com.sun.jna.Pointer?, groupLabel: WGPUStringView.ByValue): Unit
+	fun wgpuCommandEncoderResolveQuerySet(handler: com.sun.jna.Pointer?, querySet: com.sun.jna.Pointer?, firstQuery: UInt, queryCount: UInt, destination: com.sun.jna.Pointer?, destinationOffset: ULong): Unit
+	fun wgpuCommandEncoderWriteTimestamp(handler: com.sun.jna.Pointer?, querySet: com.sun.jna.Pointer?, queryIndex: UInt): Unit
+	fun wgpuCommandEncoderSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuComputePassEncoderRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuComputePassEncoderInsertDebugMarker(handler: com.sun.jna.Pointer?, markerLabel: WGPUStringView.ByValue): Unit
+	fun wgpuComputePassEncoderPopDebugGroup(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuComputePassEncoderPushDebugGroup(handler: com.sun.jna.Pointer?, groupLabel: WGPUStringView.ByValue): Unit
+	fun wgpuComputePassEncoderSetPipeline(handler: com.sun.jna.Pointer?, pipeline: com.sun.jna.Pointer?): Unit
+	fun wgpuComputePassEncoderSetBindGroup(handler: com.sun.jna.Pointer?, groupIndex: UInt, group: com.sun.jna.Pointer?, dynamicOffsetCount: ULong, dynamicOffsets: com.sun.jna.Pointer?): Unit
+	fun wgpuComputePassEncoderDispatchWorkgroups(handler: com.sun.jna.Pointer?, workgroupCountX: UInt, workgroupCountY: UInt, workgroupCountZ: UInt): Unit
+	fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(handler: com.sun.jna.Pointer?, indirectBuffer: com.sun.jna.Pointer?, indirectOffset: ULong): Unit
+	fun wgpuComputePassEncoderEnd(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuComputePassEncoderSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuComputePipelineRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuComputePipelineGetBindGroupLayout(handler: com.sun.jna.Pointer?, groupIndex: UInt): com.sun.jna.Pointer?
+	fun wgpuComputePipelineSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuDeviceRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuDeviceCreateBindGroup(handler: com.sun.jna.Pointer?, descriptor: WGPUBindGroupDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuDeviceCreateBindGroupLayout(handler: com.sun.jna.Pointer?, descriptor: WGPUBindGroupLayoutDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuDeviceCreateBuffer(handler: com.sun.jna.Pointer?, descriptor: WGPUBufferDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuDeviceCreateCommandEncoder(handler: com.sun.jna.Pointer?, descriptor: WGPUCommandEncoderDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuDeviceCreateComputePipeline(handler: com.sun.jna.Pointer?, descriptor: WGPUComputePipelineDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuDeviceCreateComputePipelineAsync(handler: com.sun.jna.Pointer?, descriptor: WGPUComputePipelineDescriptor.ByReference?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo.ByValue): Unit
+	fun wgpuDeviceCreatePipelineLayout(handler: com.sun.jna.Pointer?, descriptor: WGPUPipelineLayoutDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuDeviceCreateQuerySet(handler: com.sun.jna.Pointer?, descriptor: WGPUQuerySetDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuDeviceCreateRenderPipelineAsync(handler: com.sun.jna.Pointer?, descriptor: WGPURenderPipelineDescriptor.ByReference?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue): Unit
+	fun wgpuDeviceCreateRenderBundleEncoder(handler: com.sun.jna.Pointer?, descriptor: WGPURenderBundleEncoderDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuDeviceCreateRenderPipeline(handler: com.sun.jna.Pointer?, descriptor: WGPURenderPipelineDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuDeviceCreateSampler(handler: com.sun.jna.Pointer?, descriptor: WGPUSamplerDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuDeviceCreateShaderModule(handler: com.sun.jna.Pointer?, descriptor: WGPUShaderModuleDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuDeviceCreateTexture(handler: com.sun.jna.Pointer?, descriptor: WGPUTextureDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuDeviceDestroy(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuDeviceGetLimits(handler: com.sun.jna.Pointer?, limits: WGPUSupportedLimits.ByReference?): UInt
+	fun wgpuDeviceHasFeature(handler: com.sun.jna.Pointer?, feature: UInt): UInt
+	fun wgpuDeviceGetFeatures(handler: com.sun.jna.Pointer?, features: WGPUSupportedFeatures.ByReference?): UInt
+	fun wgpuDeviceGetQueue(handler: com.sun.jna.Pointer?): com.sun.jna.Pointer?
+	fun wgpuDevicePushErrorScope(handler: com.sun.jna.Pointer?, filter: UInt): Unit
+	fun wgpuDevicePopErrorScope(handler: com.sun.jna.Pointer?, callbackInfo: WGPUPopErrorScopeCallbackInfo.ByValue): Unit
+	fun wgpuDeviceSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuInstanceRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuInstanceCreateSurface(handler: com.sun.jna.Pointer?, descriptor: WGPUSurfaceDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuInstanceHasWGSLLanguageFeature(handler: com.sun.jna.Pointer?, feature: UInt): UInt
+	fun wgpuInstanceProcessEvents(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuInstanceRequestAdapter(handler: com.sun.jna.Pointer?, options: WGPURequestAdapterOptions.ByReference?, callbackInfo: WGPURequestAdapterCallbackInfo.ByValue): Unit
+	fun wgpuInstanceWaitAny(handler: com.sun.jna.Pointer?, futureCount: ULong, futures: WGPUFutureWaitInfo.ByReference?, timeoutNS: ULong): UInt
+	fun wgpuPipelineLayoutRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuPipelineLayoutSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuQuerySetRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuQuerySetSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuQuerySetGetType(handler: com.sun.jna.Pointer?): UInt
+	fun wgpuQuerySetGetCount(handler: com.sun.jna.Pointer?): UInt
+	fun wgpuQuerySetDestroy(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuQueueRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuQueueSubmit(handler: com.sun.jna.Pointer?, commandCount: ULong, commands: com.sun.jna.Pointer?): Unit
+	fun wgpuQueueOnSubmittedWorkDone(handler: com.sun.jna.Pointer?, callbackInfo: WGPUQueueWorkDoneCallbackInfo.ByValue): Unit
+	fun wgpuQueueWriteBuffer(handler: com.sun.jna.Pointer?, buffer: com.sun.jna.Pointer?, bufferOffset: ULong, data: com.sun.jna.Pointer?, size: ULong): Unit
+	fun wgpuQueueWriteTexture(handler: com.sun.jna.Pointer?, destination: WGPUImageCopyTexture.ByReference?, data: com.sun.jna.Pointer?, dataSize: ULong, dataLayout: WGPUTextureDataLayout.ByReference?, writeSize: WGPUExtent3D.ByReference?): Unit
+	fun wgpuQueueSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuRenderBundleRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderBundleSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuRenderBundleEncoderRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderBundleEncoderSetPipeline(handler: com.sun.jna.Pointer?, pipeline: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderBundleEncoderSetBindGroup(handler: com.sun.jna.Pointer?, groupIndex: UInt, group: com.sun.jna.Pointer?, dynamicOffsetCount: ULong, dynamicOffsets: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderBundleEncoderDraw(handler: com.sun.jna.Pointer?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit
+	fun wgpuRenderBundleEncoderDrawIndexed(handler: com.sun.jna.Pointer?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit
+	fun wgpuRenderBundleEncoderDrawIndirect(handler: com.sun.jna.Pointer?, indirectBuffer: com.sun.jna.Pointer?, indirectOffset: ULong): Unit
+	fun wgpuRenderBundleEncoderDrawIndexedIndirect(handler: com.sun.jna.Pointer?, indirectBuffer: com.sun.jna.Pointer?, indirectOffset: ULong): Unit
+	fun wgpuRenderBundleEncoderInsertDebugMarker(handler: com.sun.jna.Pointer?, markerLabel: WGPUStringView.ByValue): Unit
+	fun wgpuRenderBundleEncoderPopDebugGroup(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderBundleEncoderPushDebugGroup(handler: com.sun.jna.Pointer?, groupLabel: WGPUStringView.ByValue): Unit
+	fun wgpuRenderBundleEncoderSetVertexBuffer(handler: com.sun.jna.Pointer?, slot: UInt, buffer: com.sun.jna.Pointer?, offset: ULong, size: ULong): Unit
+	fun wgpuRenderBundleEncoderSetIndexBuffer(handler: com.sun.jna.Pointer?, buffer: com.sun.jna.Pointer?, format: UInt, offset: ULong, size: ULong): Unit
+	fun wgpuRenderBundleEncoderFinish(handler: com.sun.jna.Pointer?, descriptor: WGPURenderBundleDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuRenderBundleEncoderSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuRenderPassEncoderRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderPassEncoderSetPipeline(handler: com.sun.jna.Pointer?, pipeline: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderPassEncoderSetBindGroup(handler: com.sun.jna.Pointer?, groupIndex: UInt, group: com.sun.jna.Pointer?, dynamicOffsetCount: ULong, dynamicOffsets: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderPassEncoderDraw(handler: com.sun.jna.Pointer?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit
+	fun wgpuRenderPassEncoderDrawIndexed(handler: com.sun.jna.Pointer?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit
+	fun wgpuRenderPassEncoderDrawIndirect(handler: com.sun.jna.Pointer?, indirectBuffer: com.sun.jna.Pointer?, indirectOffset: ULong): Unit
+	fun wgpuRenderPassEncoderDrawIndexedIndirect(handler: com.sun.jna.Pointer?, indirectBuffer: com.sun.jna.Pointer?, indirectOffset: ULong): Unit
+	fun wgpuRenderPassEncoderExecuteBundles(handler: com.sun.jna.Pointer?, bundleCount: ULong, bundles: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderPassEncoderInsertDebugMarker(handler: com.sun.jna.Pointer?, markerLabel: WGPUStringView.ByValue): Unit
+	fun wgpuRenderPassEncoderPopDebugGroup(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderPassEncoderPushDebugGroup(handler: com.sun.jna.Pointer?, groupLabel: WGPUStringView.ByValue): Unit
+	fun wgpuRenderPassEncoderSetStencilReference(handler: com.sun.jna.Pointer?, reference: UInt): Unit
+	fun wgpuRenderPassEncoderSetBlendConstant(handler: com.sun.jna.Pointer?, color: WGPUColor.ByReference?): Unit
+	fun wgpuRenderPassEncoderSetViewport(handler: com.sun.jna.Pointer?, x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float): Unit
+	fun wgpuRenderPassEncoderSetScissorRect(handler: com.sun.jna.Pointer?, x: UInt, y: UInt, width: UInt, height: UInt): Unit
+	fun wgpuRenderPassEncoderSetVertexBuffer(handler: com.sun.jna.Pointer?, slot: UInt, buffer: com.sun.jna.Pointer?, offset: ULong, size: ULong): Unit
+	fun wgpuRenderPassEncoderSetIndexBuffer(handler: com.sun.jna.Pointer?, buffer: com.sun.jna.Pointer?, format: UInt, offset: ULong, size: ULong): Unit
+	fun wgpuRenderPassEncoderBeginOcclusionQuery(handler: com.sun.jna.Pointer?, queryIndex: UInt): Unit
+	fun wgpuRenderPassEncoderEndOcclusionQuery(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderPassEncoderEnd(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderPassEncoderSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuRenderPipelineRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuRenderPipelineGetBindGroupLayout(handler: com.sun.jna.Pointer?, groupIndex: UInt): com.sun.jna.Pointer?
+	fun wgpuRenderPipelineSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuSamplerRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuSamplerSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuShaderModuleRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuShaderModuleGetCompilationInfo(handler: com.sun.jna.Pointer?, callbackInfo: WGPUCompilationInfoCallbackInfo.ByValue): Unit
+	fun wgpuShaderModuleSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuSurfaceRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuSurfaceConfigure(handler: com.sun.jna.Pointer?, config: WGPUSurfaceConfiguration.ByReference?): Unit
+	fun wgpuSurfaceGetCapabilities(handler: com.sun.jna.Pointer?, adapter: com.sun.jna.Pointer?, capabilities: WGPUSurfaceCapabilities.ByReference?): UInt
+	fun wgpuSurfaceGetCurrentTexture(handler: com.sun.jna.Pointer?, surfaceTexture: WGPUSurfaceTexture.ByReference?): Unit
+	fun wgpuSurfacePresent(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuSurfaceUnconfigure(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuSurfaceSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuTextureRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuTextureCreateView(handler: com.sun.jna.Pointer?, descriptor: WGPUTextureViewDescriptor.ByReference?): com.sun.jna.Pointer?
+	fun wgpuTextureSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	fun wgpuTextureGetWidth(handler: com.sun.jna.Pointer?): UInt
+	fun wgpuTextureGetHeight(handler: com.sun.jna.Pointer?): UInt
+	fun wgpuTextureGetDepthOrArrayLayers(handler: com.sun.jna.Pointer?): UInt
+	fun wgpuTextureGetMipLevelCount(handler: com.sun.jna.Pointer?): UInt
+	fun wgpuTextureGetSampleCount(handler: com.sun.jna.Pointer?): UInt
+	fun wgpuTextureGetDimension(handler: com.sun.jna.Pointer?): UInt
+	fun wgpuTextureGetFormat(handler: com.sun.jna.Pointer?): UInt
+	fun wgpuTextureGetUsage(handler: com.sun.jna.Pointer?): ULong
+	fun wgpuTextureDestroy(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuTextureViewRelease(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuTextureViewSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
 }
 internal val Functions = com.sun.jna.Native.load("wgpu4k", FunctionsInterface::class.java)

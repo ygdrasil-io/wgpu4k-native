@@ -1,9 +1,9 @@
 package ffi
 
-import java.lang.foreign.MemorySegment
+import com.sun.jna.Pointer
 
-actual typealias NativeAddress = MemorySegment
+actual typealias NativeAddress = Pointer
 
 internal fun NativeAddress?.adapt(): Long {
-    return if (this == null) 0 else this.pointer.toAddress()
+    return if (this == null) 0 else this.toAddress()
 }
