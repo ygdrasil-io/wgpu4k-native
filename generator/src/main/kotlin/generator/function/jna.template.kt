@@ -12,6 +12,9 @@ fun List<CLibraryModel.Function>.toJnaFunctionsInterface() = templateBuilder {
             val args = function.args
                 .map { (name, type) -> "${name}: ${type.toAndroidNativeType()}" }
                 .joinToString(", ")
+
+            appendLine("@Suppress(\"INAPPLICABLE_JVM_NAME\")")
+            appendLine("@JvmName(\"${name}\")")
             appendLine("fun $name($args): $returnType")
         }
     }

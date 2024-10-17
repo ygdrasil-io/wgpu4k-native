@@ -51,11 +51,11 @@ private fun CLibraryModel.Type.toArgCall(name: String): String = when (this) {
     CLibraryModel.Primitive.UInt16 ->  "$name.toUShort()"
     CLibraryModel.Primitive.UInt64 ->  "$name.toULong()"
 
-    CLibraryModel.Reference.OpaquePointer -> name
+    CLibraryModel.Reference.OpaquePointer -> "$name ?: com.sun.jna.Pointer(0)"
 
-    is CLibraryModel.Array -> "$name.takeIf { it != com.sun.jna.Pointer.NULL }?.let(::ArrayHolder)"
-    is CLibraryModel.Reference.Callback -> "$name.takeIf { it != com.sun.jna.Pointer.NULL }?.let(::CallbackHolder)"
-    is CLibraryModel.Reference -> "$name.takeIf { it != com.sun.jna.Pointer.NULL }?.let { ${this.name}(it) }"
+    is CLibraryModel.Array -> "$name?.let(::ArrayHolder)"
+    is CLibraryModel.Reference.Callback -> "$name?.let(::CallbackHolder)"
+    is CLibraryModel.Reference -> "$name?.let { ${this.name}(it) }"
     CLibraryModel.Void -> error("unsupported type here")
 }
 
@@ -78,7 +78,7 @@ private fun CLibraryModel.Type.toCallbackJvmType(): String = when (this) {
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer,
     is CLibraryModel.Reference.Structure,
-    is CLibraryModel.Reference.StructureField -> "com.sun.jna.Pointer"
+    is CLibraryModel.Reference.StructureField -> "com.sun.jna.Pointer?"
 
     CLibraryModel.Void -> error("unsupported type here")
 }
