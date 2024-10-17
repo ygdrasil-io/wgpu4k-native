@@ -66,7 +66,7 @@ private fun Builder.toAndroidImplementation(structure: CLibraryModel.Structure, 
 
                 CLibraryModel.Reference.CString -> "handle.$name?.let(::CString)"
                 is CLibraryModel.Array -> "handle.$name?.let(::ArrayHolder)"
-                is CLibraryModel.Reference.Callback -> "handle.$name?.let(::CallbackHolder)"
+                is CLibraryModel.Reference.Callback -> "handle.$name?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }"
                 CLibraryModel.Primitive.Float32,
                 CLibraryModel.Primitive.Float64 -> "handle.$name"
 
@@ -99,7 +99,7 @@ private fun Builder.toAndroidImplementation(structure: CLibraryModel.Structure, 
                 CLibraryModel.Primitive.UInt64 -> "handle.$name = newValue.toLong()"
 
                 CLibraryModel.Reference.OpaquePointer -> "handle.$name = newValue"
-                is CLibraryModel.Reference.Callback,
+                is CLibraryModel.Reference.Callback -> "handle.$name = newValue?.callback"
                 CLibraryModel.Reference.CString,
                 is CLibraryModel.Reference.Pointer,
                 is CLibraryModel.Array -> "handle.$name = newValue?.handler"

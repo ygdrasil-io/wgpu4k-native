@@ -2309,8 +2309,8 @@ actual interface WGPUDeviceLostCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUDeviceLostCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -2333,8 +2333,8 @@ actual interface WGPUDeviceLostCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUDeviceLostCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -2392,8 +2392,8 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -2416,8 +2416,8 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -6889,8 +6889,8 @@ actual interface WGPUBufferMapCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUBufferMapCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -6913,8 +6913,8 @@ actual interface WGPUBufferMapCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUBufferMapCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -6972,8 +6972,8 @@ actual interface WGPUCompilationInfoCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUCompilationInfoCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -6996,8 +6996,8 @@ actual interface WGPUCompilationInfoCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUCompilationInfoCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -7055,8 +7055,8 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUCreateComputePipelineAsyncCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -7079,8 +7079,8 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUCreateComputePipelineAsyncCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -7138,8 +7138,8 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -7162,8 +7162,8 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -7221,8 +7221,8 @@ actual interface WGPUPopErrorScopeCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -7245,8 +7245,8 @@ actual interface WGPUPopErrorScopeCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -7304,8 +7304,8 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUQueueWorkDoneCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -7328,8 +7328,8 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPUQueueWorkDoneCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -7387,8 +7387,8 @@ actual interface WGPURequestAdapterCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPURequestAdapterCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -7411,8 +7411,8 @@ actual interface WGPURequestAdapterCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPURequestAdapterCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -7470,8 +7470,8 @@ actual interface WGPURequestDeviceCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPURequestDeviceCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1
@@ -7494,8 +7494,8 @@ actual interface WGPURequestDeviceCallbackInfo {
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
 		override var callback: CallbackHolder<WGPURequestDeviceCallback>?
-			get() = handle.callback?.let(::CallbackHolder)
-			set(newValue) { handle.callback = newValue?.handler }
+			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
+			set(newValue) { handle.callback = newValue?.callback }
 
 		override var userdata1: NativeAddress?
 			get() = handle.userdata1

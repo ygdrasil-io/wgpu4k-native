@@ -64,6 +64,6 @@ private fun CLibraryModel.Type.toJnaType(): String  = when (this) {
     is CLibraryModel.Primitive -> toPrimitiveKotlinType()
     is CLibraryModel.Reference.Structure -> "${name}.ByReference?"
     is CLibraryModel.Reference.StructureField -> "${name}.ByValue"
-    //is CLibraryModel.Reference.Callback -> TODO()
+    is CLibraryModel.Reference.Callback -> "com.sun.jna.Callback"
     else -> "com.sun.jna.Pointer"
 }

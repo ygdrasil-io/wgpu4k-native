@@ -68,7 +68,7 @@ fun getAdapter(surface: WGPUSurface, instance: WGPUInstance) = memoryScope { sco
             userdata1: NativeAddress,
             userdata2: NativeAddress
         ) {
-            if (status != 1u && adapter == null) error("fail to get adapter")
+            if (status != 1u || adapter == null) error("fail to get adapter")
             fetchedAdapter = adapter
         }
 
