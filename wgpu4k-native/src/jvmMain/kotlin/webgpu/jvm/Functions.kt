@@ -12,7 +12,6 @@ import ffi.NativeAddress
 import java.lang.foreign.FunctionDescriptor
 
 object Functions {
-
 	fun wgpuCreateInstance(descriptor: java.lang.foreign.MemorySegment): java.lang.foreign.MemorySegment {
 		return wgpuCreateInstanceHandler.invokeExact(descriptor) as java.lang.foreign.MemorySegment
 	}

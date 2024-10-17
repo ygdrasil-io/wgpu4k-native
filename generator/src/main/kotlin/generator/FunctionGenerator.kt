@@ -5,6 +5,7 @@ import commonMainBasePath
 import disclamer
 import domain.CLibraryModel
 import domain.toFunctionKotlinType
+import generator.function.toJvmFunctionsInterface
 import jvmMainBasePath
 import nativeMainBasePath
 import java.io.File
