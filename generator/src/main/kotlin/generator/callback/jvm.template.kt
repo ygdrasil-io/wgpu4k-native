@@ -73,7 +73,7 @@ private fun CLibraryModel.Type.toArgCall(name: String): String = when (this) {
 
     is CLibraryModel.Array -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let(::ArrayHolder)"
     is CLibraryModel.Reference.Callback -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let(::CallbackHolder)"
-    is CLibraryModel.Reference -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let(::${this.name})"
+    is CLibraryModel.Reference -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let { ${this.name}(it) }"
     CLibraryModel.Void -> error("unsupported type here")
 }
 

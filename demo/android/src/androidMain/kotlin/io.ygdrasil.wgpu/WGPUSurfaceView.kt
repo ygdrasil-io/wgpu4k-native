@@ -38,7 +38,7 @@ class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
     override fun surfaceCreated(surfaceHolder: SurfaceHolder) : Unit = memoryScope { scope ->
         val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
         val surface = getSurface(instance, holder)
-        val adapter = getAdapter(surface, instance)
+        val adapter = getAdapter(surface, instance, 0x00000006u)
         val device = getDevice(adapter)
         val compatibleFormat = compatibleFormat(surface, adapter)
         val alphaMode = compatibleAlphaMode(surface, adapter)
