@@ -12,7 +12,22 @@ fun compatibleFormat(surface: WGPUSurface, adapter: WGPUAdapter): UInt = memoryS
         ?: error("no compatible format")
 }
 
-fun configureSurface(device: WGPUDevice, width: Int, height: Int, surface: WGPUSurface, renderingContextFormat: UInt) {
+fun compatibleAlphaMode(surface: WGPUSurface, adapter: WGPUAdapter): UInt = memoryScope { scope ->
+    val surfaceCapabilities = WGPUSurfaceCapabilities.allocate(scope)
+    wgpuSurfaceGetCapabilities(surface, adapter, surfaceCapabilities)
+    if (surfaceCapabilities.alphaModeCount == 0uL) error("no surface alpha mode")
+    return surfaceCapabilities.alphaModes?.handler?.let { Buffer(it, Int.SIZE_BYTES.toULong() * surfaceCapabilities.formatCount) }?.readInt()?.toUInt()
+        ?: error("no compatible alpha mode")
+}
+
+fun configureSurface(
+    device: WGPUDevice,
+    width: Int,
+    height: Int,
+    surface: WGPUSurface,
+    renderingContextFormat: UInt,
+    alphaMode: UInt
+) {
     memoryScope { scope ->
         val configuration = WGPUSurfaceConfiguration.allocate(scope).apply {
             this.device = device
@@ -20,6 +35,7 @@ fun configureSurface(device: WGPUDevice, width: Int, height: Int, surface: WGPUS
             usage = 16u
             this.width = width.toUInt()
             this.height = height.toUInt()
+            this.alphaMode = alphaMode
         }
         wgpuSurfaceConfigure(surface, configuration)
     }
@@ -56,6 +72,7 @@ fun getAdapter(surface: WGPUSurface, instance: WGPUInstance) = memoryScope { sco
     val callbackInfo = WGPURequestAdapterCallbackInfo.allocate(scope)
     val options = WGPURequestAdapterOptions.allocate(scope).apply {
         compatibleSurface = surface
+        backendType = 0x00000006u
     }
 
     var fetchedAdapter: WGPUAdapter? = null

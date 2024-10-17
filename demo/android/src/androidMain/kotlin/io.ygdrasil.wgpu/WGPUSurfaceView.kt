@@ -8,18 +8,18 @@ import android.view.SurfaceView
 import com.sun.jna.Pointer
 import ffi.memoryScope
 import webgpu.HelloTriangleScene
-import webgpu.WGPUChainedStruct
 import webgpu.WGPUInstance
+import webgpu.WGPUInstanceDescriptor
 import webgpu.WGPUSurface
 import webgpu.WGPUSurfaceDescriptor
 import webgpu.WGPUSurfaceSourceAndroidNativeWindow
+import webgpu.compatibleAlphaMode
 import webgpu.compatibleFormat
 import webgpu.configureSurface
 import webgpu.getAdapter
 import webgpu.getDevice
 import webgpu.wgpuCreateInstance
 import webgpu.wgpuInstanceCreateSurface
-import java.lang.foreign.MemorySegment
 
 class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
 
@@ -35,13 +35,14 @@ class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
-    override fun surfaceCreated(surfaceHolder: SurfaceHolder) {
+    override fun surfaceCreated(surfaceHolder: SurfaceHolder) : Unit = memoryScope { scope ->
         val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
         val surface = getSurface(instance, holder)
         val adapter = getAdapter(surface, instance)
         val device = getDevice(adapter)
         val compatibleFormat = compatibleFormat(surface, adapter)
-        configureSurface(device, width, height, surface, compatibleFormat)
+        val alphaMode = compatibleAlphaMode(surface, adapter)
+        configureSurface(device, width, height, surface, compatibleFormat, alphaMode)
 
         scene = HelloTriangleScene(device, compatibleFormat, surface)
         scene?.initialize()

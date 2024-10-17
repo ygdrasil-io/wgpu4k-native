@@ -1,7 +1,6 @@
 @file:OptIn(ExperimentalForeignApi::class)
 
 import cnames.structs.GLFWwindow
-import ffi.NativeAddress
 import ffi.memoryScope
 import glfw.GLFW_CLIENT_API
 import glfw.GLFW_FALSE
@@ -20,7 +19,6 @@ import kotlinx.cinterop.COpaque
 import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.cValue
 import kotlinx.cinterop.interpretCPointer
 import kotlinx.cinterop.interpretObjCPointer
 import kotlinx.cinterop.objcPtr
@@ -28,32 +26,17 @@ import kotlinx.cinterop.reinterpret
 import platform.AppKit.NSWindow
 import platform.QuartzCore.CAMetalLayer
 import webgpu.HelloTriangleScene
-import webgpu.WGPUAdapter
 import webgpu.WGPUChainedStruct
-import webgpu.WGPUDevice
-import webgpu.WGPUDeviceDescriptor
 import webgpu.WGPUInstance
-import webgpu.WGPURequestAdapterCallback
-import webgpu.WGPURequestAdapterCallbackInfo
-import webgpu.WGPURequestAdapterOptions
-import webgpu.WGPURequestAdapterStatus
-import webgpu.WGPURequestDeviceCallback
-import webgpu.WGPURequestDeviceCallbackInfo
-import webgpu.WGPURequestDeviceStatus
-import webgpu.WGPUStringView
 import webgpu.WGPUSurface
-import webgpu.WGPUSurfaceConfiguration
 import webgpu.WGPUSurfaceDescriptor
 import webgpu.WGPUSurfaceSourceMetalLayer
 import webgpu.compatibleFormat
 import webgpu.configureSurface
 import webgpu.getAdapter
 import webgpu.getDevice
-import webgpu.wgpuAdapterRequestDevice
 import webgpu.wgpuCreateInstance
 import webgpu.wgpuInstanceCreateSurface
-import webgpu.wgpuInstanceRequestAdapter
-import webgpu.wgpuSurfaceConfigure
 
 
 fun main() {
@@ -74,7 +57,7 @@ fun main() {
     val adapter = getAdapter(surface, instance)
     val device = getDevice(adapter)
     val compatibleFormat = compatibleFormat(surface, adapter)
-    configureSurface(device, width, height, surface, compatibleFormat)
+    configureSurface(device, width, height, surface, compatibleFormat, alphaMode)
 
     val scene = HelloTriangleScene(device, compatibleFormat, surface)
     scene.initialize()
