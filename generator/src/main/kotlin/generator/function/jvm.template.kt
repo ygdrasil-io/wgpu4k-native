@@ -13,15 +13,15 @@ internal fun List<CLibraryModel.Function>.toJvmFunctionsInterface() = templateBu
 
 private fun Builder.toJvmFunction(function: CLibraryModel.Function) {
     val name = function.name
-    val returnType = function.returnType.toJvmNativeType()
+    val returnType = function.returnType.toKotlinNativeType()
     val args = function.args
-        .map { (name, type) -> "${name}: ${type.toJvmNativeType()}" }
+        .map { (name, type) -> "${name}: ${type.toKotlinNativeType()}" }
         .joinToString(", ")
     appendBlock("fun $name($args): $returnType") {
         val handlerCallArgs = function.args
-            .map { (name, _) -> name }
+            .map { (name, type) -> "$name${type.toJavaExtraConverter()}" }
             .joinToString(", ")
-        appendLine("return ${name}Handler.invokeExact($handlerCallArgs) as ${function.returnType.toJvmNativeType()}")
+        appendLine("return (${name}Handler.invokeExact($handlerCallArgs) as ${function.returnType.toJvmNativeType()})${function.returnType.toKotlinExtraConverter()}")
     }
 
 
@@ -29,6 +29,23 @@ private fun Builder.toJvmFunction(function: CLibraryModel.Function) {
     appendLine("private val ${name}HandlerAddress = findOrThrow(\"$name\")")
     appendLine("private val ${name}Handler = Linker.nativeLinker().downcallHandle(${name}HandlerAddress, ${name}HandlerDescription)")
     newLine()
+}
+
+private fun CLibraryModel.Type.toKotlinExtraConverter(): String = when (this) {
+    CLibraryModel.Primitive.UInt16 -> ".toUShort()"
+    is CLibraryModel.Reference.Enumeration,
+    CLibraryModel.Primitive.Bool,
+    CLibraryModel.Primitive.UInt32 -> ".toUInt()"
+    CLibraryModel.Primitive.UInt64 -> ".toULong()"
+    else -> ""
+}
+private fun CLibraryModel.Type.toJavaExtraConverter(): String = when (this) {
+    CLibraryModel.Primitive.UInt16 -> ".toShort()"
+    is CLibraryModel.Reference.Enumeration,
+    CLibraryModel.Primitive.Bool,
+    CLibraryModel.Primitive.UInt32 -> ".toInt()"
+    CLibraryModel.Primitive.UInt64 -> ".toLong()"
+    else -> ""
 }
 
 private fun CLibraryModel.Function.generateDescriptor(): String {
@@ -61,15 +78,15 @@ internal fun CLibraryModel.Type.toJvmDescriptorType(): String = when (this) {
 
 internal fun CLibraryModel.Type.toJvmNativeType(): String = when (this) {
     is CLibraryModel.Primitive.Int32 -> "Int"
+    CLibraryModel.Primitive.UInt64,
     is CLibraryModel.Primitive.Int64 -> "Long"
     is CLibraryModel.Void -> "Unit"
-    CLibraryModel.Primitive.Bool -> "UInt"
-    CLibraryModel.Primitive.UInt64 -> "ULong"
     CLibraryModel.Primitive.Float64 -> "Double"
     CLibraryModel.Primitive.Float32 -> "Float"
     is CLibraryModel.Reference.Enumeration,
-    CLibraryModel.Primitive.UInt32 -> "UInt"
-    CLibraryModel.Primitive.UInt16 -> "UShort"
+    CLibraryModel.Primitive.Bool,
+    CLibraryModel.Primitive.UInt32 -> "Int"
+    CLibraryModel.Primitive.UInt16 -> "Short"
     is CLibraryModel.Array,
     CLibraryModel.Reference.CString,
     is CLibraryModel.Reference.Callback,
@@ -77,4 +94,13 @@ internal fun CLibraryModel.Type.toJvmNativeType(): String = when (this) {
     is CLibraryModel.Reference.Pointer,
     is CLibraryModel.Reference.Structure,
     is CLibraryModel.Reference.StructureField -> "java.lang.foreign.MemorySegment"
+}
+
+internal fun CLibraryModel.Type.toKotlinNativeType(): String = when (this) {
+    CLibraryModel.Primitive.UInt64 -> "ULong"
+    is CLibraryModel.Reference.Enumeration,
+    CLibraryModel.Primitive.Bool,
+    CLibraryModel.Primitive.UInt32 -> "UInt"
+    CLibraryModel.Primitive.UInt16 -> "UShort"
+    else -> toJvmNativeType()
 }

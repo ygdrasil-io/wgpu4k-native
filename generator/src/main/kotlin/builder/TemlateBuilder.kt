@@ -6,10 +6,15 @@ class Builder(
 ) {
     val textBuilder = StringBuilder()
 
-    fun appendLine(text: String) {
+    fun appendLine(text: String, run: (Builder.() -> Unit)? = null) {
         textBuilder.append("\t".repeat(indent))
         textBuilder.append(text)
         newLine()
+
+        run?.let { run ->
+            Builder(indent + 1).apply(run).toString()
+                .also {textBuilder.append(it)}
+        }
     }
 
     fun appendBlock(text: String, args: String, run: Builder.() -> Unit) {

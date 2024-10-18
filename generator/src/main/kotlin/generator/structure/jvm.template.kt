@@ -29,7 +29,19 @@ internal fun CLibraryModel.Structure.toJvmStructure() = templateBuilder {
             }
             newLine()
             appendBlock("actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  $structureName) -> Unit): ArrayHolder<$structureName>") {
-                appendLine("TODO()")
+                appendLine("return allocator.allocate(${structureSize} * size.toLong())") {
+                    appendBlock(".also") {
+                        appendBlock("(0u until size).forEach", "index") {
+                            appendLine("it.handler.asSlice(index.toLong() * ${structureSize}L)") {
+                                appendLine(".let(::NativeAddress)")
+                                appendLine(".let { $structureName(it) }")
+                                appendLine(".let { provider(index, it) }")
+                            }
+                        }
+                    }
+                    appendLine(".let(::ArrayHolder)")
+                }
+
             }
 
             newLine()

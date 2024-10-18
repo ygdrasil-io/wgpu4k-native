@@ -45,7 +45,16 @@ actual interface WGPUStringView : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUStringView) -> Unit): ArrayHolder<WGPUStringView> {
-			TODO()
+			return allocator.allocate(16 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 16L)
+							.let(::NativeAddress)
+							.let { WGPUStringView(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -109,7 +118,16 @@ actual interface WGPUAdapterInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUAdapterInfo) -> Unit): ArrayHolder<WGPUAdapterInfo> {
-			TODO()
+			return allocator.allocate(88 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 88L)
+							.let(::NativeAddress)
+							.let { WGPUAdapterInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -181,7 +199,16 @@ actual interface WGPUBindGroupDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBindGroupDescriptor) -> Unit): ArrayHolder<WGPUBindGroupDescriptor> {
-			TODO()
+			return allocator.allocate(48 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 48L)
+							.let(::NativeAddress)
+							.let { WGPUBindGroupDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -250,7 +277,16 @@ actual interface WGPUBindGroupEntry : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBindGroupEntry) -> Unit): ArrayHolder<WGPUBindGroupEntry> {
-			TODO()
+			return allocator.allocate(56 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 56L)
+							.let(::NativeAddress)
+							.let { WGPUBindGroupEntry(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -313,7 +349,16 @@ actual interface WGPUBindGroupLayoutDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBindGroupLayoutDescriptor) -> Unit): ArrayHolder<WGPUBindGroupLayoutDescriptor> {
-			TODO()
+			return allocator.allocate(40 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 40L)
+							.let(::NativeAddress)
+							.let { WGPUBindGroupLayoutDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -367,7 +412,16 @@ actual interface WGPUBufferBindingLayout : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBufferBindingLayout) -> Unit): ArrayHolder<WGPUBufferBindingLayout> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUBufferBindingLayout(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -413,7 +467,16 @@ actual interface WGPUSamplerBindingLayout : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSamplerBindingLayout) -> Unit): ArrayHolder<WGPUSamplerBindingLayout> {
-			TODO()
+			return allocator.allocate(16 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 16L)
+							.let(::NativeAddress)
+							.let { WGPUSamplerBindingLayout(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -462,7 +525,16 @@ actual interface WGPUTextureBindingLayout : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTextureBindingLayout) -> Unit): ArrayHolder<WGPUTextureBindingLayout> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUTextureBindingLayout(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -517,7 +589,16 @@ actual interface WGPUStorageTextureBindingLayout : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUStorageTextureBindingLayout) -> Unit): ArrayHolder<WGPUStorageTextureBindingLayout> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUStorageTextureBindingLayout(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -580,7 +661,16 @@ actual interface WGPUBindGroupLayoutEntry : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBindGroupLayoutEntry) -> Unit): ArrayHolder<WGPUBindGroupLayoutEntry> {
-			TODO()
+			return allocator.allocate(112 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 112L)
+							.let(::NativeAddress)
+							.let { WGPUBindGroupLayoutEntry(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -640,7 +730,16 @@ actual interface WGPUBlendComponent : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBlendComponent) -> Unit): ArrayHolder<WGPUBlendComponent> {
-			TODO()
+			return allocator.allocate(12 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 12L)
+							.let(::NativeAddress)
+							.let { WGPUBlendComponent(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -681,7 +780,16 @@ actual interface WGPUBlendState : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBlendState) -> Unit): ArrayHolder<WGPUBlendState> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUBlendState(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -732,7 +840,16 @@ actual interface WGPUBufferDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBufferDescriptor) -> Unit): ArrayHolder<WGPUBufferDescriptor> {
-			TODO()
+			return allocator.allocate(48 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 48L)
+							.let(::NativeAddress)
+							.let { WGPUBufferDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -790,7 +907,16 @@ actual interface WGPUColor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUColor) -> Unit): ArrayHolder<WGPUColor> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUColor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -844,7 +970,16 @@ actual interface WGPUColorTargetState : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUColorTargetState) -> Unit): ArrayHolder<WGPUColorTargetState> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUColorTargetState(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -890,7 +1025,16 @@ actual interface WGPUCommandBufferDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCommandBufferDescriptor) -> Unit): ArrayHolder<WGPUCommandBufferDescriptor> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUCommandBufferDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -929,7 +1073,16 @@ actual interface WGPUCommandEncoderDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCommandEncoderDescriptor) -> Unit): ArrayHolder<WGPUCommandEncoderDescriptor> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUCommandEncoderDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -973,7 +1126,16 @@ actual interface WGPUCompilationInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCompilationInfo) -> Unit): ArrayHolder<WGPUCompilationInfo> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUCompilationInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1047,7 +1209,16 @@ actual interface WGPUCompilationMessage : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCompilationMessage) -> Unit): ArrayHolder<WGPUCompilationMessage> {
-			TODO()
+			return allocator.allocate(88 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 88L)
+							.let(::NativeAddress)
+							.let { WGPUCompilationMessage(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1115,7 +1286,16 @@ actual interface WGPUComputePassDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUComputePassDescriptor) -> Unit): ArrayHolder<WGPUComputePassDescriptor> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUComputePassDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1162,7 +1342,16 @@ actual interface WGPUComputePassTimestampWrites : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUComputePassTimestampWrites) -> Unit): ArrayHolder<WGPUComputePassTimestampWrites> {
-			TODO()
+			return allocator.allocate(16 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 16L)
+							.let(::NativeAddress)
+							.let { WGPUComputePassTimestampWrites(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1216,7 +1405,16 @@ actual interface WGPUProgrammableStageDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUProgrammableStageDescriptor) -> Unit): ArrayHolder<WGPUProgrammableStageDescriptor> {
-			TODO()
+			return allocator.allocate(48 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 48L)
+							.let(::NativeAddress)
+							.let { WGPUProgrammableStageDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1271,7 +1469,16 @@ actual interface WGPUComputePipelineDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUComputePipelineDescriptor) -> Unit): ArrayHolder<WGPUComputePipelineDescriptor> {
-			TODO()
+			return allocator.allocate(80 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 80L)
+							.let(::NativeAddress)
+							.let { WGPUComputePipelineDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1320,7 +1527,16 @@ actual interface WGPUConstantEntry : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUConstantEntry) -> Unit): ArrayHolder<WGPUConstantEntry> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUConstantEntry(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1371,7 +1587,16 @@ actual interface WGPUStencilFaceState : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUStencilFaceState) -> Unit): ArrayHolder<WGPUStencilFaceState> {
-			TODO()
+			return allocator.allocate(16 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 16L)
+							.let(::NativeAddress)
+							.let { WGPUStencilFaceState(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1451,7 +1676,16 @@ actual interface WGPUDepthStencilState : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUDepthStencilState) -> Unit): ArrayHolder<WGPUDepthStencilState> {
-			TODO()
+			return allocator.allocate(72 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 72L)
+							.let(::NativeAddress)
+							.let { WGPUDepthStencilState(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1517,7 +1751,16 @@ actual interface WGPUQueueDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUQueueDescriptor) -> Unit): ArrayHolder<WGPUQueueDescriptor> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUQueueDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1565,7 +1808,16 @@ actual interface WGPUDeviceLostCallbackInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUDeviceLostCallbackInfo) -> Unit): ArrayHolder<WGPUDeviceLostCallbackInfo> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUDeviceLostCallbackInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1619,7 +1871,16 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUUncapturedErrorCallbackInfo) -> Unit): ArrayHolder<WGPUUncapturedErrorCallbackInfo> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUUncapturedErrorCallbackInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1685,7 +1946,16 @@ actual interface WGPUDeviceDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUDeviceDescriptor) -> Unit): ArrayHolder<WGPUDeviceDescriptor> {
-			TODO()
+			return allocator.allocate(136 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 136L)
+							.let(::NativeAddress)
+							.let { WGPUDeviceDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1747,7 +2017,16 @@ actual interface WGPUExtent3D : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUExtent3D) -> Unit): ArrayHolder<WGPUExtent3D> {
-			TODO()
+			return allocator.allocate(12 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 12L)
+							.let(::NativeAddress)
+							.let { WGPUExtent3D(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1809,7 +2088,16 @@ actual interface WGPUFragmentState : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUFragmentState) -> Unit): ArrayHolder<WGPUFragmentState> {
-			TODO()
+			return allocator.allocate(64 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 64L)
+							.let(::NativeAddress)
+							.let { WGPUFragmentState(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1860,7 +2148,16 @@ actual interface WGPUFuture : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUFuture) -> Unit): ArrayHolder<WGPUFuture> {
-			TODO()
+			return allocator.allocate(8 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 8L)
+							.let(::NativeAddress)
+							.let { WGPUFuture(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1896,7 +2193,16 @@ actual interface WGPUFutureWaitInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUFutureWaitInfo) -> Unit): ArrayHolder<WGPUFutureWaitInfo> {
-			TODO()
+			return allocator.allocate(16 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 16L)
+							.let(::NativeAddress)
+							.let { WGPUFutureWaitInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1945,7 +2251,16 @@ actual interface WGPUTextureDataLayout : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTextureDataLayout) -> Unit): ArrayHolder<WGPUTextureDataLayout> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUTextureDataLayout(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -1994,7 +2309,16 @@ actual interface WGPUImageCopyBuffer : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUImageCopyBuffer) -> Unit): ArrayHolder<WGPUImageCopyBuffer> {
-			TODO()
+			return allocator.allocate(40 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 40L)
+							.let(::NativeAddress)
+							.let { WGPUImageCopyBuffer(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2041,7 +2365,16 @@ actual interface WGPUOrigin3D : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUOrigin3D) -> Unit): ArrayHolder<WGPUOrigin3D> {
-			TODO()
+			return allocator.allocate(12 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 12L)
+							.let(::NativeAddress)
+							.let { WGPUOrigin3D(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2095,7 +2428,16 @@ actual interface WGPUImageCopyTexture : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUImageCopyTexture) -> Unit): ArrayHolder<WGPUImageCopyTexture> {
-			TODO()
+			return allocator.allocate(40 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 40L)
+							.let(::NativeAddress)
+							.let { WGPUImageCopyTexture(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2149,7 +2491,16 @@ actual interface WGPUInstanceFeatures : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceFeatures) -> Unit): ArrayHolder<WGPUInstanceFeatures> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUInstanceFeatures(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2192,7 +2543,16 @@ actual interface WGPUInstanceDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceDescriptor) -> Unit): ArrayHolder<WGPUInstanceDescriptor> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUInstanceDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2348,7 +2708,16 @@ actual interface WGPULimits : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPULimits) -> Unit): ArrayHolder<WGPULimits> {
-			TODO()
+			return allocator.allocate(144 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 144L)
+							.let(::NativeAddress)
+							.let { WGPULimits(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2485,7 +2854,16 @@ actual interface WGPUMultisampleState : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUMultisampleState) -> Unit): ArrayHolder<WGPUMultisampleState> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUMultisampleState(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2539,7 +2917,16 @@ actual interface WGPUPipelineLayoutDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUPipelineLayoutDescriptor) -> Unit): ArrayHolder<WGPUPipelineLayoutDescriptor> {
-			TODO()
+			return allocator.allocate(40 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 40L)
+							.let(::NativeAddress)
+							.let { WGPUPipelineLayoutDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2601,7 +2988,16 @@ actual interface WGPUPrimitiveState : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUPrimitiveState) -> Unit): ArrayHolder<WGPUPrimitiveState> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUPrimitiveState(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2661,7 +3057,16 @@ actual interface WGPUQuerySetDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUQuerySetDescriptor) -> Unit): ArrayHolder<WGPUQuerySetDescriptor> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUQuerySetDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2706,7 +3111,16 @@ actual interface WGPURenderBundleDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderBundleDescriptor) -> Unit): ArrayHolder<WGPURenderBundleDescriptor> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPURenderBundleDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2769,7 +3183,16 @@ actual interface WGPURenderBundleEncoderDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderBundleEncoderDescriptor) -> Unit): ArrayHolder<WGPURenderBundleEncoderDescriptor> {
-			TODO()
+			return allocator.allocate(56 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 56L)
+							.let(::NativeAddress)
+							.let { WGPURenderBundleEncoderDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2846,7 +3269,16 @@ actual interface WGPURenderPassColorAttachment : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderPassColorAttachment) -> Unit): ArrayHolder<WGPURenderPassColorAttachment> {
-			TODO()
+			return allocator.allocate(72 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 72L)
+							.let(::NativeAddress)
+							.let { WGPURenderPassColorAttachment(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -2930,7 +3362,16 @@ actual interface WGPURenderPassDepthStencilAttachment : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderPassDepthStencilAttachment) -> Unit): ArrayHolder<WGPURenderPassDepthStencilAttachment> {
-			TODO()
+			return allocator.allocate(40 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 40L)
+							.let(::NativeAddress)
+							.let { WGPURenderPassDepthStencilAttachment(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3010,7 +3451,16 @@ actual interface WGPURenderPassDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderPassDescriptor) -> Unit): ArrayHolder<WGPURenderPassDescriptor> {
-			TODO()
+			return allocator.allocate(64 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 64L)
+							.let(::NativeAddress)
+							.let { WGPURenderPassDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3065,7 +3515,16 @@ actual interface WGPUChainedStruct : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUChainedStruct) -> Unit): ArrayHolder<WGPUChainedStruct> {
-			TODO()
+			return allocator.allocate(16 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 16L)
+							.let(::NativeAddress)
+							.let { WGPUChainedStruct(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3105,7 +3564,16 @@ actual interface WGPURenderPassMaxDrawCount : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderPassMaxDrawCount) -> Unit): ArrayHolder<WGPURenderPassMaxDrawCount> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPURenderPassMaxDrawCount(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3149,7 +3617,16 @@ actual interface WGPURenderPassTimestampWrites : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderPassTimestampWrites) -> Unit): ArrayHolder<WGPURenderPassTimestampWrites> {
-			TODO()
+			return allocator.allocate(16 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 16L)
+							.let(::NativeAddress)
+							.let { WGPURenderPassTimestampWrites(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3211,7 +3688,16 @@ actual interface WGPUVertexState : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUVertexState) -> Unit): ArrayHolder<WGPUVertexState> {
-			TODO()
+			return allocator.allocate(64 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 64L)
+							.let(::NativeAddress)
+							.let { WGPUVertexState(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3286,7 +3772,16 @@ actual interface WGPURenderPipelineDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURenderPipelineDescriptor) -> Unit): ArrayHolder<WGPURenderPipelineDescriptor> {
-			TODO()
+			return allocator.allocate(168 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 168L)
+							.let(::NativeAddress)
+							.let { WGPURenderPipelineDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3356,7 +3851,16 @@ actual interface WGPURequestAdapterOptions : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURequestAdapterOptions) -> Unit): ArrayHolder<WGPURequestAdapterOptions> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPURequestAdapterOptions(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3405,7 +3909,16 @@ actual interface WGPURequiredLimits : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURequiredLimits) -> Unit): ArrayHolder<WGPURequiredLimits> {
-			TODO()
+			return allocator.allocate(152 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 152L)
+							.let(::NativeAddress)
+							.let { WGPURequiredLimits(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3484,7 +3997,16 @@ actual interface WGPUSamplerDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSamplerDescriptor) -> Unit): ArrayHolder<WGPUSamplerDescriptor> {
-			TODO()
+			return allocator.allocate(68 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 68L)
+							.let(::NativeAddress)
+							.let { WGPUSamplerDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3554,7 +4076,16 @@ actual interface WGPUShaderModuleDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUShaderModuleDescriptor) -> Unit): ArrayHolder<WGPUShaderModuleDescriptor> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUShaderModuleDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3597,7 +4128,16 @@ actual interface WGPUShaderSourceSPIRV : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUShaderSourceSPIRV) -> Unit): ArrayHolder<WGPUShaderSourceSPIRV> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUShaderSourceSPIRV(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3639,7 +4179,16 @@ actual interface WGPUShaderSourceWGSL : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUShaderSourceWGSL) -> Unit): ArrayHolder<WGPUShaderSourceWGSL> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUShaderSourceWGSL(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3683,7 +4232,16 @@ actual interface WGPUSupportedFeatures : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSupportedFeatures) -> Unit): ArrayHolder<WGPUSupportedFeatures> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUSupportedFeatures(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3725,7 +4283,16 @@ actual interface WGPUSupportedLimits : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSupportedLimits) -> Unit): ArrayHolder<WGPUSupportedLimits> {
-			TODO()
+			return allocator.allocate(152 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 152L)
+							.let(::NativeAddress)
+							.let { WGPUSupportedLimits(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3789,7 +4356,16 @@ actual interface WGPUSurfaceCapabilities : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceCapabilities) -> Unit): ArrayHolder<WGPUSurfaceCapabilities> {
-			TODO()
+			return allocator.allocate(64 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 64L)
+							.let(::NativeAddress)
+							.let { WGPUSurfaceCapabilities(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3879,7 +4455,16 @@ actual interface WGPUSurfaceConfiguration : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceConfiguration) -> Unit): ArrayHolder<WGPUSurfaceConfiguration> {
-			TODO()
+			return allocator.allocate(64 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 64L)
+							.let(::NativeAddress)
+							.let { WGPUSurfaceConfiguration(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3943,7 +4528,16 @@ actual interface WGPUSurfaceDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceDescriptor) -> Unit): ArrayHolder<WGPUSurfaceDescriptor> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUSurfaceDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -3982,7 +4576,16 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceSourceAndroidNativeWindow) -> Unit): ArrayHolder<WGPUSurfaceSourceAndroidNativeWindow> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUSurfaceSourceAndroidNativeWindow(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4021,7 +4624,16 @@ actual interface WGPUSurfaceSourceMetalLayer : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceSourceMetalLayer) -> Unit): ArrayHolder<WGPUSurfaceSourceMetalLayer> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUSurfaceSourceMetalLayer(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4064,7 +4676,16 @@ actual interface WGPUSurfaceSourceWaylandSurface : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceSourceWaylandSurface) -> Unit): ArrayHolder<WGPUSurfaceSourceWaylandSurface> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUSurfaceSourceWaylandSurface(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4110,7 +4731,16 @@ actual interface WGPUSurfaceSourceWindowsHWND : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceSourceWindowsHWND) -> Unit): ArrayHolder<WGPUSurfaceSourceWindowsHWND> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUSurfaceSourceWindowsHWND(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4156,7 +4786,16 @@ actual interface WGPUSurfaceSourceXCBWindow : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceSourceXCBWindow) -> Unit): ArrayHolder<WGPUSurfaceSourceXCBWindow> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUSurfaceSourceXCBWindow(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4203,7 +4842,16 @@ actual interface WGPUSurfaceSourceXlibWindow : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceSourceXlibWindow) -> Unit): ArrayHolder<WGPUSurfaceSourceXlibWindow> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUSurfaceSourceXlibWindow(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4246,7 +4894,16 @@ actual interface WGPUSurfaceTexture : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceTexture) -> Unit): ArrayHolder<WGPUSurfaceTexture> {
-			TODO()
+			return allocator.allocate(16 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 16L)
+							.let(::NativeAddress)
+							.let { WGPUSurfaceTexture(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4317,7 +4974,16 @@ actual interface WGPUTextureDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTextureDescriptor) -> Unit): ArrayHolder<WGPUTextureDescriptor> {
-			TODO()
+			return allocator.allocate(80 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 80L)
+							.let(::NativeAddress)
+							.let { WGPUTextureDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4413,7 +5079,16 @@ actual interface WGPUTextureViewDescriptor : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTextureViewDescriptor) -> Unit): ArrayHolder<WGPUTextureViewDescriptor> {
-			TODO()
+			return allocator.allocate(64 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 64L)
+							.let(::NativeAddress)
+							.let { WGPUTextureViewDescriptor(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4482,7 +5157,16 @@ actual interface WGPUVertexAttribute : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUVertexAttribute) -> Unit): ArrayHolder<WGPUVertexAttribute> {
-			TODO()
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUVertexAttribute(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4535,7 +5219,16 @@ actual interface WGPUVertexBufferLayout : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUVertexBufferLayout) -> Unit): ArrayHolder<WGPUVertexBufferLayout> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUVertexBufferLayout(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4582,7 +5275,16 @@ actual interface WGPUChainedStructOut : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUChainedStructOut) -> Unit): ArrayHolder<WGPUChainedStructOut> {
-			TODO()
+			return allocator.allocate(16 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 16L)
+							.let(::NativeAddress)
+							.let { WGPUChainedStructOut(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4631,7 +5333,16 @@ actual interface WGPUBufferMapCallbackInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBufferMapCallbackInfo) -> Unit): ArrayHolder<WGPUBufferMapCallbackInfo> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUBufferMapCallbackInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4685,7 +5396,16 @@ actual interface WGPUCompilationInfoCallbackInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCompilationInfoCallbackInfo) -> Unit): ArrayHolder<WGPUCompilationInfoCallbackInfo> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUCompilationInfoCallbackInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4739,7 +5459,16 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCreateComputePipelineAsyncCallbackInfo) -> Unit): ArrayHolder<WGPUCreateComputePipelineAsyncCallbackInfo> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUCreateComputePipelineAsyncCallbackInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4793,7 +5522,16 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCreateRenderPipelineAsyncCallbackInfo) -> Unit): ArrayHolder<WGPUCreateRenderPipelineAsyncCallbackInfo> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUCreateRenderPipelineAsyncCallbackInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4847,7 +5585,16 @@ actual interface WGPUPopErrorScopeCallbackInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUPopErrorScopeCallbackInfo) -> Unit): ArrayHolder<WGPUPopErrorScopeCallbackInfo> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUPopErrorScopeCallbackInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4901,7 +5648,16 @@ actual interface WGPUQueueWorkDoneCallbackInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUQueueWorkDoneCallbackInfo) -> Unit): ArrayHolder<WGPUQueueWorkDoneCallbackInfo> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUQueueWorkDoneCallbackInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -4955,7 +5711,16 @@ actual interface WGPURequestAdapterCallbackInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURequestAdapterCallbackInfo) -> Unit): ArrayHolder<WGPURequestAdapterCallbackInfo> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPURequestAdapterCallbackInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
@@ -5009,7 +5774,16 @@ actual interface WGPURequestDeviceCallbackInfo : CStructure {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURequestDeviceCallbackInfo) -> Unit): ArrayHolder<WGPURequestDeviceCallbackInfo> {
-			TODO()
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPURequestDeviceCallbackInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
 		}
 
 		internal val LAYOUT = structLayout(
