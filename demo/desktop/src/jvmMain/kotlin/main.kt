@@ -29,6 +29,7 @@ import webgpu.WGPUSurfaceSourceWindowsHWND
 import webgpu.WGPUSurfaceSourceXlibWindow
 import webgpu.compatibleAlphaMode
 import webgpu.compatibleFormat
+import webgpu.configureLogs
 import webgpu.configureSurface
 import webgpu.getAdapter
 import webgpu.getDevice
@@ -38,8 +39,6 @@ import webgpu.wgpuSetLogCallback
 import webgpu.wgpuSetLogLevel
 import java.lang.foreign.MemorySegment
 
-val allocator = MemoryAllocator()
-
 fun main() {
     val width = 640
     val height = 480
@@ -47,14 +46,7 @@ fun main() {
 
     LibraryLoader.load()
 
-    val callback = WGPULogCallback.allocate(allocator, object : WGPULogCallback {
-        override fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress) {
-            println("${level} : ${message?.data?.toKString()}")
-        }
-
-    })
-    wgpuSetLogLevel(0x00000005u)
-    wgpuSetLogCallback(callback, null)
+    configureLogs()
 
     glfwInit()
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)

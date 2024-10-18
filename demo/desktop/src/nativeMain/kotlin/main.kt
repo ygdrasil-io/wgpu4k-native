@@ -38,6 +38,7 @@ import webgpu.WGPUSurfaceDescriptor
 import webgpu.WGPUSurfaceSourceMetalLayer
 import webgpu.compatibleAlphaMode
 import webgpu.compatibleFormat
+import webgpu.configureLogs
 import webgpu.configureSurface
 import webgpu.getAdapter
 import webgpu.getDevice
@@ -46,22 +47,12 @@ import webgpu.wgpuInstanceCreateSurface
 import webgpu.wgpuSetLogCallback
 import webgpu.wgpuSetLogLevel
 
-
-val allocator = MemoryAllocator()
-
 fun main() {
     val width = 640
     val height = 480
     val title = "GLFW+WebGPU"
 
-    val callback = WGPULogCallback.allocate(allocator, object : WGPULogCallback {
-        override fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress) {
-            println("${level} : ${message?.data?.toKString()}")
-        }
-
-    })
-    wgpuSetLogLevel(0x00000005u)
-    wgpuSetLogCallback(callback, allocator.bufferOf(callback.handler).handler)
+    configureLogs()
 
     glfwInit()
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)

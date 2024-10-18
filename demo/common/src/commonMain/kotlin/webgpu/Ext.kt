@@ -1,8 +1,22 @@
 package webgpu
 
 import ffi.Buffer
+import ffi.MemoryAllocator
 import ffi.NativeAddress
 import ffi.memoryScope
+
+val allocator = MemoryAllocator()
+
+fun configureLogs() {
+    val callback = WGPULogCallback.allocate(allocator, object : WGPULogCallback {
+        override fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress) {
+            println("${level} : ${message?.data?.toKString(message?.length ?: 0uL)}")
+        }
+
+    })
+    wgpuSetLogLevel(0x00000005u)
+    wgpuSetLogCallback(callback, allocator.bufferOfAddress(callback.handler).handler)
+}
 
 fun compatibleFormat(surface: WGPUSurface, adapter: WGPUAdapter): UInt = memoryScope { scope ->
     val surfaceCapabilities = WGPUSurfaceCapabilities.allocate(scope)
