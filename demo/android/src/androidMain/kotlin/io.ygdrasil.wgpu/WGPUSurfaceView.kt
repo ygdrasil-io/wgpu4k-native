@@ -62,6 +62,7 @@ class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
 
         scene = HelloTriangleScene(device, compatibleFormat, surface)
         scene?.initialize()
+        setWillNotDraw(false)
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) { }
