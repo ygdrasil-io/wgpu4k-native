@@ -42,7 +42,7 @@ private fun CLibraryModel.Type.toNativeCallbackArgCall(name: String): String = w
     is CLibraryModel.Primitive -> name
     is CLibraryModel.Reference.StructureField -> "$name.useContents { ${this.name}.allocate(globalMemory).also(::adapt) }"
     is CLibraryModel.Reference.Pointer -> "$name?.rawValue?.toLong()?.let(::${this.name})"
-    is CLibraryModel.Reference.Structure -> "$name?.rawValue?.toLong()?.let(::${this.name})"
+    is CLibraryModel.Reference.Structure -> "$name?.rawValue?.toLong()?.let { ${this.name}(it) }"
     CLibraryModel.Reference.CString -> "$name?.rawValue?.toLong()?.let(::CString)"
     CLibraryModel.Void -> error("unsupported type")
     else -> "$name?.rawValue?.toLong() ?: 0L"

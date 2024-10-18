@@ -31,6 +31,7 @@ import webgpu.WGPUInstance
 import webgpu.WGPUSurface
 import webgpu.WGPUSurfaceDescriptor
 import webgpu.WGPUSurfaceSourceMetalLayer
+import webgpu.compatibleAlphaMode
 import webgpu.compatibleFormat
 import webgpu.configureSurface
 import webgpu.getAdapter
@@ -57,6 +58,7 @@ fun main() {
     val adapter = getAdapter(surface, instance)
     val device = getDevice(adapter)
     val compatibleFormat = compatibleFormat(surface, adapter)
+    val alphaMode = compatibleAlphaMode(surface, adapter)
     configureSurface(device, width, height, surface, compatibleFormat, alphaMode)
 
     val scene = HelloTriangleScene(device, compatibleFormat, surface)
@@ -88,7 +90,7 @@ private fun getSurfaceFromMetalLayer(instance: WGPUInstance, metalLayer: COpaque
         nextInChain = WGPUSurfaceSourceMetalLayer.allocate(scope).apply {
             chain.sType = 0x00000004u
             layer = metalLayer.rawValue.toLong()
-        }.let { WGPUChainedStruct(it.handler) }
+        }.handler
     }
 
     return wgpuInstanceCreateSurface(instance, surfaceDescriptor)

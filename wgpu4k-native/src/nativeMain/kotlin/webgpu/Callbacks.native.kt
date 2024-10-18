@@ -43,7 +43,7 @@ actual interface WGPUCompilationInfoCallback : Callback {
 				val address = userdata2?.reinterpret<LongVar>()?.pointed?.value ?: error("Missing callback address on last argument")
 				val callback = findCallback<WGPUCompilationInfoCallback>(address)
 					?: error("Callback not found with address $address and type WGPUCompilationInfoCallback")
-				callback.invoke(status, compilationInfo?.rawValue?.toLong()?.let(::WGPUCompilationInfo), userdata1?.rawValue?.toLong() ?: 0L, userdata2?.rawValue?.toLong() ?: 0L)
+				callback.invoke(status, compilationInfo?.rawValue?.toLong()?.let { WGPUCompilationInfo(it) }, userdata1?.rawValue?.toLong() ?: 0L, userdata2?.rawValue?.toLong() ?: 0L)
 			}
 			registerCallback(actualCallback.rawValue.toLong(), callback)
 			return CallbackHolder(actualCallback.rawValue.toLong(), actualCallback)

@@ -1,5 +1,6 @@
 package generator.structure
 
+import builder.Builder
 import builder.templateBuilder
 import converter.variableType
 import domain.CLibraryModel
@@ -7,11 +8,118 @@ import domain.toFunctionKotlinType
 
 internal fun CLibraryModel.Structure.toNativeStructure() = templateBuilder {
     val structureName = name
-    appendBlock("actual value class $name(actual val handler: NativeAddress)") {
+    appendBlock("actual interface $name") {
+
+        toNativeImplementation(this@toNativeStructure)
+        newLine()
         members.forEach { (name, type, optional) ->
+            appendLine("actual ${type.variableType()} $name: ${type.toFunctionKotlinType()}$optional")
+        }
+        appendLine("actual val handler: NativeAddress")
+        newLine()
+        appendBlock("actual companion object") {
+            appendBlock("actual operator fun invoke(address: NativeAddress): $structureName") {
+                appendLine("return ByReference(address)")
+            }
+            newLine()
+            appendBlock("actual fun allocate(allocator: MemoryAllocator): $structureName") {
+                appendLine("return allocator.allocate(sizeOf<webgpu.native.$structureName>())") {
+                    appendLine(".let { $structureName(it) }")
+                }
+            }
+            newLine()
+            appendBlock("actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  $structureName) -> Unit): ArrayHolder<$structureName>") {
+                appendLine("return allocator.allocate(sizeOf<webgpu.native.$structureName>() * size.toLong())") {
+                    appendBlock(".also") {
+                        appendBlock("(0u until size).forEach", "index") {
+                            appendLine("(it + index.toLong() * sizeOf<webgpu.native.$structureName>())") {
+                                appendLine(".let { $structureName(it) }")
+                                appendLine(".let { provider(index, it) }")
+                            }
+                        }
+                    }
+                    appendLine(".let(::ArrayHolder)")
+                }
+
+            }
+        }
+        appendBlock("fun toCValue(): CValue<webgpu.native.$structureName>") {
+            appendBlock("return cValue<webgpu.native.$structureName>") {
+                members
+                    .filter { (_, type, _) -> type is CLibraryModel.Reference.StructureField }
+                    .forEach { (name, _, _) ->
+                        appendLine("$name.adapt(this@$structureName.$name)")
+                    }
+                members
+                    .filter { (_, type, _) -> type !is CLibraryModel.Reference.StructureField }
+                    .forEach { (name, type, _) ->
+                    val adapter = when (type) {
+                        CLibraryModel.Reference.OpaquePointer -> "?.toCPointer()"
+                        is CLibraryModel.Reference.Pointer,
+                        is CLibraryModel.Reference.Structure,
+                        CLibraryModel.Reference.CString,
+                        is CLibraryModel.Reference.Callback,
+                        is CLibraryModel.Array -> "?.handler?.toCPointer()"
+                        CLibraryModel.Primitive.Bool -> ".toUInt()"
+                        CLibraryModel.Primitive.Float32,
+                        CLibraryModel.Primitive.Float64,
+                        CLibraryModel.Primitive.Int32,
+                        CLibraryModel.Primitive.Int64,
+                        CLibraryModel.Primitive.UInt16,
+                        CLibraryModel.Primitive.UInt32,
+                        CLibraryModel.Primitive.UInt64,
+                        is CLibraryModel.Reference.Enumeration -> ""
+                        is CLibraryModel.Reference.StructureField,
+                            CLibraryModel.Void -> error("$type is not allowed")
+                    }
+                    appendLine("$name = this@$structureName.$name$adapter")
+                }
+            }
+        }
+    }
+    newLine()
+    appendBlock("fun webgpu.native.$structureName.adapt(structure: $name)") {
+        members
+            .filter { (_, type, _) -> type is CLibraryModel.Reference.StructureField }
+            .forEach { (name, _, _) ->
+                appendLine("$name.adapt(structure.$name)")
+            }
+        members
+            .filter { (_, type, _) -> type !is CLibraryModel.Reference.StructureField }
+            .forEach { (name, type, _) ->
+                val adapter = when (type) {
+                    CLibraryModel.Reference.OpaquePointer -> "?.toCPointer()"
+                    is CLibraryModel.Reference.Pointer,
+                    is CLibraryModel.Reference.Structure,
+                    CLibraryModel.Reference.CString,
+                    is CLibraryModel.Reference.Callback,
+                    is CLibraryModel.Array -> "?.handler?.toCPointer()"
+                    CLibraryModel.Primitive.Bool -> ".toUInt()"
+                    CLibraryModel.Primitive.Float32,
+                    CLibraryModel.Primitive.Float64,
+                    CLibraryModel.Primitive.Int32,
+                    CLibraryModel.Primitive.Int64,
+                    CLibraryModel.Primitive.UInt16,
+                    CLibraryModel.Primitive.UInt32,
+                    CLibraryModel.Primitive.UInt64,
+                    is CLibraryModel.Reference.Enumeration -> ""
+                    is CLibraryModel.Reference.StructureField,
+                    CLibraryModel.Void -> error("$type is not allowed")
+                }
+                appendLine("$name = structure.$name$adapter")
+            }
+    }
+    newLine()
+}
+
+private fun Builder.toNativeImplementation(structure: CLibraryModel.Structure) {
+    val structureName = structure.name
+    appendBlock("value class ByReference(override val handler: NativeAddress) : $structureName") {
+
+        structure.members.forEach { (name, type, optional) ->
             val variableType = type.variableType()
             val nativeAccessor = "handler.toCPointer<webgpu.native.$structureName>()?.pointed"
-            appendLine("actual $variableType $name: ${type.toFunctionKotlinType()}$optional")
+            appendLine("override $variableType $name: ${type.toFunctionKotlinType()}$optional")
             // Getter
             when (type) {
                 is CLibraryModel.Reference.OpaquePointer
@@ -100,77 +208,5 @@ internal fun CLibraryModel.Structure.toNativeStructure() = templateBuilder {
                 CLibraryModel.Void -> error("void is not allowed")
             }?.let { appendLine("\tset(newValue) { $it } \n") } ?: newLine()
         }
-        appendBlock("actual companion object") {
-            appendBlock("actual fun allocate(allocator: MemoryAllocator): $structureName") {
-                appendLine("return allocator.allocate(sizeOf<webgpu.native.$structureName>())")
-                appendLine("\t.let(::$structureName)")
-            }
-        }
-        appendBlock("fun toCValue(): CValue<webgpu.native.$structureName>") {
-            appendBlock("return cValue<webgpu.native.$structureName>") {
-                members
-                    .filter { (_, type, _) -> type is CLibraryModel.Reference.StructureField }
-                    .forEach { (name, _, _) ->
-                        appendLine("$name.adapt(this@$structureName.$name)")
-                    }
-                members
-                    .filter { (_, type, _) -> type !is CLibraryModel.Reference.StructureField }
-                    .forEach { (name, type, _) ->
-                    val adapter = when (type) {
-                        CLibraryModel.Reference.OpaquePointer -> "?.toCPointer()"
-                        is CLibraryModel.Reference.Pointer,
-                        is CLibraryModel.Reference.Structure,
-                        CLibraryModel.Reference.CString,
-                        is CLibraryModel.Reference.Callback,
-                        is CLibraryModel.Array -> "?.handler?.toCPointer()"
-                        CLibraryModel.Primitive.Bool -> ".toUInt()"
-                        CLibraryModel.Primitive.Float32,
-                        CLibraryModel.Primitive.Float64,
-                        CLibraryModel.Primitive.Int32,
-                        CLibraryModel.Primitive.Int64,
-                        CLibraryModel.Primitive.UInt16,
-                        CLibraryModel.Primitive.UInt32,
-                        CLibraryModel.Primitive.UInt64,
-                        is CLibraryModel.Reference.Enumeration -> ""
-                        is CLibraryModel.Reference.StructureField,
-                            CLibraryModel.Void -> error("$type is not allowed")
-                    }
-                    appendLine("$name = this@$structureName.$name$adapter")
-                }
-            }
-        }
     }
-    newLine()
-    appendBlock("fun webgpu.native.$structureName.adapt(structure: $name)") {
-        members
-            .filter { (_, type, _) -> type is CLibraryModel.Reference.StructureField }
-            .forEach { (name, _, _) ->
-                appendLine("$name.adapt(structure.$name)")
-            }
-        members
-            .filter { (_, type, _) -> type !is CLibraryModel.Reference.StructureField }
-            .forEach { (name, type, _) ->
-                val adapter = when (type) {
-                    CLibraryModel.Reference.OpaquePointer -> "?.toCPointer()"
-                    is CLibraryModel.Reference.Pointer,
-                    is CLibraryModel.Reference.Structure,
-                    CLibraryModel.Reference.CString,
-                    is CLibraryModel.Reference.Callback,
-                    is CLibraryModel.Array -> "?.handler?.toCPointer()"
-                    CLibraryModel.Primitive.Bool -> ".toUInt()"
-                    CLibraryModel.Primitive.Float32,
-                    CLibraryModel.Primitive.Float64,
-                    CLibraryModel.Primitive.Int32,
-                    CLibraryModel.Primitive.Int64,
-                    CLibraryModel.Primitive.UInt16,
-                    CLibraryModel.Primitive.UInt32,
-                    CLibraryModel.Primitive.UInt64,
-                    is CLibraryModel.Reference.Enumeration -> ""
-                    is CLibraryModel.Reference.StructureField,
-                    CLibraryModel.Void -> error("$type is not allowed")
-                }
-                appendLine("$name = structure.$name$adapter")
-            }
-    }
-    newLine()
 }
