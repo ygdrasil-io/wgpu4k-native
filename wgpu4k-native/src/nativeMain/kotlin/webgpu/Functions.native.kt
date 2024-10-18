@@ -5,6 +5,7 @@ package webgpu
 import ffi.CString
 import ffi.NativeAddress
 import ffi.ArrayHolder
+import ffi.CallbackHolder
 import ffi.adapt
 import kotlinx.cinterop.COpaque
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -517,4 +518,10 @@ actual fun wgpuTextureViewRelease(handler: WGPUTextureView?): Unit {
 }
 actual fun wgpuTextureViewSetLabel(handler: WGPUTextureView?, label: WGPUStringView): Unit {
 	 webgpu.native.wgpuTextureViewSetLabel(handler?.handler?.toCPointer(), label.toCValue())
+}
+actual fun wgpuSetLogLevel(level: WGPULogLevel): Unit {
+	 webgpu.native.wgpuSetLogLevel(level)
+}
+actual fun wgpuSetLogCallback(callback: CallbackHolder<WGPULogCallback>?, userdata: NativeAddress?): Unit {
+	 webgpu.native.wgpuSetLogCallback(callback?.handler?.toCPointer(), userdata?.toCPointer<COpaque>())
 }

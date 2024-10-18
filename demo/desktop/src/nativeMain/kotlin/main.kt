@@ -61,7 +61,7 @@ fun main() {
 
     })
     wgpuSetLogLevel(0x00000005u)
-    wgpuSetLogCallback(callback, null)
+    wgpuSetLogCallback(callback, allocator.bufferOf(callback.handler).handler)
 
     glfwInit()
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
