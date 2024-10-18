@@ -39,9 +39,10 @@ fun CLibraryModel.Structure.toAndroidStructure() = templateBuilder {
             appendBlock("actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  $structureName) -> Unit): ArrayHolder<$structureName>") {
                 appendLine("val array = webgpu.android.$structureName.ByValue().toArray(size.toInt())")
                 appendBlock("array.forEachIndexed", "index, structure") {
-                    appendLine("provider(index.toUInt(), $structureName.ByValue(")
-                    appendLine("\tstructure as webgpu.android.$structureName.ByValue")
-                    appendLine("))")
+                    appendLine("(structure as webgpu.android.$structureName.ByValue)") {
+                        appendLine(".also { provider(index.toUInt(), $structureName.ByValue(it)) }")
+                        appendLine(".write()")
+                    }
                 }
                 appendLine("val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer")
                 appendLine("return ArrayHolder(pointer)")

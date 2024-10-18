@@ -1,6 +1,8 @@
 @file:OptIn(ExperimentalForeignApi::class)
 
 import cnames.structs.GLFWwindow
+import ffi.MemoryAllocator
+import ffi.NativeAddress
 import ffi.memoryScope
 import glfw.GLFW_CLIENT_API
 import glfw.GLFW_FALSE
@@ -28,6 +30,9 @@ import platform.QuartzCore.CAMetalLayer
 import webgpu.HelloTriangleScene
 import webgpu.WGPUChainedStruct
 import webgpu.WGPUInstance
+import webgpu.WGPULogCallback
+import webgpu.WGPULogLevel
+import webgpu.WGPUStringView
 import webgpu.WGPUSurface
 import webgpu.WGPUSurfaceDescriptor
 import webgpu.WGPUSurfaceSourceMetalLayer
@@ -38,12 +43,25 @@ import webgpu.getAdapter
 import webgpu.getDevice
 import webgpu.wgpuCreateInstance
 import webgpu.wgpuInstanceCreateSurface
+import webgpu.wgpuSetLogCallback
+import webgpu.wgpuSetLogLevel
 
+
+val allocator = MemoryAllocator()
 
 fun main() {
     val width = 640
     val height = 480
     val title = "GLFW+WebGPU"
+
+    val callback = WGPULogCallback.allocate(allocator, object : WGPULogCallback {
+        override fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress) {
+            println("${level} : ${message?.data?.toKString()}")
+        }
+
+    })
+    wgpuSetLogLevel(0x00000005u)
+    wgpuSetLogCallback(callback, null)
 
     glfwInit()
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)

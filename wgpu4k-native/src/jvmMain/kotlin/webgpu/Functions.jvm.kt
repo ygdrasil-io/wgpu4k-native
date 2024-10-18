@@ -4,6 +4,7 @@ package webgpu
 import ffi.CString
 import ffi.NativeAddress
 import ffi.ArrayHolder
+import ffi.CallbackHolder
 import ffi.adapt
 
 
