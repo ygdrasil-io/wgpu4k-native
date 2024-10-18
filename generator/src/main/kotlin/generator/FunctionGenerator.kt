@@ -28,6 +28,7 @@ private val header = """
     
     import ffi.CString
     import ffi.NativeAddress
+    import ffi.CallbackHolder
     import ffi.ArrayHolder
     
     
@@ -55,6 +56,7 @@ private val nativeHeader = """
     import ffi.CString
     import ffi.NativeAddress
     import ffi.ArrayHolder
+    import ffi.CallbackHolder
     import ffi.adapt
     import kotlinx.cinterop.ExperimentalForeignApi
     import kotlinx.cinterop.toCPointer

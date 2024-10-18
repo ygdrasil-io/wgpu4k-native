@@ -480,5 +480,11 @@ internal interface FunctionsInterface: com.sun.jna.Library {
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuTextureViewSetLabel")
 	fun wgpuTextureViewSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("wgpuSetLogLevel")
+	fun wgpuSetLogLevel(level: UInt): Unit
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("wgpuSetLogCallback")
+	fun wgpuSetLogCallback(callback: com.sun.jna.Callback?, userdata: com.sun.jna.Pointer?): Unit
 }
 internal val Functions = com.sun.jna.Native.load("wgpu4k", FunctionsInterface::class.java)

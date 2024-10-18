@@ -53,6 +53,7 @@ private fun CLibraryModel.Type.toArgCall(name: String): String = when (this) {
 
     CLibraryModel.Reference.OpaquePointer -> "$name ?: com.sun.jna.Pointer(0)"
 
+    is CLibraryModel.Reference.StructureField -> "$name.let { ${this.name}.ByValue(it) }"
     is CLibraryModel.Array -> "$name?.let(::ArrayHolder)"
     is CLibraryModel.Reference.Callback -> "$name?.let(::CallbackHolder)"
     is CLibraryModel.Reference -> "$name?.let { ${this.name}(it) }"
@@ -72,13 +73,13 @@ private fun CLibraryModel.Type.toCallbackJvmType(): String = when (this) {
     CLibraryModel.Primitive.UInt32,
     is CLibraryModel.Reference.Enumeration -> "Int"
 
+    is CLibraryModel.Reference.StructureField -> "webgpu.android.${this.name}.ByValue"
     is CLibraryModel.Array,
     CLibraryModel.Reference.CString,
     is CLibraryModel.Reference.Callback,
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer,
-    is CLibraryModel.Reference.Structure,
-    is CLibraryModel.Reference.StructureField -> "com.sun.jna.Pointer?"
+    is CLibraryModel.Reference.Structure -> "com.sun.jna.Pointer?"
 
     CLibraryModel.Void -> error("unsupported type here")
 }

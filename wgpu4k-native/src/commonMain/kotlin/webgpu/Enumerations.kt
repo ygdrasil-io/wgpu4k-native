@@ -55,3 +55,4 @@ typealias WGPUColorWriteMask = UInt
 typealias WGPUMapMode = UInt
 typealias WGPUShaderStage = UInt
 typealias WGPUTextureUsage = UInt
+typealias WGPULogLevel = UInt

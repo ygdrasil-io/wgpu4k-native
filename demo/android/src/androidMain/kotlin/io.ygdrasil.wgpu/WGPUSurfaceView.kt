@@ -6,10 +6,15 @@ import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.sun.jna.Pointer
+import ffi.MemoryAllocator
+import ffi.NativeAddress
 import ffi.memoryScope
 import webgpu.HelloTriangleScene
 import webgpu.WGPUInstance
 import webgpu.WGPUInstanceDescriptor
+import webgpu.WGPULogCallback
+import webgpu.WGPULogLevel
+import webgpu.WGPUStringView
 import webgpu.WGPUSurface
 import webgpu.WGPUSurfaceDescriptor
 import webgpu.WGPUSurfaceSourceAndroidNativeWindow
@@ -20,10 +25,13 @@ import webgpu.getAdapter
 import webgpu.getDevice
 import webgpu.wgpuCreateInstance
 import webgpu.wgpuInstanceCreateSurface
+import webgpu.wgpuSetLogCallback
+import webgpu.wgpuSetLogLevel
 
 class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
 
     var scene: HelloTriangleScene? = null
+    val allocator = MemoryAllocator()
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -31,6 +39,14 @@ class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
 
     init {
         holder.addCallback(this)
+        val callback = WGPULogCallback.allocate(allocator, object : WGPULogCallback {
+            override fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress) {
+                println("${level} : ${message?.data?.toKString()}")
+            }
+
+        })
+        wgpuSetLogLevel(0x00000005u)
+        wgpuSetLogCallback(callback, null)
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}

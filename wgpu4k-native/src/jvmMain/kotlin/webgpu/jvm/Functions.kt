@@ -1684,4 +1684,23 @@ object Functions {
 	private val wgpuTextureViewSetLabelHandlerAddress = findOrThrow("wgpuTextureViewSetLabel")
 	private val wgpuTextureViewSetLabelHandler = Linker.nativeLinker().downcallHandle(wgpuTextureViewSetLabelHandlerAddress, wgpuTextureViewSetLabelHandlerDescription)
 
+	fun wgpuSetLogLevel(level: UInt): Unit {
+		return (wgpuSetLogLevelHandler.invokeExact(level.toInt()) as Unit)
+	}
+	private val wgpuSetLogLevelHandlerDescription = FunctionDescriptor.ofVoid(
+			C_INT
+		)
+	private val wgpuSetLogLevelHandlerAddress = findOrThrow("wgpuSetLogLevel")
+	private val wgpuSetLogLevelHandler = Linker.nativeLinker().downcallHandle(wgpuSetLogLevelHandlerAddress, wgpuSetLogLevelHandlerDescription)
+
+	fun wgpuSetLogCallback(callback: java.lang.foreign.MemorySegment, userdata: java.lang.foreign.MemorySegment): Unit {
+		return (wgpuSetLogCallbackHandler.invokeExact(callback, userdata) as Unit)
+	}
+	private val wgpuSetLogCallbackHandlerDescription = FunctionDescriptor.ofVoid(
+			C_POINTER,
+			C_POINTER
+		)
+	private val wgpuSetLogCallbackHandlerAddress = findOrThrow("wgpuSetLogCallback")
+	private val wgpuSetLogCallbackHandler = Linker.nativeLinker().downcallHandle(wgpuSetLogCallbackHandlerAddress, wgpuSetLogCallbackHandlerDescription)
+
 }

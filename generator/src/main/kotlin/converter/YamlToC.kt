@@ -13,7 +13,9 @@ import domain.toCType
 internal fun YamlModel.toCModel(): CLibraryModel {
     val pointers = convertToPointer()
     val functions = convertToCLibraryFunctions()
+        .injectWgpuFunctions()
     val enumerations = convertToCLibraryEnumerations()
+        .injectWgpuEnumerations()
     val structures = generateCLibraryStructures()
         .calculateSizeAndPadding()
     val callbacks = callbacks.map {
@@ -30,9 +32,46 @@ internal fun YamlModel.toCModel(): CLibraryModel {
                         "userdata2" to CLibraryModel.Reference.OpaquePointer
                     )
         )
-    }
+    }.injectWgpuCallbacks()
 
     return CLibraryModel(pointers, functions, enumerations, structures, callbacks)
+}
+
+private fun List<CLibraryModel.Callback>.injectWgpuCallbacks(): List<CLibraryModel.Callback> {
+    return this + listOf(
+        CLibraryModel.Callback(
+            "WGPULogCallback",
+            listOf(
+                "level" to CLibraryModel.Reference.Enumeration("WGPULogLevel"),
+                "message" to CLibraryModel.Reference.StructureField("WGPUStringView"),
+                "userdata" to CLibraryModel.Reference.OpaquePointer
+            )
+        )
+    )
+}
+
+private fun List<CLibraryModel.Enumeration>.injectWgpuEnumerations(): List<CLibraryModel.Enumeration> {
+    return this + listOf(
+        CLibraryModel.Enumeration("WGPULogLevel")
+    )
+}
+
+private fun List<CLibraryModel.Function>.injectWgpuFunctions(): List<CLibraryModel.Function> {
+    return this + listOf(
+        CLibraryModel.Function(
+            "wgpuSetLogLevel",
+            CLibraryModel.Void,
+            listOf("level" to CLibraryModel.Reference.Enumeration("WGPULogLevel"))
+        ),
+        CLibraryModel.Function(
+            "wgpuSetLogCallback",
+            CLibraryModel.Void,
+            listOf(
+                "callback" to CLibraryModel.Reference.Callback("WGPULogCallback"),
+                "userdata" to CLibraryModel.Reference.OpaquePointer
+            )
+        )
+    )
 }
 
 private fun YamlModel.generateCLibraryStructures() = structs.map {

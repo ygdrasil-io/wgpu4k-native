@@ -38,6 +38,7 @@ private fun CLibraryModel.Type.toJvmArgCall(name: String) = when(this) {
     is CLibraryModel.Reference.Structure -> "${name}?.toReference()"
     is CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Enumeration -> name
+    is CLibraryModel.Reference.Callback -> "$name?.callback"
     is CLibraryModel.Array,
     is CLibraryModel.Reference -> "$name?.handler"
     else -> name

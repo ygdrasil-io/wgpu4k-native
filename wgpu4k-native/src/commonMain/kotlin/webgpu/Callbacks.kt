@@ -77,3 +77,10 @@ expect interface WGPUUncapturedErrorCallback : Callback {
 	}
 }
 
+expect interface WGPULogCallback : Callback {
+	fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress)
+	companion object {
+		fun allocate(allocator: MemoryAllocator, callback: WGPULogCallback): CallbackHolder<WGPULogCallback>
+	}
+}
+

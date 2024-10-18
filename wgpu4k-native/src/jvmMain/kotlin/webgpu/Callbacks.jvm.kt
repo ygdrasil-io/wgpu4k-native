@@ -343,3 +343,35 @@ actual interface WGPUUncapturedErrorCallback : Callback {
 	}
 }
 
+actual interface WGPULogCallback : Callback {
+	actual fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress)
+	interface Function {
+		fun apply(level: Int, message: java.lang.foreign.MemorySegment, userdata: java.lang.foreign.MemorySegment)
+	}
+	actual companion object {
+		actual fun allocate(allocator: MemoryAllocator, callback: WGPULogCallback): CallbackHolder<WGPULogCallback> {
+			val function = object : Function {
+				override fun apply(level: Int, message: java.lang.foreign.MemorySegment, userdata: java.lang.foreign.MemorySegment) {
+					callback.invoke(level.toUInt(), message.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUStringView(it) }, userdata.let(::NativeAddress))
+				}
+			}
+			return java.lang.foreign.Linker.nativeLinker().upcallStub(
+				handler.bindTo(function),
+				descriptor,
+				allocator.arena
+			).let(::NativeAddress)
+				.let(::CallbackHolder)
+		}
+		private val descriptor: java.lang.foreign.FunctionDescriptor = java.lang.foreign.FunctionDescriptor.ofVoid(
+			ffi.C_INT,
+			WGPUStringView.LAYOUT,
+			ffi.C_POINTER,
+		)
+		private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(
+			Function::class.java,
+			"apply",
+			descriptor
+		)
+	}
+}
+

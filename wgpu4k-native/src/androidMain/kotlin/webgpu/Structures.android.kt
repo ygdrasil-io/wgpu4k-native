@@ -62,6 +62,7 @@ actual interface WGPUStringView {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUStringView {
 			return webgpu.android.WGPUStringView.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -182,6 +183,7 @@ actual interface WGPUAdapterInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUAdapterInfo {
 			return webgpu.android.WGPUAdapterInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -272,6 +274,7 @@ actual interface WGPUBindGroupDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUBindGroupDescriptor {
 			return webgpu.android.WGPUBindGroupDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -382,6 +385,7 @@ actual interface WGPUBindGroupEntry {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUBindGroupEntry {
 			return webgpu.android.WGPUBindGroupEntry.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -463,6 +467,7 @@ actual interface WGPUBindGroupLayoutDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUBindGroupLayoutDescriptor {
 			return webgpu.android.WGPUBindGroupLayoutDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -546,6 +551,7 @@ actual interface WGPUBufferBindingLayout {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUBufferBindingLayout {
 			return webgpu.android.WGPUBufferBindingLayout.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -611,6 +617,7 @@ actual interface WGPUSamplerBindingLayout {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSamplerBindingLayout {
 			return webgpu.android.WGPUSamplerBindingLayout.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -694,6 +701,7 @@ actual interface WGPUTextureBindingLayout {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUTextureBindingLayout {
 			return webgpu.android.WGPUTextureBindingLayout.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -777,6 +785,7 @@ actual interface WGPUStorageTextureBindingLayout {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUStorageTextureBindingLayout {
 			return webgpu.android.WGPUStorageTextureBindingLayout.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -879,6 +888,7 @@ actual interface WGPUBindGroupLayoutEntry {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUBindGroupLayoutEntry {
 			return webgpu.android.WGPUBindGroupLayoutEntry.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -953,6 +963,7 @@ actual interface WGPUBlendComponent {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUBlendComponent {
 			return webgpu.android.WGPUBlendComponent.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1014,6 +1025,7 @@ actual interface WGPUBlendState {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUBlendState {
 			return webgpu.android.WGPUBlendState.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1104,6 +1116,7 @@ actual interface WGPUBufferDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUBufferDescriptor {
 			return webgpu.android.WGPUBufferDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1187,6 +1200,7 @@ actual interface WGPUColor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUColor {
 			return webgpu.android.WGPUColor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1270,6 +1284,7 @@ actual interface WGPUColorTargetState {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUColorTargetState {
 			return webgpu.android.WGPUColorTargetState.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1333,6 +1348,7 @@ actual interface WGPUCommandBufferDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUCommandBufferDescriptor {
 			return webgpu.android.WGPUCommandBufferDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1396,6 +1412,7 @@ actual interface WGPUCommandEncoderDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUCommandEncoderDescriptor {
 			return webgpu.android.WGPUCommandEncoderDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1470,6 +1487,7 @@ actual interface WGPUCompilationInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUCompilationInfo {
 			return webgpu.android.WGPUCompilationInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1605,6 +1623,7 @@ actual interface WGPUCompilationMessage {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUCompilationMessage {
 			return webgpu.android.WGPUCompilationMessage.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1677,6 +1696,7 @@ actual interface WGPUComputePassDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUComputePassDescriptor {
 			return webgpu.android.WGPUComputePassDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1751,6 +1771,7 @@ actual interface WGPUComputePassTimestampWrites {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUComputePassTimestampWrites {
 			return webgpu.android.WGPUComputePassTimestampWrites.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1841,6 +1862,7 @@ actual interface WGPUProgrammableStageDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUProgrammableStageDescriptor {
 			return webgpu.android.WGPUProgrammableStageDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1920,6 +1942,7 @@ actual interface WGPUComputePipelineDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUComputePipelineDescriptor {
 			return webgpu.android.WGPUComputePipelineDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -1992,6 +2015,7 @@ actual interface WGPUConstantEntry {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUConstantEntry {
 			return webgpu.android.WGPUConstantEntry.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -2075,6 +2099,7 @@ actual interface WGPUStencilFaceState {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUStencilFaceState {
 			return webgpu.android.WGPUStencilFaceState.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -2217,6 +2242,7 @@ actual interface WGPUDepthStencilState {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUDepthStencilState {
 			return webgpu.android.WGPUDepthStencilState.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -2280,6 +2306,7 @@ actual interface WGPUQueueDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUQueueDescriptor {
 			return webgpu.android.WGPUQueueDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -2363,6 +2390,7 @@ actual interface WGPUDeviceLostCallbackInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUDeviceLostCallbackInfo {
 			return webgpu.android.WGPUDeviceLostCallbackInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -2446,6 +2474,7 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUUncapturedErrorCallbackInfo {
 			return webgpu.android.WGPUUncapturedErrorCallbackInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -2557,6 +2586,7 @@ actual interface WGPUDeviceDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUDeviceDescriptor {
 			return webgpu.android.WGPUDeviceDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -2631,6 +2661,7 @@ actual interface WGPUExtent3D {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUExtent3D {
 			return webgpu.android.WGPUExtent3D.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -2739,6 +2770,7 @@ actual interface WGPUFragmentState {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUFragmentState {
 			return webgpu.android.WGPUFragmentState.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -2795,6 +2827,7 @@ actual interface WGPUFuture {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUFuture {
 			return webgpu.android.WGPUFuture.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -2858,6 +2891,7 @@ actual interface WGPUFutureWaitInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUFutureWaitInfo {
 			return webgpu.android.WGPUFutureWaitInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -2941,6 +2975,7 @@ actual interface WGPUTextureDataLayout {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUTextureDataLayout {
 			return webgpu.android.WGPUTextureDataLayout.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -3013,6 +3048,7 @@ actual interface WGPUImageCopyBuffer {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUImageCopyBuffer {
 			return webgpu.android.WGPUImageCopyBuffer.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -3087,6 +3123,7 @@ actual interface WGPUOrigin3D {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUOrigin3D {
 			return webgpu.android.WGPUOrigin3D.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -3177,6 +3214,7 @@ actual interface WGPUImageCopyTexture {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUImageCopyTexture {
 			return webgpu.android.WGPUImageCopyTexture.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -3251,6 +3289,7 @@ actual interface WGPUInstanceFeatures {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUInstanceFeatures {
 			return webgpu.android.WGPUInstanceFeatures.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -3314,6 +3353,7 @@ actual interface WGPUInstanceDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUInstanceDescriptor {
 			return webgpu.android.WGPUInstanceDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -3640,6 +3680,7 @@ actual interface WGPULimits {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPULimits {
 			return webgpu.android.WGPULimits.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -3723,6 +3764,7 @@ actual interface WGPUMultisampleState {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUMultisampleState {
 			return webgpu.android.WGPUMultisampleState.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -3804,6 +3846,7 @@ actual interface WGPUPipelineLayoutDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUPipelineLayoutDescriptor {
 			return webgpu.android.WGPUPipelineLayoutDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -3905,6 +3948,7 @@ actual interface WGPUPrimitiveState {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUPrimitiveState {
 			return webgpu.android.WGPUPrimitiveState.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -3986,6 +4030,7 @@ actual interface WGPUQuerySetDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUQuerySetDescriptor {
 			return webgpu.android.WGPUQuerySetDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -4049,6 +4094,7 @@ actual interface WGPURenderBundleDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURenderBundleDescriptor {
 			return webgpu.android.WGPURenderBundleDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -4166,6 +4212,7 @@ actual interface WGPURenderBundleEncoderDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURenderBundleEncoderDescriptor {
 			return webgpu.android.WGPURenderBundleEncoderDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -4274,6 +4321,7 @@ actual interface WGPURenderPassColorAttachment {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURenderPassColorAttachment {
 			return webgpu.android.WGPURenderPassColorAttachment.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -4402,6 +4450,7 @@ actual interface WGPURenderPassDepthStencilAttachment {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURenderPassDepthStencilAttachment {
 			return webgpu.android.WGPURenderPassDepthStencilAttachment.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -4510,6 +4559,7 @@ actual interface WGPURenderPassDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURenderPassDescriptor {
 			return webgpu.android.WGPURenderPassDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -4575,6 +4625,7 @@ actual interface WGPUChainedStruct {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUChainedStruct {
 			return webgpu.android.WGPUChainedStruct.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -4638,6 +4689,7 @@ actual interface WGPURenderPassMaxDrawCount {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURenderPassMaxDrawCount {
 			return webgpu.android.WGPURenderPassMaxDrawCount.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -4712,6 +4764,7 @@ actual interface WGPURenderPassTimestampWrites {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURenderPassTimestampWrites {
 			return webgpu.android.WGPURenderPassTimestampWrites.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -4820,6 +4873,7 @@ actual interface WGPUVertexState {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUVertexState {
 			return webgpu.android.WGPUVertexState.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -4931,6 +4985,7 @@ actual interface WGPURenderPipelineDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURenderPipelineDescriptor {
 			return webgpu.android.WGPURenderPipelineDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -5023,6 +5078,7 @@ actual interface WGPURequestAdapterOptions {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURequestAdapterOptions {
 			return webgpu.android.WGPURequestAdapterOptions.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -5086,6 +5142,7 @@ actual interface WGPURequiredLimits {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURequiredLimits {
 			return webgpu.android.WGPURequiredLimits.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -5239,6 +5296,7 @@ actual interface WGPUSamplerDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSamplerDescriptor {
 			return webgpu.android.WGPUSamplerDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -5302,6 +5360,7 @@ actual interface WGPUShaderModuleDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUShaderModuleDescriptor {
 			return webgpu.android.WGPUShaderModuleDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -5374,6 +5433,7 @@ actual interface WGPUShaderSourceSPIRV {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUShaderSourceSPIRV {
 			return webgpu.android.WGPUShaderSourceSPIRV.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -5435,6 +5495,7 @@ actual interface WGPUShaderSourceWGSL {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUShaderSourceWGSL {
 			return webgpu.android.WGPUShaderSourceWGSL.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -5509,6 +5570,7 @@ actual interface WGPUSupportedFeatures {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSupportedFeatures {
 			return webgpu.android.WGPUSupportedFeatures.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -5572,6 +5634,7 @@ actual interface WGPUSupportedLimits {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSupportedLimits {
 			return webgpu.android.WGPUSupportedLimits.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -5691,6 +5754,7 @@ actual interface WGPUSurfaceCapabilities {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSurfaceCapabilities {
 			return webgpu.android.WGPUSurfaceCapabilities.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -5828,6 +5892,7 @@ actual interface WGPUSurfaceConfiguration {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSurfaceConfiguration {
 			return webgpu.android.WGPUSurfaceConfiguration.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -5891,6 +5956,7 @@ actual interface WGPUSurfaceDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSurfaceDescriptor {
 			return webgpu.android.WGPUSurfaceDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -5954,6 +6020,7 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceAndroidNativeWindow {
 			return webgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -6017,6 +6084,7 @@ actual interface WGPUSurfaceSourceMetalLayer {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceMetalLayer {
 			return webgpu.android.WGPUSurfaceSourceMetalLayer.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -6089,6 +6157,7 @@ actual interface WGPUSurfaceSourceWaylandSurface {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceWaylandSurface {
 			return webgpu.android.WGPUSurfaceSourceWaylandSurface.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -6161,6 +6230,7 @@ actual interface WGPUSurfaceSourceWindowsHWND {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceWindowsHWND {
 			return webgpu.android.WGPUSurfaceSourceWindowsHWND.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -6233,6 +6303,7 @@ actual interface WGPUSurfaceSourceXCBWindow {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceXCBWindow {
 			return webgpu.android.WGPUSurfaceSourceXCBWindow.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -6305,6 +6376,7 @@ actual interface WGPUSurfaceSourceXlibWindow {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceXlibWindow {
 			return webgpu.android.WGPUSurfaceSourceXlibWindow.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -6370,6 +6442,7 @@ actual interface WGPUSurfaceTexture {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUSurfaceTexture {
 			return webgpu.android.WGPUSurfaceTexture.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -6503,6 +6576,7 @@ actual interface WGPUTextureDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUTextureDescriptor {
 			return webgpu.android.WGPUTextureDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -6638,6 +6712,7 @@ actual interface WGPUTextureViewDescriptor {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUTextureViewDescriptor {
 			return webgpu.android.WGPUTextureViewDescriptor.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -6712,6 +6787,7 @@ actual interface WGPUVertexAttribute {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUVertexAttribute {
 			return webgpu.android.WGPUVertexAttribute.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -6795,6 +6871,7 @@ actual interface WGPUVertexBufferLayout {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUVertexBufferLayout {
 			return webgpu.android.WGPUVertexBufferLayout.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -6860,6 +6937,7 @@ actual interface WGPUChainedStructOut {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUChainedStructOut {
 			return webgpu.android.WGPUChainedStructOut.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -6943,6 +7021,7 @@ actual interface WGPUBufferMapCallbackInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUBufferMapCallbackInfo {
 			return webgpu.android.WGPUBufferMapCallbackInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -7026,6 +7105,7 @@ actual interface WGPUCompilationInfoCallbackInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUCompilationInfoCallbackInfo {
 			return webgpu.android.WGPUCompilationInfoCallbackInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -7109,6 +7189,7 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUCreateComputePipelineAsyncCallbackInfo {
 			return webgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -7192,6 +7273,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUCreateRenderPipelineAsyncCallbackInfo {
 			return webgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -7275,6 +7357,7 @@ actual interface WGPUPopErrorScopeCallbackInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUPopErrorScopeCallbackInfo {
 			return webgpu.android.WGPUPopErrorScopeCallbackInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -7358,6 +7441,7 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUQueueWorkDoneCallbackInfo {
 			return webgpu.android.WGPUQueueWorkDoneCallbackInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -7441,6 +7525,7 @@ actual interface WGPURequestAdapterCallbackInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURequestAdapterCallbackInfo {
 			return webgpu.android.WGPURequestAdapterCallbackInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 
@@ -7524,6 +7609,7 @@ actual interface WGPURequestDeviceCallbackInfo {
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURequestDeviceCallbackInfo {
 			return webgpu.android.WGPURequestDeviceCallbackInfo.ByReference(address)
+				.also { it.read() }
 				.let(::ByReference)
 		}
 

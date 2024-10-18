@@ -3,6 +3,7 @@ package webgpu
 
 import ffi.CString
 import ffi.NativeAddress
+import ffi.CallbackHolder
 import ffi.ArrayHolder
 import ffi.adapt
 
@@ -511,4 +512,10 @@ actual fun wgpuTextureViewRelease(handler: WGPUTextureView?): Unit
 
 actual fun wgpuTextureViewSetLabel(handler: WGPUTextureView?, label: WGPUStringView): Unit
 	 = webgpu.android.Functions.wgpuTextureViewSetLabel(handler?.handler, label.toCValue())
+
+actual fun wgpuSetLogLevel(level: WGPULogLevel): Unit
+	 = webgpu.android.Functions.wgpuSetLogLevel(level)
+
+actual fun wgpuSetLogCallback(callback: CallbackHolder<WGPULogCallback>?, userdata: NativeAddress?): Unit
+	 = webgpu.android.Functions.wgpuSetLogCallback(callback?.callback, userdata)
 

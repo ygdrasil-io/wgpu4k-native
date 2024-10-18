@@ -35,9 +35,9 @@ internal fun CLibraryModel.Type.toAndroidNativeType(): String = when (this) {
     CLibraryModel.Primitive.UInt16 -> "UShort"
     is CLibraryModel.Reference.StructureField -> "${name}.ByValue"
     is CLibraryModel.Reference.Structure -> "${name}.ByReference?"
+    is CLibraryModel.Reference.Callback -> "com.sun.jna.Callback?"
     is CLibraryModel.Array,
     CLibraryModel.Reference.CString,
-    is CLibraryModel.Reference.Callback,
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer -> "com.sun.jna.Pointer?"
 }

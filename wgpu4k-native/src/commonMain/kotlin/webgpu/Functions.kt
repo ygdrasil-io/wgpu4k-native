@@ -3,6 +3,7 @@ package webgpu
 
 import ffi.CString
 import ffi.NativeAddress
+import ffi.CallbackHolder
 import ffi.ArrayHolder
 
 
@@ -165,3 +166,5 @@ expect fun wgpuTextureGetUsage(handler: WGPUTexture?): ULong
 expect fun wgpuTextureDestroy(handler: WGPUTexture?): Unit
 expect fun wgpuTextureViewRelease(handler: WGPUTextureView?): Unit
 expect fun wgpuTextureViewSetLabel(handler: WGPUTextureView?, label: WGPUStringView): Unit
+expect fun wgpuSetLogLevel(level: WGPULogLevel): Unit
+expect fun wgpuSetLogCallback(callback: CallbackHolder<WGPULogCallback>?, userdata: NativeAddress?): Unit

@@ -27,6 +27,7 @@ fun CLibraryModel.Structure.toAndroidStructure() = templateBuilder {
         appendBlock("actual companion object") {
             appendBlock("actual operator fun invoke(address: NativeAddress): $structureName") {
                 appendLine("return webgpu.android.$structureName.ByReference(address)")
+                appendLine("\t.also { it.read() }")
                 appendLine("\t.let(::ByReference)")
             }
             newLine()
