@@ -1,5 +1,6 @@
 package generator
 
+import builder.templateBuilder
 import commonMainBasePath
 import disclamer
 import domain.CLibraryModel
@@ -20,8 +21,14 @@ internal fun File.generateCommonEnumerations(enumerations: List<CLibraryModel.En
 
     writeText(header)
 
-    enumerations.forEach { function ->
-        appendText("typealias ${function.name} = UInt\n")
-    }
+    templateBuilder {
+        enumerations.forEach { enumeration ->
+            appendLine("typealias ${enumeration.name} = UInt")
+            enumeration.values.forEach { (name, value) ->
+                appendLine("const val ${enumeration.name}_$name : ${enumeration.name} = ${value}u")
+            }
+            newLine()
+        }
+    }.let(::appendText)
 
 }

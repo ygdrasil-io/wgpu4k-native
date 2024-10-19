@@ -1,5 +1,6 @@
 package converter
 
+import convertToEnumValueName
 import convertToKotlinCallbackName
 import convertToKotlinCallbackStructureName
 import convertToKotlinClassName
@@ -8,6 +9,7 @@ import convertToKotlinVariableName
 import domain.CLibraryModel
 import domain.CLibraryModel.Type
 import domain.YamlModel
+import domain.YamlModel.Enum.Entry
 import domain.toCType
 
 internal fun YamlModel.toCModel(): CLibraryModel {
@@ -52,7 +54,14 @@ private fun List<CLibraryModel.Callback>.injectWgpuCallbacks(): List<CLibraryMod
 
 private fun List<CLibraryModel.Enumeration>.injectWgpuEnumerations(): List<CLibraryModel.Enumeration> {
     return this + listOf(
-        CLibraryModel.Enumeration("WGPULogLevel")
+        CLibraryModel.Enumeration("WGPULogLevel", listOf(
+            "Off" to 0x00000000,
+            "Error" to 0x00000001,
+            "Warn" to 0x00000002,
+            "Info" to 0x00000003,
+            "Debug" to 0x00000004,
+            "Trace" to 0x00000005,
+        ))
     )
 }
 
@@ -162,8 +171,16 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
 }
 
 private fun YamlModel.convertToCLibraryEnumerations() =
-    enums.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName()) } +
-            bitflags.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName()) }
+    enums.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertEnumToEnumValues()) } +
+            bitflags.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertToEnumValues()) }
+
+private fun List<YamlModel.Bitflag.Entry>.convertToEnumValues(): List<Pair<String, Int>> = mapIndexed { index, entry ->
+    entry.name.convertToEnumValueName() to index
+}
+
+private fun List<YamlModel.Enum.Entry>.convertEnumToEnumValues(): List<Pair<String, Int>> = mapIndexed { index, entry ->
+    entry.name.convertToEnumValueName() to (entry.value ?: index)
+}
 
 
 private fun YamlModel.convertToCLibraryFunctions(): List<CLibraryModel.Function> = functions

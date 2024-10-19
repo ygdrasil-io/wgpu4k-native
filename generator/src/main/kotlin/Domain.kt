@@ -17,6 +17,10 @@ internal fun String.convertToKotlinClassName() = split("_")
     .joinToString("")
     .let { "WGPU$it" }
 
+internal fun String.convertToEnumValueName() = split("_")
+    .map { component -> component.replaceFirstChar { it.uppercase() } }
+    .joinToString("")
+
 internal fun String.convertToKotlinFunctionName() = split("_")
     .map { component -> component.replaceFirstChar { it.uppercase() } }
     .joinToString("")
