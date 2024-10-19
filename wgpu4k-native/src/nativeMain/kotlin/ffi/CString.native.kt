@@ -15,12 +15,9 @@ actual value class CString actual constructor(actual val handler: NativeAddress)
     actual fun toKString(): String? = handler.reinterpret<ByteVarOf<Byte>>().toKString()
 
     actual fun toKString(size: ULong): String? {
-        println("toKString: $handler")
         return handler.reinterpret<ByteVarOf<Byte>>()
-            .also { println("toCPointer: $it") }
-                ?.readBytes(size.toInt())
-            .also { println("readBytes: $it") }
-                ?.toKString()
+                .readBytes(size.toInt())
+                .toKString()
     }
 }
 

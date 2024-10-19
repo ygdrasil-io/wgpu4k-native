@@ -40,7 +40,7 @@ fun CLibraryModel.Callback.toNativeCallback() = templateBuilder {
 private fun CLibraryModel.Type.toNativeCallbackArgCall(name: String): String = when (this) {
     is CLibraryModel.Reference.Enumeration,
     is CLibraryModel.Primitive -> name
-    is CLibraryModel.Reference.StructureField -> "$name.useContents { ${this.name}.allocate(globalMemory).also(::adapt) }"
+    is CLibraryModel.Reference.StructureField -> "$name.let { ${this.name}.ByValue(it) }"
     is CLibraryModel.Reference.Pointer -> "$name?.let(::NativeAddress)?.let(::${this.name})"
     is CLibraryModel.Reference.Structure -> "$name?.let(::NativeAddress)?.let { ${this.name}(it) }"
     CLibraryModel.Reference.CString -> "$name?.let(::NativeAddress)?.let(::CString)"

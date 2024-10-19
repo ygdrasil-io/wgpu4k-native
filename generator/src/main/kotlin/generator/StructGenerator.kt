@@ -76,6 +76,7 @@ private val headerNative = """
     import ffi.MemoryAllocator
     import kotlinx.cinterop.ExperimentalForeignApi
     import kotlinx.cinterop.pointed
+    import kotlinx.cinterop.useContents
     import kotlinx.cinterop.toCPointer
     import kotlinx.cinterop.toKString
     import kotlinx.cinterop.toLong

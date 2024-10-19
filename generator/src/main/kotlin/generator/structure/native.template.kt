@@ -10,7 +10,8 @@ internal fun CLibraryModel.Structure.toNativeStructure() = templateBuilder {
     val structureName = name
     appendBlock("actual interface $name") {
 
-        toNativeImplementation(this@toNativeStructure)
+        toNativeImplementationByValue(this@toNativeStructure)
+        toNativeImplementationByReference(this@toNativeStructure)
         newLine()
         members.forEach { (name, type, optional) ->
             appendLine("actual ${type.variableType()} $name: ${type.toFunctionKotlinType()}$optional")
@@ -113,7 +114,109 @@ internal fun CLibraryModel.Structure.toNativeStructure() = templateBuilder {
     newLine()
 }
 
-private fun Builder.toNativeImplementation(structure: CLibraryModel.Structure) {
+private fun Builder.toNativeImplementationByValue(structure: CLibraryModel.Structure) {
+    val structureName = structure.name
+    appendBlock("value class ByValue(val handle: CValue<webgpu.native.$structureName>) : $structureName") {
+
+        structure.members.forEach { (name, type, optional) ->
+            val variableType = type.variableType()
+            val nativeAccessor = "handle.useContents { "
+            appendLine("override $variableType $name: ${type.toFunctionKotlinType()}$optional")
+            // Getter
+            when (type) {
+                is CLibraryModel.Reference.OpaquePointer
+                    -> "$nativeAccessor${name}?.let(::NativeAddress)"
+
+                is CLibraryModel.Reference.Enumeration
+                    -> "$nativeAccessor${name} ?: error(\"pointer of $structureName is null\")"
+
+                is CLibraryModel.Primitive.Bool
+                    -> "$nativeAccessor${name}.toBoolean() ?: error(\"pointer of $structureName is null\")"
+
+                is CLibraryModel.Primitive
+                    -> "$nativeAccessor${name} ?: error(\"pointer of $structureName is null\")"
+
+                is CLibraryModel.Reference.CString
+                    -> "$nativeAccessor${name}?.toCString()"
+
+                is CLibraryModel.Reference.Pointer
+                    -> "$nativeAccessor${name}" +
+                        "?.let(::NativeAddress)" +
+                        "?.let { ${type.name}(it) }"
+
+                is CLibraryModel.Reference.StructureField
+                    -> "$nativeAccessor${name}.rawPtr.toLong()" +
+                        ".let(::NativeAddress)" +
+                        ".let { ${type.name}(it) }"
+
+                is CLibraryModel.Reference.Structure
+                    -> "$nativeAccessor${name}" +
+                        "?.let(::NativeAddress)" +
+                        "?.let { ${type.name}(it) }"
+
+                is CLibraryModel.Reference.Callback
+                    -> "$nativeAccessor${name}" +
+                        "?.let(::NativeAddress)" +
+                        "?.let { CallbackHolder<${type.name}>(it) }"
+
+                is CLibraryModel.Array
+                    -> "$nativeAccessor${name}" +
+                        "?.let(::NativeAddress)" +
+                        "?.let { ArrayHolder<${type.subType.toFunctionKotlinType()}>(it) }"
+
+                CLibraryModel.Void -> error("void is not allowed")
+            }.let { appendLine("\tget() = $it }") }
+            // Setter
+            when (type) {
+                is CLibraryModel.Reference.OpaquePointer
+                    -> nativeAccessor +
+                        "${name} = newValue?.reinterpret()"
+
+                is CLibraryModel.Reference.Enumeration
+                    -> nativeAccessor +
+                        "${name} = newValue"
+
+                is CLibraryModel.Reference.CString
+                    -> nativeAccessor +
+                        "${name} = newValue?.handler?.reinterpret()"
+
+                is CLibraryModel.Primitive.Bool
+                    -> nativeAccessor +
+                        "${name} = newValue.toUInt()"
+
+                is CLibraryModel.Primitive
+                    -> nativeAccessor +
+                        "${name} = newValue"
+
+                is CLibraryModel.Reference.Pointer
+                    -> nativeAccessor +
+                        "${name} = newValue?.handler?.reinterpret()"
+
+                is CLibraryModel.Reference.Structure
+                    -> nativeAccessor +
+                        "${name} = newValue?.handler?.reinterpret()"
+
+                is CLibraryModel.Reference.Callback
+                    -> nativeAccessor +
+                        "${name} = newValue?.handler?.reinterpret()"
+
+                is CLibraryModel.Array
+                    -> nativeAccessor +
+                        "${name} = newValue?.handler?.reinterpret()"
+
+                is CLibraryModel.Reference.StructureField -> null
+
+                CLibraryModel.Void -> error("void is not allowed")
+            }?.let { appendLine("\tset(newValue) { $it } } \n") } ?: newLine()
+
+        }
+        appendLine("override val handler: NativeAddress")
+        appendLine("\tget() = error(\"should not be call on CValue\")")
+        newLine()
+    }
+}
+
+private fun Builder.toNativeImplementationByReference(structure: CLibraryModel.Structure) {
     val structureName = structure.name
     appendBlock("value class ByReference(override val handler: NativeAddress) : $structureName") {
 
