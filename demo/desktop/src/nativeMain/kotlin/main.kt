@@ -98,7 +98,7 @@ private fun getSurfaceFromMetalLayer(instance: WGPUInstance, metalLayer: COpaque
     val surfaceDescriptor = WGPUSurfaceDescriptor.allocate(scope).apply {
         nextInChain = WGPUSurfaceSourceMetalLayer.allocate(scope).apply {
             chain.sType = 0x00000004u
-            layer = metalLayer.rawValue.toLong()
+            layer = metalLayer.let(::NativeAddress)
         }.handler
     }
 

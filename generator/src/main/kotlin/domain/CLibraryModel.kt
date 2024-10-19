@@ -75,7 +75,6 @@ internal fun CLibraryModel.Type.toFunctionKotlinType(): String = when (this) {
 }
 
 internal fun CLibraryModel.Type.toCallbackKotlinType(): String = when (this) {
-    is CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Enumeration -> toFunctionKotlinType()
     is CLibraryModel.Reference -> "${toFunctionKotlinType()}?"
     else -> toFunctionKotlinType()

@@ -2,13 +2,27 @@
 
 package ffi
 
+import kotlinx.cinterop.COpaque
 import kotlinx.cinterop.CPointed
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.toCPointer
+import kotlinx.cinterop.toLong
 
-actual typealias NativeAddress = Long
+class Pointer(val pointer: CPointer<COpaque>) {
 
-inline fun <reified T : CPointed>NativeAddress.adapt(): CPointer<T>? {
-    return toCPointer()
+    constructor(pointer: CPointer<*>) : this(pointer.reinterpret())
+    constructor(pointer: Long) : this(pointer.toCPointer<COpaque>() ?: error("Invalid pointer"))
+
+    fun <T : CPointed> reinterpret(): CPointer<T> {
+        return pointer.reinterpret()
+    }
+
+    val rawValue: Long
+        get() = pointer.toLong()
+
 }
+
+actual typealias NativeAddress = Pointer
+

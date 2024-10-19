@@ -5,7 +5,6 @@ import com.sun.jna.platform.win32.Kernel32
 import darwin.CAMetalLayer
 import darwin.NSWindow
 import ffi.LibraryLoader
-import ffi.MemoryAllocator
 import ffi.NativeAddress
 import ffi.memoryScope
 import org.lwjgl.glfw.GLFW.*
@@ -17,11 +16,7 @@ import org.lwjgl.system.MemoryUtil.NULL
 import org.rococoa.ID
 import org.rococoa.Rococoa
 import webgpu.HelloTriangleScene
-import webgpu.WGPUChainedStruct
 import webgpu.WGPUInstance
-import webgpu.WGPULogCallback
-import webgpu.WGPULogLevel
-import webgpu.WGPUStringView
 import webgpu.WGPUSurface
 import webgpu.WGPUSurfaceDescriptor
 import webgpu.WGPUSurfaceSourceMetalLayer
@@ -35,8 +30,6 @@ import webgpu.getAdapter
 import webgpu.getDevice
 import webgpu.wgpuCreateInstance
 import webgpu.wgpuInstanceCreateSurface
-import webgpu.wgpuSetLogCallback
-import webgpu.wgpuSetLogLevel
 import java.lang.foreign.MemorySegment
 
 fun main() {

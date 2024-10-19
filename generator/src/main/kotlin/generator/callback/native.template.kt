@@ -23,14 +23,14 @@ fun CLibraryModel.Callback.toNativeCallback() = templateBuilder {
                     .joinToString(", ")
                 appendBlock("val actualCallback = kotlinx.cinterop.staticCFunction",  args) {
                     val lastArgName = members.last().first
-                    appendLine("val address = $lastArgName?.reinterpret<LongVar>()?.pointed?.value ?: error(\"Missing callback address on last argument\")")
-                    appendLine("val callback = findCallback<$callbackName>(address)")
+                    appendLine("val address = $lastArgName?.reinterpret<LongVar>()?.pointed?.value?.let(::NativeAddress) ?: error(\"Missing callback address on last argument\")")
+                    appendLine("val callback = findCallback<$callbackName>(address.reinterpret<COpaque>())")
                     appendLine("\t?: error(\"Callback not found with address \$address and type $callbackName\")")
                     appendLine("callback.invoke($argsCall)")
                 }
 
-                appendLine("registerCallback(actualCallback.rawValue.toLong(), callback)")
-                appendLine("return CallbackHolder(actualCallback.rawValue.toLong(), actualCallback)")
+                appendLine("registerCallback(actualCallback, callback)")
+                appendLine("return CallbackHolder(actualCallback.let(::NativeAddress), actualCallback)")
             }
         }
     }
@@ -41,11 +41,11 @@ private fun CLibraryModel.Type.toNativeCallbackArgCall(name: String): String = w
     is CLibraryModel.Reference.Enumeration,
     is CLibraryModel.Primitive -> name
     is CLibraryModel.Reference.StructureField -> "$name.useContents { ${this.name}.allocate(globalMemory).also(::adapt) }"
-    is CLibraryModel.Reference.Pointer -> "$name?.rawValue?.toLong()?.let(::${this.name})"
-    is CLibraryModel.Reference.Structure -> "$name?.rawValue?.toLong()?.let { ${this.name}(it) }"
-    CLibraryModel.Reference.CString -> "$name?.rawValue?.toLong()?.let(::CString)"
+    is CLibraryModel.Reference.Pointer -> "$name?.let(::NativeAddress)?.let(::${this.name})"
+    is CLibraryModel.Reference.Structure -> "$name?.let(::NativeAddress)?.let { ${this.name}(it) }"
+    CLibraryModel.Reference.CString -> "$name?.let(::NativeAddress)?.let(::CString)"
     CLibraryModel.Void -> error("unsupported type")
-    else -> "$name?.rawValue?.toLong() ?: 0L"
+    else -> "$name?.let(::NativeAddress)"
 }
 
 private fun CLibraryModel.Type.toNativeCallbackArg(): String = when (this) {

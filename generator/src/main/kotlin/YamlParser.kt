@@ -4,7 +4,6 @@ import domain.YamlModel
 import generator.enumerationCommonMainFile
 import generator.functionsCommonMainFile
 import generator.functionsJvmMainFile
-import generator.functionsNativeMainFile
 import generator.generateAndroidCallback
 import generator.generateAndroidFunctions
 import generator.generateAndroidNativeFunctions
@@ -67,13 +66,13 @@ fun main() {
     }
 
     nativeMainBasePath.apply {
+        generateNativeFunctions(webgpuCModel.functions)
         generateNativeCallback(webgpuCModel.callbacks)
     }
 
     jvmNativeFunctionsMainFile.generateJvmNativeFunctions(webgpuCModel.functions)
 
     functionsCommonMainFile.generateCommonFunctions(webgpuCModel.functions)
-    //functionsNativeMainFile.generateNativeFunctions(webgpuCModel.functions)
     functionsJvmMainFile.generateJvmFunctions(webgpuCModel.functions)
 
     structuresCommonMainFile.generateCommonStructures(webgpuCModel.structures)

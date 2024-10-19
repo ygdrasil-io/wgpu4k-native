@@ -5,6 +5,7 @@ package ffi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.IntVar
 import kotlinx.cinterop.pointed
+import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.toCPointer
 import kotlinx.cinterop.value
 
@@ -24,7 +25,7 @@ actual class Buffer actual constructor(actual val handler: NativeAddress, actual
     }
 
     actual fun readInt(): Int {
-        return handler.toCPointer<IntVar>()?.pointed?.value ?: error("fail to readInt")
+        return handler.reinterpret<IntVar>().pointed.value
     }
 
     actual fun writeInt(value: Int) {

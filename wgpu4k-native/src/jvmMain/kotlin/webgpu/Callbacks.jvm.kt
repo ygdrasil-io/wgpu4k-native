@@ -8,7 +8,7 @@ import ffi.MemoryAllocator
 import ffi.NativeAddress
 
 actual interface WGPUBufferMapCallback : Callback {
-	actual fun invoke(status: WGPUMapAsyncStatus, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPUMapAsyncStatus, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function {
 		fun apply(status: Int, message: java.lang.foreign.MemorySegment, userdata1: java.lang.foreign.MemorySegment, userdata2: java.lang.foreign.MemorySegment)
 	}
@@ -41,7 +41,7 @@ actual interface WGPUBufferMapCallback : Callback {
 }
 
 actual interface WGPUCompilationInfoCallback : Callback {
-	actual fun invoke(status: WGPUCompilationInfoRequestStatus, compilationInfo: WGPUCompilationInfo?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPUCompilationInfoRequestStatus, compilationInfo: WGPUCompilationInfo?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function {
 		fun apply(status: Int, compilationInfo: java.lang.foreign.MemorySegment, userdata1: java.lang.foreign.MemorySegment, userdata2: java.lang.foreign.MemorySegment)
 	}
@@ -74,7 +74,7 @@ actual interface WGPUCompilationInfoCallback : Callback {
 }
 
 actual interface WGPUCreateComputePipelineAsyncCallback : Callback {
-	actual fun invoke(status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function {
 		fun apply(status: Int, pipeline: java.lang.foreign.MemorySegment, message: java.lang.foreign.MemorySegment, userdata1: java.lang.foreign.MemorySegment, userdata2: java.lang.foreign.MemorySegment)
 	}
@@ -108,7 +108,7 @@ actual interface WGPUCreateComputePipelineAsyncCallback : Callback {
 }
 
 actual interface WGPUCreateRenderPipelineAsyncCallback : Callback {
-	actual fun invoke(status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function {
 		fun apply(status: Int, pipeline: java.lang.foreign.MemorySegment, message: java.lang.foreign.MemorySegment, userdata1: java.lang.foreign.MemorySegment, userdata2: java.lang.foreign.MemorySegment)
 	}
@@ -142,7 +142,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallback : Callback {
 }
 
 actual interface WGPUDeviceLostCallback : Callback {
-	actual fun invoke(device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function {
 		fun apply(device: java.lang.foreign.MemorySegment, reason: Int, message: java.lang.foreign.MemorySegment, userdata1: java.lang.foreign.MemorySegment, userdata2: java.lang.foreign.MemorySegment)
 	}
@@ -176,7 +176,7 @@ actual interface WGPUDeviceLostCallback : Callback {
 }
 
 actual interface WGPUPopErrorScopeCallback : Callback {
-	actual fun invoke(status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function {
 		fun apply(status: Int, type: Int, message: java.lang.foreign.MemorySegment, userdata1: java.lang.foreign.MemorySegment, userdata2: java.lang.foreign.MemorySegment)
 	}
@@ -210,7 +210,7 @@ actual interface WGPUPopErrorScopeCallback : Callback {
 }
 
 actual interface WGPUQueueWorkDoneCallback : Callback {
-	actual fun invoke(status: WGPUQueueWorkDoneStatus, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPUQueueWorkDoneStatus, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function {
 		fun apply(status: Int, userdata1: java.lang.foreign.MemorySegment, userdata2: java.lang.foreign.MemorySegment)
 	}
@@ -242,7 +242,7 @@ actual interface WGPUQueueWorkDoneCallback : Callback {
 }
 
 actual interface WGPURequestAdapterCallback : Callback {
-	actual fun invoke(status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function {
 		fun apply(status: Int, adapter: java.lang.foreign.MemorySegment, message: java.lang.foreign.MemorySegment, userdata1: java.lang.foreign.MemorySegment, userdata2: java.lang.foreign.MemorySegment)
 	}
@@ -276,7 +276,7 @@ actual interface WGPURequestAdapterCallback : Callback {
 }
 
 actual interface WGPURequestDeviceCallback : Callback {
-	actual fun invoke(status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function {
 		fun apply(status: Int, device: java.lang.foreign.MemorySegment, message: java.lang.foreign.MemorySegment, userdata1: java.lang.foreign.MemorySegment, userdata2: java.lang.foreign.MemorySegment)
 	}
@@ -310,7 +310,7 @@ actual interface WGPURequestDeviceCallback : Callback {
 }
 
 actual interface WGPUUncapturedErrorCallback : Callback {
-	actual fun invoke(device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function {
 		fun apply(device: java.lang.foreign.MemorySegment, type: Int, message: java.lang.foreign.MemorySegment, userdata1: java.lang.foreign.MemorySegment, userdata2: java.lang.foreign.MemorySegment)
 	}
@@ -344,7 +344,7 @@ actual interface WGPUUncapturedErrorCallback : Callback {
 }
 
 actual interface WGPULogCallback : Callback {
-	actual fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress)
+	actual fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress?)
 	interface Function {
 		fun apply(level: Int, message: java.lang.foreign.MemorySegment, userdata: java.lang.foreign.MemorySegment)
 	}

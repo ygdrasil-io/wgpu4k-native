@@ -1,22 +1,16 @@
 package generator
 
-import androidMainBasePath
 import commonMainBasePath
 import disclamer
 import domain.CLibraryModel
 import domain.toFunctionKotlinType
-import generator.function.toJvmFunctionsInterface
+import generator.function.toNativeFunctionsInterface
 import jvmMainBasePath
-import nativeMainBasePath
 import java.io.File
 
 val functionsCommonMainFile = commonMainBasePath
     .resolve("webgpu")
     .resolve("Functions.kt")
-
-val functionsNativeMainFile = nativeMainBasePath
-    .resolve("webgpu")
-    .resolve("Functions.native.kt")
 
 val functionsJvmMainFile = jvmMainBasePath
     .resolve("webgpu")
@@ -58,7 +52,6 @@ private val nativeHeader = """
     import ffi.NativeAddress
     import ffi.ArrayHolder
     import ffi.CallbackHolder
-    import ffi.adapt
     import kotlinx.cinterop.ExperimentalForeignApi
     import kotlinx.cinterop.toCPointer
     
@@ -107,40 +100,13 @@ private fun CLibraryModel.Type.optional(): String = when (this) {
 }
 
 
-internal fun File.generateNativeFunctions(functions: List<CLibraryModel.Function>) {
-
+internal fun File.generateNativeFunctions(functions: List<CLibraryModel.Function>) = resolve("webgpu")
+    .resolve("Functions.native.kt").apply {
     writeText(nativeHeader)
-
-    functions.forEach { function ->
-        writeNativeFunction(function)
-    }
-
+    functions.toNativeFunctionsInterface()
+        .let(::appendText)
 }
 
-private fun File.writeNativeFunction(function: CLibraryModel.Function) {
-    val name = function.name
-    val returnType = function.returnType.toFunctionKotlinType() + function.returnType.optionalReturnType()
-    val args = function.args
-        .map { (name, type) -> "${name}: ${type.toFunctionKotlinType()}${type.optional()}" }
-        .joinToString(", ")
-    val argsCall = function.args
-        .map { (name, type) -> type.toNativeArgCall(name) }
-        .joinToString(", ")
-    appendText("actual fun $name($args): $returnType {\n")
-    appendText("\t ${if (function.returnType is CLibraryModel.Void) "" else "return "}webgpu.native.$name($argsCall)\n")
-
-    when (function.returnType) {
-        is CLibraryModel.Reference.Enumeration -> null
-        is CLibraryModel.Reference.OpaquePointer -> "?.rawValue?.toLong()"
-        is CLibraryModel.Reference -> {
-            "?.rawValue?.toLong()?.let(::${function.returnType.name})"
-        }
-        is CLibraryModel.Primitive.Bool -> ".toBoolean()"
-        else -> null
-    }?.let { appendText("\t\t$it\n") }
-
-    appendText("}\n")
-}
 
 internal fun File.generateJvmFunctions(functions: List<CLibraryModel.Function>) {
 
@@ -185,12 +151,3 @@ private fun CLibraryModel.Type.toJvmArgCall(name: String) = when(this) {
     else -> name
 }
 
-private fun CLibraryModel.Type.toNativeArgCall(name: String) = when(this) {
-    is CLibraryModel.Reference.StructureField -> "$name.toCValue()"
-    is CLibraryModel.Reference.CString -> "$name?.toKString()"
-    is CLibraryModel.Reference.OpaquePointer -> "$name?.adapt()"
-    is CLibraryModel.Reference.Enumeration -> name
-    is CLibraryModel.Array,
-    is CLibraryModel.Reference -> "$name?.handler?.toCPointer()"
-    else -> name
-}

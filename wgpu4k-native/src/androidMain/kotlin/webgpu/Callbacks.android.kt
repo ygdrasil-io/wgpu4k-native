@@ -8,7 +8,7 @@ import ffi.MemoryAllocator
 import ffi.NativeAddress
 
 actual interface WGPUBufferMapCallback : Callback {
-	actual fun invoke(status: WGPUMapAsyncStatus, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPUMapAsyncStatus, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function : com.sun.jna.Callback {
 		fun apply(status: Int, message: webgpu.android.WGPUStringView.ByValue, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?)
 	}
@@ -25,7 +25,7 @@ actual interface WGPUBufferMapCallback : Callback {
 }
 
 actual interface WGPUCompilationInfoCallback : Callback {
-	actual fun invoke(status: WGPUCompilationInfoRequestStatus, compilationInfo: WGPUCompilationInfo?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPUCompilationInfoRequestStatus, compilationInfo: WGPUCompilationInfo?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function : com.sun.jna.Callback {
 		fun apply(status: Int, compilationInfo: com.sun.jna.Pointer?, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?)
 	}
@@ -42,7 +42,7 @@ actual interface WGPUCompilationInfoCallback : Callback {
 }
 
 actual interface WGPUCreateComputePipelineAsyncCallback : Callback {
-	actual fun invoke(status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function : com.sun.jna.Callback {
 		fun apply(status: Int, pipeline: com.sun.jna.Pointer?, message: webgpu.android.WGPUStringView.ByValue, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?)
 	}
@@ -59,7 +59,7 @@ actual interface WGPUCreateComputePipelineAsyncCallback : Callback {
 }
 
 actual interface WGPUCreateRenderPipelineAsyncCallback : Callback {
-	actual fun invoke(status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function : com.sun.jna.Callback {
 		fun apply(status: Int, pipeline: com.sun.jna.Pointer?, message: webgpu.android.WGPUStringView.ByValue, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?)
 	}
@@ -76,7 +76,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallback : Callback {
 }
 
 actual interface WGPUDeviceLostCallback : Callback {
-	actual fun invoke(device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function : com.sun.jna.Callback {
 		fun apply(device: com.sun.jna.Pointer?, reason: Int, message: webgpu.android.WGPUStringView.ByValue, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?)
 	}
@@ -93,7 +93,7 @@ actual interface WGPUDeviceLostCallback : Callback {
 }
 
 actual interface WGPUPopErrorScopeCallback : Callback {
-	actual fun invoke(status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function : com.sun.jna.Callback {
 		fun apply(status: Int, type: Int, message: webgpu.android.WGPUStringView.ByValue, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?)
 	}
@@ -110,7 +110,7 @@ actual interface WGPUPopErrorScopeCallback : Callback {
 }
 
 actual interface WGPUQueueWorkDoneCallback : Callback {
-	actual fun invoke(status: WGPUQueueWorkDoneStatus, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPUQueueWorkDoneStatus, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function : com.sun.jna.Callback {
 		fun apply(status: Int, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?)
 	}
@@ -127,7 +127,7 @@ actual interface WGPUQueueWorkDoneCallback : Callback {
 }
 
 actual interface WGPURequestAdapterCallback : Callback {
-	actual fun invoke(status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function : com.sun.jna.Callback {
 		fun apply(status: Int, adapter: com.sun.jna.Pointer?, message: webgpu.android.WGPUStringView.ByValue, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?)
 	}
@@ -144,7 +144,7 @@ actual interface WGPURequestAdapterCallback : Callback {
 }
 
 actual interface WGPURequestDeviceCallback : Callback {
-	actual fun invoke(status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function : com.sun.jna.Callback {
 		fun apply(status: Int, device: com.sun.jna.Pointer?, message: webgpu.android.WGPUStringView.ByValue, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?)
 	}
@@ -161,7 +161,7 @@ actual interface WGPURequestDeviceCallback : Callback {
 }
 
 actual interface WGPUUncapturedErrorCallback : Callback {
-	actual fun invoke(device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView?, userdata1: NativeAddress, userdata2: NativeAddress)
+	actual fun invoke(device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function : com.sun.jna.Callback {
 		fun apply(device: com.sun.jna.Pointer?, type: Int, message: webgpu.android.WGPUStringView.ByValue, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?)
 	}
@@ -178,7 +178,7 @@ actual interface WGPUUncapturedErrorCallback : Callback {
 }
 
 actual interface WGPULogCallback : Callback {
-	actual fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress)
+	actual fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress?)
 	interface Function : com.sun.jna.Callback {
 		fun apply(level: Int, message: webgpu.android.WGPUStringView.ByValue, userdata: com.sun.jna.Pointer?)
 	}

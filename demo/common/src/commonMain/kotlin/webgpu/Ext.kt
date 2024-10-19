@@ -9,7 +9,7 @@ val allocator = MemoryAllocator()
 
 fun configureLogs() {
     val callback = WGPULogCallback.allocate(allocator, object : WGPULogCallback {
-        override fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress) {
+        override fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress?) {
             println("${level} : ${message?.data?.toKString(message.length)}")
         }
 
@@ -63,8 +63,8 @@ fun getDevice(adapter: WGPUAdapter): WGPUDevice = memoryScope { scope ->
             status: WGPURequestDeviceStatus,
             device: WGPUDevice?,
             message: WGPUStringView?,
-            userdata1: NativeAddress,
-            userdata2: NativeAddress
+            userdata1: NativeAddress?,
+            userdata2: NativeAddress?
         ) {
             if (status != 1u && device == null) error("fail to get device")
             fetchedDevice = device
@@ -96,8 +96,8 @@ fun getAdapter(surface: WGPUSurface, instance: WGPUInstance, backendType: UInt =
             status: WGPURequestAdapterStatus,
             adapter: WGPUAdapter?,
             message: WGPUStringView?,
-            userdata1: NativeAddress,
-            userdata2: NativeAddress
+            userdata1: NativeAddress?,
+            userdata2: NativeAddress?
         ) {
             if (status != 1u || adapter == null) error("fail to get adapter")
             fetchedAdapter = adapter

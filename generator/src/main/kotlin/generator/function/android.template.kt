@@ -44,7 +44,7 @@ private fun CLibraryModel.Type.toJvmArgCall(name: String) = when(this) {
     else -> name
 }
 
-private fun CLibraryModel.Type.optionalReturnType(): String = when (this) {
+internal fun CLibraryModel.Type.optionalReturnType(): String = when (this) {
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer,
     is CLibraryModel.Reference.Structure,
@@ -54,7 +54,7 @@ private fun CLibraryModel.Type.optionalReturnType(): String = when (this) {
     else -> ""
 }
 
-private fun CLibraryModel.Type.optional(): String = when (this) {
+internal fun CLibraryModel.Type.optional(): String = when (this) {
     CLibraryModel.Void,
     CLibraryModel.Reference.OpaquePointer,
     is CLibraryModel.Reference.Pointer,

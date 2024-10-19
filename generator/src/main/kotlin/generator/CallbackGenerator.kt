@@ -36,6 +36,7 @@ private val nativeHeader = """
     import ffi.findCallback
     import ffi.registerCallback
     import ffi.globalMemory
+    import kotlinx.cinterop.COpaque
     import kotlinx.cinterop.COpaquePointer
     import kotlinx.cinterop.useContents
     import kotlinx.cinterop.ExperimentalForeignApi
