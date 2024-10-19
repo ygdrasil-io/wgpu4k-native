@@ -10,7 +10,7 @@ val allocator = MemoryAllocator()
 fun configureLogs() {
     val callback = WGPULogCallback.allocate(allocator, object : WGPULogCallback {
         override fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress) {
-            println("${level} : ${message?.data?.toKString(message?.length ?: 0uL)}")
+            println("${level} : ${message?.data?.toKString(message.length)}")
         }
 
     })
