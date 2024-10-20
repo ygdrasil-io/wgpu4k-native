@@ -70,14 +70,6 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         return memorySegment.get(ValueLayout.JAVA_BYTE, offset.toLong()).toUByte()
     }
 
-    actual fun writeChar(value: Char, offset: ULong) {
-        memorySegment.set(ValueLayout.JAVA_CHAR, offset.toLong(), value)
-    }
-
-    actual fun readChar(offset: ULong): Char {
-        return memorySegment.get(ValueLayout.JAVA_CHAR, offset.toLong())
-    }
-
     actual fun writeShort(value: Short, offset: ULong) {
         memorySegment.set(ValueLayout.JAVA_SHORT, offset.toLong(), value)
     }

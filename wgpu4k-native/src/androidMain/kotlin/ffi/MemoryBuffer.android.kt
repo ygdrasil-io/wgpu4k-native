@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUnsignedTypes::class)
+
 package ffi
 
 actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, actual val size: ULong) {
@@ -14,13 +16,6 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
     }
 
     actual fun readUByte(offset: ULong): UByte {
-        TODO("Not yet implemented")
-    }
-
-    actual fun writeChar(value: Char, offset: ULong) {
-    }
-
-    actual fun readChar(offset: ULong): Char {
         TODO("Not yet implemented")
     }
 

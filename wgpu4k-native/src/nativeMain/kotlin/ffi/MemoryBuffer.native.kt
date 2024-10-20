@@ -6,15 +6,21 @@ import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.COpaque
 import kotlinx.cinterop.CPointed
 import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.DoubleVar
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.FloatVar
 import kotlinx.cinterop.IntVar
+import kotlinx.cinterop.LongVar
+import kotlinx.cinterop.ShortVar
+import kotlinx.cinterop.UByteVar
+import kotlinx.cinterop.UIntVar
+import kotlinx.cinterop.ULongVar
+import kotlinx.cinterop.UShortVar
 import kotlinx.cinterop.pointed
-import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.toCPointer
 import kotlinx.cinterop.value
 
 actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, actual val size: ULong) {
-
 
     private fun <T : CPointed> getPointerAtOffset(offset: ULong): CPointer<T> {
         return (handler.pointer.rawValue.toLong() + offset.toLong()).toCPointer() ?: error("fail to get pointer at offset $offset")
@@ -25,84 +31,87 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
     }
 
     actual fun readByte(offset: ULong): Byte {
-       return getPointerAtOffset<ByteVar>(offset).pointed.value
+        return getPointerAtOffset<ByteVar>(offset).pointed.value
     }
 
     actual fun writeUByte(value: UByte, offset: ULong) {
+        getPointerAtOffset<UByteVar>(offset).pointed.value = value
     }
 
     actual fun readUByte(offset: ULong): UByte {
-        TODO("Not yet implemented")
-    }
-
-    actual fun writeChar(value: Char, offset: ULong) {
-    }
-
-    actual fun readChar(offset: ULong): Char {
-        TODO("Not yet implemented")
+        return getPointerAtOffset<UByteVar>(offset).pointed.value
     }
 
     actual fun writeShort(value: Short, offset: ULong) {
+        getPointerAtOffset<ShortVar>(offset).pointed.value = value
     }
 
     actual fun readShort(offset: ULong): Short {
-        TODO("Not yet implemented")
+        return getPointerAtOffset<ShortVar>(offset).pointed.value
     }
 
     actual fun writeUShort(value: UShort, offset: ULong) {
+        getPointerAtOffset<UShortVar>(offset).pointed.value = value
     }
 
     actual fun readUShort(offset: ULong): UShort {
-        TODO("Not yet implemented")
+        return getPointerAtOffset<UShortVar>(offset).pointed.value
     }
 
     actual fun writeInt(value: Int, offset: ULong) {
+        getPointerAtOffset<IntVar>(offset).pointed.value = value
     }
 
     actual fun readInt(offset: ULong): Int {
-        TODO("Not yet implemented")
+        return getPointerAtOffset<IntVar>(offset).pointed.value
     }
 
     actual fun writeUInt(value: UInt, offset: ULong) {
+        getPointerAtOffset<UIntVar>(offset).pointed.value = value
     }
 
     actual fun readUInt(offset: ULong): UInt {
-        TODO("Not yet implemented")
+        return getPointerAtOffset<UIntVar>(offset).pointed.value
     }
 
     actual fun writeLong(value: Long, offset: ULong) {
+        getPointerAtOffset<LongVar>(offset).pointed.value = value
     }
 
     actual fun readLong(offset: ULong): Long {
-        TODO("Not yet implemented")
+        return getPointerAtOffset<LongVar>(offset).pointed.value
     }
 
     actual fun writeULong(value: ULong, offset: ULong) {
+        getPointerAtOffset<ULongVar>(offset).pointed.value = value
     }
 
     actual fun readULong(offset: ULong): ULong {
-        TODO("Not yet implemented")
+        return getPointerAtOffset<ULongVar>(offset).pointed.value
     }
 
     actual fun writeFloat(value: Float, offset: ULong) {
+        getPointerAtOffset<FloatVar>(offset).pointed.value = value
     }
 
     actual fun readFloat(offset: ULong): Float {
-        TODO("Not yet implemented")
+        return getPointerAtOffset<FloatVar>(offset).pointed.value
     }
 
     actual fun writeDouble(value: Double, offset: ULong) {
+        getPointerAtOffset<DoubleVar>(offset).pointed.value = value
     }
 
     actual fun readDouble(offset: ULong): Double {
-        TODO("Not yet implemented")
+        return getPointerAtOffset<DoubleVar>(offset).pointed.value
     }
 
     actual fun writePointer(value: NativeAddress, offset: ULong) {
+        getPointerAtOffset<LongVar>(offset).pointed.value = value.pointer.rawValue.toLong()
     }
 
     actual fun readPointer(offset: ULong): NativeAddress {
-        TODO("Not yet implemented")
+        return getPointerAtOffset<LongVar>(offset).pointed.value.toCPointer<COpaque>()?.let(::NativeAddress) ?: error("fail to read pointer at offset $offset")
     }
 
     actual fun writeBytes(
@@ -280,6 +289,4 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         size: ULong
     ) {
     }
-
-
 }

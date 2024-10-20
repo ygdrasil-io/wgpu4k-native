@@ -39,4 +39,9 @@ actual class MemoryAllocator : AutoCloseable {
     fun register(it: Any) {
         references.add(it)
     }
+
+    actual fun allocateBuffer(size: ULong): MemoryBuffer {
+        return allocate(size.toLong())
+            .let { MemoryBuffer(it, size) }
+    }
 }

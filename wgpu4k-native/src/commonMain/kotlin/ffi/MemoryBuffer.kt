@@ -11,9 +11,6 @@ expect class MemoryBuffer(handler: NativeAddress, size: ULong) {
     fun writeUByte(value: UByte, offset: ULong = 0uL)
     fun readUByte(offset: ULong = 0uL): UByte
 
-    fun writeChar(value: Char, offset: ULong = 0uL)
-    fun readChar(offset: ULong = 0uL): Char
-
     fun writeShort(value: Short, offset: ULong = 0uL)
     fun readShort(offset: ULong = 0uL): Short
 
