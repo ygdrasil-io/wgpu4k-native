@@ -207,14 +207,16 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        writeArray(bufferOffset, MemorySegment.ofArray(array.asByteArray()), arrayIndex, size, UByte.SIZE_BYTES)
     }
 
-    actual fun readYBytes(
+    actual fun readUBytes(
         array: UByteArray,
         arrayIndex: ULong,
         bufferOffset: ULong,
         size: ULong
     ) {
+        readArray(bufferOffset, MemorySegment.ofArray(array.asByteArray()), arrayIndex, size, UByte.SIZE_BYTES)
     }
 
     actual fun writeShorts(
@@ -223,6 +225,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        writeArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Short.SIZE_BYTES)
     }
 
     actual fun readShorts(
@@ -231,6 +234,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        readArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Short.SIZE_BYTES)
     }
 
     actual fun writeUShorts(
@@ -239,6 +243,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        writeArray(bufferOffset, MemorySegment.ofArray(array.asShortArray()), arrayIndex, size, UShort.SIZE_BYTES)
     }
 
     actual fun readUShorts(
@@ -247,6 +252,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        readArray(bufferOffset, MemorySegment.ofArray(array.asShortArray()), arrayIndex, size, UShort.SIZE_BYTES)
     }
 
     actual fun writeChars(
@@ -255,6 +261,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        writeArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Char.SIZE_BYTES)
     }
 
     actual fun readChars(
@@ -263,6 +270,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        readArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Char.SIZE_BYTES)
     }
 
     actual fun writeInts(
@@ -271,6 +279,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        writeArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Int.SIZE_BYTES)
     }
 
     actual fun readInts(
@@ -279,6 +288,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        readArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Int.SIZE_BYTES)
     }
 
     actual fun writeUInts(
@@ -287,6 +297,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        writeArray(bufferOffset, MemorySegment.ofArray(array.asIntArray()), arrayIndex, size, UInt.SIZE_BYTES)
     }
 
     actual fun readUInts(
@@ -295,6 +306,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        readArray(bufferOffset, MemorySegment.ofArray(array.asIntArray()), arrayIndex, size, UInt.SIZE_BYTES)
     }
 
     actual fun writeLongs(
@@ -303,6 +315,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        writeArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Long.SIZE_BYTES)
     }
 
     actual fun readLongs(
@@ -311,6 +324,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        readArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Long.SIZE_BYTES)
     }
 
     actual fun writeULongs(
@@ -319,6 +333,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        writeArray(bufferOffset, MemorySegment.ofArray(array.asLongArray()), arrayIndex, size, ULong.SIZE_BYTES)
     }
 
     actual fun readULongs(
@@ -327,6 +342,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        readArray(bufferOffset, MemorySegment.ofArray(array.asLongArray()), arrayIndex, size, ULong.SIZE_BYTES)
     }
 
     actual fun writeFloats(
@@ -335,6 +351,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        writeArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Float.SIZE_BYTES)
     }
 
     actual fun readFloats(
@@ -343,6 +360,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        readArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Float.SIZE_BYTES)
     }
 
     actual fun writeDoubles(
@@ -351,6 +369,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        writeArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Double.SIZE_BYTES)
     }
 
     actual fun readDoubles(
@@ -359,6 +378,7 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         bufferOffset: ULong,
         size: ULong
     ) {
+        readArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Double.SIZE_BYTES)
     }
 
 
