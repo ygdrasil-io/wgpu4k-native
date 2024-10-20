@@ -71,80 +71,83 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
     }
 
     actual fun writeChar(value: Char, offset: ULong) {
+        memorySegment.set(ValueLayout.JAVA_CHAR, offset.toLong(), value)
     }
 
     actual fun readChar(offset: ULong): Char {
-        TODO("Not yet implemented")
+        return memorySegment.get(ValueLayout.JAVA_CHAR, offset.toLong())
     }
 
     actual fun writeShort(value: Short, offset: ULong) {
+        memorySegment.set(ValueLayout.JAVA_SHORT, offset.toLong(), value)
     }
 
     actual fun readShort(offset: ULong): Short {
-        TODO("Not yet implemented")
+        return memorySegment.get(ValueLayout.JAVA_SHORT, offset.toLong())
     }
 
     actual fun writeUShort(value: UShort, offset: ULong) {
+        memorySegment.set(ValueLayout.JAVA_SHORT, offset.toLong(), value.toShort())
     }
 
     actual fun readUShort(offset: ULong): UShort {
-        TODO("Not yet implemented")
+        return memorySegment.get(ValueLayout.JAVA_SHORT, offset.toLong()).toUShort()
     }
 
     actual fun writeInt(value: Int, offset: ULong) {
+        memorySegment.set(ValueLayout.JAVA_INT, offset.toLong(), value)
     }
 
     actual fun readInt(offset: ULong): Int {
-        TODO("Not yet implemented")
+        return memorySegment.get(ValueLayout.JAVA_INT, offset.toLong())
     }
 
     actual fun writeUInt(value: UInt, offset: ULong) {
+        memorySegment.set(ValueLayout.JAVA_INT, offset.toLong(), value.toInt())
     }
 
     actual fun readUInt(offset: ULong): UInt {
-        TODO("Not yet implemented")
+        return memorySegment.get(ValueLayout.JAVA_INT, offset.toLong()).toUInt()
     }
 
     actual fun writeLong(value: Long, offset: ULong) {
+        memorySegment.set(ValueLayout.JAVA_LONG, offset.toLong(), value)
     }
 
     actual fun readLong(offset: ULong): Long {
-        TODO("Not yet implemented")
+        return memorySegment.get(ValueLayout.JAVA_LONG, offset.toLong())
     }
 
     actual fun writeULong(value: ULong, offset: ULong) {
+        memorySegment.set(ValueLayout.JAVA_LONG, offset.toLong(), value.toLong())
     }
 
     actual fun readULong(offset: ULong): ULong {
-        TODO("Not yet implemented")
+        return memorySegment.get(ValueLayout.JAVA_LONG, offset.toLong()).toULong()
     }
 
     actual fun writeFloat(value: Float, offset: ULong) {
+        memorySegment.set(ValueLayout.JAVA_FLOAT, offset.toLong(), value)
     }
 
     actual fun readFloat(offset: ULong): Float {
-        TODO("Not yet implemented")
+        return memorySegment.get(ValueLayout.JAVA_FLOAT, offset.toLong())
     }
 
     actual fun writeDouble(value: Double, offset: ULong) {
+        memorySegment.set(ValueLayout.JAVA_DOUBLE, offset.toLong(), value)
     }
 
     actual fun readDouble(offset: ULong): Double {
-        TODO("Not yet implemented")
+        return memorySegment.get(ValueLayout.JAVA_DOUBLE, offset.toLong())
     }
 
     actual fun writePointer(value: NativeAddress, offset: ULong) {
+        memorySegment.set(ValueLayout.ADDRESS, offset.toLong(), value.handler)
     }
 
     actual fun readPointer(offset: ULong): NativeAddress {
-        TODO("Not yet implemented")
-    }
-
-    actual fun writeString(value: String, offset: ULong) {
-    }
-
-    actual fun readString(offset: ULong): String {
-        TODO("Not yet implemented")
+        return NativeAddress(memorySegment.get(ValueLayout.ADDRESS, offset.toLong()))
     }
 
     actual fun writeBytes(

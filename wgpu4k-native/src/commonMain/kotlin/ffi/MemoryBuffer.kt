@@ -41,9 +41,6 @@ expect class MemoryBuffer(handler: NativeAddress, size: ULong) {
     fun writePointer(value: NativeAddress, offset: ULong = 0uL)
     fun readPointer(offset: ULong = 0uL): NativeAddress
 
-    fun writeString(value: String, offset: ULong = 0uL)
-    fun readString(offset: ULong = 0uL): String
-
     fun writeBytes(array: ByteArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
     fun readBytes(array: ByteArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
 
