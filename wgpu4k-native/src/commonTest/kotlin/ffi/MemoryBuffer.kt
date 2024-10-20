@@ -231,6 +231,7 @@ class MemoryBufferArrayTest : FreeSpec({
             val sourceArray = LongArray(arraySize) { random.nextLong() }
             val buffer = scope.allocateBuffer((sourceArray.size * Long.SIZE_BYTES).toULong())
             val destinationArray = LongArray(sourceArray.size)
+            buffer.writeLongs(sourceArray)
             destinationArray shouldNotBe sourceArray
 
             //When
