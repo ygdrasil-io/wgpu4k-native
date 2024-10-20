@@ -1,5 +1,6 @@
 package ffi
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -45,6 +46,33 @@ class MemoryBufferArrayTest : FreeSpec({
             //Then
             destinationBytes shouldBe sourceBytes
 
+        }
+    }
+
+    "try to write out of bounds ByteArray to MemoryBuffer" {
+        memoryScope {scope ->
+
+            // Given
+            val sourceBytes = random.nextBytes(arraySize)
+            val buffer = scope.allocateBuffer((sourceBytes.size * Byte.SIZE_BYTES).toULong())
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeBytes(sourceBytes, arrayIndex = 1u)
+            }
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeBytes(sourceBytes, bufferOffset = 1u)
+            }
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeBytes(sourceBytes, size = arraySize.toULong() + 1u)
+            }
         }
     }
 
