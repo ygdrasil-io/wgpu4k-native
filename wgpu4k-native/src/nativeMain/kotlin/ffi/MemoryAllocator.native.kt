@@ -38,6 +38,11 @@ actual class MemoryAllocator : AutoCloseable {
             .let(::NativeAddress)
             .let { CString(it) }
     }
+
+    actual fun allocateBuffer(size: ULong): MemoryBuffer {
+        return allocate(size.toLong())
+            .let { MemoryBuffer(it, size) }
+    }
 }
 
 fun NativePointed.toOpaqueNativeAddress() = rawPtr

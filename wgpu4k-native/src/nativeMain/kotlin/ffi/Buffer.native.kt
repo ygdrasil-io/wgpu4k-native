@@ -2,6 +2,10 @@
 
 package ffi
 
+import kotlinx.cinterop.ByteVar
+import kotlinx.cinterop.COpaque
+import kotlinx.cinterop.CPointed
+import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.IntVar
 import kotlinx.cinterop.pointed
@@ -10,11 +14,18 @@ import kotlinx.cinterop.toCPointer
 import kotlinx.cinterop.value
 
 actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, actual val size: ULong) {
+
+
+    private fun <T : CPointed> getPointerAtOffset(offset: ULong): CPointer<T> {
+        return (handler.pointer.rawValue.toLong() + offset.toLong()).toCPointer() ?: error("fail to get pointer at offset $offset")
+    }
+
     actual fun writeByte(value: Byte, offset: ULong) {
+        getPointerAtOffset<ByteVar>(offset).pointed.value = value
     }
 
     actual fun readByte(offset: ULong): Byte {
-        TODO("Not yet implemented")
+       return getPointerAtOffset<ByteVar>(offset).pointed.value
     }
 
     actual fun writeUByte(value: UByte, offset: ULong) {
