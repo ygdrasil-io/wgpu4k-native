@@ -216,7 +216,7 @@ class MemoryBufferArrayTest : FreeSpec({
 
             // Then
             sourceArray.forEachIndexed { index, long ->
-                buffer.readInt((index * Long.SIZE_BYTES).toULong()).toLong() shouldBe long
+                buffer.readLong((index * Long.SIZE_BYTES).toULong()).toLong() shouldBe long
             }
 
         }
@@ -229,7 +229,6 @@ class MemoryBufferArrayTest : FreeSpec({
             val sourceArray = LongArray(arraySize) { random.nextLong() }
             val buffer = scope.allocateBuffer((sourceArray.size * Long.SIZE_BYTES).toULong())
             val destinationArray = LongArray(sourceArray.size)
-            buffer.writeInts(sourceArray.map { it.toInt() }.toIntArray())
             destinationArray shouldNotBe sourceArray
 
             //When
@@ -280,7 +279,7 @@ class MemoryBufferArrayTest : FreeSpec({
 
             // Then
             sourceArray.forEachIndexed { index, float ->
-                buffer.readFloat((index * Float.SIZE_BYTES).toULong())  shouldBe float
+                buffer.readFloat((index * Float.SIZE_BYTES).toULong()) shouldBe float
             }
 
         }
@@ -344,7 +343,7 @@ class MemoryBufferArrayTest : FreeSpec({
 
             // Then
             sourceArray.forEachIndexed { index, double ->
-                buffer.readDouble((index * Float.SIZE_BYTES).toULong())  shouldBe double
+                buffer.readDouble((index * Double.SIZE_BYTES).toULong()) shouldBe double
             }
 
         }
@@ -392,6 +391,70 @@ class MemoryBufferArrayTest : FreeSpec({
             shouldThrow<IllegalStateException> {
                 // When
                 buffer.writeDoubles(sourceArray, size = arraySize.toULong() + 1u)
+            }
+        }
+    }
+
+    "write CharArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = CharArray(arraySize) { random.nextInt().toChar() }
+            val buffer = scope.allocateBuffer((sourceArray.size * Char.SIZE_BYTES).toULong())
+
+            // when
+            buffer.writeChars(sourceArray)
+
+            // Then
+            sourceArray.forEachIndexed { index, char ->
+                buffer.readChar((index * Char.SIZE_BYTES).toULong()) shouldBe char
+            }
+
+        }
+    }
+
+    "read CharArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = CharArray(arraySize) { random.nextInt().toChar() }
+            val buffer = scope.allocateBuffer((sourceArray.size * Char.SIZE_BYTES).toULong())
+            val destinationArray = CharArray(sourceArray.size)
+            buffer.writeChars(sourceArray)
+            destinationArray shouldNotBe sourceArray
+
+            //When
+            buffer.readChars(destinationArray)
+
+            //Then
+            destinationArray shouldBe sourceArray
+
+        }
+    }
+
+    "try to write out of bounds CharArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = CharArray(arraySize) { random.nextInt().toChar() }
+            val buffer = scope.allocateBuffer((sourceArray.size * Char.SIZE_BYTES).toULong())
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeChars(sourceArray, arrayIndex = 1u)
+            }
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeChars(sourceArray, bufferOffset = 1u)
+            }
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeChars(sourceArray, size = arraySize.toULong() + 1u)
             }
         }
     }
