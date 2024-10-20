@@ -212,7 +212,7 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceArray.size * Long.SIZE_BYTES).toULong())
 
             // when
-            buffer.writeInts(sourceArray.map { it.toInt() }.toIntArray())
+            buffer.writeLongs(sourceArray)
 
             // Then
             sourceArray.forEachIndexed { index, long ->
@@ -233,7 +233,7 @@ class MemoryBufferArrayTest : FreeSpec({
             destinationArray shouldNotBe sourceArray
 
             //When
-            buffer.readLongs(destinationArray.copyOf())
+            buffer.readLongs(destinationArray)
 
             //Then
             destinationArray shouldBe sourceArray
@@ -251,19 +251,19 @@ class MemoryBufferArrayTest : FreeSpec({
             // Should
             shouldThrow<IllegalStateException> {
                 // When
-                buffer.writeInts(sourceArray.map { it.toInt() }.toIntArray(), arrayIndex = 1u)
+                buffer.writeLongs(sourceArray, arrayIndex = 1u)
             }
 
             // Should
             shouldThrow<IllegalStateException> {
                 // When
-                buffer.writeInts(sourceArray.map { it.toInt() }.toIntArray(), bufferOffset = 1u)
+                buffer.writeLongs(sourceArray, bufferOffset = 1u)
             }
 
             // Should
             shouldThrow<IllegalStateException> {
                 // When
-                buffer.writeInts(sourceArray.map { it.toInt() }.toIntArray(), size = arraySize.toULong() + 1u)
+                buffer.writeLongs(sourceArray, size = arraySize.toULong() + 1u)
             }
         }
     }
@@ -276,12 +276,11 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceArray.size * Float.SIZE_BYTES).toULong())
 
             // when
-            buffer.writeInts(sourceArray.map { it.toBits() }.toIntArray())
+            buffer.writeFloats(sourceArray)
 
             // Then
             sourceArray.forEachIndexed { index, float ->
-                val readValue = Float.fromBits(buffer.readInt((index * Float.SIZE_BYTES).toULong()))
-                readValue shouldBe float
+                buffer.readFloat((index * Float.SIZE_BYTES).toULong())  shouldBe float
             }
 
         }
@@ -294,11 +293,11 @@ class MemoryBufferArrayTest : FreeSpec({
             val sourceArray = FloatArray(arraySize) { random.nextFloat() }
             val buffer = scope.allocateBuffer((sourceArray.size * Float.SIZE_BYTES).toULong())
             val destinationArray = FloatArray(sourceArray.size)
-            buffer.writeInts(sourceArray.map { it.toBits() }.toIntArray())
+            buffer.writeFloats(sourceArray)
             destinationArray shouldNotBe sourceArray
 
             //When
-            buffer.readBytes(destinationArray.map { it.toBits().toByte() }.toByteArray())
+            buffer.readFloats(destinationArray)
 
             //Then
             destinationArray shouldBe sourceArray
@@ -316,19 +315,19 @@ class MemoryBufferArrayTest : FreeSpec({
             // Should
             shouldThrow<IllegalStateException> {
                 // When
-                buffer.writeInts(sourceArray.map { it.toBits() }.toIntArray(), arrayIndex = 1u)
+                buffer.writeFloats(sourceArray, arrayIndex = 1u)
             }
 
             // Should
             shouldThrow<IllegalStateException> {
                 // When
-                buffer.writeInts(sourceArray.map { it.toBits() }.toIntArray(), bufferOffset = 1u)
+                buffer.writeFloats(sourceArray, bufferOffset = 1u)
             }
 
             // Should
             shouldThrow<IllegalStateException> {
                 // When
-                buffer.writeInts(sourceArray.map { it.toBits() }.toIntArray(), size = arraySize.toULong() + 1u)
+                buffer.writeFloats(sourceArray, size = arraySize.toULong() + 1u)
             }
         }
     }
@@ -341,12 +340,11 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceArray.size * Double.SIZE_BYTES).toULong())
 
             // when
-            buffer.writeInts(sourceArray.map { it.toBits().toInt() }.toIntArray())
+            buffer.writeDoubles(sourceArray)
 
             // Then
             sourceArray.forEachIndexed { index, double ->
-                val readValue = Double.fromBits(buffer.readInt((index * Double.SIZE_BYTES).toULong()).toLong())
-                readValue shouldBe double
+                buffer.readDouble((index * Float.SIZE_BYTES).toULong())  shouldBe double
             }
 
         }
@@ -359,11 +357,11 @@ class MemoryBufferArrayTest : FreeSpec({
             val sourceArray = DoubleArray(arraySize) { random.nextDouble() }
             val buffer = scope.allocateBuffer((sourceArray.size * Double.SIZE_BYTES).toULong())
             val destinationArray = DoubleArray(sourceArray.size)
-            buffer.writeInts(sourceArray.map { it.toBits().toInt() }.toIntArray())
+            buffer.writeDoubles(sourceArray)
             destinationArray shouldNotBe sourceArray
 
             //When
-            buffer.readBytes(destinationArray.map { it.toBits().toByte() }.toByteArray())
+            buffer.readDoubles(destinationArray)
 
             //Then
             destinationArray shouldBe sourceArray
@@ -381,19 +379,19 @@ class MemoryBufferArrayTest : FreeSpec({
             // Should
             shouldThrow<IllegalStateException> {
                 // When
-                buffer.writeInts(sourceArray.map { it.toBits().toInt() }.toIntArray(), arrayIndex = 1u)
+                buffer.writeDoubles(sourceArray, arrayIndex = 1u)
             }
 
             // Should
             shouldThrow<IllegalStateException> {
                 // When
-                buffer.writeInts(sourceArray.map { it.toBits().toInt() }.toIntArray(), bufferOffset = 1u)
+                buffer.writeDoubles(sourceArray, bufferOffset = 1u)
             }
 
             // Should
             shouldThrow<IllegalStateException> {
                 // When
-                buffer.writeInts(sourceArray.map { it.toBits().toInt() }.toIntArray(), size = arraySize.toULong() + 1u)
+                buffer.writeDoubles(sourceArray, size = arraySize.toULong() + 1u)
             }
         }
     }
