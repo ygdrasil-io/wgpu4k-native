@@ -9,7 +9,7 @@ import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.toCPointer
 import kotlinx.cinterop.value
 
-actual class Buffer actual constructor(actual val handler: NativeAddress, actual val size: ULong) {
+actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, actual val size: ULong) {
     actual fun readLong(): Long {
         TODO("Not yet implemented")
     }

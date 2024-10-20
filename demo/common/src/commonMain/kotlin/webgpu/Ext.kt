@@ -1,6 +1,6 @@
 package webgpu
 
-import ffi.Buffer
+import ffi.MemoryBuffer
 import ffi.MemoryAllocator
 import ffi.NativeAddress
 import ffi.memoryScope
@@ -22,7 +22,7 @@ fun compatibleFormat(surface: WGPUSurface, adapter: WGPUAdapter): UInt = memoryS
     val surfaceCapabilities = WGPUSurfaceCapabilities.allocate(scope)
     wgpuSurfaceGetCapabilities(surface, adapter, surfaceCapabilities)
     if (surfaceCapabilities.formatCount == 0uL) error("no surface format")
-    return surfaceCapabilities.formats?.handler?.let { Buffer(it, Int.SIZE_BYTES.toULong() * surfaceCapabilities.formatCount) }?.readInt()?.toUInt()
+    return surfaceCapabilities.formats?.handler?.let { MemoryBuffer(it, Int.SIZE_BYTES.toULong() * surfaceCapabilities.formatCount) }?.readInt()?.toUInt()
         ?: error("no compatible format")
 }
 
@@ -30,7 +30,7 @@ fun compatibleAlphaMode(surface: WGPUSurface, adapter: WGPUAdapter): UInt = memo
     val surfaceCapabilities = WGPUSurfaceCapabilities.allocate(scope)
     wgpuSurfaceGetCapabilities(surface, adapter, surfaceCapabilities)
     if (surfaceCapabilities.alphaModeCount == 0uL) error("no surface alpha mode")
-    return surfaceCapabilities.alphaModes?.handler?.let { Buffer(it, Int.SIZE_BYTES.toULong() * surfaceCapabilities.formatCount) }?.readInt()?.toUInt()
+    return surfaceCapabilities.alphaModes?.handler?.let { MemoryBuffer(it, Int.SIZE_BYTES.toULong() * surfaceCapabilities.formatCount) }?.readInt()?.toUInt()
         ?: error("no compatible alpha mode")
 }
 

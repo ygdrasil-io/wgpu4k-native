@@ -19,10 +19,10 @@ actual class MemoryAllocator : AutoCloseable {
         arena.close()
     }
 
-    actual fun bufferOf(value: Long): Buffer = allocator.allocate(ValueLayout.JAVA_LONG)
+    actual fun bufferOf(value: Long): MemoryBuffer = allocator.allocate(ValueLayout.JAVA_LONG)
         .also { it.set(ValueLayout.JAVA_LONG, 0, value) }
         .let(::NativeAddress)
-        .let { Buffer(it, Long.SIZE_BYTES.toULong()) }
+        .let { MemoryBuffer(it, Long.SIZE_BYTES.toULong()) }
 
 
     actual fun allocateFrom(value: String): CString = allocator
@@ -30,5 +30,5 @@ actual class MemoryAllocator : AutoCloseable {
         .let(::NativeAddress)
         .let(::CString)
 
-    actual fun bufferOfAddress(value: NativeAddress): Buffer = bufferOf(value.handler.address())
+    actual fun bufferOfAddress(value: NativeAddress): MemoryBuffer = bufferOf(value.handler.address())
 }

@@ -1,6 +1,6 @@
 package ffi
 
-actual class Buffer actual constructor(actual val handler: NativeAddress, actual val size: ULong) {
+actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, actual val size: ULong) {
     actual fun readLong(): Long {
         return handler.getLong(0)
     }

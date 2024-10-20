@@ -25,12 +25,12 @@ actual class MemoryAllocator : AutoCloseable {
         allocator.clear()
     }
 
-    actual fun bufferOf(value: Long): Buffer = allocator.alloc<LongVar>().also {
+    actual fun bufferOf(value: Long): MemoryBuffer = allocator.alloc<LongVar>().also {
         it.value = value
     }.toOpaqueNativeAddress()
-        .let { Buffer(it, Long.SIZE_BYTES.toULong()) }
+        .let { MemoryBuffer(it, Long.SIZE_BYTES.toULong()) }
 
-    actual fun bufferOfAddress(value: NativeAddress): Buffer = bufferOf(value.rawValue)
+    actual fun bufferOfAddress(value: NativeAddress): MemoryBuffer = bufferOf(value.rawValue)
 
     actual fun allocateFrom(value: String): CString {
         return value.cstr.getPointer(allocator)

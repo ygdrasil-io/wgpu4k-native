@@ -21,16 +21,16 @@ actual class MemoryAllocator : AutoCloseable {
         references.clear()
     }
 
-    actual fun bufferOf(value: Long): Buffer = allocator.allocate(ValueLayout.JAVA_LONG)
+    actual fun bufferOf(value: Long): MemoryBuffer = allocator.allocate(ValueLayout.JAVA_LONG)
         .also { it.set(ValueLayout.JAVA_LONG, 0, value) }
-        .let { Buffer(it.pointer, it.size.toULong()) }
+        .let { MemoryBuffer(it.pointer, it.size.toULong()) }
 
 
     actual fun allocateFrom(value: String): CString = allocator
         .allocateFrom(value)
         .let(::CString)
 
-    actual fun bufferOfAddress(value: NativeAddress): Buffer = bufferOf(value.toAddress())
+    actual fun bufferOfAddress(value: NativeAddress): MemoryBuffer = bufferOf(value.toAddress())
 
     fun registerCallback(function: com.sun.jna.Callback) {
         callbacks.add(function)
