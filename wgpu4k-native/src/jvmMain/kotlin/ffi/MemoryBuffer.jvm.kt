@@ -54,43 +54,6 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
             .copyFrom(memorySegment.asSlice(sourceOffset.toLong(), bytesToCopy.toLong()))
     }
 
-    /*actual fun readLong(): Long = handler.handler.get(ValueLayout.JAVA_LONG, 0)
-
-    actual fun writeLong(value: Long) {
-    }
-
-    actual fun readFloat(): Float = handler.handler.get(ValueLayout.JAVA_FLOAT, 0)
-
-    actual fun writeFloat(value: Float) {
-    }
-
-    actual fun readInt(): Int = handler.handler.get(ValueLayout.JAVA_INT, 0)
-
-    actual fun writeInt(value: Int) {
-    }
-
-    actual fun readPointer(): NativeAddress = readLong().let{ java.lang.foreign.MemorySegment.ofAddress(it) }.let(::NativeAddress)
-
-    actual fun writePointer(value: NativeAddress) {
-    }
-
-    actual fun writeBytes(array: ByteArray) {
-        handler.handler.copyFrom(java.lang.foreign.MemorySegment.ofArray(array))
-    }
-
-    actual fun readBytes(array: ByteArray) {
-        MemorySegment.ofArray(array)
-            .copyFrom(handler.handler)
-    }
-
-    actual fun writeInts(array: IntArray) {
-        handler.handler.copyFrom(java.lang.foreign.MemorySegment.ofArray(array))
-    }
-
-    actual fun readInts(array: IntArray) {
-        MemorySegment.ofArray(array)
-            .copyFrom(handler.handler)
-    }*/
     actual fun writeByte(value: Byte, offset: ULong) {
         memorySegment.set(ValueLayout.JAVA_BYTE, offset.toLong(), value)
     }
@@ -100,10 +63,11 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
     }
 
     actual fun writeUByte(value: UByte, offset: ULong) {
+        memorySegment.set(ValueLayout.JAVA_BYTE, offset.toLong(), value.toByte())
     }
 
     actual fun readUByte(offset: ULong): UByte {
-        TODO("Not yet implemented")
+        return memorySegment.get(ValueLayout.JAVA_BYTE, offset.toLong()).toUByte()
     }
 
     actual fun writeChar(value: Char, offset: ULong) {
