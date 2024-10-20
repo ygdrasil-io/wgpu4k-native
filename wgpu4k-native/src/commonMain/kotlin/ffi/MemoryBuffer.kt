@@ -51,29 +51,29 @@ expect class MemoryBuffer(handler: NativeAddress, size: ULong) {
     fun readYBytes(array: UByteArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
 
     fun writeShorts(array: ShortArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
-    fun readShorts(array: ShortArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong)
+    fun readShorts(array: ShortArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
 
     fun writeUShorts(array: UShortArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
-    fun readUShorts(array: UShortArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong)
+    fun readUShorts(array: UShortArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
 
     fun writeChars(array: CharArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
-    fun readChars(array: CharArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong)
+    fun readChars(array: CharArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
 
     fun writeInts(array: IntArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
-    fun readInts(array: IntArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong)
+    fun readInts(array: IntArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
 
     fun writeUInts(array: UIntArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
-    fun readUInts(array: UIntArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong)
+    fun readUInts(array: UIntArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
 
     fun writeLongs(array: LongArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
-    fun readLongs(array: LongArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong)
+    fun readLongs(array: LongArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
 
     fun writeULongs(array: ULongArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
-    fun readULongs(array: ULongArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong)
+    fun readULongs(array: ULongArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
 
     fun writeFloats(array: FloatArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
-    fun readFloats(array: FloatArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong)
+    fun readFloats(array: FloatArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
 
     fun writeDoubles(array: DoubleArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
-    fun readDoubles(array: DoubleArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong)
+    fun readDoubles(array: DoubleArray, arrayIndex: ULong = 0u, bufferOffset: ULong = 0uL, size: ULong = array.size.toULong())
 }
