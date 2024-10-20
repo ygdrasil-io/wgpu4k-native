@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUnsignedTypes::class)
+
 package ffi
 
 import io.kotest.assertions.throwables.shouldThrow
@@ -216,7 +218,7 @@ class MemoryBufferArrayTest : FreeSpec({
 
             // Then
             sourceArray.forEachIndexed { index, long ->
-                buffer.readLong((index * Long.SIZE_BYTES).toULong()).toLong() shouldBe long
+                buffer.readLong((index * Long.SIZE_BYTES).toULong()) shouldBe long
             }
 
         }
@@ -459,4 +461,259 @@ class MemoryBufferArrayTest : FreeSpec({
         }
     }
 
+    "write UByteArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = UByteArray(arraySize) { random.nextInt().toUByte() }
+            val buffer = scope.allocateBuffer((sourceArray.size * UByte.SIZE_BYTES).toULong())
+
+            // when
+            buffer.writeUBytes(sourceArray)
+
+            // Then
+            sourceArray.forEachIndexed { index, ubyte ->
+                buffer.readUByte((index * UByte.SIZE_BYTES).toULong()) shouldBe ubyte
+            }
+
+        }
+    }
+
+    "read UByteArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = UByteArray(arraySize) { random.nextInt().toUByte() }
+            val buffer = scope.allocateBuffer((sourceArray.size * UByte.SIZE_BYTES).toULong())
+            val destinationArray = UByteArray(sourceArray.size)
+            buffer.writeUBytes(sourceArray)
+            destinationArray shouldNotBe sourceArray
+
+            //When
+            buffer.readUBytes(destinationArray)
+
+            //Then
+            destinationArray shouldBe sourceArray
+
+        }
+    }
+
+    "try to write out of bounds UByteArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = UByteArray(arraySize) { random.nextInt().toUByte() }
+            val buffer = scope.allocateBuffer((sourceArray.size * UByte.SIZE_BYTES).toULong())
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeUBytes(sourceArray, arrayIndex = 1u)
+            }
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeUBytes(sourceArray, bufferOffset = 1u)
+            }
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeUBytes(sourceArray, size = arraySize.toULong() + 1u)
+            }
+        }
+    }
+
+    "write UShortArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = UShortArray(arraySize) { random.nextInt().toUShort() }
+            val buffer = scope.allocateBuffer((sourceArray.size * UShort.SIZE_BYTES).toULong())
+
+            // when
+            buffer.writeUShorts(sourceArray)
+
+            // Then
+            sourceArray.forEachIndexed { index, ushort ->
+                buffer.readUShort((index * UShort.SIZE_BYTES).toULong()) shouldBe ushort
+            }
+
+        }
+    }
+
+    "read UShortArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = UShortArray(arraySize) { random.nextInt().toUShort() }
+            val buffer = scope.allocateBuffer((sourceArray.size * UShort.SIZE_BYTES).toULong())
+            val destinationArray = UShortArray(sourceArray.size)
+            buffer.writeUShorts(sourceArray)
+            destinationArray shouldNotBe sourceArray
+
+            //When
+            buffer.readUShorts(destinationArray)
+
+            //Then
+            destinationArray shouldBe sourceArray
+
+        }
+    }
+
+    "try to write out of bounds UShortArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = UShortArray(arraySize) { random.nextInt().toUShort() }
+            val buffer = scope.allocateBuffer((sourceArray.size * UShort.SIZE_BYTES).toULong())
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeUShorts(sourceArray, arrayIndex = 1u)
+            }
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeUShorts(sourceArray, bufferOffset = 1u)
+            }
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeUShorts(sourceArray, size = arraySize.toULong() + 1u)
+            }
+        }
+    }
+
+    "write UIntArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = UIntArray(arraySize) { random.nextInt().toUInt() }
+            val buffer = scope.allocateBuffer((sourceArray.size * UInt.SIZE_BYTES).toULong())
+
+            // when
+            buffer.writeUInts(sourceArray)
+
+            // Then
+            sourceArray.forEachIndexed { index, uint ->
+                buffer.readUInt((index * UInt.SIZE_BYTES).toULong()) shouldBe uint
+            }
+
+        }
+    }
+
+    "read UIntArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = UIntArray(arraySize) { random.nextInt().toUInt() }
+            val buffer = scope.allocateBuffer((sourceArray.size * UInt.SIZE_BYTES).toULong())
+            val destinationArray = UIntArray(sourceArray.size)
+            buffer.writeUInts(sourceArray)
+            destinationArray shouldNotBe sourceArray
+
+            //When
+            buffer.readUInts(destinationArray)
+
+            //Then
+            destinationArray shouldBe sourceArray
+
+        }
+    }
+
+    "try to write out of bounds UIntArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = UIntArray(arraySize) { random.nextInt().toUInt() }
+            val buffer = scope.allocateBuffer((sourceArray.size * UInt.SIZE_BYTES).toULong())
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeUInts(sourceArray, arrayIndex = 1u)
+            }
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeUInts(sourceArray, bufferOffset = 1u)
+            }
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.writeUInts(sourceArray, size = arraySize.toULong() + 1u)
+            }
+        }
+    }
+
+    "write ULongArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = ULongArray(arraySize) { random.nextInt().toULong() }
+            val buffer = scope.allocateBuffer((sourceArray.size * ULong.SIZE_BYTES).toULong())
+
+            // when
+            buffer.writeULongs(sourceArray)
+
+            // Then
+            sourceArray.forEachIndexed { index, uint ->
+                buffer.readULong((index * ULong.SIZE_BYTES).toULong()) shouldBe uint
+            }
+
+        }
+    }
+
+    "read ULongArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = ULongArray(arraySize) { random.nextInt().toULong() }
+            val buffer = scope.allocateBuffer((sourceArray.size * ULong.SIZE_BYTES).toULong())
+            val destinationArray = ULongArray(sourceArray.size)
+            buffer.writeULongs(sourceArray)
+            destinationArray shouldNotBe sourceArray
+
+            //When
+            buffer.readULongs(destinationArray)
+
+            //Then
+            destinationArray shouldBe sourceArray
+
+        }
+    }
+
+    "try to write out of bounds ULongArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = ULongArray(arraySize) { random.nextInt().toULong() }
+            val buffer = scope.allocateBuffer((sourceArray.size * UInt.SIZE_BYTES).toULong())
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.readULongs(sourceArray, arrayIndex = 1u)
+            }
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.readULongs(sourceArray, bufferOffset = 1u)
+            }
+
+            // Should
+            shouldThrow<IllegalStateException> {
+                // When
+                buffer.readULongs(sourceArray, size = arraySize.toULong() + 1u)
+            }
+        }
+    }
 })
