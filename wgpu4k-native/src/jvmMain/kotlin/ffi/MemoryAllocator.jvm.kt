@@ -31,4 +31,7 @@ actual class MemoryAllocator : AutoCloseable {
         .let(::CString)
 
     actual fun bufferOfAddress(value: NativeAddress): MemoryBuffer = bufferOf(value.handler.address())
+
+    actual fun allocateBuffer(size: ULong): MemoryBuffer = allocate(size.toLong())
+        .let { MemoryBuffer(it, size) }
 }

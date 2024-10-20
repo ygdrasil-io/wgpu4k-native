@@ -15,6 +15,7 @@ expect class MemoryAllocator() : AutoCloseable {
 
     fun allocateFrom(value: String): CString
     fun bufferOfAddress(value: NativeAddress): MemoryBuffer
+    fun allocateBuffer(size: ULong): MemoryBuffer
 }
 
 @OptIn(kotlin.contracts.ExperimentalContracts::class)
