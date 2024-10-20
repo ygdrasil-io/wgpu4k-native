@@ -13,7 +13,7 @@ class MemoryBufferArrayTest : FreeSpec({
     val arraySize = random.nextInt(200) + 100
 
     "write ByteArray to MemoryBuffer" {
-        memoryScope {scope ->
+        memoryScope { scope ->
 
             // Given
             val sourceBytes = random.nextBytes(arraySize)
@@ -31,7 +31,7 @@ class MemoryBufferArrayTest : FreeSpec({
     }
 
     "read ByteArray to MemoryBuffer" {
-        memoryScope {scope ->
+        memoryScope { scope ->
 
             // Given
             val sourceBytes = random.nextBytes(arraySize)
@@ -50,7 +50,7 @@ class MemoryBufferArrayTest : FreeSpec({
     }
 
     "try to write out of bounds ByteArray to MemoryBuffer" {
-        memoryScope {scope ->
+        memoryScope { scope ->
 
             // Given
             val sourceBytes = random.nextBytes(arraySize)
@@ -76,4 +76,67 @@ class MemoryBufferArrayTest : FreeSpec({
         }
     }
 
+    "write ShortArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = ShortArray(arraySize) { random.nextInt().toShort() }
+            val buffer = scope.allocateBuffer((sourceArray.size * Short.SIZE_BYTES).toULong())
+
+            // when
+            buffer.writeShorts(sourceArray)
+
+            // Then
+            sourceArray.forEachIndexed { index, short ->
+                buffer.readShort((index * Short.SIZE_BYTES).toULong()) shouldBe short
+            }
+
+        }
+    }
+
+    "read ShortArray to MemoryBuffer" { TODO() }
+
+    "try to write out of bounds ShortArray to MemoryBuffer" { TODO() }
+
+    "write IntArray to MemoryBuffer" {
+        memoryScope { scope ->
+
+            // Given
+            val sourceArray = IntArray(arraySize) { random.nextInt() }
+            val buffer = scope.allocateBuffer((sourceArray.size * Int.SIZE_BYTES).toULong())
+
+            // when
+            buffer.writeInts(sourceArray)
+
+            // Then
+            sourceArray.forEachIndexed { index, int ->
+               buffer.readInt((index * Int.SIZE_BYTES).toULong()) shouldBe int
+            }
+
+        }
+    }
+
+    "read IntArray to MemoryBuffer" { TODO() }
+
+    "try to write out of bounds IntArray to MemoryBuffer" { TODO() }
+
+    "write LongArray to MemoryBuffer" { TODO() }
+    
+    "read LongArray to MemoryBuffer" { TODO() }
+
+    "try to write out of bounds LongArray to MemoryBuffer" { TODO() }
+
+    "write FloatArray to MemoryBuffer" { TODO() }
+
+    "read FloatArray to MemoryBuffer" { TODO() }
+
+    "try to write out of bounds FloatArray to MemoryBuffer" { TODO() }
+
+    "write DoubleArray to MemoryBuffer" { TODO() }
+
+    "read DoubleArray to MemoryBuffer" { TODO() }
+
+    "try to write out of bounds DoubleArray to MemoryBuffer" { TODO() }
+    
+    
 })
