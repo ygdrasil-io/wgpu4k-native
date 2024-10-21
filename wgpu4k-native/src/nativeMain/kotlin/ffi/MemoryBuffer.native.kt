@@ -125,6 +125,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ByteVar>())
+
         val buffer = getPointerAtOffset<ByteVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             buffer[index] = array[index + arrayIndex.toInt()]
@@ -137,6 +139,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ByteVar>())
+
         val buffer = getPointerAtOffset<ByteVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             array[index + arrayIndex.toInt()] = buffer[index]
@@ -149,6 +153,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UByteVar>())
+
         val buffer = getPointerAtOffset<UByteVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             buffer[index] = array[index + arrayIndex.toInt()]
@@ -161,6 +167,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UByteVar>())
+
         val buffer = getPointerAtOffset<UByteVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             array[index + arrayIndex.toInt()] = buffer[index]
@@ -173,6 +181,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ShortVar>())
+
         val buffer = getPointerAtOffset<ShortVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             buffer[index] = array[index + arrayIndex.toInt()]
@@ -185,6 +195,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ShortVar>())
+
         val buffer = getPointerAtOffset<ShortVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             array[index + arrayIndex.toInt()] = buffer[index]
@@ -197,6 +209,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UShortVar>())
+
         val buffer = getPointerAtOffset<UShortVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             buffer[index] = array[index + arrayIndex.toInt()]
@@ -209,6 +223,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UShortVar>())
+
         val buffer = getPointerAtOffset<UShortVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             array[index + arrayIndex.toInt()] = buffer[index]
@@ -222,6 +238,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<IntVar>())
+
         val buffer = getPointerAtOffset<IntVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             buffer[index] = array[index + arrayIndex.toInt()]
@@ -234,6 +252,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<IntVar>())
+
         val buffer = getPointerAtOffset<IntVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             array[index + arrayIndex.toInt()] = buffer[index]
@@ -246,6 +266,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UIntVar>())
+
         val buffer = getPointerAtOffset<UIntVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             buffer[index] = array[index + arrayIndex.toInt()]
@@ -258,6 +280,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UIntVar>())
+
         val buffer = getPointerAtOffset<UIntVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             array[index + arrayIndex.toInt()] = buffer[index]
@@ -270,6 +294,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<LongVar>())
+
         val buffer = getPointerAtOffset<LongVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             buffer[index] = array[index + arrayIndex.toInt()]
@@ -282,6 +308,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<LongVar>())
+
         val buffer = getPointerAtOffset<LongVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             array[index + arrayIndex.toInt()] = buffer[index]
@@ -294,6 +322,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ULongVar>())
+
         val buffer = getPointerAtOffset<ULongVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             buffer[index] = array[index + arrayIndex.toInt()]
@@ -306,6 +336,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ULongVar>())
+
         val buffer = getPointerAtOffset<ULongVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             array[index + arrayIndex.toInt()] = buffer[index]
@@ -318,6 +350,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<FloatVar>())
+
         val buffer = getPointerAtOffset<FloatVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             buffer[index] = array[index + arrayIndex.toInt()]
@@ -330,6 +364,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<FloatVar>())
+
         val buffer = getPointerAtOffset<FloatVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             array[index + arrayIndex.toInt()] = buffer[index]
