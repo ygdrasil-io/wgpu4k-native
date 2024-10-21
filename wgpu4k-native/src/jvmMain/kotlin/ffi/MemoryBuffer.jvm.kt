@@ -212,24 +212,6 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         readArray(bufferOffset, MemorySegment.ofArray(array.asShortArray()), arrayIndex, size, UShort.SIZE_BYTES)
     }
 
-    actual fun writeChars(
-        array: CharArray,
-        arrayIndex: ULong,
-        bufferOffset: ULong,
-        size: ULong
-    ) {
-        writeArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Char.SIZE_BYTES)
-    }
-
-    actual fun readChars(
-        array: CharArray,
-        arrayIndex: ULong,
-        bufferOffset: ULong,
-        size: ULong
-    ) {
-        readArray(bufferOffset, MemorySegment.ofArray(array), arrayIndex, size, Char.SIZE_BYTES)
-    }
-
     actual fun writeInts(
         array: IntArray,
         arrayIndex: ULong,

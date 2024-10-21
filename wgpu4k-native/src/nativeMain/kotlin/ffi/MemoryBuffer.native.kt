@@ -148,6 +148,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<UByteVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            buffer[index] = array[index + arrayIndex.toInt()]
+        }
     }
 
     actual fun readUBytes(
@@ -156,6 +160,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<UByteVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            array[index + arrayIndex.toInt()] = buffer[index]
+        }
     }
 
     actual fun writeShorts(
@@ -164,6 +172,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<ShortVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            buffer[index] = array[index + arrayIndex.toInt()]
+        }
     }
 
     actual fun readShorts(
@@ -172,6 +184,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<ShortVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            array[index + arrayIndex.toInt()] = buffer[index]
+        }
     }
 
     actual fun writeUShorts(
@@ -180,6 +196,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<UShortVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            buffer[index] = array[index + arrayIndex.toInt()]
+        }
     }
 
     actual fun readUShorts(
@@ -188,23 +208,12 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<UShortVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            array[index + arrayIndex.toInt()] = buffer[index]
+        }
     }
 
-    actual fun writeChars(
-        array: CharArray,
-        arrayIndex: ULong,
-        bufferOffset: ULong,
-        size: ULong
-    ) {
-    }
-
-    actual fun readChars(
-        array: CharArray,
-        arrayIndex: ULong,
-        bufferOffset: ULong,
-        size: ULong
-    ) {
-    }
 
     actual fun writeInts(
         array: IntArray,
@@ -212,6 +221,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<IntVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            buffer[index] = array[index + arrayIndex.toInt()]
+        }
     }
 
     actual fun readInts(
@@ -220,6 +233,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<IntVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            array[index + arrayIndex.toInt()] = buffer[index]
+        }
     }
 
     actual fun writeUInts(
@@ -228,6 +245,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<UIntVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            buffer[index] = array[index + arrayIndex.toInt()]
+        }
     }
 
     actual fun readUInts(
@@ -236,6 +257,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<UIntVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            array[index + arrayIndex.toInt()] = buffer[index]
+        }
     }
 
     actual fun writeLongs(
@@ -244,6 +269,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<LongVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            buffer[index] = array[index + arrayIndex.toInt()]
+        }
     }
 
     actual fun readLongs(
@@ -252,6 +281,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<LongVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            array[index + arrayIndex.toInt()] = buffer[index]
+        }
     }
 
     actual fun writeULongs(
@@ -260,6 +293,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<ULongVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            buffer[index] = array[index + arrayIndex.toInt()]
+        }
     }
 
     actual fun readULongs(
@@ -268,6 +305,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<ULongVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            array[index + arrayIndex.toInt()] = buffer[index]
+        }
     }
 
     actual fun writeFloats(
@@ -276,6 +317,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<FloatVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            buffer[index] = array[index + arrayIndex.toInt()]
+        }
     }
 
     actual fun readFloats(
@@ -284,6 +329,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<FloatVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            array[index + arrayIndex.toInt()] = buffer[index]
+        }
     }
 
     actual fun writeDoubles(
@@ -292,6 +341,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<DoubleVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            buffer[index] = array[index + arrayIndex.toInt()]
+        }
     }
 
     actual fun readDoubles(
@@ -300,5 +353,9 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<DoubleVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            array[index + arrayIndex.toInt()] = buffer[index]
+        }
     }
 }
