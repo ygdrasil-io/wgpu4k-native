@@ -59,19 +59,19 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceBytes.size * Byte.SIZE_BYTES).toULong())
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeBytes(sourceBytes, arrayIndex = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeBytes(sourceBytes, bufferOffset = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeBytes(sourceBytes, size = arraySize.toULong() + 1u)
             }
@@ -123,19 +123,19 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceArray.size * Short.SIZE_BYTES).toULong())
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeShorts(sourceArray, arrayIndex = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeShorts(sourceArray, bufferOffset = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeShorts(sourceArray, size = arraySize.toULong() + 1u)
             }
@@ -187,19 +187,19 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceArray.size * Int.SIZE_BYTES).toULong())
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeInts(sourceArray, arrayIndex = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeInts(sourceArray, bufferOffset = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeInts(sourceArray, size = arraySize.toULong() + 1u)
             }
@@ -251,19 +251,19 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceArray.size * Long.SIZE_BYTES).toULong())
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeLongs(sourceArray, arrayIndex = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeLongs(sourceArray, bufferOffset = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeLongs(sourceArray, size = arraySize.toULong() + 1u)
             }
@@ -315,19 +315,19 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceArray.size * Float.SIZE_BYTES).toULong())
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeFloats(sourceArray, arrayIndex = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeFloats(sourceArray, bufferOffset = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeFloats(sourceArray, size = arraySize.toULong() + 1u)
             }
@@ -379,19 +379,19 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceArray.size * Double.SIZE_BYTES).toULong())
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeDoubles(sourceArray, arrayIndex = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeDoubles(sourceArray, bufferOffset = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeDoubles(sourceArray, size = arraySize.toULong() + 1u)
             }
@@ -443,19 +443,19 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceArray.size * UByte.SIZE_BYTES).toULong())
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeUBytes(sourceArray, arrayIndex = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeUBytes(sourceArray, bufferOffset = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeUBytes(sourceArray, size = arraySize.toULong() + 1u)
             }
@@ -507,19 +507,19 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceArray.size * UShort.SIZE_BYTES).toULong())
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeUShorts(sourceArray, arrayIndex = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeUShorts(sourceArray, bufferOffset = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeUShorts(sourceArray, size = arraySize.toULong() + 1u)
             }
@@ -571,19 +571,19 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceArray.size * UInt.SIZE_BYTES).toULong())
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeUInts(sourceArray, arrayIndex = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeUInts(sourceArray, bufferOffset = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.writeUInts(sourceArray, size = arraySize.toULong() + 1u)
             }
@@ -635,19 +635,19 @@ class MemoryBufferArrayTest : FreeSpec({
             val buffer = scope.allocateBuffer((sourceArray.size * UInt.SIZE_BYTES).toULong())
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.readULongs(sourceArray, arrayIndex = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.readULongs(sourceArray, bufferOffset = 1u)
             }
 
             // Should
-            shouldThrow<IllegalStateException> {
+            shouldThrow<IllegalArgumentException> {
                 // When
                 buffer.readULongs(sourceArray, size = arraySize.toULong() + 1u)
             }

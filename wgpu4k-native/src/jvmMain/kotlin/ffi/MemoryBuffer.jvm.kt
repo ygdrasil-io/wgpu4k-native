@@ -26,8 +26,8 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         val sourceBytes = source.byteSize().toULong()
         val destinationBytes = memorySegment.byteSize().toULong()
 
-        if (destinationBytes < (destinationOffset + bytesToCopy)) error("Out of destination bounds")
-        if (sourceOffset + bytesToCopy > sourceBytes) error("Out of source bounds")
+        require(destinationBytes >= (destinationOffset + bytesToCopy)) { "Out of destination bounds" }
+        require(sourceOffset + bytesToCopy <= sourceBytes) { "Out of source bounds" }
 
         memorySegment.asSlice(destinationOffset.toLong(), bytesToCopy.toLong())
             .copyFrom(source.asSlice(sourceOffset.toLong(), bytesToCopy.toLong()))
@@ -45,8 +45,8 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
         val destinationBytes = destination.byteSize().toULong()
         val sourceBytes = memorySegment.byteSize().toULong()
 
-        if (destinationBytes < (destinationOffset + bytesToCopy)) error("Out of destination bounds")
-        if (sourceOffset + bytesToCopy > sourceBytes) error("Out of source bounds")
+        require(destinationBytes >= (destinationOffset + bytesToCopy)) { "Out of destination bounds" }
+        require(sourceOffset + bytesToCopy <= sourceBytes) { "Out of source bounds" }
 
         destination.asSlice(destinationOffset.toLong(), bytesToCopy.toLong())
             .copyFrom(memorySegment.asSlice(sourceOffset.toLong(), bytesToCopy.toLong()))

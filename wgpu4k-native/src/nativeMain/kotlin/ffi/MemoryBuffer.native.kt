@@ -19,6 +19,7 @@ import kotlinx.cinterop.UShortVar
 import kotlinx.cinterop.get
 import kotlinx.cinterop.pointed
 import kotlinx.cinterop.set
+import kotlinx.cinterop.sizeOf
 import kotlinx.cinterop.toCPointer
 import kotlinx.cinterop.value
 
@@ -341,6 +342,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array)
+
         val buffer = getPointerAtOffset<DoubleVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             buffer[index] = array[index + arrayIndex.toInt()]
@@ -353,9 +356,22 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        boundCheck(bufferOffset, size, arrayIndex, array)
+
         val buffer = getPointerAtOffset<DoubleVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
             array[index + arrayIndex.toInt()] = buffer[index]
         }
+    }
+
+    private fun boundCheck(
+        bufferOffset: ULong,
+        size: ULong,
+        arrayIndex: ULong,
+        array: DoubleArray
+    ) {
+        val bufferEnd = bufferOffset.toLong() + size.toInt() * sizeOf<DoubleVar>()
+        require(bufferEnd <= this.size.toLong()) { "Buffer overflow: trying to access $bufferEnd but buffer size is ${this.size}" }
+        require(arrayIndex.toInt() + size.toInt() <= array.size) { "Array overflow: trying to access ${(arrayIndex.toInt() + size.toInt())} but array size is ${array.size}" }
     }
 }
