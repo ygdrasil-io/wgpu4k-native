@@ -342,7 +342,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array)
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<DoubleVar>())
 
         val buffer = getPointerAtOffset<DoubleVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -356,7 +356,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array)
+        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<DoubleVar>())
 
         val buffer = getPointerAtOffset<DoubleVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -368,10 +368,11 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong,
         arrayIndex: ULong,
-        array: DoubleArray
+        arraySize: Int,
+        elementSizeInByte: Long
     ) {
-        val bufferEnd = bufferOffset.toLong() + size.toInt() * sizeOf<DoubleVar>()
+        val bufferEnd = bufferOffset.toLong() + size.toInt() * elementSizeInByte
         require(bufferEnd <= this.size.toLong()) { "Buffer overflow: trying to access $bufferEnd but buffer size is ${this.size}" }
-        require(arrayIndex.toInt() + size.toInt() <= array.size) { "Array overflow: trying to access ${(arrayIndex.toInt() + size.toInt())} but array size is ${array.size}" }
+        require(arrayIndex.toInt() + size.toInt() <= arraySize) { "Array overflow: trying to access ${(arrayIndex.toInt() + size.toInt())} but array size is ${arraySize}" }
     }
 }
