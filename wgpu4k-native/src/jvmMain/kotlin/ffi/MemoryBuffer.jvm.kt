@@ -10,8 +10,6 @@ actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val 
     actual val handler: NativeAddress = handler.handler.reinterpret(size.toLong()).let(::NativeAddress)
     val memorySegment: MemorySegment = handler.handler
 
-
-
     private fun writeArray(destinationOffset: ULong, source: MemorySegment, arrayIndex: ULong, size: ULong, elementSizeBytes: Int) {
         val sourceOffset = elementSizeBytes.toULong() * arrayIndex
         val bytesToCopy = elementSizeBytes.toULong() * size

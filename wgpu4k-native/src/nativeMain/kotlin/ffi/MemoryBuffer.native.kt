@@ -16,14 +16,17 @@ import kotlinx.cinterop.UByteVar
 import kotlinx.cinterop.UIntVar
 import kotlinx.cinterop.ULongVar
 import kotlinx.cinterop.UShortVar
+import kotlinx.cinterop.get
 import kotlinx.cinterop.pointed
+import kotlinx.cinterop.set
 import kotlinx.cinterop.toCPointer
 import kotlinx.cinterop.value
 
 actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, actual val size: ULong) {
 
     private fun <T : CPointed> getPointerAtOffset(offset: ULong): CPointer<T> {
-        return (handler.pointer.rawValue.toLong() + offset.toLong()).toCPointer() ?: error("fail to get pointer at offset $offset")
+        return (handler.pointer.rawValue.toLong() + offset.toLong()).toCPointer()
+            ?: error("fail to get pointer at offset $offset")
     }
 
     actual fun writeByte(value: Byte, offset: ULong) {
@@ -111,7 +114,8 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
     }
 
     actual fun readPointer(offset: ULong): NativeAddress {
-        return getPointerAtOffset<LongVar>(offset).pointed.value.toCPointer<COpaque>()?.let(::NativeAddress) ?: error("fail to read pointer at offset $offset")
+        return getPointerAtOffset<LongVar>(offset).pointed.value.toCPointer<COpaque>()?.let(::NativeAddress)
+            ?: error("fail to read pointer at offset $offset")
     }
 
     actual fun writeBytes(
@@ -120,6 +124,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<ByteVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            buffer[index] = array[index + arrayIndex.toInt()]
+        }
     }
 
     actual fun readBytes(
@@ -128,6 +136,10 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        val buffer = getPointerAtOffset<ByteVar>(bufferOffset)
+        (0 until size.toInt()).forEach { index ->
+            array[index + arrayIndex.toInt()] = buffer[index]
+        }
     }
 
     actual fun writeUBytes(
