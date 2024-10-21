@@ -146,22 +146,6 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
     ) {
     }
 
-    actual fun writeChars(
-        array: CharArray,
-        arrayIndex: ULong,
-        bufferOffset: ULong,
-        size: ULong
-    ) {
-    }
-
-    actual fun readChars(
-        array: CharArray,
-        arrayIndex: ULong,
-        bufferOffset: ULong,
-        size: ULong
-    ) {
-    }
-
     actual fun writeInts(
         array: IntArray,
         arrayIndex: ULong,
