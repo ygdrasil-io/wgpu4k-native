@@ -15,6 +15,7 @@ expect class MemoryAllocator() : AutoCloseable {
 
     fun allocateFrom(value: String): CString
     fun bufferOfAddress(value: NativeAddress): MemoryBuffer
+    fun bufferOfAddresses(value: List<NativeAddress>): MemoryBuffer
     fun allocateBuffer(size: ULong): MemoryBuffer
 }
 

@@ -34,4 +34,12 @@ actual class MemoryAllocator : AutoCloseable {
 
     actual fun allocateBuffer(size: ULong): MemoryBuffer = allocate(size.toLong())
         .let { MemoryBuffer(it, size) }
+
+    actual fun bufferOfAddresses(value: List<NativeAddress>): MemoryBuffer {
+        val size = (Long.SIZE_BYTES * value.size).toULong()
+        return allocateBuffer(size)
+            .also { buffer -> value.forEachIndexed { index, pointer ->
+                buffer.writePointer(pointer, (Long.SIZE_BYTES * index).toULong())
+            }}
+    }
 }
