@@ -61,6 +61,18 @@ private fun List<CLibraryModel.Enumeration>.injectWgpuEnumerations(): List<CLibr
             "Info" to 0x00000003,
             "Debug" to 0x00000004,
             "Trace" to 0x00000005,
+        )),
+        CLibraryModel.Enumeration("WGPUNativeSType", listOf(
+            "DeviceExtras" to 0x00030001,
+            "RequiredLimitsExtras" to 0x00030002,
+            "PipelineLayoutExtras" to 0x00030003,
+            "ShaderModuleGLSLDescriptor" to 0x00030004,
+            "SupportedLimitsExtras" to 0x00030005,
+            "InstanceExtras" to 0x00030006,
+            "BindGroupEntryExtras" to 0x00030007,
+            "BindGroupLayoutEntryExtras" to 0x00030008,
+            "QuerySetDescriptorExtras" to 0x00030009,
+            "SurfaceConfigurationExtras" to 0x0003000A,
         ))
     )
 }
