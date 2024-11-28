@@ -499,3 +499,15 @@ const val WGPULogLevel_Info : WGPULogLevel = 3u
 const val WGPULogLevel_Debug : WGPULogLevel = 4u
 const val WGPULogLevel_Trace : WGPULogLevel = 5u
 
+typealias WGPUNativeSType = UInt
+const val WGPUNativeSType_DeviceExtras : WGPUNativeSType = 196609u
+const val WGPUNativeSType_RequiredLimitsExtras : WGPUNativeSType = 196610u
+const val WGPUNativeSType_PipelineLayoutExtras : WGPUNativeSType = 196611u
+const val WGPUNativeSType_ShaderModuleGLSLDescriptor : WGPUNativeSType = 196612u
+const val WGPUNativeSType_SupportedLimitsExtras : WGPUNativeSType = 196613u
+const val WGPUNativeSType_InstanceExtras : WGPUNativeSType = 196614u
+const val WGPUNativeSType_BindGroupEntryExtras : WGPUNativeSType = 196615u
+const val WGPUNativeSType_BindGroupLayoutEntryExtras : WGPUNativeSType = 196616u
+const val WGPUNativeSType_QuerySetDescriptorExtras : WGPUNativeSType = 196617u
+const val WGPUNativeSType_SurfaceConfigurationExtras : WGPUNativeSType = 196618u
+
