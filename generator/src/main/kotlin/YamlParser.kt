@@ -47,11 +47,10 @@ val nativeMainBasePath = sourceBasePath
 fun main() {
     println(File(".").absoluteFile)
 
-    val webgpuCModel = basePath.resolve("webgpu-headers")
-        .resolve("webgpu.yml")
-        .readText()
-        .let { Yaml.default.decodeFromString(YamlModel.serializer(), it) }
+    val webgpuCModel = loadWebGPUYaml()
+        .merge(loadExtraYaml())
         .toCModel()
+
 
 
     typesCommonMainFile.generateTypesCommonMain(webgpuCModel.pointers)
@@ -92,6 +91,15 @@ fun main() {
     }
 }
 
+fun loadExtraYaml() = basePath.resolve("generator")
+    .resolve("extra.yml")
+    .readText()
+    .let { Yaml.default.decodeFromString(YamlModel.serializer(), it) }
+
+fun loadWebGPUYaml() = basePath.resolve("webgpu-headers")
+    .resolve("webgpu.yml")
+    .readText()
+    .let { Yaml.default.decodeFromString(YamlModel.serializer(), it) }
 
 
 

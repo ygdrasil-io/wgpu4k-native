@@ -16,6 +16,21 @@ data class YamlModel(
     val functions: List<Function>,
     val objects: List<Object>,
 ) {
+    fun merge(loadExtraYaml: YamlModel): YamlModel {
+        return YamlModel(
+            copyright = this.copyright,
+            name = this.name,
+            enum_prefix = this.enum_prefix,
+            constants = (this.constants + loadExtraYaml.constants).distinctBy { it.name },
+            typedefs = (this.typedefs + loadExtraYaml.typedefs).distinct(),
+            enums = (this.enums + loadExtraYaml.enums).distinctBy { it.name },
+            bitflags = (this.bitflags + loadExtraYaml.bitflags).distinctBy { it.name },
+            structs = (this.structs + loadExtraYaml.structs).distinctBy { it.name },
+            callbacks = (this.callbacks + loadExtraYaml.callbacks).distinctBy { it.name },
+            functions = (this.functions + loadExtraYaml.functions).distinctBy { it.name },
+            objects = (this.objects + loadExtraYaml.objects).distinctBy { it.name }
+        )
+    }
 
     @Serializable
     data class Object(
