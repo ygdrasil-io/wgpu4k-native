@@ -5,6 +5,46 @@ copyright: |
 name: webgpu
 enum_prefix: '0x0000'
 enums:
+  - name: InstanceBackend
+    doc: |
+      TODO
+    entries:
+      - name: All
+        doc: |
+          TODO
+        value: 0x00000000
+      - name: Vulkan
+        doc: |
+          TODO
+        value: 0x00000001
+      - name: GL
+        doc: |
+          TODO
+        value: 0x00000002
+      - name: Metal
+        doc: |
+          TODO
+        value: 0x00000004
+      - name: DX12
+        doc: |
+          TODO
+        value: 0x00000008
+      - name: DX11
+        doc: |
+          TODO
+        value: 0x00000016
+      - name: BrowserWebGPU
+        doc: |
+          TODO
+        value: 0x00000032
+      - name: Primary
+        doc: |
+          TODO
+        value: 0x00000045
+      - name: Secondary
+        doc: |
+          TODO
+        value: 0x00000018
   - name: LogLevel
     doc: |
       TODO
@@ -81,7 +121,36 @@ enums:
 constants: []
 typedefs: []
 bitflags: []
-structs: []
+structs:
+  - name: InstanceExtras
+    doc: |
+      TODO
+    type: base_in
+    members:
+      - name: backends
+        doc: |
+          TODO
+        type: enum.InstanceBackend
+      - name: flags
+        doc: |
+          TODO
+        type: InstanceFlag
+      - name: dx12ShaderCompiler
+        doc: |
+          TODO
+        type: Dx12Compiler
+      - name: gles3MinorVersion
+        doc: |
+          TODO
+        type: Gles3MinorVersion
+      - name: dxilPath
+        doc: |
+          TODO
+        type: string
+      - name: dxcPath
+        doc: |
+          TODO
+        type: string
 callbacks: []
 functions: []
 objects: []

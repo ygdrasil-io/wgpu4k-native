@@ -2182,6 +2182,26 @@ sealed class WGPUVertexBufferLayout(pointer: com.sun.jna.Pointer? = null) : com.
 	}
 }
 
+sealed class WGPUInstanceExtras(pointer: com.sun.jna.Pointer? = null) : com.sun.jna.Structure(pointer) {
+	@JvmField var nextInChain: com.sun.jna.Pointer? = null
+	@JvmField var dxilPath: WGPUStringView.ByValue = WGPUStringView.ByValue()
+	override fun getFieldOrder() = listOf("nextInChain", "dxilPath")
+
+	class ByReference(pointer: com.sun.jna.Pointer? = null) : WGPUInstanceExtras(pointer), com.sun.jna.Structure.ByReference {
+		constructor(other: WGPUInstanceExtras) : this(other.pointer) {
+			this.nextInChain = other.nextInChain
+			this.dxilPath = other.dxilPath
+		}
+	}
+
+	class ByValue(pointer: com.sun.jna.Pointer? = null) : WGPUInstanceExtras(pointer), com.sun.jna.Structure.ByValue {
+		constructor(other: WGPUInstanceExtras) : this(other.pointer) {
+			this.nextInChain = other.nextInChain
+			this.dxilPath = other.dxilPath
+		}
+	}
+}
+
 sealed class WGPUChainedStructOut(pointer: com.sun.jna.Pointer? = null) : com.sun.jna.Structure(pointer) {
 	@JvmField var next: WGPUChainedStructOut.ByReference?? = null
 	@JvmField var sType: Int = 0

@@ -1067,6 +1067,17 @@ expect interface WGPUVertexBufferLayout {
 	}
 }
 
+expect interface WGPUInstanceExtras {
+	var nextInChain: NativeAddress?
+	val dxilPath: WGPUStringView
+	val handler: NativeAddress
+	companion object {
+		operator fun invoke(address: NativeAddress): WGPUInstanceExtras
+		fun allocate(allocator: MemoryAllocator): WGPUInstanceExtras
+		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUInstanceExtras) -> Unit): ArrayHolder<WGPUInstanceExtras>
+	}
+}
+
 expect interface WGPUChainedStructOut {
 	var next: WGPUChainedStructOut?
 	var sType: WGPUSType

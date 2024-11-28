@@ -6893,6 +6893,70 @@ actual interface WGPUVertexBufferLayout {
 	}
 }
 
+actual interface WGPUInstanceExtras {
+
+	class ByReference(val handle: webgpu.android.WGPUInstanceExtras.ByReference = webgpu.android.WGPUInstanceExtras.ByReference(com.sun.jna.Pointer.NULL)) : WGPUInstanceExtras {
+		override var nextInChain: NativeAddress?
+			get() = handle.nextInChain
+			set(newValue) { handle.nextInChain = newValue }
+
+		override val dxilPath: WGPUStringView
+			get() = handle.dxilPath.let{ WGPUStringView.ByValue(it) }
+
+		override val handler: NativeAddress
+			get() {
+				handle.write()
+				return handle.getPointer()
+			}
+	}
+
+	class ByValue(val handle: webgpu.android.WGPUInstanceExtras.ByValue = webgpu.android.WGPUInstanceExtras.ByValue(com.sun.jna.Pointer.NULL)) : WGPUInstanceExtras {
+		override var nextInChain: NativeAddress?
+			get() = handle.nextInChain
+			set(newValue) { handle.nextInChain = newValue }
+
+		override val dxilPath: WGPUStringView
+			get() = handle.dxilPath.let{ WGPUStringView.ByValue(it) }
+
+		override val handler: NativeAddress
+			get() {
+				handle.write()
+				return handle.getPointer()
+			}
+	}
+
+	fun toCValue() = (this as ByReference).let{ webgpu.android.WGPUInstanceExtras.ByValue(handle) }
+	fun toReference() = (this as ByReference).handle
+
+	actual var nextInChain: NativeAddress?
+	actual val dxilPath: WGPUStringView
+	actual val handler: NativeAddress
+
+	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUInstanceExtras {
+			return webgpu.android.WGPUInstanceExtras.ByReference(address)
+				.also { it.read() }
+				.let(::ByReference)
+		}
+
+		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceExtras {
+			return WGPUInstanceExtras.ByReference()
+				.also { allocator.register(it) }
+		}
+
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceExtras) -> Unit): ArrayHolder<WGPUInstanceExtras> {
+			val array = webgpu.android.WGPUInstanceExtras.ByValue().toArray(size.toInt())
+			array.forEachIndexed { index, structure ->
+				(structure as webgpu.android.WGPUInstanceExtras.ByValue)
+					.also { provider(index.toUInt(), WGPUInstanceExtras.ByValue(it)) }
+					.write()
+			}
+			val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
+			return ArrayHolder(pointer)
+		}
+	}
+}
+
 actual interface WGPUChainedStructOut {
 
 	class ByReference(val handle: webgpu.android.WGPUChainedStructOut.ByReference = webgpu.android.WGPUChainedStructOut.ByReference(com.sun.jna.Pointer.NULL)) : WGPUChainedStructOut {

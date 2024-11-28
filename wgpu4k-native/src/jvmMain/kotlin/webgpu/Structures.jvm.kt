@@ -5249,6 +5249,54 @@ actual interface WGPUVertexBufferLayout : CStructure {
 		val attributesLayout = ffi.C_POINTER
 	}
 }
+actual interface WGPUInstanceExtras : CStructure {
+
+	@JvmInline
+	value class ByReference(override val handler: NativeAddress) : WGPUInstanceExtras {
+		override var nextInChain: NativeAddress?
+			get() = get(nextInChainLayout, nextInChainOffset)
+			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
+		override val dxilPath: WGPUStringView
+			get() = handler.handler.asSlice(dxilPathOffset, 16L).let(::NativeAddress).let { WGPUStringView(it) }
+	}
+
+	actual var nextInChain: NativeAddress?
+	actual val dxilPath: WGPUStringView
+
+	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUInstanceExtras {
+			return ByReference(address)
+		}
+
+		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceExtras {
+			return allocator.allocate(24L)
+				.let { WGPUInstanceExtras(it) }
+		}
+
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceExtras) -> Unit): ArrayHolder<WGPUInstanceExtras> {
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUInstanceExtras(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
+		}
+
+		internal val LAYOUT = structLayout(
+			ffi.C_POINTER.withName("nextInChain"),
+			WGPUStringView.LAYOUT.withName("dxilPath"),
+		).withName("WGPUInstanceExtras")
+
+		val nextInChainOffset = 0L
+		val nextInChainLayout = ffi.C_POINTER
+		val dxilPathOffset = 8L
+		val dxilPathLayout = WGPUStringView.LAYOUT
+	}
+}
 actual interface WGPUChainedStructOut : CStructure {
 
 	@JvmInline
