@@ -1069,7 +1069,12 @@ expect interface WGPUVertexBufferLayout {
 
 expect interface WGPUInstanceExtras {
 	var nextInChain: NativeAddress?
+	var backends: WGPUInstanceBackend
+	var flags: WGPUInstanceFlag
+	var dx12ShaderCompiler: WGPUDx12Compiler
+	var gles3MinorVersion: WGPUGles3MinorVersion
 	val dxilPath: WGPUStringView
+	val dxcPath: WGPUStringView
 	val handler: NativeAddress
 	companion object {
 		operator fun invoke(address: NativeAddress): WGPUInstanceExtras

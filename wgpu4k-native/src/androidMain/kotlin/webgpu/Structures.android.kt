@@ -6900,8 +6900,27 @@ actual interface WGPUInstanceExtras {
 			get() = handle.nextInChain
 			set(newValue) { handle.nextInChain = newValue }
 
+		override var backends: WGPUInstanceBackend
+			get() = handle.backends.toUInt()
+			set(newValue) { handle.backends = newValue.toInt() }
+
+		override var flags: WGPUInstanceFlag
+			get() = handle.flags.toUInt()
+			set(newValue) { handle.flags = newValue.toInt() }
+
+		override var dx12ShaderCompiler: WGPUDx12Compiler
+			get() = handle.dx12ShaderCompiler.toUInt()
+			set(newValue) { handle.dx12ShaderCompiler = newValue.toInt() }
+
+		override var gles3MinorVersion: WGPUGles3MinorVersion
+			get() = handle.gles3MinorVersion.toUInt()
+			set(newValue) { handle.gles3MinorVersion = newValue.toInt() }
+
 		override val dxilPath: WGPUStringView
 			get() = handle.dxilPath.let{ WGPUStringView.ByValue(it) }
+
+		override val dxcPath: WGPUStringView
+			get() = handle.dxcPath.let{ WGPUStringView.ByValue(it) }
 
 		override val handler: NativeAddress
 			get() {
@@ -6915,8 +6934,27 @@ actual interface WGPUInstanceExtras {
 			get() = handle.nextInChain
 			set(newValue) { handle.nextInChain = newValue }
 
+		override var backends: WGPUInstanceBackend
+			get() = handle.backends.toUInt()
+			set(newValue) { handle.backends = newValue.toInt() }
+
+		override var flags: WGPUInstanceFlag
+			get() = handle.flags.toUInt()
+			set(newValue) { handle.flags = newValue.toInt() }
+
+		override var dx12ShaderCompiler: WGPUDx12Compiler
+			get() = handle.dx12ShaderCompiler.toUInt()
+			set(newValue) { handle.dx12ShaderCompiler = newValue.toInt() }
+
+		override var gles3MinorVersion: WGPUGles3MinorVersion
+			get() = handle.gles3MinorVersion.toUInt()
+			set(newValue) { handle.gles3MinorVersion = newValue.toInt() }
+
 		override val dxilPath: WGPUStringView
 			get() = handle.dxilPath.let{ WGPUStringView.ByValue(it) }
+
+		override val dxcPath: WGPUStringView
+			get() = handle.dxcPath.let{ WGPUStringView.ByValue(it) }
 
 		override val handler: NativeAddress
 			get() {
@@ -6929,7 +6967,12 @@ actual interface WGPUInstanceExtras {
 	fun toReference() = (this as ByReference).handle
 
 	actual var nextInChain: NativeAddress?
+	actual var backends: WGPUInstanceBackend
+	actual var flags: WGPUInstanceFlag
+	actual var dx12ShaderCompiler: WGPUDx12Compiler
+	actual var gles3MinorVersion: WGPUGles3MinorVersion
 	actual val dxilPath: WGPUStringView
+	actual val dxcPath: WGPUStringView
 	actual val handler: NativeAddress
 
 	actual companion object {

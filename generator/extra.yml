@@ -5,6 +5,62 @@ copyright: |
 name: webgpu
 enum_prefix: '0x0000'
 enums:
+  - name: Gles3MinorVersion
+    doc: |
+      TODO
+    entries:
+      - name: Automatic
+        doc: |
+          TODO
+        value: 0x00000000
+      - name: Version0
+        doc: |
+          TODO
+        value: 0x00000001
+      - name: Version1
+        doc: |
+          TODO
+        value: 0x00000002
+      - name: Version2
+        doc: |
+          TODO
+        value: 0x00000003
+  - name: Dx12Compiler
+    doc: |
+      TODO
+    entries:
+      - name: Undefined
+        doc: |
+          TODO
+        value: 0x00000000
+      - name: Fxc
+        doc: |
+          TODO
+        value: 0x00000001
+      - name: Dxc
+        doc: |
+          TODO
+        value: 0x00000002
+  - name: InstanceFlag
+    doc: |
+      TODO
+    entries:
+      - name: Default
+        doc: |
+          TODO
+        value: 0x00000000
+      - name: Debug
+        doc: |
+          TODO
+        value: 0x00000001
+      - name: Validation
+        doc: |
+          TODO
+        value: 0x00000002
+      - name: DiscardHalLabels
+        doc: |
+          TODO
+        value: 0x00000004
   - name: InstanceBackend
     doc: |
       TODO
@@ -134,15 +190,15 @@ structs:
       - name: flags
         doc: |
           TODO
-        type: InstanceFlag
+        type: enum.InstanceFlag
       - name: dx12ShaderCompiler
         doc: |
           TODO
-        type: Dx12Compiler
+        type: enum.Dx12Compiler
       - name: gles3MinorVersion
         doc: |
           TODO
-        type: Gles3MinorVersion
+        type: enum.Gles3MinorVersion
       - name: dxilPath
         doc: |
           TODO

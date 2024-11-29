@@ -7248,8 +7248,27 @@ actual interface WGPUInstanceExtras {
 			get() = handle.useContents { nextInChain?.let(::NativeAddress) }
 			set(newValue) { handle.useContents { nextInChain = newValue?.reinterpret() } } 
 
+		override var backends: WGPUInstanceBackend
+			get() = handle.useContents { backends ?: error("pointer of WGPUInstanceExtras is null") }
+			set(newValue) { handle.useContents { backends = newValue } } 
+
+		override var flags: WGPUInstanceFlag
+			get() = handle.useContents { flags ?: error("pointer of WGPUInstanceExtras is null") }
+			set(newValue) { handle.useContents { flags = newValue } } 
+
+		override var dx12ShaderCompiler: WGPUDx12Compiler
+			get() = handle.useContents { dx12ShaderCompiler ?: error("pointer of WGPUInstanceExtras is null") }
+			set(newValue) { handle.useContents { dx12ShaderCompiler = newValue } } 
+
+		override var gles3MinorVersion: WGPUGles3MinorVersion
+			get() = handle.useContents { gles3MinorVersion ?: error("pointer of WGPUInstanceExtras is null") }
+			set(newValue) { handle.useContents { gles3MinorVersion = newValue } } 
+
 		override val dxilPath: WGPUStringView
 			get() = handle.useContents { dxilPath.rawPtr.toLong().let(::NativeAddress).let { WGPUStringView(it) } }
+
+		override val dxcPath: WGPUStringView
+			get() = handle.useContents { dxcPath.rawPtr.toLong().let(::NativeAddress).let { WGPUStringView(it) } }
 
 		override val handler: NativeAddress
 			get() = error("should not be call on CValue")
@@ -7260,13 +7279,37 @@ actual interface WGPUInstanceExtras {
 			get() = handler.reinterpret<webgpu.native.WGPUInstanceExtras>().pointed.nextInChain?.let(::NativeAddress)
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUInstanceExtras>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
 
+		override var backends: WGPUInstanceBackend
+			get() = handler.reinterpret<webgpu.native.WGPUInstanceExtras>().pointed.backends ?: error("pointer of WGPUInstanceExtras is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUInstanceExtras>().pointed.let { it.backends = newValue } } 
+
+		override var flags: WGPUInstanceFlag
+			get() = handler.reinterpret<webgpu.native.WGPUInstanceExtras>().pointed.flags ?: error("pointer of WGPUInstanceExtras is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUInstanceExtras>().pointed.let { it.flags = newValue } } 
+
+		override var dx12ShaderCompiler: WGPUDx12Compiler
+			get() = handler.reinterpret<webgpu.native.WGPUInstanceExtras>().pointed.dx12ShaderCompiler ?: error("pointer of WGPUInstanceExtras is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUInstanceExtras>().pointed.let { it.dx12ShaderCompiler = newValue } } 
+
+		override var gles3MinorVersion: WGPUGles3MinorVersion
+			get() = handler.reinterpret<webgpu.native.WGPUInstanceExtras>().pointed.gles3MinorVersion ?: error("pointer of WGPUInstanceExtras is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUInstanceExtras>().pointed.let { it.gles3MinorVersion = newValue } } 
+
 		override val dxilPath: WGPUStringView
 			get() = handler.reinterpret<webgpu.native.WGPUInstanceExtras>().pointed.dxilPath.rawPtr.toLong().let(::NativeAddress).let { WGPUStringView(it) }
+
+		override val dxcPath: WGPUStringView
+			get() = handler.reinterpret<webgpu.native.WGPUInstanceExtras>().pointed.dxcPath.rawPtr.toLong().let(::NativeAddress).let { WGPUStringView(it) }
 
 	}
 
 	actual var nextInChain: NativeAddress?
+	actual var backends: WGPUInstanceBackend
+	actual var flags: WGPUInstanceFlag
+	actual var dx12ShaderCompiler: WGPUDx12Compiler
+	actual var gles3MinorVersion: WGPUGles3MinorVersion
 	actual val dxilPath: WGPUStringView
+	actual val dxcPath: WGPUStringView
 	actual val handler: NativeAddress
 
 	actual companion object {
@@ -7295,14 +7338,24 @@ actual interface WGPUInstanceExtras {
 	fun toCValue(): CValue<webgpu.native.WGPUInstanceExtras> {
 		return cValue<webgpu.native.WGPUInstanceExtras> {
 			dxilPath.adapt(this@WGPUInstanceExtras.dxilPath)
+			dxcPath.adapt(this@WGPUInstanceExtras.dxcPath)
 			nextInChain = this@WGPUInstanceExtras.nextInChain?.reinterpret()
+			backends = this@WGPUInstanceExtras.backends
+			flags = this@WGPUInstanceExtras.flags
+			dx12ShaderCompiler = this@WGPUInstanceExtras.dx12ShaderCompiler
+			gles3MinorVersion = this@WGPUInstanceExtras.gles3MinorVersion
 		}
 	}
 }
 
 fun webgpu.native.WGPUInstanceExtras.adapt(structure: WGPUInstanceExtras) {
 	dxilPath.adapt(structure.dxilPath)
+	dxcPath.adapt(structure.dxcPath)
 	nextInChain = structure.nextInChain?.reinterpret()
+	backends = structure.backends
+	flags = structure.flags
+	dx12ShaderCompiler = structure.dx12ShaderCompiler
+	gles3MinorVersion = structure.gles3MinorVersion
 }
 
 actual interface WGPUChainedStructOut {

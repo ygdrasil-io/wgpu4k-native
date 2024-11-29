@@ -2184,20 +2184,35 @@ sealed class WGPUVertexBufferLayout(pointer: com.sun.jna.Pointer? = null) : com.
 
 sealed class WGPUInstanceExtras(pointer: com.sun.jna.Pointer? = null) : com.sun.jna.Structure(pointer) {
 	@JvmField var nextInChain: com.sun.jna.Pointer? = null
+	@JvmField var backends: Int = 0
+	@JvmField var flags: Int = 0
+	@JvmField var dx12ShaderCompiler: Int = 0
+	@JvmField var gles3MinorVersion: Int = 0
 	@JvmField var dxilPath: WGPUStringView.ByValue = WGPUStringView.ByValue()
-	override fun getFieldOrder() = listOf("nextInChain", "dxilPath")
+	@JvmField var dxcPath: WGPUStringView.ByValue = WGPUStringView.ByValue()
+	override fun getFieldOrder() = listOf("nextInChain", "backends", "flags", "dx12ShaderCompiler", "gles3MinorVersion", "dxilPath", "dxcPath")
 
 	class ByReference(pointer: com.sun.jna.Pointer? = null) : WGPUInstanceExtras(pointer), com.sun.jna.Structure.ByReference {
 		constructor(other: WGPUInstanceExtras) : this(other.pointer) {
 			this.nextInChain = other.nextInChain
+			this.backends = other.backends
+			this.flags = other.flags
+			this.dx12ShaderCompiler = other.dx12ShaderCompiler
+			this.gles3MinorVersion = other.gles3MinorVersion
 			this.dxilPath = other.dxilPath
+			this.dxcPath = other.dxcPath
 		}
 	}
 
 	class ByValue(pointer: com.sun.jna.Pointer? = null) : WGPUInstanceExtras(pointer), com.sun.jna.Structure.ByValue {
 		constructor(other: WGPUInstanceExtras) : this(other.pointer) {
 			this.nextInChain = other.nextInChain
+			this.backends = other.backends
+			this.flags = other.flags
+			this.dx12ShaderCompiler = other.dx12ShaderCompiler
+			this.gles3MinorVersion = other.gles3MinorVersion
 			this.dxilPath = other.dxilPath
+			this.dxcPath = other.dxcPath
 		}
 	}
 }

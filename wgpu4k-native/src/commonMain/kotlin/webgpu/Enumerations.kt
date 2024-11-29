@@ -451,6 +451,34 @@ const val WGPUWGSLFeatureName_Packed4x8IntegerDotProduct : WGPUWGSLFeatureName =
 const val WGPUWGSLFeatureName_UnrestrictedPointerParameters : WGPUWGSLFeatureName = 3u
 const val WGPUWGSLFeatureName_PointerCompositeAccess : WGPUWGSLFeatureName = 4u
 
+typealias WGPUGles3MinorVersion = UInt
+const val WGPUGles3MinorVersion_Automatic : WGPUGles3MinorVersion = 0u
+const val WGPUGles3MinorVersion_Version0 : WGPUGles3MinorVersion = 1u
+const val WGPUGles3MinorVersion_Version1 : WGPUGles3MinorVersion = 2u
+const val WGPUGles3MinorVersion_Version2 : WGPUGles3MinorVersion = 3u
+
+typealias WGPUDx12Compiler = UInt
+const val WGPUDx12Compiler_Undefined : WGPUDx12Compiler = 0u
+const val WGPUDx12Compiler_Fxc : WGPUDx12Compiler = 1u
+const val WGPUDx12Compiler_Dxc : WGPUDx12Compiler = 2u
+
+typealias WGPUInstanceFlag = UInt
+const val WGPUInstanceFlag_Default : WGPUInstanceFlag = 0u
+const val WGPUInstanceFlag_Debug : WGPUInstanceFlag = 1u
+const val WGPUInstanceFlag_Validation : WGPUInstanceFlag = 2u
+const val WGPUInstanceFlag_DiscardHalLabels : WGPUInstanceFlag = 4u
+
+typealias WGPUInstanceBackend = UInt
+const val WGPUInstanceBackend_All : WGPUInstanceBackend = 0u
+const val WGPUInstanceBackend_Vulkan : WGPUInstanceBackend = 1u
+const val WGPUInstanceBackend_GL : WGPUInstanceBackend = 2u
+const val WGPUInstanceBackend_Metal : WGPUInstanceBackend = 4u
+const val WGPUInstanceBackend_DX12 : WGPUInstanceBackend = 8u
+const val WGPUInstanceBackend_DX11 : WGPUInstanceBackend = 22u
+const val WGPUInstanceBackend_BrowserWebGPU : WGPUInstanceBackend = 50u
+const val WGPUInstanceBackend_Primary : WGPUInstanceBackend = 69u
+const val WGPUInstanceBackend_Secondary : WGPUInstanceBackend = 24u
+
 typealias WGPULogLevel = UInt
 const val WGPULogLevel_Off : WGPULogLevel = 0u
 const val WGPULogLevel_Error : WGPULogLevel = 1u
