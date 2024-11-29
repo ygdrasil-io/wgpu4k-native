@@ -6896,17 +6896,16 @@ actual interface WGPUVertexBufferLayout {
 actual interface WGPUInstanceExtras {
 
 	class ByReference(val handle: webgpu.android.WGPUInstanceExtras.ByReference = webgpu.android.WGPUInstanceExtras.ByReference(com.sun.jna.Pointer.NULL)) : WGPUInstanceExtras {
-		override var nextInChain: NativeAddress?
-			get() = handle.nextInChain
-			set(newValue) { handle.nextInChain = newValue }
+		override val chain: WGPUChainedStruct
+			get() = handle.chain.let{ WGPUChainedStruct.ByValue(it) }
 
-		override var backends: WGPUInstanceBackend
-			get() = handle.backends.toUInt()
-			set(newValue) { handle.backends = newValue.toInt() }
+		override var backends: ULong
+			get() = handle.backends.toULong()
+			set(newValue) { handle.backends = newValue.toLong() }
 
-		override var flags: WGPUInstanceFlag
-			get() = handle.flags.toUInt()
-			set(newValue) { handle.flags = newValue.toInt() }
+		override var flags: ULong
+			get() = handle.flags.toULong()
+			set(newValue) { handle.flags = newValue.toLong() }
 
 		override var dx12ShaderCompiler: WGPUDx12Compiler
 			get() = handle.dx12ShaderCompiler.toUInt()
@@ -6930,17 +6929,16 @@ actual interface WGPUInstanceExtras {
 	}
 
 	class ByValue(val handle: webgpu.android.WGPUInstanceExtras.ByValue = webgpu.android.WGPUInstanceExtras.ByValue(com.sun.jna.Pointer.NULL)) : WGPUInstanceExtras {
-		override var nextInChain: NativeAddress?
-			get() = handle.nextInChain
-			set(newValue) { handle.nextInChain = newValue }
+		override val chain: WGPUChainedStruct
+			get() = handle.chain.let{ WGPUChainedStruct.ByValue(it) }
 
-		override var backends: WGPUInstanceBackend
-			get() = handle.backends.toUInt()
-			set(newValue) { handle.backends = newValue.toInt() }
+		override var backends: ULong
+			get() = handle.backends.toULong()
+			set(newValue) { handle.backends = newValue.toLong() }
 
-		override var flags: WGPUInstanceFlag
-			get() = handle.flags.toUInt()
-			set(newValue) { handle.flags = newValue.toInt() }
+		override var flags: ULong
+			get() = handle.flags.toULong()
+			set(newValue) { handle.flags = newValue.toLong() }
 
 		override var dx12ShaderCompiler: WGPUDx12Compiler
 			get() = handle.dx12ShaderCompiler.toUInt()
@@ -6966,9 +6964,9 @@ actual interface WGPUInstanceExtras {
 	fun toCValue() = (this as ByReference).let{ webgpu.android.WGPUInstanceExtras.ByValue(handle) }
 	fun toReference() = (this as ByReference).handle
 
-	actual var nextInChain: NativeAddress?
-	actual var backends: WGPUInstanceBackend
-	actual var flags: WGPUInstanceFlag
+	actual val chain: WGPUChainedStruct
+	actual var backends: ULong
+	actual var flags: ULong
 	actual var dx12ShaderCompiler: WGPUDx12Compiler
 	actual var gles3MinorVersion: WGPUGles3MinorVersion
 	actual val dxilPath: WGPUStringView

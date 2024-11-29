@@ -41,66 +41,6 @@ enums:
         doc: |
           TODO
         value: 0x00000002
-  - name: InstanceFlag
-    doc: |
-      TODO
-    entries:
-      - name: Default
-        doc: |
-          TODO
-        value: 0x00000000
-      - name: Debug
-        doc: |
-          TODO
-        value: 0x00000001
-      - name: Validation
-        doc: |
-          TODO
-        value: 0x00000002
-      - name: DiscardHalLabels
-        doc: |
-          TODO
-        value: 0x00000004
-  - name: InstanceBackend
-    doc: |
-      TODO
-    entries:
-      - name: All
-        doc: |
-          TODO
-        value: 0x00000000
-      - name: Vulkan
-        doc: |
-          TODO
-        value: 0x00000001
-      - name: GL
-        doc: |
-          TODO
-        value: 0x00000002
-      - name: Metal
-        doc: |
-          TODO
-        value: 0x00000004
-      - name: DX12
-        doc: |
-          TODO
-        value: 0x00000008
-      - name: DX11
-        doc: |
-          TODO
-        value: 0x00000016
-      - name: BrowserWebGPU
-        doc: |
-          TODO
-        value: 0x00000032
-      - name: Primary
-        doc: |
-          TODO
-        value: 0x00000045
-      - name: Secondary
-        doc: |
-          TODO
-        value: 0x00000018
   - name: LogLevel
     doc: |
       TODO
@@ -176,21 +116,76 @@ enums:
         value: 0x0003000A
 constants: []
 typedefs: []
-bitflags: []
+bitflags:
+  - name: InstanceFlag
+    doc: |
+      TODO
+    entries:
+      - name: Default
+        doc: |
+          TODO
+      - name: Debug
+        doc: |
+          TODO
+      - name: Validation
+        doc: |
+          TODO
+      - name: DiscardHalLabels
+        doc: |
+          TODO
+  - name: InstanceBackend
+    doc: |
+      TODO
+    entries:
+      - name: All
+        doc: |
+          TODO
+      - name: Vulkan
+        doc: |
+          TODO
+      - name: GL
+        doc: |
+          TODO
+      - name: Metal
+        doc: |
+          TODO
+      - name: DX12
+        doc: |
+          TODO
+      - name: DX11
+        doc: |
+          TODO
+      - name: BrowserWebGPU
+        doc: |
+          TODO
+      - name: Primary
+        doc: |
+          TODO
+        value_combination:
+          - Vulkan
+          - Metal
+          - DX12
+          - BrowserWebGPU
+      - name: Secondary
+        doc: |
+          TODO
+        value_combination:
+          - GL
+          - DX11
 structs:
   - name: InstanceExtras
     doc: |
       TODO
-    type: base_in
+    type: extension_in
     members:
       - name: backends
         doc: |
           TODO
-        type: enum.InstanceBackend
+        type: bitflag.InstanceBackend
       - name: flags
         doc: |
           TODO
-        type: enum.InstanceFlag
+        type: bitflag.InstanceFlag
       - name: dx12ShaderCompiler
         doc: |
           TODO

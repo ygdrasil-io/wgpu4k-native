@@ -2183,18 +2183,18 @@ sealed class WGPUVertexBufferLayout(pointer: com.sun.jna.Pointer? = null) : com.
 }
 
 sealed class WGPUInstanceExtras(pointer: com.sun.jna.Pointer? = null) : com.sun.jna.Structure(pointer) {
-	@JvmField var nextInChain: com.sun.jna.Pointer? = null
-	@JvmField var backends: Int = 0
-	@JvmField var flags: Int = 0
+	@JvmField var chain: WGPUChainedStruct.ByValue = WGPUChainedStruct.ByValue()
+	@JvmField var backends: Long = 0L
+	@JvmField var flags: Long = 0L
 	@JvmField var dx12ShaderCompiler: Int = 0
 	@JvmField var gles3MinorVersion: Int = 0
 	@JvmField var dxilPath: WGPUStringView.ByValue = WGPUStringView.ByValue()
 	@JvmField var dxcPath: WGPUStringView.ByValue = WGPUStringView.ByValue()
-	override fun getFieldOrder() = listOf("nextInChain", "backends", "flags", "dx12ShaderCompiler", "gles3MinorVersion", "dxilPath", "dxcPath")
+	override fun getFieldOrder() = listOf("chain", "backends", "flags", "dx12ShaderCompiler", "gles3MinorVersion", "dxilPath", "dxcPath")
 
 	class ByReference(pointer: com.sun.jna.Pointer? = null) : WGPUInstanceExtras(pointer), com.sun.jna.Structure.ByReference {
 		constructor(other: WGPUInstanceExtras) : this(other.pointer) {
-			this.nextInChain = other.nextInChain
+			this.chain = other.chain
 			this.backends = other.backends
 			this.flags = other.flags
 			this.dx12ShaderCompiler = other.dx12ShaderCompiler
@@ -2206,7 +2206,7 @@ sealed class WGPUInstanceExtras(pointer: com.sun.jna.Pointer? = null) : com.sun.
 
 	class ByValue(pointer: com.sun.jna.Pointer? = null) : WGPUInstanceExtras(pointer), com.sun.jna.Structure.ByValue {
 		constructor(other: WGPUInstanceExtras) : this(other.pointer) {
-			this.nextInChain = other.nextInChain
+			this.chain = other.chain
 			this.backends = other.backends
 			this.flags = other.flags
 			this.dx12ShaderCompiler = other.dx12ShaderCompiler

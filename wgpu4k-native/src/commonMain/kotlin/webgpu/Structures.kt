@@ -1068,9 +1068,9 @@ expect interface WGPUVertexBufferLayout {
 }
 
 expect interface WGPUInstanceExtras {
-	var nextInChain: NativeAddress?
-	var backends: WGPUInstanceBackend
-	var flags: WGPUInstanceFlag
+	val chain: WGPUChainedStruct
+	var backends: ULong
+	var flags: ULong
 	var dx12ShaderCompiler: WGPUDx12Compiler
 	var gles3MinorVersion: WGPUGles3MinorVersion
 	val dxilPath: WGPUStringView

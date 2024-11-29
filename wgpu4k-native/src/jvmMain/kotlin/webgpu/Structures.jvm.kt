@@ -5253,14 +5253,13 @@ actual interface WGPUInstanceExtras : CStructure {
 
 	@JvmInline
 	value class ByReference(override val handler: NativeAddress) : WGPUInstanceExtras {
-		override var nextInChain: NativeAddress?
-			get() = get(nextInChainLayout, nextInChainOffset)
-			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
-		override var backends: WGPUInstanceBackend
-			get() = getUInt(backendsOffset)
+		override val chain: WGPUChainedStruct
+			get() = handler.handler.asSlice(chainOffset, 16L).let(::NativeAddress).let { WGPUChainedStruct(it) }
+		override var backends: ULong
+			get() = getULong(backendsOffset)
 			set(newValue) = set(backendsOffset, newValue)
-		override var flags: WGPUInstanceFlag
-			get() = getUInt(flagsOffset)
+		override var flags: ULong
+			get() = getULong(flagsOffset)
 			set(newValue) = set(flagsOffset, newValue)
 		override var dx12ShaderCompiler: WGPUDx12Compiler
 			get() = getUInt(dx12ShaderCompilerOffset)
@@ -5274,9 +5273,9 @@ actual interface WGPUInstanceExtras : CStructure {
 			get() = handler.handler.asSlice(dxcPathOffset, 16L).let(::NativeAddress).let { WGPUStringView(it) }
 	}
 
-	actual var nextInChain: NativeAddress?
-	actual var backends: WGPUInstanceBackend
-	actual var flags: WGPUInstanceFlag
+	actual val chain: WGPUChainedStruct
+	actual var backends: ULong
+	actual var flags: ULong
 	actual var dx12ShaderCompiler: WGPUDx12Compiler
 	actual var gles3MinorVersion: WGPUGles3MinorVersion
 	actual val dxilPath: WGPUStringView
@@ -5288,15 +5287,15 @@ actual interface WGPUInstanceExtras : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceExtras {
-			return allocator.allocate(56L)
+			return allocator.allocate(72L)
 				.let { WGPUInstanceExtras(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceExtras) -> Unit): ArrayHolder<WGPUInstanceExtras> {
-			return allocator.allocate(56 * size.toLong())
+			return allocator.allocate(72 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 56L)
+						it.handler.asSlice(index.toLong() * 72L)
 							.let(::NativeAddress)
 							.let { WGPUInstanceExtras(it) }
 							.let { provider(index, it) }
@@ -5306,28 +5305,28 @@ actual interface WGPUInstanceExtras : CStructure {
 		}
 
 		internal val LAYOUT = structLayout(
-			ffi.C_POINTER.withName("nextInChain"),
-			ffi.C_INT.withName("backends"),
-			ffi.C_INT.withName("flags"),
+			WGPUChainedStruct.LAYOUT.withName("chain"),
+			ffi.C_LONG.withName("backends"),
+			ffi.C_LONG.withName("flags"),
 			ffi.C_INT.withName("dx12ShaderCompiler"),
 			ffi.C_INT.withName("gles3MinorVersion"),
 			WGPUStringView.LAYOUT.withName("dxilPath"),
 			WGPUStringView.LAYOUT.withName("dxcPath"),
 		).withName("WGPUInstanceExtras")
 
-		val nextInChainOffset = 0L
-		val nextInChainLayout = ffi.C_POINTER
-		val backendsOffset = 8L
-		val backendsLayout = ffi.C_INT
-		val flagsOffset = 12L
-		val flagsLayout = ffi.C_INT
-		val dx12ShaderCompilerOffset = 16L
+		val chainOffset = 0L
+		val chainLayout = WGPUChainedStruct.LAYOUT
+		val backendsOffset = 16L
+		val backendsLayout = ffi.C_LONG
+		val flagsOffset = 24L
+		val flagsLayout = ffi.C_LONG
+		val dx12ShaderCompilerOffset = 32L
 		val dx12ShaderCompilerLayout = ffi.C_INT
-		val gles3MinorVersionOffset = 20L
+		val gles3MinorVersionOffset = 36L
 		val gles3MinorVersionLayout = ffi.C_INT
-		val dxilPathOffset = 24L
+		val dxilPathOffset = 40L
 		val dxilPathLayout = WGPUStringView.LAYOUT
-		val dxcPathOffset = 40L
+		val dxcPathOffset = 56L
 		val dxcPathLayout = WGPUStringView.LAYOUT
 	}
 }
