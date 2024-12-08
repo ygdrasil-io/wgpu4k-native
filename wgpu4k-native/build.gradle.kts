@@ -139,6 +139,13 @@ configureDownloadTasks {
 
     /*** Macos ***/
     download("wgpu-macos-aarch64-release.zip") {
+        extract("wgpu-native-meta/webgpu.yml", buildNativeResourcesDirectory.resolve("webgpu.yml")).doLast {
+            Files.move(
+                buildNativeResourcesDirectory.resolve("wgpu-native-meta").resolve("webgpu.yml").toPath(),
+                buildNativeResourcesDirectory.resolve("webgpu.yml").toPath()
+            )
+            buildNativeResourcesDirectory.resolve("wgpu-native-meta").deleteRecursively()
+        }
         extract("include/webgpu/webgpu.h", buildNativeResourcesDirectory.resolve("webgpu.h")).doLast {
             Files.move(
                 buildNativeResourcesDirectory.resolve("include").resolve("webgpu").resolve("webgpu.h").toPath(),
@@ -146,9 +153,9 @@ configureDownloadTasks {
             )
             buildNativeResourcesDirectory.resolve("include").deleteRecursively()
         }
-        extract("include/wgpu/wgpu.h", buildNativeResourcesDirectory.resolve("wgpu.h")).doLast {
+        extract("include/webgpu/wgpu.h", buildNativeResourcesDirectory.resolve("wgpu.h")).doLast {
             Files.move(
-                buildNativeResourcesDirectory.resolve("include").resolve("wgpu").resolve("wgpu.h").toPath(),
+                buildNativeResourcesDirectory.resolve("include").resolve("webgpu").resolve("wgpu.h").toPath(),
                 buildNativeResourcesDirectory.resolve("wgpu.h").toPath()
             )
             buildNativeResourcesDirectory.resolve("include").deleteRecursively()

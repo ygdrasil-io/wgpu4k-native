@@ -1,6 +1,11 @@
 import com.charleskorn.kaml.Yaml
+import com.charleskorn.kaml.YamlList
+import com.charleskorn.kaml.YamlNode
+import com.charleskorn.kaml.YamlNull
+import com.charleskorn.kaml.yamlMap
+import com.charleskorn.kaml.yamlScalar
 import converter.toCModel
-import domain.YamlModel
+import domain.YamlModelV2
 import generator.enumerationCommonMainFile
 import generator.functionsCommonMainFile
 import generator.functionsJvmMainFile
@@ -47,11 +52,10 @@ val nativeMainBasePath = sourceBasePath
 fun main() {
     println(File(".").absoluteFile)
 
+
     val webgpuCModel = loadWebGPUYaml()
         .merge(loadExtraYaml())
         .toCModel()
-
-
 
     typesCommonMainFile.generateTypesCommonMain(webgpuCModel.pointers)
 
@@ -94,13 +98,49 @@ fun main() {
 fun loadExtraYaml() = basePath.resolve("generator")
     .resolve("extra.yml")
     .readText()
-    .let { Yaml.default.decodeFromString(YamlModel.serializer(), it) }
+    .let { text -> parser.decodeFromString(YamlModelV2.serializer(), text).also { injectEnumValues(text, it) }  }
 
-fun loadWebGPUYaml() = basePath.resolve("webgpu-headers")
+fun loadWebGPUYaml() = basePath.resolve("wgpu4k-native")
+    .resolve("build")
+    .resolve("native")
     .resolve("webgpu.yml")
     .readText()
-    .let { Yaml.default.decodeFromString(YamlModel.serializer(), it) }
+    .let { text -> parser.decodeFromString(YamlModelV2.serializer(), text).also { injectEnumValues(text, it) } }
 
 
+private fun injectEnumValues(text: String, model: YamlModelV2): YamlModelV2 {
+    val enumNodes = (Yaml.default.parseToYamlNode(text)
+        .yamlMap.get<YamlList>("enums") ?: error("enums not found"))
 
+    val enums = model.enums.map { enum ->
+        val result = enumNodes.items.firstOrNull { it.yamlMap.get<YamlNode>("name")!!.yamlScalar.content == enum.name }
+            ?: error("enum ${enum.name} not found")
+        val entries = result.yamlMap.get<YamlList>("entries")!!.items
+            .filter { entry -> entry !is YamlNull }
+            .map { entry ->
+                val name = entry.yamlMap.get<YamlNode>("name")!!.yamlScalar.content
+                val doc = entry.yamlMap.get<YamlNode>("doc")!!.yamlScalar.content
+                YamlModelV2.Enum.Entry(name, doc)
+        }
+        YamlModelV2.Enum(enum.name, enum.doc, entries)
+    }
+
+    return YamlModelV2(
+        copyright = model.copyright,
+        name = model.name,
+        enum_prefix = model.enum_prefix,
+        constants = model.constants,
+        typedefs = model.typedefs,
+        enums = enums,
+        bitflags = model.bitflags,
+        structs = model.structs,
+        callbacks = model.callbacks,
+        functions = model.functions,
+        objects = model.objects
+    )
+}
+
+val parser = Yaml(
+    configuration = Yaml.default.configuration.copy(strictMode = false)
+)
 

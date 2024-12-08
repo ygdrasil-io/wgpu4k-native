@@ -10,9 +10,10 @@ import domain.CLibraryModel
 import domain.CLibraryModel.Type
 import domain.YamlModel
 import domain.YamlModel.Enum.Entry
+import domain.YamlModelV2
 import domain.toCType
 
-internal fun YamlModel.toCModel(): CLibraryModel {
+internal fun YamlModelV2.toCModel(): CLibraryModel {
     val pointers = convertToPointer()
     val functions = convertToCLibraryFunctions()
         .injectWgpuFunctions()
@@ -69,10 +70,10 @@ private fun List<CLibraryModel.Function>.injectWgpuFunctions(): List<CLibraryMod
     )
 }
 
-private fun YamlModel.generateCLibraryStructures() = structs.map {
+private fun YamlModelV2.generateCLibraryStructures() = structs.map {
     val members = when {
         it.type == "base_in" -> listOf(
-            YamlModel.Struct.Member(
+            YamlModelV2.Struct.Member(
                 "nextInChain",
                 "",
                 "c_void",
@@ -81,9 +82,9 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
             )
         ) + it.members
 
-        it.type == "extension_in" -> listOf(YamlModel.Struct.Member("chain", "", "struct.chained_struct")) + it.members
+        it.type == "extension_in" -> listOf(YamlModelV2.Struct.Member("chain", "", "struct.chained_struct")) + it.members
         it.type == "base_out" -> listOf(
-            YamlModel.Struct.Member(
+            YamlModelV2.Struct.Member(
                 "nextInChain",
                 "",
                 "c_void",
@@ -156,20 +157,20 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
     )
 }
 
-private fun YamlModel.convertToCLibraryEnumerations() =
+private fun YamlModelV2.convertToCLibraryEnumerations() =
     enums.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertEnumToEnumValues()) } +
             bitflags.map { CLibraryModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertToEnumValues()) }
 
-private fun List<YamlModel.Bitflag.Entry>.convertToEnumValues(): List<Pair<String, Int>> = mapIndexed { index, entry ->
+private fun List<YamlModelV2.Bitflag.Entry>.convertToEnumValues(): List<Pair<String, Int>> = mapIndexed { index, entry ->
     entry.name.convertToEnumValueName() to index
 }
 
-private fun List<YamlModel.Enum.Entry>.convertEnumToEnumValues(): List<Pair<String, Int>> = mapIndexed { index, entry ->
+private fun List<YamlModelV2.Enum.Entry>.convertEnumToEnumValues(): List<Pair<String, Int>> = mapIndexed { index, entry ->
     entry.name.convertToEnumValueName() to (entry.value ?: index)
 }
 
 
-private fun YamlModel.convertToCLibraryFunctions(): List<CLibraryModel.Function> = functions
+private fun YamlModelV2.convertToCLibraryFunctions(): List<CLibraryModel.Function> = functions
     // TODO Skip until added to binding
     .filter { it.name != "get_instance_features" }
     .map {
@@ -183,11 +184,11 @@ private fun YamlModel.convertToCLibraryFunctions(): List<CLibraryModel.Function>
         )
     } + objects.flatMap { reference ->
     (listOf(
-        YamlModel.Function("release", "")
+        YamlModelV2.Function("release", "")
     ) + reference.methods)
         .map {
             val name = "${reference.name}_${it.name}".convertToKotlinFunctionName()
-            val args = listOf(YamlModel.Function.Arg("handler", "", "object.${reference.name}")) + it.args
+            val args = listOf(YamlModelV2.Function.Arg("handler", "", "object.${reference.name}")) + it.args
             CLibraryModel.Function(
                 name,
                 it.returns.let { it?.type }.toCType(it.returns?.pointer != null, it.returns?.pointer == "mutable"),
@@ -199,7 +200,7 @@ private fun YamlModel.convertToCLibraryFunctions(): List<CLibraryModel.Function>
         }
 }
 
-fun convertToCFunctionArgs(args: List<YamlModel.Function.Arg>, callback: String?): List<Pair<String, Type>> {
+fun convertToCFunctionArgs(args: List<YamlModelV2.Function.Arg>, callback: String?): List<Pair<String, Type>> {
     return args.flatMap { arg ->
         (arg.name.convertToKotlinVariableName() to arg.type.toCType(
             arg.pointer != null,
@@ -222,7 +223,7 @@ private fun String?.injectCallbackInfoStructure(): List<Pair<String, Type>> = wh
     else -> emptyList()
 }
 
-private fun YamlModel.convertToPointer(): List<CLibraryModel.Pointer> {
+private fun YamlModelV2.convertToPointer(): List<CLibraryModel.Pointer> {
     val pointers = objects.map { it.name.convertToKotlinClassName() }
         .map { CLibraryModel.Pointer(it) }
     return pointers
