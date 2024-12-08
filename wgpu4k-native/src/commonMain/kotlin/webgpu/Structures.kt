@@ -250,9 +250,6 @@ expect interface WGPUCompilationMessage {
 	var linePos: ULong
 	var offset: ULong
 	var length: ULong
-	var utf16LinePos: ULong
-	var utf16Offset: ULong
-	var utf16Length: ULong
 	val handler: NativeAddress
 	companion object {
 		operator fun invoke(address: NativeAddress): WGPUCompilationMessage
@@ -399,7 +396,7 @@ expect interface WGPUDeviceDescriptor {
 	val label: WGPUStringView
 	var requiredFeatureCount: ULong
 	var requiredFeatures: ArrayHolder<WGPUFeatureName>?
-	var requiredLimits: WGPURequiredLimits?
+	var requiredLimits: WGPULimits?
 	val defaultQueue: WGPUQueueDescriptor
 	val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
 	val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
@@ -460,72 +457,21 @@ expect interface WGPUFutureWaitInfo {
 	}
 }
 
-expect interface WGPUTextureDataLayout {
-	var nextInChain: NativeAddress?
-	var offset: ULong
-	var bytesPerRow: UInt
-	var rowsPerImage: UInt
-	val handler: NativeAddress
-	companion object {
-		operator fun invoke(address: NativeAddress): WGPUTextureDataLayout
-		fun allocate(allocator: MemoryAllocator): WGPUTextureDataLayout
-		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTextureDataLayout) -> Unit): ArrayHolder<WGPUTextureDataLayout>
-	}
-}
-
-expect interface WGPUImageCopyBuffer {
-	var nextInChain: NativeAddress?
-	val layout: WGPUTextureDataLayout
-	var buffer: WGPUBuffer?
-	val handler: NativeAddress
-	companion object {
-		operator fun invoke(address: NativeAddress): WGPUImageCopyBuffer
-		fun allocate(allocator: MemoryAllocator): WGPUImageCopyBuffer
-		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUImageCopyBuffer) -> Unit): ArrayHolder<WGPUImageCopyBuffer>
-	}
-}
-
-expect interface WGPUOrigin3D {
-	var x: UInt
-	var y: UInt
-	var z: UInt
-	val handler: NativeAddress
-	companion object {
-		operator fun invoke(address: NativeAddress): WGPUOrigin3D
-		fun allocate(allocator: MemoryAllocator): WGPUOrigin3D
-		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUOrigin3D) -> Unit): ArrayHolder<WGPUOrigin3D>
-	}
-}
-
-expect interface WGPUImageCopyTexture {
-	var nextInChain: NativeAddress?
-	var texture: WGPUTexture?
-	var mipLevel: UInt
-	val origin: WGPUOrigin3D
-	var aspect: WGPUTextureAspect
-	val handler: NativeAddress
-	companion object {
-		operator fun invoke(address: NativeAddress): WGPUImageCopyTexture
-		fun allocate(allocator: MemoryAllocator): WGPUImageCopyTexture
-		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUImageCopyTexture) -> Unit): ArrayHolder<WGPUImageCopyTexture>
-	}
-}
-
-expect interface WGPUInstanceFeatures {
+expect interface WGPUInstanceCapabilities {
 	var nextInChain: NativeAddress?
 	var timedWaitAnyEnable: Boolean
 	var timedWaitAnyMaxCount: ULong
 	val handler: NativeAddress
 	companion object {
-		operator fun invoke(address: NativeAddress): WGPUInstanceFeatures
-		fun allocate(allocator: MemoryAllocator): WGPUInstanceFeatures
-		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUInstanceFeatures) -> Unit): ArrayHolder<WGPUInstanceFeatures>
+		operator fun invoke(address: NativeAddress): WGPUInstanceCapabilities
+		fun allocate(allocator: MemoryAllocator): WGPUInstanceCapabilities
+		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUInstanceCapabilities) -> Unit): ArrayHolder<WGPUInstanceCapabilities>
 	}
 }
 
 expect interface WGPUInstanceDescriptor {
 	var nextInChain: NativeAddress?
-	val features: WGPUInstanceFeatures
+	val features: WGPUInstanceCapabilities
 	val handler: NativeAddress
 	companion object {
 		operator fun invoke(address: NativeAddress): WGPUInstanceDescriptor
@@ -535,6 +481,7 @@ expect interface WGPUInstanceDescriptor {
 }
 
 expect interface WGPULimits {
+	var nextInChain: NativeAddress?
 	var maxTextureDimension1D: UInt
 	var maxTextureDimension2D: UInt
 	var maxTextureDimension3D: UInt
@@ -584,6 +531,18 @@ expect interface WGPUMultisampleState {
 		operator fun invoke(address: NativeAddress): WGPUMultisampleState
 		fun allocate(allocator: MemoryAllocator): WGPUMultisampleState
 		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUMultisampleState) -> Unit): ArrayHolder<WGPUMultisampleState>
+	}
+}
+
+expect interface WGPUOrigin3D {
+	var x: UInt
+	var y: UInt
+	var z: UInt
+	val handler: NativeAddress
+	companion object {
+		operator fun invoke(address: NativeAddress): WGPUOrigin3D
+		fun allocate(allocator: MemoryAllocator): WGPUOrigin3D
+		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUOrigin3D) -> Unit): ArrayHolder<WGPUOrigin3D>
 	}
 }
 
@@ -775,26 +734,16 @@ expect interface WGPURenderPipelineDescriptor {
 
 expect interface WGPURequestAdapterOptions {
 	var nextInChain: NativeAddress?
-	var compatibleSurface: WGPUSurface?
+	var featureLevel: WGPUFeatureLevel
 	var powerPreference: WGPUPowerPreference
-	var backendType: WGPUBackendType
 	var forceFallbackAdapter: Boolean
+	var backendType: WGPUBackendType
+	var compatibleSurface: WGPUSurface?
 	val handler: NativeAddress
 	companion object {
 		operator fun invoke(address: NativeAddress): WGPURequestAdapterOptions
 		fun allocate(allocator: MemoryAllocator): WGPURequestAdapterOptions
 		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURequestAdapterOptions) -> Unit): ArrayHolder<WGPURequestAdapterOptions>
-	}
-}
-
-expect interface WGPURequiredLimits {
-	var nextInChain: NativeAddress?
-	val limits: WGPULimits
-	val handler: NativeAddress
-	companion object {
-		operator fun invoke(address: NativeAddress): WGPURequiredLimits
-		fun allocate(allocator: MemoryAllocator): WGPURequiredLimits
-		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURequiredLimits) -> Unit): ArrayHolder<WGPURequiredLimits>
 	}
 }
 
@@ -854,7 +803,6 @@ expect interface WGPUShaderSourceWGSL {
 }
 
 expect interface WGPUSupportedFeatures {
-	var nextInChain: NativeAddress?
 	var featureCount: ULong
 	var features: ArrayHolder<WGPUFeatureName>?
 	val handler: NativeAddress
@@ -865,14 +813,14 @@ expect interface WGPUSupportedFeatures {
 	}
 }
 
-expect interface WGPUSupportedLimits {
-	var nextInChain: NativeAddress?
-	val limits: WGPULimits
+expect interface WGPUSupportedWGSLLanguageFeatures {
+	var featureCount: ULong
+	var features: ArrayHolder<WGPUWGSLLanguageFeatureName>?
 	val handler: NativeAddress
 	companion object {
-		operator fun invoke(address: NativeAddress): WGPUSupportedLimits
-		fun allocate(allocator: MemoryAllocator): WGPUSupportedLimits
-		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSupportedLimits) -> Unit): ArrayHolder<WGPUSupportedLimits>
+		operator fun invoke(address: NativeAddress): WGPUSupportedWGSLLanguageFeatures
+		fun allocate(allocator: MemoryAllocator): WGPUSupportedWGSLLanguageFeatures
+		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSupportedWGSLLanguageFeatures) -> Unit): ArrayHolder<WGPUSupportedWGSLLanguageFeatures>
 	}
 }
 
@@ -994,6 +942,7 @@ expect interface WGPUSurfaceSourceXlibWindow {
 }
 
 expect interface WGPUSurfaceTexture {
+	var nextInChain: NativeAddress?
 	var texture: WGPUTexture?
 	var status: WGPUSurfaceGetCurrentTextureStatus
 	val handler: NativeAddress
@@ -1001,6 +950,42 @@ expect interface WGPUSurfaceTexture {
 		operator fun invoke(address: NativeAddress): WGPUSurfaceTexture
 		fun allocate(allocator: MemoryAllocator): WGPUSurfaceTexture
 		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceTexture) -> Unit): ArrayHolder<WGPUSurfaceTexture>
+	}
+}
+
+expect interface WGPUTexelCopyBufferLayout {
+	var offset: ULong
+	var bytesPerRow: UInt
+	var rowsPerImage: UInt
+	val handler: NativeAddress
+	companion object {
+		operator fun invoke(address: NativeAddress): WGPUTexelCopyBufferLayout
+		fun allocate(allocator: MemoryAllocator): WGPUTexelCopyBufferLayout
+		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTexelCopyBufferLayout) -> Unit): ArrayHolder<WGPUTexelCopyBufferLayout>
+	}
+}
+
+expect interface WGPUTexelCopyBufferInfo {
+	val layout: WGPUTexelCopyBufferLayout
+	var buffer: WGPUBuffer?
+	val handler: NativeAddress
+	companion object {
+		operator fun invoke(address: NativeAddress): WGPUTexelCopyBufferInfo
+		fun allocate(allocator: MemoryAllocator): WGPUTexelCopyBufferInfo
+		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTexelCopyBufferInfo) -> Unit): ArrayHolder<WGPUTexelCopyBufferInfo>
+	}
+}
+
+expect interface WGPUTexelCopyTextureInfo {
+	var texture: WGPUTexture?
+	var mipLevel: UInt
+	val origin: WGPUOrigin3D
+	var aspect: WGPUTextureAspect
+	val handler: NativeAddress
+	companion object {
+		operator fun invoke(address: NativeAddress): WGPUTexelCopyTextureInfo
+		fun allocate(allocator: MemoryAllocator): WGPUTexelCopyTextureInfo
+		fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTexelCopyTextureInfo) -> Unit): ArrayHolder<WGPUTexelCopyTextureInfo>
 	}
 }
 
@@ -1055,8 +1040,8 @@ expect interface WGPUVertexAttribute {
 }
 
 expect interface WGPUVertexBufferLayout {
-	var arrayStride: ULong
 	var stepMode: WGPUVertexStepMode
+	var arrayStride: ULong
 	var attributeCount: ULong
 	var attributes: ArrayHolder<WGPUVertexAttribute>?
 	val handler: NativeAddress

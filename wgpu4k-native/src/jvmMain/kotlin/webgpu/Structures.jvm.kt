@@ -1176,15 +1176,6 @@ actual interface WGPUCompilationMessage : CStructure {
 		override var length: ULong
 			get() = getULong(lengthOffset)
 			set(newValue) = set(lengthOffset, newValue)
-		override var utf16LinePos: ULong
-			get() = getULong(utf16LinePosOffset)
-			set(newValue) = set(utf16LinePosOffset, newValue)
-		override var utf16Offset: ULong
-			get() = getULong(utf16OffsetOffset)
-			set(newValue) = set(utf16OffsetOffset, newValue)
-		override var utf16Length: ULong
-			get() = getULong(utf16LengthOffset)
-			set(newValue) = set(utf16LengthOffset, newValue)
 	}
 
 	actual var nextInChain: NativeAddress?
@@ -1194,9 +1185,6 @@ actual interface WGPUCompilationMessage : CStructure {
 	actual var linePos: ULong
 	actual var offset: ULong
 	actual var length: ULong
-	actual var utf16LinePos: ULong
-	actual var utf16Offset: ULong
-	actual var utf16Length: ULong
 
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUCompilationMessage {
@@ -1204,15 +1192,15 @@ actual interface WGPUCompilationMessage : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUCompilationMessage {
-			return allocator.allocate(88L)
+			return allocator.allocate(64L)
 				.let { WGPUCompilationMessage(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCompilationMessage) -> Unit): ArrayHolder<WGPUCompilationMessage> {
-			return allocator.allocate(88 * size.toLong())
+			return allocator.allocate(64 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 88L)
+						it.handler.asSlice(index.toLong() * 64L)
 							.let(::NativeAddress)
 							.let { WGPUCompilationMessage(it) }
 							.let { provider(index, it) }
@@ -1230,9 +1218,6 @@ actual interface WGPUCompilationMessage : CStructure {
 			ffi.C_LONG.withName("linePos"),
 			ffi.C_LONG.withName("offset"),
 			ffi.C_LONG.withName("length"),
-			ffi.C_LONG.withName("utf16LinePos"),
-			ffi.C_LONG.withName("utf16Offset"),
-			ffi.C_LONG.withName("utf16Length"),
 		).withName("WGPUCompilationMessage")
 
 		val nextInChainOffset = 0L
@@ -1249,12 +1234,6 @@ actual interface WGPUCompilationMessage : CStructure {
 		val offsetLayout = ffi.C_LONG
 		val lengthOffset = 56L
 		val lengthLayout = ffi.C_LONG
-		val utf16LinePosOffset = 64L
-		val utf16LinePosLayout = ffi.C_LONG
-		val utf16OffsetOffset = 72L
-		val utf16OffsetLayout = ffi.C_LONG
-		val utf16LengthOffset = 80L
-		val utf16LengthLayout = ffi.C_LONG
 	}
 }
 actual interface WGPUComputePassDescriptor : CStructure {
@@ -1915,8 +1894,8 @@ actual interface WGPUDeviceDescriptor : CStructure {
 		override var requiredFeatures: ArrayHolder<WGPUFeatureName>?
 			get() = get(requiredFeaturesLayout, requiredFeaturesOffset).let(::ArrayHolder)
 			set(newValue) = set(requiredFeaturesLayout, requiredFeaturesOffset, newValue?.handler)
-		override var requiredLimits: WGPURequiredLimits?
-			get() = get(requiredLimitsLayout, requiredLimitsOffset).let { WGPURequiredLimits(it) }
+		override var requiredLimits: WGPULimits?
+			get() = get(requiredLimitsLayout, requiredLimitsOffset).let { WGPULimits(it) }
 			set(newValue) = set(requiredLimitsLayout, requiredLimitsOffset, newValue?.handler)
 		override val defaultQueue: WGPUQueueDescriptor
 			get() = handler.handler.asSlice(defaultQueueOffset, 24L).let(::NativeAddress).let { WGPUQueueDescriptor(it) }
@@ -1930,7 +1909,7 @@ actual interface WGPUDeviceDescriptor : CStructure {
 	actual val label: WGPUStringView
 	actual var requiredFeatureCount: ULong
 	actual var requiredFeatures: ArrayHolder<WGPUFeatureName>?
-	actual var requiredLimits: WGPURequiredLimits?
+	actual var requiredLimits: WGPULimits?
 	actual val defaultQueue: WGPUQueueDescriptor
 	actual val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
 	actual val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
@@ -2217,254 +2196,10 @@ actual interface WGPUFutureWaitInfo : CStructure {
 		val completedLayout = ffi.C_INT
 	}
 }
-actual interface WGPUTextureDataLayout : CStructure {
+actual interface WGPUInstanceCapabilities : CStructure {
 
 	@JvmInline
-	value class ByReference(override val handler: NativeAddress) : WGPUTextureDataLayout {
-		override var nextInChain: NativeAddress?
-			get() = get(nextInChainLayout, nextInChainOffset)
-			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
-		override var offset: ULong
-			get() = getULong(offsetOffset)
-			set(newValue) = set(offsetOffset, newValue)
-		override var bytesPerRow: UInt
-			get() = getUInt(bytesPerRowOffset)
-			set(newValue) = set(bytesPerRowOffset, newValue)
-		override var rowsPerImage: UInt
-			get() = getUInt(rowsPerImageOffset)
-			set(newValue) = set(rowsPerImageOffset, newValue)
-	}
-
-	actual var nextInChain: NativeAddress?
-	actual var offset: ULong
-	actual var bytesPerRow: UInt
-	actual var rowsPerImage: UInt
-
-	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPUTextureDataLayout {
-			return ByReference(address)
-		}
-
-		actual fun allocate(allocator: MemoryAllocator): WGPUTextureDataLayout {
-			return allocator.allocate(24L)
-				.let { WGPUTextureDataLayout(it) }
-		}
-
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTextureDataLayout) -> Unit): ArrayHolder<WGPUTextureDataLayout> {
-			return allocator.allocate(24 * size.toLong())
-				.also {
-					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 24L)
-							.let(::NativeAddress)
-							.let { WGPUTextureDataLayout(it) }
-							.let { provider(index, it) }
-					}
-				}
-				.let(::ArrayHolder)
-		}
-
-		internal val LAYOUT = structLayout(
-			ffi.C_POINTER.withName("nextInChain"),
-			ffi.C_LONG.withName("offset"),
-			ffi.C_INT.withName("bytesPerRow"),
-			ffi.C_INT.withName("rowsPerImage"),
-		).withName("WGPUTextureDataLayout")
-
-		val nextInChainOffset = 0L
-		val nextInChainLayout = ffi.C_POINTER
-		val offsetOffset = 8L
-		val offsetLayout = ffi.C_LONG
-		val bytesPerRowOffset = 16L
-		val bytesPerRowLayout = ffi.C_INT
-		val rowsPerImageOffset = 20L
-		val rowsPerImageLayout = ffi.C_INT
-	}
-}
-actual interface WGPUImageCopyBuffer : CStructure {
-
-	@JvmInline
-	value class ByReference(override val handler: NativeAddress) : WGPUImageCopyBuffer {
-		override var nextInChain: NativeAddress?
-			get() = get(nextInChainLayout, nextInChainOffset)
-			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
-		override val layout: WGPUTextureDataLayout
-			get() = handler.handler.asSlice(layoutOffset, 24L).let(::NativeAddress).let { WGPUTextureDataLayout(it) }
-		override var buffer: WGPUBuffer?
-			get() = get(bufferLayout, bufferOffset).let { WGPUBuffer(it) }
-			set(newValue) = set(bufferLayout, bufferOffset, newValue?.handler)
-	}
-
-	actual var nextInChain: NativeAddress?
-	actual val layout: WGPUTextureDataLayout
-	actual var buffer: WGPUBuffer?
-
-	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPUImageCopyBuffer {
-			return ByReference(address)
-		}
-
-		actual fun allocate(allocator: MemoryAllocator): WGPUImageCopyBuffer {
-			return allocator.allocate(40L)
-				.let { WGPUImageCopyBuffer(it) }
-		}
-
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUImageCopyBuffer) -> Unit): ArrayHolder<WGPUImageCopyBuffer> {
-			return allocator.allocate(40 * size.toLong())
-				.also {
-					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 40L)
-							.let(::NativeAddress)
-							.let { WGPUImageCopyBuffer(it) }
-							.let { provider(index, it) }
-					}
-				}
-				.let(::ArrayHolder)
-		}
-
-		internal val LAYOUT = structLayout(
-			ffi.C_POINTER.withName("nextInChain"),
-			WGPUTextureDataLayout.LAYOUT.withName("layout"),
-			ffi.C_POINTER.withName("buffer"),
-		).withName("WGPUImageCopyBuffer")
-
-		val nextInChainOffset = 0L
-		val nextInChainLayout = ffi.C_POINTER
-		val layoutOffset = 8L
-		val layoutLayout = WGPUTextureDataLayout.LAYOUT
-		val bufferOffset = 32L
-		val bufferLayout = ffi.C_POINTER
-	}
-}
-actual interface WGPUOrigin3D : CStructure {
-
-	@JvmInline
-	value class ByReference(override val handler: NativeAddress) : WGPUOrigin3D {
-		override var x: UInt
-			get() = getUInt(xOffset)
-			set(newValue) = set(xOffset, newValue)
-		override var y: UInt
-			get() = getUInt(yOffset)
-			set(newValue) = set(yOffset, newValue)
-		override var z: UInt
-			get() = getUInt(zOffset)
-			set(newValue) = set(zOffset, newValue)
-	}
-
-	actual var x: UInt
-	actual var y: UInt
-	actual var z: UInt
-
-	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPUOrigin3D {
-			return ByReference(address)
-		}
-
-		actual fun allocate(allocator: MemoryAllocator): WGPUOrigin3D {
-			return allocator.allocate(12L)
-				.let { WGPUOrigin3D(it) }
-		}
-
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUOrigin3D) -> Unit): ArrayHolder<WGPUOrigin3D> {
-			return allocator.allocate(12 * size.toLong())
-				.also {
-					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 12L)
-							.let(::NativeAddress)
-							.let { WGPUOrigin3D(it) }
-							.let { provider(index, it) }
-					}
-				}
-				.let(::ArrayHolder)
-		}
-
-		internal val LAYOUT = structLayout(
-			ffi.C_INT.withName("x"),
-			ffi.C_INT.withName("y"),
-			ffi.C_INT.withName("z"),
-		).withName("WGPUOrigin3D")
-
-		val xOffset = 0L
-		val xLayout = ffi.C_INT
-		val yOffset = 4L
-		val yLayout = ffi.C_INT
-		val zOffset = 8L
-		val zLayout = ffi.C_INT
-	}
-}
-actual interface WGPUImageCopyTexture : CStructure {
-
-	@JvmInline
-	value class ByReference(override val handler: NativeAddress) : WGPUImageCopyTexture {
-		override var nextInChain: NativeAddress?
-			get() = get(nextInChainLayout, nextInChainOffset)
-			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
-		override var texture: WGPUTexture?
-			get() = get(textureLayout, textureOffset).let { WGPUTexture(it) }
-			set(newValue) = set(textureLayout, textureOffset, newValue?.handler)
-		override var mipLevel: UInt
-			get() = getUInt(mipLevelOffset)
-			set(newValue) = set(mipLevelOffset, newValue)
-		override val origin: WGPUOrigin3D
-			get() = handler.handler.asSlice(originOffset, 12L).let(::NativeAddress).let { WGPUOrigin3D(it) }
-		override var aspect: WGPUTextureAspect
-			get() = getUInt(aspectOffset)
-			set(newValue) = set(aspectOffset, newValue)
-	}
-
-	actual var nextInChain: NativeAddress?
-	actual var texture: WGPUTexture?
-	actual var mipLevel: UInt
-	actual val origin: WGPUOrigin3D
-	actual var aspect: WGPUTextureAspect
-
-	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPUImageCopyTexture {
-			return ByReference(address)
-		}
-
-		actual fun allocate(allocator: MemoryAllocator): WGPUImageCopyTexture {
-			return allocator.allocate(40L)
-				.let { WGPUImageCopyTexture(it) }
-		}
-
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUImageCopyTexture) -> Unit): ArrayHolder<WGPUImageCopyTexture> {
-			return allocator.allocate(40 * size.toLong())
-				.also {
-					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 40L)
-							.let(::NativeAddress)
-							.let { WGPUImageCopyTexture(it) }
-							.let { provider(index, it) }
-					}
-				}
-				.let(::ArrayHolder)
-		}
-
-		internal val LAYOUT = structLayout(
-			ffi.C_POINTER.withName("nextInChain"),
-			ffi.C_POINTER.withName("texture"),
-			ffi.C_INT.withName("mipLevel"),
-			WGPUOrigin3D.LAYOUT.withName("origin"),
-			ffi.C_INT.withName("aspect"),
-			MemoryLayout.paddingLayout(4)
-		).withName("WGPUImageCopyTexture")
-
-		val nextInChainOffset = 0L
-		val nextInChainLayout = ffi.C_POINTER
-		val textureOffset = 8L
-		val textureLayout = ffi.C_POINTER
-		val mipLevelOffset = 16L
-		val mipLevelLayout = ffi.C_INT
-		val originOffset = 20L
-		val originLayout = WGPUOrigin3D.LAYOUT
-		val aspectOffset = 32L
-		val aspectLayout = ffi.C_INT
-	}
-}
-actual interface WGPUInstanceFeatures : CStructure {
-
-	@JvmInline
-	value class ByReference(override val handler: NativeAddress) : WGPUInstanceFeatures {
+	value class ByReference(override val handler: NativeAddress) : WGPUInstanceCapabilities {
 		override var nextInChain: NativeAddress?
 			get() = get(nextInChainLayout, nextInChainOffset)
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
@@ -2481,22 +2216,22 @@ actual interface WGPUInstanceFeatures : CStructure {
 	actual var timedWaitAnyMaxCount: ULong
 
 	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPUInstanceFeatures {
+		actual operator fun invoke(address: NativeAddress): WGPUInstanceCapabilities {
 			return ByReference(address)
 		}
 
-		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceFeatures {
+		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceCapabilities {
 			return allocator.allocate(24L)
-				.let { WGPUInstanceFeatures(it) }
+				.let { WGPUInstanceCapabilities(it) }
 		}
 
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceFeatures) -> Unit): ArrayHolder<WGPUInstanceFeatures> {
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceCapabilities) -> Unit): ArrayHolder<WGPUInstanceCapabilities> {
 			return allocator.allocate(24 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
 						it.handler.asSlice(index.toLong() * 24L)
 							.let(::NativeAddress)
-							.let { WGPUInstanceFeatures(it) }
+							.let { WGPUInstanceCapabilities(it) }
 							.let { provider(index, it) }
 					}
 				}
@@ -2508,7 +2243,7 @@ actual interface WGPUInstanceFeatures : CStructure {
 			ffi.C_INT.withName("timedWaitAnyEnable"),
 			MemoryLayout.paddingLayout(4),
 			ffi.C_LONG.withName("timedWaitAnyMaxCount"),
-		).withName("WGPUInstanceFeatures")
+		).withName("WGPUInstanceCapabilities")
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
@@ -2525,12 +2260,12 @@ actual interface WGPUInstanceDescriptor : CStructure {
 		override var nextInChain: NativeAddress?
 			get() = get(nextInChainLayout, nextInChainOffset)
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
-		override val features: WGPUInstanceFeatures
-			get() = handler.handler.asSlice(featuresOffset, 24L).let(::NativeAddress).let { WGPUInstanceFeatures(it) }
+		override val features: WGPUInstanceCapabilities
+			get() = handler.handler.asSlice(featuresOffset, 24L).let(::NativeAddress).let { WGPUInstanceCapabilities(it) }
 	}
 
 	actual var nextInChain: NativeAddress?
-	actual val features: WGPUInstanceFeatures
+	actual val features: WGPUInstanceCapabilities
 
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPUInstanceDescriptor {
@@ -2557,19 +2292,22 @@ actual interface WGPUInstanceDescriptor : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
-			WGPUInstanceFeatures.LAYOUT.withName("features"),
+			WGPUInstanceCapabilities.LAYOUT.withName("features"),
 		).withName("WGPUInstanceDescriptor")
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
 		val featuresOffset = 8L
-		val featuresLayout = WGPUInstanceFeatures.LAYOUT
+		val featuresLayout = WGPUInstanceCapabilities.LAYOUT
 	}
 }
 actual interface WGPULimits : CStructure {
 
 	@JvmInline
 	value class ByReference(override val handler: NativeAddress) : WGPULimits {
+		override var nextInChain: NativeAddress?
+			get() = get(nextInChainLayout, nextInChainOffset)
+			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 		override var maxTextureDimension1D: UInt
 			get() = getUInt(maxTextureDimension1DOffset)
 			set(newValue) = set(maxTextureDimension1DOffset, newValue)
@@ -2665,6 +2403,7 @@ actual interface WGPULimits : CStructure {
 			set(newValue) = set(maxComputeWorkgroupsPerDimensionOffset, newValue)
 	}
 
+	actual var nextInChain: NativeAddress?
 	actual var maxTextureDimension1D: UInt
 	actual var maxTextureDimension2D: UInt
 	actual var maxTextureDimension3D: UInt
@@ -2703,15 +2442,15 @@ actual interface WGPULimits : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPULimits {
-			return allocator.allocate(144L)
+			return allocator.allocate(152L)
 				.let { WGPULimits(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPULimits) -> Unit): ArrayHolder<WGPULimits> {
-			return allocator.allocate(144 * size.toLong())
+			return allocator.allocate(152 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 144L)
+						it.handler.asSlice(index.toLong() * 152L)
 							.let(::NativeAddress)
 							.let { WGPULimits(it) }
 							.let { provider(index, it) }
@@ -2721,6 +2460,7 @@ actual interface WGPULimits : CStructure {
 		}
 
 		internal val LAYOUT = structLayout(
+			ffi.C_POINTER.withName("nextInChain"),
 			ffi.C_INT.withName("maxTextureDimension1D"),
 			ffi.C_INT.withName("maxTextureDimension2D"),
 			ffi.C_INT.withName("maxTextureDimension3D"),
@@ -2756,67 +2496,69 @@ actual interface WGPULimits : CStructure {
 			MemoryLayout.paddingLayout(4)
 		).withName("WGPULimits")
 
-		val maxTextureDimension1DOffset = 0L
+		val nextInChainOffset = 0L
+		val nextInChainLayout = ffi.C_POINTER
+		val maxTextureDimension1DOffset = 8L
 		val maxTextureDimension1DLayout = ffi.C_INT
-		val maxTextureDimension2DOffset = 4L
+		val maxTextureDimension2DOffset = 12L
 		val maxTextureDimension2DLayout = ffi.C_INT
-		val maxTextureDimension3DOffset = 8L
+		val maxTextureDimension3DOffset = 16L
 		val maxTextureDimension3DLayout = ffi.C_INT
-		val maxTextureArrayLayersOffset = 12L
+		val maxTextureArrayLayersOffset = 20L
 		val maxTextureArrayLayersLayout = ffi.C_INT
-		val maxBindGroupsOffset = 16L
+		val maxBindGroupsOffset = 24L
 		val maxBindGroupsLayout = ffi.C_INT
-		val maxBindGroupsPlusVertexBuffersOffset = 20L
+		val maxBindGroupsPlusVertexBuffersOffset = 28L
 		val maxBindGroupsPlusVertexBuffersLayout = ffi.C_INT
-		val maxBindingsPerBindGroupOffset = 24L
+		val maxBindingsPerBindGroupOffset = 32L
 		val maxBindingsPerBindGroupLayout = ffi.C_INT
-		val maxDynamicUniformBuffersPerPipelineLayoutOffset = 28L
+		val maxDynamicUniformBuffersPerPipelineLayoutOffset = 36L
 		val maxDynamicUniformBuffersPerPipelineLayoutLayout = ffi.C_INT
-		val maxDynamicStorageBuffersPerPipelineLayoutOffset = 32L
+		val maxDynamicStorageBuffersPerPipelineLayoutOffset = 40L
 		val maxDynamicStorageBuffersPerPipelineLayoutLayout = ffi.C_INT
-		val maxSampledTexturesPerShaderStageOffset = 36L
+		val maxSampledTexturesPerShaderStageOffset = 44L
 		val maxSampledTexturesPerShaderStageLayout = ffi.C_INT
-		val maxSamplersPerShaderStageOffset = 40L
+		val maxSamplersPerShaderStageOffset = 48L
 		val maxSamplersPerShaderStageLayout = ffi.C_INT
-		val maxStorageBuffersPerShaderStageOffset = 44L
+		val maxStorageBuffersPerShaderStageOffset = 52L
 		val maxStorageBuffersPerShaderStageLayout = ffi.C_INT
-		val maxStorageTexturesPerShaderStageOffset = 48L
+		val maxStorageTexturesPerShaderStageOffset = 56L
 		val maxStorageTexturesPerShaderStageLayout = ffi.C_INT
-		val maxUniformBuffersPerShaderStageOffset = 52L
+		val maxUniformBuffersPerShaderStageOffset = 60L
 		val maxUniformBuffersPerShaderStageLayout = ffi.C_INT
-		val maxUniformBufferBindingSizeOffset = 56L
+		val maxUniformBufferBindingSizeOffset = 64L
 		val maxUniformBufferBindingSizeLayout = ffi.C_LONG
-		val maxStorageBufferBindingSizeOffset = 64L
+		val maxStorageBufferBindingSizeOffset = 72L
 		val maxStorageBufferBindingSizeLayout = ffi.C_LONG
-		val minUniformBufferOffsetAlignmentOffset = 72L
+		val minUniformBufferOffsetAlignmentOffset = 80L
 		val minUniformBufferOffsetAlignmentLayout = ffi.C_INT
-		val minStorageBufferOffsetAlignmentOffset = 76L
+		val minStorageBufferOffsetAlignmentOffset = 84L
 		val minStorageBufferOffsetAlignmentLayout = ffi.C_INT
-		val maxVertexBuffersOffset = 80L
+		val maxVertexBuffersOffset = 88L
 		val maxVertexBuffersLayout = ffi.C_INT
-		val maxBufferSizeOffset = 88L
+		val maxBufferSizeOffset = 96L
 		val maxBufferSizeLayout = ffi.C_LONG
-		val maxVertexAttributesOffset = 96L
+		val maxVertexAttributesOffset = 104L
 		val maxVertexAttributesLayout = ffi.C_INT
-		val maxVertexBufferArrayStrideOffset = 100L
+		val maxVertexBufferArrayStrideOffset = 108L
 		val maxVertexBufferArrayStrideLayout = ffi.C_INT
-		val maxInterStageShaderVariablesOffset = 104L
+		val maxInterStageShaderVariablesOffset = 112L
 		val maxInterStageShaderVariablesLayout = ffi.C_INT
-		val maxColorAttachmentsOffset = 108L
+		val maxColorAttachmentsOffset = 116L
 		val maxColorAttachmentsLayout = ffi.C_INT
-		val maxColorAttachmentBytesPerSampleOffset = 112L
+		val maxColorAttachmentBytesPerSampleOffset = 120L
 		val maxColorAttachmentBytesPerSampleLayout = ffi.C_INT
-		val maxComputeWorkgroupStorageSizeOffset = 116L
+		val maxComputeWorkgroupStorageSizeOffset = 124L
 		val maxComputeWorkgroupStorageSizeLayout = ffi.C_INT
-		val maxComputeInvocationsPerWorkgroupOffset = 120L
+		val maxComputeInvocationsPerWorkgroupOffset = 128L
 		val maxComputeInvocationsPerWorkgroupLayout = ffi.C_INT
-		val maxComputeWorkgroupSizeXOffset = 124L
+		val maxComputeWorkgroupSizeXOffset = 132L
 		val maxComputeWorkgroupSizeXLayout = ffi.C_INT
-		val maxComputeWorkgroupSizeYOffset = 128L
+		val maxComputeWorkgroupSizeYOffset = 136L
 		val maxComputeWorkgroupSizeYLayout = ffi.C_INT
-		val maxComputeWorkgroupSizeZOffset = 132L
+		val maxComputeWorkgroupSizeZOffset = 140L
 		val maxComputeWorkgroupSizeZLayout = ffi.C_INT
-		val maxComputeWorkgroupsPerDimensionOffset = 136L
+		val maxComputeWorkgroupsPerDimensionOffset = 144L
 		val maxComputeWorkgroupsPerDimensionLayout = ffi.C_INT
 	}
 }
@@ -2882,6 +2624,62 @@ actual interface WGPUMultisampleState : CStructure {
 		val maskLayout = ffi.C_INT
 		val alphaToCoverageEnabledOffset = 16L
 		val alphaToCoverageEnabledLayout = ffi.C_INT
+	}
+}
+actual interface WGPUOrigin3D : CStructure {
+
+	@JvmInline
+	value class ByReference(override val handler: NativeAddress) : WGPUOrigin3D {
+		override var x: UInt
+			get() = getUInt(xOffset)
+			set(newValue) = set(xOffset, newValue)
+		override var y: UInt
+			get() = getUInt(yOffset)
+			set(newValue) = set(yOffset, newValue)
+		override var z: UInt
+			get() = getUInt(zOffset)
+			set(newValue) = set(zOffset, newValue)
+	}
+
+	actual var x: UInt
+	actual var y: UInt
+	actual var z: UInt
+
+	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUOrigin3D {
+			return ByReference(address)
+		}
+
+		actual fun allocate(allocator: MemoryAllocator): WGPUOrigin3D {
+			return allocator.allocate(12L)
+				.let { WGPUOrigin3D(it) }
+		}
+
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUOrigin3D) -> Unit): ArrayHolder<WGPUOrigin3D> {
+			return allocator.allocate(12 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 12L)
+							.let(::NativeAddress)
+							.let { WGPUOrigin3D(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
+		}
+
+		internal val LAYOUT = structLayout(
+			ffi.C_INT.withName("x"),
+			ffi.C_INT.withName("y"),
+			ffi.C_INT.withName("z"),
+		).withName("WGPUOrigin3D")
+
+		val xOffset = 0L
+		val xLayout = ffi.C_INT
+		val yOffset = 4L
+		val yLayout = ffi.C_INT
+		val zOffset = 8L
+		val zLayout = ffi.C_INT
 	}
 }
 actual interface WGPUPipelineLayoutDescriptor : CStructure {
@@ -3820,25 +3618,29 @@ actual interface WGPURequestAdapterOptions : CStructure {
 		override var nextInChain: NativeAddress?
 			get() = get(nextInChainLayout, nextInChainOffset)
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
-		override var compatibleSurface: WGPUSurface?
-			get() = get(compatibleSurfaceLayout, compatibleSurfaceOffset).let { WGPUSurface(it) }
-			set(newValue) = set(compatibleSurfaceLayout, compatibleSurfaceOffset, newValue?.handler)
+		override var featureLevel: WGPUFeatureLevel
+			get() = getUInt(featureLevelOffset)
+			set(newValue) = set(featureLevelOffset, newValue)
 		override var powerPreference: WGPUPowerPreference
 			get() = getUInt(powerPreferenceOffset)
 			set(newValue) = set(powerPreferenceOffset, newValue)
-		override var backendType: WGPUBackendType
-			get() = getUInt(backendTypeOffset)
-			set(newValue) = set(backendTypeOffset, newValue)
 		override var forceFallbackAdapter: Boolean
 			get() = getInt(forceFallbackAdapterOffset).toBoolean()
 			set(newValue) = set(forceFallbackAdapterOffset, newValue)
+		override var backendType: WGPUBackendType
+			get() = getUInt(backendTypeOffset)
+			set(newValue) = set(backendTypeOffset, newValue)
+		override var compatibleSurface: WGPUSurface?
+			get() = get(compatibleSurfaceLayout, compatibleSurfaceOffset).let { WGPUSurface(it) }
+			set(newValue) = set(compatibleSurfaceLayout, compatibleSurfaceOffset, newValue?.handler)
 	}
 
 	actual var nextInChain: NativeAddress?
-	actual var compatibleSurface: WGPUSurface?
+	actual var featureLevel: WGPUFeatureLevel
 	actual var powerPreference: WGPUPowerPreference
-	actual var backendType: WGPUBackendType
 	actual var forceFallbackAdapter: Boolean
+	actual var backendType: WGPUBackendType
+	actual var compatibleSurface: WGPUSurface?
 
 	actual companion object {
 		actual operator fun invoke(address: NativeAddress): WGPURequestAdapterOptions {
@@ -3865,71 +3667,25 @@ actual interface WGPURequestAdapterOptions : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
-			ffi.C_POINTER.withName("compatibleSurface"),
+			ffi.C_INT.withName("featureLevel"),
 			ffi.C_INT.withName("powerPreference"),
-			ffi.C_INT.withName("backendType"),
 			ffi.C_INT.withName("forceFallbackAdapter"),
-			MemoryLayout.paddingLayout(4)
+			ffi.C_INT.withName("backendType"),
+			ffi.C_POINTER.withName("compatibleSurface"),
 		).withName("WGPURequestAdapterOptions")
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
-		val compatibleSurfaceOffset = 8L
-		val compatibleSurfaceLayout = ffi.C_POINTER
-		val powerPreferenceOffset = 16L
+		val featureLevelOffset = 8L
+		val featureLevelLayout = ffi.C_INT
+		val powerPreferenceOffset = 12L
 		val powerPreferenceLayout = ffi.C_INT
+		val forceFallbackAdapterOffset = 16L
+		val forceFallbackAdapterLayout = ffi.C_INT
 		val backendTypeOffset = 20L
 		val backendTypeLayout = ffi.C_INT
-		val forceFallbackAdapterOffset = 24L
-		val forceFallbackAdapterLayout = ffi.C_INT
-	}
-}
-actual interface WGPURequiredLimits : CStructure {
-
-	@JvmInline
-	value class ByReference(override val handler: NativeAddress) : WGPURequiredLimits {
-		override var nextInChain: NativeAddress?
-			get() = get(nextInChainLayout, nextInChainOffset)
-			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
-		override val limits: WGPULimits
-			get() = handler.handler.asSlice(limitsOffset, 144L).let(::NativeAddress).let { WGPULimits(it) }
-	}
-
-	actual var nextInChain: NativeAddress?
-	actual val limits: WGPULimits
-
-	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPURequiredLimits {
-			return ByReference(address)
-		}
-
-		actual fun allocate(allocator: MemoryAllocator): WGPURequiredLimits {
-			return allocator.allocate(152L)
-				.let { WGPURequiredLimits(it) }
-		}
-
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURequiredLimits) -> Unit): ArrayHolder<WGPURequiredLimits> {
-			return allocator.allocate(152 * size.toLong())
-				.also {
-					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 152L)
-							.let(::NativeAddress)
-							.let { WGPURequiredLimits(it) }
-							.let { provider(index, it) }
-					}
-				}
-				.let(::ArrayHolder)
-		}
-
-		internal val LAYOUT = structLayout(
-			ffi.C_POINTER.withName("nextInChain"),
-			WGPULimits.LAYOUT.withName("limits"),
-		).withName("WGPURequiredLimits")
-
-		val nextInChainOffset = 0L
-		val nextInChainLayout = ffi.C_POINTER
-		val limitsOffset = 8L
-		val limitsLayout = WGPULimits.LAYOUT
+		val compatibleSurfaceOffset = 24L
+		val compatibleSurfaceLayout = ffi.C_POINTER
 	}
 }
 actual interface WGPUSamplerDescriptor : CStructure {
@@ -4206,9 +3962,6 @@ actual interface WGPUSupportedFeatures : CStructure {
 
 	@JvmInline
 	value class ByReference(override val handler: NativeAddress) : WGPUSupportedFeatures {
-		override var nextInChain: NativeAddress?
-			get() = get(nextInChainLayout, nextInChainOffset)
-			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 		override var featureCount: ULong
 			get() = getULong(featureCountOffset)
 			set(newValue) = set(featureCountOffset, newValue)
@@ -4217,7 +3970,6 @@ actual interface WGPUSupportedFeatures : CStructure {
 			set(newValue) = set(featuresLayout, featuresOffset, newValue?.handler)
 	}
 
-	actual var nextInChain: NativeAddress?
 	actual var featureCount: ULong
 	actual var features: ArrayHolder<WGPUFeatureName>?
 
@@ -4227,15 +3979,15 @@ actual interface WGPUSupportedFeatures : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUSupportedFeatures {
-			return allocator.allocate(24L)
+			return allocator.allocate(16L)
 				.let { WGPUSupportedFeatures(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSupportedFeatures) -> Unit): ArrayHolder<WGPUSupportedFeatures> {
-			return allocator.allocate(24 * size.toLong())
+			return allocator.allocate(16 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 24L)
+						it.handler.asSlice(index.toLong() * 16L)
 							.let(::NativeAddress)
 							.let { WGPUSupportedFeatures(it) }
 							.let { provider(index, it) }
@@ -4245,50 +3997,48 @@ actual interface WGPUSupportedFeatures : CStructure {
 		}
 
 		internal val LAYOUT = structLayout(
-			ffi.C_POINTER.withName("nextInChain"),
 			ffi.C_LONG.withName("featureCount"),
 			ffi.C_POINTER.withName("features"),
 		).withName("WGPUSupportedFeatures")
 
-		val nextInChainOffset = 0L
-		val nextInChainLayout = ffi.C_POINTER
-		val featureCountOffset = 8L
+		val featureCountOffset = 0L
 		val featureCountLayout = ffi.C_LONG
-		val featuresOffset = 16L
+		val featuresOffset = 8L
 		val featuresLayout = ffi.C_POINTER
 	}
 }
-actual interface WGPUSupportedLimits : CStructure {
+actual interface WGPUSupportedWGSLLanguageFeatures : CStructure {
 
 	@JvmInline
-	value class ByReference(override val handler: NativeAddress) : WGPUSupportedLimits {
-		override var nextInChain: NativeAddress?
-			get() = get(nextInChainLayout, nextInChainOffset)
-			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
-		override val limits: WGPULimits
-			get() = handler.handler.asSlice(limitsOffset, 144L).let(::NativeAddress).let { WGPULimits(it) }
+	value class ByReference(override val handler: NativeAddress) : WGPUSupportedWGSLLanguageFeatures {
+		override var featureCount: ULong
+			get() = getULong(featureCountOffset)
+			set(newValue) = set(featureCountOffset, newValue)
+		override var features: ArrayHolder<WGPUWGSLLanguageFeatureName>?
+			get() = get(featuresLayout, featuresOffset).let(::ArrayHolder)
+			set(newValue) = set(featuresLayout, featuresOffset, newValue?.handler)
 	}
 
-	actual var nextInChain: NativeAddress?
-	actual val limits: WGPULimits
+	actual var featureCount: ULong
+	actual var features: ArrayHolder<WGPUWGSLLanguageFeatureName>?
 
 	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPUSupportedLimits {
+		actual operator fun invoke(address: NativeAddress): WGPUSupportedWGSLLanguageFeatures {
 			return ByReference(address)
 		}
 
-		actual fun allocate(allocator: MemoryAllocator): WGPUSupportedLimits {
-			return allocator.allocate(152L)
-				.let { WGPUSupportedLimits(it) }
+		actual fun allocate(allocator: MemoryAllocator): WGPUSupportedWGSLLanguageFeatures {
+			return allocator.allocate(16L)
+				.let { WGPUSupportedWGSLLanguageFeatures(it) }
 		}
 
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSupportedLimits) -> Unit): ArrayHolder<WGPUSupportedLimits> {
-			return allocator.allocate(152 * size.toLong())
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSupportedWGSLLanguageFeatures) -> Unit): ArrayHolder<WGPUSupportedWGSLLanguageFeatures> {
+			return allocator.allocate(16 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 152L)
+						it.handler.asSlice(index.toLong() * 16L)
 							.let(::NativeAddress)
-							.let { WGPUSupportedLimits(it) }
+							.let { WGPUSupportedWGSLLanguageFeatures(it) }
 							.let { provider(index, it) }
 					}
 				}
@@ -4296,14 +4046,14 @@ actual interface WGPUSupportedLimits : CStructure {
 		}
 
 		internal val LAYOUT = structLayout(
-			ffi.C_POINTER.withName("nextInChain"),
-			WGPULimits.LAYOUT.withName("limits"),
-		).withName("WGPUSupportedLimits")
+			ffi.C_LONG.withName("featureCount"),
+			ffi.C_POINTER.withName("features"),
+		).withName("WGPUSupportedWGSLLanguageFeatures")
 
-		val nextInChainOffset = 0L
-		val nextInChainLayout = ffi.C_POINTER
-		val limitsOffset = 8L
-		val limitsLayout = WGPULimits.LAYOUT
+		val featureCountOffset = 0L
+		val featureCountLayout = ffi.C_LONG
+		val featuresOffset = 8L
+		val featuresLayout = ffi.C_POINTER
 	}
 }
 actual interface WGPUSurfaceCapabilities : CStructure {
@@ -4872,6 +4622,9 @@ actual interface WGPUSurfaceTexture : CStructure {
 
 	@JvmInline
 	value class ByReference(override val handler: NativeAddress) : WGPUSurfaceTexture {
+		override var nextInChain: NativeAddress?
+			get() = get(nextInChainLayout, nextInChainOffset)
+			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue)
 		override var texture: WGPUTexture?
 			get() = get(textureLayout, textureOffset).let { WGPUTexture(it) }
 			set(newValue) = set(textureLayout, textureOffset, newValue?.handler)
@@ -4880,6 +4633,7 @@ actual interface WGPUSurfaceTexture : CStructure {
 			set(newValue) = set(statusOffset, newValue)
 	}
 
+	actual var nextInChain: NativeAddress?
 	actual var texture: WGPUTexture?
 	actual var status: WGPUSurfaceGetCurrentTextureStatus
 
@@ -4889,15 +4643,15 @@ actual interface WGPUSurfaceTexture : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceTexture {
-			return allocator.allocate(16L)
+			return allocator.allocate(24L)
 				.let { WGPUSurfaceTexture(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSurfaceTexture) -> Unit): ArrayHolder<WGPUSurfaceTexture> {
-			return allocator.allocate(16 * size.toLong())
+			return allocator.allocate(24 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 16L)
+						it.handler.asSlice(index.toLong() * 24L)
 							.let(::NativeAddress)
 							.let { WGPUSurfaceTexture(it) }
 							.let { provider(index, it) }
@@ -4907,15 +4661,185 @@ actual interface WGPUSurfaceTexture : CStructure {
 		}
 
 		internal val LAYOUT = structLayout(
+			ffi.C_POINTER.withName("nextInChain"),
 			ffi.C_POINTER.withName("texture"),
 			ffi.C_INT.withName("status"),
 			MemoryLayout.paddingLayout(4)
 		).withName("WGPUSurfaceTexture")
 
+		val nextInChainOffset = 0L
+		val nextInChainLayout = ffi.C_POINTER
+		val textureOffset = 8L
+		val textureLayout = ffi.C_POINTER
+		val statusOffset = 16L
+		val statusLayout = ffi.C_INT
+	}
+}
+actual interface WGPUTexelCopyBufferLayout : CStructure {
+
+	@JvmInline
+	value class ByReference(override val handler: NativeAddress) : WGPUTexelCopyBufferLayout {
+		override var offset: ULong
+			get() = getULong(offsetOffset)
+			set(newValue) = set(offsetOffset, newValue)
+		override var bytesPerRow: UInt
+			get() = getUInt(bytesPerRowOffset)
+			set(newValue) = set(bytesPerRowOffset, newValue)
+		override var rowsPerImage: UInt
+			get() = getUInt(rowsPerImageOffset)
+			set(newValue) = set(rowsPerImageOffset, newValue)
+	}
+
+	actual var offset: ULong
+	actual var bytesPerRow: UInt
+	actual var rowsPerImage: UInt
+
+	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUTexelCopyBufferLayout {
+			return ByReference(address)
+		}
+
+		actual fun allocate(allocator: MemoryAllocator): WGPUTexelCopyBufferLayout {
+			return allocator.allocate(16L)
+				.let { WGPUTexelCopyBufferLayout(it) }
+		}
+
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTexelCopyBufferLayout) -> Unit): ArrayHolder<WGPUTexelCopyBufferLayout> {
+			return allocator.allocate(16 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 16L)
+							.let(::NativeAddress)
+							.let { WGPUTexelCopyBufferLayout(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
+		}
+
+		internal val LAYOUT = structLayout(
+			ffi.C_LONG.withName("offset"),
+			ffi.C_INT.withName("bytesPerRow"),
+			ffi.C_INT.withName("rowsPerImage"),
+		).withName("WGPUTexelCopyBufferLayout")
+
+		val offsetOffset = 0L
+		val offsetLayout = ffi.C_LONG
+		val bytesPerRowOffset = 8L
+		val bytesPerRowLayout = ffi.C_INT
+		val rowsPerImageOffset = 12L
+		val rowsPerImageLayout = ffi.C_INT
+	}
+}
+actual interface WGPUTexelCopyBufferInfo : CStructure {
+
+	@JvmInline
+	value class ByReference(override val handler: NativeAddress) : WGPUTexelCopyBufferInfo {
+		override val layout: WGPUTexelCopyBufferLayout
+			get() = handler.handler.asSlice(layoutOffset, 16L).let(::NativeAddress).let { WGPUTexelCopyBufferLayout(it) }
+		override var buffer: WGPUBuffer?
+			get() = get(bufferLayout, bufferOffset).let { WGPUBuffer(it) }
+			set(newValue) = set(bufferLayout, bufferOffset, newValue?.handler)
+	}
+
+	actual val layout: WGPUTexelCopyBufferLayout
+	actual var buffer: WGPUBuffer?
+
+	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUTexelCopyBufferInfo {
+			return ByReference(address)
+		}
+
+		actual fun allocate(allocator: MemoryAllocator): WGPUTexelCopyBufferInfo {
+			return allocator.allocate(24L)
+				.let { WGPUTexelCopyBufferInfo(it) }
+		}
+
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTexelCopyBufferInfo) -> Unit): ArrayHolder<WGPUTexelCopyBufferInfo> {
+			return allocator.allocate(24 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 24L)
+							.let(::NativeAddress)
+							.let { WGPUTexelCopyBufferInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
+		}
+
+		internal val LAYOUT = structLayout(
+			WGPUTexelCopyBufferLayout.LAYOUT.withName("layout"),
+			ffi.C_POINTER.withName("buffer"),
+		).withName("WGPUTexelCopyBufferInfo")
+
+		val layoutOffset = 0L
+		val layoutLayout = WGPUTexelCopyBufferLayout.LAYOUT
+		val bufferOffset = 16L
+		val bufferLayout = ffi.C_POINTER
+	}
+}
+actual interface WGPUTexelCopyTextureInfo : CStructure {
+
+	@JvmInline
+	value class ByReference(override val handler: NativeAddress) : WGPUTexelCopyTextureInfo {
+		override var texture: WGPUTexture?
+			get() = get(textureLayout, textureOffset).let { WGPUTexture(it) }
+			set(newValue) = set(textureLayout, textureOffset, newValue?.handler)
+		override var mipLevel: UInt
+			get() = getUInt(mipLevelOffset)
+			set(newValue) = set(mipLevelOffset, newValue)
+		override val origin: WGPUOrigin3D
+			get() = handler.handler.asSlice(originOffset, 12L).let(::NativeAddress).let { WGPUOrigin3D(it) }
+		override var aspect: WGPUTextureAspect
+			get() = getUInt(aspectOffset)
+			set(newValue) = set(aspectOffset, newValue)
+	}
+
+	actual var texture: WGPUTexture?
+	actual var mipLevel: UInt
+	actual val origin: WGPUOrigin3D
+	actual var aspect: WGPUTextureAspect
+
+	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUTexelCopyTextureInfo {
+			return ByReference(address)
+		}
+
+		actual fun allocate(allocator: MemoryAllocator): WGPUTexelCopyTextureInfo {
+			return allocator.allocate(32L)
+				.let { WGPUTexelCopyTextureInfo(it) }
+		}
+
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTexelCopyTextureInfo) -> Unit): ArrayHolder<WGPUTexelCopyTextureInfo> {
+			return allocator.allocate(32 * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						it.handler.asSlice(index.toLong() * 32L)
+							.let(::NativeAddress)
+							.let { WGPUTexelCopyTextureInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
+		}
+
+		internal val LAYOUT = structLayout(
+			ffi.C_POINTER.withName("texture"),
+			ffi.C_INT.withName("mipLevel"),
+			WGPUOrigin3D.LAYOUT.withName("origin"),
+			ffi.C_INT.withName("aspect"),
+			MemoryLayout.paddingLayout(4)
+		).withName("WGPUTexelCopyTextureInfo")
+
 		val textureOffset = 0L
 		val textureLayout = ffi.C_POINTER
-		val statusOffset = 8L
-		val statusLayout = ffi.C_INT
+		val mipLevelOffset = 8L
+		val mipLevelLayout = ffi.C_INT
+		val originOffset = 12L
+		val originLayout = WGPUOrigin3D.LAYOUT
+		val aspectOffset = 24L
+		val aspectLayout = ffi.C_INT
 	}
 }
 actual interface WGPUTextureDescriptor : CStructure {
@@ -5189,12 +5113,12 @@ actual interface WGPUVertexBufferLayout : CStructure {
 
 	@JvmInline
 	value class ByReference(override val handler: NativeAddress) : WGPUVertexBufferLayout {
-		override var arrayStride: ULong
-			get() = getULong(arrayStrideOffset)
-			set(newValue) = set(arrayStrideOffset, newValue)
 		override var stepMode: WGPUVertexStepMode
 			get() = getUInt(stepModeOffset)
 			set(newValue) = set(stepModeOffset, newValue)
+		override var arrayStride: ULong
+			get() = getULong(arrayStrideOffset)
+			set(newValue) = set(arrayStrideOffset, newValue)
 		override var attributeCount: ULong
 			get() = getULong(attributeCountOffset)
 			set(newValue) = set(attributeCountOffset, newValue)
@@ -5203,8 +5127,8 @@ actual interface WGPUVertexBufferLayout : CStructure {
 			set(newValue) = set(attributesLayout, attributesOffset, newValue?.handler)
 	}
 
-	actual var arrayStride: ULong
 	actual var stepMode: WGPUVertexStepMode
+	actual var arrayStride: ULong
 	actual var attributeCount: ULong
 	actual var attributes: ArrayHolder<WGPUVertexAttribute>?
 
@@ -5232,17 +5156,17 @@ actual interface WGPUVertexBufferLayout : CStructure {
 		}
 
 		internal val LAYOUT = structLayout(
-			ffi.C_LONG.withName("arrayStride"),
 			ffi.C_INT.withName("stepMode"),
 			MemoryLayout.paddingLayout(4),
+			ffi.C_LONG.withName("arrayStride"),
 			ffi.C_LONG.withName("attributeCount"),
 			ffi.C_POINTER.withName("attributes"),
 		).withName("WGPUVertexBufferLayout")
 
-		val arrayStrideOffset = 0L
-		val arrayStrideLayout = ffi.C_LONG
-		val stepModeOffset = 8L
+		val stepModeOffset = 0L
 		val stepModeLayout = ffi.C_INT
+		val arrayStrideOffset = 8L
+		val arrayStrideLayout = ffi.C_LONG
 		val attributeCountOffset = 16L
 		val attributeCountLayout = ffi.C_LONG
 		val attributesOffset = 24L

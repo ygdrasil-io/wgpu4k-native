@@ -12,21 +12,23 @@ actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance
 	 = webgpu.android.Functions.wgpuCreateInstance(descriptor?.toReference())
 	?.let(::WGPUInstance)
 
+actual fun wgpuGetInstanceCapabilities(capabilities: WGPUInstanceCapabilities?): WGPUStatus
+	 = webgpu.android.Functions.wgpuGetInstanceCapabilities(capabilities?.toReference())
+
 actual fun wgpuAdapterRelease(handler: WGPUAdapter?): Unit
 	 = webgpu.android.Functions.wgpuAdapterRelease(handler?.handler)
 
-actual fun wgpuAdapterGetLimits(handler: WGPUAdapter?, limits: WGPUSupportedLimits?): Boolean
+actual fun wgpuAdapterGetLimits(handler: WGPUAdapter?, limits: WGPULimits?): WGPUStatus
 	 = webgpu.android.Functions.wgpuAdapterGetLimits(handler?.handler, limits?.toReference())
-	.toBoolean()
 
 actual fun wgpuAdapterHasFeature(handler: WGPUAdapter?, feature: WGPUFeatureName): Boolean
 	 = webgpu.android.Functions.wgpuAdapterHasFeature(handler?.handler, feature)
 	.toBoolean()
 
-actual fun wgpuAdapterGetFeatures(handler: WGPUAdapter?, features: WGPUSupportedFeatures?): WGPUStatus
+actual fun wgpuAdapterGetFeatures(handler: WGPUAdapter?, features: WGPUSupportedFeatures?): Unit
 	 = webgpu.android.Functions.wgpuAdapterGetFeatures(handler?.handler, features?.toReference())
 
-actual fun wgpuAdapterGetInfo(handler: WGPUAdapter?, info: WGPUAdapterInfo?): Unit
+actual fun wgpuAdapterGetInfo(handler: WGPUAdapter?, info: WGPUAdapterInfo?): WGPUStatus
 	 = webgpu.android.Functions.wgpuAdapterGetInfo(handler?.handler, info?.toReference())
 
 actual fun wgpuAdapterRequestDevice(handler: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): Unit
@@ -98,13 +100,13 @@ actual fun wgpuCommandEncoderBeginRenderPass(handler: WGPUCommandEncoder?, descr
 actual fun wgpuCommandEncoderCopyBufferToBuffer(handler: WGPUCommandEncoder?, source: WGPUBuffer?, sourceOffset: ULong, destination: WGPUBuffer?, destinationOffset: ULong, size: ULong): Unit
 	 = webgpu.android.Functions.wgpuCommandEncoderCopyBufferToBuffer(handler?.handler, source?.handler, sourceOffset, destination?.handler, destinationOffset, size)
 
-actual fun wgpuCommandEncoderCopyBufferToTexture(handler: WGPUCommandEncoder?, source: WGPUImageCopyBuffer?, destination: WGPUImageCopyTexture?, copySize: WGPUExtent3D?): Unit
+actual fun wgpuCommandEncoderCopyBufferToTexture(handler: WGPUCommandEncoder?, source: WGPUTexelCopyBufferInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit
 	 = webgpu.android.Functions.wgpuCommandEncoderCopyBufferToTexture(handler?.handler, source?.toReference(), destination?.toReference(), copySize?.toReference())
 
-actual fun wgpuCommandEncoderCopyTextureToBuffer(handler: WGPUCommandEncoder?, source: WGPUImageCopyTexture?, destination: WGPUImageCopyBuffer?, copySize: WGPUExtent3D?): Unit
+actual fun wgpuCommandEncoderCopyTextureToBuffer(handler: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyBufferInfo?, copySize: WGPUExtent3D?): Unit
 	 = webgpu.android.Functions.wgpuCommandEncoderCopyTextureToBuffer(handler?.handler, source?.toReference(), destination?.toReference(), copySize?.toReference())
 
-actual fun wgpuCommandEncoderCopyTextureToTexture(handler: WGPUCommandEncoder?, source: WGPUImageCopyTexture?, destination: WGPUImageCopyTexture?, copySize: WGPUExtent3D?): Unit
+actual fun wgpuCommandEncoderCopyTextureToTexture(handler: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit
 	 = webgpu.android.Functions.wgpuCommandEncoderCopyTextureToTexture(handler?.handler, source?.toReference(), destination?.toReference(), copySize?.toReference())
 
 actual fun wgpuCommandEncoderClearBuffer(handler: WGPUCommandEncoder?, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit
@@ -228,16 +230,23 @@ actual fun wgpuDeviceCreateTexture(handler: WGPUDevice?, descriptor: WGPUTexture
 actual fun wgpuDeviceDestroy(handler: WGPUDevice?): Unit
 	 = webgpu.android.Functions.wgpuDeviceDestroy(handler?.handler)
 
-actual fun wgpuDeviceGetLimits(handler: WGPUDevice?, limits: WGPUSupportedLimits?): Boolean
+actual fun wgpuDeviceGetLostFuture(handler: WGPUDevice?): WGPUFuture
+	 = webgpu.android.Functions.wgpuDeviceGetLostFuture(handler?.handler)
+	?.let(::WGPUFuture)
+
+actual fun wgpuDeviceGetLimits(handler: WGPUDevice?, limits: WGPULimits?): WGPUStatus
 	 = webgpu.android.Functions.wgpuDeviceGetLimits(handler?.handler, limits?.toReference())
-	.toBoolean()
 
 actual fun wgpuDeviceHasFeature(handler: WGPUDevice?, feature: WGPUFeatureName): Boolean
 	 = webgpu.android.Functions.wgpuDeviceHasFeature(handler?.handler, feature)
 	.toBoolean()
 
-actual fun wgpuDeviceGetFeatures(handler: WGPUDevice?, features: WGPUSupportedFeatures?): WGPUStatus
+actual fun wgpuDeviceGetFeatures(handler: WGPUDevice?, features: WGPUSupportedFeatures?): Unit
 	 = webgpu.android.Functions.wgpuDeviceGetFeatures(handler?.handler, features?.toReference())
+
+actual fun wgpuDeviceGetAdapterInfo(handler: WGPUDevice?): WGPUAdapterInfo
+	 = webgpu.android.Functions.wgpuDeviceGetAdapterInfo(handler?.handler)
+	?.let(::WGPUAdapterInfo)
 
 actual fun wgpuDeviceGetQueue(handler: WGPUDevice?): WGPUQueue?
 	 = webgpu.android.Functions.wgpuDeviceGetQueue(handler?.handler)
@@ -259,7 +268,10 @@ actual fun wgpuInstanceCreateSurface(handler: WGPUInstance?, descriptor: WGPUSur
 	 = webgpu.android.Functions.wgpuInstanceCreateSurface(handler?.handler, descriptor?.toReference())
 	?.let(::WGPUSurface)
 
-actual fun wgpuInstanceHasWGSLLanguageFeature(handler: WGPUInstance?, feature: WGPUWGSLFeatureName): Boolean
+actual fun wgpuInstanceGetWGSLLanguageFeatures(handler: WGPUInstance?, features: WGPUSupportedWGSLLanguageFeatures?): WGPUStatus
+	 = webgpu.android.Functions.wgpuInstanceGetWGSLLanguageFeatures(handler?.handler, features?.toReference())
+
+actual fun wgpuInstanceHasWGSLLanguageFeature(handler: WGPUInstance?, feature: WGPUWGSLLanguageFeatureName): Boolean
 	 = webgpu.android.Functions.wgpuInstanceHasWGSLLanguageFeature(handler?.handler, feature)
 	.toBoolean()
 
@@ -305,7 +317,7 @@ actual fun wgpuQueueOnSubmittedWorkDone(handler: WGPUQueue?, callbackInfo: WGPUQ
 actual fun wgpuQueueWriteBuffer(handler: WGPUQueue?, buffer: WGPUBuffer?, bufferOffset: ULong, data: NativeAddress?, size: ULong): Unit
 	 = webgpu.android.Functions.wgpuQueueWriteBuffer(handler?.handler, buffer?.handler, bufferOffset, data, size)
 
-actual fun wgpuQueueWriteTexture(handler: WGPUQueue?, destination: WGPUImageCopyTexture?, data: NativeAddress?, dataSize: ULong, dataLayout: WGPUTextureDataLayout?, writeSize: WGPUExtent3D?): Unit
+actual fun wgpuQueueWriteTexture(handler: WGPUQueue?, destination: WGPUTexelCopyTextureInfo?, data: NativeAddress?, dataSize: ULong, dataLayout: WGPUTexelCopyBufferLayout?, writeSize: WGPUExtent3D?): Unit
 	 = webgpu.android.Functions.wgpuQueueWriteTexture(handler?.handler, destination?.toReference(), data, dataSize, dataLayout?.toReference(), writeSize?.toReference())
 
 actual fun wgpuQueueSetLabel(handler: WGPUQueue?, label: WGPUStringView): Unit
@@ -454,14 +466,13 @@ actual fun wgpuSurfaceRelease(handler: WGPUSurface?): Unit
 actual fun wgpuSurfaceConfigure(handler: WGPUSurface?, config: WGPUSurfaceConfiguration?): Unit
 	 = webgpu.android.Functions.wgpuSurfaceConfigure(handler?.handler, config?.toReference())
 
-actual fun wgpuSurfaceGetCapabilities(handler: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): Boolean
+actual fun wgpuSurfaceGetCapabilities(handler: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus
 	 = webgpu.android.Functions.wgpuSurfaceGetCapabilities(handler?.handler, adapter?.handler, capabilities?.toReference())
-	.toBoolean()
 
 actual fun wgpuSurfaceGetCurrentTexture(handler: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit
 	 = webgpu.android.Functions.wgpuSurfaceGetCurrentTexture(handler?.handler, surfaceTexture?.toReference())
 
-actual fun wgpuSurfacePresent(handler: WGPUSurface?): Unit
+actual fun wgpuSurfacePresent(handler: WGPUSurface?): WGPUStatus
 	 = webgpu.android.Functions.wgpuSurfacePresent(handler?.handler)
 
 actual fun wgpuSurfaceUnconfigure(handler: WGPUSurface?): Unit

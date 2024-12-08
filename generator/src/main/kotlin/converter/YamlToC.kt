@@ -83,7 +83,7 @@ private fun YamlModelV2.generateCLibraryStructures() = structs.map {
         ) + it.members
 
         it.type == "extension_in" -> listOf(YamlModelV2.Struct.Member("chain", "", "struct.chained_struct")) + it.members
-        it.type == "base_out" -> listOf(
+        it.type == "base_out" || it.type == "base_in_or_out" -> listOf(
             YamlModelV2.Struct.Member(
                 "nextInChain",
                 "",

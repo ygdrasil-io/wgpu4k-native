@@ -7,20 +7,23 @@ internal interface FunctionsInterface: com.sun.jna.Library {
 	@JvmName("wgpuCreateInstance")
 	fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor.ByReference?): com.sun.jna.Pointer?
 	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("wgpuGetInstanceCapabilities")
+	fun wgpuGetInstanceCapabilities(capabilities: WGPUInstanceCapabilities.ByReference?): UInt
+	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuAdapterRelease")
 	fun wgpuAdapterRelease(handler: com.sun.jna.Pointer?): Unit
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuAdapterGetLimits")
-	fun wgpuAdapterGetLimits(handler: com.sun.jna.Pointer?, limits: WGPUSupportedLimits.ByReference?): UInt
+	fun wgpuAdapterGetLimits(handler: com.sun.jna.Pointer?, limits: WGPULimits.ByReference?): UInt
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuAdapterHasFeature")
 	fun wgpuAdapterHasFeature(handler: com.sun.jna.Pointer?, feature: UInt): UInt
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuAdapterGetFeatures")
-	fun wgpuAdapterGetFeatures(handler: com.sun.jna.Pointer?, features: WGPUSupportedFeatures.ByReference?): UInt
+	fun wgpuAdapterGetFeatures(handler: com.sun.jna.Pointer?, features: WGPUSupportedFeatures.ByReference?): Unit
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuAdapterGetInfo")
-	fun wgpuAdapterGetInfo(handler: com.sun.jna.Pointer?, info: WGPUAdapterInfo.ByReference?): Unit
+	fun wgpuAdapterGetInfo(handler: com.sun.jna.Pointer?, info: WGPUAdapterInfo.ByReference?): UInt
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuAdapterRequestDevice")
 	fun wgpuAdapterRequestDevice(handler: com.sun.jna.Pointer?, descriptor: WGPUDeviceDescriptor.ByReference?, callbackInfo: WGPURequestDeviceCallbackInfo.ByValue): Unit
@@ -89,13 +92,13 @@ internal interface FunctionsInterface: com.sun.jna.Library {
 	fun wgpuCommandEncoderCopyBufferToBuffer(handler: com.sun.jna.Pointer?, source: com.sun.jna.Pointer?, sourceOffset: ULong, destination: com.sun.jna.Pointer?, destinationOffset: ULong, size: ULong): Unit
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuCommandEncoderCopyBufferToTexture")
-	fun wgpuCommandEncoderCopyBufferToTexture(handler: com.sun.jna.Pointer?, source: WGPUImageCopyBuffer.ByReference?, destination: WGPUImageCopyTexture.ByReference?, copySize: WGPUExtent3D.ByReference?): Unit
+	fun wgpuCommandEncoderCopyBufferToTexture(handler: com.sun.jna.Pointer?, source: WGPUTexelCopyBufferInfo.ByReference?, destination: WGPUTexelCopyTextureInfo.ByReference?, copySize: WGPUExtent3D.ByReference?): Unit
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuCommandEncoderCopyTextureToBuffer")
-	fun wgpuCommandEncoderCopyTextureToBuffer(handler: com.sun.jna.Pointer?, source: WGPUImageCopyTexture.ByReference?, destination: WGPUImageCopyBuffer.ByReference?, copySize: WGPUExtent3D.ByReference?): Unit
+	fun wgpuCommandEncoderCopyTextureToBuffer(handler: com.sun.jna.Pointer?, source: WGPUTexelCopyTextureInfo.ByReference?, destination: WGPUTexelCopyBufferInfo.ByReference?, copySize: WGPUExtent3D.ByReference?): Unit
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuCommandEncoderCopyTextureToTexture")
-	fun wgpuCommandEncoderCopyTextureToTexture(handler: com.sun.jna.Pointer?, source: WGPUImageCopyTexture.ByReference?, destination: WGPUImageCopyTexture.ByReference?, copySize: WGPUExtent3D.ByReference?): Unit
+	fun wgpuCommandEncoderCopyTextureToTexture(handler: com.sun.jna.Pointer?, source: WGPUTexelCopyTextureInfo.ByReference?, destination: WGPUTexelCopyTextureInfo.ByReference?, copySize: WGPUExtent3D.ByReference?): Unit
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuCommandEncoderClearBuffer")
 	fun wgpuCommandEncoderClearBuffer(handler: com.sun.jna.Pointer?, buffer: com.sun.jna.Pointer?, offset: ULong, size: ULong): Unit
@@ -205,14 +208,20 @@ internal interface FunctionsInterface: com.sun.jna.Library {
 	@JvmName("wgpuDeviceDestroy")
 	fun wgpuDeviceDestroy(handler: com.sun.jna.Pointer?): Unit
 	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("wgpuDeviceGetLostFuture")
+	fun wgpuDeviceGetLostFuture(handler: com.sun.jna.Pointer?): WGPUFuture.ByValue
+	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuDeviceGetLimits")
-	fun wgpuDeviceGetLimits(handler: com.sun.jna.Pointer?, limits: WGPUSupportedLimits.ByReference?): UInt
+	fun wgpuDeviceGetLimits(handler: com.sun.jna.Pointer?, limits: WGPULimits.ByReference?): UInt
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuDeviceHasFeature")
 	fun wgpuDeviceHasFeature(handler: com.sun.jna.Pointer?, feature: UInt): UInt
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuDeviceGetFeatures")
-	fun wgpuDeviceGetFeatures(handler: com.sun.jna.Pointer?, features: WGPUSupportedFeatures.ByReference?): UInt
+	fun wgpuDeviceGetFeatures(handler: com.sun.jna.Pointer?, features: WGPUSupportedFeatures.ByReference?): Unit
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("wgpuDeviceGetAdapterInfo")
+	fun wgpuDeviceGetAdapterInfo(handler: com.sun.jna.Pointer?): WGPUAdapterInfo.ByValue
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuDeviceGetQueue")
 	fun wgpuDeviceGetQueue(handler: com.sun.jna.Pointer?): com.sun.jna.Pointer?
@@ -231,6 +240,9 @@ internal interface FunctionsInterface: com.sun.jna.Library {
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuInstanceCreateSurface")
 	fun wgpuInstanceCreateSurface(handler: com.sun.jna.Pointer?, descriptor: WGPUSurfaceDescriptor.ByReference?): com.sun.jna.Pointer?
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("wgpuInstanceGetWGSLLanguageFeatures")
+	fun wgpuInstanceGetWGSLLanguageFeatures(handler: com.sun.jna.Pointer?, features: WGPUSupportedWGSLLanguageFeatures.ByReference?): UInt
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuInstanceHasWGSLLanguageFeature")
 	fun wgpuInstanceHasWGSLLanguageFeature(handler: com.sun.jna.Pointer?, feature: UInt): UInt
@@ -278,7 +290,7 @@ internal interface FunctionsInterface: com.sun.jna.Library {
 	fun wgpuQueueWriteBuffer(handler: com.sun.jna.Pointer?, buffer: com.sun.jna.Pointer?, bufferOffset: ULong, data: com.sun.jna.Pointer?, size: ULong): Unit
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuQueueWriteTexture")
-	fun wgpuQueueWriteTexture(handler: com.sun.jna.Pointer?, destination: WGPUImageCopyTexture.ByReference?, data: com.sun.jna.Pointer?, dataSize: ULong, dataLayout: WGPUTextureDataLayout.ByReference?, writeSize: WGPUExtent3D.ByReference?): Unit
+	fun wgpuQueueWriteTexture(handler: com.sun.jna.Pointer?, destination: WGPUTexelCopyTextureInfo.ByReference?, data: com.sun.jna.Pointer?, dataSize: ULong, dataLayout: WGPUTexelCopyBufferLayout.ByReference?, writeSize: WGPUExtent3D.ByReference?): Unit
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuQueueSetLabel")
 	fun wgpuQueueSetLabel(handler: com.sun.jna.Pointer?, label: WGPUStringView.ByValue): Unit
@@ -431,7 +443,7 @@ internal interface FunctionsInterface: com.sun.jna.Library {
 	fun wgpuSurfaceGetCurrentTexture(handler: com.sun.jna.Pointer?, surfaceTexture: WGPUSurfaceTexture.ByReference?): Unit
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuSurfacePresent")
-	fun wgpuSurfacePresent(handler: com.sun.jna.Pointer?): Unit
+	fun wgpuSurfacePresent(handler: com.sun.jna.Pointer?): UInt
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("wgpuSurfaceUnconfigure")
 	fun wgpuSurfaceUnconfigure(handler: com.sun.jna.Pointer?): Unit

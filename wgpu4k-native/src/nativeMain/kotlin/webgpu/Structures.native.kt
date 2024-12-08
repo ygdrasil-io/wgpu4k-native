@@ -1594,18 +1594,6 @@ actual interface WGPUCompilationMessage {
 			get() = handle.useContents { length ?: error("pointer of WGPUCompilationMessage is null") }
 			set(newValue) { handle.useContents { length = newValue } } 
 
-		override var utf16LinePos: ULong
-			get() = handle.useContents { utf16LinePos ?: error("pointer of WGPUCompilationMessage is null") }
-			set(newValue) { handle.useContents { utf16LinePos = newValue } } 
-
-		override var utf16Offset: ULong
-			get() = handle.useContents { utf16Offset ?: error("pointer of WGPUCompilationMessage is null") }
-			set(newValue) { handle.useContents { utf16Offset = newValue } } 
-
-		override var utf16Length: ULong
-			get() = handle.useContents { utf16Length ?: error("pointer of WGPUCompilationMessage is null") }
-			set(newValue) { handle.useContents { utf16Length = newValue } } 
-
 		override val handler: NativeAddress
 			get() = error("should not be call on CValue")
 
@@ -1638,18 +1626,6 @@ actual interface WGPUCompilationMessage {
 			get() = handler.reinterpret<webgpu.native.WGPUCompilationMessage>().pointed.length ?: error("pointer of WGPUCompilationMessage is null")
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUCompilationMessage>().pointed.let { it.length = newValue } } 
 
-		override var utf16LinePos: ULong
-			get() = handler.reinterpret<webgpu.native.WGPUCompilationMessage>().pointed.utf16LinePos ?: error("pointer of WGPUCompilationMessage is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUCompilationMessage>().pointed.let { it.utf16LinePos = newValue } } 
-
-		override var utf16Offset: ULong
-			get() = handler.reinterpret<webgpu.native.WGPUCompilationMessage>().pointed.utf16Offset ?: error("pointer of WGPUCompilationMessage is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUCompilationMessage>().pointed.let { it.utf16Offset = newValue } } 
-
-		override var utf16Length: ULong
-			get() = handler.reinterpret<webgpu.native.WGPUCompilationMessage>().pointed.utf16Length ?: error("pointer of WGPUCompilationMessage is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUCompilationMessage>().pointed.let { it.utf16Length = newValue } } 
-
 	}
 
 	actual var nextInChain: NativeAddress?
@@ -1659,9 +1635,6 @@ actual interface WGPUCompilationMessage {
 	actual var linePos: ULong
 	actual var offset: ULong
 	actual var length: ULong
-	actual var utf16LinePos: ULong
-	actual var utf16Offset: ULong
-	actual var utf16Length: ULong
 	actual val handler: NativeAddress
 
 	actual companion object {
@@ -1696,9 +1669,6 @@ actual interface WGPUCompilationMessage {
 			linePos = this@WGPUCompilationMessage.linePos
 			offset = this@WGPUCompilationMessage.offset
 			length = this@WGPUCompilationMessage.length
-			utf16LinePos = this@WGPUCompilationMessage.utf16LinePos
-			utf16Offset = this@WGPUCompilationMessage.utf16Offset
-			utf16Length = this@WGPUCompilationMessage.utf16Length
 		}
 	}
 }
@@ -1711,9 +1681,6 @@ fun webgpu.native.WGPUCompilationMessage.adapt(structure: WGPUCompilationMessage
 	linePos = structure.linePos
 	offset = structure.offset
 	length = structure.length
-	utf16LinePos = structure.utf16LinePos
-	utf16Offset = structure.utf16Offset
-	utf16Length = structure.utf16Length
 }
 
 actual interface WGPUComputePassDescriptor {
@@ -2620,8 +2587,8 @@ actual interface WGPUDeviceDescriptor {
 			get() = handle.useContents { requiredFeatures?.let(::NativeAddress)?.let { ArrayHolder<WGPUFeatureName>(it) } }
 			set(newValue) { handle.useContents { requiredFeatures = newValue?.handler?.reinterpret() } } 
 
-		override var requiredLimits: WGPURequiredLimits?
-			get() = handle.useContents { requiredLimits?.let(::NativeAddress)?.let { WGPURequiredLimits(it) } }
+		override var requiredLimits: WGPULimits?
+			get() = handle.useContents { requiredLimits?.let(::NativeAddress)?.let { WGPULimits(it) } }
 			set(newValue) { handle.useContents { requiredLimits = newValue?.handler?.reinterpret() } } 
 
 		override val defaultQueue: WGPUQueueDescriptor
@@ -2653,8 +2620,8 @@ actual interface WGPUDeviceDescriptor {
 			get() = handler.reinterpret<webgpu.native.WGPUDeviceDescriptor>().pointed.requiredFeatures?.let(::NativeAddress)?.let { ArrayHolder<WGPUFeatureName>(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUDeviceDescriptor>().pointed.let { it.requiredFeatures = newValue?.handler?.reinterpret() } } 
 
-		override var requiredLimits: WGPURequiredLimits?
-			get() = handler.reinterpret<webgpu.native.WGPUDeviceDescriptor>().pointed.requiredLimits?.let(::NativeAddress)?.let { WGPURequiredLimits(it) }
+		override var requiredLimits: WGPULimits?
+			get() = handler.reinterpret<webgpu.native.WGPUDeviceDescriptor>().pointed.requiredLimits?.let(::NativeAddress)?.let { WGPULimits(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUDeviceDescriptor>().pointed.let { it.requiredLimits = newValue?.handler?.reinterpret() } } 
 
 		override val defaultQueue: WGPUQueueDescriptor
@@ -2672,7 +2639,7 @@ actual interface WGPUDeviceDescriptor {
 	actual val label: WGPUStringView
 	actual var requiredFeatureCount: ULong
 	actual var requiredFeatures: ArrayHolder<WGPUFeatureName>?
-	actual var requiredLimits: WGPURequiredLimits?
+	actual var requiredLimits: WGPULimits?
 	actual val defaultQueue: WGPUQueueDescriptor
 	actual val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
 	actual val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
@@ -3037,369 +3004,36 @@ fun webgpu.native.WGPUFutureWaitInfo.adapt(structure: WGPUFutureWaitInfo) {
 	completed = structure.completed.toUInt()
 }
 
-actual interface WGPUTextureDataLayout {
-	value class ByValue(val handle: CValue<webgpu.native.WGPUTextureDataLayout>) : WGPUTextureDataLayout {
-		override var nextInChain: NativeAddress?
-			get() = handle.useContents { nextInChain?.let(::NativeAddress) }
-			set(newValue) { handle.useContents { nextInChain = newValue?.reinterpret() } } 
-
-		override var offset: ULong
-			get() = handle.useContents { offset ?: error("pointer of WGPUTextureDataLayout is null") }
-			set(newValue) { handle.useContents { offset = newValue } } 
-
-		override var bytesPerRow: UInt
-			get() = handle.useContents { bytesPerRow ?: error("pointer of WGPUTextureDataLayout is null") }
-			set(newValue) { handle.useContents { bytesPerRow = newValue } } 
-
-		override var rowsPerImage: UInt
-			get() = handle.useContents { rowsPerImage ?: error("pointer of WGPUTextureDataLayout is null") }
-			set(newValue) { handle.useContents { rowsPerImage = newValue } } 
-
-		override val handler: NativeAddress
-			get() = error("should not be call on CValue")
-
-	}
-	value class ByReference(override val handler: NativeAddress) : WGPUTextureDataLayout {
-		override var nextInChain: NativeAddress?
-			get() = handler.reinterpret<webgpu.native.WGPUTextureDataLayout>().pointed.nextInChain?.let(::NativeAddress)
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUTextureDataLayout>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
-
-		override var offset: ULong
-			get() = handler.reinterpret<webgpu.native.WGPUTextureDataLayout>().pointed.offset ?: error("pointer of WGPUTextureDataLayout is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUTextureDataLayout>().pointed.let { it.offset = newValue } } 
-
-		override var bytesPerRow: UInt
-			get() = handler.reinterpret<webgpu.native.WGPUTextureDataLayout>().pointed.bytesPerRow ?: error("pointer of WGPUTextureDataLayout is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUTextureDataLayout>().pointed.let { it.bytesPerRow = newValue } } 
-
-		override var rowsPerImage: UInt
-			get() = handler.reinterpret<webgpu.native.WGPUTextureDataLayout>().pointed.rowsPerImage ?: error("pointer of WGPUTextureDataLayout is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUTextureDataLayout>().pointed.let { it.rowsPerImage = newValue } } 
-
-	}
-
-	actual var nextInChain: NativeAddress?
-	actual var offset: ULong
-	actual var bytesPerRow: UInt
-	actual var rowsPerImage: UInt
-	actual val handler: NativeAddress
-
-	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPUTextureDataLayout {
-			return ByReference(address)
-		}
-
-		actual fun allocate(allocator: MemoryAllocator): WGPUTextureDataLayout {
-			return allocator.allocate(sizeOf<webgpu.native.WGPUTextureDataLayout>())
-				.let { WGPUTextureDataLayout(it) }
-		}
-
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTextureDataLayout) -> Unit): ArrayHolder<WGPUTextureDataLayout> {
-			return allocator.allocate(sizeOf<webgpu.native.WGPUTextureDataLayout>() * size.toLong())
-				.also {
-					(0u until size).forEach { index ->
-						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPUTextureDataLayout>())
-							.let(::NativeAddress)
-							.let { WGPUTextureDataLayout(it) }
-							.let { provider(index, it) }
-					}
-				}
-				.let(::ArrayHolder)
-		}
-	}
-	fun toCValue(): CValue<webgpu.native.WGPUTextureDataLayout> {
-		return cValue<webgpu.native.WGPUTextureDataLayout> {
-			nextInChain = this@WGPUTextureDataLayout.nextInChain?.reinterpret()
-			offset = this@WGPUTextureDataLayout.offset
-			bytesPerRow = this@WGPUTextureDataLayout.bytesPerRow
-			rowsPerImage = this@WGPUTextureDataLayout.rowsPerImage
-		}
-	}
-}
-
-fun webgpu.native.WGPUTextureDataLayout.adapt(structure: WGPUTextureDataLayout) {
-	nextInChain = structure.nextInChain?.reinterpret()
-	offset = structure.offset
-	bytesPerRow = structure.bytesPerRow
-	rowsPerImage = structure.rowsPerImage
-}
-
-actual interface WGPUImageCopyBuffer {
-	value class ByValue(val handle: CValue<webgpu.native.WGPUImageCopyBuffer>) : WGPUImageCopyBuffer {
-		override var nextInChain: NativeAddress?
-			get() = handle.useContents { nextInChain?.let(::NativeAddress) }
-			set(newValue) { handle.useContents { nextInChain = newValue?.reinterpret() } } 
-
-		override val layout: WGPUTextureDataLayout
-			get() = handle.useContents { layout.rawPtr.toLong().let(::NativeAddress).let { WGPUTextureDataLayout(it) } }
-
-		override var buffer: WGPUBuffer?
-			get() = handle.useContents { buffer?.let(::NativeAddress)?.let { WGPUBuffer(it) } }
-			set(newValue) { handle.useContents { buffer = newValue?.handler?.reinterpret() } } 
-
-		override val handler: NativeAddress
-			get() = error("should not be call on CValue")
-
-	}
-	value class ByReference(override val handler: NativeAddress) : WGPUImageCopyBuffer {
-		override var nextInChain: NativeAddress?
-			get() = handler.reinterpret<webgpu.native.WGPUImageCopyBuffer>().pointed.nextInChain?.let(::NativeAddress)
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUImageCopyBuffer>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
-
-		override val layout: WGPUTextureDataLayout
-			get() = handler.reinterpret<webgpu.native.WGPUImageCopyBuffer>().pointed.layout.rawPtr.toLong().let(::NativeAddress).let { WGPUTextureDataLayout(it) }
-
-		override var buffer: WGPUBuffer?
-			get() = handler.reinterpret<webgpu.native.WGPUImageCopyBuffer>().pointed.buffer?.let(::NativeAddress)?.let { WGPUBuffer(it) }
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUImageCopyBuffer>().pointed.let { it.buffer = newValue?.handler?.reinterpret() } } 
-
-	}
-
-	actual var nextInChain: NativeAddress?
-	actual val layout: WGPUTextureDataLayout
-	actual var buffer: WGPUBuffer?
-	actual val handler: NativeAddress
-
-	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPUImageCopyBuffer {
-			return ByReference(address)
-		}
-
-		actual fun allocate(allocator: MemoryAllocator): WGPUImageCopyBuffer {
-			return allocator.allocate(sizeOf<webgpu.native.WGPUImageCopyBuffer>())
-				.let { WGPUImageCopyBuffer(it) }
-		}
-
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUImageCopyBuffer) -> Unit): ArrayHolder<WGPUImageCopyBuffer> {
-			return allocator.allocate(sizeOf<webgpu.native.WGPUImageCopyBuffer>() * size.toLong())
-				.also {
-					(0u until size).forEach { index ->
-						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPUImageCopyBuffer>())
-							.let(::NativeAddress)
-							.let { WGPUImageCopyBuffer(it) }
-							.let { provider(index, it) }
-					}
-				}
-				.let(::ArrayHolder)
-		}
-	}
-	fun toCValue(): CValue<webgpu.native.WGPUImageCopyBuffer> {
-		return cValue<webgpu.native.WGPUImageCopyBuffer> {
-			layout.adapt(this@WGPUImageCopyBuffer.layout)
-			nextInChain = this@WGPUImageCopyBuffer.nextInChain?.reinterpret()
-			buffer = this@WGPUImageCopyBuffer.buffer?.handler?.reinterpret()
-		}
-	}
-}
-
-fun webgpu.native.WGPUImageCopyBuffer.adapt(structure: WGPUImageCopyBuffer) {
-	layout.adapt(structure.layout)
-	nextInChain = structure.nextInChain?.reinterpret()
-	buffer = structure.buffer?.handler?.reinterpret()
-}
-
-actual interface WGPUOrigin3D {
-	value class ByValue(val handle: CValue<webgpu.native.WGPUOrigin3D>) : WGPUOrigin3D {
-		override var x: UInt
-			get() = handle.useContents { x ?: error("pointer of WGPUOrigin3D is null") }
-			set(newValue) { handle.useContents { x = newValue } } 
-
-		override var y: UInt
-			get() = handle.useContents { y ?: error("pointer of WGPUOrigin3D is null") }
-			set(newValue) { handle.useContents { y = newValue } } 
-
-		override var z: UInt
-			get() = handle.useContents { z ?: error("pointer of WGPUOrigin3D is null") }
-			set(newValue) { handle.useContents { z = newValue } } 
-
-		override val handler: NativeAddress
-			get() = error("should not be call on CValue")
-
-	}
-	value class ByReference(override val handler: NativeAddress) : WGPUOrigin3D {
-		override var x: UInt
-			get() = handler.reinterpret<webgpu.native.WGPUOrigin3D>().pointed.x ?: error("pointer of WGPUOrigin3D is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUOrigin3D>().pointed.let { it.x = newValue } } 
-
-		override var y: UInt
-			get() = handler.reinterpret<webgpu.native.WGPUOrigin3D>().pointed.y ?: error("pointer of WGPUOrigin3D is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUOrigin3D>().pointed.let { it.y = newValue } } 
-
-		override var z: UInt
-			get() = handler.reinterpret<webgpu.native.WGPUOrigin3D>().pointed.z ?: error("pointer of WGPUOrigin3D is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUOrigin3D>().pointed.let { it.z = newValue } } 
-
-	}
-
-	actual var x: UInt
-	actual var y: UInt
-	actual var z: UInt
-	actual val handler: NativeAddress
-
-	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPUOrigin3D {
-			return ByReference(address)
-		}
-
-		actual fun allocate(allocator: MemoryAllocator): WGPUOrigin3D {
-			return allocator.allocate(sizeOf<webgpu.native.WGPUOrigin3D>())
-				.let { WGPUOrigin3D(it) }
-		}
-
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUOrigin3D) -> Unit): ArrayHolder<WGPUOrigin3D> {
-			return allocator.allocate(sizeOf<webgpu.native.WGPUOrigin3D>() * size.toLong())
-				.also {
-					(0u until size).forEach { index ->
-						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPUOrigin3D>())
-							.let(::NativeAddress)
-							.let { WGPUOrigin3D(it) }
-							.let { provider(index, it) }
-					}
-				}
-				.let(::ArrayHolder)
-		}
-	}
-	fun toCValue(): CValue<webgpu.native.WGPUOrigin3D> {
-		return cValue<webgpu.native.WGPUOrigin3D> {
-			x = this@WGPUOrigin3D.x
-			y = this@WGPUOrigin3D.y
-			z = this@WGPUOrigin3D.z
-		}
-	}
-}
-
-fun webgpu.native.WGPUOrigin3D.adapt(structure: WGPUOrigin3D) {
-	x = structure.x
-	y = structure.y
-	z = structure.z
-}
-
-actual interface WGPUImageCopyTexture {
-	value class ByValue(val handle: CValue<webgpu.native.WGPUImageCopyTexture>) : WGPUImageCopyTexture {
-		override var nextInChain: NativeAddress?
-			get() = handle.useContents { nextInChain?.let(::NativeAddress) }
-			set(newValue) { handle.useContents { nextInChain = newValue?.reinterpret() } } 
-
-		override var texture: WGPUTexture?
-			get() = handle.useContents { texture?.let(::NativeAddress)?.let { WGPUTexture(it) } }
-			set(newValue) { handle.useContents { texture = newValue?.handler?.reinterpret() } } 
-
-		override var mipLevel: UInt
-			get() = handle.useContents { mipLevel ?: error("pointer of WGPUImageCopyTexture is null") }
-			set(newValue) { handle.useContents { mipLevel = newValue } } 
-
-		override val origin: WGPUOrigin3D
-			get() = handle.useContents { origin.rawPtr.toLong().let(::NativeAddress).let { WGPUOrigin3D(it) } }
-
-		override var aspect: WGPUTextureAspect
-			get() = handle.useContents { aspect ?: error("pointer of WGPUImageCopyTexture is null") }
-			set(newValue) { handle.useContents { aspect = newValue } } 
-
-		override val handler: NativeAddress
-			get() = error("should not be call on CValue")
-
-	}
-	value class ByReference(override val handler: NativeAddress) : WGPUImageCopyTexture {
-		override var nextInChain: NativeAddress?
-			get() = handler.reinterpret<webgpu.native.WGPUImageCopyTexture>().pointed.nextInChain?.let(::NativeAddress)
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUImageCopyTexture>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
-
-		override var texture: WGPUTexture?
-			get() = handler.reinterpret<webgpu.native.WGPUImageCopyTexture>().pointed.texture?.let(::NativeAddress)?.let { WGPUTexture(it) }
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUImageCopyTexture>().pointed.let { it.texture = newValue?.handler?.reinterpret() } } 
-
-		override var mipLevel: UInt
-			get() = handler.reinterpret<webgpu.native.WGPUImageCopyTexture>().pointed.mipLevel ?: error("pointer of WGPUImageCopyTexture is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUImageCopyTexture>().pointed.let { it.mipLevel = newValue } } 
-
-		override val origin: WGPUOrigin3D
-			get() = handler.reinterpret<webgpu.native.WGPUImageCopyTexture>().pointed.origin.rawPtr.toLong().let(::NativeAddress).let { WGPUOrigin3D(it) }
-
-		override var aspect: WGPUTextureAspect
-			get() = handler.reinterpret<webgpu.native.WGPUImageCopyTexture>().pointed.aspect ?: error("pointer of WGPUImageCopyTexture is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUImageCopyTexture>().pointed.let { it.aspect = newValue } } 
-
-	}
-
-	actual var nextInChain: NativeAddress?
-	actual var texture: WGPUTexture?
-	actual var mipLevel: UInt
-	actual val origin: WGPUOrigin3D
-	actual var aspect: WGPUTextureAspect
-	actual val handler: NativeAddress
-
-	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPUImageCopyTexture {
-			return ByReference(address)
-		}
-
-		actual fun allocate(allocator: MemoryAllocator): WGPUImageCopyTexture {
-			return allocator.allocate(sizeOf<webgpu.native.WGPUImageCopyTexture>())
-				.let { WGPUImageCopyTexture(it) }
-		}
-
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUImageCopyTexture) -> Unit): ArrayHolder<WGPUImageCopyTexture> {
-			return allocator.allocate(sizeOf<webgpu.native.WGPUImageCopyTexture>() * size.toLong())
-				.also {
-					(0u until size).forEach { index ->
-						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPUImageCopyTexture>())
-							.let(::NativeAddress)
-							.let { WGPUImageCopyTexture(it) }
-							.let { provider(index, it) }
-					}
-				}
-				.let(::ArrayHolder)
-		}
-	}
-	fun toCValue(): CValue<webgpu.native.WGPUImageCopyTexture> {
-		return cValue<webgpu.native.WGPUImageCopyTexture> {
-			origin.adapt(this@WGPUImageCopyTexture.origin)
-			nextInChain = this@WGPUImageCopyTexture.nextInChain?.reinterpret()
-			texture = this@WGPUImageCopyTexture.texture?.handler?.reinterpret()
-			mipLevel = this@WGPUImageCopyTexture.mipLevel
-			aspect = this@WGPUImageCopyTexture.aspect
-		}
-	}
-}
-
-fun webgpu.native.WGPUImageCopyTexture.adapt(structure: WGPUImageCopyTexture) {
-	origin.adapt(structure.origin)
-	nextInChain = structure.nextInChain?.reinterpret()
-	texture = structure.texture?.handler?.reinterpret()
-	mipLevel = structure.mipLevel
-	aspect = structure.aspect
-}
-
-actual interface WGPUInstanceFeatures {
-	value class ByValue(val handle: CValue<webgpu.native.WGPUInstanceFeatures>) : WGPUInstanceFeatures {
+actual interface WGPUInstanceCapabilities {
+	value class ByValue(val handle: CValue<webgpu.native.WGPUInstanceCapabilities>) : WGPUInstanceCapabilities {
 		override var nextInChain: NativeAddress?
 			get() = handle.useContents { nextInChain?.let(::NativeAddress) }
 			set(newValue) { handle.useContents { nextInChain = newValue?.reinterpret() } } 
 
 		override var timedWaitAnyEnable: Boolean
-			get() = handle.useContents { timedWaitAnyEnable.toBoolean() ?: error("pointer of WGPUInstanceFeatures is null") }
+			get() = handle.useContents { timedWaitAnyEnable.toBoolean() ?: error("pointer of WGPUInstanceCapabilities is null") }
 			set(newValue) { handle.useContents { timedWaitAnyEnable = newValue.toUInt() } } 
 
 		override var timedWaitAnyMaxCount: ULong
-			get() = handle.useContents { timedWaitAnyMaxCount ?: error("pointer of WGPUInstanceFeatures is null") }
+			get() = handle.useContents { timedWaitAnyMaxCount ?: error("pointer of WGPUInstanceCapabilities is null") }
 			set(newValue) { handle.useContents { timedWaitAnyMaxCount = newValue } } 
 
 		override val handler: NativeAddress
 			get() = error("should not be call on CValue")
 
 	}
-	value class ByReference(override val handler: NativeAddress) : WGPUInstanceFeatures {
+	value class ByReference(override val handler: NativeAddress) : WGPUInstanceCapabilities {
 		override var nextInChain: NativeAddress?
-			get() = handler.reinterpret<webgpu.native.WGPUInstanceFeatures>().pointed.nextInChain?.let(::NativeAddress)
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUInstanceFeatures>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
+			get() = handler.reinterpret<webgpu.native.WGPUInstanceCapabilities>().pointed.nextInChain?.let(::NativeAddress)
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUInstanceCapabilities>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
 
 		override var timedWaitAnyEnable: Boolean
-			get() = handler.reinterpret<webgpu.native.WGPUInstanceFeatures>().pointed.timedWaitAnyEnable.toBoolean() ?: error("pointer of WGPUInstanceFeatures is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUInstanceFeatures>().pointed.let { it.timedWaitAnyEnable = newValue.toUInt() } } 
+			get() = handler.reinterpret<webgpu.native.WGPUInstanceCapabilities>().pointed.timedWaitAnyEnable.toBoolean() ?: error("pointer of WGPUInstanceCapabilities is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUInstanceCapabilities>().pointed.let { it.timedWaitAnyEnable = newValue.toUInt() } } 
 
 		override var timedWaitAnyMaxCount: ULong
-			get() = handler.reinterpret<webgpu.native.WGPUInstanceFeatures>().pointed.timedWaitAnyMaxCount ?: error("pointer of WGPUInstanceFeatures is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUInstanceFeatures>().pointed.let { it.timedWaitAnyMaxCount = newValue } } 
+			get() = handler.reinterpret<webgpu.native.WGPUInstanceCapabilities>().pointed.timedWaitAnyMaxCount ?: error("pointer of WGPUInstanceCapabilities is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUInstanceCapabilities>().pointed.let { it.timedWaitAnyMaxCount = newValue } } 
 
 	}
 
@@ -3409,38 +3043,38 @@ actual interface WGPUInstanceFeatures {
 	actual val handler: NativeAddress
 
 	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPUInstanceFeatures {
+		actual operator fun invoke(address: NativeAddress): WGPUInstanceCapabilities {
 			return ByReference(address)
 		}
 
-		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceFeatures {
-			return allocator.allocate(sizeOf<webgpu.native.WGPUInstanceFeatures>())
-				.let { WGPUInstanceFeatures(it) }
+		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceCapabilities {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUInstanceCapabilities>())
+				.let { WGPUInstanceCapabilities(it) }
 		}
 
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceFeatures) -> Unit): ArrayHolder<WGPUInstanceFeatures> {
-			return allocator.allocate(sizeOf<webgpu.native.WGPUInstanceFeatures>() * size.toLong())
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceCapabilities) -> Unit): ArrayHolder<WGPUInstanceCapabilities> {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUInstanceCapabilities>() * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPUInstanceFeatures>())
+						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPUInstanceCapabilities>())
 							.let(::NativeAddress)
-							.let { WGPUInstanceFeatures(it) }
+							.let { WGPUInstanceCapabilities(it) }
 							.let { provider(index, it) }
 					}
 				}
 				.let(::ArrayHolder)
 		}
 	}
-	fun toCValue(): CValue<webgpu.native.WGPUInstanceFeatures> {
-		return cValue<webgpu.native.WGPUInstanceFeatures> {
-			nextInChain = this@WGPUInstanceFeatures.nextInChain?.reinterpret()
-			timedWaitAnyEnable = this@WGPUInstanceFeatures.timedWaitAnyEnable.toUInt()
-			timedWaitAnyMaxCount = this@WGPUInstanceFeatures.timedWaitAnyMaxCount
+	fun toCValue(): CValue<webgpu.native.WGPUInstanceCapabilities> {
+		return cValue<webgpu.native.WGPUInstanceCapabilities> {
+			nextInChain = this@WGPUInstanceCapabilities.nextInChain?.reinterpret()
+			timedWaitAnyEnable = this@WGPUInstanceCapabilities.timedWaitAnyEnable.toUInt()
+			timedWaitAnyMaxCount = this@WGPUInstanceCapabilities.timedWaitAnyMaxCount
 		}
 	}
 }
 
-fun webgpu.native.WGPUInstanceFeatures.adapt(structure: WGPUInstanceFeatures) {
+fun webgpu.native.WGPUInstanceCapabilities.adapt(structure: WGPUInstanceCapabilities) {
 	nextInChain = structure.nextInChain?.reinterpret()
 	timedWaitAnyEnable = structure.timedWaitAnyEnable.toUInt()
 	timedWaitAnyMaxCount = structure.timedWaitAnyMaxCount
@@ -3452,8 +3086,8 @@ actual interface WGPUInstanceDescriptor {
 			get() = handle.useContents { nextInChain?.let(::NativeAddress) }
 			set(newValue) { handle.useContents { nextInChain = newValue?.reinterpret() } } 
 
-		override val features: WGPUInstanceFeatures
-			get() = handle.useContents { features.rawPtr.toLong().let(::NativeAddress).let { WGPUInstanceFeatures(it) } }
+		override val features: WGPUInstanceCapabilities
+			get() = handle.useContents { features.rawPtr.toLong().let(::NativeAddress).let { WGPUInstanceCapabilities(it) } }
 
 		override val handler: NativeAddress
 			get() = error("should not be call on CValue")
@@ -3464,13 +3098,13 @@ actual interface WGPUInstanceDescriptor {
 			get() = handler.reinterpret<webgpu.native.WGPUInstanceDescriptor>().pointed.nextInChain?.let(::NativeAddress)
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUInstanceDescriptor>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
 
-		override val features: WGPUInstanceFeatures
-			get() = handler.reinterpret<webgpu.native.WGPUInstanceDescriptor>().pointed.features.rawPtr.toLong().let(::NativeAddress).let { WGPUInstanceFeatures(it) }
+		override val features: WGPUInstanceCapabilities
+			get() = handler.reinterpret<webgpu.native.WGPUInstanceDescriptor>().pointed.features.rawPtr.toLong().let(::NativeAddress).let { WGPUInstanceCapabilities(it) }
 
 	}
 
 	actual var nextInChain: NativeAddress?
-	actual val features: WGPUInstanceFeatures
+	actual val features: WGPUInstanceCapabilities
 	actual val handler: NativeAddress
 
 	actual companion object {
@@ -3511,6 +3145,10 @@ fun webgpu.native.WGPUInstanceDescriptor.adapt(structure: WGPUInstanceDescriptor
 
 actual interface WGPULimits {
 	value class ByValue(val handle: CValue<webgpu.native.WGPULimits>) : WGPULimits {
+		override var nextInChain: NativeAddress?
+			get() = handle.useContents { nextInChain?.let(::NativeAddress) }
+			set(newValue) { handle.useContents { nextInChain = newValue?.reinterpret() } } 
+
 		override var maxTextureDimension1D: UInt
 			get() = handle.useContents { maxTextureDimension1D ?: error("pointer of WGPULimits is null") }
 			set(newValue) { handle.useContents { maxTextureDimension1D = newValue } } 
@@ -3640,6 +3278,10 @@ actual interface WGPULimits {
 
 	}
 	value class ByReference(override val handler: NativeAddress) : WGPULimits {
+		override var nextInChain: NativeAddress?
+			get() = handler.reinterpret<webgpu.native.WGPULimits>().pointed.nextInChain?.let(::NativeAddress)
+			set(newValue) { handler.reinterpret<webgpu.native.WGPULimits>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
+
 		override var maxTextureDimension1D: UInt
 			get() = handler.reinterpret<webgpu.native.WGPULimits>().pointed.maxTextureDimension1D ?: error("pointer of WGPULimits is null")
 			set(newValue) { handler.reinterpret<webgpu.native.WGPULimits>().pointed.let { it.maxTextureDimension1D = newValue } } 
@@ -3766,6 +3408,7 @@ actual interface WGPULimits {
 
 	}
 
+	actual var nextInChain: NativeAddress?
 	actual var maxTextureDimension1D: UInt
 	actual var maxTextureDimension2D: UInt
 	actual var maxTextureDimension3D: UInt
@@ -3824,6 +3467,7 @@ actual interface WGPULimits {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPULimits> {
 		return cValue<webgpu.native.WGPULimits> {
+			nextInChain = this@WGPULimits.nextInChain?.reinterpret()
 			maxTextureDimension1D = this@WGPULimits.maxTextureDimension1D
 			maxTextureDimension2D = this@WGPULimits.maxTextureDimension2D
 			maxTextureDimension3D = this@WGPULimits.maxTextureDimension3D
@@ -3860,6 +3504,7 @@ actual interface WGPULimits {
 }
 
 fun webgpu.native.WGPULimits.adapt(structure: WGPULimits) {
+	nextInChain = structure.nextInChain?.reinterpret()
 	maxTextureDimension1D = structure.maxTextureDimension1D
 	maxTextureDimension2D = structure.maxTextureDimension2D
 	maxTextureDimension3D = structure.maxTextureDimension3D
@@ -3978,6 +3623,82 @@ fun webgpu.native.WGPUMultisampleState.adapt(structure: WGPUMultisampleState) {
 	count = structure.count
 	mask = structure.mask
 	alphaToCoverageEnabled = structure.alphaToCoverageEnabled.toUInt()
+}
+
+actual interface WGPUOrigin3D {
+	value class ByValue(val handle: CValue<webgpu.native.WGPUOrigin3D>) : WGPUOrigin3D {
+		override var x: UInt
+			get() = handle.useContents { x ?: error("pointer of WGPUOrigin3D is null") }
+			set(newValue) { handle.useContents { x = newValue } } 
+
+		override var y: UInt
+			get() = handle.useContents { y ?: error("pointer of WGPUOrigin3D is null") }
+			set(newValue) { handle.useContents { y = newValue } } 
+
+		override var z: UInt
+			get() = handle.useContents { z ?: error("pointer of WGPUOrigin3D is null") }
+			set(newValue) { handle.useContents { z = newValue } } 
+
+		override val handler: NativeAddress
+			get() = error("should not be call on CValue")
+
+	}
+	value class ByReference(override val handler: NativeAddress) : WGPUOrigin3D {
+		override var x: UInt
+			get() = handler.reinterpret<webgpu.native.WGPUOrigin3D>().pointed.x ?: error("pointer of WGPUOrigin3D is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUOrigin3D>().pointed.let { it.x = newValue } } 
+
+		override var y: UInt
+			get() = handler.reinterpret<webgpu.native.WGPUOrigin3D>().pointed.y ?: error("pointer of WGPUOrigin3D is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUOrigin3D>().pointed.let { it.y = newValue } } 
+
+		override var z: UInt
+			get() = handler.reinterpret<webgpu.native.WGPUOrigin3D>().pointed.z ?: error("pointer of WGPUOrigin3D is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUOrigin3D>().pointed.let { it.z = newValue } } 
+
+	}
+
+	actual var x: UInt
+	actual var y: UInt
+	actual var z: UInt
+	actual val handler: NativeAddress
+
+	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUOrigin3D {
+			return ByReference(address)
+		}
+
+		actual fun allocate(allocator: MemoryAllocator): WGPUOrigin3D {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUOrigin3D>())
+				.let { WGPUOrigin3D(it) }
+		}
+
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUOrigin3D) -> Unit): ArrayHolder<WGPUOrigin3D> {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUOrigin3D>() * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPUOrigin3D>())
+							.let(::NativeAddress)
+							.let { WGPUOrigin3D(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
+		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUOrigin3D> {
+		return cValue<webgpu.native.WGPUOrigin3D> {
+			x = this@WGPUOrigin3D.x
+			y = this@WGPUOrigin3D.y
+			z = this@WGPUOrigin3D.z
+		}
+	}
+}
+
+fun webgpu.native.WGPUOrigin3D.adapt(structure: WGPUOrigin3D) {
+	x = structure.x
+	y = structure.y
+	z = structure.z
 }
 
 actual interface WGPUPipelineLayoutDescriptor {
@@ -5280,21 +5001,25 @@ actual interface WGPURequestAdapterOptions {
 			get() = handle.useContents { nextInChain?.let(::NativeAddress) }
 			set(newValue) { handle.useContents { nextInChain = newValue?.reinterpret() } } 
 
-		override var compatibleSurface: WGPUSurface?
-			get() = handle.useContents { compatibleSurface?.let(::NativeAddress)?.let { WGPUSurface(it) } }
-			set(newValue) { handle.useContents { compatibleSurface = newValue?.handler?.reinterpret() } } 
+		override var featureLevel: WGPUFeatureLevel
+			get() = handle.useContents { featureLevel ?: error("pointer of WGPURequestAdapterOptions is null") }
+			set(newValue) { handle.useContents { featureLevel = newValue } } 
 
 		override var powerPreference: WGPUPowerPreference
 			get() = handle.useContents { powerPreference ?: error("pointer of WGPURequestAdapterOptions is null") }
 			set(newValue) { handle.useContents { powerPreference = newValue } } 
 
+		override var forceFallbackAdapter: Boolean
+			get() = handle.useContents { forceFallbackAdapter.toBoolean() ?: error("pointer of WGPURequestAdapterOptions is null") }
+			set(newValue) { handle.useContents { forceFallbackAdapter = newValue.toUInt() } } 
+
 		override var backendType: WGPUBackendType
 			get() = handle.useContents { backendType ?: error("pointer of WGPURequestAdapterOptions is null") }
 			set(newValue) { handle.useContents { backendType = newValue } } 
 
-		override var forceFallbackAdapter: Boolean
-			get() = handle.useContents { forceFallbackAdapter.toBoolean() ?: error("pointer of WGPURequestAdapterOptions is null") }
-			set(newValue) { handle.useContents { forceFallbackAdapter = newValue.toUInt() } } 
+		override var compatibleSurface: WGPUSurface?
+			get() = handle.useContents { compatibleSurface?.let(::NativeAddress)?.let { WGPUSurface(it) } }
+			set(newValue) { handle.useContents { compatibleSurface = newValue?.handler?.reinterpret() } } 
 
 		override val handler: NativeAddress
 			get() = error("should not be call on CValue")
@@ -5305,29 +5030,34 @@ actual interface WGPURequestAdapterOptions {
 			get() = handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.nextInChain?.let(::NativeAddress)
 			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
 
-		override var compatibleSurface: WGPUSurface?
-			get() = handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.compatibleSurface?.let(::NativeAddress)?.let { WGPUSurface(it) }
-			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.let { it.compatibleSurface = newValue?.handler?.reinterpret() } } 
+		override var featureLevel: WGPUFeatureLevel
+			get() = handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.featureLevel ?: error("pointer of WGPURequestAdapterOptions is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.let { it.featureLevel = newValue } } 
 
 		override var powerPreference: WGPUPowerPreference
 			get() = handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.powerPreference ?: error("pointer of WGPURequestAdapterOptions is null")
 			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.let { it.powerPreference = newValue } } 
 
-		override var backendType: WGPUBackendType
-			get() = handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.backendType ?: error("pointer of WGPURequestAdapterOptions is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.let { it.backendType = newValue } } 
-
 		override var forceFallbackAdapter: Boolean
 			get() = handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.forceFallbackAdapter.toBoolean() ?: error("pointer of WGPURequestAdapterOptions is null")
 			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.let { it.forceFallbackAdapter = newValue.toUInt() } } 
 
+		override var backendType: WGPUBackendType
+			get() = handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.backendType ?: error("pointer of WGPURequestAdapterOptions is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.let { it.backendType = newValue } } 
+
+		override var compatibleSurface: WGPUSurface?
+			get() = handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.compatibleSurface?.let(::NativeAddress)?.let { WGPUSurface(it) }
+			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestAdapterOptions>().pointed.let { it.compatibleSurface = newValue?.handler?.reinterpret() } } 
+
 	}
 
 	actual var nextInChain: NativeAddress?
-	actual var compatibleSurface: WGPUSurface?
+	actual var featureLevel: WGPUFeatureLevel
 	actual var powerPreference: WGPUPowerPreference
-	actual var backendType: WGPUBackendType
 	actual var forceFallbackAdapter: Boolean
+	actual var backendType: WGPUBackendType
+	actual var compatibleSurface: WGPUSurface?
 	actual val handler: NativeAddress
 
 	actual companion object {
@@ -5356,83 +5086,22 @@ actual interface WGPURequestAdapterOptions {
 	fun toCValue(): CValue<webgpu.native.WGPURequestAdapterOptions> {
 		return cValue<webgpu.native.WGPURequestAdapterOptions> {
 			nextInChain = this@WGPURequestAdapterOptions.nextInChain?.reinterpret()
-			compatibleSurface = this@WGPURequestAdapterOptions.compatibleSurface?.handler?.reinterpret()
+			featureLevel = this@WGPURequestAdapterOptions.featureLevel
 			powerPreference = this@WGPURequestAdapterOptions.powerPreference
-			backendType = this@WGPURequestAdapterOptions.backendType
 			forceFallbackAdapter = this@WGPURequestAdapterOptions.forceFallbackAdapter.toUInt()
+			backendType = this@WGPURequestAdapterOptions.backendType
+			compatibleSurface = this@WGPURequestAdapterOptions.compatibleSurface?.handler?.reinterpret()
 		}
 	}
 }
 
 fun webgpu.native.WGPURequestAdapterOptions.adapt(structure: WGPURequestAdapterOptions) {
 	nextInChain = structure.nextInChain?.reinterpret()
-	compatibleSurface = structure.compatibleSurface?.handler?.reinterpret()
+	featureLevel = structure.featureLevel
 	powerPreference = structure.powerPreference
-	backendType = structure.backendType
 	forceFallbackAdapter = structure.forceFallbackAdapter.toUInt()
-}
-
-actual interface WGPURequiredLimits {
-	value class ByValue(val handle: CValue<webgpu.native.WGPURequiredLimits>) : WGPURequiredLimits {
-		override var nextInChain: NativeAddress?
-			get() = handle.useContents { nextInChain?.let(::NativeAddress) }
-			set(newValue) { handle.useContents { nextInChain = newValue?.reinterpret() } } 
-
-		override val limits: WGPULimits
-			get() = handle.useContents { limits.rawPtr.toLong().let(::NativeAddress).let { WGPULimits(it) } }
-
-		override val handler: NativeAddress
-			get() = error("should not be call on CValue")
-
-	}
-	value class ByReference(override val handler: NativeAddress) : WGPURequiredLimits {
-		override var nextInChain: NativeAddress?
-			get() = handler.reinterpret<webgpu.native.WGPURequiredLimits>().pointed.nextInChain?.let(::NativeAddress)
-			set(newValue) { handler.reinterpret<webgpu.native.WGPURequiredLimits>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
-
-		override val limits: WGPULimits
-			get() = handler.reinterpret<webgpu.native.WGPURequiredLimits>().pointed.limits.rawPtr.toLong().let(::NativeAddress).let { WGPULimits(it) }
-
-	}
-
-	actual var nextInChain: NativeAddress?
-	actual val limits: WGPULimits
-	actual val handler: NativeAddress
-
-	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPURequiredLimits {
-			return ByReference(address)
-		}
-
-		actual fun allocate(allocator: MemoryAllocator): WGPURequiredLimits {
-			return allocator.allocate(sizeOf<webgpu.native.WGPURequiredLimits>())
-				.let { WGPURequiredLimits(it) }
-		}
-
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURequiredLimits) -> Unit): ArrayHolder<WGPURequiredLimits> {
-			return allocator.allocate(sizeOf<webgpu.native.WGPURequiredLimits>() * size.toLong())
-				.also {
-					(0u until size).forEach { index ->
-						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPURequiredLimits>())
-							.let(::NativeAddress)
-							.let { WGPURequiredLimits(it) }
-							.let { provider(index, it) }
-					}
-				}
-				.let(::ArrayHolder)
-		}
-	}
-	fun toCValue(): CValue<webgpu.native.WGPURequiredLimits> {
-		return cValue<webgpu.native.WGPURequiredLimits> {
-			limits.adapt(this@WGPURequiredLimits.limits)
-			nextInChain = this@WGPURequiredLimits.nextInChain?.reinterpret()
-		}
-	}
-}
-
-fun webgpu.native.WGPURequiredLimits.adapt(structure: WGPURequiredLimits) {
-	limits.adapt(structure.limits)
-	nextInChain = structure.nextInChain?.reinterpret()
+	backendType = structure.backendType
+	compatibleSurface = structure.compatibleSurface?.handler?.reinterpret()
 }
 
 actual interface WGPUSamplerDescriptor {
@@ -5808,10 +5477,6 @@ fun webgpu.native.WGPUShaderSourceWGSL.adapt(structure: WGPUShaderSourceWGSL) {
 
 actual interface WGPUSupportedFeatures {
 	value class ByValue(val handle: CValue<webgpu.native.WGPUSupportedFeatures>) : WGPUSupportedFeatures {
-		override var nextInChain: NativeAddress?
-			get() = handle.useContents { nextInChain?.let(::NativeAddress) }
-			set(newValue) { handle.useContents { nextInChain = newValue?.reinterpret() } } 
-
 		override var featureCount: ULong
 			get() = handle.useContents { featureCount ?: error("pointer of WGPUSupportedFeatures is null") }
 			set(newValue) { handle.useContents { featureCount = newValue } } 
@@ -5825,10 +5490,6 @@ actual interface WGPUSupportedFeatures {
 
 	}
 	value class ByReference(override val handler: NativeAddress) : WGPUSupportedFeatures {
-		override var nextInChain: NativeAddress?
-			get() = handler.reinterpret<webgpu.native.WGPUSupportedFeatures>().pointed.nextInChain?.let(::NativeAddress)
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUSupportedFeatures>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
-
 		override var featureCount: ULong
 			get() = handler.reinterpret<webgpu.native.WGPUSupportedFeatures>().pointed.featureCount ?: error("pointer of WGPUSupportedFeatures is null")
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUSupportedFeatures>().pointed.let { it.featureCount = newValue } } 
@@ -5839,7 +5500,6 @@ actual interface WGPUSupportedFeatures {
 
 	}
 
-	actual var nextInChain: NativeAddress?
 	actual var featureCount: ULong
 	actual var features: ArrayHolder<WGPUFeatureName>?
 	actual val handler: NativeAddress
@@ -5869,7 +5529,6 @@ actual interface WGPUSupportedFeatures {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUSupportedFeatures> {
 		return cValue<webgpu.native.WGPUSupportedFeatures> {
-			nextInChain = this@WGPUSupportedFeatures.nextInChain?.reinterpret()
 			featureCount = this@WGPUSupportedFeatures.featureCount
 			features = this@WGPUSupportedFeatures.features?.handler?.reinterpret()
 		}
@@ -5877,72 +5536,73 @@ actual interface WGPUSupportedFeatures {
 }
 
 fun webgpu.native.WGPUSupportedFeatures.adapt(structure: WGPUSupportedFeatures) {
-	nextInChain = structure.nextInChain?.reinterpret()
 	featureCount = structure.featureCount
 	features = structure.features?.handler?.reinterpret()
 }
 
-actual interface WGPUSupportedLimits {
-	value class ByValue(val handle: CValue<webgpu.native.WGPUSupportedLimits>) : WGPUSupportedLimits {
-		override var nextInChain: NativeAddress?
-			get() = handle.useContents { nextInChain?.let(::NativeAddress) }
-			set(newValue) { handle.useContents { nextInChain = newValue?.reinterpret() } } 
+actual interface WGPUSupportedWGSLLanguageFeatures {
+	value class ByValue(val handle: CValue<webgpu.native.WGPUSupportedWGSLLanguageFeatures>) : WGPUSupportedWGSLLanguageFeatures {
+		override var featureCount: ULong
+			get() = handle.useContents { featureCount ?: error("pointer of WGPUSupportedWGSLLanguageFeatures is null") }
+			set(newValue) { handle.useContents { featureCount = newValue } } 
 
-		override val limits: WGPULimits
-			get() = handle.useContents { limits.rawPtr.toLong().let(::NativeAddress).let { WGPULimits(it) } }
+		override var features: ArrayHolder<WGPUWGSLLanguageFeatureName>?
+			get() = handle.useContents { features?.let(::NativeAddress)?.let { ArrayHolder<WGPUWGSLLanguageFeatureName>(it) } }
+			set(newValue) { handle.useContents { features = newValue?.handler?.reinterpret() } } 
 
 		override val handler: NativeAddress
 			get() = error("should not be call on CValue")
 
 	}
-	value class ByReference(override val handler: NativeAddress) : WGPUSupportedLimits {
-		override var nextInChain: NativeAddress?
-			get() = handler.reinterpret<webgpu.native.WGPUSupportedLimits>().pointed.nextInChain?.let(::NativeAddress)
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUSupportedLimits>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
+	value class ByReference(override val handler: NativeAddress) : WGPUSupportedWGSLLanguageFeatures {
+		override var featureCount: ULong
+			get() = handler.reinterpret<webgpu.native.WGPUSupportedWGSLLanguageFeatures>().pointed.featureCount ?: error("pointer of WGPUSupportedWGSLLanguageFeatures is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUSupportedWGSLLanguageFeatures>().pointed.let { it.featureCount = newValue } } 
 
-		override val limits: WGPULimits
-			get() = handler.reinterpret<webgpu.native.WGPUSupportedLimits>().pointed.limits.rawPtr.toLong().let(::NativeAddress).let { WGPULimits(it) }
+		override var features: ArrayHolder<WGPUWGSLLanguageFeatureName>?
+			get() = handler.reinterpret<webgpu.native.WGPUSupportedWGSLLanguageFeatures>().pointed.features?.let(::NativeAddress)?.let { ArrayHolder<WGPUWGSLLanguageFeatureName>(it) }
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUSupportedWGSLLanguageFeatures>().pointed.let { it.features = newValue?.handler?.reinterpret() } } 
 
 	}
 
-	actual var nextInChain: NativeAddress?
-	actual val limits: WGPULimits
+	actual var featureCount: ULong
+	actual var features: ArrayHolder<WGPUWGSLLanguageFeatureName>?
 	actual val handler: NativeAddress
 
 	actual companion object {
-		actual operator fun invoke(address: NativeAddress): WGPUSupportedLimits {
+		actual operator fun invoke(address: NativeAddress): WGPUSupportedWGSLLanguageFeatures {
 			return ByReference(address)
 		}
 
-		actual fun allocate(allocator: MemoryAllocator): WGPUSupportedLimits {
-			return allocator.allocate(sizeOf<webgpu.native.WGPUSupportedLimits>())
-				.let { WGPUSupportedLimits(it) }
+		actual fun allocate(allocator: MemoryAllocator): WGPUSupportedWGSLLanguageFeatures {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUSupportedWGSLLanguageFeatures>())
+				.let { WGPUSupportedWGSLLanguageFeatures(it) }
 		}
 
-		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSupportedLimits) -> Unit): ArrayHolder<WGPUSupportedLimits> {
-			return allocator.allocate(sizeOf<webgpu.native.WGPUSupportedLimits>() * size.toLong())
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUSupportedWGSLLanguageFeatures) -> Unit): ArrayHolder<WGPUSupportedWGSLLanguageFeatures> {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUSupportedWGSLLanguageFeatures>() * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPUSupportedLimits>())
+						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPUSupportedWGSLLanguageFeatures>())
 							.let(::NativeAddress)
-							.let { WGPUSupportedLimits(it) }
+							.let { WGPUSupportedWGSLLanguageFeatures(it) }
 							.let { provider(index, it) }
 					}
 				}
 				.let(::ArrayHolder)
 		}
 	}
-	fun toCValue(): CValue<webgpu.native.WGPUSupportedLimits> {
-		return cValue<webgpu.native.WGPUSupportedLimits> {
-			limits.adapt(this@WGPUSupportedLimits.limits)
-			nextInChain = this@WGPUSupportedLimits.nextInChain?.reinterpret()
+	fun toCValue(): CValue<webgpu.native.WGPUSupportedWGSLLanguageFeatures> {
+		return cValue<webgpu.native.WGPUSupportedWGSLLanguageFeatures> {
+			featureCount = this@WGPUSupportedWGSLLanguageFeatures.featureCount
+			features = this@WGPUSupportedWGSLLanguageFeatures.features?.handler?.reinterpret()
 		}
 	}
 }
 
-fun webgpu.native.WGPUSupportedLimits.adapt(structure: WGPUSupportedLimits) {
-	limits.adapt(structure.limits)
-	nextInChain = structure.nextInChain?.reinterpret()
+fun webgpu.native.WGPUSupportedWGSLLanguageFeatures.adapt(structure: WGPUSupportedWGSLLanguageFeatures) {
+	featureCount = structure.featureCount
+	features = structure.features?.handler?.reinterpret()
 }
 
 actual interface WGPUSurfaceCapabilities {
@@ -6716,6 +6376,10 @@ fun webgpu.native.WGPUSurfaceSourceXlibWindow.adapt(structure: WGPUSurfaceSource
 
 actual interface WGPUSurfaceTexture {
 	value class ByValue(val handle: CValue<webgpu.native.WGPUSurfaceTexture>) : WGPUSurfaceTexture {
+		override var nextInChain: NativeAddress?
+			get() = handle.useContents { nextInChain?.let(::NativeAddress) }
+			set(newValue) { handle.useContents { nextInChain = newValue?.reinterpret() } } 
+
 		override var texture: WGPUTexture?
 			get() = handle.useContents { texture?.let(::NativeAddress)?.let { WGPUTexture(it) } }
 			set(newValue) { handle.useContents { texture = newValue?.handler?.reinterpret() } } 
@@ -6729,6 +6393,10 @@ actual interface WGPUSurfaceTexture {
 
 	}
 	value class ByReference(override val handler: NativeAddress) : WGPUSurfaceTexture {
+		override var nextInChain: NativeAddress?
+			get() = handler.reinterpret<webgpu.native.WGPUSurfaceTexture>().pointed.nextInChain?.let(::NativeAddress)
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUSurfaceTexture>().pointed.let { it.nextInChain = newValue?.reinterpret() } } 
+
 		override var texture: WGPUTexture?
 			get() = handler.reinterpret<webgpu.native.WGPUSurfaceTexture>().pointed.texture?.let(::NativeAddress)?.let { WGPUTexture(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUSurfaceTexture>().pointed.let { it.texture = newValue?.handler?.reinterpret() } } 
@@ -6739,6 +6407,7 @@ actual interface WGPUSurfaceTexture {
 
 	}
 
+	actual var nextInChain: NativeAddress?
 	actual var texture: WGPUTexture?
 	actual var status: WGPUSurfaceGetCurrentTextureStatus
 	actual val handler: NativeAddress
@@ -6768,6 +6437,7 @@ actual interface WGPUSurfaceTexture {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUSurfaceTexture> {
 		return cValue<webgpu.native.WGPUSurfaceTexture> {
+			nextInChain = this@WGPUSurfaceTexture.nextInChain?.reinterpret()
 			texture = this@WGPUSurfaceTexture.texture?.handler?.reinterpret()
 			status = this@WGPUSurfaceTexture.status
 		}
@@ -6775,8 +6445,233 @@ actual interface WGPUSurfaceTexture {
 }
 
 fun webgpu.native.WGPUSurfaceTexture.adapt(structure: WGPUSurfaceTexture) {
+	nextInChain = structure.nextInChain?.reinterpret()
 	texture = structure.texture?.handler?.reinterpret()
 	status = structure.status
+}
+
+actual interface WGPUTexelCopyBufferLayout {
+	value class ByValue(val handle: CValue<webgpu.native.WGPUTexelCopyBufferLayout>) : WGPUTexelCopyBufferLayout {
+		override var offset: ULong
+			get() = handle.useContents { offset ?: error("pointer of WGPUTexelCopyBufferLayout is null") }
+			set(newValue) { handle.useContents { offset = newValue } } 
+
+		override var bytesPerRow: UInt
+			get() = handle.useContents { bytesPerRow ?: error("pointer of WGPUTexelCopyBufferLayout is null") }
+			set(newValue) { handle.useContents { bytesPerRow = newValue } } 
+
+		override var rowsPerImage: UInt
+			get() = handle.useContents { rowsPerImage ?: error("pointer of WGPUTexelCopyBufferLayout is null") }
+			set(newValue) { handle.useContents { rowsPerImage = newValue } } 
+
+		override val handler: NativeAddress
+			get() = error("should not be call on CValue")
+
+	}
+	value class ByReference(override val handler: NativeAddress) : WGPUTexelCopyBufferLayout {
+		override var offset: ULong
+			get() = handler.reinterpret<webgpu.native.WGPUTexelCopyBufferLayout>().pointed.offset ?: error("pointer of WGPUTexelCopyBufferLayout is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUTexelCopyBufferLayout>().pointed.let { it.offset = newValue } } 
+
+		override var bytesPerRow: UInt
+			get() = handler.reinterpret<webgpu.native.WGPUTexelCopyBufferLayout>().pointed.bytesPerRow ?: error("pointer of WGPUTexelCopyBufferLayout is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUTexelCopyBufferLayout>().pointed.let { it.bytesPerRow = newValue } } 
+
+		override var rowsPerImage: UInt
+			get() = handler.reinterpret<webgpu.native.WGPUTexelCopyBufferLayout>().pointed.rowsPerImage ?: error("pointer of WGPUTexelCopyBufferLayout is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUTexelCopyBufferLayout>().pointed.let { it.rowsPerImage = newValue } } 
+
+	}
+
+	actual var offset: ULong
+	actual var bytesPerRow: UInt
+	actual var rowsPerImage: UInt
+	actual val handler: NativeAddress
+
+	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUTexelCopyBufferLayout {
+			return ByReference(address)
+		}
+
+		actual fun allocate(allocator: MemoryAllocator): WGPUTexelCopyBufferLayout {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUTexelCopyBufferLayout>())
+				.let { WGPUTexelCopyBufferLayout(it) }
+		}
+
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTexelCopyBufferLayout) -> Unit): ArrayHolder<WGPUTexelCopyBufferLayout> {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUTexelCopyBufferLayout>() * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPUTexelCopyBufferLayout>())
+							.let(::NativeAddress)
+							.let { WGPUTexelCopyBufferLayout(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
+		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUTexelCopyBufferLayout> {
+		return cValue<webgpu.native.WGPUTexelCopyBufferLayout> {
+			offset = this@WGPUTexelCopyBufferLayout.offset
+			bytesPerRow = this@WGPUTexelCopyBufferLayout.bytesPerRow
+			rowsPerImage = this@WGPUTexelCopyBufferLayout.rowsPerImage
+		}
+	}
+}
+
+fun webgpu.native.WGPUTexelCopyBufferLayout.adapt(structure: WGPUTexelCopyBufferLayout) {
+	offset = structure.offset
+	bytesPerRow = structure.bytesPerRow
+	rowsPerImage = structure.rowsPerImage
+}
+
+actual interface WGPUTexelCopyBufferInfo {
+	value class ByValue(val handle: CValue<webgpu.native.WGPUTexelCopyBufferInfo>) : WGPUTexelCopyBufferInfo {
+		override val layout: WGPUTexelCopyBufferLayout
+			get() = handle.useContents { layout.rawPtr.toLong().let(::NativeAddress).let { WGPUTexelCopyBufferLayout(it) } }
+
+		override var buffer: WGPUBuffer?
+			get() = handle.useContents { buffer?.let(::NativeAddress)?.let { WGPUBuffer(it) } }
+			set(newValue) { handle.useContents { buffer = newValue?.handler?.reinterpret() } } 
+
+		override val handler: NativeAddress
+			get() = error("should not be call on CValue")
+
+	}
+	value class ByReference(override val handler: NativeAddress) : WGPUTexelCopyBufferInfo {
+		override val layout: WGPUTexelCopyBufferLayout
+			get() = handler.reinterpret<webgpu.native.WGPUTexelCopyBufferInfo>().pointed.layout.rawPtr.toLong().let(::NativeAddress).let { WGPUTexelCopyBufferLayout(it) }
+
+		override var buffer: WGPUBuffer?
+			get() = handler.reinterpret<webgpu.native.WGPUTexelCopyBufferInfo>().pointed.buffer?.let(::NativeAddress)?.let { WGPUBuffer(it) }
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUTexelCopyBufferInfo>().pointed.let { it.buffer = newValue?.handler?.reinterpret() } } 
+
+	}
+
+	actual val layout: WGPUTexelCopyBufferLayout
+	actual var buffer: WGPUBuffer?
+	actual val handler: NativeAddress
+
+	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUTexelCopyBufferInfo {
+			return ByReference(address)
+		}
+
+		actual fun allocate(allocator: MemoryAllocator): WGPUTexelCopyBufferInfo {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUTexelCopyBufferInfo>())
+				.let { WGPUTexelCopyBufferInfo(it) }
+		}
+
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTexelCopyBufferInfo) -> Unit): ArrayHolder<WGPUTexelCopyBufferInfo> {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUTexelCopyBufferInfo>() * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPUTexelCopyBufferInfo>())
+							.let(::NativeAddress)
+							.let { WGPUTexelCopyBufferInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
+		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUTexelCopyBufferInfo> {
+		return cValue<webgpu.native.WGPUTexelCopyBufferInfo> {
+			layout.adapt(this@WGPUTexelCopyBufferInfo.layout)
+			buffer = this@WGPUTexelCopyBufferInfo.buffer?.handler?.reinterpret()
+		}
+	}
+}
+
+fun webgpu.native.WGPUTexelCopyBufferInfo.adapt(structure: WGPUTexelCopyBufferInfo) {
+	layout.adapt(structure.layout)
+	buffer = structure.buffer?.handler?.reinterpret()
+}
+
+actual interface WGPUTexelCopyTextureInfo {
+	value class ByValue(val handle: CValue<webgpu.native.WGPUTexelCopyTextureInfo>) : WGPUTexelCopyTextureInfo {
+		override var texture: WGPUTexture?
+			get() = handle.useContents { texture?.let(::NativeAddress)?.let { WGPUTexture(it) } }
+			set(newValue) { handle.useContents { texture = newValue?.handler?.reinterpret() } } 
+
+		override var mipLevel: UInt
+			get() = handle.useContents { mipLevel ?: error("pointer of WGPUTexelCopyTextureInfo is null") }
+			set(newValue) { handle.useContents { mipLevel = newValue } } 
+
+		override val origin: WGPUOrigin3D
+			get() = handle.useContents { origin.rawPtr.toLong().let(::NativeAddress).let { WGPUOrigin3D(it) } }
+
+		override var aspect: WGPUTextureAspect
+			get() = handle.useContents { aspect ?: error("pointer of WGPUTexelCopyTextureInfo is null") }
+			set(newValue) { handle.useContents { aspect = newValue } } 
+
+		override val handler: NativeAddress
+			get() = error("should not be call on CValue")
+
+	}
+	value class ByReference(override val handler: NativeAddress) : WGPUTexelCopyTextureInfo {
+		override var texture: WGPUTexture?
+			get() = handler.reinterpret<webgpu.native.WGPUTexelCopyTextureInfo>().pointed.texture?.let(::NativeAddress)?.let { WGPUTexture(it) }
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUTexelCopyTextureInfo>().pointed.let { it.texture = newValue?.handler?.reinterpret() } } 
+
+		override var mipLevel: UInt
+			get() = handler.reinterpret<webgpu.native.WGPUTexelCopyTextureInfo>().pointed.mipLevel ?: error("pointer of WGPUTexelCopyTextureInfo is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUTexelCopyTextureInfo>().pointed.let { it.mipLevel = newValue } } 
+
+		override val origin: WGPUOrigin3D
+			get() = handler.reinterpret<webgpu.native.WGPUTexelCopyTextureInfo>().pointed.origin.rawPtr.toLong().let(::NativeAddress).let { WGPUOrigin3D(it) }
+
+		override var aspect: WGPUTextureAspect
+			get() = handler.reinterpret<webgpu.native.WGPUTexelCopyTextureInfo>().pointed.aspect ?: error("pointer of WGPUTexelCopyTextureInfo is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUTexelCopyTextureInfo>().pointed.let { it.aspect = newValue } } 
+
+	}
+
+	actual var texture: WGPUTexture?
+	actual var mipLevel: UInt
+	actual val origin: WGPUOrigin3D
+	actual var aspect: WGPUTextureAspect
+	actual val handler: NativeAddress
+
+	actual companion object {
+		actual operator fun invoke(address: NativeAddress): WGPUTexelCopyTextureInfo {
+			return ByReference(address)
+		}
+
+		actual fun allocate(allocator: MemoryAllocator): WGPUTexelCopyTextureInfo {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUTexelCopyTextureInfo>())
+				.let { WGPUTexelCopyTextureInfo(it) }
+		}
+
+		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUTexelCopyTextureInfo) -> Unit): ArrayHolder<WGPUTexelCopyTextureInfo> {
+			return allocator.allocate(sizeOf<webgpu.native.WGPUTexelCopyTextureInfo>() * size.toLong())
+				.also {
+					(0u until size).forEach { index ->
+						(it.rawValue + index.toLong() * sizeOf<webgpu.native.WGPUTexelCopyTextureInfo>())
+							.let(::NativeAddress)
+							.let { WGPUTexelCopyTextureInfo(it) }
+							.let { provider(index, it) }
+					}
+				}
+				.let(::ArrayHolder)
+		}
+	}
+	fun toCValue(): CValue<webgpu.native.WGPUTexelCopyTextureInfo> {
+		return cValue<webgpu.native.WGPUTexelCopyTextureInfo> {
+			origin.adapt(this@WGPUTexelCopyTextureInfo.origin)
+			texture = this@WGPUTexelCopyTextureInfo.texture?.handler?.reinterpret()
+			mipLevel = this@WGPUTexelCopyTextureInfo.mipLevel
+			aspect = this@WGPUTexelCopyTextureInfo.aspect
+		}
+	}
+}
+
+fun webgpu.native.WGPUTexelCopyTextureInfo.adapt(structure: WGPUTexelCopyTextureInfo) {
+	origin.adapt(structure.origin)
+	texture = structure.texture?.handler?.reinterpret()
+	mipLevel = structure.mipLevel
+	aspect = structure.aspect
 }
 
 actual interface WGPUTextureDescriptor {
@@ -7157,13 +7052,13 @@ fun webgpu.native.WGPUVertexAttribute.adapt(structure: WGPUVertexAttribute) {
 
 actual interface WGPUVertexBufferLayout {
 	value class ByValue(val handle: CValue<webgpu.native.WGPUVertexBufferLayout>) : WGPUVertexBufferLayout {
-		override var arrayStride: ULong
-			get() = handle.useContents { arrayStride ?: error("pointer of WGPUVertexBufferLayout is null") }
-			set(newValue) { handle.useContents { arrayStride = newValue } } 
-
 		override var stepMode: WGPUVertexStepMode
 			get() = handle.useContents { stepMode ?: error("pointer of WGPUVertexBufferLayout is null") }
 			set(newValue) { handle.useContents { stepMode = newValue } } 
+
+		override var arrayStride: ULong
+			get() = handle.useContents { arrayStride ?: error("pointer of WGPUVertexBufferLayout is null") }
+			set(newValue) { handle.useContents { arrayStride = newValue } } 
 
 		override var attributeCount: ULong
 			get() = handle.useContents { attributeCount ?: error("pointer of WGPUVertexBufferLayout is null") }
@@ -7178,13 +7073,13 @@ actual interface WGPUVertexBufferLayout {
 
 	}
 	value class ByReference(override val handler: NativeAddress) : WGPUVertexBufferLayout {
-		override var arrayStride: ULong
-			get() = handler.reinterpret<webgpu.native.WGPUVertexBufferLayout>().pointed.arrayStride ?: error("pointer of WGPUVertexBufferLayout is null")
-			set(newValue) { handler.reinterpret<webgpu.native.WGPUVertexBufferLayout>().pointed.let { it.arrayStride = newValue } } 
-
 		override var stepMode: WGPUVertexStepMode
 			get() = handler.reinterpret<webgpu.native.WGPUVertexBufferLayout>().pointed.stepMode ?: error("pointer of WGPUVertexBufferLayout is null")
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUVertexBufferLayout>().pointed.let { it.stepMode = newValue } } 
+
+		override var arrayStride: ULong
+			get() = handler.reinterpret<webgpu.native.WGPUVertexBufferLayout>().pointed.arrayStride ?: error("pointer of WGPUVertexBufferLayout is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUVertexBufferLayout>().pointed.let { it.arrayStride = newValue } } 
 
 		override var attributeCount: ULong
 			get() = handler.reinterpret<webgpu.native.WGPUVertexBufferLayout>().pointed.attributeCount ?: error("pointer of WGPUVertexBufferLayout is null")
@@ -7196,8 +7091,8 @@ actual interface WGPUVertexBufferLayout {
 
 	}
 
-	actual var arrayStride: ULong
 	actual var stepMode: WGPUVertexStepMode
+	actual var arrayStride: ULong
 	actual var attributeCount: ULong
 	actual var attributes: ArrayHolder<WGPUVertexAttribute>?
 	actual val handler: NativeAddress
@@ -7227,8 +7122,8 @@ actual interface WGPUVertexBufferLayout {
 	}
 	fun toCValue(): CValue<webgpu.native.WGPUVertexBufferLayout> {
 		return cValue<webgpu.native.WGPUVertexBufferLayout> {
-			arrayStride = this@WGPUVertexBufferLayout.arrayStride
 			stepMode = this@WGPUVertexBufferLayout.stepMode
+			arrayStride = this@WGPUVertexBufferLayout.arrayStride
 			attributeCount = this@WGPUVertexBufferLayout.attributeCount
 			attributes = this@WGPUVertexBufferLayout.attributes?.handler?.reinterpret()
 		}
@@ -7236,8 +7131,8 @@ actual interface WGPUVertexBufferLayout {
 }
 
 fun webgpu.native.WGPUVertexBufferLayout.adapt(structure: WGPUVertexBufferLayout) {
-	arrayStride = structure.arrayStride
 	stepMode = structure.stepMode
+	arrayStride = structure.arrayStride
 	attributeCount = structure.attributeCount
 	attributes = structure.attributes?.handler?.reinterpret()
 }
