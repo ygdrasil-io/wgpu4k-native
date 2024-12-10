@@ -5,7 +5,7 @@ import com.charleskorn.kaml.YamlNull
 import com.charleskorn.kaml.yamlMap
 import com.charleskorn.kaml.yamlScalar
 import converter.toCModel
-import domain.YamlModelV2
+import domain.YamlModel
 import generator.enumerationCommonMainFile
 import generator.functionsCommonMainFile
 import generator.functionsJvmMainFile
@@ -98,17 +98,17 @@ fun main() {
 fun loadExtraYaml() = basePath.resolve("generator")
     .resolve("extra.yml")
     .readText()
-    .let { text -> parser.decodeFromString(YamlModelV2.serializer(), text).also { injectEnumValues(text, it) }  }
+    .let { text -> parser.decodeFromString(YamlModel.serializer(), text).also { injectEnumValues(text, it) }  }
 
 fun loadWebGPUYaml() = basePath.resolve("wgpu4k-native")
     .resolve("build")
     .resolve("native")
     .resolve("webgpu.yml")
     .readText()
-    .let { text -> parser.decodeFromString(YamlModelV2.serializer(), text).also { injectEnumValues(text, it) } }
+    .let { text -> parser.decodeFromString(YamlModel.serializer(), text).also { injectEnumValues(text, it) } }
 
 
-private fun injectEnumValues(text: String, model: YamlModelV2): YamlModelV2 {
+private fun injectEnumValues(text: String, model: YamlModel): YamlModel {
     val enumNodes = (Yaml.default.parseToYamlNode(text)
         .yamlMap.get<YamlList>("enums") ?: error("enums not found"))
 
@@ -120,12 +120,12 @@ private fun injectEnumValues(text: String, model: YamlModelV2): YamlModelV2 {
             .map { entry ->
                 val name = entry.yamlMap.get<YamlNode>("name")!!.yamlScalar.content
                 val doc = entry.yamlMap.get<YamlNode>("doc")!!.yamlScalar.content
-                YamlModelV2.Enum.Entry(name, doc)
+                YamlModel.Enum.Entry(name, doc)
         }
-        YamlModelV2.Enum(enum.name, enum.doc, entries)
+        YamlModel.Enum(enum.name, enum.doc, entries)
     }
 
-    return YamlModelV2(
+    return YamlModel(
         copyright = model.copyright,
         name = model.name,
         enum_prefix = model.enum_prefix,

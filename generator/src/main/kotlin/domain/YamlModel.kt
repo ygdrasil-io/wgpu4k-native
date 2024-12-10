@@ -1,6 +1,7 @@
 package domain
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class YamlModel(
@@ -9,12 +10,12 @@ data class YamlModel(
     val enum_prefix: String,
     val constants: List<Constant>,
     val typedefs: List<String>,
-    val enums: List<Enum>,
     val bitflags: List<Bitflag>,
     val structs: List<Struct>,
     val callbacks: List<Callback>,
     val functions: List<Function>,
     val objects: List<Object>,
+    val enums: List<Enum>,
 ) {
     fun merge(loadExtraYaml: YamlModel): YamlModel {
         return YamlModel(
@@ -124,7 +125,7 @@ data class YamlModel(
     data class Enum(
         val name: String,
         val doc: String,
-        val entries: List<Entry>,
+        @Transient val entries: List<Entry> = listOf(),
     ) {
         @Serializable
         data class Entry(
