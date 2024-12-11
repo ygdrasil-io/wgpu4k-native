@@ -3,15 +3,47 @@ package generator.function
 import builder.Builder
 import builder.templateBuilder
 import domain.CLibraryModel
+import domain.toFunctionKotlinType
+
+internal fun List<CLibraryModel.Function>.toJvmFunctions() = templateBuilder {
+    forEach { function -> toJvmFunction(function) }
+}
 
 internal fun List<CLibraryModel.Function>.toJvmFunctionsInterface() = templateBuilder {
     appendBlock("object Functions") {
-        forEach { function -> toJvmFunction(function) }
+        forEach { function -> toJvmFunctionInterface(function) }
     }
 }
 
 
 private fun Builder.toJvmFunction(function: CLibraryModel.Function) {
+    val name = function.name
+    val returnType = function.returnType.toFunctionKotlinType() + function.returnType.optionalReturnType()
+    val args = function.args
+        .map { (name, type) -> "${name}: ${type.toFunctionKotlinType()}${type.optional()}" }
+        .joinToString(", ")
+    val argsCall = function.args
+        .map { (name, type) -> type.toJvmArgCall(name) }
+        .joinToString(", ")
+    appendLine("actual fun $name($args): $returnType")
+    appendLine("\t = Functions.$name($argsCall)")
+
+    when (function.returnType) {
+        is CLibraryModel.Reference.Enumeration -> null
+        is CLibraryModel.Reference.StructureField -> ".let(::NativeAddress).let(${function.returnType.name}::invoke)"
+        is CLibraryModel.Reference.OpaquePointer -> "?.let(::NativeAddress)"
+        is CLibraryModel.Reference -> {
+            "?.let(::NativeAddress)?.let(::${function.returnType.name})"
+        }
+        is CLibraryModel.Primitive.Bool -> ".toBoolean()"
+        else -> null
+    }?.let { appendLine("\t\t$it") }
+
+    newLine()
+}
+
+
+private fun Builder.toJvmFunctionInterface(function: CLibraryModel.Function) {
     val name = function.name
     val returnType = function.returnType.toKotlinNativeType()
     val args = function.args
@@ -103,4 +135,12 @@ internal fun CLibraryModel.Type.toKotlinNativeType(): String = when (this) {
     CLibraryModel.Primitive.UInt32 -> "UInt"
     CLibraryModel.Primitive.UInt16 -> "UShort"
     else -> toJvmNativeType()
+}
+
+private fun CLibraryModel.Type.toJvmArgCall(name: String) = when(this) {
+    is CLibraryModel.Reference.OpaquePointer -> "$name.adapt() ?: java.lang.foreign.MemorySegment.NULL"
+    is CLibraryModel.Reference.Enumeration -> name
+    is CLibraryModel.Array,
+    is CLibraryModel.Reference -> "$name?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL"
+    else -> name
 }

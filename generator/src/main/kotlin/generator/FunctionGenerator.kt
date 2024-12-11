@@ -5,6 +5,7 @@ import disclamer
 import domain.CLibraryModel
 import domain.toFunctionKotlinType
 import generator.function.toNativeFunctionsInterface
+import generator.function.toJvmFunctions
 import jvmMainBasePath
 import java.io.File
 
@@ -109,45 +110,8 @@ internal fun File.generateNativeFunctions(functions: List<CLibraryModel.Function
 
 
 internal fun File.generateJvmFunctions(functions: List<CLibraryModel.Function>) {
-
     writeText(jvmHeader)
-
-    functions.forEach { function ->
-        writeJvmFunction(function)
-    }
-
-}
-
-private fun File.writeJvmFunction(function: CLibraryModel.Function) {
-    val name = function.name
-    val returnType = function.returnType.toFunctionKotlinType() + function.returnType.optionalReturnType()
-    val args = function.args
-        .map { (name, type) -> "${name}: ${type.toFunctionKotlinType()}${type.optional()}" }
-        .joinToString(", ")
-    val argsCall = function.args
-        .map { (name, type) -> type.toJvmArgCall(name) }
-        .joinToString(", ")
-    appendText("actual fun $name($args): $returnType\n")
-    appendText("\t = Functions.$name($argsCall)\n")
-
-    when (function.returnType) {
-        is CLibraryModel.Reference.Enumeration -> null
-        is CLibraryModel.Reference.OpaquePointer -> "?.let(::NativeAddress)"
-        is CLibraryModel.Reference -> {
-            "?.let(::NativeAddress)?.let(::${function.returnType.name})"
-        }
-        is CLibraryModel.Primitive.Bool -> ".toBoolean()"
-        else -> null
-    }?.let { appendText("\t\t$it\n") }
-
-    appendText("\n")
-}
-
-private fun CLibraryModel.Type.toJvmArgCall(name: String) = when(this) {
-    is CLibraryModel.Reference.OpaquePointer -> "$name.adapt() ?: java.lang.foreign.MemorySegment.NULL"
-    is CLibraryModel.Reference.Enumeration -> name
-    is CLibraryModel.Array,
-    is CLibraryModel.Reference -> "$name?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL"
-    else -> name
+    functions.toJvmFunctions()
+        .let(::appendText)
 }
 

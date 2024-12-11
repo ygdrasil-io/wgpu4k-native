@@ -234,7 +234,7 @@ actual fun wgpuDeviceDestroy(handler: WGPUDevice?): Unit
 
 actual fun wgpuDeviceGetLostFuture(handler: WGPUDevice?): WGPUFuture
 	 = Functions.wgpuDeviceGetLostFuture(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUFuture)
+		.let(::NativeAddress).let(WGPUFuture::invoke)
 
 actual fun wgpuDeviceGetLimits(handler: WGPUDevice?, limits: WGPULimits?): WGPUStatus
 	 = Functions.wgpuDeviceGetLimits(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, limits?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
@@ -248,7 +248,7 @@ actual fun wgpuDeviceGetFeatures(handler: WGPUDevice?, features: WGPUSupportedFe
 
 actual fun wgpuDeviceGetAdapterInfo(handler: WGPUDevice?): WGPUAdapterInfo
 	 = Functions.wgpuDeviceGetAdapterInfo(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUAdapterInfo)
+		.let(::NativeAddress).let(WGPUAdapterInfo::invoke)
 
 actual fun wgpuDeviceGetQueue(handler: WGPUDevice?): WGPUQueue?
 	 = Functions.wgpuDeviceGetQueue(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
