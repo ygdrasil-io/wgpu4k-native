@@ -21,6 +21,7 @@ fun List<CLibraryModel.Function>.toAndroidFunctions() = templateBuilder {
         when (function.returnType) {
             is CLibraryModel.Reference.Enumeration,
             is CLibraryModel.Reference.OpaquePointer -> null
+            is CLibraryModel.Reference.StructureField -> ".let(${function.returnType.name}::ByValue)"
             is CLibraryModel.Reference -> {
                 "?.let(::${function.returnType.name})"
             }

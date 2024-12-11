@@ -52,8 +52,12 @@ data class YamlModel(
         data class Return(
             val type: String,
             val doc: String,
+            val passed_with_ownership:Boolean = false,
             val pointer: String? = null,
-        )
+        ) {
+            val isMutable: Boolean
+                get() = passed_with_ownership || pointer == "mutable"
+        }
 
         @Serializable
         data class Arg(

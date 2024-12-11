@@ -304,7 +304,7 @@ actual fun wgpuDeviceDestroy(handler: WGPUDevice?): Unit {
 
 actual fun wgpuDeviceGetLostFuture(handler: WGPUDevice?): WGPUFuture {
 	return webgpu.native.wgpuDeviceGetLostFuture(handler?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUFuture)
+		.let(WGPUFuture::ByValue)
 }
 
 actual fun wgpuDeviceGetLimits(handler: WGPUDevice?, limits: WGPULimits?): WGPUStatus {
@@ -322,7 +322,7 @@ actual fun wgpuDeviceGetFeatures(handler: WGPUDevice?, features: WGPUSupportedFe
 
 actual fun wgpuDeviceGetAdapterInfo(handler: WGPUDevice?): WGPUAdapterInfo {
 	return webgpu.native.wgpuDeviceGetAdapterInfo(handler?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUAdapterInfo)
+		.let(WGPUAdapterInfo::ByValue)
 }
 
 actual fun wgpuDeviceGetQueue(handler: WGPUDevice?): WGPUQueue? {

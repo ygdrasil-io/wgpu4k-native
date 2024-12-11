@@ -232,7 +232,7 @@ actual fun wgpuDeviceDestroy(handler: WGPUDevice?): Unit
 
 actual fun wgpuDeviceGetLostFuture(handler: WGPUDevice?): WGPUFuture
 	 = webgpu.android.Functions.wgpuDeviceGetLostFuture(handler?.handler)
-	?.let(::WGPUFuture)
+	.let(WGPUFuture::ByValue)
 
 actual fun wgpuDeviceGetLimits(handler: WGPUDevice?, limits: WGPULimits?): WGPUStatus
 	 = webgpu.android.Functions.wgpuDeviceGetLimits(handler?.handler, limits?.toReference())
@@ -246,7 +246,7 @@ actual fun wgpuDeviceGetFeatures(handler: WGPUDevice?, features: WGPUSupportedFe
 
 actual fun wgpuDeviceGetAdapterInfo(handler: WGPUDevice?): WGPUAdapterInfo
 	 = webgpu.android.Functions.wgpuDeviceGetAdapterInfo(handler?.handler)
-	?.let(::WGPUAdapterInfo)
+	.let(WGPUAdapterInfo::ByValue)
 
 actual fun wgpuDeviceGetQueue(handler: WGPUDevice?): WGPUQueue?
 	 = webgpu.android.Functions.wgpuDeviceGetQueue(handler?.handler)

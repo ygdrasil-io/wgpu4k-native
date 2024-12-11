@@ -24,6 +24,7 @@ private fun Builder.toNativeFunction(function: CLibraryModel.Function) {
         when (function.returnType) {
             is CLibraryModel.Reference.Enumeration -> null
             is CLibraryModel.Reference.OpaquePointer -> "?.let(::NativeAddress)"
+            is CLibraryModel.Reference.StructureField -> ".let(${function.returnType.name}::ByValue)"
             is CLibraryModel.Reference -> {
                 "?.let(::NativeAddress)?.let(::${function.returnType.name})"
             }
