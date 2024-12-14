@@ -23,9 +23,11 @@ internal fun File.generateCommonEnumerations(enumerations: List<CLibraryModel.En
 
     templateBuilder {
         enumerations.forEach { enumeration ->
-            appendLine("typealias ${enumeration.name} = UInt")
+            val type = if (enumeration.size == 32) "UInt" else "ULong"
+            val valueSuffix = if (enumeration.size == 32) "u" else "uL"
+            appendLine("typealias ${enumeration.name} = $type")
             enumeration.values.forEach { (name, value) ->
-                appendLine("const val ${enumeration.name}_$name : ${enumeration.name} = ${value}u")
+                appendLine("const val ${enumeration.name}_$name : ${enumeration.name} = ${value}$valueSuffix")
             }
             newLine()
         }

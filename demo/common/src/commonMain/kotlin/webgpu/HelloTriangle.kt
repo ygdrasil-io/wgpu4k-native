@@ -36,7 +36,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                 targetCount = 1u
                 targets = WGPUColorTargetState.allocateArray(scope, 1u) { index, structure ->
                     structure.format = renderingContextFormat
-                    structure.writeMask = WGPUColorWriteMask_All.toULong()
+                    structure.writeMask = WGPUColorWriteMask_All
                 }.let { ArrayHolder(it.handler) }
             }
 

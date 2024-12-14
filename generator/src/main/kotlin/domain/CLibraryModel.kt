@@ -13,7 +13,7 @@ data class CLibraryModel(
     val callbacks: List<Callback>,
 ) {
 
-    class Enumeration(val name: String, val values: List<Pair<String, Int>>)
+    class Enumeration(val name: String, val values: List<Pair<String, Int>>, val size: Int = 32)
 
     sealed interface Type
     sealed class Reference(val name: String) : Type {

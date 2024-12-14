@@ -85,7 +85,7 @@ fun getDevice(adapter: WGPUAdapter): WGPUDevice = memoryScope { scope ->
     fetchedDevice ?: error("fail to get device")
 }
 
-fun getAdapter(surface: WGPUSurface, instance: WGPUInstance, backendType: UInt = WGPUInstanceBackend_All) = memoryScope { scope ->
+fun getAdapter(surface: WGPUSurface, instance: WGPUInstance, backendType: UInt = WGPUBackendType_Undefined) = memoryScope { scope ->
     val callbackInfo = WGPURequestAdapterCallbackInfo.allocate(scope)
     val options = WGPURequestAdapterOptions.allocate(scope).apply {
         compatibleSurface = surface

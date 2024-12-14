@@ -170,7 +170,7 @@ private fun YamlModel.convertToCLibraryEnumerations() =
     enums.map {
         CLibraryModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertEnumToEnumValues(it.entries.getBaseValue()))
     } + bitflags.map {
-        CLibraryModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertToEnumValues(it.entries))
+        CLibraryModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertToEnumValues(it.entries), 64)
     }
 
 private fun List<YamlModel.Enum.Entry>.getBaseValue(): Int {
