@@ -114,7 +114,7 @@ data class YamlModel(
         data class Entry(
             val name: String,
             val doc: String,
-            val value_combination: List<String>? = listOf(),
+            val value_combination: List<String>? = null,
         )
     }
 

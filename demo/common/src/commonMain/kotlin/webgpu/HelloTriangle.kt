@@ -15,7 +15,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                 nextInChain = WGPUShaderSourceWGSL.allocate(scope).apply {
                     code.length = triangleVertexShader.length.toULong()
                     code.data = scope.allocateFrom(triangleVertexShader)
-                    chain.sType = 0x00000002u
+                    chain.sType = WGPUSType_ShaderSourceWGSL
                 }.handler
             }.let { wgpuDeviceCreateShaderModule(device, it) } ?: error("fail to create shader module")
 
@@ -29,14 +29,14 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                     nextInChain = WGPUShaderSourceWGSL.allocate(scope).apply {
                         code.length = redFragmentShader.length.toULong()
                         code.data = scope.allocateFrom(redFragmentShader)
-                        chain.sType = 0x00000002u
+                        chain.sType = WGPUSType_ShaderSourceWGSL
                     }.handler
                 }.let { wgpuDeviceCreateShaderModule(device, it) } ?: error("fail to create shader module")
 
                 targetCount = 1u
                 targets = WGPUColorTargetState.allocateArray(scope, 1u) { index, structure ->
                     structure.format = renderingContextFormat
-                    structure.writeMask = 0x000000000000000Fu
+                    structure.writeMask = WGPUColorWriteMask_All.toULong()
                 }.let { ArrayHolder(it.handler) }
             }
 
