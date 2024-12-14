@@ -278,10 +278,10 @@ java {
 
 fun jniBasePath() = buildNativeResourcesDirectory.resolve("libsDebug")
 
-if (Platform.os == Os.MacOs) {
+/*if (Platform.os == Os.MacOs) {
     tasks.findByName("linkDebugTestMingwX64")?.apply { enabled = false }
     tasks.findByName("mingwX64Test")?.apply { enabled = false }
-}
+}*/
 
 tasks.named<Test>("jvmTest") {
     useJUnitPlatform()
