@@ -40,7 +40,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                 }.let { ArrayHolder(it.handler) }
             }
 
-            primitive.topology = 0x00000003u
+            primitive.topology = WGPUPrimitiveTopology_TriangleList
             multisample.count = 1u
             multisample.mask = 0xFFFFFFFFu
         }.let { wgpuDeviceCreateRenderPipeline(device, it) }
@@ -51,7 +51,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
         val surfaceTexture = WGPUSurfaceTexture.allocate(scope)
         wgpuSurfaceGetCurrentTexture(surface, surfaceTexture)
 
-        if (surfaceTexture.status > 1u) error("surface status is KO with status ${surfaceTexture.status}")
+        if (surfaceTexture.status > WGPUSurfaceGetCurrentTextureStatus_SuccessSuboptimal) error("surface status is KO with status ${surfaceTexture.status}")
         surfaceTexture.texture ?: error("fail to get texture")
 
         val frame = wgpuTextureCreateView(surfaceTexture.texture, null) ?: error("fail to create view")
@@ -66,8 +66,8 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
             colorAttachmentCount = 1u
             colorAttachments = WGPURenderPassColorAttachment.allocateArray(scope, 1u) { index, structure ->
                 structure.view = frame
-                structure.loadOp = 1u
-                structure.storeOp = 1u
+                structure.loadOp = WGPULoadOp_Clear
+                structure.storeOp = WGPUStoreOp_Store
                 structure.depthSlice = UInt.MAX_VALUE
                 structure.clearValue.r = .0
                 structure.clearValue.g = 1.0

@@ -98,14 +98,14 @@ fun main() {
 fun loadExtraYaml() = basePath.resolve("generator")
     .resolve("extra.yml")
     .readText()
-    .let { text -> parser.decodeFromString(YamlModel.serializer(), text).also { injectEnumValues(text, it) }  }
+    .let { text -> parser.decodeFromString(YamlModel.serializer(), text).let { injectEnumValues(text, it) }  }
 
 fun loadWebGPUYaml() = basePath.resolve("wgpu4k-native")
     .resolve("build")
     .resolve("native")
     .resolve("webgpu.yml")
     .readText()
-    .let { text -> parser.decodeFromString(YamlModel.serializer(), text).also { injectEnumValues(text, it) } }
+    .let { text -> parser.decodeFromString(YamlModel.serializer(), text).let { injectEnumValues(text, it) } }
 
 
 private fun injectEnumValues(text: String, model: YamlModel): YamlModel {
