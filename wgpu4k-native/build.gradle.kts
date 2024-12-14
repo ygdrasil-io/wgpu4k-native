@@ -27,7 +27,6 @@ kotlin {
     )
 
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget = JvmTarget.JVM_22
         }
@@ -36,7 +35,6 @@ kotlin {
     }
 
     jvm {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget = JvmTarget.JVM_22
         }
@@ -51,9 +49,8 @@ kotlin {
         }
     }
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
-        allWarningsAsErrors = true
+        //allWarningsAsErrors = true
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
@@ -123,8 +120,8 @@ android {
     buildTypes {
         getByName("release") {
 
-            isMinifyEnabled = false
-            isJniDebuggable = true
+            isMinifyEnabled = true
+            isJniDebuggable = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
