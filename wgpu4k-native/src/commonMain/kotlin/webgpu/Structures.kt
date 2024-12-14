@@ -381,7 +381,6 @@ expect interface WGPUDeviceLostCallbackInfo {
 
 expect interface WGPUUncapturedErrorCallbackInfo {
 	var nextInChain: WGPUChainedStruct?
-	var mode: WGPUCallbackMode
 	var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
 	var userdata1: NativeAddress?
 	var userdata2: NativeAddress?

@@ -757,16 +757,14 @@ sealed class WGPUDeviceLostCallbackInfo(pointer: com.sun.jna.Pointer? = null) : 
 
 sealed class WGPUUncapturedErrorCallbackInfo(pointer: com.sun.jna.Pointer? = null) : com.sun.jna.Structure(pointer) {
 	@JvmField var nextInChain: WGPUChainedStruct.ByReference?? = null
-	@JvmField var mode: Int = 0
 	@JvmField var callback: com.sun.jna.Callback? = null
 	@JvmField var userdata1: com.sun.jna.Pointer? = null
 	@JvmField var userdata2: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("nextInChain", "mode", "callback", "userdata1", "userdata2")
+	override fun getFieldOrder() = listOf("nextInChain", "callback", "userdata1", "userdata2")
 
 	class ByReference(pointer: com.sun.jna.Pointer? = null) : WGPUUncapturedErrorCallbackInfo(pointer), com.sun.jna.Structure.ByReference {
 		constructor(other: WGPUUncapturedErrorCallbackInfo) : this(other.pointer) {
 			this.nextInChain = other.nextInChain
-			this.mode = other.mode
 			this.callback = other.callback
 			this.userdata1 = other.userdata1
 			this.userdata2 = other.userdata2
@@ -776,7 +774,6 @@ sealed class WGPUUncapturedErrorCallbackInfo(pointer: com.sun.jna.Pointer? = nul
 	class ByValue(pointer: com.sun.jna.Pointer? = null) : WGPUUncapturedErrorCallbackInfo(pointer), com.sun.jna.Structure.ByValue {
 		constructor(other: WGPUUncapturedErrorCallbackInfo) : this(other.pointer) {
 			this.nextInChain = other.nextInChain
-			this.mode = other.mode
 			this.callback = other.callback
 			this.userdata1 = other.userdata1
 			this.userdata2 = other.userdata2

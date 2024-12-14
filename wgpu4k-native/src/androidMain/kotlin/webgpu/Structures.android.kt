@@ -2401,10 +2401,6 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 			get() = handle.nextInChain?.let{ WGPUChainedStruct.ByReference(it) }
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
-		override var mode: WGPUCallbackMode
-			get() = handle.mode.toUInt()
-			set(newValue) { handle.mode = newValue.toInt() }
-
 		override var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
 			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
 			set(newValue) { handle.callback = newValue?.callback }
@@ -2429,10 +2425,6 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 			get() = handle.nextInChain?.let{ WGPUChainedStruct.ByReference(it) }
 			set(newValue) { handle.nextInChain = (newValue as? WGPUChainedStruct.ByReference)?.handle }
 
-		override var mode: WGPUCallbackMode
-			get() = handle.mode.toUInt()
-			set(newValue) { handle.mode = newValue.toInt() }
-
 		override var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
 			get() = handle.callback?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }
 			set(newValue) { handle.callback = newValue?.callback }
@@ -2456,7 +2448,6 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 	fun toReference() = (this as ByReference).handle
 
 	actual var nextInChain: WGPUChainedStruct?
-	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?

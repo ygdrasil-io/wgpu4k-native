@@ -1831,9 +1831,6 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
 		override var nextInChain: WGPUChainedStruct?
 			get() = get(nextInChainLayout, nextInChainOffset).let { WGPUChainedStruct(it) }
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
-		override var mode: WGPUCallbackMode
-			get() = getUInt(modeOffset)
-			set(newValue) = set(modeOffset, newValue)
 		override var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
 			get() = get(callbackLayout, callbackOffset).let(::CallbackHolder)
 			set(newValue) = set(callbackLayout, callbackOffset, newValue?.handler)
@@ -1846,7 +1843,6 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
-	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -1857,15 +1853,15 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUUncapturedErrorCallbackInfo {
-			return allocator.allocate(40L)
+			return allocator.allocate(32L)
 				.let { WGPUUncapturedErrorCallbackInfo(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUUncapturedErrorCallbackInfo) -> Unit): ArrayHolder<WGPUUncapturedErrorCallbackInfo> {
-			return allocator.allocate(40 * size.toLong())
+			return allocator.allocate(32 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 40L)
+						it.handler.asSlice(index.toLong() * 32L)
 							.let(::NativeAddress)
 							.let { WGPUUncapturedErrorCallbackInfo(it) }
 							.let { provider(index, it) }
@@ -1876,8 +1872,6 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
-			ffi.C_INT.withName("mode"),
-			MemoryLayout.paddingLayout(4),
 			ffi.C_POINTER.withName("callback"),
 			ffi.C_POINTER.withName("userdata1"),
 			ffi.C_POINTER.withName("userdata2"),
@@ -1885,13 +1879,11 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
-		val modeOffset = 8L
-		val modeLayout = ffi.C_INT
-		val callbackOffset = 16L
+		val callbackOffset = 8L
 		val callbackLayout = ffi.C_POINTER
-		val userdata1Offset = 24L
+		val userdata1Offset = 16L
 		val userdata1Layout = ffi.C_POINTER
-		val userdata2Offset = 32L
+		val userdata2Offset = 24L
 		val userdata2Layout = ffi.C_POINTER
 	}
 }
@@ -1918,7 +1910,7 @@ actual interface WGPUDeviceDescriptor : CStructure {
 		override val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
 			get() = handler.handler.asSlice(deviceLostCallbackInfoOffset, 40L).let(::NativeAddress).let { WGPUDeviceLostCallbackInfo(it) }
 		override val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
-			get() = handler.handler.asSlice(uncapturedErrorCallbackInfoOffset, 40L).let(::NativeAddress).let { WGPUUncapturedErrorCallbackInfo(it) }
+			get() = handler.handler.asSlice(uncapturedErrorCallbackInfoOffset, 32L).let(::NativeAddress).let { WGPUUncapturedErrorCallbackInfo(it) }
 	}
 
 	actual var nextInChain: NativeAddress?
@@ -1936,15 +1928,15 @@ actual interface WGPUDeviceDescriptor : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUDeviceDescriptor {
-			return allocator.allocate(152L)
+			return allocator.allocate(144L)
 				.let { WGPUDeviceDescriptor(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUDeviceDescriptor) -> Unit): ArrayHolder<WGPUDeviceDescriptor> {
-			return allocator.allocate(152 * size.toLong())
+			return allocator.allocate(144 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 152L)
+						it.handler.asSlice(index.toLong() * 144L)
 							.let(::NativeAddress)
 							.let { WGPUDeviceDescriptor(it) }
 							.let { provider(index, it) }
