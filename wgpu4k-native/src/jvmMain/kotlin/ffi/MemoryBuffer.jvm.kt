@@ -8,7 +8,7 @@ import java.lang.foreign.ValueLayout
 actual class MemoryBuffer actual constructor(handler: NativeAddress, actual val size: ULong) {
 
     actual val handler: NativeAddress = handler.handler.reinterpret(size.toLong()).let(::NativeAddress)
-    val memorySegment: MemorySegment = handler.handler
+    val memorySegment: MemorySegment = this.handler.handler
 
     private fun writeArray(destinationOffset: ULong, source: MemorySegment, arrayIndex: ULong, size: ULong, elementSizeBytes: Int) {
         val sourceOffset = elementSizeBytes.toULong() * arrayIndex
