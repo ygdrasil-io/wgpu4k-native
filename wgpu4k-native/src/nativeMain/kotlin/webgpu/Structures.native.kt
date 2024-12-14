@@ -2402,6 +2402,10 @@ actual interface WGPUDeviceLostCallbackInfo {
 			get() = handle.useContents { nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) } }
 			set(newValue) { handle.useContents { nextInChain = newValue?.handler?.reinterpret() } } 
 
+		override var mode: WGPUCallbackMode
+			get() = handle.useContents { mode ?: error("pointer of WGPUDeviceLostCallbackInfo is null") }
+			set(newValue) { handle.useContents { mode = newValue } } 
+
 		override var callback: CallbackHolder<WGPUDeviceLostCallback>?
 			get() = handle.useContents { callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUDeviceLostCallback>(it) } }
 			set(newValue) { handle.useContents { callback = newValue?.handler?.reinterpret() } } 
@@ -2423,6 +2427,10 @@ actual interface WGPUDeviceLostCallbackInfo {
 			get() = handler.reinterpret<webgpu.native.WGPUDeviceLostCallbackInfo>().pointed.nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUDeviceLostCallbackInfo>().pointed.let { it.nextInChain = newValue?.handler?.reinterpret() } } 
 
+		override var mode: WGPUCallbackMode
+			get() = handler.reinterpret<webgpu.native.WGPUDeviceLostCallbackInfo>().pointed.mode ?: error("pointer of WGPUDeviceLostCallbackInfo is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUDeviceLostCallbackInfo>().pointed.let { it.mode = newValue } } 
+
 		override var callback: CallbackHolder<WGPUDeviceLostCallback>?
 			get() = handler.reinterpret<webgpu.native.WGPUDeviceLostCallbackInfo>().pointed.callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUDeviceLostCallback>(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUDeviceLostCallbackInfo>().pointed.let { it.callback = newValue?.handler?.reinterpret() } } 
@@ -2438,6 +2446,7 @@ actual interface WGPUDeviceLostCallbackInfo {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUDeviceLostCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -2469,6 +2478,7 @@ actual interface WGPUDeviceLostCallbackInfo {
 	fun toCValue(): CValue<webgpu.native.WGPUDeviceLostCallbackInfo> {
 		return cValue<webgpu.native.WGPUDeviceLostCallbackInfo> {
 			nextInChain = this@WGPUDeviceLostCallbackInfo.nextInChain?.handler?.reinterpret()
+			mode = this@WGPUDeviceLostCallbackInfo.mode
 			callback = this@WGPUDeviceLostCallbackInfo.callback?.handler?.reinterpret()
 			userdata1 = this@WGPUDeviceLostCallbackInfo.userdata1?.reinterpret()
 			userdata2 = this@WGPUDeviceLostCallbackInfo.userdata2?.reinterpret()
@@ -2478,6 +2488,7 @@ actual interface WGPUDeviceLostCallbackInfo {
 
 fun webgpu.native.WGPUDeviceLostCallbackInfo.adapt(structure: WGPUDeviceLostCallbackInfo) {
 	nextInChain = structure.nextInChain?.handler?.reinterpret()
+	mode = structure.mode
 	callback = structure.callback?.handler?.reinterpret()
 	userdata1 = structure.userdata1?.reinterpret()
 	userdata2 = structure.userdata2?.reinterpret()
@@ -2488,6 +2499,10 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 		override var nextInChain: WGPUChainedStruct?
 			get() = handle.useContents { nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) } }
 			set(newValue) { handle.useContents { nextInChain = newValue?.handler?.reinterpret() } } 
+
+		override var mode: WGPUCallbackMode
+			get() = handle.useContents { mode ?: error("pointer of WGPUUncapturedErrorCallbackInfo is null") }
+			set(newValue) { handle.useContents { mode = newValue } } 
 
 		override var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
 			get() = handle.useContents { callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUUncapturedErrorCallback>(it) } }
@@ -2510,6 +2525,10 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 			get() = handler.reinterpret<webgpu.native.WGPUUncapturedErrorCallbackInfo>().pointed.nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUUncapturedErrorCallbackInfo>().pointed.let { it.nextInChain = newValue?.handler?.reinterpret() } } 
 
+		override var mode: WGPUCallbackMode
+			get() = handler.reinterpret<webgpu.native.WGPUUncapturedErrorCallbackInfo>().pointed.mode ?: error("pointer of WGPUUncapturedErrorCallbackInfo is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUUncapturedErrorCallbackInfo>().pointed.let { it.mode = newValue } } 
+
 		override var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
 			get() = handler.reinterpret<webgpu.native.WGPUUncapturedErrorCallbackInfo>().pointed.callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUUncapturedErrorCallback>(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUUncapturedErrorCallbackInfo>().pointed.let { it.callback = newValue?.handler?.reinterpret() } } 
@@ -2525,6 +2544,7 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -2556,6 +2576,7 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 	fun toCValue(): CValue<webgpu.native.WGPUUncapturedErrorCallbackInfo> {
 		return cValue<webgpu.native.WGPUUncapturedErrorCallbackInfo> {
 			nextInChain = this@WGPUUncapturedErrorCallbackInfo.nextInChain?.handler?.reinterpret()
+			mode = this@WGPUUncapturedErrorCallbackInfo.mode
 			callback = this@WGPUUncapturedErrorCallbackInfo.callback?.handler?.reinterpret()
 			userdata1 = this@WGPUUncapturedErrorCallbackInfo.userdata1?.reinterpret()
 			userdata2 = this@WGPUUncapturedErrorCallbackInfo.userdata2?.reinterpret()
@@ -2565,6 +2586,7 @@ actual interface WGPUUncapturedErrorCallbackInfo {
 
 fun webgpu.native.WGPUUncapturedErrorCallbackInfo.adapt(structure: WGPUUncapturedErrorCallbackInfo) {
 	nextInChain = structure.nextInChain?.handler?.reinterpret()
+	mode = structure.mode
 	callback = structure.callback?.handler?.reinterpret()
 	userdata1 = structure.userdata1?.reinterpret()
 	userdata2 = structure.userdata2?.reinterpret()
@@ -7322,6 +7344,10 @@ actual interface WGPUBufferMapCallbackInfo {
 			get() = handle.useContents { nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) } }
 			set(newValue) { handle.useContents { nextInChain = newValue?.handler?.reinterpret() } } 
 
+		override var mode: WGPUCallbackMode
+			get() = handle.useContents { mode ?: error("pointer of WGPUBufferMapCallbackInfo is null") }
+			set(newValue) { handle.useContents { mode = newValue } } 
+
 		override var callback: CallbackHolder<WGPUBufferMapCallback>?
 			get() = handle.useContents { callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUBufferMapCallback>(it) } }
 			set(newValue) { handle.useContents { callback = newValue?.handler?.reinterpret() } } 
@@ -7343,6 +7369,10 @@ actual interface WGPUBufferMapCallbackInfo {
 			get() = handler.reinterpret<webgpu.native.WGPUBufferMapCallbackInfo>().pointed.nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUBufferMapCallbackInfo>().pointed.let { it.nextInChain = newValue?.handler?.reinterpret() } } 
 
+		override var mode: WGPUCallbackMode
+			get() = handler.reinterpret<webgpu.native.WGPUBufferMapCallbackInfo>().pointed.mode ?: error("pointer of WGPUBufferMapCallbackInfo is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUBufferMapCallbackInfo>().pointed.let { it.mode = newValue } } 
+
 		override var callback: CallbackHolder<WGPUBufferMapCallback>?
 			get() = handler.reinterpret<webgpu.native.WGPUBufferMapCallbackInfo>().pointed.callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUBufferMapCallback>(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUBufferMapCallbackInfo>().pointed.let { it.callback = newValue?.handler?.reinterpret() } } 
@@ -7358,6 +7388,7 @@ actual interface WGPUBufferMapCallbackInfo {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUBufferMapCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -7389,6 +7420,7 @@ actual interface WGPUBufferMapCallbackInfo {
 	fun toCValue(): CValue<webgpu.native.WGPUBufferMapCallbackInfo> {
 		return cValue<webgpu.native.WGPUBufferMapCallbackInfo> {
 			nextInChain = this@WGPUBufferMapCallbackInfo.nextInChain?.handler?.reinterpret()
+			mode = this@WGPUBufferMapCallbackInfo.mode
 			callback = this@WGPUBufferMapCallbackInfo.callback?.handler?.reinterpret()
 			userdata1 = this@WGPUBufferMapCallbackInfo.userdata1?.reinterpret()
 			userdata2 = this@WGPUBufferMapCallbackInfo.userdata2?.reinterpret()
@@ -7398,6 +7430,7 @@ actual interface WGPUBufferMapCallbackInfo {
 
 fun webgpu.native.WGPUBufferMapCallbackInfo.adapt(structure: WGPUBufferMapCallbackInfo) {
 	nextInChain = structure.nextInChain?.handler?.reinterpret()
+	mode = structure.mode
 	callback = structure.callback?.handler?.reinterpret()
 	userdata1 = structure.userdata1?.reinterpret()
 	userdata2 = structure.userdata2?.reinterpret()
@@ -7408,6 +7441,10 @@ actual interface WGPUCompilationInfoCallbackInfo {
 		override var nextInChain: WGPUChainedStruct?
 			get() = handle.useContents { nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) } }
 			set(newValue) { handle.useContents { nextInChain = newValue?.handler?.reinterpret() } } 
+
+		override var mode: WGPUCallbackMode
+			get() = handle.useContents { mode ?: error("pointer of WGPUCompilationInfoCallbackInfo is null") }
+			set(newValue) { handle.useContents { mode = newValue } } 
 
 		override var callback: CallbackHolder<WGPUCompilationInfoCallback>?
 			get() = handle.useContents { callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUCompilationInfoCallback>(it) } }
@@ -7430,6 +7467,10 @@ actual interface WGPUCompilationInfoCallbackInfo {
 			get() = handler.reinterpret<webgpu.native.WGPUCompilationInfoCallbackInfo>().pointed.nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUCompilationInfoCallbackInfo>().pointed.let { it.nextInChain = newValue?.handler?.reinterpret() } } 
 
+		override var mode: WGPUCallbackMode
+			get() = handler.reinterpret<webgpu.native.WGPUCompilationInfoCallbackInfo>().pointed.mode ?: error("pointer of WGPUCompilationInfoCallbackInfo is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUCompilationInfoCallbackInfo>().pointed.let { it.mode = newValue } } 
+
 		override var callback: CallbackHolder<WGPUCompilationInfoCallback>?
 			get() = handler.reinterpret<webgpu.native.WGPUCompilationInfoCallbackInfo>().pointed.callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUCompilationInfoCallback>(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUCompilationInfoCallbackInfo>().pointed.let { it.callback = newValue?.handler?.reinterpret() } } 
@@ -7445,6 +7486,7 @@ actual interface WGPUCompilationInfoCallbackInfo {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUCompilationInfoCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -7476,6 +7518,7 @@ actual interface WGPUCompilationInfoCallbackInfo {
 	fun toCValue(): CValue<webgpu.native.WGPUCompilationInfoCallbackInfo> {
 		return cValue<webgpu.native.WGPUCompilationInfoCallbackInfo> {
 			nextInChain = this@WGPUCompilationInfoCallbackInfo.nextInChain?.handler?.reinterpret()
+			mode = this@WGPUCompilationInfoCallbackInfo.mode
 			callback = this@WGPUCompilationInfoCallbackInfo.callback?.handler?.reinterpret()
 			userdata1 = this@WGPUCompilationInfoCallbackInfo.userdata1?.reinterpret()
 			userdata2 = this@WGPUCompilationInfoCallbackInfo.userdata2?.reinterpret()
@@ -7485,6 +7528,7 @@ actual interface WGPUCompilationInfoCallbackInfo {
 
 fun webgpu.native.WGPUCompilationInfoCallbackInfo.adapt(structure: WGPUCompilationInfoCallbackInfo) {
 	nextInChain = structure.nextInChain?.handler?.reinterpret()
+	mode = structure.mode
 	callback = structure.callback?.handler?.reinterpret()
 	userdata1 = structure.userdata1?.reinterpret()
 	userdata2 = structure.userdata2?.reinterpret()
@@ -7495,6 +7539,10 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
 		override var nextInChain: WGPUChainedStruct?
 			get() = handle.useContents { nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) } }
 			set(newValue) { handle.useContents { nextInChain = newValue?.handler?.reinterpret() } } 
+
+		override var mode: WGPUCallbackMode
+			get() = handle.useContents { mode ?: error("pointer of WGPUCreateComputePipelineAsyncCallbackInfo is null") }
+			set(newValue) { handle.useContents { mode = newValue } } 
 
 		override var callback: CallbackHolder<WGPUCreateComputePipelineAsyncCallback>?
 			get() = handle.useContents { callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUCreateComputePipelineAsyncCallback>(it) } }
@@ -7517,6 +7565,10 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
 			get() = handler.reinterpret<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo>().pointed.nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo>().pointed.let { it.nextInChain = newValue?.handler?.reinterpret() } } 
 
+		override var mode: WGPUCallbackMode
+			get() = handler.reinterpret<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo>().pointed.mode ?: error("pointer of WGPUCreateComputePipelineAsyncCallbackInfo is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo>().pointed.let { it.mode = newValue } } 
+
 		override var callback: CallbackHolder<WGPUCreateComputePipelineAsyncCallback>?
 			get() = handler.reinterpret<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo>().pointed.callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUCreateComputePipelineAsyncCallback>(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo>().pointed.let { it.callback = newValue?.handler?.reinterpret() } } 
@@ -7532,6 +7584,7 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUCreateComputePipelineAsyncCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -7563,6 +7616,7 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
 	fun toCValue(): CValue<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo> {
 		return cValue<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo> {
 			nextInChain = this@WGPUCreateComputePipelineAsyncCallbackInfo.nextInChain?.handler?.reinterpret()
+			mode = this@WGPUCreateComputePipelineAsyncCallbackInfo.mode
 			callback = this@WGPUCreateComputePipelineAsyncCallbackInfo.callback?.handler?.reinterpret()
 			userdata1 = this@WGPUCreateComputePipelineAsyncCallbackInfo.userdata1?.reinterpret()
 			userdata2 = this@WGPUCreateComputePipelineAsyncCallbackInfo.userdata2?.reinterpret()
@@ -7572,6 +7626,7 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
 
 fun webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo.adapt(structure: WGPUCreateComputePipelineAsyncCallbackInfo) {
 	nextInChain = structure.nextInChain?.handler?.reinterpret()
+	mode = structure.mode
 	callback = structure.callback?.handler?.reinterpret()
 	userdata1 = structure.userdata1?.reinterpret()
 	userdata2 = structure.userdata2?.reinterpret()
@@ -7582,6 +7637,10 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 		override var nextInChain: WGPUChainedStruct?
 			get() = handle.useContents { nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) } }
 			set(newValue) { handle.useContents { nextInChain = newValue?.handler?.reinterpret() } } 
+
+		override var mode: WGPUCallbackMode
+			get() = handle.useContents { mode ?: error("pointer of WGPUCreateRenderPipelineAsyncCallbackInfo is null") }
+			set(newValue) { handle.useContents { mode = newValue } } 
 
 		override var callback: CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>?
 			get() = handle.useContents { callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>(it) } }
@@ -7604,6 +7663,10 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 			get() = handler.reinterpret<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>().pointed.nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>().pointed.let { it.nextInChain = newValue?.handler?.reinterpret() } } 
 
+		override var mode: WGPUCallbackMode
+			get() = handler.reinterpret<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>().pointed.mode ?: error("pointer of WGPUCreateRenderPipelineAsyncCallbackInfo is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>().pointed.let { it.mode = newValue } } 
+
 		override var callback: CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>?
 			get() = handler.reinterpret<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>().pointed.callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo>().pointed.let { it.callback = newValue?.handler?.reinterpret() } } 
@@ -7619,6 +7682,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -7650,6 +7714,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 	fun toCValue(): CValue<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo> {
 		return cValue<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo> {
 			nextInChain = this@WGPUCreateRenderPipelineAsyncCallbackInfo.nextInChain?.handler?.reinterpret()
+			mode = this@WGPUCreateRenderPipelineAsyncCallbackInfo.mode
 			callback = this@WGPUCreateRenderPipelineAsyncCallbackInfo.callback?.handler?.reinterpret()
 			userdata1 = this@WGPUCreateRenderPipelineAsyncCallbackInfo.userdata1?.reinterpret()
 			userdata2 = this@WGPUCreateRenderPipelineAsyncCallbackInfo.userdata2?.reinterpret()
@@ -7659,6 +7724,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 
 fun webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo.adapt(structure: WGPUCreateRenderPipelineAsyncCallbackInfo) {
 	nextInChain = structure.nextInChain?.handler?.reinterpret()
+	mode = structure.mode
 	callback = structure.callback?.handler?.reinterpret()
 	userdata1 = structure.userdata1?.reinterpret()
 	userdata2 = structure.userdata2?.reinterpret()
@@ -7669,6 +7735,10 @@ actual interface WGPUPopErrorScopeCallbackInfo {
 		override var nextInChain: WGPUChainedStruct?
 			get() = handle.useContents { nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) } }
 			set(newValue) { handle.useContents { nextInChain = newValue?.handler?.reinterpret() } } 
+
+		override var mode: WGPUCallbackMode
+			get() = handle.useContents { mode ?: error("pointer of WGPUPopErrorScopeCallbackInfo is null") }
+			set(newValue) { handle.useContents { mode = newValue } } 
 
 		override var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
 			get() = handle.useContents { callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUPopErrorScopeCallback>(it) } }
@@ -7691,6 +7761,10 @@ actual interface WGPUPopErrorScopeCallbackInfo {
 			get() = handler.reinterpret<webgpu.native.WGPUPopErrorScopeCallbackInfo>().pointed.nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUPopErrorScopeCallbackInfo>().pointed.let { it.nextInChain = newValue?.handler?.reinterpret() } } 
 
+		override var mode: WGPUCallbackMode
+			get() = handler.reinterpret<webgpu.native.WGPUPopErrorScopeCallbackInfo>().pointed.mode ?: error("pointer of WGPUPopErrorScopeCallbackInfo is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUPopErrorScopeCallbackInfo>().pointed.let { it.mode = newValue } } 
+
 		override var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
 			get() = handler.reinterpret<webgpu.native.WGPUPopErrorScopeCallbackInfo>().pointed.callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUPopErrorScopeCallback>(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUPopErrorScopeCallbackInfo>().pointed.let { it.callback = newValue?.handler?.reinterpret() } } 
@@ -7706,6 +7780,7 @@ actual interface WGPUPopErrorScopeCallbackInfo {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -7737,6 +7812,7 @@ actual interface WGPUPopErrorScopeCallbackInfo {
 	fun toCValue(): CValue<webgpu.native.WGPUPopErrorScopeCallbackInfo> {
 		return cValue<webgpu.native.WGPUPopErrorScopeCallbackInfo> {
 			nextInChain = this@WGPUPopErrorScopeCallbackInfo.nextInChain?.handler?.reinterpret()
+			mode = this@WGPUPopErrorScopeCallbackInfo.mode
 			callback = this@WGPUPopErrorScopeCallbackInfo.callback?.handler?.reinterpret()
 			userdata1 = this@WGPUPopErrorScopeCallbackInfo.userdata1?.reinterpret()
 			userdata2 = this@WGPUPopErrorScopeCallbackInfo.userdata2?.reinterpret()
@@ -7746,6 +7822,7 @@ actual interface WGPUPopErrorScopeCallbackInfo {
 
 fun webgpu.native.WGPUPopErrorScopeCallbackInfo.adapt(structure: WGPUPopErrorScopeCallbackInfo) {
 	nextInChain = structure.nextInChain?.handler?.reinterpret()
+	mode = structure.mode
 	callback = structure.callback?.handler?.reinterpret()
 	userdata1 = structure.userdata1?.reinterpret()
 	userdata2 = structure.userdata2?.reinterpret()
@@ -7756,6 +7833,10 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
 		override var nextInChain: WGPUChainedStruct?
 			get() = handle.useContents { nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) } }
 			set(newValue) { handle.useContents { nextInChain = newValue?.handler?.reinterpret() } } 
+
+		override var mode: WGPUCallbackMode
+			get() = handle.useContents { mode ?: error("pointer of WGPUQueueWorkDoneCallbackInfo is null") }
+			set(newValue) { handle.useContents { mode = newValue } } 
 
 		override var callback: CallbackHolder<WGPUQueueWorkDoneCallback>?
 			get() = handle.useContents { callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUQueueWorkDoneCallback>(it) } }
@@ -7778,6 +7859,10 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
 			get() = handler.reinterpret<webgpu.native.WGPUQueueWorkDoneCallbackInfo>().pointed.nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUQueueWorkDoneCallbackInfo>().pointed.let { it.nextInChain = newValue?.handler?.reinterpret() } } 
 
+		override var mode: WGPUCallbackMode
+			get() = handler.reinterpret<webgpu.native.WGPUQueueWorkDoneCallbackInfo>().pointed.mode ?: error("pointer of WGPUQueueWorkDoneCallbackInfo is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPUQueueWorkDoneCallbackInfo>().pointed.let { it.mode = newValue } } 
+
 		override var callback: CallbackHolder<WGPUQueueWorkDoneCallback>?
 			get() = handler.reinterpret<webgpu.native.WGPUQueueWorkDoneCallbackInfo>().pointed.callback?.let(::NativeAddress)?.let { CallbackHolder<WGPUQueueWorkDoneCallback>(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPUQueueWorkDoneCallbackInfo>().pointed.let { it.callback = newValue?.handler?.reinterpret() } } 
@@ -7793,6 +7878,7 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUQueueWorkDoneCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -7824,6 +7910,7 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
 	fun toCValue(): CValue<webgpu.native.WGPUQueueWorkDoneCallbackInfo> {
 		return cValue<webgpu.native.WGPUQueueWorkDoneCallbackInfo> {
 			nextInChain = this@WGPUQueueWorkDoneCallbackInfo.nextInChain?.handler?.reinterpret()
+			mode = this@WGPUQueueWorkDoneCallbackInfo.mode
 			callback = this@WGPUQueueWorkDoneCallbackInfo.callback?.handler?.reinterpret()
 			userdata1 = this@WGPUQueueWorkDoneCallbackInfo.userdata1?.reinterpret()
 			userdata2 = this@WGPUQueueWorkDoneCallbackInfo.userdata2?.reinterpret()
@@ -7833,6 +7920,7 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
 
 fun webgpu.native.WGPUQueueWorkDoneCallbackInfo.adapt(structure: WGPUQueueWorkDoneCallbackInfo) {
 	nextInChain = structure.nextInChain?.handler?.reinterpret()
+	mode = structure.mode
 	callback = structure.callback?.handler?.reinterpret()
 	userdata1 = structure.userdata1?.reinterpret()
 	userdata2 = structure.userdata2?.reinterpret()
@@ -7843,6 +7931,10 @@ actual interface WGPURequestAdapterCallbackInfo {
 		override var nextInChain: WGPUChainedStruct?
 			get() = handle.useContents { nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) } }
 			set(newValue) { handle.useContents { nextInChain = newValue?.handler?.reinterpret() } } 
+
+		override var mode: WGPUCallbackMode
+			get() = handle.useContents { mode ?: error("pointer of WGPURequestAdapterCallbackInfo is null") }
+			set(newValue) { handle.useContents { mode = newValue } } 
 
 		override var callback: CallbackHolder<WGPURequestAdapterCallback>?
 			get() = handle.useContents { callback?.let(::NativeAddress)?.let { CallbackHolder<WGPURequestAdapterCallback>(it) } }
@@ -7865,6 +7957,10 @@ actual interface WGPURequestAdapterCallbackInfo {
 			get() = handler.reinterpret<webgpu.native.WGPURequestAdapterCallbackInfo>().pointed.nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestAdapterCallbackInfo>().pointed.let { it.nextInChain = newValue?.handler?.reinterpret() } } 
 
+		override var mode: WGPUCallbackMode
+			get() = handler.reinterpret<webgpu.native.WGPURequestAdapterCallbackInfo>().pointed.mode ?: error("pointer of WGPURequestAdapterCallbackInfo is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestAdapterCallbackInfo>().pointed.let { it.mode = newValue } } 
+
 		override var callback: CallbackHolder<WGPURequestAdapterCallback>?
 			get() = handler.reinterpret<webgpu.native.WGPURequestAdapterCallbackInfo>().pointed.callback?.let(::NativeAddress)?.let { CallbackHolder<WGPURequestAdapterCallback>(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestAdapterCallbackInfo>().pointed.let { it.callback = newValue?.handler?.reinterpret() } } 
@@ -7880,6 +7976,7 @@ actual interface WGPURequestAdapterCallbackInfo {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPURequestAdapterCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -7911,6 +8008,7 @@ actual interface WGPURequestAdapterCallbackInfo {
 	fun toCValue(): CValue<webgpu.native.WGPURequestAdapterCallbackInfo> {
 		return cValue<webgpu.native.WGPURequestAdapterCallbackInfo> {
 			nextInChain = this@WGPURequestAdapterCallbackInfo.nextInChain?.handler?.reinterpret()
+			mode = this@WGPURequestAdapterCallbackInfo.mode
 			callback = this@WGPURequestAdapterCallbackInfo.callback?.handler?.reinterpret()
 			userdata1 = this@WGPURequestAdapterCallbackInfo.userdata1?.reinterpret()
 			userdata2 = this@WGPURequestAdapterCallbackInfo.userdata2?.reinterpret()
@@ -7920,6 +8018,7 @@ actual interface WGPURequestAdapterCallbackInfo {
 
 fun webgpu.native.WGPURequestAdapterCallbackInfo.adapt(structure: WGPURequestAdapterCallbackInfo) {
 	nextInChain = structure.nextInChain?.handler?.reinterpret()
+	mode = structure.mode
 	callback = structure.callback?.handler?.reinterpret()
 	userdata1 = structure.userdata1?.reinterpret()
 	userdata2 = structure.userdata2?.reinterpret()
@@ -7930,6 +8029,10 @@ actual interface WGPURequestDeviceCallbackInfo {
 		override var nextInChain: WGPUChainedStruct?
 			get() = handle.useContents { nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) } }
 			set(newValue) { handle.useContents { nextInChain = newValue?.handler?.reinterpret() } } 
+
+		override var mode: WGPUCallbackMode
+			get() = handle.useContents { mode ?: error("pointer of WGPURequestDeviceCallbackInfo is null") }
+			set(newValue) { handle.useContents { mode = newValue } } 
 
 		override var callback: CallbackHolder<WGPURequestDeviceCallback>?
 			get() = handle.useContents { callback?.let(::NativeAddress)?.let { CallbackHolder<WGPURequestDeviceCallback>(it) } }
@@ -7952,6 +8055,10 @@ actual interface WGPURequestDeviceCallbackInfo {
 			get() = handler.reinterpret<webgpu.native.WGPURequestDeviceCallbackInfo>().pointed.nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestDeviceCallbackInfo>().pointed.let { it.nextInChain = newValue?.handler?.reinterpret() } } 
 
+		override var mode: WGPUCallbackMode
+			get() = handler.reinterpret<webgpu.native.WGPURequestDeviceCallbackInfo>().pointed.mode ?: error("pointer of WGPURequestDeviceCallbackInfo is null")
+			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestDeviceCallbackInfo>().pointed.let { it.mode = newValue } } 
+
 		override var callback: CallbackHolder<WGPURequestDeviceCallback>?
 			get() = handler.reinterpret<webgpu.native.WGPURequestDeviceCallbackInfo>().pointed.callback?.let(::NativeAddress)?.let { CallbackHolder<WGPURequestDeviceCallback>(it) }
 			set(newValue) { handler.reinterpret<webgpu.native.WGPURequestDeviceCallbackInfo>().pointed.let { it.callback = newValue?.handler?.reinterpret() } } 
@@ -7967,6 +8074,7 @@ actual interface WGPURequestDeviceCallbackInfo {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPURequestDeviceCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -7998,6 +8106,7 @@ actual interface WGPURequestDeviceCallbackInfo {
 	fun toCValue(): CValue<webgpu.native.WGPURequestDeviceCallbackInfo> {
 		return cValue<webgpu.native.WGPURequestDeviceCallbackInfo> {
 			nextInChain = this@WGPURequestDeviceCallbackInfo.nextInChain?.handler?.reinterpret()
+			mode = this@WGPURequestDeviceCallbackInfo.mode
 			callback = this@WGPURequestDeviceCallbackInfo.callback?.handler?.reinterpret()
 			userdata1 = this@WGPURequestDeviceCallbackInfo.userdata1?.reinterpret()
 			userdata2 = this@WGPURequestDeviceCallbackInfo.userdata2?.reinterpret()
@@ -8007,6 +8116,7 @@ actual interface WGPURequestDeviceCallbackInfo {
 
 fun webgpu.native.WGPURequestDeviceCallbackInfo.adapt(structure: WGPURequestDeviceCallbackInfo) {
 	nextInChain = structure.nextInChain?.handler?.reinterpret()
+	mode = structure.mode
 	callback = structure.callback?.handler?.reinterpret()
 	userdata1 = structure.userdata1?.reinterpret()
 	userdata2 = structure.userdata2?.reinterpret()

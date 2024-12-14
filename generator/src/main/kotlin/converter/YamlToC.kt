@@ -148,6 +148,7 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
     CLibraryModel.Structure(
         name, listOf(
             CLibraryModel.StructureField("nextInChain", CLibraryModel.Reference.Structure("WGPUChainedStruct"), "?"),
+            CLibraryModel.StructureField("mode", CLibraryModel.Reference.Enumeration("WGPUCallbackMode"), ""),
             CLibraryModel.StructureField("callback", CLibraryModel.Reference.Callback(it.name.convertToKotlinCallbackName()), "?"),
             CLibraryModel.StructureField("userdata1", CLibraryModel.Reference.OpaquePointer, "?"),
             CLibraryModel.StructureField("userdata2", CLibraryModel.Reference.OpaquePointer, "?")

@@ -367,6 +367,7 @@ expect interface WGPUQueueDescriptor {
 
 expect interface WGPUDeviceLostCallbackInfo {
 	var nextInChain: WGPUChainedStruct?
+	var mode: WGPUCallbackMode
 	var callback: CallbackHolder<WGPUDeviceLostCallback>?
 	var userdata1: NativeAddress?
 	var userdata2: NativeAddress?
@@ -380,6 +381,7 @@ expect interface WGPUDeviceLostCallbackInfo {
 
 expect interface WGPUUncapturedErrorCallbackInfo {
 	var nextInChain: WGPUChainedStruct?
+	var mode: WGPUCallbackMode
 	var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
 	var userdata1: NativeAddress?
 	var userdata2: NativeAddress?
@@ -1081,6 +1083,7 @@ expect interface WGPUChainedStructOut {
 
 expect interface WGPUBufferMapCallbackInfo {
 	var nextInChain: WGPUChainedStruct?
+	var mode: WGPUCallbackMode
 	var callback: CallbackHolder<WGPUBufferMapCallback>?
 	var userdata1: NativeAddress?
 	var userdata2: NativeAddress?
@@ -1094,6 +1097,7 @@ expect interface WGPUBufferMapCallbackInfo {
 
 expect interface WGPUCompilationInfoCallbackInfo {
 	var nextInChain: WGPUChainedStruct?
+	var mode: WGPUCallbackMode
 	var callback: CallbackHolder<WGPUCompilationInfoCallback>?
 	var userdata1: NativeAddress?
 	var userdata2: NativeAddress?
@@ -1107,6 +1111,7 @@ expect interface WGPUCompilationInfoCallbackInfo {
 
 expect interface WGPUCreateComputePipelineAsyncCallbackInfo {
 	var nextInChain: WGPUChainedStruct?
+	var mode: WGPUCallbackMode
 	var callback: CallbackHolder<WGPUCreateComputePipelineAsyncCallback>?
 	var userdata1: NativeAddress?
 	var userdata2: NativeAddress?
@@ -1120,6 +1125,7 @@ expect interface WGPUCreateComputePipelineAsyncCallbackInfo {
 
 expect interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 	var nextInChain: WGPUChainedStruct?
+	var mode: WGPUCallbackMode
 	var callback: CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>?
 	var userdata1: NativeAddress?
 	var userdata2: NativeAddress?
@@ -1133,6 +1139,7 @@ expect interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 
 expect interface WGPUPopErrorScopeCallbackInfo {
 	var nextInChain: WGPUChainedStruct?
+	var mode: WGPUCallbackMode
 	var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
 	var userdata1: NativeAddress?
 	var userdata2: NativeAddress?
@@ -1146,6 +1153,7 @@ expect interface WGPUPopErrorScopeCallbackInfo {
 
 expect interface WGPUQueueWorkDoneCallbackInfo {
 	var nextInChain: WGPUChainedStruct?
+	var mode: WGPUCallbackMode
 	var callback: CallbackHolder<WGPUQueueWorkDoneCallback>?
 	var userdata1: NativeAddress?
 	var userdata2: NativeAddress?
@@ -1159,6 +1167,7 @@ expect interface WGPUQueueWorkDoneCallbackInfo {
 
 expect interface WGPURequestAdapterCallbackInfo {
 	var nextInChain: WGPUChainedStruct?
+	var mode: WGPUCallbackMode
 	var callback: CallbackHolder<WGPURequestAdapterCallback>?
 	var userdata1: NativeAddress?
 	var userdata2: NativeAddress?
@@ -1172,6 +1181,7 @@ expect interface WGPURequestAdapterCallbackInfo {
 
 expect interface WGPURequestDeviceCallbackInfo {
 	var nextInChain: WGPUChainedStruct?
+	var mode: WGPUCallbackMode
 	var callback: CallbackHolder<WGPURequestDeviceCallback>?
 	var userdata1: NativeAddress?
 	var userdata2: NativeAddress?

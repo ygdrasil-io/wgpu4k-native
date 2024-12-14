@@ -1760,6 +1760,9 @@ actual interface WGPUDeviceLostCallbackInfo : CStructure {
 		override var nextInChain: WGPUChainedStruct?
 			get() = get(nextInChainLayout, nextInChainOffset).let { WGPUChainedStruct(it) }
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+		override var mode: WGPUCallbackMode
+			get() = getUInt(modeOffset)
+			set(newValue) = set(modeOffset, newValue)
 		override var callback: CallbackHolder<WGPUDeviceLostCallback>?
 			get() = get(callbackLayout, callbackOffset).let(::CallbackHolder)
 			set(newValue) = set(callbackLayout, callbackOffset, newValue?.handler)
@@ -1772,6 +1775,7 @@ actual interface WGPUDeviceLostCallbackInfo : CStructure {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUDeviceLostCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -1782,15 +1786,15 @@ actual interface WGPUDeviceLostCallbackInfo : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUDeviceLostCallbackInfo {
-			return allocator.allocate(32L)
+			return allocator.allocate(40L)
 				.let { WGPUDeviceLostCallbackInfo(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUDeviceLostCallbackInfo) -> Unit): ArrayHolder<WGPUDeviceLostCallbackInfo> {
-			return allocator.allocate(32 * size.toLong())
+			return allocator.allocate(40 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 32L)
+						it.handler.asSlice(index.toLong() * 40L)
 							.let(::NativeAddress)
 							.let { WGPUDeviceLostCallbackInfo(it) }
 							.let { provider(index, it) }
@@ -1801,6 +1805,8 @@ actual interface WGPUDeviceLostCallbackInfo : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("mode"),
+			MemoryLayout.paddingLayout(4),
 			ffi.C_POINTER.withName("callback"),
 			ffi.C_POINTER.withName("userdata1"),
 			ffi.C_POINTER.withName("userdata2"),
@@ -1808,11 +1814,13 @@ actual interface WGPUDeviceLostCallbackInfo : CStructure {
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
-		val callbackOffset = 8L
+		val modeOffset = 8L
+		val modeLayout = ffi.C_INT
+		val callbackOffset = 16L
 		val callbackLayout = ffi.C_POINTER
-		val userdata1Offset = 16L
+		val userdata1Offset = 24L
 		val userdata1Layout = ffi.C_POINTER
-		val userdata2Offset = 24L
+		val userdata2Offset = 32L
 		val userdata2Layout = ffi.C_POINTER
 	}
 }
@@ -1823,6 +1831,9 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
 		override var nextInChain: WGPUChainedStruct?
 			get() = get(nextInChainLayout, nextInChainOffset).let { WGPUChainedStruct(it) }
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+		override var mode: WGPUCallbackMode
+			get() = getUInt(modeOffset)
+			set(newValue) = set(modeOffset, newValue)
 		override var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
 			get() = get(callbackLayout, callbackOffset).let(::CallbackHolder)
 			set(newValue) = set(callbackLayout, callbackOffset, newValue?.handler)
@@ -1835,6 +1846,7 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUUncapturedErrorCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -1845,15 +1857,15 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUUncapturedErrorCallbackInfo {
-			return allocator.allocate(32L)
+			return allocator.allocate(40L)
 				.let { WGPUUncapturedErrorCallbackInfo(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUUncapturedErrorCallbackInfo) -> Unit): ArrayHolder<WGPUUncapturedErrorCallbackInfo> {
-			return allocator.allocate(32 * size.toLong())
+			return allocator.allocate(40 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 32L)
+						it.handler.asSlice(index.toLong() * 40L)
 							.let(::NativeAddress)
 							.let { WGPUUncapturedErrorCallbackInfo(it) }
 							.let { provider(index, it) }
@@ -1864,6 +1876,8 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("mode"),
+			MemoryLayout.paddingLayout(4),
 			ffi.C_POINTER.withName("callback"),
 			ffi.C_POINTER.withName("userdata1"),
 			ffi.C_POINTER.withName("userdata2"),
@@ -1871,11 +1885,13 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
-		val callbackOffset = 8L
+		val modeOffset = 8L
+		val modeLayout = ffi.C_INT
+		val callbackOffset = 16L
 		val callbackLayout = ffi.C_POINTER
-		val userdata1Offset = 16L
+		val userdata1Offset = 24L
 		val userdata1Layout = ffi.C_POINTER
-		val userdata2Offset = 24L
+		val userdata2Offset = 32L
 		val userdata2Layout = ffi.C_POINTER
 	}
 }
@@ -1900,9 +1916,9 @@ actual interface WGPUDeviceDescriptor : CStructure {
 		override val defaultQueue: WGPUQueueDescriptor
 			get() = handler.handler.asSlice(defaultQueueOffset, 24L).let(::NativeAddress).let { WGPUQueueDescriptor(it) }
 		override val deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
-			get() = handler.handler.asSlice(deviceLostCallbackInfoOffset, 32L).let(::NativeAddress).let { WGPUDeviceLostCallbackInfo(it) }
+			get() = handler.handler.asSlice(deviceLostCallbackInfoOffset, 40L).let(::NativeAddress).let { WGPUDeviceLostCallbackInfo(it) }
 		override val uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
-			get() = handler.handler.asSlice(uncapturedErrorCallbackInfoOffset, 32L).let(::NativeAddress).let { WGPUUncapturedErrorCallbackInfo(it) }
+			get() = handler.handler.asSlice(uncapturedErrorCallbackInfoOffset, 40L).let(::NativeAddress).let { WGPUUncapturedErrorCallbackInfo(it) }
 	}
 
 	actual var nextInChain: NativeAddress?
@@ -1920,15 +1936,15 @@ actual interface WGPUDeviceDescriptor : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUDeviceDescriptor {
-			return allocator.allocate(136L)
+			return allocator.allocate(152L)
 				.let { WGPUDeviceDescriptor(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUDeviceDescriptor) -> Unit): ArrayHolder<WGPUDeviceDescriptor> {
-			return allocator.allocate(136 * size.toLong())
+			return allocator.allocate(152 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 136L)
+						it.handler.asSlice(index.toLong() * 152L)
 							.let(::NativeAddress)
 							.let { WGPUDeviceDescriptor(it) }
 							.let { provider(index, it) }
@@ -1962,7 +1978,7 @@ actual interface WGPUDeviceDescriptor : CStructure {
 		val defaultQueueLayout = WGPUQueueDescriptor.LAYOUT
 		val deviceLostCallbackInfoOffset = 72L
 		val deviceLostCallbackInfoLayout = WGPUDeviceLostCallbackInfo.LAYOUT
-		val uncapturedErrorCallbackInfoOffset = 104L
+		val uncapturedErrorCallbackInfoOffset = 112L
 		val uncapturedErrorCallbackInfoLayout = WGPUUncapturedErrorCallbackInfo.LAYOUT
 	}
 }
@@ -5311,6 +5327,9 @@ actual interface WGPUBufferMapCallbackInfo : CStructure {
 		override var nextInChain: WGPUChainedStruct?
 			get() = get(nextInChainLayout, nextInChainOffset).let { WGPUChainedStruct(it) }
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+		override var mode: WGPUCallbackMode
+			get() = getUInt(modeOffset)
+			set(newValue) = set(modeOffset, newValue)
 		override var callback: CallbackHolder<WGPUBufferMapCallback>?
 			get() = get(callbackLayout, callbackOffset).let(::CallbackHolder)
 			set(newValue) = set(callbackLayout, callbackOffset, newValue?.handler)
@@ -5323,6 +5342,7 @@ actual interface WGPUBufferMapCallbackInfo : CStructure {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUBufferMapCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -5333,15 +5353,15 @@ actual interface WGPUBufferMapCallbackInfo : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUBufferMapCallbackInfo {
-			return allocator.allocate(32L)
+			return allocator.allocate(40L)
 				.let { WGPUBufferMapCallbackInfo(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUBufferMapCallbackInfo) -> Unit): ArrayHolder<WGPUBufferMapCallbackInfo> {
-			return allocator.allocate(32 * size.toLong())
+			return allocator.allocate(40 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 32L)
+						it.handler.asSlice(index.toLong() * 40L)
 							.let(::NativeAddress)
 							.let { WGPUBufferMapCallbackInfo(it) }
 							.let { provider(index, it) }
@@ -5352,6 +5372,8 @@ actual interface WGPUBufferMapCallbackInfo : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("mode"),
+			MemoryLayout.paddingLayout(4),
 			ffi.C_POINTER.withName("callback"),
 			ffi.C_POINTER.withName("userdata1"),
 			ffi.C_POINTER.withName("userdata2"),
@@ -5359,11 +5381,13 @@ actual interface WGPUBufferMapCallbackInfo : CStructure {
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
-		val callbackOffset = 8L
+		val modeOffset = 8L
+		val modeLayout = ffi.C_INT
+		val callbackOffset = 16L
 		val callbackLayout = ffi.C_POINTER
-		val userdata1Offset = 16L
+		val userdata1Offset = 24L
 		val userdata1Layout = ffi.C_POINTER
-		val userdata2Offset = 24L
+		val userdata2Offset = 32L
 		val userdata2Layout = ffi.C_POINTER
 	}
 }
@@ -5374,6 +5398,9 @@ actual interface WGPUCompilationInfoCallbackInfo : CStructure {
 		override var nextInChain: WGPUChainedStruct?
 			get() = get(nextInChainLayout, nextInChainOffset).let { WGPUChainedStruct(it) }
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+		override var mode: WGPUCallbackMode
+			get() = getUInt(modeOffset)
+			set(newValue) = set(modeOffset, newValue)
 		override var callback: CallbackHolder<WGPUCompilationInfoCallback>?
 			get() = get(callbackLayout, callbackOffset).let(::CallbackHolder)
 			set(newValue) = set(callbackLayout, callbackOffset, newValue?.handler)
@@ -5386,6 +5413,7 @@ actual interface WGPUCompilationInfoCallbackInfo : CStructure {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUCompilationInfoCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -5396,15 +5424,15 @@ actual interface WGPUCompilationInfoCallbackInfo : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUCompilationInfoCallbackInfo {
-			return allocator.allocate(32L)
+			return allocator.allocate(40L)
 				.let { WGPUCompilationInfoCallbackInfo(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCompilationInfoCallbackInfo) -> Unit): ArrayHolder<WGPUCompilationInfoCallbackInfo> {
-			return allocator.allocate(32 * size.toLong())
+			return allocator.allocate(40 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 32L)
+						it.handler.asSlice(index.toLong() * 40L)
 							.let(::NativeAddress)
 							.let { WGPUCompilationInfoCallbackInfo(it) }
 							.let { provider(index, it) }
@@ -5415,6 +5443,8 @@ actual interface WGPUCompilationInfoCallbackInfo : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("mode"),
+			MemoryLayout.paddingLayout(4),
 			ffi.C_POINTER.withName("callback"),
 			ffi.C_POINTER.withName("userdata1"),
 			ffi.C_POINTER.withName("userdata2"),
@@ -5422,11 +5452,13 @@ actual interface WGPUCompilationInfoCallbackInfo : CStructure {
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
-		val callbackOffset = 8L
+		val modeOffset = 8L
+		val modeLayout = ffi.C_INT
+		val callbackOffset = 16L
 		val callbackLayout = ffi.C_POINTER
-		val userdata1Offset = 16L
+		val userdata1Offset = 24L
 		val userdata1Layout = ffi.C_POINTER
-		val userdata2Offset = 24L
+		val userdata2Offset = 32L
 		val userdata2Layout = ffi.C_POINTER
 	}
 }
@@ -5437,6 +5469,9 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo : CStructure {
 		override var nextInChain: WGPUChainedStruct?
 			get() = get(nextInChainLayout, nextInChainOffset).let { WGPUChainedStruct(it) }
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+		override var mode: WGPUCallbackMode
+			get() = getUInt(modeOffset)
+			set(newValue) = set(modeOffset, newValue)
 		override var callback: CallbackHolder<WGPUCreateComputePipelineAsyncCallback>?
 			get() = get(callbackLayout, callbackOffset).let(::CallbackHolder)
 			set(newValue) = set(callbackLayout, callbackOffset, newValue?.handler)
@@ -5449,6 +5484,7 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo : CStructure {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUCreateComputePipelineAsyncCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -5459,15 +5495,15 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUCreateComputePipelineAsyncCallbackInfo {
-			return allocator.allocate(32L)
+			return allocator.allocate(40L)
 				.let { WGPUCreateComputePipelineAsyncCallbackInfo(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCreateComputePipelineAsyncCallbackInfo) -> Unit): ArrayHolder<WGPUCreateComputePipelineAsyncCallbackInfo> {
-			return allocator.allocate(32 * size.toLong())
+			return allocator.allocate(40 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 32L)
+						it.handler.asSlice(index.toLong() * 40L)
 							.let(::NativeAddress)
 							.let { WGPUCreateComputePipelineAsyncCallbackInfo(it) }
 							.let { provider(index, it) }
@@ -5478,6 +5514,8 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("mode"),
+			MemoryLayout.paddingLayout(4),
 			ffi.C_POINTER.withName("callback"),
 			ffi.C_POINTER.withName("userdata1"),
 			ffi.C_POINTER.withName("userdata2"),
@@ -5485,11 +5523,13 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo : CStructure {
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
-		val callbackOffset = 8L
+		val modeOffset = 8L
+		val modeLayout = ffi.C_INT
+		val callbackOffset = 16L
 		val callbackLayout = ffi.C_POINTER
-		val userdata1Offset = 16L
+		val userdata1Offset = 24L
 		val userdata1Layout = ffi.C_POINTER
-		val userdata2Offset = 24L
+		val userdata2Offset = 32L
 		val userdata2Layout = ffi.C_POINTER
 	}
 }
@@ -5500,6 +5540,9 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo : CStructure {
 		override var nextInChain: WGPUChainedStruct?
 			get() = get(nextInChainLayout, nextInChainOffset).let { WGPUChainedStruct(it) }
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+		override var mode: WGPUCallbackMode
+			get() = getUInt(modeOffset)
+			set(newValue) = set(modeOffset, newValue)
 		override var callback: CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>?
 			get() = get(callbackLayout, callbackOffset).let(::CallbackHolder)
 			set(newValue) = set(callbackLayout, callbackOffset, newValue?.handler)
@@ -5512,6 +5555,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo : CStructure {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUCreateRenderPipelineAsyncCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -5522,15 +5566,15 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUCreateRenderPipelineAsyncCallbackInfo {
-			return allocator.allocate(32L)
+			return allocator.allocate(40L)
 				.let { WGPUCreateRenderPipelineAsyncCallbackInfo(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUCreateRenderPipelineAsyncCallbackInfo) -> Unit): ArrayHolder<WGPUCreateRenderPipelineAsyncCallbackInfo> {
-			return allocator.allocate(32 * size.toLong())
+			return allocator.allocate(40 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 32L)
+						it.handler.asSlice(index.toLong() * 40L)
 							.let(::NativeAddress)
 							.let { WGPUCreateRenderPipelineAsyncCallbackInfo(it) }
 							.let { provider(index, it) }
@@ -5541,6 +5585,8 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("mode"),
+			MemoryLayout.paddingLayout(4),
 			ffi.C_POINTER.withName("callback"),
 			ffi.C_POINTER.withName("userdata1"),
 			ffi.C_POINTER.withName("userdata2"),
@@ -5548,11 +5594,13 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo : CStructure {
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
-		val callbackOffset = 8L
+		val modeOffset = 8L
+		val modeLayout = ffi.C_INT
+		val callbackOffset = 16L
 		val callbackLayout = ffi.C_POINTER
-		val userdata1Offset = 16L
+		val userdata1Offset = 24L
 		val userdata1Layout = ffi.C_POINTER
-		val userdata2Offset = 24L
+		val userdata2Offset = 32L
 		val userdata2Layout = ffi.C_POINTER
 	}
 }
@@ -5563,6 +5611,9 @@ actual interface WGPUPopErrorScopeCallbackInfo : CStructure {
 		override var nextInChain: WGPUChainedStruct?
 			get() = get(nextInChainLayout, nextInChainOffset).let { WGPUChainedStruct(it) }
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+		override var mode: WGPUCallbackMode
+			get() = getUInt(modeOffset)
+			set(newValue) = set(modeOffset, newValue)
 		override var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
 			get() = get(callbackLayout, callbackOffset).let(::CallbackHolder)
 			set(newValue) = set(callbackLayout, callbackOffset, newValue?.handler)
@@ -5575,6 +5626,7 @@ actual interface WGPUPopErrorScopeCallbackInfo : CStructure {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUPopErrorScopeCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -5585,15 +5637,15 @@ actual interface WGPUPopErrorScopeCallbackInfo : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUPopErrorScopeCallbackInfo {
-			return allocator.allocate(32L)
+			return allocator.allocate(40L)
 				.let { WGPUPopErrorScopeCallbackInfo(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUPopErrorScopeCallbackInfo) -> Unit): ArrayHolder<WGPUPopErrorScopeCallbackInfo> {
-			return allocator.allocate(32 * size.toLong())
+			return allocator.allocate(40 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 32L)
+						it.handler.asSlice(index.toLong() * 40L)
 							.let(::NativeAddress)
 							.let { WGPUPopErrorScopeCallbackInfo(it) }
 							.let { provider(index, it) }
@@ -5604,6 +5656,8 @@ actual interface WGPUPopErrorScopeCallbackInfo : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("mode"),
+			MemoryLayout.paddingLayout(4),
 			ffi.C_POINTER.withName("callback"),
 			ffi.C_POINTER.withName("userdata1"),
 			ffi.C_POINTER.withName("userdata2"),
@@ -5611,11 +5665,13 @@ actual interface WGPUPopErrorScopeCallbackInfo : CStructure {
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
-		val callbackOffset = 8L
+		val modeOffset = 8L
+		val modeLayout = ffi.C_INT
+		val callbackOffset = 16L
 		val callbackLayout = ffi.C_POINTER
-		val userdata1Offset = 16L
+		val userdata1Offset = 24L
 		val userdata1Layout = ffi.C_POINTER
-		val userdata2Offset = 24L
+		val userdata2Offset = 32L
 		val userdata2Layout = ffi.C_POINTER
 	}
 }
@@ -5626,6 +5682,9 @@ actual interface WGPUQueueWorkDoneCallbackInfo : CStructure {
 		override var nextInChain: WGPUChainedStruct?
 			get() = get(nextInChainLayout, nextInChainOffset).let { WGPUChainedStruct(it) }
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+		override var mode: WGPUCallbackMode
+			get() = getUInt(modeOffset)
+			set(newValue) = set(modeOffset, newValue)
 		override var callback: CallbackHolder<WGPUQueueWorkDoneCallback>?
 			get() = get(callbackLayout, callbackOffset).let(::CallbackHolder)
 			set(newValue) = set(callbackLayout, callbackOffset, newValue?.handler)
@@ -5638,6 +5697,7 @@ actual interface WGPUQueueWorkDoneCallbackInfo : CStructure {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPUQueueWorkDoneCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -5648,15 +5708,15 @@ actual interface WGPUQueueWorkDoneCallbackInfo : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUQueueWorkDoneCallbackInfo {
-			return allocator.allocate(32L)
+			return allocator.allocate(40L)
 				.let { WGPUQueueWorkDoneCallbackInfo(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUQueueWorkDoneCallbackInfo) -> Unit): ArrayHolder<WGPUQueueWorkDoneCallbackInfo> {
-			return allocator.allocate(32 * size.toLong())
+			return allocator.allocate(40 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 32L)
+						it.handler.asSlice(index.toLong() * 40L)
 							.let(::NativeAddress)
 							.let { WGPUQueueWorkDoneCallbackInfo(it) }
 							.let { provider(index, it) }
@@ -5667,6 +5727,8 @@ actual interface WGPUQueueWorkDoneCallbackInfo : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("mode"),
+			MemoryLayout.paddingLayout(4),
 			ffi.C_POINTER.withName("callback"),
 			ffi.C_POINTER.withName("userdata1"),
 			ffi.C_POINTER.withName("userdata2"),
@@ -5674,11 +5736,13 @@ actual interface WGPUQueueWorkDoneCallbackInfo : CStructure {
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
-		val callbackOffset = 8L
+		val modeOffset = 8L
+		val modeLayout = ffi.C_INT
+		val callbackOffset = 16L
 		val callbackLayout = ffi.C_POINTER
-		val userdata1Offset = 16L
+		val userdata1Offset = 24L
 		val userdata1Layout = ffi.C_POINTER
-		val userdata2Offset = 24L
+		val userdata2Offset = 32L
 		val userdata2Layout = ffi.C_POINTER
 	}
 }
@@ -5689,6 +5753,9 @@ actual interface WGPURequestAdapterCallbackInfo : CStructure {
 		override var nextInChain: WGPUChainedStruct?
 			get() = get(nextInChainLayout, nextInChainOffset).let { WGPUChainedStruct(it) }
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+		override var mode: WGPUCallbackMode
+			get() = getUInt(modeOffset)
+			set(newValue) = set(modeOffset, newValue)
 		override var callback: CallbackHolder<WGPURequestAdapterCallback>?
 			get() = get(callbackLayout, callbackOffset).let(::CallbackHolder)
 			set(newValue) = set(callbackLayout, callbackOffset, newValue?.handler)
@@ -5701,6 +5768,7 @@ actual interface WGPURequestAdapterCallbackInfo : CStructure {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPURequestAdapterCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -5711,15 +5779,15 @@ actual interface WGPURequestAdapterCallbackInfo : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPURequestAdapterCallbackInfo {
-			return allocator.allocate(32L)
+			return allocator.allocate(40L)
 				.let { WGPURequestAdapterCallbackInfo(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURequestAdapterCallbackInfo) -> Unit): ArrayHolder<WGPURequestAdapterCallbackInfo> {
-			return allocator.allocate(32 * size.toLong())
+			return allocator.allocate(40 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 32L)
+						it.handler.asSlice(index.toLong() * 40L)
 							.let(::NativeAddress)
 							.let { WGPURequestAdapterCallbackInfo(it) }
 							.let { provider(index, it) }
@@ -5730,6 +5798,8 @@ actual interface WGPURequestAdapterCallbackInfo : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("mode"),
+			MemoryLayout.paddingLayout(4),
 			ffi.C_POINTER.withName("callback"),
 			ffi.C_POINTER.withName("userdata1"),
 			ffi.C_POINTER.withName("userdata2"),
@@ -5737,11 +5807,13 @@ actual interface WGPURequestAdapterCallbackInfo : CStructure {
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
-		val callbackOffset = 8L
+		val modeOffset = 8L
+		val modeLayout = ffi.C_INT
+		val callbackOffset = 16L
 		val callbackLayout = ffi.C_POINTER
-		val userdata1Offset = 16L
+		val userdata1Offset = 24L
 		val userdata1Layout = ffi.C_POINTER
-		val userdata2Offset = 24L
+		val userdata2Offset = 32L
 		val userdata2Layout = ffi.C_POINTER
 	}
 }
@@ -5752,6 +5824,9 @@ actual interface WGPURequestDeviceCallbackInfo : CStructure {
 		override var nextInChain: WGPUChainedStruct?
 			get() = get(nextInChainLayout, nextInChainOffset).let { WGPUChainedStruct(it) }
 			set(newValue) = set(nextInChainLayout, nextInChainOffset, newValue?.handler)
+		override var mode: WGPUCallbackMode
+			get() = getUInt(modeOffset)
+			set(newValue) = set(modeOffset, newValue)
 		override var callback: CallbackHolder<WGPURequestDeviceCallback>?
 			get() = get(callbackLayout, callbackOffset).let(::CallbackHolder)
 			set(newValue) = set(callbackLayout, callbackOffset, newValue?.handler)
@@ -5764,6 +5839,7 @@ actual interface WGPURequestDeviceCallbackInfo : CStructure {
 	}
 
 	actual var nextInChain: WGPUChainedStruct?
+	actual var mode: WGPUCallbackMode
 	actual var callback: CallbackHolder<WGPURequestDeviceCallback>?
 	actual var userdata1: NativeAddress?
 	actual var userdata2: NativeAddress?
@@ -5774,15 +5850,15 @@ actual interface WGPURequestDeviceCallbackInfo : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPURequestDeviceCallbackInfo {
-			return allocator.allocate(32L)
+			return allocator.allocate(40L)
 				.let { WGPURequestDeviceCallbackInfo(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPURequestDeviceCallbackInfo) -> Unit): ArrayHolder<WGPURequestDeviceCallbackInfo> {
-			return allocator.allocate(32 * size.toLong())
+			return allocator.allocate(40 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 32L)
+						it.handler.asSlice(index.toLong() * 40L)
 							.let(::NativeAddress)
 							.let { WGPURequestDeviceCallbackInfo(it) }
 							.let { provider(index, it) }
@@ -5793,6 +5869,8 @@ actual interface WGPURequestDeviceCallbackInfo : CStructure {
 
 		internal val LAYOUT = structLayout(
 			ffi.C_POINTER.withName("nextInChain"),
+			ffi.C_INT.withName("mode"),
+			MemoryLayout.paddingLayout(4),
 			ffi.C_POINTER.withName("callback"),
 			ffi.C_POINTER.withName("userdata1"),
 			ffi.C_POINTER.withName("userdata2"),
@@ -5800,11 +5878,13 @@ actual interface WGPURequestDeviceCallbackInfo : CStructure {
 
 		val nextInChainOffset = 0L
 		val nextInChainLayout = ffi.C_POINTER
-		val callbackOffset = 8L
+		val modeOffset = 8L
+		val modeLayout = ffi.C_INT
+		val callbackOffset = 16L
 		val callbackLayout = ffi.C_POINTER
-		val userdata1Offset = 16L
+		val userdata1Offset = 24L
 		val userdata1Layout = ffi.C_POINTER
-		val userdata2Offset = 24L
+		val userdata2Offset = 32L
 		val userdata2Layout = ffi.C_POINTER
 	}
 }
