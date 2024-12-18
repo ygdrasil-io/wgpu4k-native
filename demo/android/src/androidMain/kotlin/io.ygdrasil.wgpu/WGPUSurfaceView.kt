@@ -9,6 +9,7 @@ import com.sun.jna.Pointer
 import ffi.memoryScope
 import webgpu.HelloTriangleScene
 import webgpu.WGPUBackendType_OpenGLES
+import webgpu.WGPUBackendType_Vulkan
 import webgpu.WGPUInstance
 import webgpu.WGPUSType_SurfaceSourceAndroidNativeWindow
 import webgpu.WGPUSurface
@@ -44,11 +45,9 @@ class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
         val surface = getSurface(instance, holder)
         val adapter = getAdapter(surface, instance, WGPUBackendType_OpenGLES)
         val device = getDevice(adapter)
-        val compatibleFormat = compatibleFormat(surface, adapter)
-        val alphaMode = compatibleAlphaMode(surface, adapter)
         val surfaceCapabilities = surfaceCapabilities(surface, adapter)
-        configureSurface(device, width, height, surface, surfaceCapabilities.formats.first(), surfaceCapabilities.alphaModes.first(), surfaceCapabilities.formats)
-        scene = HelloTriangleScene(device, compatibleFormat, surface).apply {
+        configureSurface(device, width, height, surface, surfaceCapabilities.formats.first(), surfaceCapabilities.alphaModes.first(), listOf(surfaceCapabilities.formats.first()))
+        scene = HelloTriangleScene(device, surfaceCapabilities.formats.first(), surface).apply {
             initialize()
         }
 

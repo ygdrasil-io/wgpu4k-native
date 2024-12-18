@@ -98,9 +98,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
-        array.forEachIndexed { index, byte ->
-            handler.setByte(index + bufferOffset.toLong(), byte)
-        }
+        handler.write(bufferOffset.toLong(), array, arrayIndex.toInt(), size.toInt())
     }
 
     actual fun readBytes(
@@ -109,9 +107,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
-        array.forEachIndexed { index, byte ->
-            array[index] = handler.getByte(index + bufferOffset.toLong())
-        }
+        handler.read(bufferOffset.toLong(), array, arrayIndex.toInt(), size.toInt())
     }
 
     actual fun writeUBytes(
@@ -120,6 +116,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.write(bufferOffset.toLong(), array.asByteArray(), arrayIndex.toInt(), size.toInt())
     }
 
     actual fun readUBytes(
@@ -128,6 +125,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.read(bufferOffset.toLong(), array.asByteArray(), arrayIndex.toInt(), size.toInt())
     }
 
     actual fun writeShorts(
@@ -136,6 +134,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.write(bufferOffset.toLong(), array, arrayIndex.toInt(), size.toInt())
     }
 
     actual fun readShorts(
@@ -144,6 +143,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.read(bufferOffset.toLong(), array, arrayIndex.toInt(), size.toInt())
     }
 
     actual fun writeUShorts(
@@ -152,6 +152,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.write(bufferOffset.toLong(), array.asShortArray(), arrayIndex.toInt(), size.toInt())
     }
 
     actual fun readUShorts(
@@ -160,6 +161,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.read(bufferOffset.toLong(), array.asShortArray(), arrayIndex.toInt(), size.toInt())
     }
 
     actual fun writeInts(
@@ -168,6 +170,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.write(bufferOffset.toLong(), array, arrayIndex.toInt(), size.toInt())
     }
 
     actual fun readInts(
@@ -176,6 +179,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.read(bufferOffset.toLong(), array, arrayIndex.toInt(), size.toInt())
     }
 
     actual fun writeUInts(
@@ -184,6 +188,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.write(bufferOffset.toLong(), array.asIntArray(), arrayIndex.toInt(), size.toInt())
     }
 
     actual fun readUInts(
@@ -192,6 +197,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.read(bufferOffset.toLong(), array.asIntArray(), arrayIndex.toInt(), size.toInt())
     }
 
     actual fun writeLongs(
@@ -200,6 +206,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.write(bufferOffset.toLong(), array, arrayIndex.toInt(), size.toInt())
     }
 
     actual fun readLongs(
@@ -208,6 +215,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.read(bufferOffset.toLong(), array, arrayIndex.toInt(), size.toInt())
     }
 
     actual fun writeULongs(
@@ -216,6 +224,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.write(bufferOffset.toLong(), array.asLongArray(), arrayIndex.toInt(), size.toInt())
     }
 
     actual fun readULongs(
@@ -224,6 +233,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.read(bufferOffset.toLong(), array.asLongArray(), arrayIndex.toInt(), size.toInt())
     }
 
     actual fun writeFloats(
@@ -232,6 +242,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.write(bufferOffset.toLong(), array, arrayIndex.toInt(), size.toInt())
     }
 
     actual fun readFloats(
@@ -240,6 +251,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.read(bufferOffset.toLong(), array, arrayIndex.toInt(), size.toInt())
     }
 
     actual fun writeDoubles(
@@ -248,6 +260,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.write(bufferOffset.toLong(), array, arrayIndex.toInt(), size.toInt())
     }
 
     actual fun readDoubles(
@@ -256,6 +269,7 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        handler.read(bufferOffset.toLong(), array, arrayIndex.toInt(), size.toInt())
     }
 
 

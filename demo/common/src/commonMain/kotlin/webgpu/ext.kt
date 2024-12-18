@@ -43,8 +43,8 @@ fun configureSurface(
             it.width = width.toUInt()
             it.height = height.toUInt()
             it.alphaMode = alphaMode
-            it.viewFormatCount = viewFormats.size.toULong()
             if (viewFormats.isNotEmpty()) {
+                it.viewFormatCount = viewFormats.size.toULong()
                 it.viewFormats = scope.allocateBuffer(viewFormats.size.toULong() * UInt.SIZE_BYTES.toULong())
                     .also { buffer -> buffer.writeUInts(viewFormats.toUIntArray())}
                     .let { ArrayHolder(it.handler) }
