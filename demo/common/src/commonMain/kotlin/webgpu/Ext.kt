@@ -14,7 +14,7 @@ fun configureLogs() {
         }
 
     })
-    wgpuSetLogLevel(0x00000005u)
+    wgpuSetLogLevel(WGPULogLevel_Trace)
     wgpuSetLogCallback(callback, allocator.bufferOfAddress(callback.handler).handler)
 }
 
@@ -49,7 +49,7 @@ fun configureSurface(
         val configuration = WGPUSurfaceConfiguration.allocate(scope).apply {
             this.device = device
             format = renderingContextFormat
-            usage = 16u
+            usage = WGPUTextureUsage_RenderAttachment
             this.width = width.toUInt()
             this.height = height.toUInt()
             this.alphaMode = alphaMode
@@ -69,7 +69,7 @@ fun getDevice(adapter: WGPUAdapter): WGPUDevice = memoryScope { scope ->
             userdata1: NativeAddress?,
             userdata2: NativeAddress?
         ) {
-            if (status != 1u && device == null) error("fail to get device")
+            if (status != WGPURequestDeviceStatus_Success && device == null) error("fail to get device")
             fetchedDevice = device
         }
 
@@ -102,7 +102,7 @@ fun getAdapter(surface: WGPUSurface, instance: WGPUInstance, backendType: UInt =
             userdata1: NativeAddress?,
             userdata2: NativeAddress?
         ) {
-            if (status != 1u || adapter == null) error("fail to get adapter")
+            if (status != WGPURequestAdapterStatus_Success || adapter == null) error("fail to get adapter")
             fetchedAdapter = adapter
         }
 

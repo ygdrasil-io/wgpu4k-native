@@ -9,7 +9,12 @@ import com.sun.jna.Pointer
 import ffi.MemoryAllocator
 import ffi.NativeAddress
 import ffi.memoryScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import webgpu.HelloTriangleScene
+import webgpu.WGPUBackendType_OpenGL
+import webgpu.WGPUBackendType_Vulkan
 import webgpu.WGPUInstance
 import webgpu.WGPUInstanceDescriptor
 import webgpu.WGPULogCallback
@@ -44,24 +49,30 @@ class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
-    override fun surfaceCreated(surfaceHolder: SurfaceHolder) : Unit = memoryScope { scope ->
-        val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
-        val surface = getSurface(instance, holder)
-        val adapter = getAdapter(surface, instance, 0x00000006u)
-        val device = getDevice(adapter)
-        val compatibleFormat = compatibleFormat(surface, adapter)
-        val alphaMode = compatibleAlphaMode(surface, adapter)
-        configureSurface(device, width, height, surface, compatibleFormat, alphaMode)
+    override fun surfaceCreated(surfaceHolder: SurfaceHolder): Unit = memoryScope { scope ->
 
-        scene = HelloTriangleScene(device, compatibleFormat, surface)
-        scene?.initialize()
-        setWillNotDraw(false)
+        CoroutineScope(Dispatchers.Default).launch {
+            val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
+            val surface = getSurface(instance, holder)
+            val adapter = getAdapter(surface, instance)
+            val device = getDevice(adapter)
+            val compatibleFormat = compatibleFormat(surface, adapter)
+            val alphaMode = compatibleAlphaMode(surface, adapter)
+            configureSurface(device, width, height, surface, compatibleFormat, alphaMode)
+            scene = HelloTriangleScene(device, compatibleFormat, surface).apply {
+                initialize()
+            }
+
+            setWillNotDraw(false)
+        }
     }
 
-    override fun surfaceDestroyed(holder: SurfaceHolder) { }
+    override fun surfaceDestroyed(holder: SurfaceHolder) {}
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
+
+
 
         scene?.render()
         invalidate()

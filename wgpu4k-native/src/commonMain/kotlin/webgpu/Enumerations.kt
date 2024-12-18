@@ -494,12 +494,12 @@ const val WGPUDx12Compiler_Fxc : WGPUDx12Compiler = 2u
 const val WGPUDx12Compiler_Dxc : WGPUDx12Compiler = 3u
 
 typealias WGPULogLevel = UInt
-const val WGPULogLevel_Off : WGPULogLevel = 1u
-const val WGPULogLevel_Error : WGPULogLevel = 2u
-const val WGPULogLevel_Warn : WGPULogLevel = 3u
-const val WGPULogLevel_Info : WGPULogLevel = 4u
-const val WGPULogLevel_Debug : WGPULogLevel = 5u
-const val WGPULogLevel_Trace : WGPULogLevel = 6u
+const val WGPULogLevel_Off : WGPULogLevel = 0u
+const val WGPULogLevel_Error : WGPULogLevel = 1u
+const val WGPULogLevel_Warn : WGPULogLevel = 2u
+const val WGPULogLevel_Info : WGPULogLevel = 3u
+const val WGPULogLevel_Debug : WGPULogLevel = 4u
+const val WGPULogLevel_Trace : WGPULogLevel = 5u
 
 typealias WGPUNativeSType = UInt
 const val WGPUNativeSType_DeviceExtras : WGPUNativeSType = 1u

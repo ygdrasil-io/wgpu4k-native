@@ -12,14 +12,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        memoryScope {scope ->
-            val info = WGPUAdapterInfo.allocate(scope)
-
-            info.deviceID = 51u
-
-            assert(info.deviceID == 51u)
-        }
-
         val layoutParams = ViewGroup
             .LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
