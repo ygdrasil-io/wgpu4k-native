@@ -6,20 +6,11 @@ import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.sun.jna.Pointer
-import ffi.MemoryAllocator
-import ffi.NativeAddress
 import ffi.memoryScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import webgpu.HelloTriangleScene
-import webgpu.WGPUBackendType_OpenGL
-import webgpu.WGPUBackendType_Vulkan
+import webgpu.WGPUBackendType_OpenGLES
 import webgpu.WGPUInstance
-import webgpu.WGPUInstanceDescriptor
-import webgpu.WGPULogCallback
-import webgpu.WGPULogLevel
-import webgpu.WGPUStringView
+import webgpu.WGPUSType_SurfaceSourceAndroidNativeWindow
 import webgpu.WGPUSurface
 import webgpu.WGPUSurfaceDescriptor
 import webgpu.WGPUSurfaceSourceAndroidNativeWindow
@@ -31,8 +22,7 @@ import webgpu.getAdapter
 import webgpu.getDevice
 import webgpu.wgpuCreateInstance
 import webgpu.wgpuInstanceCreateSurface
-import webgpu.wgpuSetLogCallback
-import webgpu.wgpuSetLogLevel
+import webgpu.surfaceCapabilities
 
 class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
 
@@ -50,30 +40,25 @@ class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
     override fun surfaceCreated(surfaceHolder: SurfaceHolder): Unit = memoryScope { scope ->
-
-        CoroutineScope(Dispatchers.Default).launch {
-            val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
-            val surface = getSurface(instance, holder)
-            val adapter = getAdapter(surface, instance)
-            val device = getDevice(adapter)
-            val compatibleFormat = compatibleFormat(surface, adapter)
-            val alphaMode = compatibleAlphaMode(surface, adapter)
-            configureSurface(device, width, height, surface, compatibleFormat, alphaMode)
-            scene = HelloTriangleScene(device, compatibleFormat, surface).apply {
-                initialize()
-            }
-
-            setWillNotDraw(false)
+        val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
+        val surface = getSurface(instance, holder)
+        val adapter = getAdapter(surface, instance, WGPUBackendType_OpenGLES)
+        val device = getDevice(adapter)
+        val compatibleFormat = compatibleFormat(surface, adapter)
+        val alphaMode = compatibleAlphaMode(surface, adapter)
+        val surfaceCapabilities = surfaceCapabilities(surface, adapter)
+        configureSurface(device, width, height, surface, surfaceCapabilities.formats.first(), surfaceCapabilities.alphaModes.first(), surfaceCapabilities.formats)
+        scene = HelloTriangleScene(device, compatibleFormat, surface).apply {
+            initialize()
         }
+
+        setWillNotDraw(false)
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {}
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
-
-
-
         scene?.render()
         invalidate()
     }
@@ -90,7 +75,7 @@ fun getSurface(
 
     val surfaceDescriptor = WGPUSurfaceDescriptor.allocate(scope).apply {
         nextInChain = WGPUSurfaceSourceAndroidNativeWindow.allocate(scope).apply {
-            chain.sType = 0x00000008u
+            chain.sType = WGPUSType_SurfaceSourceAndroidNativeWindow
             window = Pointer(nativeWindow)
         }.handler
     }

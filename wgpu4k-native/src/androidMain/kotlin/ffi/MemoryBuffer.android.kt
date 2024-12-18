@@ -98,6 +98,9 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        array.forEachIndexed { index, byte ->
+            handler.setByte(index + bufferOffset.toLong(), byte)
+        }
     }
 
     actual fun readBytes(
@@ -106,6 +109,9 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         bufferOffset: ULong,
         size: ULong
     ) {
+        array.forEachIndexed { index, byte ->
+            array[index] = handler.getByte(index + bufferOffset.toLong())
+        }
     }
 
     actual fun writeUBytes(

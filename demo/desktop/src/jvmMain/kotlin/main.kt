@@ -17,6 +17,9 @@ import org.rococoa.ID
 import org.rococoa.Rococoa
 import webgpu.HelloTriangleScene
 import webgpu.WGPUInstance
+import webgpu.WGPUSType_SurfaceSourceMetalLayer
+import webgpu.WGPUSType_SurfaceSourceWindowsHWND
+import webgpu.WGPUSType_SurfaceSourceXlibWindow
 import webgpu.WGPUSurface
 import webgpu.WGPUSurfaceDescriptor
 import webgpu.WGPUSurfaceSourceMetalLayer
@@ -96,7 +99,7 @@ private fun getSurfaceFromMetalLayer(instance: WGPUInstance, metalLayer: NativeA
 
     val surfaceDescriptor = WGPUSurfaceDescriptor.allocate(scope).apply {
         nextInChain = WGPUSurfaceSourceMetalLayer.allocate(scope).apply {
-            chain.sType = 0x00000004u
+            chain.sType = WGPUSType_SurfaceSourceMetalLayer
             layer = metalLayer
         }.handler
     }
@@ -108,7 +111,7 @@ fun getSurfaceFromX11Window(instance: WGPUInstance, display: NativeAddress, wind
 
     val surfaceDescriptor = WGPUSurfaceDescriptor.allocate(scope).apply {
         nextInChain = WGPUSurfaceSourceXlibWindow.allocate(scope).apply {
-            chain.sType = 0x00000006u
+            chain.sType = WGPUSType_SurfaceSourceXlibWindow
             this.display = display
             this.window = window.toULong()
         }.handler
@@ -121,7 +124,7 @@ fun getSurfaceFromWindows(instance: WGPUInstance, hinstance: NativeAddress, hwnd
 
     val surfaceDescriptor = WGPUSurfaceDescriptor.allocate(scope).apply {
         nextInChain = WGPUSurfaceSourceWindowsHWND.allocate(scope).apply {
-            chain.sType = 0x00000005u
+            chain.sType = WGPUSType_SurfaceSourceWindowsHWND
             this.hwnd = hwnd
             this.hinstance = hinstance
         }.handler

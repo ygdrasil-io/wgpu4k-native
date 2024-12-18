@@ -1,41 +1,30 @@
 package webgpu
 
-import ffi.MemoryBuffer
+import ffi.ArrayHolder
 import ffi.MemoryAllocator
 import ffi.NativeAddress
 import ffi.memoryScope
 
 val allocator = MemoryAllocator()
 
-fun configureLogs() {
+fun configureLogs(logLevel: WGPULogLevel = WGPULogLevel_Trace) {
     val callback = WGPULogCallback.allocate(allocator, object : WGPULogCallback {
         override fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress?) {
-            println("${level} : ${message?.data?.toKString(message.length)}")
+            val kMessage = message?.data?.toKString(message.length)
+            when (level) {
+                WGPULogLevel_Error -> println("ERROR : $kMessage}")
+                WGPULogLevel_Warn -> println("WARN : $kMessage")
+                WGPULogLevel_Info -> println("INFO : $kMessage")
+                WGPULogLevel_Debug -> println("DEBUG : $kMessage")
+                WGPULogLevel_Trace -> println("TRACE : $kMessage")
+            }
         }
 
     })
-    wgpuSetLogLevel(WGPULogLevel_Trace)
+    wgpuSetLogLevel(logLevel)
     wgpuSetLogCallback(callback, allocator.bufferOfAddress(callback.handler).handler)
 }
 
-fun compatibleFormat(surface: WGPUSurface, adapter: WGPUAdapter): UInt = memoryScope { scope ->
-    val surfaceCapabilities = WGPUSurfaceCapabilities.allocate(scope)
-    wgpuSurfaceGetCapabilities(surface, adapter, surfaceCapabilities)
-    if (surfaceCapabilities.formatCount == 0uL) error("no surface format")
-    println("surface format count: ${surfaceCapabilities.formatCount}")
-    return surfaceCapabilities.formats?.handler
-        ?.let { MemoryBuffer(it, Int.SIZE_BYTES.toULong() * surfaceCapabilities.formatCount) }
-        ?.readInt()?.toUInt()
-        ?: error("no compatible format")
-}
-
-fun compatibleAlphaMode(surface: WGPUSurface, adapter: WGPUAdapter): UInt = memoryScope { scope ->
-    val surfaceCapabilities = WGPUSurfaceCapabilities.allocate(scope)
-    wgpuSurfaceGetCapabilities(surface, adapter, surfaceCapabilities)
-    if (surfaceCapabilities.alphaModeCount == 0uL) error("no surface alpha mode")
-    return surfaceCapabilities.alphaModes?.handler?.let { MemoryBuffer(it, Int.SIZE_BYTES.toULong() * surfaceCapabilities.formatCount) }?.readInt()?.toUInt()
-        ?: error("no compatible alpha mode")
-}
 
 fun configureSurface(
     device: WGPUDevice,
@@ -43,16 +32,23 @@ fun configureSurface(
     height: Int,
     surface: WGPUSurface,
     renderingContextFormat: UInt,
-    alphaMode: UInt
+    alphaMode: UInt,
+    viewFormats: List<WGPUTextureFormat> = listOf()
 ) {
     memoryScope { scope ->
-        val configuration = WGPUSurfaceConfiguration.allocate(scope).apply {
-            this.device = device
-            format = renderingContextFormat
-            usage = WGPUTextureUsage_RenderAttachment
-            this.width = width.toUInt()
-            this.height = height.toUInt()
-            this.alphaMode = alphaMode
+        val configuration = WGPUSurfaceConfiguration.allocate(scope).also {
+            it.device = device
+            it.format = renderingContextFormat
+            it.usage = WGPUTextureUsage_RenderAttachment
+            it.width = width.toUInt()
+            it.height = height.toUInt()
+            it.alphaMode = alphaMode
+            it.viewFormatCount = viewFormats.size.toULong()
+            if (viewFormats.isNotEmpty()) {
+                it.viewFormats = scope.allocateBuffer(viewFormats.size.toULong() * UInt.SIZE_BYTES.toULong())
+                    .also { buffer -> buffer.writeUInts(viewFormats.toUIntArray())}
+                    .let { ArrayHolder(it.handler) }
+            }
         }
         wgpuSurfaceConfigure(surface, configuration)
     }

@@ -1,7 +1,6 @@
 @file:OptIn(ExperimentalForeignApi::class)
 
 import cnames.structs.GLFWwindow
-import ffi.MemoryAllocator
 import ffi.NativeAddress
 import ffi.memoryScope
 import glfw.GLFW_CLIENT_API
@@ -28,11 +27,7 @@ import kotlinx.cinterop.reinterpret
 import platform.AppKit.NSWindow
 import platform.QuartzCore.CAMetalLayer
 import webgpu.HelloTriangleScene
-import webgpu.WGPUChainedStruct
 import webgpu.WGPUInstance
-import webgpu.WGPULogCallback
-import webgpu.WGPULogLevel
-import webgpu.WGPUStringView
 import webgpu.WGPUSurface
 import webgpu.WGPUSurfaceDescriptor
 import webgpu.WGPUSurfaceSourceMetalLayer
@@ -44,8 +39,6 @@ import webgpu.getAdapter
 import webgpu.getDevice
 import webgpu.wgpuCreateInstance
 import webgpu.wgpuInstanceCreateSurface
-import webgpu.wgpuSetLogCallback
-import webgpu.wgpuSetLogLevel
 
 fun main() {
     val width = 640
@@ -68,7 +61,7 @@ fun main() {
     val device = getDevice(adapter)
     val compatibleFormat = compatibleFormat(surface, adapter)
     val alphaMode = compatibleAlphaMode(surface, adapter)
-    configureSurface(device, width, height, surface, compatibleFormat, alphaMode)
+    configureSurface(device, width, height, surface, compatibleFormat, alphaMode, surfaceCapabilities.formats)
 
     val scene = HelloTriangleScene(device, compatibleFormat, surface)
     scene.initialize()
