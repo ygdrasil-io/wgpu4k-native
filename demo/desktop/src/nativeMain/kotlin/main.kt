@@ -76,24 +76,4 @@ fun main() {
     glfwDestroyWindow(windowHandler)
 }
 
-
-private fun getSurface(instance: WGPUInstance, window: CPointer<GLFWwindow>): WGPUSurface {
-    val nsWindow = interpretObjCPointer<NSWindow>(glfwGetCocoaWindow(window)!!.rawValue)
-    nsWindow.contentView()?.setWantsLayer(true)
-    val layer = CAMetalLayer.layer()
-    nsWindow.contentView()?.setLayer(layer)
-    val layerPointer: COpaquePointer = interpretCPointer<COpaque>(layer.objcPtr())!!.reinterpret()
-    return getSurfaceFromMetalLayer(instance, layerPointer) ?: error("fail to get surface on MacOs")
-}
-
-private fun getSurfaceFromMetalLayer(instance: WGPUInstance, metalLayer: COpaquePointer): WGPUSurface? = memoryScope { scope ->
-
-    val surfaceDescriptor = WGPUSurfaceDescriptor.allocate(scope).apply {
-        nextInChain = WGPUSurfaceSourceMetalLayer.allocate(scope).apply {
-            chain.sType = 0x00000004u
-            layer = metalLayer.let(::NativeAddress)
-        }.handler
-    }
-
-    return wgpuInstanceCreateSurface(instance, surfaceDescriptor)
-}
+expect fun getSurface(instance: WGPUInstance, window: CPointer<GLFWwindow>): WGPUSurface

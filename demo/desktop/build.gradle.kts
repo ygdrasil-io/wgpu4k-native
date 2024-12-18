@@ -10,9 +10,9 @@ kotlin {
     val nativeTarget = when {
         // No toolchain on this architecture
         hostOs == "Linux" && isArm64 -> null.also { println("Linux native Arm64 not yet supported") }
-        hostOs == "Linux" && !isArm64 -> linuxX64("native")
-        hostOs == "Mac OS X" && isArm64 -> macosArm64("native")
-        hostOs == "Mac OS X" && !isArm64 -> macosX64("native")
+        hostOs == "Linux" && !isArm64 -> linuxX64()
+        hostOs == "Mac OS X" && isArm64 -> macosArm64()
+        hostOs == "Mac OS X" && !isArm64 -> macosX64()
         else -> null // Not supported
     }
 
@@ -64,10 +64,7 @@ kotlin {
                 }
             }
         }
-
-
     }
-
 }
 
 tasks.register<JavaExec>("runJvm") {
