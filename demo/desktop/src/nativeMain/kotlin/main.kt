@@ -61,7 +61,7 @@ fun main() {
     val device = getDevice(adapter)
     val compatibleFormat = compatibleFormat(surface, adapter)
     val alphaMode = compatibleAlphaMode(surface, adapter)
-    configureSurface(device, width, height, surface, compatibleFormat, alphaMode, surfaceCapabilities.formats)
+    configureSurface(device, width, height, surface, compatibleFormat, alphaMode)
 
     val scene = HelloTriangleScene(device, compatibleFormat, surface)
     scene.initialize()
