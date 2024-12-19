@@ -2,7 +2,6 @@ plugins {
     id(libs.plugins.kotlin.multiplatform.get().pluginId)
 }
 
-
 kotlin {
 
     val hostOs = System.getProperty("os.name")
