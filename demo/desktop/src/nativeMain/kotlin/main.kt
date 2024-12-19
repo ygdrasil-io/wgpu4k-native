@@ -1,8 +1,6 @@
 @file:OptIn(ExperimentalForeignApi::class)
 
 import cnames.structs.GLFWwindow
-import ffi.NativeAddress
-import ffi.memoryScope
 import glfw.GLFW_CLIENT_API
 import glfw.GLFW_FALSE
 import glfw.GLFW_NO_API
@@ -10,27 +8,16 @@ import glfw.GLFW_RESIZABLE
 import glfw.GLFW_VISIBLE
 import glfw.glfwCreateWindow
 import glfw.glfwDestroyWindow
-import glfw.glfwGetCocoaWindow
 import glfw.glfwInit
 import glfw.glfwPollEvents
 import glfw.glfwShowWindow
 import glfw.glfwWindowHint
 import glfw.glfwWindowShouldClose
-import kotlinx.cinterop.COpaque
-import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.interpretCPointer
-import kotlinx.cinterop.interpretObjCPointer
-import kotlinx.cinterop.objcPtr
-import kotlinx.cinterop.reinterpret
-import platform.AppKit.NSWindow
-import platform.QuartzCore.CAMetalLayer
 import webgpu.HelloTriangleScene
 import webgpu.WGPUInstance
 import webgpu.WGPUSurface
-import webgpu.WGPUSurfaceDescriptor
-import webgpu.WGPUSurfaceSourceMetalLayer
 import webgpu.compatibleAlphaMode
 import webgpu.compatibleFormat
 import webgpu.configureLogs
@@ -38,7 +25,6 @@ import webgpu.configureSurface
 import webgpu.getAdapter
 import webgpu.getDevice
 import webgpu.wgpuCreateInstance
-import webgpu.wgpuInstanceCreateSurface
 
 fun main() {
     val width = 640
