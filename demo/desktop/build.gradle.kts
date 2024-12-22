@@ -14,6 +14,7 @@ kotlin {
         hostOs == "Mac OS X" && !isArm64 -> macosX64()
         else -> null // Not supported
     }
+    mingwX64()
 
     if (nativeTarget != null) {
         with(nativeTarget) {

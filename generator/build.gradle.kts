@@ -21,6 +21,6 @@ dependencies {
 	implementation(libs.okhttp)
 	implementation(libs.commons.io)
 
-	implementation("com.charleskorn.kaml:kaml:0.66.0")
+	implementation(libs.kaml)
 
 }

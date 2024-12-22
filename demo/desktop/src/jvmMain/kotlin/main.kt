@@ -17,6 +17,7 @@ import org.rococoa.ID
 import org.rococoa.Rococoa
 import webgpu.HelloTriangleScene
 import webgpu.WGPUInstance
+import webgpu.WGPULimits
 import webgpu.WGPUSType_SurfaceSourceMetalLayer
 import webgpu.WGPUSType_SurfaceSourceWindowsHWND
 import webgpu.WGPUSType_SurfaceSourceXlibWindow
@@ -31,6 +32,7 @@ import webgpu.configureLogs
 import webgpu.configureSurface
 import webgpu.getAdapter
 import webgpu.getDevice
+import webgpu.wgpuAdapterGetLimits
 import webgpu.wgpuCreateInstance
 import webgpu.wgpuInstanceCreateSurface
 import java.lang.foreign.MemorySegment
@@ -55,6 +57,13 @@ fun main() {
     val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
     val surface = getSurface(instance, windowHandler)
     val adapter = getAdapter(surface, instance)
+
+    memoryScope { scope ->
+        val supportedLimits = WGPULimits.allocate(scope)
+        wgpuAdapterGetLimits(adapter, supportedLimits)
+        println("Adapter limits: $supportedLimits")
+    }
+
     val device = getDevice(adapter)
     val compatibleFormat = compatibleFormat(surface, adapter)
     val alphaMode = compatibleAlphaMode(surface, adapter)
