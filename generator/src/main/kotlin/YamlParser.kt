@@ -101,7 +101,7 @@ fun loadExtraYaml() = basePath.resolve("wgpu4k-native-specs")
     .resolve("resources")
     .resolve("extra.yml")
     .readText()
-    .let { text -> parser.decodeFromString(YamlModel.serializer(), text).let { injectEnumValues(text, it) }  }
+    .let { text -> parser.decodeFromString(YamlModel.serializer(), text) }
 
 fun loadWebGPUYaml() = basePath.resolve("wgpu4k-native-specs")
     .resolve("src")
@@ -109,34 +109,7 @@ fun loadWebGPUYaml() = basePath.resolve("wgpu4k-native-specs")
     .resolve("resources")
     .resolve("webgpu.yml")
     .readText()
-    .let { text -> parser.decodeFromString(YamlModel.serializer(), text).let { injectEnumValues(text, it) } }
-
-
-private fun injectEnumValues(text: String, model: YamlModel): YamlModel {
-    val enumNodes = (Yaml.default.parseToYamlNode(text)
-        .yamlMap.get<YamlList>("enums") ?: error("enums not found"))
-
-    val enums = model.enums.map { enum ->
-        val result = enumNodes.items.firstOrNull { it.yamlMap.get<YamlNode>("name")!!.yamlScalar.content == enum.name }
-            ?: error("enum ${enum.name} not found")
-        val entries = result.yamlMap.get<YamlList>("entries")!!
-        YamlModel.Enum(enum.name, enum.doc, entries)
-    }
-
-    return YamlModel(
-        copyright = model.copyright,
-        name = model.name,
-        enum_prefix = model.enum_prefix,
-        constants = model.constants,
-        typedefs = model.typedefs,
-        enums = enums,
-        bitflags = model.bitflags,
-        structs = model.structs,
-        callbacks = model.callbacks,
-        functions = model.functions,
-        objects = model.objects
-    )
-}
+    .let { text -> parser.decodeFromString(YamlModel.serializer(), text)}
 
 val parser = Yaml(
     configuration = Yaml.default.configuration.copy(strictMode = false)
