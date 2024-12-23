@@ -1,11 +1,9 @@
 package generator
 
-import androidMainBasePath
 import commonMainBasePath
-import converter.getOffsetSize
 import converter.variableType
 import disclamer
-import domain.CLibraryModel
+import domain.NativeModel
 import domain.toFunctionKotlinType
 import generator.structure.toJvmStructure
 import generator.structure.toNativeStructure
@@ -87,7 +85,7 @@ private val headerNative = """
     
 """.trimIndent()
 
-internal fun File.generateCommonStructures(structures: List<CLibraryModel.Structure>) {
+internal fun File.generateCommonStructures(structures: List<NativeModel.Structure>) {
     writeText(header)
     structures.forEach {
         val structureName = it.name
@@ -108,13 +106,13 @@ internal fun File.generateCommonStructures(structures: List<CLibraryModel.Struct
     }
 }
 
-internal fun File.generateNativeStructures(structures: List<CLibraryModel.Structure>) {
+internal fun File.generateNativeStructures(structures: List<NativeModel.Structure>) {
     writeText(headerNative)
     structures.map { it.toNativeStructure() }
         .forEach { appendText(it) }
 }
 
-internal fun File.generateJvmStructures(structures: List<CLibraryModel.Structure>) {
+internal fun File.generateJvmStructures(structures: List<NativeModel.Structure>) {
     writeText(headerJvm)
     structures.map { it.toJvmStructure() }
         .forEach { appendText(it) }

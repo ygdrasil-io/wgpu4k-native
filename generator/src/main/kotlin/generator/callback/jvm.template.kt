@@ -1,11 +1,11 @@
 package generator.callback
 
 import builder.templateBuilder
-import domain.CLibraryModel
+import domain.NativeModel
 import domain.toCallbackKotlinType
 import domain.typeToJvmLayout
 
-fun CLibraryModel.Callback.toJvmCallback() = templateBuilder {
+fun NativeModel.Callback.toJvmCallback() = templateBuilder {
 
     val jvmArgs = members
         .map { (name, type) -> "$name: ${type.toCallbackJvmType()}" }
@@ -58,45 +58,45 @@ fun CLibraryModel.Callback.toJvmCallback() = templateBuilder {
     newLine()
 }
 
-private fun CLibraryModel.Type.toArgCall(name: String): String = when (this) {
-    CLibraryModel.Primitive.Bool,
-    is CLibraryModel.Reference.Enumeration,
-    CLibraryModel.Primitive.UInt32 -> "$name.toUInt()"
-    CLibraryModel.Primitive.Float32,
-    CLibraryModel.Primitive.Float64,
-    CLibraryModel.Primitive.Int32,
-    CLibraryModel.Primitive.Int64 -> name
-    CLibraryModel.Primitive.UInt16 ->  "$name.toUShort()"
-    CLibraryModel.Primitive.UInt64 ->  "$name.toULong()"
+private fun NativeModel.Type.toArgCall(name: String): String = when (this) {
+    NativeModel.Primitive.Bool,
+    is NativeModel.Reference.Enumeration,
+    NativeModel.Primitive.UInt32 -> "$name.toUInt()"
+    NativeModel.Primitive.Float32,
+    NativeModel.Primitive.Float64,
+    NativeModel.Primitive.Int32,
+    NativeModel.Primitive.Int64 -> name
+    NativeModel.Primitive.UInt16 ->  "$name.toUShort()"
+    NativeModel.Primitive.UInt64 ->  "$name.toULong()"
 
-    CLibraryModel.Reference.OpaquePointer -> "$name.let(::NativeAddress)"
+    NativeModel.Reference.OpaquePointer -> "$name.let(::NativeAddress)"
 
-    is CLibraryModel.Array -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let(::ArrayHolder)"
-    is CLibraryModel.Reference.Callback -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let(::CallbackHolder)"
-    is CLibraryModel.Reference -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let { ${this.name}(it) }"
-    CLibraryModel.Void -> error("unsupported type here")
+    is NativeModel.Array -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let(::ArrayHolder)"
+    is NativeModel.Reference.Callback -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let(::CallbackHolder)"
+    is NativeModel.Reference -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let { ${this.name}(it) }"
+    NativeModel.Void -> error("unsupported type here")
 }
 
 
-private fun CLibraryModel.Type.toCallbackJvmType(): String = when (this) {
-    CLibraryModel.Primitive.Float32 -> "Float"
-    CLibraryModel.Primitive.Float64 -> "Double"
-    CLibraryModel.Primitive.UInt16 -> "Short"
-    CLibraryModel.Primitive.UInt64,
-    CLibraryModel.Primitive.Int64 -> "Long"
+private fun NativeModel.Type.toCallbackJvmType(): String = when (this) {
+    NativeModel.Primitive.Float32 -> "Float"
+    NativeModel.Primitive.Float64 -> "Double"
+    NativeModel.Primitive.UInt16 -> "Short"
+    NativeModel.Primitive.UInt64,
+    NativeModel.Primitive.Int64 -> "Long"
 
-    CLibraryModel.Primitive.Bool,
-    CLibraryModel.Primitive.Int32,
-    CLibraryModel.Primitive.UInt32,
-    is CLibraryModel.Reference.Enumeration -> "Int"
+    NativeModel.Primitive.Bool,
+    NativeModel.Primitive.Int32,
+    NativeModel.Primitive.UInt32,
+    is NativeModel.Reference.Enumeration -> "Int"
 
-    is CLibraryModel.Array,
-    CLibraryModel.Reference.CString,
-    is CLibraryModel.Reference.Callback,
-    CLibraryModel.Reference.OpaquePointer,
-    is CLibraryModel.Reference.Pointer,
-    is CLibraryModel.Reference.Structure,
-    is CLibraryModel.Reference.StructureField -> "java.lang.foreign.MemorySegment"
+    is NativeModel.Array,
+    NativeModel.Reference.CString,
+    is NativeModel.Reference.Callback,
+    NativeModel.Reference.OpaquePointer,
+    is NativeModel.Reference.Pointer,
+    is NativeModel.Reference.Structure,
+    is NativeModel.Reference.StructureField -> "java.lang.foreign.MemorySegment"
 
-    CLibraryModel.Void -> error("unsupported type here")
+    NativeModel.Void -> error("unsupported type here")
 }

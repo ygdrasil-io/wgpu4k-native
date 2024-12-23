@@ -1,7 +1,7 @@
 package generator
 
 import disclamer
-import domain.CLibraryModel
+import domain.NativeModel
 import generator.function.toJvmFunctionsInterface
 import jvmMainBasePath
 import java.io.File
@@ -29,7 +29,7 @@ private val header = """
     
 """.trimIndent()
 
-internal fun File.generateJvmNativeFunctions(functions: List<CLibraryModel.Function>) {
+internal fun File.generateJvmNativeFunctions(functions: List<NativeModel.Function>) {
     writeText(header)
     functions.toJvmFunctionsInterface()
         .let(::appendText)

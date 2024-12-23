@@ -1,10 +1,10 @@
 package converter
 
-import domain.CLibraryModel
+import domain.NativeModel
 
-internal fun List<CLibraryModel.Structure>.calculateSizeAndPadding(): List<CLibraryModel.Structure> {
+internal fun List<NativeModel.Structure>.calculateSizeAndPadding(): List<NativeModel.Structure> {
     val stack = toMutableList()
-    val processed = mutableListOf<CLibraryModel.Structure>()
+    val processed = mutableListOf<NativeModel.Structure>()
     while (stack.isNotEmpty()) {
         stack.removeFirst()
             .updateSizeAndPadding(stack, processed)
@@ -12,14 +12,14 @@ internal fun List<CLibraryModel.Structure>.calculateSizeAndPadding(): List<CLibr
     return processed
 }
 
-private fun CLibraryModel.Structure.updateSizeAndPadding(
-    stack: MutableList<CLibraryModel.Structure>,
-    processed: MutableList<CLibraryModel.Structure>
+private fun NativeModel.Structure.updateSizeAndPadding(
+    stack: MutableList<NativeModel.Structure>,
+    processed: MutableList<NativeModel.Structure>
 ) {
     var structureAlignment = 1
     var offset = 0
     val members = members.map { member ->
-        val (size, alignment) = if (member.type is CLibraryModel.Reference.StructureField) {
+        val (size, alignment) = if (member.type is NativeModel.Reference.StructureField) {
             stack.firstOrNull { it.name == member.type.name }
                 ?.also { stack.remove(it) }
                 ?.updateSizeAndPadding(stack, processed)
@@ -36,12 +36,12 @@ private fun CLibraryModel.Structure.updateSizeAndPadding(
         val padding = offset % alignment
         offset += size + padding
 
-        CLibraryModel.StructureField(member.name, member.type, member.option, alignment, size, padding)
+        NativeModel.StructureField(member.name, member.type, member.option, alignment, size, padding)
     }
 
     val padding = offset % structureAlignment
     if (padding > 0) println("padding on $name: $padding structureAlignment: $structureAlignment size before padding: $offset")
     offset += padding
 
-    processed.add(CLibraryModel.Structure(name, members, offset, structureAlignment, padding))
+    processed.add(NativeModel.Structure(name, members, offset, structureAlignment, padding))
 }

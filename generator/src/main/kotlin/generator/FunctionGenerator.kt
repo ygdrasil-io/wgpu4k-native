@@ -2,7 +2,7 @@ package generator
 
 import commonMainBasePath
 import disclamer
-import domain.CLibraryModel
+import domain.NativeModel
 import domain.toFunctionKotlinType
 import generator.function.toNativeFunctionsInterface
 import generator.function.toJvmFunctions
@@ -60,7 +60,7 @@ private val nativeHeader = """
     
 """.trimIndent()
 
-internal fun File.generateCommonFunctions(functions: List<CLibraryModel.Function>) {
+internal fun File.generateCommonFunctions(functions: List<NativeModel.Function>) {
 
     writeText(header)
 
@@ -70,7 +70,7 @@ internal fun File.generateCommonFunctions(functions: List<CLibraryModel.Function
 
 }
 
-private fun File.writeFunction(function: CLibraryModel.Function) {
+private fun File.writeFunction(function: NativeModel.Function) {
     val name = function.name
     val returnType = function.returnType.toFunctionKotlinType() + function.returnType.optionalReturnType()
     val args = function.args
@@ -79,29 +79,29 @@ private fun File.writeFunction(function: CLibraryModel.Function) {
     appendText("expect fun $name($args): $returnType\n")
 }
 
-private fun CLibraryModel.Type.optionalReturnType(): String = when (this) {
-    CLibraryModel.Reference.OpaquePointer,
-    is CLibraryModel.Reference.Pointer,
-    is CLibraryModel.Reference.Structure,
-    CLibraryModel.Reference.CString,
-    is CLibraryModel.Reference.Callback,
-    is CLibraryModel.Array -> "?"
+private fun NativeModel.Type.optionalReturnType(): String = when (this) {
+    NativeModel.Reference.OpaquePointer,
+    is NativeModel.Reference.Pointer,
+    is NativeModel.Reference.Structure,
+    NativeModel.Reference.CString,
+    is NativeModel.Reference.Callback,
+    is NativeModel.Array -> "?"
     else -> ""
 }
 
-private fun CLibraryModel.Type.optional(): String = when (this) {
-    CLibraryModel.Void,
-    CLibraryModel.Reference.OpaquePointer,
-    is CLibraryModel.Reference.Pointer,
-    is CLibraryModel.Reference.Structure,
-    CLibraryModel.Reference.CString,
-    is CLibraryModel.Reference.Callback,
-    is CLibraryModel.Array -> "?"
+private fun NativeModel.Type.optional(): String = when (this) {
+    NativeModel.Void,
+    NativeModel.Reference.OpaquePointer,
+    is NativeModel.Reference.Pointer,
+    is NativeModel.Reference.Structure,
+    NativeModel.Reference.CString,
+    is NativeModel.Reference.Callback,
+    is NativeModel.Array -> "?"
     else -> ""
 }
 
 
-internal fun File.generateNativeFunctions(functions: List<CLibraryModel.Function>) = resolve("webgpu")
+internal fun File.generateNativeFunctions(functions: List<NativeModel.Function>) = resolve("webgpu")
     .resolve("Functions.native.kt").apply {
     writeText(nativeHeader)
     functions.toNativeFunctionsInterface()
@@ -109,7 +109,7 @@ internal fun File.generateNativeFunctions(functions: List<CLibraryModel.Function
 }
 
 
-internal fun File.generateJvmFunctions(functions: List<CLibraryModel.Function>) {
+internal fun File.generateJvmFunctions(functions: List<NativeModel.Function>) {
     writeText(jvmHeader)
     functions.toJvmFunctions()
         .let(::appendText)

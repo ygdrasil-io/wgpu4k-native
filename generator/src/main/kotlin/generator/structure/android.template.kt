@@ -3,10 +3,10 @@ package generator.structure
 import builder.Builder
 import builder.templateBuilder
 import converter.variableType
-import domain.CLibraryModel
+import domain.NativeModel
 import domain.toFunctionKotlinType
 
-fun CLibraryModel.Structure.toAndroidStructure() = templateBuilder {
+fun NativeModel.Structure.toAndroidStructure() = templateBuilder {
     val structureName = name
     val structureSize = size ?: error("structure size should be know at this point")
     appendBlock("actual interface $structureName") {
@@ -53,7 +53,7 @@ fun CLibraryModel.Structure.toAndroidStructure() = templateBuilder {
     newLine()
 }
 
-private fun Builder.toAndroidImplementation(structure: CLibraryModel.Structure, name: String) {
+private fun Builder.toAndroidImplementation(structure: NativeModel.Structure, name: String) {
     val structureName = structure.name
     newLine()
     appendBlock("class $name(val handle: webgpu.android.$structureName.$name = webgpu.android.$structureName.$name(com.sun.jna.Pointer.NULL)) : $structureName") {
@@ -62,53 +62,53 @@ private fun Builder.toAndroidImplementation(structure: CLibraryModel.Structure, 
             appendLine("override ${type.variableType()} $name: ${type.toFunctionKotlinType()}$optional")
             // Getter
             when (type) {
-                CLibraryModel.Void,
-                CLibraryModel.Reference.OpaquePointer,
+                NativeModel.Void,
+                NativeModel.Reference.OpaquePointer,
                     -> "handle.$name"
 
-                CLibraryModel.Reference.CString -> "handle.$name?.let(::CString)"
-                is CLibraryModel.Array -> "handle.$name?.let(::ArrayHolder)"
-                is CLibraryModel.Reference.Callback -> "handle.$name?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }"
-                CLibraryModel.Primitive.Float32,
-                CLibraryModel.Primitive.Float64 -> "handle.$name"
+                NativeModel.Reference.CString -> "handle.$name?.let(::CString)"
+                is NativeModel.Array -> "handle.$name?.let(::ArrayHolder)"
+                is NativeModel.Reference.Callback -> "handle.$name?.let{ CallbackHolder(com.sun.jna.Pointer(0), it) }"
+                NativeModel.Primitive.Float32,
+                NativeModel.Primitive.Float64 -> "handle.$name"
 
-                CLibraryModel.Primitive.Int64 -> "handle.$name"
-                CLibraryModel.Primitive.Int32 -> "handle.$name"
-                CLibraryModel.Primitive.Bool -> "handle.$name.toBoolean()"
-                CLibraryModel.Primitive.UInt16 -> "handle.$name.toUShort()"
-                CLibraryModel.Primitive.UInt64 -> "handle.$name.toULong()"
-                is CLibraryModel.Reference.Enumeration,
-                CLibraryModel.Primitive.UInt32 -> "handle.$name.toUInt()"
+                NativeModel.Primitive.Int64 -> "handle.$name"
+                NativeModel.Primitive.Int32 -> "handle.$name"
+                NativeModel.Primitive.Bool -> "handle.$name.toBoolean()"
+                NativeModel.Primitive.UInt16 -> "handle.$name.toUShort()"
+                NativeModel.Primitive.UInt64 -> "handle.$name.toULong()"
+                is NativeModel.Reference.Enumeration,
+                NativeModel.Primitive.UInt32 -> "handle.$name.toUInt()"
 
-                is CLibraryModel.Reference.StructureField -> "handle.$name.let{ ${type.name}.ByValue(it) }"
-                is CLibraryModel.Reference.Structure -> "handle.$name?.let{ ${type.name}.ByReference(it) }"
-                is CLibraryModel.Reference -> "handle.$name?.let{ ${type.name}(it) }"
+                is NativeModel.Reference.StructureField -> "handle.$name.let{ ${type.name}.ByValue(it) }"
+                is NativeModel.Reference.Structure -> "handle.$name?.let{ ${type.name}.ByReference(it) }"
+                is NativeModel.Reference -> "handle.$name?.let{ ${type.name}(it) }"
             }.let { appendLine("\tget() = $it") }
 
             // Setter
             when (type) {
-                CLibraryModel.Void,
-                CLibraryModel.Primitive.Float32,
-                CLibraryModel.Primitive.Float64,
-                CLibraryModel.Primitive.Int64,
-                CLibraryModel.Primitive.Int32 -> "handle.$name = newValue"
+                NativeModel.Void,
+                NativeModel.Primitive.Float32,
+                NativeModel.Primitive.Float64,
+                NativeModel.Primitive.Int64,
+                NativeModel.Primitive.Int32 -> "handle.$name = newValue"
 
-                CLibraryModel.Primitive.UInt16 -> "handle.$name = newValue.toShort()"
-                is CLibraryModel.Reference.Enumeration,
-                CLibraryModel.Primitive.Bool,
-                CLibraryModel.Primitive.UInt32 -> "handle.$name = newValue.toInt()"
+                NativeModel.Primitive.UInt16 -> "handle.$name = newValue.toShort()"
+                is NativeModel.Reference.Enumeration,
+                NativeModel.Primitive.Bool,
+                NativeModel.Primitive.UInt32 -> "handle.$name = newValue.toInt()"
 
-                CLibraryModel.Primitive.UInt64 -> "handle.$name = newValue.toLong()"
+                NativeModel.Primitive.UInt64 -> "handle.$name = newValue.toLong()"
 
-                CLibraryModel.Reference.OpaquePointer -> "handle.$name = newValue"
-                is CLibraryModel.Reference.Callback -> "handle.$name = newValue?.callback"
-                CLibraryModel.Reference.CString,
-                is CLibraryModel.Reference.Pointer,
-                is CLibraryModel.Array -> "handle.$name = newValue?.handler"
+                NativeModel.Reference.OpaquePointer -> "handle.$name = newValue"
+                is NativeModel.Reference.Callback -> "handle.$name = newValue?.callback"
+                NativeModel.Reference.CString,
+                is NativeModel.Reference.Pointer,
+                is NativeModel.Array -> "handle.$name = newValue?.handler"
 
-                is CLibraryModel.Reference.Structure -> "handle.$name = (newValue as? ${type.name}.ByReference)?.handle"
+                is NativeModel.Reference.Structure -> "handle.$name = (newValue as? ${type.name}.ByReference)?.handle"
 
-                is CLibraryModel.Reference.StructureField -> null
+                is NativeModel.Reference.StructureField -> null
             }?.let { appendLine("\tset(newValue) { $it }") }
             newLine()
         }

@@ -1,11 +1,11 @@
 package generator.function
 
 import builder.templateBuilder
-import domain.CLibraryModel
+import domain.NativeModel
 import domain.toFunctionKotlinType
 
 
-fun List<CLibraryModel.Function>.toAndroidFunctions() = templateBuilder {
+fun List<NativeModel.Function>.toAndroidFunctions() = templateBuilder {
     forEach { function ->
         val name = function.name
         val returnType = function.returnType.toFunctionKotlinType() + function.returnType.optionalReturnType()
@@ -19,13 +19,13 @@ fun List<CLibraryModel.Function>.toAndroidFunctions() = templateBuilder {
         appendLine("\t = webgpu.android.Functions.$name($argsCall)")
 
         when (function.returnType) {
-            is CLibraryModel.Reference.Enumeration,
-            is CLibraryModel.Reference.OpaquePointer -> null
-            is CLibraryModel.Reference.StructureField -> ".let(${function.returnType.name}::ByValue)"
-            is CLibraryModel.Reference -> {
+            is NativeModel.Reference.Enumeration,
+            is NativeModel.Reference.OpaquePointer -> null
+            is NativeModel.Reference.StructureField -> ".let(${function.returnType.name}::ByValue)"
+            is NativeModel.Reference -> {
                 "?.let(::${function.returnType.name})"
             }
-            is CLibraryModel.Primitive.Bool -> ".toBoolean()"
+            is NativeModel.Primitive.Bool -> ".toBoolean()"
             else -> null
         }?.let { appendLine("\t$it") }
 
@@ -34,34 +34,34 @@ fun List<CLibraryModel.Function>.toAndroidFunctions() = templateBuilder {
 }
 
 
-private fun CLibraryModel.Type.toJvmArgCall(name: String) = when(this) {
-    is CLibraryModel.Reference.StructureField -> "${name}.toCValue()"
-    is CLibraryModel.Reference.Structure -> "${name}?.toReference()"
-    is CLibraryModel.Reference.OpaquePointer,
-    is CLibraryModel.Reference.Enumeration -> name
-    is CLibraryModel.Reference.Callback -> "$name?.callback"
-    is CLibraryModel.Array,
-    is CLibraryModel.Reference -> "$name?.handler"
+private fun NativeModel.Type.toJvmArgCall(name: String) = when(this) {
+    is NativeModel.Reference.StructureField -> "${name}.toCValue()"
+    is NativeModel.Reference.Structure -> "${name}?.toReference()"
+    is NativeModel.Reference.OpaquePointer,
+    is NativeModel.Reference.Enumeration -> name
+    is NativeModel.Reference.Callback -> "$name?.callback"
+    is NativeModel.Array,
+    is NativeModel.Reference -> "$name?.handler"
     else -> name
 }
 
-internal fun CLibraryModel.Type.optionalReturnType(): String = when (this) {
-    CLibraryModel.Reference.OpaquePointer,
-    is CLibraryModel.Reference.Pointer,
-    is CLibraryModel.Reference.Structure,
-    CLibraryModel.Reference.CString,
-    is CLibraryModel.Reference.Callback,
-    is CLibraryModel.Array -> "?"
+internal fun NativeModel.Type.optionalReturnType(): String = when (this) {
+    NativeModel.Reference.OpaquePointer,
+    is NativeModel.Reference.Pointer,
+    is NativeModel.Reference.Structure,
+    NativeModel.Reference.CString,
+    is NativeModel.Reference.Callback,
+    is NativeModel.Array -> "?"
     else -> ""
 }
 
-internal fun CLibraryModel.Type.optional(): String = when (this) {
-    CLibraryModel.Void,
-    CLibraryModel.Reference.OpaquePointer,
-    is CLibraryModel.Reference.Pointer,
-    is CLibraryModel.Reference.Structure,
-    CLibraryModel.Reference.CString,
-    is CLibraryModel.Reference.Callback,
-    is CLibraryModel.Array -> "?"
+internal fun NativeModel.Type.optional(): String = when (this) {
+    NativeModel.Void,
+    NativeModel.Reference.OpaquePointer,
+    is NativeModel.Reference.Pointer,
+    is NativeModel.Reference.Structure,
+    NativeModel.Reference.CString,
+    is NativeModel.Reference.Callback,
+    is NativeModel.Array -> "?"
     else -> ""
 }

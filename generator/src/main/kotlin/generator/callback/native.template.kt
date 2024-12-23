@@ -1,11 +1,11 @@
 package generator.callback
 
 import builder.templateBuilder
-import domain.CLibraryModel
+import domain.NativeModel
 import domain.toCallbackKotlinType
 import domain.toFunctionKotlinType
 
-fun CLibraryModel.Callback.toNativeCallback() = templateBuilder {
+fun NativeModel.Callback.toNativeCallback() = templateBuilder {
     val callbackName = name
     appendBlock("actual interface $callbackName : Callback") {
         val args = members
@@ -37,21 +37,21 @@ fun CLibraryModel.Callback.toNativeCallback() = templateBuilder {
     newLine()
 }
 
-private fun CLibraryModel.Type.toNativeCallbackArgCall(name: String): String = when (this) {
-    is CLibraryModel.Reference.Enumeration,
-    is CLibraryModel.Primitive -> name
-    is CLibraryModel.Reference.StructureField -> "$name.let { ${this.name}.ByValue(it) }"
-    is CLibraryModel.Reference.Pointer -> "$name?.let(::NativeAddress)?.let(::${this.name})"
-    is CLibraryModel.Reference.Structure -> "$name?.let(::NativeAddress)?.let { ${this.name}(it) }"
-    CLibraryModel.Reference.CString -> "$name?.let(::NativeAddress)?.let(::CString)"
-    CLibraryModel.Void -> error("unsupported type")
+private fun NativeModel.Type.toNativeCallbackArgCall(name: String): String = when (this) {
+    is NativeModel.Reference.Enumeration,
+    is NativeModel.Primitive -> name
+    is NativeModel.Reference.StructureField -> "$name.let { ${this.name}.ByValue(it) }"
+    is NativeModel.Reference.Pointer -> "$name?.let(::NativeAddress)?.let(::${this.name})"
+    is NativeModel.Reference.Structure -> "$name?.let(::NativeAddress)?.let { ${this.name}(it) }"
+    NativeModel.Reference.CString -> "$name?.let(::NativeAddress)?.let(::CString)"
+    NativeModel.Void -> error("unsupported type")
     else -> "$name?.let(::NativeAddress)"
 }
 
-private fun CLibraryModel.Type.toNativeCallbackArg(): String = when (this) {
-    is CLibraryModel.Primitive -> toFunctionKotlinType()
-    is CLibraryModel.Reference.StructureField -> "kotlinx.cinterop.CValue<webgpu.native.$name>"
-    is CLibraryModel.Reference.Enumeration -> "UInt"
-    CLibraryModel.Void -> error("unsupported type")
+private fun NativeModel.Type.toNativeCallbackArg(): String = when (this) {
+    is NativeModel.Primitive -> toFunctionKotlinType()
+    is NativeModel.Reference.StructureField -> "kotlinx.cinterop.CValue<webgpu.native.$name>"
+    is NativeModel.Reference.Enumeration -> "UInt"
+    NativeModel.Void -> error("unsupported type")
     else -> "COpaquePointer?"
 }

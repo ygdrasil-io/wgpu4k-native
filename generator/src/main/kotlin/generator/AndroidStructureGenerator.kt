@@ -1,7 +1,7 @@
 package generator
 
 import disclamer
-import domain.CLibraryModel
+import domain.NativeModel
 import generator.structure.toAndroidStructure
 import generator.structure.toJnaStructure
 import java.io.File
@@ -39,15 +39,15 @@ private val headerAndroid = """
     
 """.trimIndent()
 
-fun File.generateAndroidStructures(structures: List<CLibraryModel.Structure>) = resolve("webgpu").apply {
+fun File.generateAndroidStructures(structures: List<NativeModel.Structure>) = resolve("webgpu").apply {
     resolve("Structures.android.kt").apply {
         writeText(headerAndroid)
-        structures.map(CLibraryModel.Structure::toAndroidStructure)
+        structures.map(NativeModel.Structure::toAndroidStructure)
             .forEach(::appendText)
     }
     resolve("android").resolve("Structures.kt").apply {
         writeText(headerAndroidJna)
-        structures.map(CLibraryModel.Structure::toJnaStructure)
+        structures.map(NativeModel.Structure::toJnaStructure)
             .forEach(::appendText)
     }
 }

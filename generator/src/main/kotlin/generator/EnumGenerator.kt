@@ -3,7 +3,7 @@ package generator
 import builder.templateBuilder
 import commonMainBasePath
 import disclamer
-import domain.CLibraryModel
+import domain.NativeModel
 import java.io.File
 
 val enumerationCommonMainFile = commonMainBasePath
@@ -17,7 +17,7 @@ private val header = """
     
 """.trimIndent()
 
-internal fun File.generateCommonEnumerations(enumerations: List<CLibraryModel.Enumeration>) {
+internal fun File.generateCommonEnumerations(enumerations: List<NativeModel.Enumeration>) {
 
     writeText(header)
 

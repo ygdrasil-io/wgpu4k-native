@@ -6,12 +6,12 @@ import convertToKotlinCallbackStructureName
 import convertToKotlinClassName
 import convertToKotlinFunctionName
 import convertToKotlinVariableName
-import domain.CLibraryModel
-import domain.CLibraryModel.Type
+import domain.NativeModel
+import domain.NativeModel.Type
 import domain.YamlModel
 import domain.toCType
 
-internal fun YamlModel.toCModel(): CLibraryModel {
+internal fun YamlModel.toCModel(): NativeModel {
     val pointers = convertToPointer()
     val functions = convertToCLibraryFunctions()
         .injectWgpuFunctions()
@@ -19,7 +19,7 @@ internal fun YamlModel.toCModel(): CLibraryModel {
     val structures = generateCLibraryStructures()
         .calculateSizeAndPadding()
     val callbacks = callbacks.map {
-        CLibraryModel.Callback(
+        NativeModel.Callback(
             it.name.convertToKotlinCallbackName(),
             it.args.map {
                 it.name.convertToKotlinVariableName() to it.type.toCType(
@@ -28,41 +28,41 @@ internal fun YamlModel.toCModel(): CLibraryModel {
                 )
             } +
                     listOf(
-                        "userdata1" to CLibraryModel.Reference.OpaquePointer,
-                        "userdata2" to CLibraryModel.Reference.OpaquePointer
+                        "userdata1" to NativeModel.Reference.OpaquePointer,
+                        "userdata2" to NativeModel.Reference.OpaquePointer
                     )
         )
     }.injectWgpuCallbacks()
 
-    return CLibraryModel(pointers, functions, enumerations, structures, callbacks)
+    return NativeModel(pointers, functions, enumerations, structures, callbacks)
 }
 
-private fun List<CLibraryModel.Callback>.injectWgpuCallbacks(): List<CLibraryModel.Callback> {
+private fun List<NativeModel.Callback>.injectWgpuCallbacks(): List<NativeModel.Callback> {
     return this + listOf(
-        CLibraryModel.Callback(
+        NativeModel.Callback(
             "WGPULogCallback",
             listOf(
-                "level" to CLibraryModel.Reference.Enumeration("WGPULogLevel"),
-                "message" to CLibraryModel.Reference.StructureField("WGPUStringView"),
-                "userdata" to CLibraryModel.Reference.OpaquePointer
+                "level" to NativeModel.Reference.Enumeration("WGPULogLevel"),
+                "message" to NativeModel.Reference.StructureField("WGPUStringView"),
+                "userdata" to NativeModel.Reference.OpaquePointer
             )
         )
     )
 }
 
-private fun List<CLibraryModel.Function>.injectWgpuFunctions(): List<CLibraryModel.Function> {
+private fun List<NativeModel.Function>.injectWgpuFunctions(): List<NativeModel.Function> {
     return this + listOf(
-        CLibraryModel.Function(
+        NativeModel.Function(
             "wgpuSetLogLevel",
-            CLibraryModel.Void,
-            listOf("level" to CLibraryModel.Reference.Enumeration("WGPULogLevel"))
+            NativeModel.Void,
+            listOf("level" to NativeModel.Reference.Enumeration("WGPULogLevel"))
         ),
-        CLibraryModel.Function(
+        NativeModel.Function(
             "wgpuSetLogCallback",
-            CLibraryModel.Void,
+            NativeModel.Void,
             listOf(
-                "callback" to CLibraryModel.Reference.Callback("WGPULogCallback"),
-                "userdata" to CLibraryModel.Reference.OpaquePointer
+                "callback" to NativeModel.Reference.Callback("WGPULogCallback"),
+                "userdata" to NativeModel.Reference.OpaquePointer
             )
         )
     )
@@ -95,26 +95,26 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
         else -> error("unsuported type ${it.type}")
     }
 
-    CLibraryModel.Structure(
+    NativeModel.Structure(
         it.name.convertToKotlinClassName(),
         members.flatMap {
-            CLibraryModel.StructureField(
+            NativeModel.StructureField(
                 it.name.convertToKotlinVariableName(),
                 it.type.toCType(it.pointer != null, it.pointer == "mutable"),
-                if (it.type.toCType(it.pointer != null, it.pointer == "mutable") is CLibraryModel.Array ||
-                    (it.type.toCType(it.pointer != null, it.pointer == "mutable") is CLibraryModel.Reference &&
+                if (it.type.toCType(it.pointer != null, it.pointer == "mutable") is NativeModel.Array ||
+                    (it.type.toCType(it.pointer != null, it.pointer == "mutable") is NativeModel.Reference &&
                             it.type.toCType(
                                 it.pointer != null,
                                 it.pointer == "mutable"
-                            ) !is CLibraryModel.Reference.Enumeration &&
+                            ) !is NativeModel.Reference.Enumeration &&
                             it.type.toCType(
                                 it.pointer != null,
                                 it.pointer == "mutable"
-                            ) !is CLibraryModel.Reference.StructureField)
+                            ) !is NativeModel.Reference.StructureField)
                 ) "?" else ""
             ).let {
                 when (it.type) {
-                    is CLibraryModel.Array -> listOf(
+                    is NativeModel.Array -> listOf(
                         it.generateArrayCounter(),
                         it
                     )
@@ -125,42 +125,42 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
         }
     )
 } + listOf(
-    CLibraryModel.Structure(
+    NativeModel.Structure(
         "WGPUChainedStruct", listOf(
-            CLibraryModel.StructureField("next", CLibraryModel.Reference.Structure("WGPUChainedStruct"), "?"),
-            CLibraryModel.StructureField("sType", CLibraryModel.Reference.Enumeration("WGPUSType"), "")
+            NativeModel.StructureField("next", NativeModel.Reference.Structure("WGPUChainedStruct"), "?"),
+            NativeModel.StructureField("sType", NativeModel.Reference.Enumeration("WGPUSType"), "")
         )
     ),
-    CLibraryModel.Structure(
+    NativeModel.Structure(
         "WGPUChainedStructOut", listOf(
-            CLibraryModel.StructureField("next", CLibraryModel.Reference.Structure("WGPUChainedStructOut"), "?"),
-            CLibraryModel.StructureField("sType", CLibraryModel.Reference.Enumeration("WGPUSType"), "")
+            NativeModel.StructureField("next", NativeModel.Reference.Structure("WGPUChainedStructOut"), "?"),
+            NativeModel.StructureField("sType", NativeModel.Reference.Enumeration("WGPUSType"), "")
         )
     ),
-    CLibraryModel.Structure(
+    NativeModel.Structure(
         "WGPUStringView", listOf(
-            CLibraryModel.StructureField("data", CLibraryModel.Reference.CString, "?"),
-            CLibraryModel.StructureField("length", CLibraryModel.Primitive.UInt64, "")
+            NativeModel.StructureField("data", NativeModel.Reference.CString, "?"),
+            NativeModel.StructureField("length", NativeModel.Primitive.UInt64, "")
         )
     )
 ) + callbacks.map {
     val name = it.name.convertToKotlinCallbackStructureName()
     when (it.style) {
-        "callback_mode" -> CLibraryModel.Structure(
+        "callback_mode" -> NativeModel.Structure(
             name, listOf(
-                CLibraryModel.StructureField("nextInChain", CLibraryModel.Reference.Structure("WGPUChainedStruct"), "?"),
-                CLibraryModel.StructureField("mode", CLibraryModel.Reference.Enumeration("WGPUCallbackMode"), ""),
-                CLibraryModel.StructureField("callback", CLibraryModel.Reference.Callback(it.name.convertToKotlinCallbackName()), "?"),
-                CLibraryModel.StructureField("userdata1", CLibraryModel.Reference.OpaquePointer, "?"),
-                CLibraryModel.StructureField("userdata2", CLibraryModel.Reference.OpaquePointer, "?")
+                NativeModel.StructureField("nextInChain", NativeModel.Reference.Structure("WGPUChainedStruct"), "?"),
+                NativeModel.StructureField("mode", NativeModel.Reference.Enumeration("WGPUCallbackMode"), ""),
+                NativeModel.StructureField("callback", NativeModel.Reference.Callback(it.name.convertToKotlinCallbackName()), "?"),
+                NativeModel.StructureField("userdata1", NativeModel.Reference.OpaquePointer, "?"),
+                NativeModel.StructureField("userdata2", NativeModel.Reference.OpaquePointer, "?")
             )
         )
-        else -> CLibraryModel.Structure(
+        else -> NativeModel.Structure(
             name, listOf(
-                CLibraryModel.StructureField("nextInChain", CLibraryModel.Reference.Structure("WGPUChainedStruct"), "?"),
-                CLibraryModel.StructureField("callback", CLibraryModel.Reference.Callback(it.name.convertToKotlinCallbackName()), "?"),
-                CLibraryModel.StructureField("userdata1", CLibraryModel.Reference.OpaquePointer, "?"),
-                CLibraryModel.StructureField("userdata2", CLibraryModel.Reference.OpaquePointer, "?")
+                NativeModel.StructureField("nextInChain", NativeModel.Reference.Structure("WGPUChainedStruct"), "?"),
+                NativeModel.StructureField("callback", NativeModel.Reference.Callback(it.name.convertToKotlinCallbackName()), "?"),
+                NativeModel.StructureField("userdata1", NativeModel.Reference.OpaquePointer, "?"),
+                NativeModel.StructureField("userdata2", NativeModel.Reference.OpaquePointer, "?")
             )
         )
     }
@@ -168,9 +168,9 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
 
 private fun YamlModel.convertToCLibraryEnumerations() =
     enums.map {
-        CLibraryModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertEnumToEnumValues(it.entries.getBaseValue()))
+        NativeModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertEnumToEnumValues(it.entries.getBaseValue()))
     } + bitflags.map {
-        CLibraryModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertToEnumValues(it.entries), 64)
+        NativeModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertToEnumValues(it.entries), 64)
     }
 
 private fun List<YamlModel.Enum.Entry>.getBaseValue(): Int {
@@ -191,11 +191,11 @@ private fun List<YamlModel.Enum.Entry>.convertEnumToEnumValues(baseValue: Int): 
 }
 
 
-private fun YamlModel.convertToCLibraryFunctions(): List<CLibraryModel.Function> = functions
+private fun YamlModel.convertToCLibraryFunctions(): List<NativeModel.Function> = functions
     // TODO Skip until added to binding
     .filter { it.name != "get_instance_features" }
     .map {
-        CLibraryModel.Function(
+        NativeModel.Function(
             it.name.convertToKotlinFunctionName(),
             it.returns.let { it?.type }.toCType(it.returns?.pointer != null, it.returns?.pointer == "mutable"),
             // Uncomnent when success to handle structure filed
@@ -210,7 +210,7 @@ private fun YamlModel.convertToCLibraryFunctions(): List<CLibraryModel.Function>
         .map {
             val name = "${reference.name}_${it.name}".convertToKotlinFunctionName()
             val args = listOf(YamlModel.Function.Arg("handler", "", "object.${reference.name}")) + it.args
-            CLibraryModel.Function(
+            NativeModel.Function(
                 name,
                 it.returns.let { it?.type }.toCType(it.returns?.pointer != null, it.returns?.pointer == "mutable"),
                 // Uncomnent when success to handle structure filed
@@ -228,7 +228,7 @@ fun convertToCFunctionArgs(args: List<YamlModel.Function.Arg>, callback: String?
             arg.pointer == "mutable"
         )).let {
             when (it.second) {
-                is CLibraryModel.Array -> listOf(
+                is NativeModel.Array -> listOf(
                     it.generateArrayCounter(),
                     it
                 )
@@ -240,30 +240,30 @@ fun convertToCFunctionArgs(args: List<YamlModel.Function.Arg>, callback: String?
 }
 
 private fun String?.injectCallbackInfoStructure(): List<Pair<String, Type>> = when {
-    this != null -> listOf("callbackInfo" to CLibraryModel.Reference.StructureField(split(".")[1].convertToKotlinCallbackStructureName()))
+    this != null -> listOf("callbackInfo" to NativeModel.Reference.StructureField(split(".")[1].convertToKotlinCallbackStructureName()))
     else -> emptyList()
 }
 
-private fun YamlModel.convertToPointer(): List<CLibraryModel.Pointer> {
+private fun YamlModel.convertToPointer(): List<NativeModel.Pointer> {
     val pointers = objects.map { it.name.convertToKotlinClassName() }
-        .map { CLibraryModel.Pointer(it) }
+        .map { NativeModel.Pointer(it) }
     return pointers
 }
 
-private fun CLibraryModel.StructureField.generateArrayCounter() = let { (name, _, _) ->
+private fun NativeModel.StructureField.generateArrayCounter() = let { (name, _, _) ->
     val newName = when {
         name.endsWith("ies") -> name.removeSuffix("ies") + "yCount"
         else -> name.removeSuffix("s") + "Count"
     }
-    CLibraryModel.StructureField(newName, CLibraryModel.Primitive.UInt64, "")
+    NativeModel.StructureField(newName, NativeModel.Primitive.UInt64, "")
 }
 
-private fun Pair<String, CLibraryModel.Type>.generateArrayCounter() = let { (name, _) ->
+private fun Pair<String, NativeModel.Type>.generateArrayCounter() = let { (name, _) ->
     val newName = when {
         name.endsWith("ies") -> name.removeSuffix("ies") + "yCount"
         else -> name.removeSuffix("s") + "Count"
     }
-    newName to CLibraryModel.Primitive.UInt64
+    newName to NativeModel.Primitive.UInt64
 }
 
 

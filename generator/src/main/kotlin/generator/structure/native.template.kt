@@ -3,10 +3,10 @@ package generator.structure
 import builder.Builder
 import builder.templateBuilder
 import converter.variableType
-import domain.CLibraryModel
+import domain.NativeModel
 import domain.toFunctionKotlinType
 
-internal fun CLibraryModel.Structure.toNativeStructure() = templateBuilder {
+internal fun NativeModel.Structure.toNativeStructure() = templateBuilder {
     val structureName = name
     appendBlock("actual interface $name") {
 
@@ -48,31 +48,31 @@ internal fun CLibraryModel.Structure.toNativeStructure() = templateBuilder {
         appendBlock("fun toCValue(): CValue<webgpu.native.$structureName>") {
             appendBlock("return cValue<webgpu.native.$structureName>") {
                 members
-                    .filter { (_, type, _) -> type is CLibraryModel.Reference.StructureField }
+                    .filter { (_, type, _) -> type is NativeModel.Reference.StructureField }
                     .forEach { (name, _, _) ->
                         appendLine("$name.adapt(this@$structureName.$name)")
                     }
                 members
-                    .filter { (_, type, _) -> type !is CLibraryModel.Reference.StructureField }
+                    .filter { (_, type, _) -> type !is NativeModel.Reference.StructureField }
                     .forEach { (name, type, _) ->
                     val adapter = when (type) {
-                        CLibraryModel.Reference.OpaquePointer -> "?.reinterpret()"
-                        is CLibraryModel.Reference.Pointer,
-                        is CLibraryModel.Reference.Structure,
-                        CLibraryModel.Reference.CString,
-                        is CLibraryModel.Reference.Callback,
-                        is CLibraryModel.Array -> "?.handler?.reinterpret()"
-                        CLibraryModel.Primitive.Bool -> ".toUInt()"
-                        CLibraryModel.Primitive.Float32,
-                        CLibraryModel.Primitive.Float64,
-                        CLibraryModel.Primitive.Int32,
-                        CLibraryModel.Primitive.Int64,
-                        CLibraryModel.Primitive.UInt16,
-                        CLibraryModel.Primitive.UInt32,
-                        CLibraryModel.Primitive.UInt64,
-                        is CLibraryModel.Reference.Enumeration -> ""
-                        is CLibraryModel.Reference.StructureField,
-                            CLibraryModel.Void -> error("$type is not allowed")
+                        NativeModel.Reference.OpaquePointer -> "?.reinterpret()"
+                        is NativeModel.Reference.Pointer,
+                        is NativeModel.Reference.Structure,
+                        NativeModel.Reference.CString,
+                        is NativeModel.Reference.Callback,
+                        is NativeModel.Array -> "?.handler?.reinterpret()"
+                        NativeModel.Primitive.Bool -> ".toUInt()"
+                        NativeModel.Primitive.Float32,
+                        NativeModel.Primitive.Float64,
+                        NativeModel.Primitive.Int32,
+                        NativeModel.Primitive.Int64,
+                        NativeModel.Primitive.UInt16,
+                        NativeModel.Primitive.UInt32,
+                        NativeModel.Primitive.UInt64,
+                        is NativeModel.Reference.Enumeration -> ""
+                        is NativeModel.Reference.StructureField,
+                            NativeModel.Void -> error("$type is not allowed")
                     }
                     appendLine("$name = this@$structureName.$name$adapter")
                 }
@@ -82,31 +82,31 @@ internal fun CLibraryModel.Structure.toNativeStructure() = templateBuilder {
     newLine()
     appendBlock("fun webgpu.native.$structureName.adapt(structure: $name)") {
         members
-            .filter { (_, type, _) -> type is CLibraryModel.Reference.StructureField }
+            .filter { (_, type, _) -> type is NativeModel.Reference.StructureField }
             .forEach { (name, _, _) ->
                 appendLine("$name.adapt(structure.$name)")
             }
         members
-            .filter { (_, type, _) -> type !is CLibraryModel.Reference.StructureField }
+            .filter { (_, type, _) -> type !is NativeModel.Reference.StructureField }
             .forEach { (name, type, _) ->
                 val adapter = when (type) {
-                    CLibraryModel.Reference.OpaquePointer -> "?.reinterpret()"
-                    is CLibraryModel.Reference.Pointer,
-                    is CLibraryModel.Reference.Structure,
-                    CLibraryModel.Reference.CString,
-                    is CLibraryModel.Reference.Callback,
-                    is CLibraryModel.Array -> "?.handler?.reinterpret()"
-                    CLibraryModel.Primitive.Bool -> ".toUInt()"
-                    CLibraryModel.Primitive.Float32,
-                    CLibraryModel.Primitive.Float64,
-                    CLibraryModel.Primitive.Int32,
-                    CLibraryModel.Primitive.Int64,
-                    CLibraryModel.Primitive.UInt16,
-                    CLibraryModel.Primitive.UInt32,
-                    CLibraryModel.Primitive.UInt64,
-                    is CLibraryModel.Reference.Enumeration -> ""
-                    is CLibraryModel.Reference.StructureField,
-                    CLibraryModel.Void -> error("$type is not allowed")
+                    NativeModel.Reference.OpaquePointer -> "?.reinterpret()"
+                    is NativeModel.Reference.Pointer,
+                    is NativeModel.Reference.Structure,
+                    NativeModel.Reference.CString,
+                    is NativeModel.Reference.Callback,
+                    is NativeModel.Array -> "?.handler?.reinterpret()"
+                    NativeModel.Primitive.Bool -> ".toUInt()"
+                    NativeModel.Primitive.Float32,
+                    NativeModel.Primitive.Float64,
+                    NativeModel.Primitive.Int32,
+                    NativeModel.Primitive.Int64,
+                    NativeModel.Primitive.UInt16,
+                    NativeModel.Primitive.UInt32,
+                    NativeModel.Primitive.UInt64,
+                    is NativeModel.Reference.Enumeration -> ""
+                    is NativeModel.Reference.StructureField,
+                    NativeModel.Void -> error("$type is not allowed")
                 }
                 appendLine("$name = structure.$name$adapter")
             }
@@ -114,7 +114,7 @@ internal fun CLibraryModel.Structure.toNativeStructure() = templateBuilder {
     newLine()
 }
 
-private fun Builder.toNativeImplementationByValue(structure: CLibraryModel.Structure) {
+private fun Builder.toNativeImplementationByValue(structure: NativeModel.Structure) {
     val structureName = structure.name
     appendBlock("value class ByValue(val handle: CValue<webgpu.native.$structureName>) : $structureName") {
 
@@ -124,89 +124,89 @@ private fun Builder.toNativeImplementationByValue(structure: CLibraryModel.Struc
             appendLine("override $variableType $name: ${type.toFunctionKotlinType()}$optional")
             // Getter
             when (type) {
-                is CLibraryModel.Reference.OpaquePointer
+                is NativeModel.Reference.OpaquePointer
                     -> "$nativeAccessor${name}?.let(::NativeAddress)"
 
-                is CLibraryModel.Reference.Enumeration
+                is NativeModel.Reference.Enumeration
                     -> "$nativeAccessor${name} ?: error(\"pointer of $structureName is null\")"
 
-                is CLibraryModel.Primitive.Bool
+                is NativeModel.Primitive.Bool
                     -> "$nativeAccessor${name}.toBoolean() ?: error(\"pointer of $structureName is null\")"
 
-                is CLibraryModel.Primitive
+                is NativeModel.Primitive
                     -> "$nativeAccessor${name} ?: error(\"pointer of $structureName is null\")"
 
-                is CLibraryModel.Reference.CString
+                is NativeModel.Reference.CString
                     -> "$nativeAccessor${name}?.toCString()"
 
-                is CLibraryModel.Reference.Pointer
+                is NativeModel.Reference.Pointer
                     -> "$nativeAccessor${name}" +
                         "?.let(::NativeAddress)" +
                         "?.let { ${type.name}(it) }"
 
-                is CLibraryModel.Reference.StructureField
+                is NativeModel.Reference.StructureField
                     -> "$nativeAccessor${name}.rawPtr.toLong()" +
                         ".let(::NativeAddress)" +
                         ".let { ${type.name}(it) }"
 
-                is CLibraryModel.Reference.Structure
+                is NativeModel.Reference.Structure
                     -> "$nativeAccessor${name}" +
                         "?.let(::NativeAddress)" +
                         "?.let { ${type.name}(it) }"
 
-                is CLibraryModel.Reference.Callback
+                is NativeModel.Reference.Callback
                     -> "$nativeAccessor${name}" +
                         "?.let(::NativeAddress)" +
                         "?.let { CallbackHolder<${type.name}>(it) }"
 
-                is CLibraryModel.Array
+                is NativeModel.Array
                     -> "$nativeAccessor${name}" +
                         "?.let(::NativeAddress)" +
                         "?.let { ArrayHolder<${type.subType.toFunctionKotlinType()}>(it) }"
 
-                CLibraryModel.Void -> error("void is not allowed")
+                NativeModel.Void -> error("void is not allowed")
             }.let { appendLine("\tget() = $it }") }
             // Setter
             when (type) {
-                is CLibraryModel.Reference.OpaquePointer
+                is NativeModel.Reference.OpaquePointer
                     -> nativeAccessor +
                         "${name} = newValue?.reinterpret()"
 
-                is CLibraryModel.Reference.Enumeration
+                is NativeModel.Reference.Enumeration
                     -> nativeAccessor +
                         "${name} = newValue"
 
-                is CLibraryModel.Reference.CString
+                is NativeModel.Reference.CString
                     -> nativeAccessor +
                         "${name} = newValue?.handler?.reinterpret()"
 
-                is CLibraryModel.Primitive.Bool
+                is NativeModel.Primitive.Bool
                     -> nativeAccessor +
                         "${name} = newValue.toUInt()"
 
-                is CLibraryModel.Primitive
+                is NativeModel.Primitive
                     -> nativeAccessor +
                         "${name} = newValue"
 
-                is CLibraryModel.Reference.Pointer
+                is NativeModel.Reference.Pointer
                     -> nativeAccessor +
                         "${name} = newValue?.handler?.reinterpret()"
 
-                is CLibraryModel.Reference.Structure
+                is NativeModel.Reference.Structure
                     -> nativeAccessor +
                         "${name} = newValue?.handler?.reinterpret()"
 
-                is CLibraryModel.Reference.Callback
+                is NativeModel.Reference.Callback
                     -> nativeAccessor +
                         "${name} = newValue?.handler?.reinterpret()"
 
-                is CLibraryModel.Array
+                is NativeModel.Array
                     -> nativeAccessor +
                         "${name} = newValue?.handler?.reinterpret()"
 
-                is CLibraryModel.Reference.StructureField -> null
+                is NativeModel.Reference.StructureField -> null
 
-                CLibraryModel.Void -> error("void is not allowed")
+                NativeModel.Void -> error("void is not allowed")
             }?.let { appendLine("\tset(newValue) { $it } } \n") } ?: newLine()
 
         }
@@ -216,7 +216,7 @@ private fun Builder.toNativeImplementationByValue(structure: CLibraryModel.Struc
     }
 }
 
-private fun Builder.toNativeImplementationByReference(structure: CLibraryModel.Structure) {
+private fun Builder.toNativeImplementationByReference(structure: NativeModel.Structure) {
     val structureName = structure.name
     appendBlock("value class ByReference(override val handler: NativeAddress) : $structureName") {
 
@@ -226,89 +226,89 @@ private fun Builder.toNativeImplementationByReference(structure: CLibraryModel.S
             appendLine("override $variableType $name: ${type.toFunctionKotlinType()}$optional")
             // Getter
             when (type) {
-                is CLibraryModel.Reference.OpaquePointer
+                is NativeModel.Reference.OpaquePointer
                     -> "$nativeAccessor.${name}?.let(::NativeAddress)"
 
-                is CLibraryModel.Reference.Enumeration
+                is NativeModel.Reference.Enumeration
                     -> "$nativeAccessor.${name} ?: error(\"pointer of $structureName is null\")"
 
-                is CLibraryModel.Primitive.Bool
+                is NativeModel.Primitive.Bool
                     -> "$nativeAccessor.${name}.toBoolean() ?: error(\"pointer of $structureName is null\")"
 
-                is CLibraryModel.Primitive
+                is NativeModel.Primitive
                     -> "$nativeAccessor.${name} ?: error(\"pointer of $structureName is null\")"
 
-                is CLibraryModel.Reference.CString
+                is NativeModel.Reference.CString
                     -> "$nativeAccessor.${name}?.toCString()"
 
-                is CLibraryModel.Reference.Pointer
+                is NativeModel.Reference.Pointer
                     -> "$nativeAccessor.${name}" +
                         "?.let(::NativeAddress)" +
                         "?.let { ${type.name}(it) }"
 
-                is CLibraryModel.Reference.StructureField
+                is NativeModel.Reference.StructureField
                     -> "$nativeAccessor.${name}.rawPtr.toLong()" +
                         ".let(::NativeAddress)" +
                         ".let { ${type.name}(it) }"
 
-                is CLibraryModel.Reference.Structure
+                is NativeModel.Reference.Structure
                     -> "$nativeAccessor.${name}" +
                         "?.let(::NativeAddress)" +
                         "?.let { ${type.name}(it) }"
 
-                is CLibraryModel.Reference.Callback
+                is NativeModel.Reference.Callback
                     -> "$nativeAccessor.${name}" +
                         "?.let(::NativeAddress)" +
                         "?.let { CallbackHolder<${type.name}>(it) }"
 
-                is CLibraryModel.Array
+                is NativeModel.Array
                     -> "$nativeAccessor.${name}" +
                         "?.let(::NativeAddress)" +
                         "?.let { ArrayHolder<${type.subType.toFunctionKotlinType()}>(it) }"
 
-                CLibraryModel.Void -> error("void is not allowed")
+                NativeModel.Void -> error("void is not allowed")
             }.let { appendLine("\tget() = $it") }
             // Setter
             when (type) {
-                is CLibraryModel.Reference.OpaquePointer
+                is NativeModel.Reference.OpaquePointer
                     -> nativeAccessor +
                         ".let { it.${name} = newValue?.reinterpret() }"
 
-                is CLibraryModel.Reference.Enumeration
+                is NativeModel.Reference.Enumeration
                     -> nativeAccessor +
                         ".let { it.${name} = newValue }"
 
-                is CLibraryModel.Reference.CString
+                is NativeModel.Reference.CString
                     -> nativeAccessor +
                         ".let { it.${name} = newValue?.handler?.reinterpret() }"
 
-                is CLibraryModel.Primitive.Bool
+                is NativeModel.Primitive.Bool
                     -> nativeAccessor +
                         ".let { it.${name} = newValue.toUInt() }"
 
-                is CLibraryModel.Primitive
+                is NativeModel.Primitive
                     -> nativeAccessor +
                         ".let { it.${name} = newValue }"
 
-                is CLibraryModel.Reference.Pointer
+                is NativeModel.Reference.Pointer
                     -> nativeAccessor +
                         ".let { it.${name} = newValue?.handler?.reinterpret() }"
 
-                is CLibraryModel.Reference.Structure
+                is NativeModel.Reference.Structure
                     -> nativeAccessor +
                         ".let { it.${name} = newValue?.handler?.reinterpret() }"
 
-                is CLibraryModel.Reference.Callback
+                is NativeModel.Reference.Callback
                     -> nativeAccessor +
                         ".let { it.${name} = newValue?.handler?.reinterpret() }"
 
-                is CLibraryModel.Array
+                is NativeModel.Array
                     -> nativeAccessor +
                         ".let { it.${name} = newValue?.handler?.reinterpret() }"
 
-                is CLibraryModel.Reference.StructureField -> null
+                is NativeModel.Reference.StructureField -> null
 
-                CLibraryModel.Void -> error("void is not allowed")
+                NativeModel.Void -> error("void is not allowed")
             }?.let { appendLine("\tset(newValue) { $it } \n") } ?: newLine()
         }
     }

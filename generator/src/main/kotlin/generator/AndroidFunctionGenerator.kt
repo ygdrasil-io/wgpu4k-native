@@ -1,7 +1,7 @@
 package generator
 
 import disclamer
-import domain.CLibraryModel
+import domain.NativeModel
 import generator.function.toAndroidFunctions
 import generator.function.toJnaFunctionsInterface
 import java.io.File
@@ -29,7 +29,7 @@ private val header = """
     
 """.trimIndent()
 
-internal fun File.generateAndroidNativeFunctions(functions: List<CLibraryModel.Function>) = resolve("webgpu")
+internal fun File.generateAndroidNativeFunctions(functions: List<NativeModel.Function>) = resolve("webgpu")
     .resolve("android")
     .resolve("Functions.kt").apply {
         writeText(jnaHeader)
@@ -40,7 +40,7 @@ internal fun File.generateAndroidNativeFunctions(functions: List<CLibraryModel.F
     }
 
 
-internal fun File.generateAndroidFunctions(functions: List<CLibraryModel.Function>) = resolve("webgpu")
+internal fun File.generateAndroidFunctions(functions: List<NativeModel.Function>) = resolve("webgpu")
     .resolve("Functions.android.kt").apply {
         writeText(header)
 

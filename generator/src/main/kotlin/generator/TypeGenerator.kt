@@ -2,7 +2,7 @@ package generator
 
 import commonMainBasePath
 import disclamer
-import domain.CLibraryModel
+import domain.NativeModel
 import java.io.File
 
 val typesCommonMainFile = commonMainBasePath
@@ -18,7 +18,7 @@ private val header = """
     
 """.trimIndent()
 
-fun File.generateTypesCommonMain(classes: List<CLibraryModel.Pointer>) {
+fun File.generateTypesCommonMain(classes: List<NativeModel.Pointer>) {
     writeText(header)
     classes.forEach {
         appendText("@JvmInline\n")

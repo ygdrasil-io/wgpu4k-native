@@ -1,8 +1,7 @@
 package generator
 
-import commonMainBasePath
 import disclamer
-import domain.CLibraryModel
+import domain.NativeModel
 import generator.callback.toCommonCallback
 import generator.callback.toJnaCallback
 import generator.callback.toJvmCallback
@@ -48,34 +47,34 @@ private val nativeHeader = """
     
 """.trimIndent()
 
-internal fun File.generateCommonCallback(callbacks: List<CLibraryModel.Callback>) = resolve("webgpu")
+internal fun File.generateCommonCallback(callbacks: List<NativeModel.Callback>) = resolve("webgpu")
     .resolve("Callbacks.kt").apply {
 
     writeText(header)
-    callbacks.map(CLibraryModel.Callback::toCommonCallback)
+    callbacks.map(NativeModel.Callback::toCommonCallback)
         .forEach(::appendText)
 }
 
-internal fun File.generateJvmCallback(callbacks: List<CLibraryModel.Callback>) = resolve("webgpu")
+internal fun File.generateJvmCallback(callbacks: List<NativeModel.Callback>) = resolve("webgpu")
     .resolve("Callbacks.jvm.kt").apply {
 
         writeText(header)
-        callbacks.map(CLibraryModel.Callback::toJvmCallback)
+        callbacks.map(NativeModel.Callback::toJvmCallback)
             .forEach(::appendText)
     }
 
-internal fun File.generateAndroidCallback(callbacks: List<CLibraryModel.Callback>) = resolve("webgpu")
+internal fun File.generateAndroidCallback(callbacks: List<NativeModel.Callback>) = resolve("webgpu")
     .resolve("Callbacks.android.kt").apply {
 
         writeText(header)
-        callbacks.map(CLibraryModel.Callback::toJnaCallback)
+        callbacks.map(NativeModel.Callback::toJnaCallback)
             .forEach(::appendText)
     }
 
-internal fun File.generateNativeCallback(callbacks: List<CLibraryModel.Callback>) = resolve("webgpu")
+internal fun File.generateNativeCallback(callbacks: List<NativeModel.Callback>) = resolve("webgpu")
     .resolve("Callbacks.native.kt").apply {
 
         writeText(nativeHeader)
-        callbacks.map(CLibraryModel.Callback::toNativeCallback)
+        callbacks.map(NativeModel.Callback::toNativeCallback)
             .forEach(::appendText)
     }

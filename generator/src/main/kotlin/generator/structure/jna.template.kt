@@ -3,11 +3,10 @@ package generator.structure
 import builder.templateBuilder
 import converter.toPrimitiveDefaultValue
 import converter.toPrimitiveKotlinType
-import converter.variableType
-import domain.CLibraryModel
+import domain.NativeModel
 
 
-fun CLibraryModel.Structure.toJnaStructure() = templateBuilder {
+fun NativeModel.Structure.toJnaStructure() = templateBuilder {
     appendBlock("sealed class $name(pointer: com.sun.jna.Pointer? = null) : com.sun.jna.Structure(pointer)") {
         members.forEach { (name, type, _) ->
             appendLine("@JvmField var $name: ${type.toJnaType()}${type.toOptionalModifier()} = ${type.toDefaultValue()}")
@@ -35,35 +34,35 @@ fun CLibraryModel.Structure.toJnaStructure() = templateBuilder {
     newLine()
 }
 
-private fun CLibraryModel.Type.toDefaultValue(): String = when (this) {
-    is CLibraryModel.Primitive.Bool -> "0"
-    is CLibraryModel.Primitive.UInt64 -> "0L"
-    is CLibraryModel.Reference.Enumeration,
-    is CLibraryModel.Primitive.UInt32 -> "0"
-    is CLibraryModel.Primitive.UInt16 -> "0"
-    is CLibraryModel.Primitive -> toPrimitiveDefaultValue()
-    is CLibraryModel.Reference.StructureField -> "${name}.ByValue()"
+private fun NativeModel.Type.toDefaultValue(): String = when (this) {
+    is NativeModel.Primitive.Bool -> "0"
+    is NativeModel.Primitive.UInt64 -> "0L"
+    is NativeModel.Reference.Enumeration,
+    is NativeModel.Primitive.UInt32 -> "0"
+    is NativeModel.Primitive.UInt16 -> "0"
+    is NativeModel.Primitive -> toPrimitiveDefaultValue()
+    is NativeModel.Reference.StructureField -> "${name}.ByValue()"
     //is CLibraryModel.Reference.Callback -> TODO()
     else -> "null"
 }
 
-private fun CLibraryModel.Type.toOptionalModifier(): String  = when (this) {
-    is CLibraryModel.Primitive -> ""
-    is CLibraryModel.Reference.StructureField -> ""
-    is CLibraryModel.Reference.Enumeration -> ""
+private fun NativeModel.Type.toOptionalModifier(): String  = when (this) {
+    is NativeModel.Primitive -> ""
+    is NativeModel.Reference.StructureField -> ""
+    is NativeModel.Reference.Enumeration -> ""
     //is CLibraryModel.Reference.Callback -> TODO()
     else -> "?"
 }
 
-private fun CLibraryModel.Type.toJnaType(): String  = when (this) {
-    is CLibraryModel.Primitive.Bool -> "Int"
-    is CLibraryModel.Primitive.UInt64 -> "Long"
-    is CLibraryModel.Reference.Enumeration,
-    is CLibraryModel.Primitive.UInt32 -> "Int"
-    is CLibraryModel.Primitive.UInt16 -> "Short"
-    is CLibraryModel.Primitive -> toPrimitiveKotlinType()
-    is CLibraryModel.Reference.Structure -> "${name}.ByReference?"
-    is CLibraryModel.Reference.StructureField -> "${name}.ByValue"
-    is CLibraryModel.Reference.Callback -> "com.sun.jna.Callback"
+private fun NativeModel.Type.toJnaType(): String  = when (this) {
+    is NativeModel.Primitive.Bool -> "Int"
+    is NativeModel.Primitive.UInt64 -> "Long"
+    is NativeModel.Reference.Enumeration,
+    is NativeModel.Primitive.UInt32 -> "Int"
+    is NativeModel.Primitive.UInt16 -> "Short"
+    is NativeModel.Primitive -> toPrimitiveKotlinType()
+    is NativeModel.Reference.Structure -> "${name}.ByReference?"
+    is NativeModel.Reference.StructureField -> "${name}.ByValue"
+    is NativeModel.Reference.Callback -> "com.sun.jna.Callback"
     else -> "com.sun.jna.Pointer"
 }

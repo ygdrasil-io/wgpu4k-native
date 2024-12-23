@@ -1,9 +1,9 @@
 package generator.function
 
 import builder.templateBuilder
-import domain.CLibraryModel
+import domain.NativeModel
 
-fun List<CLibraryModel.Function>.toJnaFunctionsInterface() = templateBuilder {
+fun List<NativeModel.Function>.toJnaFunctionsInterface() = templateBuilder {
 
     appendBlock("internal interface FunctionsInterface: com.sun.jna.Library") {
         forEach { function ->
@@ -22,22 +22,22 @@ fun List<CLibraryModel.Function>.toJnaFunctionsInterface() = templateBuilder {
     appendLine("internal val Functions = com.sun.jna.Native.load(\"wgpu4k\", FunctionsInterface::class.java)")
 }
 
-internal fun CLibraryModel.Type.toAndroidNativeType(): String = when (this) {
-    is CLibraryModel.Primitive.Int32 -> "Int"
-    is CLibraryModel.Primitive.Int64 -> "Long"
-    is CLibraryModel.Void -> "Unit"
-    CLibraryModel.Primitive.Bool -> "UInt"
-    CLibraryModel.Primitive.UInt64 -> "ULong"
-    CLibraryModel.Primitive.Float64 -> "Double"
-    CLibraryModel.Primitive.Float32 -> "Float"
-    is CLibraryModel.Reference.Enumeration,
-    CLibraryModel.Primitive.UInt32 -> "UInt"
-    CLibraryModel.Primitive.UInt16 -> "UShort"
-    is CLibraryModel.Reference.StructureField -> "${name}.ByValue"
-    is CLibraryModel.Reference.Structure -> "${name}.ByReference?"
-    is CLibraryModel.Reference.Callback -> "com.sun.jna.Callback?"
-    is CLibraryModel.Array,
-    CLibraryModel.Reference.CString,
-    CLibraryModel.Reference.OpaquePointer,
-    is CLibraryModel.Reference.Pointer -> "com.sun.jna.Pointer?"
+internal fun NativeModel.Type.toAndroidNativeType(): String = when (this) {
+    is NativeModel.Primitive.Int32 -> "Int"
+    is NativeModel.Primitive.Int64 -> "Long"
+    is NativeModel.Void -> "Unit"
+    NativeModel.Primitive.Bool -> "UInt"
+    NativeModel.Primitive.UInt64 -> "ULong"
+    NativeModel.Primitive.Float64 -> "Double"
+    NativeModel.Primitive.Float32 -> "Float"
+    is NativeModel.Reference.Enumeration,
+    NativeModel.Primitive.UInt32 -> "UInt"
+    NativeModel.Primitive.UInt16 -> "UShort"
+    is NativeModel.Reference.StructureField -> "${name}.ByValue"
+    is NativeModel.Reference.Structure -> "${name}.ByReference?"
+    is NativeModel.Reference.Callback -> "com.sun.jna.Callback?"
+    is NativeModel.Array,
+    NativeModel.Reference.CString,
+    NativeModel.Reference.OpaquePointer,
+    is NativeModel.Reference.Pointer -> "com.sun.jna.Pointer?"
 }

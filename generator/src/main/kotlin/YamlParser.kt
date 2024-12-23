@@ -95,14 +95,18 @@ fun main() {
     }
 }
 
-fun loadExtraYaml() = basePath.resolve("generator")
+fun loadExtraYaml() = basePath.resolve("wgpu4k-native-specs")
+    .resolve("src")
+    .resolve("jvmMain")
+    .resolve("resources")
     .resolve("extra.yml")
     .readText()
     .let { text -> parser.decodeFromString(YamlModel.serializer(), text).let { injectEnumValues(text, it) }  }
 
-fun loadWebGPUYaml() = basePath.resolve("wgpu4k-native")
-    .resolve("build")
-    .resolve("native")
+fun loadWebGPUYaml() = basePath.resolve("wgpu4k-native-specs")
+    .resolve("src")
+    .resolve("jvmMain")
+    .resolve("resources")
     .resolve("webgpu.yml")
     .readText()
     .let { text -> parser.decodeFromString(YamlModel.serializer(), text).let { injectEnumValues(text, it) } }
