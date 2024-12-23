@@ -20,6 +20,7 @@ dependencyResolutionManagement {
 val hostOs = System.getProperty("os.name")
 
 include("wgpu4k-native")
+include("wgpu4k-native-specs")
 include("demo:common")
 include("demo:desktop")
 include("demo:android")
