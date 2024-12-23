@@ -1,5 +1,6 @@
 plugins {
 	`kotlin-dsl`
+	kotlin("plugin.serialization") version "2.0.20"
 }
 
 
@@ -10,6 +11,7 @@ repositories {
 }
 
 dependencies {
+	implementation(libs.download)
 	implementation(libs.kotlin.multiplatform)
 	implementation(libs.jreleaser.plugin)
 	implementation(libs.android.library)
@@ -18,4 +20,7 @@ dependencies {
 	implementation(libs.zip4j)
 	implementation(libs.okhttp)
 	implementation(libs.commons.io)
+
+	implementation(libs.kaml)
+
 }
