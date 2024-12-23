@@ -124,7 +124,9 @@ private fun injectEnumValues(text: String, model: YamlModel): YamlModel {
             .map { entry ->
                 val name = entry.yamlMap.get<YamlNode>("name")!!.yamlScalar.content
                 val doc = entry.yamlMap.get<YamlNode>("doc")!!.yamlScalar.content
-                YamlModel.Enum.Entry(name, doc)
+                val value = entry.yamlMap.get<YamlNode>("value")?.yamlScalar?.content
+                    ?.substringAfter("x")?.toInt(radix = 16)
+                YamlModel.Enum.Entry(name, doc, value)
         }
         YamlModel.Enum(enum.name, enum.doc, entries)
     }
