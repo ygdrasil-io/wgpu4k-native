@@ -168,7 +168,7 @@ private fun YamlModel.generateCLibraryStructures() = structs.map {
 
 private fun YamlModel.convertToCLibraryEnumerations() =
     enums.map {
-        NativeModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertEnumToEnumValues(it.entries.getBaseValue()))
+        NativeModel.Enumeration(it.name.convertToKotlinClassName(), it.values.convertEnumToEnumValues(it.values.getBaseValue()))
     } + bitflags.map {
         NativeModel.Enumeration(it.name.convertToKotlinClassName(), it.entries.convertToEnumValues(it.entries), 64)
     }
