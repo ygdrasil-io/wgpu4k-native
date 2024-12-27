@@ -49,7 +49,7 @@ actual interface WGPUCompilationInfoCallback : Callback {
 		actual fun allocate(allocator: MemoryAllocator, callback: WGPUCompilationInfoCallback): CallbackHolder<WGPUCompilationInfoCallback> {
 			val function = object : Function {
 				override fun apply(status: Int, compilationInfo: java.lang.foreign.MemorySegment, userdata1: java.lang.foreign.MemorySegment, userdata2: java.lang.foreign.MemorySegment) {
-					callback.invoke(status.toUInt(), compilationInfo.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUCompilationInfo(it) }, userdata1.let(::NativeAddress), userdata2.let(::NativeAddress))
+					callback.invoke(status.toUInt(), compilationInfo.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let { java.lang.foreign.MemorySegment.ofAddress(it.address()) }?.let(::NativeAddress)?.let { WGPUCompilationInfo(it) }, userdata1.let(::NativeAddress), userdata2.let(::NativeAddress))
 				}
 			}
 			return java.lang.foreign.Linker.nativeLinker().upcallStub(

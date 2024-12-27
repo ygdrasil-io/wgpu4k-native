@@ -50,8 +50,6 @@ val nativeMainBasePath = sourceBasePath
     .resolve("kotlin")
 
 fun main() {
-    println(File(".").absoluteFile)
-
 
     val webgpuCModel = loadWebGPUYaml()
         .merge(loadExtraYaml())

@@ -18,8 +18,10 @@ val C_DOUBLE: ValueLayout = ValueLayout.JAVA_DOUBLE
 val C_POINTER: ValueLayout = ValueLayout.ADDRESS
 val C_LONG: ValueLayout = ValueLayout.JAVA_LONG
 
-private val SYMBOL_LOOKUP = SymbolLookup.loaderLookup()
-    .or(Linker.nativeLinker().defaultLookup())
+private val SYMBOL_LOOKUP by lazy {
+    SymbolLookup.loaderLookup()
+        .or(Linker.nativeLinker().defaultLookup())
+}
 
 internal fun findOrThrow(symbol: String): MemorySegment {
     return SYMBOL_LOOKUP.find(symbol)
