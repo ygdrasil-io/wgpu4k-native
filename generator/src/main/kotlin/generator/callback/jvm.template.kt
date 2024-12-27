@@ -74,8 +74,7 @@ private fun NativeModel.Type.toArgCall(name: String): String = when (this) {
     is NativeModel.Array -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let(::ArrayHolder)"
     is NativeModel.Reference.Callback -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let(::CallbackHolder)"
     // Need to allocate a new MemorySegment, else on some OS, the session scope is close to early and cannot be used.
-    is NativeModel.Reference.Structure -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let { java.lang.foreign.MemorySegment.ofAddress(it.address()) }?.let(::NativeAddress)?.let { ${this.name}(it) }"
-    is NativeModel.Reference -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let(::NativeAddress)?.let { ${this.name}(it) }"
+    is NativeModel.Reference -> "$name.takeIf { it != java.lang.foreign.MemorySegment.NULL }?.let { java.lang.foreign.MemorySegment.ofAddress(it.address()).reinterpret(it.byteSize()) }?.let(::NativeAddress)?.let { ${this.name}(it) }"
     NativeModel.Void -> error("unsupported type here")
 }
 
