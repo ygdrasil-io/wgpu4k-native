@@ -6,15 +6,17 @@ kotlin {
 
     val hostOs = System.getProperty("os.name")
     val isArm64 = System.getProperty("os.arch") == "aarch64"
+
+    println("host is $hostOs")
     val nativeTarget = when {
         // No toolchain on this architecture
         hostOs == "Linux" && isArm64 -> null.also { println("Linux native Arm64 not yet supported") }
         hostOs == "Linux" && !isArm64 -> linuxX64()
         hostOs == "Mac OS X" && isArm64 -> macosArm64()
         hostOs == "Mac OS X" && !isArm64 -> macosX64()
+        hostOs.startsWith("Windows") -> mingwX64()
         else -> null // Not supported
     }
-    mingwX64()
 
     if (nativeTarget != null) {
         with(nativeTarget) {

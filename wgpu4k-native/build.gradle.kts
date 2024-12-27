@@ -184,6 +184,7 @@ configureDownloadTasks {
         extract("lib/libwgpu_native.a", buildNativeResourcesDirectory.resolve("windows-x64").resolve("wgpu.a"))
     }
     download("wgpu-windows-x86_64-msvc-release.zip") {
+        extract("lib/wgpu_native.lib", buildNativeResourcesDirectory.resolve("windows-x64").resolve("wgpu.lib"))
         extract("lib/wgpu_native.dll", jvmLibResourcesDirectory.resolve("win32-x86-64").resolve("WGPU.dll")).doLast {
             val basePath = jvmLibResourcesDirectory.resolve("win32-x86-64")
             Files.move(
