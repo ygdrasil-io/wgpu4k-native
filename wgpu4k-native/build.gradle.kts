@@ -31,7 +31,7 @@ kotlin {
             jvmTarget = JvmTarget.JVM_22
         }
 
-        publishLibraryVariants("release", "debug")
+        publishAllLibraryVariants()
     }
 
     jvm {
@@ -116,19 +116,6 @@ android {
         }
     }*/
 
-
-    buildTypes {
-        getByName("release") {
-
-            isMinifyEnabled = true
-            isJniDebuggable = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-        getByName("debug") {
-            isMinifyEnabled = false
-            isJniDebuggable = true
-        }
-    }
 }
 
 configureDownloadTasks {
