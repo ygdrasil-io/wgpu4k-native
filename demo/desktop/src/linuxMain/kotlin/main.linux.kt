@@ -9,12 +9,12 @@ import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.reinterpret
-import webgpu.WGPUInstance
-import webgpu.WGPUSType_SurfaceSourceXlibWindow
-import webgpu.WGPUSurface
-import webgpu.WGPUSurfaceDescriptor
-import webgpu.WGPUSurfaceSourceXlibWindow
-import webgpu.wgpuInstanceCreateSurface
+import io.ygdrasil.wgpu.WGPUInstance
+import io.ygdrasil.wgpu.WGPUSType_SurfaceSourceXlibWindow
+import io.ygdrasil.wgpu.WGPUSurface
+import io.ygdrasil.wgpu.WGPUSurfaceDescriptor
+import io.ygdrasil.wgpu.WGPUSurfaceSourceXlibWindow
+import io.ygdrasil.wgpu.wgpuInstanceCreateSurface
 
 actual fun getSurface(instance: WGPUInstance, window: CPointer<GLFWwindow>): WGPUSurface {
 

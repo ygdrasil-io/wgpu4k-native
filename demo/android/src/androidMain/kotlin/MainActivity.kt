@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.activity.ComponentActivity
 import ffi.memoryScope
-import webgpu.WGPUAdapterInfo
+import io.ygdrasil.wgpu.WGPUAdapterInfo
 
 
 class MainActivity : ComponentActivity() {

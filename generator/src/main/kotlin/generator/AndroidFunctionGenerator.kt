@@ -8,7 +8,7 @@ import java.io.File
 
 private val jnaHeader = """
     $disclamer
-    package webgpu.android
+    package io.ygdrasil.wgpu.android
 
     
     
@@ -17,7 +17,7 @@ private val jnaHeader = """
 
 private val header = """
     $disclamer
-    package webgpu
+    package io.ygdrasil.wgpu
     
     import ffi.CString
     import ffi.NativeAddress

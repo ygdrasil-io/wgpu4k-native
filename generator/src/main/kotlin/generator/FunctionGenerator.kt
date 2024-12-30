@@ -19,7 +19,7 @@ val functionsJvmMainFile = jvmMainBasePath
 
 private val header = """
     $disclamer
-    package webgpu
+    package io.ygdrasil.wgpu
     
     import ffi.CString
     import ffi.NativeAddress
@@ -32,7 +32,7 @@ private val header = """
 
 private val jvmHeader = """
     $disclamer
-    package webgpu
+    package io.ygdrasil.wgpu
     
     import ffi.CString
     import ffi.NativeAddress
@@ -47,7 +47,7 @@ private val jvmHeader = """
 private val nativeHeader = """
     @file:OptIn(ExperimentalForeignApi::class)
     $disclamer
-    package webgpu
+    package io.ygdrasil.wgpu
     
     import ffi.CString
     import ffi.NativeAddress

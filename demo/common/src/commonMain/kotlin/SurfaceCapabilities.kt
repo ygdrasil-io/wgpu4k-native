@@ -1,4 +1,4 @@
-package webgpu
+package io.ygdrasil.wgpu
 
 import ffi.MemoryBuffer
 import ffi.memoryScope

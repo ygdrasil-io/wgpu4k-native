@@ -1,5 +1,5 @@
 // This file has been generated DO NOT EDIT !!!
-package webgpu
+package io.ygdrasil.wgpu
 
 typealias WGPUAdapterType = UInt
 const val WGPUAdapterType_DiscreteGPU : WGPUAdapterType = 1u

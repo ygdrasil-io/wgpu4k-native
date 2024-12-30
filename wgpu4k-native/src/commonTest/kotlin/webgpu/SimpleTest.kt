@@ -1,4 +1,4 @@
-package webgpu
+package io.ygdrasil.wgpu
 
 import ffi.memoryScope
 import io.kotest.core.spec.style.FreeSpec

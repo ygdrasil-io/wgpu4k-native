@@ -15,16 +15,16 @@ import glfw.glfwWindowHint
 import glfw.glfwWindowShouldClose
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
-import webgpu.HelloTriangleScene
-import webgpu.WGPUInstance
-import webgpu.WGPUSurface
-import webgpu.compatibleAlphaMode
-import webgpu.compatibleFormat
-import webgpu.configureLogs
-import webgpu.configureSurface
-import webgpu.getAdapter
-import webgpu.getDevice
-import webgpu.wgpuCreateInstance
+import io.ygdrasil.wgpu.HelloTriangleScene
+import io.ygdrasil.wgpu.WGPUInstance
+import io.ygdrasil.wgpu.WGPUSurface
+import io.ygdrasil.wgpu.compatibleAlphaMode
+import io.ygdrasil.wgpu.compatibleFormat
+import io.ygdrasil.wgpu.configureLogs
+import io.ygdrasil.wgpu.configureSurface
+import io.ygdrasil.wgpu.getAdapter
+import io.ygdrasil.wgpu.getDevice
+import io.ygdrasil.wgpu.wgpuCreateInstance
 
 fun main() {
     val width = 640

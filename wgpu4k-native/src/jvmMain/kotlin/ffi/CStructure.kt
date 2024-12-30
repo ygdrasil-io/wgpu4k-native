@@ -1,6 +1,6 @@
 package ffi
 
-import webgpu.toInt
+import io.ygdrasil.wgpu.toInt
 import java.lang.foreign.AddressLayout
 import java.lang.foreign.StructLayout
 import java.lang.foreign.ValueLayout

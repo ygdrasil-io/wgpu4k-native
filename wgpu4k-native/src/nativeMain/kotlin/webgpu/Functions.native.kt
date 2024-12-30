@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalForeignApi::class)
 // This file has been generated DO NOT EDIT !!!
-package webgpu
+package io.ygdrasil.wgpu
 
 import ffi.CString
 import ffi.NativeAddress

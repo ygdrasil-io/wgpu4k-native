@@ -1,5 +1,5 @@
 // This file has been generated DO NOT EDIT !!!
-package webgpu.android
+package io.ygdrasil.wgpu.android
 
 
 internal interface FunctionsInterface: com.sun.jna.Library {

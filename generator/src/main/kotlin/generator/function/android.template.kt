@@ -16,7 +16,7 @@ fun List<NativeModel.Function>.toAndroidFunctions() = templateBuilder {
             .map { (name, type) -> type.toJvmArgCall(name) }
             .joinToString(", ")
         appendLine("actual fun $name($args): $returnType")
-        appendLine("\t = webgpu.android.Functions.$name($argsCall)")
+        appendLine("\t = io.ygdrasil.wgpu.android.Functions.$name($argsCall)")
 
         when (function.returnType) {
             is NativeModel.Reference.Enumeration,

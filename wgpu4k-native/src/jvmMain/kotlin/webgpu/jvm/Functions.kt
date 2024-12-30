@@ -1,5 +1,5 @@
 // This file has been generated DO NOT EDIT !!!
-package webgpu
+package io.ygdrasil.wgpu
 
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.Linker

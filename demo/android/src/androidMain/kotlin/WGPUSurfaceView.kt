@@ -7,23 +7,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.sun.jna.Pointer
 import ffi.memoryScope
-import webgpu.HelloTriangleScene
-import webgpu.WGPUBackendType_OpenGLES
-import webgpu.WGPUBackendType_Vulkan
-import webgpu.WGPUInstance
-import webgpu.WGPUSType_SurfaceSourceAndroidNativeWindow
-import webgpu.WGPUSurface
-import webgpu.WGPUSurfaceDescriptor
-import webgpu.WGPUSurfaceSourceAndroidNativeWindow
-import webgpu.compatibleAlphaMode
-import webgpu.compatibleFormat
-import webgpu.configureLogs
-import webgpu.configureSurface
-import webgpu.getAdapter
-import webgpu.getDevice
-import webgpu.wgpuCreateInstance
-import webgpu.wgpuInstanceCreateSurface
-import webgpu.surfaceCapabilities
+
 
 class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {
 

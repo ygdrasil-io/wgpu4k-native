@@ -25,7 +25,7 @@ val structuresNativeMainFile = nativeMainBasePath
 
 private val header = """
     $disclamer
-    package webgpu
+    package io.ygdrasil.wgpu
     
     import ffi.NativeAddress
     import ffi.CallbackHolder
@@ -38,7 +38,7 @@ private val header = """
 
 private val headerJvm = """
     $disclamer
-    package webgpu
+    package io.ygdrasil.wgpu
     
     import ffi.NativeAddress
     import ffi.CallbackHolder
@@ -64,7 +64,7 @@ private val headerJvm = """
 private val headerNative = """
     $disclamer
     @file:OptIn(ExperimentalForeignApi::class)
-    package webgpu
+    package io.ygdrasil.wgpu
         
     import ffi.NativeAddress
     import ffi.CallbackHolder

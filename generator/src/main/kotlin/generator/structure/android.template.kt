@@ -14,7 +14,7 @@ fun NativeModel.Structure.toAndroidStructure() = templateBuilder {
         toAndroidImplementation(this@toAndroidStructure, "ByValue")
 
         newLine()
-        appendLine("fun toCValue() = (this as ByReference).let{ webgpu.android.${structureName}.ByValue(handle) }")
+        appendLine("fun toCValue() = (this as ByReference).let{ io.ygdrasil.wgpu.android.${structureName}.ByValue(handle) }")
         appendLine("fun toReference() = (this as ByReference).handle")
 
         newLine()
@@ -26,7 +26,7 @@ fun NativeModel.Structure.toAndroidStructure() = templateBuilder {
         newLine()
         appendBlock("actual companion object") {
             appendBlock("actual operator fun invoke(address: NativeAddress): $structureName") {
-                appendLine("return webgpu.android.$structureName.ByReference(address)")
+                appendLine("return io.ygdrasil.wgpu.android.$structureName.ByReference(address)")
                 appendLine("\t.also { it.read() }")
                 appendLine("\t.let(::ByReference)")
             }
@@ -37,9 +37,9 @@ fun NativeModel.Structure.toAndroidStructure() = templateBuilder {
             }
             newLine()
             appendBlock("actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  $structureName) -> Unit): ArrayHolder<$structureName>") {
-                appendLine("val array = webgpu.android.$structureName.ByValue().toArray(size.toInt())")
+                appendLine("val array = io.ygdrasil.wgpu.android.$structureName.ByValue().toArray(size.toInt())")
                 appendBlock("array.forEachIndexed", "index, structure") {
-                    appendLine("(structure as webgpu.android.$structureName.ByValue)") {
+                    appendLine("(structure as io.ygdrasil.wgpu.android.$structureName.ByValue)") {
                         appendLine(".also { provider(index.toUInt(), $structureName.ByValue(it)) }")
                         appendLine(".write()")
                     }
@@ -56,7 +56,7 @@ fun NativeModel.Structure.toAndroidStructure() = templateBuilder {
 private fun Builder.toAndroidImplementation(structure: NativeModel.Structure, name: String) {
     val structureName = structure.name
     newLine()
-    appendBlock("class $name(val handle: webgpu.android.$structureName.$name = webgpu.android.$structureName.$name(com.sun.jna.Pointer.NULL)) : $structureName") {
+    appendBlock("class $name(val handle: io.ygdrasil.wgpu.android.$structureName.$name = io.ygdrasil.wgpu.android.$structureName.$name(com.sun.jna.Pointer.NULL)) : $structureName") {
         structure.members.forEach { (name, type, optional) ->
 
             appendLine("override ${type.variableType()} $name: ${type.toFunctionKotlinType()}$optional")

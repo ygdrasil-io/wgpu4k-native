@@ -7,12 +7,12 @@ import glfw.glfwGetCocoaWindow
 import kotlinx.cinterop.*
 import platform.AppKit.NSWindow
 import platform.QuartzCore.CAMetalLayer
-import webgpu.WGPUInstance
-import webgpu.WGPUSType_SurfaceSourceMetalLayer
-import webgpu.WGPUSurface
-import webgpu.WGPUSurfaceDescriptor
-import webgpu.WGPUSurfaceSourceMetalLayer
-import webgpu.wgpuInstanceCreateSurface
+import io.ygdrasil.wgpu.WGPUInstance
+import io.ygdrasil.wgpu.WGPUSType_SurfaceSourceMetalLayer
+import io.ygdrasil.wgpu.WGPUSurface
+import io.ygdrasil.wgpu.WGPUSurfaceDescriptor
+import io.ygdrasil.wgpu.WGPUSurfaceSourceMetalLayer
+import io.ygdrasil.wgpu.wgpuInstanceCreateSurface
 
 actual fun getSurface(instance: WGPUInstance, window: CPointer<GLFWwindow>): WGPUSurface {
     val nsWindow = interpretObjCPointer<NSWindow>(glfwGetCocoaWindow(window).rawValue)

@@ -12,7 +12,7 @@ val enumerationCommonMainFile = commonMainBasePath
 
 private val header = """
     $disclamer
-    package webgpu
+    package io.ygdrasil.wgpu
     
     
 """.trimIndent()

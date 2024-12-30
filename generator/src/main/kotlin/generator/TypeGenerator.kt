@@ -11,7 +11,7 @@ val typesCommonMainFile = commonMainBasePath
 
 private val header = """
     $disclamer
-    package webgpu
+    package io.ygdrasil.wgpu
     
     import ffi.NativeAddress
     import kotlin.jvm.JvmInline

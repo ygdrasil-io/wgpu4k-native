@@ -14,7 +14,7 @@ val jvmNativeFunctionsMainFile = jvmMainBasePath
 
 private val header = """
     $disclamer
-    package webgpu
+    package io.ygdrasil.wgpu
     
     import java.lang.foreign.MemorySegment
     import java.lang.foreign.Linker

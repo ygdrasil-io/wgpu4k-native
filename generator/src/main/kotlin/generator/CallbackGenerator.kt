@@ -10,7 +10,7 @@ import java.io.File
 
 private val header = """
     $disclamer
-    package webgpu
+    package io.ygdrasil.wgpu
     
     import ffi.Callback
     import ffi.CString
@@ -25,7 +25,7 @@ private val nativeHeader = """
     $disclamer
     @file:OptIn(ExperimentalForeignApi::class)
     
-    package webgpu
+    package io.ygdrasil.wgpu
     
     import ffi.CString
     import ffi.Callback

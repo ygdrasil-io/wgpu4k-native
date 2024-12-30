@@ -71,7 +71,7 @@ private fun NativeModel.Type.toCallbackJvmType(): String = when (this) {
     NativeModel.Primitive.UInt32,
     is NativeModel.Reference.Enumeration -> "Int"
 
-    is NativeModel.Reference.StructureField -> "webgpu.android.${this.name}.ByValue"
+    is NativeModel.Reference.StructureField -> "io.ygdrasil.wgpu.android.${this.name}.ByValue"
     is NativeModel.Array,
     NativeModel.Reference.CString,
     is NativeModel.Reference.Callback,
