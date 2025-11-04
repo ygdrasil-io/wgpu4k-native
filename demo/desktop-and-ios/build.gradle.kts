@@ -1,38 +1,41 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     `kotlin-multiplatform`
-    `binary-compatibility-validator` apply false
 }
+
+val os = DefaultNativePlatform.getCurrentOperatingSystem()
 
 kotlin {
 
     val xcframeworkName = "WgpuApp"
     val xcf = XCFramework(xcframeworkName)
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "WgpuApp"
-            isStatic = true
-            xcf.add(this)
-            binaryOption("bundleId", "io.ygdrasil.webgpu.$xcframeworkName")
+    if (os.isMacOsX) {
+        listOf(
+            iosX64(),
+            iosArm64(),
+            iosSimulatorArm64()
+        ).forEach { iosTarget ->
+            iosTarget.binaries.framework {
+                baseName = "WgpuApp"
+                isStatic = true
+                xcf.add(this)
+                binaryOption("bundleId", "io.ygdrasil.webgpu.$xcframeworkName")
+            }
         }
     }
 
-    val hostOs = System.getProperty("os.name")
-    val isArm64 = System.getProperty("os.arch") == "aarch64"
 
-    println("host is $hostOs")
+    val isArm64 = System.getProperty("os.arch") == "aarch64"
     val nativeTarget = when {
         // No toolchain on this architecture
-        hostOs == "Linux" && isArm64 -> null.also { println("Linux native Arm64 not yet supported") }
-        hostOs == "Linux" && !isArm64 -> linuxX64()
-        hostOs == "Mac OS X" && isArm64 -> macosArm64()
-        hostOs == "Mac OS X" && !isArm64 -> macosX64()
+        os.isLinux && isArm64 -> null.also { println("Linux native Arm64 not yet supported") }
+        os.isLinux && !isArm64 -> linuxX64()
+        os.isMacOsX && isArm64 -> macosArm64()
+        os.isMacOsX && !isArm64 -> macosX64()
         // Disable native on windows until linking issues are note solved
         //hostOs.startsWith("Windows") -> mingwX64()
         else -> null // Not supported
@@ -50,7 +53,9 @@ kotlin {
     }
 
     jvm {
-        withJava()
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_24
+        }
     }
 
     applyDefaultHierarchyTemplate()
@@ -101,8 +106,6 @@ kotlin {
 
 tasks.register<JavaExec>("runJvm") {
     group = "run"
-    // TODO: find why the app is crashing sometimes
-    isIgnoreExitValue = true
     mainClass = "io.ygdrasil.wgpu.MainKt"
     jvmArgs(
         if (Platform.os == Os.MacOs) {
@@ -118,11 +121,11 @@ tasks.register<JavaExec>("runJvm") {
             )
         }
     )
-    classpath = sourceSets["main"].runtimeClasspath
+    classpath = sourceSets["jvmMain"].runtimeClasspath
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(22))
+        languageVersion = JavaLanguageVersion.of(24)
     }
 }

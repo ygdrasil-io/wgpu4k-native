@@ -1,28 +1,47 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id(libs.plugins.kotlin.multiplatform.get().pluginId)
-    `binary-compatibility-validator` apply false
+    `kotlin-multiplatform`
     id("com.android.library")
 }
 
+val os = DefaultNativePlatform.getCurrentOperatingSystem()
+
 kotlin {
 
+    jvm {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_24
+        }
+    }
 
-
-    jvm()
-    macosArm64()
-    macosX64()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    if (os.isMacOsX) {
+        macosArm64()
+        macosX64()
+        iosX64()
+        iosArm64()
+        iosSimulatorArm64()
+    }
     linuxArm64()
     linuxX64()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
     mingwX64()
-    androidTarget()
+    androidTarget {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
+        }
+
+        android {
+            namespace = "io.ygdrasil.wgpu.app.common"
+            compileSdk = 36
+
+            defaultConfig {
+                minSdk = 28
+            }
+
+        }
+    }
 
     sourceSets {
 
@@ -48,16 +67,7 @@ kotlin {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(22))
+        languageVersion = JavaLanguageVersion.of(24)
     }
 }
 
-android {
-    namespace = "io.ygdrasil.wgpu4k"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 28
-    }
-
-}

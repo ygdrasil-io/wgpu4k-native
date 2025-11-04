@@ -8,10 +8,10 @@ import java.nio.file.Files
 
 plugins {
     `kotlin-multiplatform`
-    `binary-compatibility-validator`
     publish
     com.android.library
     alias(libs.plugins.kotest)
+    alias(libs.plugins.ksp)
     id("generator")
 }
 
@@ -33,15 +33,24 @@ kotlin {
 
     androidTarget {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_22
+            jvmTarget = JvmTarget.JVM_17
         }
 
-        publishAllLibraryVariants()
+        android {
+            namespace = "io.ygdrasil.wgpu"
+            compileSdk = 36
+
+            defaultConfig {
+                minSdk = 28
+            }
+
+        }
+        publishLibraryVariants("release", "debug")
     }
 
     jvm {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_22
+            jvmTarget = JvmTarget.JVM_24
         }
     }
 
@@ -55,7 +64,7 @@ kotlin {
     }
 
     compilerOptions {
-        //allWarningsAsErrors = true
+        allWarningsAsErrors = true
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
@@ -94,33 +103,6 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "io.ygdrasil.nativeWgpu4k"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 28
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_22
-    }
-
-    sourceSets {
-        getByName("main") {
-            jniLibs.srcDirs(jniBasePath().absolutePath)
-        }
-    }
-
-    /*testOptions {
-        unitTests.all {
-            it.useJUnitPlatform()
-
-        }
-    }*/
-
 }
 
 configureDownloadTasks {
@@ -246,17 +228,18 @@ configureDownloadTasks {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(22)
+        languageVersion = JavaLanguageVersion.of(24)
     }
 }
 
 fun jniBasePath() = buildNativeResourcesDirectory.resolve("libs")
 
+tasks.withType<Test> {
+    failOnNoDiscoveredTests = false
+}
+
 tasks.named<Test>("jvmTest") {
     useJUnitPlatform()
-    filter {
-        isFailOnNoMatchingTests = false
-    }
     testLogging {
         showExceptions = true
         showStandardStreams = true
