@@ -6824,11 +6824,24 @@ actual interface WGPUInstanceExtras {
 			get() = handle.gles3MinorVersion.toUInt()
 			set(newValue) { handle.gles3MinorVersion = newValue.toInt() }
 
-		override val dxilPath: WGPUStringView
-			get() = handle.dxilPath.let{ WGPUStringView.ByValue(it) }
+		override var glFenceBehaviour: WGPUGLFenceBehaviour
+			get() = handle.glFenceBehaviour.toUInt()
+			set(newValue) { handle.glFenceBehaviour = newValue.toInt() }
 
 		override val dxcPath: WGPUStringView
 			get() = handle.dxcPath.let{ WGPUStringView.ByValue(it) }
+
+		override var dxcMaxShaderModel: WGPUDxcMaxShaderModel
+			get() = handle.dxcMaxShaderModel.toUInt()
+			set(newValue) { handle.dxcMaxShaderModel = newValue.toInt() }
+
+		override var budgetForDeviceCreation: NativeAddress?
+			get() = handle.budgetForDeviceCreation
+			set(newValue) { handle.budgetForDeviceCreation = newValue }
+
+		override var budgetForDeviceLoss: NativeAddress?
+			get() = handle.budgetForDeviceLoss
+			set(newValue) { handle.budgetForDeviceLoss = newValue }
 
 		override val handler: NativeAddress
 			get() {
@@ -6857,11 +6870,24 @@ actual interface WGPUInstanceExtras {
 			get() = handle.gles3MinorVersion.toUInt()
 			set(newValue) { handle.gles3MinorVersion = newValue.toInt() }
 
-		override val dxilPath: WGPUStringView
-			get() = handle.dxilPath.let{ WGPUStringView.ByValue(it) }
+		override var glFenceBehaviour: WGPUGLFenceBehaviour
+			get() = handle.glFenceBehaviour.toUInt()
+			set(newValue) { handle.glFenceBehaviour = newValue.toInt() }
 
 		override val dxcPath: WGPUStringView
 			get() = handle.dxcPath.let{ WGPUStringView.ByValue(it) }
+
+		override var dxcMaxShaderModel: WGPUDxcMaxShaderModel
+			get() = handle.dxcMaxShaderModel.toUInt()
+			set(newValue) { handle.dxcMaxShaderModel = newValue.toInt() }
+
+		override var budgetForDeviceCreation: NativeAddress?
+			get() = handle.budgetForDeviceCreation
+			set(newValue) { handle.budgetForDeviceCreation = newValue }
+
+		override var budgetForDeviceLoss: NativeAddress?
+			get() = handle.budgetForDeviceLoss
+			set(newValue) { handle.budgetForDeviceLoss = newValue }
 
 		override val handler: NativeAddress
 			get() {
@@ -6878,8 +6904,11 @@ actual interface WGPUInstanceExtras {
 	actual var flags: ULong
 	actual var dx12ShaderCompiler: WGPUDx12Compiler
 	actual var gles3MinorVersion: WGPUGles3MinorVersion
-	actual val dxilPath: WGPUStringView
+	actual var glFenceBehaviour: WGPUGLFenceBehaviour
 	actual val dxcPath: WGPUStringView
+	actual var dxcMaxShaderModel: WGPUDxcMaxShaderModel
+	actual var budgetForDeviceCreation: NativeAddress?
+	actual var budgetForDeviceLoss: NativeAddress?
 	actual val handler: NativeAddress
 
 	actual companion object {
@@ -6895,7 +6924,7 @@ actual interface WGPUInstanceExtras {
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceExtras) -> Unit): ArrayHolder<WGPUInstanceExtras> {
-			val array = io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByValue(allocator.allocate(72 * size.toLong())).toArray(size.toInt())
+			val array = io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByValue(allocator.allocate(88 * size.toLong())).toArray(size.toInt())
 			array.forEachIndexed { index, structure ->
 				(structure as io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByValue)
 					.also { provider(index.toUInt(), WGPUInstanceExtras.ByValue(it)) }
