@@ -42,7 +42,7 @@ kotlin {
             compileTaskProvider.configure {
                 compilerOptions {
                     //freeCompilerArgs.add("-Xmemory-model=experimental")
-                    freeCompilerArgs.add("-Xbinary=androidMaxPageSize=16384")
+                    //freeCompilerArgs.add("-Xbinary=androidMaxPageSize=16384")
                 }
             }
         }
