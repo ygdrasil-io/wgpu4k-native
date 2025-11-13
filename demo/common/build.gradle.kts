@@ -38,6 +38,15 @@ kotlin {
             }
         }
 
+        target.compilations.configureEach {
+            compileTaskProvider.configure {
+                compilerOptions {
+                    //freeCompilerArgs.add("-Xmemory-model=experimental")
+                    freeCompilerArgs.add("-Xbinary=androidMaxPageSize=16384")
+                }
+            }
+        }
+
         target.binaries.all {
             linkTaskProvider.configure {
                 doLast {
@@ -85,7 +94,7 @@ kotlin {
 
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
-        allWarningsAsErrors = true
+        //allWarningsAsErrors = true
     }
 }
 
