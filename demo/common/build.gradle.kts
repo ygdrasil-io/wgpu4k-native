@@ -39,6 +39,8 @@ kotlin {
         }
 
         target.binaries.all {
+            // Configure for 16KB page size support
+            linkerOpts("-Wl,-z,max-page-size=16384", "-Wl,-z,common-page-size=16384")
             linkTaskProvider.configure {
                 doLast {
                     val sourceFile = outputFile.get()
@@ -94,4 +96,3 @@ java {
         languageVersion = JavaLanguageVersion.of(24)
     }
 }
-
