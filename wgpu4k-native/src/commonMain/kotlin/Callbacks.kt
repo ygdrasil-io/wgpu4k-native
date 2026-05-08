@@ -50,7 +50,7 @@ expect fun interface WGPUPopErrorScopeCallback : Callback {
 }
 
 expect fun interface WGPUQueueWorkDoneCallback : Callback {
-	fun invoke(status: WGPUQueueWorkDoneStatus, userdata1: NativeAddress?, userdata2: NativeAddress?)
+	fun invoke(status: WGPUQueueWorkDoneStatus, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	companion object {
 		fun allocate(allocator: MemoryAllocator, callback: WGPUQueueWorkDoneCallback): CallbackHolder<WGPUQueueWorkDoneCallback>
 	}

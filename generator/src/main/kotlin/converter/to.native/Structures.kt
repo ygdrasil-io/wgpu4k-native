@@ -12,7 +12,7 @@ import domain.actualDoc
 import domain.mappingVersion
 
 internal fun YamlModel.generateCLibraryStructures() = structs.map {
-    val members = getMembers(it)
+    val members = getMembers(it, structs)
     NativeModel.Structure(
         it.name.convertToKotlinClassName(),
         members.flatMap {
@@ -51,13 +51,6 @@ internal fun YamlModel.generateCLibraryStructures() = structs.map {
             NativeModel.StructureField("sType", NativeModel.Reference.Enumeration("WGPUSType"), "", null)
         ),
         null
-    ),
-    NativeModel.Structure(
-        "WGPUChainedStructOut", listOf(
-            NativeModel.StructureField("next", NativeModel.Reference.Structure("WGPUChainedStructOut"), "?", null),
-            NativeModel.StructureField("sType", NativeModel.Reference.Enumeration("WGPUSType"), "", null)
-        ),
-        null
     )
 ) + callbacks.map {
     val name = it.name.convertToKotlinCallbackStructureName()
@@ -92,30 +85,46 @@ internal fun YamlModel.generateCLibraryStructures() = structs.map {
     )
 ) else emptyList()
 
-private fun getMembers(it: YamlModel.Struct) = when {
-    it.type == "base_in" -> listOf(
-        YamlModel.Struct.Member(
-            "nextInChain",
-            "",
-            "c_void",
-            true,
-            "mutable"
-        )
-    ) + it.members
+private fun getMembers(it: YamlModel.Struct, allStructs: List<YamlModel.Struct>): List<YamlModel.Struct.Member> {
+    val inheritedMembers = it.extends.flatMap { parentName ->
+        allStructs.find { it.name == parentName }?.members ?: emptyList()
+    }
+    
+    return when (it.type) {
+        "base_in" -> listOf(
+            YamlModel.Struct.Member(
+                "nextInChain",
+                "",
+                "c_void",
+                true,
+                "mutable"
+            )
+        ) + it.members + inheritedMembers
 
-    it.type == "extension_in" -> listOf(YamlModel.Struct.Member("chain", "", "struct.chained_struct")) + it.members
-    it.type == "base_out" || it.type == "base_in_or_out" -> listOf(
-        YamlModel.Struct.Member(
-            "nextInChain",
-            "",
-            "c_void",
-            true,
-            "mutable"
-        )
-    ) + it.members
+        "extension_in" -> listOf(YamlModel.Struct.Member("chain", "", "struct.chained_struct")) + it.members + inheritedMembers
+        "base_out", "base_in_or_out" -> listOf(
+            YamlModel.Struct.Member(
+                "nextInChain",
+                "",
+                "c_void",
+                true,
+                "mutable"
+            )
+        ) + it.members + inheritedMembers
 
-    it.type == "standalone" -> it.members
-    else -> error("unsuported type ${it.type}")
+        "extensible" -> listOf(
+            YamlModel.Struct.Member(
+                "nextInChain",
+                "",
+                "c_void",
+                true,
+                "mutable"
+            )
+        ) + it.members + inheritedMembers
+        "standalone", "extensible_callback_arg", null -> it.members + inheritedMembers
+        "extension" -> listOf(YamlModel.Struct.Member("chain", "", "struct.chained_struct")) + it.members
+        else -> error("unsuported type ${it.type}")
+    }
 }
 
 

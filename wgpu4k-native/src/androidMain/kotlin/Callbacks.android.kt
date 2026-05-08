@@ -110,15 +110,15 @@ actual fun interface WGPUPopErrorScopeCallback : Callback {
 }
 
 actual fun interface WGPUQueueWorkDoneCallback : Callback {
-	actual fun invoke(status: WGPUQueueWorkDoneStatus, userdata1: NativeAddress?, userdata2: NativeAddress?)
+	actual fun invoke(status: WGPUQueueWorkDoneStatus, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
 	interface Function : com.sun.jna.Callback {
-		fun apply(status: Int, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?)
+		fun apply(status: Int, message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?)
 	}
 	actual companion object {
 		actual fun allocate(allocator: MemoryAllocator, callback: WGPUQueueWorkDoneCallback): CallbackHolder<WGPUQueueWorkDoneCallback> {
 			val callbackFunction = object : Function {
-				override fun apply(status: Int, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?) {
-					callback.invoke(status.toUInt(), userdata1 ?: com.sun.jna.Pointer(0), userdata2 ?: com.sun.jna.Pointer(0))
+				override fun apply(status: Int, message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue, userdata1: com.sun.jna.Pointer?, userdata2: com.sun.jna.Pointer?) {
+					callback.invoke(status.toUInt(), message.let { WGPUStringView.ByValue(it) }, userdata1 ?: com.sun.jna.Pointer(0), userdata2 ?: com.sun.jna.Pointer(0))
 				}
 			}
 			return CallbackHolder(com.sun.jna.Pointer(0), callbackFunction)
