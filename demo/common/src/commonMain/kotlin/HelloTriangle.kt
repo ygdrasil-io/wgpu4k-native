@@ -16,7 +16,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                     code.length = triangleVertexShader.length.toULong()
                     code.data = scope.allocateFrom(triangleVertexShader)
                     chain.sType = WGPUSType_ShaderSourceWGSL
-                }.handler
+                }.chain
             }.let { wgpuDeviceCreateShaderModule(device, it) } ?: error("fail to create shader module")
 
             vertex.entryPoint.data = scope.allocateFrom("main")
@@ -30,15 +30,15 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                         code.length = redFragmentShader.length.toULong()
                         code.data = scope.allocateFrom(redFragmentShader)
                         chain.sType = WGPUSType_ShaderSourceWGSL
-                    }.handler
+                    }.chain
                 }.let { wgpuDeviceCreateShaderModule(device, it) } ?: error("fail to create shader module")
 
                 targetCount = 1u
                 targets = WGPUColorTargetState.allocateArray(scope, 1u) { index, structure ->
                     structure.format = renderingContextFormat
                     structure.writeMask = WGPUColorWriteMask_All
-                }.handler
-            }.handler
+                }.let { WGPUColorTargetState(it.handler) }
+            }
 
             primitive.topology = WGPUPrimitiveTopology_TriangleList
             multisample.count = 1u
@@ -73,7 +73,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                 structure.clearValue.g = 1.0
                 structure.clearValue.b = .0
                 structure.clearValue.a = 1.0
-            }.handler
+            }.let { WGPURenderPassColorAttachment(it.handler) }
         }.let { wgpuCommandEncoderBeginRenderPass(commandEncoder, it) }
 
         wgpuRenderPassEncoderSetPipeline(renderPassEncoder, renderPipeline)
@@ -83,7 +83,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
 
         val commandBuffer = wgpuCommandEncoderFinish(commandEncoder, null) ?: error("fail to get finish command buffer")
 
-        wgpuQueueSubmit(queue, 1u, scope.bufferOfAddress(commandBuffer.handler).let { ArrayHolder(it.handler) })
+        wgpuQueueSubmit(queue, 1u, scope.bufferOfAddress(commandBuffer.handler).let { WGPUCommandBuffer(it.handler) })
 
         wgpuSurfacePresent(surface)
 

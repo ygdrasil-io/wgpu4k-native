@@ -11,144 +11,6 @@ open class WGPUStringView(pointer: Pointer? = null) : Structure(pointer) {
     class ByValue(pointer: Pointer? = null) : WGPUStringView(pointer), Structure.ByValue
 }
 
-open class WGPUAdapterImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUAdapterImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUAdapterImpl(pointer), Structure.ByValue
-}
-
-open class WGPUBindGroupImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUBindGroupImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUBindGroupImpl(pointer), Structure.ByValue
-}
-
-open class WGPUBindGroupLayoutImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUBindGroupLayoutImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUBindGroupLayoutImpl(pointer), Structure.ByValue
-}
-
-open class WGPUBufferImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUBufferImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUBufferImpl(pointer), Structure.ByValue
-}
-
-open class WGPUCommandBufferImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUCommandBufferImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUCommandBufferImpl(pointer), Structure.ByValue
-}
-
-open class WGPUCommandEncoderImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUCommandEncoderImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUCommandEncoderImpl(pointer), Structure.ByValue
-}
-
-open class WGPUComputePassEncoderImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUComputePassEncoderImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUComputePassEncoderImpl(pointer), Structure.ByValue
-}
-
-open class WGPUComputePipelineImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUComputePipelineImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUComputePipelineImpl(pointer), Structure.ByValue
-}
-
-open class WGPUDeviceImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUDeviceImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUDeviceImpl(pointer), Structure.ByValue
-}
-
-open class WGPUExternalTextureImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUExternalTextureImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUExternalTextureImpl(pointer), Structure.ByValue
-}
-
-open class WGPUInstanceImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUInstanceImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUInstanceImpl(pointer), Structure.ByValue
-}
-
-open class WGPUPipelineLayoutImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUPipelineLayoutImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUPipelineLayoutImpl(pointer), Structure.ByValue
-}
-
-open class WGPUQuerySetImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUQuerySetImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUQuerySetImpl(pointer), Structure.ByValue
-}
-
-open class WGPUQueueImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUQueueImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUQueueImpl(pointer), Structure.ByValue
-}
-
-open class WGPURenderBundleImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPURenderBundleImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPURenderBundleImpl(pointer), Structure.ByValue
-}
-
-open class WGPURenderBundleEncoderImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPURenderBundleEncoderImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPURenderBundleEncoderImpl(pointer), Structure.ByValue
-}
-
-open class WGPURenderPassEncoderImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPURenderPassEncoderImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPURenderPassEncoderImpl(pointer), Structure.ByValue
-}
-
-open class WGPURenderPipelineImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPURenderPipelineImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPURenderPipelineImpl(pointer), Structure.ByValue
-}
-
-open class WGPUSamplerImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUSamplerImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUSamplerImpl(pointer), Structure.ByValue
-}
-
-open class WGPUShaderModuleImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUShaderModuleImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUShaderModuleImpl(pointer), Structure.ByValue
-}
-
-open class WGPUSurfaceImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUSurfaceImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUSurfaceImpl(pointer), Structure.ByValue
-}
-
-open class WGPUTextureImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUTextureImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUTextureImpl(pointer), Structure.ByValue
-}
-
-open class WGPUTextureViewImpl(pointer: Pointer? = null) : Structure(pointer) {
-    override fun getFieldOrder() = listOf<String>()
-    class ByReference(pointer: Pointer? = null) : WGPUTextureViewImpl(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUTextureViewImpl(pointer), Structure.ByValue
-}
-
 open class WGPUChainedStruct(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var next: Pointer? = null
     @JvmField var sType: Int = 0
@@ -1146,6 +1008,19 @@ open class WGPUWaylandDisplayHandle(pointer: Pointer? = null) : Structure(pointe
     override fun getFieldOrder() = listOf<String>("display")
     class ByReference(pointer: Pointer? = null) : WGPUWaylandDisplayHandle(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUWaylandDisplayHandle(pointer), Structure.ByValue
+}
+
+open class WGPUNativeDisplayHandle(pointer: Pointer? = null) : Structure(pointer) {
+    @JvmField var type: Int = 0
+    @JvmField var data: Data = Data()
+    override fun getFieldOrder() = listOf<String>("type", "data")
+    class Data : com.sun.jna.Union() {
+        @JvmField var xlib: WGPUXlibDisplayHandle.ByValue = WGPUXlibDisplayHandle.ByValue()
+        @JvmField var xcb: WGPUXcbDisplayHandle.ByValue = WGPUXcbDisplayHandle.ByValue()
+        @JvmField var wayland: WGPUWaylandDisplayHandle.ByValue = WGPUWaylandDisplayHandle.ByValue()
+    }
+    class ByReference(pointer: Pointer? = null) : WGPUNativeDisplayHandle(pointer), Structure.ByReference
+    class ByValue(pointer: Pointer? = null) : WGPUNativeDisplayHandle(pointer), Structure.ByValue
 }
 
 open class WGPUInstanceExtras(pointer: Pointer? = null) : Structure(pointer) {

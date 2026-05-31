@@ -1,6 +1,5 @@
 @file:OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
 
-import io.ygdrasil.kffi.MemoryAllocator
 import io.ygdrasil.kffi.NativeAddress
 import io.ygdrasil.kffi.Pointer
 import io.ygdrasil.wgpu.HelloTriangleScene
@@ -11,7 +10,6 @@ import io.ygdrasil.wgpu.WGPULogLevel_Error
 import io.ygdrasil.wgpu.WGPULogLevel_Info
 import io.ygdrasil.wgpu.WGPULogLevel_Trace
 import io.ygdrasil.wgpu.WGPULogLevel_Warn
-import io.ygdrasil.wgpu.WGPUStringView
 import io.ygdrasil.wgpu.configureSurface
 import io.ygdrasil.wgpu.getAdapter
 import io.ygdrasil.wgpu.getDevice
@@ -75,24 +73,23 @@ fun ANativeActivity_onCreate(
     callbacks.pointed.onNativeWindowCreated = onNativeWindowCreatedCallback.reinterpret()
 }
 
-private val allocator = MemoryAllocator()
+private var logCallback: WGPULogCallback? = null
 
 private fun configureLogs(logLevel: WGPULogLevel = WGPULogLevel_Trace) {
-    val callback = WGPULogCallback.allocate(allocator, object : WGPULogCallback {
-        override fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress?) {
-            val kMessage = message?.data?.toKString(message.length)
-            when (level) {
-                WGPULogLevel_Error -> println("ERROR : $kMessage}")
-                WGPULogLevel_Warn -> println("WARN : $kMessage")
-                WGPULogLevel_Info -> println("INFO : $kMessage")
-                WGPULogLevel_Debug -> println("DEBUG : $kMessage")
-                WGPULogLevel_Trace -> println("TRACE : $kMessage")
-            }
+    val callback = WGPULogCallback.allocate { level, message, _ ->
+        val kMessage = message.data?.toKString(message.length)
+        when (level) {
+            WGPULogLevel_Error -> println("ERROR : $kMessage}")
+            WGPULogLevel_Warn -> println("WARN : $kMessage")
+            WGPULogLevel_Info -> println("INFO : $kMessage")
+            WGPULogLevel_Debug -> println("DEBUG : $kMessage")
+            WGPULogLevel_Trace -> println("TRACE : $kMessage")
         }
-
-    })
+    }
+    logCallback?.close()
+    logCallback = callback
     wgpuSetLogLevel(logLevel)
-    wgpuSetLogCallback(callback, allocator.bufferOfAddress(callback.handler).handler)
+    wgpuSetLogCallback(callback, null)
 }
 
 private fun COpaquePointer.toNativeAddress() = Pointer(reinterpret())

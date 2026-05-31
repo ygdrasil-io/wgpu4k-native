@@ -6,23 +6,23 @@ import io.ygdrasil.kffi.NativeAddress
 import io.ygdrasil.kffi.memoryScope
 
 val allocator = MemoryAllocator()
+private var logCallback: WGPULogCallback? = null
 
 fun configureLogs(logLevel: WGPULogLevel = WGPULogLevel_Trace) {
-    val callback = WGPULogCallback.allocate(allocator, object : WGPULogCallback {
-        override fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress?) {
-            val kMessage = message?.data?.toKString(message.length)
-            when (level) {
-                WGPULogLevel_Error -> println("ERROR : $kMessage}")
-                WGPULogLevel_Warn -> println("WARN : $kMessage")
-                WGPULogLevel_Info -> println("INFO : $kMessage")
-                WGPULogLevel_Debug -> println("DEBUG : $kMessage")
-                WGPULogLevel_Trace -> println("TRACE : $kMessage")
-            }
+    val callback = WGPULogCallback.allocate { level, message, _ ->
+        val kMessage = message.data?.toKString(message.length)
+        when (level) {
+            WGPULogLevel_Error -> println("ERROR : $kMessage}")
+            WGPULogLevel_Warn -> println("WARN : $kMessage")
+            WGPULogLevel_Info -> println("INFO : $kMessage")
+            WGPULogLevel_Debug -> println("DEBUG : $kMessage")
+            WGPULogLevel_Trace -> println("TRACE : $kMessage")
         }
-
-    })
+    }
+    logCallback?.close()
+    logCallback = callback
     wgpuSetLogLevel(logLevel)
-    wgpuSetLogCallback(callback, allocator.bufferOfAddress(callback.handler).handler)
+    wgpuSetLogCallback(callback, null)
 }
 
 
@@ -57,7 +57,7 @@ fun configureSurface(
 fun getDevice(adapter: WGPUAdapter): WGPUDevice = memoryScope { scope ->
     var fetchedDevice: WGPUDevice? = null
 
-    val callback = WGPURequestDeviceCallback.allocate(scope) { status, device, _, _, _ ->
+    val callback = WGPURequestDeviceCallback.allocate { status, device, _, _, _ ->
         if (status != WGPURequestDeviceStatus_Success && device == null) error("fail to get device")
         fetchedDevice = device
     }
@@ -81,7 +81,7 @@ fun getAdapter(surface: WGPUSurface, instance: WGPUInstance, backendType: UInt =
 
     var fetchedAdapter: WGPUAdapter? = null
 
-    val callback = WGPURequestAdapterCallback.allocate(scope) { status, adapter, _, _, _ ->
+    val callback = WGPURequestAdapterCallback.allocate { status, adapter, _, _, _ ->
         if (status != WGPURequestAdapterStatus_Success || adapter == null) error("fail to get adapter")
         fetchedAdapter = adapter
     }
@@ -100,7 +100,7 @@ fun getSurfaceFromMetalLayer(instance: WGPUInstance, metalLayer: NativeAddress):
         nextInChain = WGPUSurfaceSourceMetalLayer.allocate(scope).apply {
             chain.sType = WGPUSType_SurfaceSourceMetalLayer
             layer = metalLayer
-        }.handler
+        }.chain
     }
 
     return wgpuInstanceCreateSurface(instance, surfaceDescriptor)
@@ -115,7 +115,7 @@ fun getSurfaceAndroidView(
         nextInChain = WGPUSurfaceSourceAndroidNativeWindow.allocate(scope).apply {
             chain.sType = WGPUSType_SurfaceSourceAndroidNativeWindow
             window = surfaceHolder
-        }.handler
+        }.chain
     }
 
     wgpuInstanceCreateSurface(instance, surfaceDescriptor) ?: error("fail to create surface")
@@ -128,7 +128,7 @@ fun getSurfaceFromX11Window(instance: WGPUInstance, display: NativeAddress, wind
             chain.sType = WGPUSType_SurfaceSourceXlibWindow
             this.display = display
             this.window = window
-        }.handler
+        }.chain
     }
 
     return wgpuInstanceCreateSurface(instance, surfaceDescriptor)
@@ -141,7 +141,7 @@ fun getSurfaceFromWindows(instance: WGPUInstance, hinstance: NativeAddress, hwnd
             chain.sType = WGPUSType_SurfaceSourceWindowsHWND
             this.hwnd = hwnd
             this.hinstance = hinstance
-        }.handler
+        }.chain
     }
 
     return wgpuInstanceCreateSurface(instance, surfaceDescriptor)
@@ -154,7 +154,7 @@ fun getSurfaceFromWaylandWindow(instance: WGPUInstance, display: NativeAddress, 
             chain.sType = WGPUSType_SurfaceSourceWaylandSurface
             this.display = display
             this.surface = surface
-        }.handler
+        }.chain
     }
 
     return wgpuInstanceCreateSurface(instance, surfaceDescriptor)
