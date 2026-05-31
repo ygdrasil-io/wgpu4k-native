@@ -3,7 +3,7 @@ package io.ygdrasil.wgpu
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.activity.ComponentActivity
-import ffi.memoryScope
+import io.ygdrasil.kffi.memoryScope
 import io.ygdrasil.wgpu.WGPUAdapterInfo
 
 

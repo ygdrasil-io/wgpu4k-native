@@ -3,7 +3,7 @@
 package io.ygdrasil.wgpu
 
 import cnames.structs.GLFWwindow
-import ffi.NativeAddress
+import io.ygdrasil.kffi.NativeAddress
 import glfw.glfwGetCocoaWindow
 import kotlinx.cinterop.*
 import platform.AppKit.NSWindow

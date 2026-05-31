@@ -1,32 +1,32 @@
 // This file has been generated DO NOT EDIT !!!
 package io.ygdrasil.wgpu
 
-import ffi.CString
-import ffi.NativeAddress
-import ffi.CallbackHolder
-import ffi.ArrayHolder
-import ffi.adapt
+import io.ygdrasil.kffi.CString
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.CallbackHolder
+import io.ygdrasil.kffi.ArrayHolder
+import io.ygdrasil.kffi.adapt
 
 
 actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuCreateInstance(descriptor?.toReference())
-	?.let(::WGPUInstance)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuCreateInstance((descriptor as? io.ygdrasil.wgpu.WGPUInstanceDescriptor.ByReference)?.handle)
+	?.let { WGPUInstance(it) }
 
 actual fun wgpuGetInstanceFeatures(features: WGPUSupportedInstanceFeatures?): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuGetInstanceFeatures(features?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuGetInstanceFeatures((features as? io.ygdrasil.wgpu.WGPUSupportedInstanceFeatures.ByReference)?.handle)
 
 actual fun wgpuGetInstanceLimits(limits: WGPUInstanceLimits?): WGPUStatus
-	 = io.ygdrasil.wgpu.android.Functions.wgpuGetInstanceLimits(limits?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuGetInstanceLimits((limits as? io.ygdrasil.wgpu.WGPUInstanceLimits.ByReference)?.handle)
 
 actual fun wgpuHasInstanceFeature(feature: WGPUInstanceFeatureName): Boolean
 	 = io.ygdrasil.wgpu.android.Functions.wgpuHasInstanceFeature(feature)
 	.toBoolean()
 
 actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuGenerateReport(instance?.handler, report?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuGenerateReport(instance?.handler, (report as? io.ygdrasil.wgpu.WGPUGlobalReport.ByReference)?.handle)
 
 actual fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: WGPUAdapter?): ULong
-	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceEnumerateAdapters(instance?.handler, options?.toReference(), adapters?.handler)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceEnumerateAdapters(instance?.handler, (options as? io.ygdrasil.wgpu.WGPUInstanceEnumerateAdapterOptions.ByReference)?.handle, adapters?.handler)
 
 actual fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: WGPUCommandBuffer?): ULong
 	 = io.ygdrasil.wgpu.android.Functions.wgpuQueueSubmitForIndex(queue?.handler, commandCount, commands?.handler)
@@ -39,8 +39,8 @@ actual fun wgpuDevicePoll(device: WGPUDevice?, wait: Boolean, submissionIndex: N
 	.toBoolean()
 
 actual fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptorSpirV?): WGPUShaderModule?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateShaderModuleSpirV(device?.handler, descriptor?.toReference())
-	?.let(::WGPUShaderModule)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateShaderModuleSpirV(device?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUShaderModuleDescriptorSpirV.ByReference)?.handle)
+	?.let { WGPUShaderModule(it) }
 
 actual fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): Boolean
 	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceStartGraphicsDebuggerCapture(device?.handler)
@@ -110,38 +110,38 @@ actual fun wgpuAdapterRelease(handler: WGPUAdapter?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuAdapterRelease(handler?.handler)
 
 actual fun wgpuAdapterGetLimits(handler: WGPUAdapter?, limits: WGPULimits?): WGPUStatus
-	 = io.ygdrasil.wgpu.android.Functions.wgpuAdapterGetLimits(handler?.handler, limits?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuAdapterGetLimits(handler?.handler, (limits as? io.ygdrasil.wgpu.WGPULimits.ByReference)?.handle)
 
 actual fun wgpuAdapterHasFeature(handler: WGPUAdapter?, feature: WGPUFeatureName): Boolean
 	 = io.ygdrasil.wgpu.android.Functions.wgpuAdapterHasFeature(handler?.handler, feature)
 	.toBoolean()
 
 actual fun wgpuAdapterGetFeatures(handler: WGPUAdapter?, features: WGPUSupportedFeatures?): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuAdapterGetFeatures(handler?.handler, features?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuAdapterGetFeatures(handler?.handler, (features as? io.ygdrasil.wgpu.WGPUSupportedFeatures.ByReference)?.handle)
 
 actual fun wgpuAdapterGetInfo(handler: WGPUAdapter?, info: WGPUAdapterInfo?): WGPUStatus
-	 = io.ygdrasil.wgpu.android.Functions.wgpuAdapterGetInfo(handler?.handler, info?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuAdapterGetInfo(handler?.handler, (info as? io.ygdrasil.wgpu.WGPUAdapterInfo.ByReference)?.handle)
 
 actual fun wgpuAdapterRequestDevice(handler: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuAdapterRequestDevice(handler?.handler, descriptor?.toReference(), callbackInfo.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuAdapterRequestDevice(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUDeviceDescriptor.ByReference)?.handle, (callbackInfo as io.ygdrasil.wgpu.WGPURequestDeviceCallbackInfo.ByValue).handle)
 
 actual fun wgpuBindGroupRelease(handler: WGPUBindGroup?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuBindGroupRelease(handler?.handler)
 
 actual fun wgpuBindGroupSetLabel(handler: WGPUBindGroup?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuBindGroupSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuBindGroupSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuBindGroupLayoutRelease(handler: WGPUBindGroupLayout?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuBindGroupLayoutRelease(handler?.handler)
 
 actual fun wgpuBindGroupLayoutSetLabel(handler: WGPUBindGroupLayout?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuBindGroupLayoutSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuBindGroupLayoutSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuBufferRelease(handler: WGPUBuffer?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuBufferRelease(handler?.handler)
 
 actual fun wgpuBufferMapAsync(handler: WGPUBuffer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuBufferMapAsync(handler?.handler, mode, offset, size, callbackInfo.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuBufferMapAsync(handler?.handler, mode, offset, size, (callbackInfo as io.ygdrasil.wgpu.WGPUBufferMapCallbackInfo.ByValue).handle)
 
 actual fun wgpuBufferGetMappedRange(handler: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress?
 	 = io.ygdrasil.wgpu.android.Functions.wgpuBufferGetMappedRange(handler?.handler, offset, size)
@@ -156,7 +156,7 @@ actual fun wgpuBufferWriteMappedRange(handler: WGPUBuffer?, offset: ULong, data:
 	 = io.ygdrasil.wgpu.android.Functions.wgpuBufferWriteMappedRange(handler?.handler, offset, data, size)
 
 actual fun wgpuBufferSetLabel(handler: WGPUBuffer?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuBufferSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuBufferSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuBufferGetUsage(handler: WGPUBuffer?): ULong
 	 = io.ygdrasil.wgpu.android.Functions.wgpuBufferGetUsage(handler?.handler)
@@ -177,46 +177,46 @@ actual fun wgpuCommandBufferRelease(handler: WGPUCommandBuffer?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandBufferRelease(handler?.handler)
 
 actual fun wgpuCommandBufferSetLabel(handler: WGPUCommandBuffer?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandBufferSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandBufferSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuCommandEncoderRelease(handler: WGPUCommandEncoder?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderRelease(handler?.handler)
 
 actual fun wgpuCommandEncoderFinish(handler: WGPUCommandEncoder?, descriptor: WGPUCommandBufferDescriptor?): WGPUCommandBuffer?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderFinish(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUCommandBuffer)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderFinish(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUCommandBufferDescriptor.ByReference)?.handle)
+	?.let { WGPUCommandBuffer(it) }
 
 actual fun wgpuCommandEncoderBeginComputePass(handler: WGPUCommandEncoder?, descriptor: WGPUComputePassDescriptor?): WGPUComputePassEncoder?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderBeginComputePass(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUComputePassEncoder)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderBeginComputePass(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUComputePassDescriptor.ByReference)?.handle)
+	?.let { WGPUComputePassEncoder(it) }
 
 actual fun wgpuCommandEncoderBeginRenderPass(handler: WGPUCommandEncoder?, descriptor: WGPURenderPassDescriptor?): WGPURenderPassEncoder?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderBeginRenderPass(handler?.handler, descriptor?.toReference())
-	?.let(::WGPURenderPassEncoder)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderBeginRenderPass(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPURenderPassDescriptor.ByReference)?.handle)
+	?.let { WGPURenderPassEncoder(it) }
 
 actual fun wgpuCommandEncoderCopyBufferToBuffer(handler: WGPUCommandEncoder?, source: WGPUBuffer?, sourceOffset: ULong, destination: WGPUBuffer?, destinationOffset: ULong, size: ULong): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderCopyBufferToBuffer(handler?.handler, source?.handler, sourceOffset, destination?.handler, destinationOffset, size)
 
 actual fun wgpuCommandEncoderCopyBufferToTexture(handler: WGPUCommandEncoder?, source: WGPUTexelCopyBufferInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderCopyBufferToTexture(handler?.handler, source?.toReference(), destination?.toReference(), copySize?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderCopyBufferToTexture(handler?.handler, (source as? io.ygdrasil.wgpu.WGPUTexelCopyBufferInfo.ByReference)?.handle, (destination as? io.ygdrasil.wgpu.WGPUTexelCopyTextureInfo.ByReference)?.handle, (copySize as? io.ygdrasil.wgpu.WGPUExtent3D.ByReference)?.handle)
 
 actual fun wgpuCommandEncoderCopyTextureToBuffer(handler: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyBufferInfo?, copySize: WGPUExtent3D?): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderCopyTextureToBuffer(handler?.handler, source?.toReference(), destination?.toReference(), copySize?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderCopyTextureToBuffer(handler?.handler, (source as? io.ygdrasil.wgpu.WGPUTexelCopyTextureInfo.ByReference)?.handle, (destination as? io.ygdrasil.wgpu.WGPUTexelCopyBufferInfo.ByReference)?.handle, (copySize as? io.ygdrasil.wgpu.WGPUExtent3D.ByReference)?.handle)
 
 actual fun wgpuCommandEncoderCopyTextureToTexture(handler: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderCopyTextureToTexture(handler?.handler, source?.toReference(), destination?.toReference(), copySize?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderCopyTextureToTexture(handler?.handler, (source as? io.ygdrasil.wgpu.WGPUTexelCopyTextureInfo.ByReference)?.handle, (destination as? io.ygdrasil.wgpu.WGPUTexelCopyTextureInfo.ByReference)?.handle, (copySize as? io.ygdrasil.wgpu.WGPUExtent3D.ByReference)?.handle)
 
 actual fun wgpuCommandEncoderClearBuffer(handler: WGPUCommandEncoder?, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderClearBuffer(handler?.handler, buffer?.handler, offset, size)
 
 actual fun wgpuCommandEncoderInsertDebugMarker(handler: WGPUCommandEncoder?, markerLabel: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderInsertDebugMarker(handler?.handler, markerLabel.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderInsertDebugMarker(handler?.handler, (markerLabel as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuCommandEncoderPopDebugGroup(handler: WGPUCommandEncoder?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderPopDebugGroup(handler?.handler)
 
 actual fun wgpuCommandEncoderPushDebugGroup(handler: WGPUCommandEncoder?, groupLabel: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderPushDebugGroup(handler?.handler, groupLabel.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderPushDebugGroup(handler?.handler, (groupLabel as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuCommandEncoderResolveQuerySet(handler: WGPUCommandEncoder?, querySet: WGPUQuerySet?, firstQuery: UInt, queryCount: UInt, destination: WGPUBuffer?, destinationOffset: ULong): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderResolveQuerySet(handler?.handler, querySet?.handler, firstQuery, queryCount, destination?.handler, destinationOffset)
@@ -225,19 +225,19 @@ actual fun wgpuCommandEncoderWriteTimestamp(handler: WGPUCommandEncoder?, queryS
 	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderWriteTimestamp(handler?.handler, querySet?.handler, queryIndex)
 
 actual fun wgpuCommandEncoderSetLabel(handler: WGPUCommandEncoder?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuCommandEncoderSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuComputePassEncoderRelease(handler: WGPUComputePassEncoder?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePassEncoderRelease(handler?.handler)
 
 actual fun wgpuComputePassEncoderInsertDebugMarker(handler: WGPUComputePassEncoder?, markerLabel: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePassEncoderInsertDebugMarker(handler?.handler, markerLabel.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePassEncoderInsertDebugMarker(handler?.handler, (markerLabel as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuComputePassEncoderPopDebugGroup(handler: WGPUComputePassEncoder?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePassEncoderPopDebugGroup(handler?.handler)
 
 actual fun wgpuComputePassEncoderPushDebugGroup(handler: WGPUComputePassEncoder?, groupLabel: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePassEncoderPushDebugGroup(handler?.handler, groupLabel.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePassEncoderPushDebugGroup(handler?.handler, (groupLabel as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuComputePassEncoderSetPipeline(handler: WGPUComputePassEncoder?, pipeline: WGPUComputePipeline?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePassEncoderSetPipeline(handler?.handler, pipeline?.handler)
@@ -255,74 +255,74 @@ actual fun wgpuComputePassEncoderEnd(handler: WGPUComputePassEncoder?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePassEncoderEnd(handler?.handler)
 
 actual fun wgpuComputePassEncoderSetLabel(handler: WGPUComputePassEncoder?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePassEncoderSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePassEncoderSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuComputePipelineRelease(handler: WGPUComputePipeline?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePipelineRelease(handler?.handler)
 
 actual fun wgpuComputePipelineGetBindGroupLayout(handler: WGPUComputePipeline?, groupIndex: UInt): WGPUBindGroupLayout?
 	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePipelineGetBindGroupLayout(handler?.handler, groupIndex)
-	?.let(::WGPUBindGroupLayout)
+	?.let { WGPUBindGroupLayout(it) }
 
 actual fun wgpuComputePipelineSetLabel(handler: WGPUComputePipeline?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePipelineSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuComputePipelineSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuDeviceRelease(handler: WGPUDevice?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceRelease(handler?.handler)
 
 actual fun wgpuDeviceCreateBindGroup(handler: WGPUDevice?, descriptor: WGPUBindGroupDescriptor?): WGPUBindGroup?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateBindGroup(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUBindGroup)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateBindGroup(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUBindGroupDescriptor.ByReference)?.handle)
+	?.let { WGPUBindGroup(it) }
 
 actual fun wgpuDeviceCreateBindGroupLayout(handler: WGPUDevice?, descriptor: WGPUBindGroupLayoutDescriptor?): WGPUBindGroupLayout?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateBindGroupLayout(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUBindGroupLayout)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateBindGroupLayout(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUBindGroupLayoutDescriptor.ByReference)?.handle)
+	?.let { WGPUBindGroupLayout(it) }
 
 actual fun wgpuDeviceCreateBuffer(handler: WGPUDevice?, descriptor: WGPUBufferDescriptor?): WGPUBuffer?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateBuffer(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUBuffer)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateBuffer(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUBufferDescriptor.ByReference)?.handle)
+	?.let { WGPUBuffer(it) }
 
 actual fun wgpuDeviceCreateCommandEncoder(handler: WGPUDevice?, descriptor: WGPUCommandEncoderDescriptor?): WGPUCommandEncoder?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateCommandEncoder(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUCommandEncoder)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateCommandEncoder(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUCommandEncoderDescriptor.ByReference)?.handle)
+	?.let { WGPUCommandEncoder(it) }
 
 actual fun wgpuDeviceCreateComputePipeline(handler: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?): WGPUComputePipeline?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateComputePipeline(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUComputePipeline)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateComputePipeline(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUComputePipelineDescriptor.ByReference)?.handle)
+	?.let { WGPUComputePipeline(it) }
 
 actual fun wgpuDeviceCreateComputePipelineAsync(handler: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateComputePipelineAsync(handler?.handler, descriptor?.toReference(), callbackInfo.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateComputePipelineAsync(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUComputePipelineDescriptor.ByReference)?.handle, (callbackInfo as io.ygdrasil.wgpu.WGPUCreateComputePipelineAsyncCallbackInfo.ByValue).handle)
 
 actual fun wgpuDeviceCreatePipelineLayout(handler: WGPUDevice?, descriptor: WGPUPipelineLayoutDescriptor?): WGPUPipelineLayout?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreatePipelineLayout(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUPipelineLayout)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreatePipelineLayout(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUPipelineLayoutDescriptor.ByReference)?.handle)
+	?.let { WGPUPipelineLayout(it) }
 
 actual fun wgpuDeviceCreateQuerySet(handler: WGPUDevice?, descriptor: WGPUQuerySetDescriptor?): WGPUQuerySet?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateQuerySet(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUQuerySet)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateQuerySet(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUQuerySetDescriptor.ByReference)?.handle)
+	?.let { WGPUQuerySet(it) }
 
 actual fun wgpuDeviceCreateRenderPipelineAsync(handler: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateRenderPipelineAsync(handler?.handler, descriptor?.toReference(), callbackInfo.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateRenderPipelineAsync(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPURenderPipelineDescriptor.ByReference)?.handle, (callbackInfo as io.ygdrasil.wgpu.WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue).handle)
 
 actual fun wgpuDeviceCreateRenderBundleEncoder(handler: WGPUDevice?, descriptor: WGPURenderBundleEncoderDescriptor?): WGPURenderBundleEncoder?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateRenderBundleEncoder(handler?.handler, descriptor?.toReference())
-	?.let(::WGPURenderBundleEncoder)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateRenderBundleEncoder(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPURenderBundleEncoderDescriptor.ByReference)?.handle)
+	?.let { WGPURenderBundleEncoder(it) }
 
 actual fun wgpuDeviceCreateRenderPipeline(handler: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?): WGPURenderPipeline?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateRenderPipeline(handler?.handler, descriptor?.toReference())
-	?.let(::WGPURenderPipeline)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateRenderPipeline(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPURenderPipelineDescriptor.ByReference)?.handle)
+	?.let { WGPURenderPipeline(it) }
 
 actual fun wgpuDeviceCreateSampler(handler: WGPUDevice?, descriptor: WGPUSamplerDescriptor?): WGPUSampler?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateSampler(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUSampler)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateSampler(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUSamplerDescriptor.ByReference)?.handle)
+	?.let { WGPUSampler(it) }
 
 actual fun wgpuDeviceCreateShaderModule(handler: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?): WGPUShaderModule?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateShaderModule(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUShaderModule)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateShaderModule(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUShaderModuleDescriptor.ByReference)?.handle)
+	?.let { WGPUShaderModule(it) }
 
 actual fun wgpuDeviceCreateTexture(handler: WGPUDevice?, descriptor: WGPUTextureDescriptor?): WGPUTexture?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateTexture(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUTexture)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceCreateTexture(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUTextureDescriptor.ByReference)?.handle)
+	?.let { WGPUTexture(it) }
 
 actual fun wgpuDeviceDestroy(handler: WGPUDevice?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceDestroy(handler?.handler)
@@ -332,46 +332,46 @@ actual fun wgpuDeviceGetLostFuture(handler: WGPUDevice?): WGPUFuture
 	.let(WGPUFuture::ByValue)
 
 actual fun wgpuDeviceGetLimits(handler: WGPUDevice?, limits: WGPULimits?): WGPUStatus
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceGetLimits(handler?.handler, limits?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceGetLimits(handler?.handler, (limits as? io.ygdrasil.wgpu.WGPULimits.ByReference)?.handle)
 
 actual fun wgpuDeviceHasFeature(handler: WGPUDevice?, feature: WGPUFeatureName): Boolean
 	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceHasFeature(handler?.handler, feature)
 	.toBoolean()
 
 actual fun wgpuDeviceGetFeatures(handler: WGPUDevice?, features: WGPUSupportedFeatures?): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceGetFeatures(handler?.handler, features?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceGetFeatures(handler?.handler, (features as? io.ygdrasil.wgpu.WGPUSupportedFeatures.ByReference)?.handle)
 
 actual fun wgpuDeviceGetAdapterInfo(handler: WGPUDevice?, adapterInfo: WGPUAdapterInfo?): WGPUStatus
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceGetAdapterInfo(handler?.handler, adapterInfo?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceGetAdapterInfo(handler?.handler, (adapterInfo as? io.ygdrasil.wgpu.WGPUAdapterInfo.ByReference)?.handle)
 
 actual fun wgpuDeviceGetQueue(handler: WGPUDevice?): WGPUQueue?
 	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceGetQueue(handler?.handler)
-	?.let(::WGPUQueue)
+	?.let { WGPUQueue(it) }
 
 actual fun wgpuDevicePushErrorScope(handler: WGPUDevice?, filter: WGPUErrorFilter): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuDevicePushErrorScope(handler?.handler, filter)
 
 actual fun wgpuDevicePopErrorScope(handler: WGPUDevice?, callbackInfo: WGPUPopErrorScopeCallbackInfo): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDevicePopErrorScope(handler?.handler, callbackInfo.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDevicePopErrorScope(handler?.handler, (callbackInfo as io.ygdrasil.wgpu.WGPUPopErrorScopeCallbackInfo.ByValue).handle)
 
 actual fun wgpuDeviceSetLabel(handler: WGPUDevice?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuDeviceSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuExternalTextureRelease(handler: WGPUExternalTexture?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuExternalTextureRelease(handler?.handler)
 
 actual fun wgpuExternalTextureSetLabel(handler: WGPUExternalTexture?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuExternalTextureSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuExternalTextureSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuInstanceRelease(handler: WGPUInstance?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceRelease(handler?.handler)
 
 actual fun wgpuInstanceCreateSurface(handler: WGPUInstance?, descriptor: WGPUSurfaceDescriptor?): WGPUSurface?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceCreateSurface(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUSurface)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceCreateSurface(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUSurfaceDescriptor.ByReference)?.handle)
+	?.let { WGPUSurface(it) }
 
 actual fun wgpuInstanceGetWGSLLanguageFeatures(handler: WGPUInstance?, features: WGPUSupportedWGSLLanguageFeatures?): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceGetWGSLLanguageFeatures(handler?.handler, features?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceGetWGSLLanguageFeatures(handler?.handler, (features as? io.ygdrasil.wgpu.WGPUSupportedWGSLLanguageFeatures.ByReference)?.handle)
 
 actual fun wgpuInstanceHasWGSLLanguageFeature(handler: WGPUInstance?, feature: WGPUWGSLLanguageFeatureName): Boolean
 	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceHasWGSLLanguageFeature(handler?.handler, feature)
@@ -381,22 +381,22 @@ actual fun wgpuInstanceProcessEvents(handler: WGPUInstance?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceProcessEvents(handler?.handler)
 
 actual fun wgpuInstanceRequestAdapter(handler: WGPUInstance?, options: WGPURequestAdapterOptions?, callbackInfo: WGPURequestAdapterCallbackInfo): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceRequestAdapter(handler?.handler, options?.toReference(), callbackInfo.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceRequestAdapter(handler?.handler, (options as? io.ygdrasil.wgpu.WGPURequestAdapterOptions.ByReference)?.handle, (callbackInfo as io.ygdrasil.wgpu.WGPURequestAdapterCallbackInfo.ByValue).handle)
 
 actual fun wgpuInstanceWaitAny(handler: WGPUInstance?, futureCount: ULong, futures: WGPUFutureWaitInfo?, timeoutNS: ULong): WGPUWaitStatus
-	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceWaitAny(handler?.handler, futureCount, futures?.toReference(), timeoutNS)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuInstanceWaitAny(handler?.handler, futureCount, (futures as? io.ygdrasil.wgpu.WGPUFutureWaitInfo.ByReference)?.handle, timeoutNS)
 
 actual fun wgpuPipelineLayoutRelease(handler: WGPUPipelineLayout?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuPipelineLayoutRelease(handler?.handler)
 
 actual fun wgpuPipelineLayoutSetLabel(handler: WGPUPipelineLayout?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuPipelineLayoutSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuPipelineLayoutSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuQuerySetRelease(handler: WGPUQuerySet?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuQuerySetRelease(handler?.handler)
 
 actual fun wgpuQuerySetSetLabel(handler: WGPUQuerySet?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuQuerySetSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuQuerySetSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuQuerySetGetType(handler: WGPUQuerySet?): WGPUQueryType
 	 = io.ygdrasil.wgpu.android.Functions.wgpuQuerySetGetType(handler?.handler)
@@ -414,22 +414,22 @@ actual fun wgpuQueueSubmit(handler: WGPUQueue?, commandCount: ULong, commands: A
 	 = io.ygdrasil.wgpu.android.Functions.wgpuQueueSubmit(handler?.handler, commandCount, commands?.handler)
 
 actual fun wgpuQueueOnSubmittedWorkDone(handler: WGPUQueue?, callbackInfo: WGPUQueueWorkDoneCallbackInfo): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuQueueOnSubmittedWorkDone(handler?.handler, callbackInfo.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuQueueOnSubmittedWorkDone(handler?.handler, (callbackInfo as io.ygdrasil.wgpu.WGPUQueueWorkDoneCallbackInfo.ByValue).handle)
 
 actual fun wgpuQueueWriteBuffer(handler: WGPUQueue?, buffer: WGPUBuffer?, bufferOffset: ULong, data: NativeAddress?, size: ULong): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuQueueWriteBuffer(handler?.handler, buffer?.handler, bufferOffset, data, size)
 
 actual fun wgpuQueueWriteTexture(handler: WGPUQueue?, destination: WGPUTexelCopyTextureInfo?, data: NativeAddress?, dataSize: ULong, dataLayout: WGPUTexelCopyBufferLayout?, writeSize: WGPUExtent3D?): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuQueueWriteTexture(handler?.handler, destination?.toReference(), data, dataSize, dataLayout?.toReference(), writeSize?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuQueueWriteTexture(handler?.handler, (destination as? io.ygdrasil.wgpu.WGPUTexelCopyTextureInfo.ByReference)?.handle, data, dataSize, (dataLayout as? io.ygdrasil.wgpu.WGPUTexelCopyBufferLayout.ByReference)?.handle, (writeSize as? io.ygdrasil.wgpu.WGPUExtent3D.ByReference)?.handle)
 
 actual fun wgpuQueueSetLabel(handler: WGPUQueue?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuQueueSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuQueueSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuRenderBundleRelease(handler: WGPURenderBundle?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleRelease(handler?.handler)
 
 actual fun wgpuRenderBundleSetLabel(handler: WGPURenderBundle?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuRenderBundleEncoderRelease(handler: WGPURenderBundleEncoder?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderRelease(handler?.handler)
@@ -453,13 +453,13 @@ actual fun wgpuRenderBundleEncoderDrawIndexedIndirect(handler: WGPURenderBundleE
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderDrawIndexedIndirect(handler?.handler, indirectBuffer?.handler, indirectOffset)
 
 actual fun wgpuRenderBundleEncoderInsertDebugMarker(handler: WGPURenderBundleEncoder?, markerLabel: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderInsertDebugMarker(handler?.handler, markerLabel.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderInsertDebugMarker(handler?.handler, (markerLabel as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuRenderBundleEncoderPopDebugGroup(handler: WGPURenderBundleEncoder?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderPopDebugGroup(handler?.handler)
 
 actual fun wgpuRenderBundleEncoderPushDebugGroup(handler: WGPURenderBundleEncoder?, groupLabel: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderPushDebugGroup(handler?.handler, groupLabel.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderPushDebugGroup(handler?.handler, (groupLabel as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuRenderBundleEncoderSetVertexBuffer(handler: WGPURenderBundleEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderSetVertexBuffer(handler?.handler, slot, buffer?.handler, offset, size)
@@ -468,11 +468,11 @@ actual fun wgpuRenderBundleEncoderSetIndexBuffer(handler: WGPURenderBundleEncode
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderSetIndexBuffer(handler?.handler, buffer?.handler, format, offset, size)
 
 actual fun wgpuRenderBundleEncoderFinish(handler: WGPURenderBundleEncoder?, descriptor: WGPURenderBundleDescriptor?): WGPURenderBundle?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderFinish(handler?.handler, descriptor?.toReference())
-	?.let(::WGPURenderBundle)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderFinish(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPURenderBundleDescriptor.ByReference)?.handle)
+	?.let { WGPURenderBundle(it) }
 
 actual fun wgpuRenderBundleEncoderSetLabel(handler: WGPURenderBundleEncoder?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderBundleEncoderSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuRenderPassEncoderRelease(handler: WGPURenderPassEncoder?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderRelease(handler?.handler)
@@ -499,19 +499,19 @@ actual fun wgpuRenderPassEncoderExecuteBundles(handler: WGPURenderPassEncoder?, 
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderExecuteBundles(handler?.handler, bundleCount, bundles?.handler)
 
 actual fun wgpuRenderPassEncoderInsertDebugMarker(handler: WGPURenderPassEncoder?, markerLabel: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderInsertDebugMarker(handler?.handler, markerLabel.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderInsertDebugMarker(handler?.handler, (markerLabel as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuRenderPassEncoderPopDebugGroup(handler: WGPURenderPassEncoder?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderPopDebugGroup(handler?.handler)
 
 actual fun wgpuRenderPassEncoderPushDebugGroup(handler: WGPURenderPassEncoder?, groupLabel: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderPushDebugGroup(handler?.handler, groupLabel.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderPushDebugGroup(handler?.handler, (groupLabel as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuRenderPassEncoderSetStencilReference(handler: WGPURenderPassEncoder?, reference: UInt): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderSetStencilReference(handler?.handler, reference)
 
 actual fun wgpuRenderPassEncoderSetBlendConstant(handler: WGPURenderPassEncoder?, color: WGPUColor?): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderSetBlendConstant(handler?.handler, color?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderSetBlendConstant(handler?.handler, (color as? io.ygdrasil.wgpu.WGPUColor.ByReference)?.handle)
 
 actual fun wgpuRenderPassEncoderSetViewport(handler: WGPURenderPassEncoder?, x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderSetViewport(handler?.handler, x, y, width, height, minDepth, maxDepth)
@@ -535,44 +535,44 @@ actual fun wgpuRenderPassEncoderEnd(handler: WGPURenderPassEncoder?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderEnd(handler?.handler)
 
 actual fun wgpuRenderPassEncoderSetLabel(handler: WGPURenderPassEncoder?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPassEncoderSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuRenderPipelineRelease(handler: WGPURenderPipeline?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPipelineRelease(handler?.handler)
 
 actual fun wgpuRenderPipelineGetBindGroupLayout(handler: WGPURenderPipeline?, groupIndex: UInt): WGPUBindGroupLayout?
 	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPipelineGetBindGroupLayout(handler?.handler, groupIndex)
-	?.let(::WGPUBindGroupLayout)
+	?.let { WGPUBindGroupLayout(it) }
 
 actual fun wgpuRenderPipelineSetLabel(handler: WGPURenderPipeline?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPipelineSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuRenderPipelineSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuSamplerRelease(handler: WGPUSampler?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuSamplerRelease(handler?.handler)
 
 actual fun wgpuSamplerSetLabel(handler: WGPUSampler?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuSamplerSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuSamplerSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuShaderModuleRelease(handler: WGPUShaderModule?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuShaderModuleRelease(handler?.handler)
 
 actual fun wgpuShaderModuleGetCompilationInfo(handler: WGPUShaderModule?, callbackInfo: WGPUCompilationInfoCallbackInfo): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuShaderModuleGetCompilationInfo(handler?.handler, callbackInfo.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuShaderModuleGetCompilationInfo(handler?.handler, (callbackInfo as io.ygdrasil.wgpu.WGPUCompilationInfoCallbackInfo.ByValue).handle)
 
 actual fun wgpuShaderModuleSetLabel(handler: WGPUShaderModule?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuShaderModuleSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuShaderModuleSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuSurfaceRelease(handler: WGPUSurface?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuSurfaceRelease(handler?.handler)
 
 actual fun wgpuSurfaceConfigure(handler: WGPUSurface?, config: WGPUSurfaceConfiguration?): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuSurfaceConfigure(handler?.handler, config?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuSurfaceConfigure(handler?.handler, (config as? io.ygdrasil.wgpu.WGPUSurfaceConfiguration.ByReference)?.handle)
 
 actual fun wgpuSurfaceGetCapabilities(handler: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus
-	 = io.ygdrasil.wgpu.android.Functions.wgpuSurfaceGetCapabilities(handler?.handler, adapter?.handler, capabilities?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuSurfaceGetCapabilities(handler?.handler, adapter?.handler, (capabilities as? io.ygdrasil.wgpu.WGPUSurfaceCapabilities.ByReference)?.handle)
 
 actual fun wgpuSurfaceGetCurrentTexture(handler: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuSurfaceGetCurrentTexture(handler?.handler, surfaceTexture?.toReference())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuSurfaceGetCurrentTexture(handler?.handler, (surfaceTexture as? io.ygdrasil.wgpu.WGPUSurfaceTexture.ByReference)?.handle)
 
 actual fun wgpuSurfacePresent(handler: WGPUSurface?): WGPUStatus
 	 = io.ygdrasil.wgpu.android.Functions.wgpuSurfacePresent(handler?.handler)
@@ -581,17 +581,17 @@ actual fun wgpuSurfaceUnconfigure(handler: WGPUSurface?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuSurfaceUnconfigure(handler?.handler)
 
 actual fun wgpuSurfaceSetLabel(handler: WGPUSurface?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuSurfaceSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuSurfaceSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuTextureRelease(handler: WGPUTexture?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuTextureRelease(handler?.handler)
 
 actual fun wgpuTextureCreateView(handler: WGPUTexture?, descriptor: WGPUTextureViewDescriptor?): WGPUTextureView?
-	 = io.ygdrasil.wgpu.android.Functions.wgpuTextureCreateView(handler?.handler, descriptor?.toReference())
-	?.let(::WGPUTextureView)
+	 = io.ygdrasil.wgpu.android.Functions.wgpuTextureCreateView(handler?.handler, (descriptor as? io.ygdrasil.wgpu.WGPUTextureViewDescriptor.ByReference)?.handle)
+	?.let { WGPUTextureView(it) }
 
 actual fun wgpuTextureSetLabel(handler: WGPUTexture?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuTextureSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuTextureSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 
 actual fun wgpuTextureGetWidth(handler: WGPUTexture?): UInt
 	 = io.ygdrasil.wgpu.android.Functions.wgpuTextureGetWidth(handler?.handler)
@@ -627,5 +627,5 @@ actual fun wgpuTextureViewRelease(handler: WGPUTextureView?): Unit
 	 = io.ygdrasil.wgpu.android.Functions.wgpuTextureViewRelease(handler?.handler)
 
 actual fun wgpuTextureViewSetLabel(handler: WGPUTextureView?, label: WGPUStringView): Unit
-	 = io.ygdrasil.wgpu.android.Functions.wgpuTextureViewSetLabel(handler?.handler, label.toCValue())
+	 = io.ygdrasil.wgpu.android.Functions.wgpuTextureViewSetLabel(handler?.handler, (label as io.ygdrasil.wgpu.WGPUStringView.ByValue).handle)
 

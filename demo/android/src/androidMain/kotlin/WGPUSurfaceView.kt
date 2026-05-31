@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.sun.jna.Pointer
-import ffi.NativeAddress
-import ffi.memoryScope
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.memoryScope
 
 
 class WGPUSurfaceView : SurfaceView, SurfaceHolder.Callback2 {

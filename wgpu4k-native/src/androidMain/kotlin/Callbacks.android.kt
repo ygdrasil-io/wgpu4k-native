@@ -1,11 +1,11 @@
 // This file has been generated DO NOT EDIT !!!
 package io.ygdrasil.wgpu
 
-import ffi.Callback
-import ffi.CString
-import ffi.CallbackHolder
-import ffi.MemoryAllocator
-import ffi.NativeAddress
+import io.ygdrasil.kffi.Callback
+import io.ygdrasil.kffi.CString
+import io.ygdrasil.kffi.CallbackHolder
+import io.ygdrasil.kffi.MemoryAllocator
+import io.ygdrasil.kffi.NativeAddress
 
 actual fun interface WGPUBufferMapCallback : Callback {
 	actual fun invoke(status: WGPUMapAsyncStatus, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)

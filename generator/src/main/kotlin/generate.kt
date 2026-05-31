@@ -25,25 +25,31 @@ fun generate(path: Paths) {
         .merge(path.specs.loadExtraYaml())
         .toNativeModel()
 
+    val commonFile = path.commonMainBasePath.resolve("io/ygdrasil/wgpu/wgpu_hCommon.kt")
+    val commonContent = if (commonFile.exists()) commonFile.readText() else ""
+    val filteredEnums = webgpuCModel.enumerations.filter { enum ->
+        !commonContent.contains("typealias ${enum.name} ") && !commonContent.contains("class ${enum.name}")
+    }
+
     path.commonMainBasePath.apply {
-        generateCommonTypes(webgpuCModel.pointers)
+        // generateCommonTypes(webgpuCModel.pointers)
         generateCommonCallback(webgpuCModel.callbacks)
-        generateCommonEnumerations(webgpuCModel.enumerations)
+        generateCommonEnumerations(filteredEnums)
         generateCommonFunctions(webgpuCModel.functions)
-        generateCommonStructures(webgpuCModel.structures)
+        // generateCommonStructures(webgpuCModel.structures)
     }
 
     path.jvmMainBasePath.apply {
         generateJvmCallback(webgpuCModel.callbacks)
         generateJvmNativeFunctions(webgpuCModel.functions)
         generateJvmFunctions(webgpuCModel.functions)
-        generateJvmStructures(webgpuCModel.structures)
+        // generateJvmStructures(webgpuCModel.structures)
     }
 
     path.nativeMainBasePath.apply {
         generateNativeCallback(webgpuCModel.callbacks)
         generateNativeFunctions(webgpuCModel.functions)
-        generateNativeStructures(webgpuCModel.structures)
+        // generateNativeStructures(webgpuCModel.structures)
     }
 
 
@@ -51,7 +57,7 @@ fun generate(path: Paths) {
         generateAndroidCallback(webgpuCModel.callbacks)
         generateAndroidNativeFunctions(webgpuCModel.functions)
         generateAndroidFunctions(webgpuCModel.functions)
-        generateAndroidStructures(webgpuCModel.structures)
+        // generateAndroidStructures(webgpuCModel.structures)
     }
 }
 

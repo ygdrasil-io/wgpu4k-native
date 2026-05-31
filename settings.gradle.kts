@@ -19,7 +19,9 @@ dependencyResolutionManagement {
 
 include("wgpu4k-native")
 include("wgpu4k-native-specs")
+include("kffi")
 include("demo:common")
 include("demo:desktop-and-ios")
 include("demo:android")
 include("demo:android-native")
+include("kextract")

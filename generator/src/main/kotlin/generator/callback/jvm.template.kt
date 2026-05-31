@@ -48,7 +48,7 @@ fun NativeModel.Callback.toJvmCallback() = templateBuilder {
             }
             appendLine(")")
 
-            appendLine("private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(")
+            appendLine("private val handler: java.lang.invoke.MethodHandle = io.ygdrasil.kffi.upcallHandle(")
             appendLine("\tFunction::class.java,")
             appendLine("\t\"apply\",")
             appendLine("\tdescriptor")

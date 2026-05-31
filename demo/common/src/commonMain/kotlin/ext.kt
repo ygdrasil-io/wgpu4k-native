@@ -1,9 +1,9 @@
 package io.ygdrasil.wgpu
 
-import ffi.ArrayHolder
-import ffi.MemoryAllocator
-import ffi.NativeAddress
-import ffi.memoryScope
+import io.ygdrasil.kffi.ArrayHolder
+import io.ygdrasil.kffi.MemoryAllocator
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.memoryScope
 
 val allocator = MemoryAllocator()
 
@@ -47,7 +47,7 @@ fun configureSurface(
                 it.viewFormatCount = viewFormats.size.toULong()
                 it.viewFormats = scope.allocateBuffer(viewFormats.size.toULong() * UInt.SIZE_BYTES.toULong())
                     .also { buffer -> buffer.writeUInts(viewFormats.toUIntArray())}
-                    .let { ArrayHolder(it.handler) }
+                    .handler
             }
         }
         wgpuSurfaceConfigure(surface, configuration)
@@ -63,7 +63,7 @@ fun getDevice(adapter: WGPUAdapter): WGPUDevice = memoryScope { scope ->
     }
 
     val callbackInfo = WGPURequestDeviceCallbackInfo.allocate(scope).apply {
-        this.callback = callback
+        this.callback = callback.handler
         this.userdata2 = scope.bufferOfAddress(callback.handler).handler
     }
 
@@ -86,7 +86,7 @@ fun getAdapter(surface: WGPUSurface, instance: WGPUInstance, backendType: UInt =
         fetchedAdapter = adapter
     }
 
-    callbackInfo.callback = callback
+    callbackInfo.callback = callback.handler
     callbackInfo.userdata2 = scope.bufferOfAddress(callback.handler).handler
 
     wgpuInstanceRequestAdapter(instance, options, callbackInfo)

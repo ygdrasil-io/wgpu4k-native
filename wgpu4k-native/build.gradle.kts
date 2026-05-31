@@ -78,6 +78,12 @@ kotlin {
     }
 
     sourceSets {
+        commonMain {
+            dependencies {
+                api(project(":kffi"))
+            }
+        }
+
         androidMain {
             dependencies {
                 val jna = libs.jna.get()
@@ -280,3 +286,30 @@ tasks.register<Task>("generateDocs") {
     description = "Generates the documentation in HTML and Markdown formats, then copies the files into the 'doc' folder."
     dependsOn("copyDocsToRoot")
 }
+
+tasks.register<Exec>("generateBindingsFromHeader") {
+    group = "generation"
+    description = "Generates unified KMP bindings from webgpu.h using kextract CLI"
+    dependsOn(":kextract:assemble")
+
+    val kextractBin = project(":kextract").layout.buildDirectory.file("kextract/bin/kextract").get().asFile.absolutePath
+    executable = kextractBin
+
+    val isMac = System.getProperty("os.name").contains("Mac", ignoreCase = true)
+    val clangArgs = mutableListOf<String>()
+    if (isMac) {
+        val sdkPath = providers.exec {
+            commandLine("xcrun", "--show-sdk-path")
+        }.standardOutput.asText.get().trim()
+        clangArgs.addAll(listOf("-A", "-isysroot", "-A", sdkPath))
+    }
+
+    args = listOf(
+        "--multiplatform",
+        "--target-package", "io.ygdrasil.wgpu",
+        "--output", project.file("src").absolutePath,
+        "--library", "wgpu_native",
+        project.file("build/native/wgpu.h").absolutePath
+    ) + clangArgs
+}
+

@@ -1,0 +1,3 @@
+[submodule "kextract"]
+	path = kextract
+	url = https://github.com/klang-toolkit/kextract

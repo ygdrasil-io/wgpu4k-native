@@ -24,7 +24,7 @@ fun List<NativeModel.Function>.toAndroidFunctions() = templateBuilder {
             is NativeModel.Reference.OpaquePointer -> null
             is NativeModel.Reference.StructureField -> ".let(${returnType.name}::ByValue)"
             is NativeModel.Reference -> {
-                "?.let(::${returnType.name})"
+                "?.let { ${returnType.name}(it) }"
             }
             is NativeModel.Primitive.Bool -> ".toBoolean()"
             else -> null
@@ -38,10 +38,10 @@ fun List<NativeModel.Function>.toAndroidFunctions() = templateBuilder {
 private fun NativeModel.Type.toJvmArgCall(name: String) = when(this) {
     is NativeModel.Primitive.Bool -> "$name.toUInt()"
     is NativeModel.Reference.StructureField -> when (isOptional) {
-        true -> "$name?.toCValue()"
-        else -> "${name}.toCValue()"
+        true -> "($name as? io.ygdrasil.wgpu.${this.name}.ByValue)?.handle"
+        else -> "($name as io.ygdrasil.wgpu.${this.name}.ByValue).handle"
     }
-    is NativeModel.Reference.Structure -> "${name}?.toReference()"
+    is NativeModel.Reference.Structure -> "($name as? io.ygdrasil.wgpu.${this.name}.ByReference)?.handle"
     is NativeModel.Reference.OpaquePointer,
     is NativeModel.Reference.Enumeration -> name
     is NativeModel.Reference.Callback -> "$name?.callback"

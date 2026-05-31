@@ -9,7 +9,7 @@ private val header = """
     $disclamer
     package io.ygdrasil.wgpu
     
-    import ffi.NativeAddress
+    import io.ygdrasil.kffi.NativeAddress
     import kotlin.jvm.JvmInline
     
 """.trimIndent()

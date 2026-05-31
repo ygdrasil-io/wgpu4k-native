@@ -5,8 +5,10 @@ import com.sun.jna.platform.win32.Kernel32
 import darwin.CAMetalLayer
 import darwin.NSWindow
 import ffi.LibraryLoader
-import ffi.NativeAddress
-import ffi.memoryScope
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.memoryScope
+import io.ygdrasil.kffi.Platform
+import io.ygdrasil.kffi.Os
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWNativeCocoa.glfwGetCocoaWindow
 import org.lwjgl.glfw.GLFWNativeWayland.glfwGetWaylandDisplay
@@ -76,7 +78,7 @@ private fun getSurface(instance: WGPUInstance, window: Long): WGPUSurface = when
             getSurfaceFromWaylandWindow(instance, display, wayland_window)
         }
     }
-    Os.Window -> {
+    Os.Windows -> {
         val hwnd = glfwGetWin32Window(window).toNativeAddress()
         val hinstance = Kernel32.INSTANCE.GetModuleHandle(null).pointer.toNativeAddress()
         getSurfaceFromWindows(instance, hinstance, hwnd) ?: error("fail to get surface on Windows")

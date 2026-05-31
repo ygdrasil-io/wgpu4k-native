@@ -1,8 +1,8 @@
 @file:OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
 
-import ffi.MemoryAllocator
-import ffi.NativeAddress
-import ffi.Pointer
+import io.ygdrasil.kffi.MemoryAllocator
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.Pointer
 import io.ygdrasil.wgpu.HelloTriangleScene
 import io.ygdrasil.wgpu.WGPULogCallback
 import io.ygdrasil.wgpu.WGPULogLevel

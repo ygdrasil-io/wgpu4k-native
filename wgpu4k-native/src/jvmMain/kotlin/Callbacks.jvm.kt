@@ -1,11 +1,11 @@
 // This file has been generated DO NOT EDIT !!!
 package io.ygdrasil.wgpu
 
-import ffi.Callback
-import ffi.CString
-import ffi.CallbackHolder
-import ffi.MemoryAllocator
-import ffi.NativeAddress
+import io.ygdrasil.kffi.Callback
+import io.ygdrasil.kffi.CString
+import io.ygdrasil.kffi.CallbackHolder
+import io.ygdrasil.kffi.MemoryAllocator
+import io.ygdrasil.kffi.NativeAddress
 
 actual fun interface WGPUBufferMapCallback : Callback {
 	actual fun invoke(status: WGPUMapAsyncStatus, message: WGPUStringView?, userdata1: NativeAddress?, userdata2: NativeAddress?)
@@ -27,12 +27,12 @@ actual fun interface WGPUBufferMapCallback : Callback {
 				.let(::CallbackHolder)
 		}
 		private val descriptor: java.lang.foreign.FunctionDescriptor = java.lang.foreign.FunctionDescriptor.ofVoid(
-			ffi.C_INT,
-			WGPUStringView.LAYOUT,
-			ffi.C_POINTER,
-			ffi.C_POINTER,
+			io.ygdrasil.kffi.C_INT,
+			WGPUStringView.layout,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
 		)
-		private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(
+		private val handler: java.lang.invoke.MethodHandle = io.ygdrasil.kffi.upcallHandle(
 			Function::class.java,
 			"apply",
 			descriptor
@@ -60,12 +60,12 @@ actual fun interface WGPUCompilationInfoCallback : Callback {
 				.let(::CallbackHolder)
 		}
 		private val descriptor: java.lang.foreign.FunctionDescriptor = java.lang.foreign.FunctionDescriptor.ofVoid(
-			ffi.C_INT,
-			ffi.C_POINTER,
-			ffi.C_POINTER,
-			ffi.C_POINTER,
+			io.ygdrasil.kffi.C_INT,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
 		)
-		private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(
+		private val handler: java.lang.invoke.MethodHandle = io.ygdrasil.kffi.upcallHandle(
 			Function::class.java,
 			"apply",
 			descriptor
@@ -93,13 +93,13 @@ actual fun interface WGPUCreateComputePipelineAsyncCallback : Callback {
 				.let(::CallbackHolder)
 		}
 		private val descriptor: java.lang.foreign.FunctionDescriptor = java.lang.foreign.FunctionDescriptor.ofVoid(
-			ffi.C_INT,
-			ffi.C_POINTER,
-			WGPUStringView.LAYOUT,
-			ffi.C_POINTER,
-			ffi.C_POINTER,
+			io.ygdrasil.kffi.C_INT,
+			io.ygdrasil.kffi.C_POINTER,
+			WGPUStringView.layout,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
 		)
-		private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(
+		private val handler: java.lang.invoke.MethodHandle = io.ygdrasil.kffi.upcallHandle(
 			Function::class.java,
 			"apply",
 			descriptor
@@ -127,13 +127,13 @@ actual fun interface WGPUCreateRenderPipelineAsyncCallback : Callback {
 				.let(::CallbackHolder)
 		}
 		private val descriptor: java.lang.foreign.FunctionDescriptor = java.lang.foreign.FunctionDescriptor.ofVoid(
-			ffi.C_INT,
-			ffi.C_POINTER,
-			WGPUStringView.LAYOUT,
-			ffi.C_POINTER,
-			ffi.C_POINTER,
+			io.ygdrasil.kffi.C_INT,
+			io.ygdrasil.kffi.C_POINTER,
+			WGPUStringView.layout,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
 		)
-		private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(
+		private val handler: java.lang.invoke.MethodHandle = io.ygdrasil.kffi.upcallHandle(
 			Function::class.java,
 			"apply",
 			descriptor
@@ -161,13 +161,13 @@ actual fun interface WGPUDeviceLostCallback : Callback {
 				.let(::CallbackHolder)
 		}
 		private val descriptor: java.lang.foreign.FunctionDescriptor = java.lang.foreign.FunctionDescriptor.ofVoid(
-			ffi.C_POINTER,
-			ffi.C_INT,
-			WGPUStringView.LAYOUT,
-			ffi.C_POINTER,
-			ffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_INT,
+			WGPUStringView.layout,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
 		)
-		private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(
+		private val handler: java.lang.invoke.MethodHandle = io.ygdrasil.kffi.upcallHandle(
 			Function::class.java,
 			"apply",
 			descriptor
@@ -195,13 +195,13 @@ actual fun interface WGPUPopErrorScopeCallback : Callback {
 				.let(::CallbackHolder)
 		}
 		private val descriptor: java.lang.foreign.FunctionDescriptor = java.lang.foreign.FunctionDescriptor.ofVoid(
-			ffi.C_INT,
-			ffi.C_INT,
-			WGPUStringView.LAYOUT,
-			ffi.C_POINTER,
-			ffi.C_POINTER,
+			io.ygdrasil.kffi.C_INT,
+			io.ygdrasil.kffi.C_INT,
+			WGPUStringView.layout,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
 		)
-		private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(
+		private val handler: java.lang.invoke.MethodHandle = io.ygdrasil.kffi.upcallHandle(
 			Function::class.java,
 			"apply",
 			descriptor
@@ -229,12 +229,12 @@ actual fun interface WGPUQueueWorkDoneCallback : Callback {
 				.let(::CallbackHolder)
 		}
 		private val descriptor: java.lang.foreign.FunctionDescriptor = java.lang.foreign.FunctionDescriptor.ofVoid(
-			ffi.C_INT,
-			WGPUStringView.LAYOUT,
-			ffi.C_POINTER,
-			ffi.C_POINTER,
+			io.ygdrasil.kffi.C_INT,
+			WGPUStringView.layout,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
 		)
-		private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(
+		private val handler: java.lang.invoke.MethodHandle = io.ygdrasil.kffi.upcallHandle(
 			Function::class.java,
 			"apply",
 			descriptor
@@ -262,13 +262,13 @@ actual fun interface WGPURequestAdapterCallback : Callback {
 				.let(::CallbackHolder)
 		}
 		private val descriptor: java.lang.foreign.FunctionDescriptor = java.lang.foreign.FunctionDescriptor.ofVoid(
-			ffi.C_INT,
-			ffi.C_POINTER,
-			WGPUStringView.LAYOUT,
-			ffi.C_POINTER,
-			ffi.C_POINTER,
+			io.ygdrasil.kffi.C_INT,
+			io.ygdrasil.kffi.C_POINTER,
+			WGPUStringView.layout,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
 		)
-		private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(
+		private val handler: java.lang.invoke.MethodHandle = io.ygdrasil.kffi.upcallHandle(
 			Function::class.java,
 			"apply",
 			descriptor
@@ -296,13 +296,13 @@ actual fun interface WGPURequestDeviceCallback : Callback {
 				.let(::CallbackHolder)
 		}
 		private val descriptor: java.lang.foreign.FunctionDescriptor = java.lang.foreign.FunctionDescriptor.ofVoid(
-			ffi.C_INT,
-			ffi.C_POINTER,
-			WGPUStringView.LAYOUT,
-			ffi.C_POINTER,
-			ffi.C_POINTER,
+			io.ygdrasil.kffi.C_INT,
+			io.ygdrasil.kffi.C_POINTER,
+			WGPUStringView.layout,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
 		)
-		private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(
+		private val handler: java.lang.invoke.MethodHandle = io.ygdrasil.kffi.upcallHandle(
 			Function::class.java,
 			"apply",
 			descriptor
@@ -330,13 +330,13 @@ actual fun interface WGPUUncapturedErrorCallback : Callback {
 				.let(::CallbackHolder)
 		}
 		private val descriptor: java.lang.foreign.FunctionDescriptor = java.lang.foreign.FunctionDescriptor.ofVoid(
-			ffi.C_POINTER,
-			ffi.C_INT,
-			WGPUStringView.LAYOUT,
-			ffi.C_POINTER,
-			ffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_INT,
+			WGPUStringView.layout,
+			io.ygdrasil.kffi.C_POINTER,
+			io.ygdrasil.kffi.C_POINTER,
 		)
-		private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(
+		private val handler: java.lang.invoke.MethodHandle = io.ygdrasil.kffi.upcallHandle(
 			Function::class.java,
 			"apply",
 			descriptor
@@ -364,11 +364,11 @@ actual fun interface WGPULogCallback : Callback {
 				.let(::CallbackHolder)
 		}
 		private val descriptor: java.lang.foreign.FunctionDescriptor = java.lang.foreign.FunctionDescriptor.ofVoid(
-			ffi.C_INT,
-			WGPUStringView.LAYOUT,
-			ffi.C_POINTER,
+			io.ygdrasil.kffi.C_INT,
+			WGPUStringView.layout,
+			io.ygdrasil.kffi.C_POINTER,
 		)
-		private val handler: java.lang.invoke.MethodHandle = ffi.upcallHandle(
+		private val handler: java.lang.invoke.MethodHandle = io.ygdrasil.kffi.upcallHandle(
 			Function::class.java,
 			"apply",
 			descriptor

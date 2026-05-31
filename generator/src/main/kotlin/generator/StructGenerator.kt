@@ -13,11 +13,11 @@ private val header = """
     $disclamer
     package io.ygdrasil.wgpu
     
-    import ffi.NativeAddress
-    import ffi.CallbackHolder
-    import ffi.CString
-    import ffi.ArrayHolder
-    import ffi.MemoryAllocator
+    import io.ygdrasil.kffi.NativeAddress
+    import io.ygdrasil.kffi.CallbackHolder
+    import io.ygdrasil.kffi.CString
+    import io.ygdrasil.kffi.ArrayHolder
+    import io.ygdrasil.kffi.MemoryAllocator
     
     
 """.trimIndent()
@@ -26,18 +26,18 @@ private val headerJvm = """
     $disclamer
     package io.ygdrasil.wgpu
     
-    import ffi.NativeAddress
-    import ffi.CallbackHolder
-    import ffi.CString
-    import ffi.ArrayHolder
-    import ffi.C_LONG
-    import ffi.C_POINTER
-    import ffi.C_SHORT
-    import ffi.C_INT
-    import ffi.C_FLOAT
-    import ffi.C_DOUBLE
-    import ffi.CStructure
-    import ffi.MemoryAllocator
+    import io.ygdrasil.kffi.NativeAddress
+    import io.ygdrasil.kffi.CallbackHolder
+    import io.ygdrasil.kffi.CString
+    import io.ygdrasil.kffi.ArrayHolder
+    import io.ygdrasil.kffi.C_LONG
+    import io.ygdrasil.kffi.C_POINTER
+    import io.ygdrasil.kffi.C_SHORT
+    import io.ygdrasil.kffi.C_INT
+    import io.ygdrasil.kffi.C_FLOAT
+    import io.ygdrasil.kffi.C_DOUBLE
+    import io.ygdrasil.kffi.CStructure
+    import io.ygdrasil.kffi.MemoryAllocator
     import java.lang.foreign.AddressLayout
     import java.lang.foreign.MemoryLayout
     import java.lang.foreign.GroupLayout
@@ -52,12 +52,12 @@ private val headerNative = """
     @file:OptIn(ExperimentalForeignApi::class)
     package io.ygdrasil.wgpu
         
-    import ffi.NativeAddress
-    import ffi.CallbackHolder
-    import ffi.CString
-    import ffi.toCString
-    import ffi.ArrayHolder
-    import ffi.MemoryAllocator
+    import io.ygdrasil.kffi.NativeAddress
+    import io.ygdrasil.kffi.CallbackHolder
+    import io.ygdrasil.kffi.CString
+    import io.ygdrasil.kffi.toCString
+    import io.ygdrasil.kffi.ArrayHolder
+    import io.ygdrasil.kffi.MemoryAllocator
     import kotlinx.cinterop.ExperimentalForeignApi
     import kotlinx.cinterop.pointed
     import kotlinx.cinterop.useContents

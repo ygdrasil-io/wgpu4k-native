@@ -34,7 +34,7 @@ private fun Builder.toJvmFunction(function: NativeModel.Function) {
         is NativeModel.Reference.StructureField -> ".let(::NativeAddress).let(${returnType.name}::invoke)"
         is NativeModel.Reference.OpaquePointer -> "?.let(::NativeAddress)"
         is NativeModel.Reference -> {
-            "?.let(::NativeAddress)?.let(::${returnType.name})"
+            "?.let(::NativeAddress)?.let { ${returnType.name}(it) }"
         }
         is NativeModel.Primitive.Bool -> ".toBoolean()"
         else -> null
@@ -109,7 +109,7 @@ internal fun NativeModel.Type.toJvmDescriptorType(): String = when (this) {
     NativeModel.Reference.OpaquePointer,
     is NativeModel.Reference.Pointer,
     is NativeModel.Reference.Structure -> "C_POINTER"
-    is NativeModel.Reference.StructureField -> "${name}.LAYOUT"
+    is NativeModel.Reference.StructureField -> "${name}.layout"
 }
 
 internal fun NativeModel.Type.toJvmNativeType(): String = when (this) {

@@ -41,7 +41,7 @@ private fun NativeModel.Type.toNativeCallbackArgCall(name: String): String = whe
     is NativeModel.Reference.Enumeration,
     is NativeModel.Primitive -> name
     is NativeModel.Reference.StructureField -> "$name.let { ${this.name}.ByValue(it) }"
-    is NativeModel.Reference.Pointer -> "$name?.let(::NativeAddress)?.let(::${this.name})"
+    is NativeModel.Reference.Pointer -> "$name?.let(::NativeAddress)?.let { ${this.name}Impl(it) }"
     is NativeModel.Reference.Structure -> "$name?.let(::NativeAddress)?.let { ${this.name}(it) }"
     NativeModel.Reference.CString -> "$name?.let(::NativeAddress)?.let(::CString)"
     NativeModel.Void -> error("unsupported type")

@@ -6,8 +6,8 @@ import cnames.structs.GLFWwindow
 import glfw.glfwGetWin32Window
 import kotlinx.cinterop.*
 import platform.windows.GetModuleHandle
-import ffi.NativeAddress
-import ffi.memoryScope
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.memoryScope
 import io.ygdrasil.wgpu.WGPUInstance
 import io.ygdrasil.wgpu.WGPUSurface
 import io.ygdrasil.wgpu.WGPUSurfaceDescriptor

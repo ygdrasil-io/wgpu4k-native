@@ -12,10 +12,10 @@ private val header = """
     $disclamer
     package io.ygdrasil.wgpu
     
-    import ffi.CString
-    import ffi.NativeAddress
-    import ffi.CallbackHolder
-    import ffi.ArrayHolder
+    import io.ygdrasil.kffi.CString
+    import io.ygdrasil.kffi.NativeAddress
+    import io.ygdrasil.kffi.CallbackHolder
+    import io.ygdrasil.kffi.ArrayHolder
     
     
     
@@ -25,11 +25,11 @@ private val jvmHeader = """
     $disclamer
     package io.ygdrasil.wgpu
     
-    import ffi.CString
-    import ffi.NativeAddress
-    import ffi.ArrayHolder
-    import ffi.CallbackHolder
-    import ffi.adapt
+    import io.ygdrasil.kffi.CString
+    import io.ygdrasil.kffi.NativeAddress
+    import io.ygdrasil.kffi.ArrayHolder
+    import io.ygdrasil.kffi.CallbackHolder
+    import io.ygdrasil.kffi.adapt
     
     
     
@@ -40,10 +40,10 @@ private val nativeHeader = """
     $disclamer
     package io.ygdrasil.wgpu
     
-    import ffi.CString
-    import ffi.NativeAddress
-    import ffi.ArrayHolder
-    import ffi.CallbackHolder
+    import io.ygdrasil.kffi.CString
+    import io.ygdrasil.kffi.NativeAddress
+    import io.ygdrasil.kffi.ArrayHolder
+    import io.ygdrasil.kffi.CallbackHolder
     import kotlinx.cinterop.ExperimentalForeignApi
     import kotlinx.cinterop.toCPointer
     

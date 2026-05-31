@@ -11,12 +11,12 @@ private val header = """
     
     import java.lang.foreign.MemorySegment
     import java.lang.foreign.Linker
-    import ffi.findOrThrow
-    import ffi.C_POINTER
-    import ffi.C_INT
-    import ffi.C_LONG
-    import ffi.C_FLOAT
-    import ffi.NativeAddress
+    import io.ygdrasil.kffi.findOrThrow
+    import io.ygdrasil.kffi.C_POINTER
+    import io.ygdrasil.kffi.C_INT
+    import io.ygdrasil.kffi.C_LONG
+    import io.ygdrasil.kffi.C_FLOAT
+    import io.ygdrasil.kffi.NativeAddress
     import java.lang.foreign.FunctionDescriptor
     
     

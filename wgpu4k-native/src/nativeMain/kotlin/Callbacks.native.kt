@@ -3,14 +3,14 @@
 
 package io.ygdrasil.wgpu
 
-import ffi.CString
-import ffi.Callback
-import ffi.CallbackHolder
-import ffi.MemoryAllocator
-import ffi.NativeAddress
-import ffi.findCallback
-import ffi.registerCallback
-import ffi.globalMemory
+import io.ygdrasil.kffi.CString
+import io.ygdrasil.kffi.Callback
+import io.ygdrasil.kffi.CallbackHolder
+import io.ygdrasil.kffi.MemoryAllocator
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.findCallback
+import io.ygdrasil.kffi.registerCallback
+import io.ygdrasil.kffi.globalMemory
 import kotlinx.cinterop.COpaque
 import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.useContents
@@ -60,7 +60,7 @@ actual fun interface WGPUCreateComputePipelineAsyncCallback : Callback {
 				val address = userdata2?.reinterpret<LongVar>()?.pointed?.value?.let(::NativeAddress) ?: error("Missing callback address on last argument")
 				val callback = findCallback<WGPUCreateComputePipelineAsyncCallback>(address.reinterpret<COpaque>())
 					?: error("Callback not found with address $address and type WGPUCreateComputePipelineAsyncCallback")
-				callback.invoke(status, pipeline?.let(::NativeAddress)?.let(::WGPUComputePipeline), message.let { WGPUStringView.ByValue(it) }, userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
+				callback.invoke(status, pipeline?.let(::NativeAddress)?.let { WGPUComputePipelineImpl(it) }, message.let { WGPUStringView.ByValue(it) }, userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 			}
 			registerCallback(actualCallback, callback)
 			return CallbackHolder(actualCallback.let(::NativeAddress), actualCallback)
@@ -76,7 +76,7 @@ actual fun interface WGPUCreateRenderPipelineAsyncCallback : Callback {
 				val address = userdata2?.reinterpret<LongVar>()?.pointed?.value?.let(::NativeAddress) ?: error("Missing callback address on last argument")
 				val callback = findCallback<WGPUCreateRenderPipelineAsyncCallback>(address.reinterpret<COpaque>())
 					?: error("Callback not found with address $address and type WGPUCreateRenderPipelineAsyncCallback")
-				callback.invoke(status, pipeline?.let(::NativeAddress)?.let(::WGPURenderPipeline), message.let { WGPUStringView.ByValue(it) }, userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
+				callback.invoke(status, pipeline?.let(::NativeAddress)?.let { WGPURenderPipelineImpl(it) }, message.let { WGPUStringView.ByValue(it) }, userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 			}
 			registerCallback(actualCallback, callback)
 			return CallbackHolder(actualCallback.let(::NativeAddress), actualCallback)
@@ -92,7 +92,7 @@ actual fun interface WGPUDeviceLostCallback : Callback {
 				val address = userdata2?.reinterpret<LongVar>()?.pointed?.value?.let(::NativeAddress) ?: error("Missing callback address on last argument")
 				val callback = findCallback<WGPUDeviceLostCallback>(address.reinterpret<COpaque>())
 					?: error("Callback not found with address $address and type WGPUDeviceLostCallback")
-				callback.invoke(device?.let(::NativeAddress)?.let(::WGPUDevice), reason, message.let { WGPUStringView.ByValue(it) }, userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
+				callback.invoke(device?.let(::NativeAddress)?.let { WGPUDeviceImpl(it) }, reason, message.let { WGPUStringView.ByValue(it) }, userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 			}
 			registerCallback(actualCallback, callback)
 			return CallbackHolder(actualCallback.let(::NativeAddress), actualCallback)
@@ -140,7 +140,7 @@ actual fun interface WGPURequestAdapterCallback : Callback {
 				val address = userdata2?.reinterpret<LongVar>()?.pointed?.value?.let(::NativeAddress) ?: error("Missing callback address on last argument")
 				val callback = findCallback<WGPURequestAdapterCallback>(address.reinterpret<COpaque>())
 					?: error("Callback not found with address $address and type WGPURequestAdapterCallback")
-				callback.invoke(status, adapter?.let(::NativeAddress)?.let(::WGPUAdapter), message.let { WGPUStringView.ByValue(it) }, userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
+				callback.invoke(status, adapter?.let(::NativeAddress)?.let { WGPUAdapterImpl(it) }, message.let { WGPUStringView.ByValue(it) }, userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 			}
 			registerCallback(actualCallback, callback)
 			return CallbackHolder(actualCallback.let(::NativeAddress), actualCallback)
@@ -156,7 +156,7 @@ actual fun interface WGPURequestDeviceCallback : Callback {
 				val address = userdata2?.reinterpret<LongVar>()?.pointed?.value?.let(::NativeAddress) ?: error("Missing callback address on last argument")
 				val callback = findCallback<WGPURequestDeviceCallback>(address.reinterpret<COpaque>())
 					?: error("Callback not found with address $address and type WGPURequestDeviceCallback")
-				callback.invoke(status, device?.let(::NativeAddress)?.let(::WGPUDevice), message.let { WGPUStringView.ByValue(it) }, userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
+				callback.invoke(status, device?.let(::NativeAddress)?.let { WGPUDeviceImpl(it) }, message.let { WGPUStringView.ByValue(it) }, userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 			}
 			registerCallback(actualCallback, callback)
 			return CallbackHolder(actualCallback.let(::NativeAddress), actualCallback)
@@ -172,7 +172,7 @@ actual fun interface WGPUUncapturedErrorCallback : Callback {
 				val address = userdata2?.reinterpret<LongVar>()?.pointed?.value?.let(::NativeAddress) ?: error("Missing callback address on last argument")
 				val callback = findCallback<WGPUUncapturedErrorCallback>(address.reinterpret<COpaque>())
 					?: error("Callback not found with address $address and type WGPUUncapturedErrorCallback")
-				callback.invoke(device?.let(::NativeAddress)?.let(::WGPUDevice), type, message.let { WGPUStringView.ByValue(it) }, userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
+				callback.invoke(device?.let(::NativeAddress)?.let { WGPUDeviceImpl(it) }, type, message.let { WGPUStringView.ByValue(it) }, userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 			}
 			registerCallback(actualCallback, callback)
 			return CallbackHolder(actualCallback.let(::NativeAddress), actualCallback)

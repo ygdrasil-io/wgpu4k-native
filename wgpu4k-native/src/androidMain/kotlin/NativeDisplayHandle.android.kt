@@ -2,9 +2,9 @@
 // DO NOT EDIT - This file is manually maintained
 package io.ygdrasil.wgpu
 
-import ffi.NativeAddress
-import ffi.MemoryAllocator
-import ffi.ArrayHolder
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.MemoryAllocator
+import io.ygdrasil.kffi.ArrayHolder
 
 actual interface WGPUNativeDisplayHandle {
     actual var type: WGPUNativeDisplayHandleType
@@ -19,11 +19,11 @@ actual interface WGPUNativeDisplayHandle {
     class ByReference(override val handler: NativeAddress) : WGPUNativeDisplayHandle {
         // Storage for union data
         private var _type: WGPUNativeDisplayHandleType = WGPUNativeDisplayHandleType_None
-        private var _xlibDisplay: NativeAddress? = null
+        private var _xlibDisplay: NativeAddress = NativeAddress(0L)
         private var _xlibScreen: Int = 0
-        private var _xcbConnection: NativeAddress? = null
+        private var _xcbConnection: NativeAddress = NativeAddress(0L)
         private var _xcbScreen: Int = 0
-        private var _waylandDisplay: NativeAddress? = null
+        private var _waylandDisplay: NativeAddress = NativeAddress(0L)
         
         override var type: WGPUNativeDisplayHandleType
             get() = _type
@@ -32,7 +32,7 @@ actual interface WGPUNativeDisplayHandle {
         override val xlib: WGPUXlibDisplayHandle?
             get() = if (type == WGPUNativeDisplayHandleType_Xlib) {
                 object : WGPUXlibDisplayHandle {
-                    override var display: NativeAddress? = _xlibDisplay
+                    override var display: NativeAddress = _xlibDisplay
                     override var screen: Int = _xlibScreen
                     override val handler: NativeAddress = this@ByReference.handler
                 }
@@ -41,7 +41,7 @@ actual interface WGPUNativeDisplayHandle {
         override val xcb: WGPUXcbDisplayHandle?
             get() = if (type == WGPUNativeDisplayHandleType_Xcb) {
                 object : WGPUXcbDisplayHandle {
-                    override var connection: NativeAddress? = _xcbConnection
+                    override var connection: NativeAddress = _xcbConnection
                     override var screen: Int = _xcbScreen
                     override val handler: NativeAddress = this@ByReference.handler
                 }
@@ -50,7 +50,7 @@ actual interface WGPUNativeDisplayHandle {
         override val wayland: WGPUWaylandDisplayHandle?
             get() = if (type == WGPUNativeDisplayHandleType_Wayland) {
                 object : WGPUWaylandDisplayHandle {
-                    override var display: NativeAddress? = _waylandDisplay
+                    override var display: NativeAddress = _waylandDisplay
                     override val handler: NativeAddress = this@ByReference.handler
                 }
             } else null

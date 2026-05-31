@@ -12,11 +12,11 @@ private val header = """
     $disclamer
     package io.ygdrasil.wgpu
     
-    import ffi.Callback
-    import ffi.CString
-    import ffi.CallbackHolder
-    import ffi.MemoryAllocator
-    import ffi.NativeAddress
+    import io.ygdrasil.kffi.Callback
+    import io.ygdrasil.kffi.CString
+    import io.ygdrasil.kffi.CallbackHolder
+    import io.ygdrasil.kffi.MemoryAllocator
+    import io.ygdrasil.kffi.NativeAddress
     
     
 """.trimIndent()
@@ -27,14 +27,14 @@ private val nativeHeader = """
     
     package io.ygdrasil.wgpu
     
-    import ffi.CString
-    import ffi.Callback
-    import ffi.CallbackHolder
-    import ffi.MemoryAllocator
-    import ffi.NativeAddress
-    import ffi.findCallback
-    import ffi.registerCallback
-    import ffi.globalMemory
+    import io.ygdrasil.kffi.CString
+    import io.ygdrasil.kffi.Callback
+    import io.ygdrasil.kffi.CallbackHolder
+    import io.ygdrasil.kffi.MemoryAllocator
+    import io.ygdrasil.kffi.NativeAddress
+    import io.ygdrasil.kffi.findCallback
+    import io.ygdrasil.kffi.registerCallback
+    import io.ygdrasil.kffi.globalMemory
     import kotlinx.cinterop.COpaque
     import kotlinx.cinterop.COpaquePointer
     import kotlinx.cinterop.useContents

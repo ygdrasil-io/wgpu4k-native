@@ -1,7 +1,7 @@
 package io.ygdrasil.wgpu
 
-import ffi.ArrayHolder
-import ffi.memoryScope
+import io.ygdrasil.kffi.ArrayHolder
+import io.ygdrasil.kffi.memoryScope
 
 
 class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UInt, val surface: WGPUSurface) {
@@ -37,8 +37,8 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                 targets = WGPUColorTargetState.allocateArray(scope, 1u) { index, structure ->
                     structure.format = renderingContextFormat
                     structure.writeMask = WGPUColorWriteMask_All
-                }.let { ArrayHolder(it.handler) }
-            }
+                }.handler
+            }.handler
 
             primitive.topology = WGPUPrimitiveTopology_TriangleList
             multisample.count = 1u
@@ -73,7 +73,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
                 structure.clearValue.g = 1.0
                 structure.clearValue.b = .0
                 structure.clearValue.a = 1.0
-            }.let { ArrayHolder(it.handler) }
+            }.handler
         }.let { wgpuCommandEncoderBeginRenderPass(commandEncoder, it) }
 
         wgpuRenderPassEncoderSetPipeline(renderPassEncoder, renderPipeline)

@@ -1,10 +1,10 @@
 // This file has been generated DO NOT EDIT !!!
 package io.ygdrasil.wgpu
 
-import ffi.CString
-import ffi.NativeAddress
-import ffi.CallbackHolder
-import ffi.ArrayHolder
+import io.ygdrasil.kffi.CString
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.CallbackHolder
+import io.ygdrasil.kffi.ArrayHolder
 
 
 /**

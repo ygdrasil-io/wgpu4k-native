@@ -2,6 +2,7 @@ package ffi
 
 import java.lang.foreign.SegmentAllocator
 import java.lang.foreign.ValueLayout
+import io.ygdrasil.kffi.JnaArena
 
 actual class MemoryAllocator : AutoCloseable {
 

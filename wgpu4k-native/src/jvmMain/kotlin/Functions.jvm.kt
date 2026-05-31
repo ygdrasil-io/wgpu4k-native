@@ -1,16 +1,16 @@
 // This file has been generated DO NOT EDIT !!!
 package io.ygdrasil.wgpu
 
-import ffi.CString
-import ffi.NativeAddress
-import ffi.ArrayHolder
-import ffi.CallbackHolder
-import ffi.adapt
+import io.ygdrasil.kffi.CString
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.ArrayHolder
+import io.ygdrasil.kffi.CallbackHolder
+import io.ygdrasil.kffi.adapt
 
 
 actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance?
 	 = Functions.wgpuCreateInstance(descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUInstance)
+		?.let(::NativeAddress)?.let { WGPUInstance(it) }
 
 actual fun wgpuGetInstanceFeatures(features: WGPUSupportedInstanceFeatures?): Unit
 	 = Functions.wgpuGetInstanceFeatures(features?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
@@ -40,7 +40,7 @@ actual fun wgpuDevicePoll(device: WGPUDevice?, wait: Boolean, submissionIndex: N
 
 actual fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptorSpirV?): WGPUShaderModule?
 	 = Functions.wgpuDeviceCreateShaderModuleSpirV(device?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUShaderModule)
+		?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
 
 actual fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): Boolean
 	 = Functions.wgpuDeviceStartGraphicsDebuggerCapture(device?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
@@ -189,15 +189,15 @@ actual fun wgpuCommandEncoderRelease(handler: WGPUCommandEncoder?): Unit
 
 actual fun wgpuCommandEncoderFinish(handler: WGPUCommandEncoder?, descriptor: WGPUCommandBufferDescriptor?): WGPUCommandBuffer?
 	 = Functions.wgpuCommandEncoderFinish(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUCommandBuffer)
+		?.let(::NativeAddress)?.let { WGPUCommandBuffer(it) }
 
 actual fun wgpuCommandEncoderBeginComputePass(handler: WGPUCommandEncoder?, descriptor: WGPUComputePassDescriptor?): WGPUComputePassEncoder?
 	 = Functions.wgpuCommandEncoderBeginComputePass(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUComputePassEncoder)
+		?.let(::NativeAddress)?.let { WGPUComputePassEncoder(it) }
 
 actual fun wgpuCommandEncoderBeginRenderPass(handler: WGPUCommandEncoder?, descriptor: WGPURenderPassDescriptor?): WGPURenderPassEncoder?
 	 = Functions.wgpuCommandEncoderBeginRenderPass(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPURenderPassEncoder)
+		?.let(::NativeAddress)?.let { WGPURenderPassEncoder(it) }
 
 actual fun wgpuCommandEncoderCopyBufferToBuffer(handler: WGPUCommandEncoder?, source: WGPUBuffer?, sourceOffset: ULong, destination: WGPUBuffer?, destinationOffset: ULong, size: ULong): Unit
 	 = Functions.wgpuCommandEncoderCopyBufferToBuffer(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, source?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, sourceOffset, destination?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, destinationOffset, size)
@@ -267,7 +267,7 @@ actual fun wgpuComputePipelineRelease(handler: WGPUComputePipeline?): Unit
 
 actual fun wgpuComputePipelineGetBindGroupLayout(handler: WGPUComputePipeline?, groupIndex: UInt): WGPUBindGroupLayout?
 	 = Functions.wgpuComputePipelineGetBindGroupLayout(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, groupIndex)
-		?.let(::NativeAddress)?.let(::WGPUBindGroupLayout)
+		?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
 
 actual fun wgpuComputePipelineSetLabel(handler: WGPUComputePipeline?, label: WGPUStringView): Unit
 	 = Functions.wgpuComputePipelineSetLabel(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, label?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
@@ -277,57 +277,57 @@ actual fun wgpuDeviceRelease(handler: WGPUDevice?): Unit
 
 actual fun wgpuDeviceCreateBindGroup(handler: WGPUDevice?, descriptor: WGPUBindGroupDescriptor?): WGPUBindGroup?
 	 = Functions.wgpuDeviceCreateBindGroup(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUBindGroup)
+		?.let(::NativeAddress)?.let { WGPUBindGroup(it) }
 
 actual fun wgpuDeviceCreateBindGroupLayout(handler: WGPUDevice?, descriptor: WGPUBindGroupLayoutDescriptor?): WGPUBindGroupLayout?
 	 = Functions.wgpuDeviceCreateBindGroupLayout(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUBindGroupLayout)
+		?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
 
 actual fun wgpuDeviceCreateBuffer(handler: WGPUDevice?, descriptor: WGPUBufferDescriptor?): WGPUBuffer?
 	 = Functions.wgpuDeviceCreateBuffer(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUBuffer)
+		?.let(::NativeAddress)?.let { WGPUBuffer(it) }
 
 actual fun wgpuDeviceCreateCommandEncoder(handler: WGPUDevice?, descriptor: WGPUCommandEncoderDescriptor?): WGPUCommandEncoder?
 	 = Functions.wgpuDeviceCreateCommandEncoder(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUCommandEncoder)
+		?.let(::NativeAddress)?.let { WGPUCommandEncoder(it) }
 
 actual fun wgpuDeviceCreateComputePipeline(handler: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?): WGPUComputePipeline?
 	 = Functions.wgpuDeviceCreateComputePipeline(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUComputePipeline)
+		?.let(::NativeAddress)?.let { WGPUComputePipeline(it) }
 
 actual fun wgpuDeviceCreateComputePipelineAsync(handler: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): Unit
 	 = Functions.wgpuDeviceCreateComputePipelineAsync(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, callbackInfo?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
 
 actual fun wgpuDeviceCreatePipelineLayout(handler: WGPUDevice?, descriptor: WGPUPipelineLayoutDescriptor?): WGPUPipelineLayout?
 	 = Functions.wgpuDeviceCreatePipelineLayout(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUPipelineLayout)
+		?.let(::NativeAddress)?.let { WGPUPipelineLayout(it) }
 
 actual fun wgpuDeviceCreateQuerySet(handler: WGPUDevice?, descriptor: WGPUQuerySetDescriptor?): WGPUQuerySet?
 	 = Functions.wgpuDeviceCreateQuerySet(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUQuerySet)
+		?.let(::NativeAddress)?.let { WGPUQuerySet(it) }
 
 actual fun wgpuDeviceCreateRenderPipelineAsync(handler: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): Unit
 	 = Functions.wgpuDeviceCreateRenderPipelineAsync(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, callbackInfo?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
 
 actual fun wgpuDeviceCreateRenderBundleEncoder(handler: WGPUDevice?, descriptor: WGPURenderBundleEncoderDescriptor?): WGPURenderBundleEncoder?
 	 = Functions.wgpuDeviceCreateRenderBundleEncoder(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPURenderBundleEncoder)
+		?.let(::NativeAddress)?.let { WGPURenderBundleEncoder(it) }
 
 actual fun wgpuDeviceCreateRenderPipeline(handler: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?): WGPURenderPipeline?
 	 = Functions.wgpuDeviceCreateRenderPipeline(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPURenderPipeline)
+		?.let(::NativeAddress)?.let { WGPURenderPipeline(it) }
 
 actual fun wgpuDeviceCreateSampler(handler: WGPUDevice?, descriptor: WGPUSamplerDescriptor?): WGPUSampler?
 	 = Functions.wgpuDeviceCreateSampler(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUSampler)
+		?.let(::NativeAddress)?.let { WGPUSampler(it) }
 
 actual fun wgpuDeviceCreateShaderModule(handler: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?): WGPUShaderModule?
 	 = Functions.wgpuDeviceCreateShaderModule(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUShaderModule)
+		?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
 
 actual fun wgpuDeviceCreateTexture(handler: WGPUDevice?, descriptor: WGPUTextureDescriptor?): WGPUTexture?
 	 = Functions.wgpuDeviceCreateTexture(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUTexture)
+		?.let(::NativeAddress)?.let { WGPUTexture(it) }
 
 actual fun wgpuDeviceDestroy(handler: WGPUDevice?): Unit
 	 = Functions.wgpuDeviceDestroy(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
@@ -351,7 +351,7 @@ actual fun wgpuDeviceGetAdapterInfo(handler: WGPUDevice?, adapterInfo: WGPUAdapt
 
 actual fun wgpuDeviceGetQueue(handler: WGPUDevice?): WGPUQueue?
 	 = Functions.wgpuDeviceGetQueue(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUQueue)
+		?.let(::NativeAddress)?.let { WGPUQueue(it) }
 
 actual fun wgpuDevicePushErrorScope(handler: WGPUDevice?, filter: WGPUErrorFilter): Unit
 	 = Functions.wgpuDevicePushErrorScope(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, filter)
@@ -373,7 +373,7 @@ actual fun wgpuInstanceRelease(handler: WGPUInstance?): Unit
 
 actual fun wgpuInstanceCreateSurface(handler: WGPUInstance?, descriptor: WGPUSurfaceDescriptor?): WGPUSurface?
 	 = Functions.wgpuInstanceCreateSurface(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUSurface)
+		?.let(::NativeAddress)?.let { WGPUSurface(it) }
 
 actual fun wgpuInstanceGetWGSLLanguageFeatures(handler: WGPUInstance?, features: WGPUSupportedWGSLLanguageFeatures?): Unit
 	 = Functions.wgpuInstanceGetWGSLLanguageFeatures(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, features?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
@@ -474,7 +474,7 @@ actual fun wgpuRenderBundleEncoderSetIndexBuffer(handler: WGPURenderBundleEncode
 
 actual fun wgpuRenderBundleEncoderFinish(handler: WGPURenderBundleEncoder?, descriptor: WGPURenderBundleDescriptor?): WGPURenderBundle?
 	 = Functions.wgpuRenderBundleEncoderFinish(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPURenderBundle)
+		?.let(::NativeAddress)?.let { WGPURenderBundle(it) }
 
 actual fun wgpuRenderBundleEncoderSetLabel(handler: WGPURenderBundleEncoder?, label: WGPUStringView): Unit
 	 = Functions.wgpuRenderBundleEncoderSetLabel(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, label?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
@@ -547,7 +547,7 @@ actual fun wgpuRenderPipelineRelease(handler: WGPURenderPipeline?): Unit
 
 actual fun wgpuRenderPipelineGetBindGroupLayout(handler: WGPURenderPipeline?, groupIndex: UInt): WGPUBindGroupLayout?
 	 = Functions.wgpuRenderPipelineGetBindGroupLayout(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, groupIndex)
-		?.let(::NativeAddress)?.let(::WGPUBindGroupLayout)
+		?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
 
 actual fun wgpuRenderPipelineSetLabel(handler: WGPURenderPipeline?, label: WGPUStringView): Unit
 	 = Functions.wgpuRenderPipelineSetLabel(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, label?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
@@ -593,7 +593,7 @@ actual fun wgpuTextureRelease(handler: WGPUTexture?): Unit
 
 actual fun wgpuTextureCreateView(handler: WGPUTexture?, descriptor: WGPUTextureViewDescriptor?): WGPUTextureView?
 	 = Functions.wgpuTextureCreateView(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, descriptor?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)
-		?.let(::NativeAddress)?.let(::WGPUTextureView)
+		?.let(::NativeAddress)?.let { WGPUTextureView(it) }
 
 actual fun wgpuTextureSetLabel(handler: WGPUTexture?, label: WGPUStringView): Unit
 	 = Functions.wgpuTextureSetLabel(handler?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL, label?.handler.adapt() ?: java.lang.foreign.MemorySegment.NULL)

@@ -2,9 +2,9 @@
 // DO NOT EDIT - This file is manually maintained
 package io.ygdrasil.wgpu
 
-import ffi.NativeAddress
-import ffi.MemoryAllocator
-import ffi.ArrayHolder
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.MemoryAllocator
+import io.ygdrasil.kffi.ArrayHolder
 
 /**
  * Manual implementation for WGPUNativeDisplayHandle with union data support.

@@ -27,7 +27,7 @@ private fun Builder.toNativeFunction(function: NativeModel.Function) {
             is NativeModel.Reference.OpaquePointer -> "?.let(::NativeAddress)"
             is NativeModel.Reference.StructureField -> ".let(${returnType.name}::ByValue)"
             is NativeModel.Reference -> {
-                "?.let(::NativeAddress)?.let(::${returnType.name})"
+                "?.let(::NativeAddress)?.let { ${returnType.name}(it) }"
             }
             is NativeModel.Primitive.Bool -> ".toBoolean()"
             else -> null

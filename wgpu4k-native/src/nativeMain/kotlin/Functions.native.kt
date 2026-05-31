@@ -2,17 +2,17 @@
 // This file has been generated DO NOT EDIT !!!
 package io.ygdrasil.wgpu
 
-import ffi.CString
-import ffi.NativeAddress
-import ffi.ArrayHolder
-import ffi.CallbackHolder
+import io.ygdrasil.kffi.CString
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.ArrayHolder
+import io.ygdrasil.kffi.CallbackHolder
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.toCPointer
 
 
 actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance? {
 	return webgpu.native.wgpuCreateInstance(descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUInstance)
+		?.let(::NativeAddress)?.let { WGPUInstance(it) }
 }
 
 actual fun wgpuGetInstanceFeatures(features: WGPUSupportedInstanceFeatures?): Unit {
@@ -51,7 +51,7 @@ actual fun wgpuDevicePoll(device: WGPUDevice?, wait: Boolean, submissionIndex: N
 
 actual fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptorSpirV?): WGPUShaderModule? {
 	return webgpu.native.wgpuDeviceCreateShaderModuleSpirV(device?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUShaderModule)
+		?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
 }
 
 actual fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): Boolean {
@@ -247,17 +247,17 @@ actual fun wgpuCommandEncoderRelease(handler: WGPUCommandEncoder?): Unit {
 
 actual fun wgpuCommandEncoderFinish(handler: WGPUCommandEncoder?, descriptor: WGPUCommandBufferDescriptor?): WGPUCommandBuffer? {
 	return webgpu.native.wgpuCommandEncoderFinish(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUCommandBuffer)
+		?.let(::NativeAddress)?.let { WGPUCommandBuffer(it) }
 }
 
 actual fun wgpuCommandEncoderBeginComputePass(handler: WGPUCommandEncoder?, descriptor: WGPUComputePassDescriptor?): WGPUComputePassEncoder? {
 	return webgpu.native.wgpuCommandEncoderBeginComputePass(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUComputePassEncoder)
+		?.let(::NativeAddress)?.let { WGPUComputePassEncoder(it) }
 }
 
 actual fun wgpuCommandEncoderBeginRenderPass(handler: WGPUCommandEncoder?, descriptor: WGPURenderPassDescriptor?): WGPURenderPassEncoder? {
 	return webgpu.native.wgpuCommandEncoderBeginRenderPass(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPURenderPassEncoder)
+		?.let(::NativeAddress)?.let { WGPURenderPassEncoder(it) }
 }
 
 actual fun wgpuCommandEncoderCopyBufferToBuffer(handler: WGPUCommandEncoder?, source: WGPUBuffer?, sourceOffset: ULong, destination: WGPUBuffer?, destinationOffset: ULong, size: ULong): Unit {
@@ -350,7 +350,7 @@ actual fun wgpuComputePipelineRelease(handler: WGPUComputePipeline?): Unit {
 
 actual fun wgpuComputePipelineGetBindGroupLayout(handler: WGPUComputePipeline?, groupIndex: UInt): WGPUBindGroupLayout? {
 	return webgpu.native.wgpuComputePipelineGetBindGroupLayout(handler?.handler?.reinterpret(), groupIndex)
-		?.let(::NativeAddress)?.let(::WGPUBindGroupLayout)
+		?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
 }
 
 actual fun wgpuComputePipelineSetLabel(handler: WGPUComputePipeline?, label: WGPUStringView): Unit {
@@ -363,27 +363,27 @@ actual fun wgpuDeviceRelease(handler: WGPUDevice?): Unit {
 
 actual fun wgpuDeviceCreateBindGroup(handler: WGPUDevice?, descriptor: WGPUBindGroupDescriptor?): WGPUBindGroup? {
 	return webgpu.native.wgpuDeviceCreateBindGroup(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUBindGroup)
+		?.let(::NativeAddress)?.let { WGPUBindGroup(it) }
 }
 
 actual fun wgpuDeviceCreateBindGroupLayout(handler: WGPUDevice?, descriptor: WGPUBindGroupLayoutDescriptor?): WGPUBindGroupLayout? {
 	return webgpu.native.wgpuDeviceCreateBindGroupLayout(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUBindGroupLayout)
+		?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
 }
 
 actual fun wgpuDeviceCreateBuffer(handler: WGPUDevice?, descriptor: WGPUBufferDescriptor?): WGPUBuffer? {
 	return webgpu.native.wgpuDeviceCreateBuffer(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUBuffer)
+		?.let(::NativeAddress)?.let { WGPUBuffer(it) }
 }
 
 actual fun wgpuDeviceCreateCommandEncoder(handler: WGPUDevice?, descriptor: WGPUCommandEncoderDescriptor?): WGPUCommandEncoder? {
 	return webgpu.native.wgpuDeviceCreateCommandEncoder(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUCommandEncoder)
+		?.let(::NativeAddress)?.let { WGPUCommandEncoder(it) }
 }
 
 actual fun wgpuDeviceCreateComputePipeline(handler: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?): WGPUComputePipeline? {
 	return webgpu.native.wgpuDeviceCreateComputePipeline(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUComputePipeline)
+		?.let(::NativeAddress)?.let { WGPUComputePipeline(it) }
 }
 
 actual fun wgpuDeviceCreateComputePipelineAsync(handler: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): Unit {
@@ -392,12 +392,12 @@ actual fun wgpuDeviceCreateComputePipelineAsync(handler: WGPUDevice?, descriptor
 
 actual fun wgpuDeviceCreatePipelineLayout(handler: WGPUDevice?, descriptor: WGPUPipelineLayoutDescriptor?): WGPUPipelineLayout? {
 	return webgpu.native.wgpuDeviceCreatePipelineLayout(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUPipelineLayout)
+		?.let(::NativeAddress)?.let { WGPUPipelineLayout(it) }
 }
 
 actual fun wgpuDeviceCreateQuerySet(handler: WGPUDevice?, descriptor: WGPUQuerySetDescriptor?): WGPUQuerySet? {
 	return webgpu.native.wgpuDeviceCreateQuerySet(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUQuerySet)
+		?.let(::NativeAddress)?.let { WGPUQuerySet(it) }
 }
 
 actual fun wgpuDeviceCreateRenderPipelineAsync(handler: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): Unit {
@@ -406,27 +406,27 @@ actual fun wgpuDeviceCreateRenderPipelineAsync(handler: WGPUDevice?, descriptor:
 
 actual fun wgpuDeviceCreateRenderBundleEncoder(handler: WGPUDevice?, descriptor: WGPURenderBundleEncoderDescriptor?): WGPURenderBundleEncoder? {
 	return webgpu.native.wgpuDeviceCreateRenderBundleEncoder(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPURenderBundleEncoder)
+		?.let(::NativeAddress)?.let { WGPURenderBundleEncoder(it) }
 }
 
 actual fun wgpuDeviceCreateRenderPipeline(handler: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?): WGPURenderPipeline? {
 	return webgpu.native.wgpuDeviceCreateRenderPipeline(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPURenderPipeline)
+		?.let(::NativeAddress)?.let { WGPURenderPipeline(it) }
 }
 
 actual fun wgpuDeviceCreateSampler(handler: WGPUDevice?, descriptor: WGPUSamplerDescriptor?): WGPUSampler? {
 	return webgpu.native.wgpuDeviceCreateSampler(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUSampler)
+		?.let(::NativeAddress)?.let { WGPUSampler(it) }
 }
 
 actual fun wgpuDeviceCreateShaderModule(handler: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?): WGPUShaderModule? {
 	return webgpu.native.wgpuDeviceCreateShaderModule(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUShaderModule)
+		?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
 }
 
 actual fun wgpuDeviceCreateTexture(handler: WGPUDevice?, descriptor: WGPUTextureDescriptor?): WGPUTexture? {
 	return webgpu.native.wgpuDeviceCreateTexture(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUTexture)
+		?.let(::NativeAddress)?.let { WGPUTexture(it) }
 }
 
 actual fun wgpuDeviceDestroy(handler: WGPUDevice?): Unit {
@@ -457,7 +457,7 @@ actual fun wgpuDeviceGetAdapterInfo(handler: WGPUDevice?, adapterInfo: WGPUAdapt
 
 actual fun wgpuDeviceGetQueue(handler: WGPUDevice?): WGPUQueue? {
 	return webgpu.native.wgpuDeviceGetQueue(handler?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUQueue)
+		?.let(::NativeAddress)?.let { WGPUQueue(it) }
 }
 
 actual fun wgpuDevicePushErrorScope(handler: WGPUDevice?, filter: WGPUErrorFilter): Unit {
@@ -486,7 +486,7 @@ actual fun wgpuInstanceRelease(handler: WGPUInstance?): Unit {
 
 actual fun wgpuInstanceCreateSurface(handler: WGPUInstance?, descriptor: WGPUSurfaceDescriptor?): WGPUSurface? {
 	return webgpu.native.wgpuInstanceCreateSurface(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUSurface)
+		?.let(::NativeAddress)?.let { WGPUSurface(it) }
 }
 
 actual fun wgpuInstanceGetWGSLLanguageFeatures(handler: WGPUInstance?, features: WGPUSupportedWGSLLanguageFeatures?): Unit {
@@ -620,7 +620,7 @@ actual fun wgpuRenderBundleEncoderSetIndexBuffer(handler: WGPURenderBundleEncode
 
 actual fun wgpuRenderBundleEncoderFinish(handler: WGPURenderBundleEncoder?, descriptor: WGPURenderBundleDescriptor?): WGPURenderBundle? {
 	return webgpu.native.wgpuRenderBundleEncoderFinish(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPURenderBundle)
+		?.let(::NativeAddress)?.let { WGPURenderBundle(it) }
 }
 
 actual fun wgpuRenderBundleEncoderSetLabel(handler: WGPURenderBundleEncoder?, label: WGPUStringView): Unit {
@@ -717,7 +717,7 @@ actual fun wgpuRenderPipelineRelease(handler: WGPURenderPipeline?): Unit {
 
 actual fun wgpuRenderPipelineGetBindGroupLayout(handler: WGPURenderPipeline?, groupIndex: UInt): WGPUBindGroupLayout? {
 	return webgpu.native.wgpuRenderPipelineGetBindGroupLayout(handler?.handler?.reinterpret(), groupIndex)
-		?.let(::NativeAddress)?.let(::WGPUBindGroupLayout)
+		?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
 }
 
 actual fun wgpuRenderPipelineSetLabel(handler: WGPURenderPipeline?, label: WGPUStringView): Unit {
@@ -778,7 +778,7 @@ actual fun wgpuTextureRelease(handler: WGPUTexture?): Unit {
 
 actual fun wgpuTextureCreateView(handler: WGPUTexture?, descriptor: WGPUTextureViewDescriptor?): WGPUTextureView? {
 	return webgpu.native.wgpuTextureCreateView(handler?.handler?.reinterpret(), descriptor?.handler?.reinterpret())
-		?.let(::NativeAddress)?.let(::WGPUTextureView)
+		?.let(::NativeAddress)?.let { WGPUTextureView(it) }
 }
 
 actual fun wgpuTextureSetLabel(handler: WGPUTexture?, label: WGPUStringView): Unit {

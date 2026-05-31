@@ -10,7 +10,7 @@ private val headerAndroidJna = """
     $disclamer
     package io.ygdrasil.wgpu.android
     
-    import ffi.NativeAddress
+    import io.ygdrasil.kffi.NativeAddress
 
     
 """.trimIndent()
@@ -19,19 +19,19 @@ private val headerAndroid = """
     $disclamer
     package io.ygdrasil.wgpu
     
-    import ffi.NativeAddress
-    import ffi.CallbackHolder
-    import ffi.CString
-    import ffi.ArrayHolder
-    import ffi.C_LONG
-    import ffi.C_POINTER
-    import ffi.C_SHORT
-    import ffi.C_INT
-    import ffi.C_FLOAT
-    import ffi.C_DOUBLE
-    import ffi.CStructure
-    import ffi.MemoryAllocator
-    import ffi.toAddress
+    import io.ygdrasil.kffi.NativeAddress
+    import io.ygdrasil.kffi.CallbackHolder
+    import io.ygdrasil.kffi.CString
+    import io.ygdrasil.kffi.ArrayHolder
+    import io.ygdrasil.kffi.C_LONG
+    import io.ygdrasil.kffi.C_POINTER
+    import io.ygdrasil.kffi.C_SHORT
+    import io.ygdrasil.kffi.C_INT
+    import io.ygdrasil.kffi.C_FLOAT
+    import io.ygdrasil.kffi.C_DOUBLE
+    import io.ygdrasil.kffi.CStructure
+    import io.ygdrasil.kffi.MemoryAllocator
+    import io.ygdrasil.kffi.toAddress
     import java.lang.foreign.AddressLayout
     
     

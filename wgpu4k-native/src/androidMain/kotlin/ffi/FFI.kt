@@ -1,9 +1,8 @@
 package ffi
 
-import com.sun.jna.Memory
 import com.sun.jna.Pointer
-import java.lang.foreign.NativeString
 import java.lang.foreign.ValueLayout
+import io.ygdrasil.kffi.JnaArena
 
 val C_BOOL: ValueLayout = ValueLayout.JAVA_BOOLEAN
 val C_CHAR: ValueLayout = ValueLayout.JAVA_BYTE
@@ -16,22 +15,3 @@ val C_POINTER: ValueLayout = ValueLayout.ADDRESS
 val C_LONG: ValueLayout = ValueLayout.JAVA_LONG
 
 fun Pointer.toAddress() = Pointer.nativeValue(this)
-
-class JnaArena: AutoCloseable {
-    private val autoCloseableMemory = mutableListOf<AutoCloseable>()
-
-    fun allocate(size: Long): Pointer {
-        return Memory(size)
-            .also { autoCloseableMemory.add(it) }
-    }
-
-    override fun close() {
-        autoCloseableMemory.forEach { it.close() }
-    }
-
-    fun allocateFrom(label: String): Pointer {
-        return NativeString(label).pointer
-            ?.also { autoCloseableMemory.add(it) }
-            ?: error("fail to allocate CString")
-    }
-}
