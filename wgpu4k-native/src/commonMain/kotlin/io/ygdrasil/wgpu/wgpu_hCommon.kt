@@ -6,6 +6,73 @@ import io.ygdrasil.kffi.CString
 import io.ygdrasil.kffi.ArrayHolder
 import io.ygdrasil.kffi.MemoryAllocator
 
+typealias WGPUBufferUsage = ULong
+const val WGPUBufferUsage_None : WGPUBufferUsage = 0uL
+const val WGPUBufferUsage_MapRead : WGPUBufferUsage = 1uL
+const val WGPUBufferUsage_MapWrite : WGPUBufferUsage = 2uL
+const val WGPUBufferUsage_CopySrc : WGPUBufferUsage = 4uL
+const val WGPUBufferUsage_CopyDst : WGPUBufferUsage = 8uL
+const val WGPUBufferUsage_Index : WGPUBufferUsage = 16uL
+const val WGPUBufferUsage_Vertex : WGPUBufferUsage = 32uL
+const val WGPUBufferUsage_Uniform : WGPUBufferUsage = 64uL
+const val WGPUBufferUsage_Storage : WGPUBufferUsage = 128uL
+const val WGPUBufferUsage_Indirect : WGPUBufferUsage = 256uL
+const val WGPUBufferUsage_QueryResolve : WGPUBufferUsage = 512uL
+
+typealias WGPUColorWriteMask = ULong
+const val WGPUColorWriteMask_None : WGPUColorWriteMask = 0uL
+const val WGPUColorWriteMask_Red : WGPUColorWriteMask = 1uL
+const val WGPUColorWriteMask_Green : WGPUColorWriteMask = 2uL
+const val WGPUColorWriteMask_Blue : WGPUColorWriteMask = 4uL
+const val WGPUColorWriteMask_Alpha : WGPUColorWriteMask = 8uL
+const val WGPUColorWriteMask_All : WGPUColorWriteMask = 15uL
+
+typealias WGPUMapMode = ULong
+const val WGPUMapMode_None : WGPUMapMode = 0uL
+const val WGPUMapMode_Read : WGPUMapMode = 1uL
+const val WGPUMapMode_Write : WGPUMapMode = 2uL
+
+typealias WGPUShaderStage = ULong
+const val WGPUShaderStage_None : WGPUShaderStage = 0uL
+const val WGPUShaderStage_Vertex : WGPUShaderStage = 1uL
+const val WGPUShaderStage_Fragment : WGPUShaderStage = 2uL
+const val WGPUShaderStage_Compute : WGPUShaderStage = 4uL
+
+typealias WGPUTextureUsage = ULong
+const val WGPUTextureUsage_None : WGPUTextureUsage = 0uL
+const val WGPUTextureUsage_CopySrc : WGPUTextureUsage = 1uL
+const val WGPUTextureUsage_CopyDst : WGPUTextureUsage = 2uL
+const val WGPUTextureUsage_TextureBinding : WGPUTextureUsage = 4uL
+const val WGPUTextureUsage_StorageBinding : WGPUTextureUsage = 8uL
+const val WGPUTextureUsage_RenderAttachment : WGPUTextureUsage = 16uL
+const val WGPUTextureUsage_TransientAttachment : WGPUTextureUsage = 32uL
+
+typealias WGPUInstanceBackend = ULong
+const val WGPUInstanceBackend_All : WGPUInstanceBackend = 0uL
+const val WGPUInstanceBackend_Vulkan : WGPUInstanceBackend = 1uL
+const val WGPUInstanceBackend_GL : WGPUInstanceBackend = 2uL
+const val WGPUInstanceBackend_Metal : WGPUInstanceBackend = 4uL
+const val WGPUInstanceBackend_DX12 : WGPUInstanceBackend = 8uL
+const val WGPUInstanceBackend_BrowserWebGPU : WGPUInstanceBackend = 32uL
+const val WGPUInstanceBackend_Primary : WGPUInstanceBackend = 45uL
+const val WGPUInstanceBackend_Secondary : WGPUInstanceBackend = 2uL
+const val WGPUInstanceBackend_Force32 : WGPUInstanceBackend = 2147483647uL
+
+typealias WGPUInstanceFlag = ULong
+const val WGPUInstanceFlag_Empty : WGPUInstanceFlag = 0uL
+const val WGPUInstanceFlag_Debug : WGPUInstanceFlag = 1uL
+const val WGPUInstanceFlag_Validation : WGPUInstanceFlag = 2uL
+const val WGPUInstanceFlag_DiscardHalLabels : WGPUInstanceFlag = 4uL
+const val WGPUInstanceFlag_AllowUnderlyingNoncompliantAdapter : WGPUInstanceFlag = 8uL
+const val WGPUInstanceFlag_GPUBasedValidation : WGPUInstanceFlag = 16uL
+const val WGPUInstanceFlag_ValidationIndirectCall : WGPUInstanceFlag = 32uL
+const val WGPUInstanceFlag_AutomaticTimestampNormalization : WGPUInstanceFlag = 64uL
+const val WGPUInstanceFlag_Default : WGPUInstanceFlag = 16777216uL
+const val WGPUInstanceFlag_Debugging : WGPUInstanceFlag = 33554432uL
+const val WGPUInstanceFlag_AdvancedDebugging : WGPUInstanceFlag = 67108864uL
+const val WGPUInstanceFlag_WithEnv : WGPUInstanceFlag = 134217728uL
+const val WGPUInstanceFlag_Force32 : WGPUInstanceFlag = 2147483647uL
+
 expect interface WGPUStringView {
     var data: CString?
     var length: ULong
