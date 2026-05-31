@@ -12,7 +12,8 @@ fun surfaceCapabilities(surface: WGPUSurface, adapter: WGPUAdapter): SurfaceCapa
     if (surfaceCapabilities.formatCount == 0uL) error("No surface formats available")
     if (surfaceCapabilities.alphaModeCount == 0uL) error("No alpha modes available")
 
-    val formats = MemoryBuffer(surfaceCapabilities.formats, UInt.SIZE_BYTES.toULong() * surfaceCapabilities.formatCount)
+    val formatsPointer = surfaceCapabilities.formats ?: error("Surface formats pointer is null")
+    val formats = MemoryBuffer(formatsPointer, UInt.SIZE_BYTES.toULong() * surfaceCapabilities.formatCount)
         .let { buffer ->
             UIntArray(surfaceCapabilities.formatCount.toInt()).let {
                 buffer.readUInts(it)
@@ -20,7 +21,8 @@ fun surfaceCapabilities(surface: WGPUSurface, adapter: WGPUAdapter): SurfaceCapa
             }
         }
 
-    val alphaModes = MemoryBuffer(surfaceCapabilities.alphaModes, UInt.SIZE_BYTES.toULong() * surfaceCapabilities.alphaModeCount)
+    val alphaModesPointer = surfaceCapabilities.alphaModes ?: error("Surface alpha modes pointer is null")
+    val alphaModes = MemoryBuffer(alphaModesPointer, UInt.SIZE_BYTES.toULong() * surfaceCapabilities.alphaModeCount)
         .let { buffer ->
             UIntArray(surfaceCapabilities.alphaModeCount.toInt()).let {
                 buffer.readUInts(it)
@@ -35,7 +37,7 @@ fun compatibleFormat(surface: WGPUSurface, adapter: WGPUAdapter): UInt = memoryS
     val surfaceCapabilities = WGPUSurfaceCapabilities.allocate(scope)
     wgpuSurfaceGetCapabilities(surface, adapter, surfaceCapabilities)
     if (surfaceCapabilities.formatCount == 0uL) error("no surface format")
-    val formats = surfaceCapabilities.formats
+    val formats = surfaceCapabilities.formats ?: error("surface formats pointer is null")
     return MemoryBuffer(formats, Int.SIZE_BYTES.toULong() * surfaceCapabilities.formatCount)
         .readInt().toUInt()
 }
@@ -44,7 +46,7 @@ fun compatibleAlphaMode(surface: WGPUSurface, adapter: WGPUAdapter): UInt = memo
     val surfaceCapabilities = WGPUSurfaceCapabilities.allocate(scope)
     wgpuSurfaceGetCapabilities(surface, adapter, surfaceCapabilities)
     if (surfaceCapabilities.alphaModeCount == 0uL) error("no surface alpha mode")
-    val alphaModes = surfaceCapabilities.alphaModes
+    val alphaModes = surfaceCapabilities.alphaModes ?: error("surface alpha modes pointer is null")
     return MemoryBuffer(alphaModes, Int.SIZE_BYTES.toULong() * surfaceCapabilities.alphaModeCount)
         .readInt().toUInt()
 }

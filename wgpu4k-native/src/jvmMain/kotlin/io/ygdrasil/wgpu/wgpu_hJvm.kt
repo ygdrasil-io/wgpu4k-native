@@ -460,9 +460,9 @@ actual interface WGPUChainedStruct : CStructure {
 actual interface WGPUBufferMapCallbackInfo : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -501,24 +501,24 @@ actual interface WGPUBufferMapCallbackInfo : CStructure {
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
             set(value) = mode_VH.set(handler.handler, 0L, value.toInt())
-        override var callback: NativeAddress
-            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = callback_VH.set(handler.handler, 0L, value.handler)
-        override var userdata1: NativeAddress
-            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata1_VH.set(handler.handler, 0L, value.handler)
-        override var userdata2: NativeAddress
-            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata2_VH.set(handler.handler, 0L, value.handler)
+        override var callback: NativeAddress?
+            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = callback_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata1: NativeAddress?
+            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata1_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata2: NativeAddress?
+            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata2_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUCompilationInfoCallbackInfo : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -557,24 +557,24 @@ actual interface WGPUCompilationInfoCallbackInfo : CStructure {
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
             set(value) = mode_VH.set(handler.handler, 0L, value.toInt())
-        override var callback: NativeAddress
-            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = callback_VH.set(handler.handler, 0L, value.handler)
-        override var userdata1: NativeAddress
-            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata1_VH.set(handler.handler, 0L, value.handler)
-        override var userdata2: NativeAddress
-            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata2_VH.set(handler.handler, 0L, value.handler)
+        override var callback: NativeAddress?
+            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = callback_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata1: NativeAddress?
+            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata1_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata2: NativeAddress?
+            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata2_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUCreateComputePipelineAsyncCallbackInfo : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -613,24 +613,24 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo : CStructure {
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
             set(value) = mode_VH.set(handler.handler, 0L, value.toInt())
-        override var callback: NativeAddress
-            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = callback_VH.set(handler.handler, 0L, value.handler)
-        override var userdata1: NativeAddress
-            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata1_VH.set(handler.handler, 0L, value.handler)
-        override var userdata2: NativeAddress
-            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata2_VH.set(handler.handler, 0L, value.handler)
+        override var callback: NativeAddress?
+            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = callback_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata1: NativeAddress?
+            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata1_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata2: NativeAddress?
+            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata2_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUCreateRenderPipelineAsyncCallbackInfo : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -669,24 +669,24 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo : CStructure {
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
             set(value) = mode_VH.set(handler.handler, 0L, value.toInt())
-        override var callback: NativeAddress
-            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = callback_VH.set(handler.handler, 0L, value.handler)
-        override var userdata1: NativeAddress
-            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata1_VH.set(handler.handler, 0L, value.handler)
-        override var userdata2: NativeAddress
-            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata2_VH.set(handler.handler, 0L, value.handler)
+        override var callback: NativeAddress?
+            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = callback_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata1: NativeAddress?
+            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata1_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata2: NativeAddress?
+            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata2_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUDeviceLostCallbackInfo : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -725,24 +725,24 @@ actual interface WGPUDeviceLostCallbackInfo : CStructure {
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
             set(value) = mode_VH.set(handler.handler, 0L, value.toInt())
-        override var callback: NativeAddress
-            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = callback_VH.set(handler.handler, 0L, value.handler)
-        override var userdata1: NativeAddress
-            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata1_VH.set(handler.handler, 0L, value.handler)
-        override var userdata2: NativeAddress
-            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata2_VH.set(handler.handler, 0L, value.handler)
+        override var callback: NativeAddress?
+            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = callback_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata1: NativeAddress?
+            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata1_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata2: NativeAddress?
+            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata2_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUPopErrorScopeCallbackInfo : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -781,24 +781,24 @@ actual interface WGPUPopErrorScopeCallbackInfo : CStructure {
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
             set(value) = mode_VH.set(handler.handler, 0L, value.toInt())
-        override var callback: NativeAddress
-            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = callback_VH.set(handler.handler, 0L, value.handler)
-        override var userdata1: NativeAddress
-            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata1_VH.set(handler.handler, 0L, value.handler)
-        override var userdata2: NativeAddress
-            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata2_VH.set(handler.handler, 0L, value.handler)
+        override var callback: NativeAddress?
+            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = callback_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata1: NativeAddress?
+            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata1_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata2: NativeAddress?
+            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata2_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUQueueWorkDoneCallbackInfo : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -837,24 +837,24 @@ actual interface WGPUQueueWorkDoneCallbackInfo : CStructure {
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
             set(value) = mode_VH.set(handler.handler, 0L, value.toInt())
-        override var callback: NativeAddress
-            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = callback_VH.set(handler.handler, 0L, value.handler)
-        override var userdata1: NativeAddress
-            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata1_VH.set(handler.handler, 0L, value.handler)
-        override var userdata2: NativeAddress
-            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata2_VH.set(handler.handler, 0L, value.handler)
+        override var callback: NativeAddress?
+            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = callback_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata1: NativeAddress?
+            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata1_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata2: NativeAddress?
+            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata2_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPURequestAdapterCallbackInfo : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -893,24 +893,24 @@ actual interface WGPURequestAdapterCallbackInfo : CStructure {
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
             set(value) = mode_VH.set(handler.handler, 0L, value.toInt())
-        override var callback: NativeAddress
-            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = callback_VH.set(handler.handler, 0L, value.handler)
-        override var userdata1: NativeAddress
-            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata1_VH.set(handler.handler, 0L, value.handler)
-        override var userdata2: NativeAddress
-            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata2_VH.set(handler.handler, 0L, value.handler)
+        override var callback: NativeAddress?
+            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = callback_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata1: NativeAddress?
+            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata1_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata2: NativeAddress?
+            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata2_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPURequestDeviceCallbackInfo : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -949,23 +949,23 @@ actual interface WGPURequestDeviceCallbackInfo : CStructure {
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
             set(value) = mode_VH.set(handler.handler, 0L, value.toInt())
-        override var callback: NativeAddress
-            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = callback_VH.set(handler.handler, 0L, value.handler)
-        override var userdata1: NativeAddress
-            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata1_VH.set(handler.handler, 0L, value.handler)
-        override var userdata2: NativeAddress
-            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata2_VH.set(handler.handler, 0L, value.handler)
+        override var callback: NativeAddress?
+            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = callback_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata1: NativeAddress?
+            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata1_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata2: NativeAddress?
+            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata2_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
     actual var nextInChain: WGPUChainedStruct?
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -998,15 +998,15 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
         override var nextInChain: WGPUChainedStruct?
             get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
-        override var callback: NativeAddress
-            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = callback_VH.set(handler.handler, 0L, value.handler)
-        override var userdata1: NativeAddress
-            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata1_VH.set(handler.handler, 0L, value.handler)
-        override var userdata2: NativeAddress
-            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = userdata2_VH.set(handler.handler, 0L, value.handler)
+        override var callback: NativeAddress?
+            get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = callback_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata1: NativeAddress?
+            get() = (userdata1_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata1_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var userdata2: NativeAddress?
+            get() = (userdata2_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = userdata2_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
@@ -2120,7 +2120,7 @@ actual interface WGPURenderBundleEncoderDescriptor : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var label: WGPUStringView
     actual var colorFormatCount: ULong
-    actual var colorFormats: NativeAddress
+    actual var colorFormats: NativeAddress?
     actual var depthStencilFormat: WGPUTextureFormat
     actual var sampleCount: UInt
     actual var depthReadOnly: UInt
@@ -2172,9 +2172,9 @@ actual interface WGPURenderBundleEncoderDescriptor : CStructure {
         override var colorFormatCount: ULong
             get() = (colorFormatCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = colorFormatCount_VH.set(handler.handler, 0L, value.toLong())
-        override var colorFormats: NativeAddress
-            get() = (colorFormats_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = colorFormats_VH.set(handler.handler, 0L, value.handler)
+        override var colorFormats: NativeAddress?
+            get() = (colorFormats_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = colorFormats_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var depthStencilFormat: WGPUTextureFormat
             get() = (depthStencilFormat_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUTextureFormat
             set(value) = depthStencilFormat_VH.set(handler.handler, 0L, value.toInt())
@@ -2492,7 +2492,7 @@ actual interface WGPUSamplerDescriptor : CStructure {
 actual interface WGPUShaderSourceSPIRV : CStructure {
     actual var chain: WGPUChainedStruct
     actual var codeSize: UInt
-    actual var code: NativeAddress
+    actual var code: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -2528,9 +2528,9 @@ actual interface WGPUShaderSourceSPIRV : CStructure {
         override var codeSize: UInt
             get() = (codeSize_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
             set(value) = codeSize_VH.set(handler.handler, 0L, value.toInt())
-        override var code: NativeAddress
-            get() = (code_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = code_VH.set(handler.handler, 0L, value.handler)
+        override var code: NativeAddress?
+            get() = (code_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = code_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
@@ -2674,7 +2674,7 @@ actual interface WGPUStorageTextureBindingLayout : CStructure {
 
 actual interface WGPUSupportedFeatures : CStructure {
     actual var featureCount: ULong
-    actual var features: NativeAddress
+    actual var features: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -2703,15 +2703,15 @@ actual interface WGPUSupportedFeatures : CStructure {
         override var featureCount: ULong
             get() = (featureCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = featureCount_VH.set(handler.handler, 0L, value.toLong())
-        override var features: NativeAddress
-            get() = (features_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = features_VH.set(handler.handler, 0L, value.handler)
+        override var features: NativeAddress?
+            get() = (features_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = features_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUSupportedInstanceFeatures : CStructure {
     actual var featureCount: ULong
-    actual var features: NativeAddress
+    actual var features: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -2740,15 +2740,15 @@ actual interface WGPUSupportedInstanceFeatures : CStructure {
         override var featureCount: ULong
             get() = (featureCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = featureCount_VH.set(handler.handler, 0L, value.toLong())
-        override var features: NativeAddress
-            get() = (features_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = features_VH.set(handler.handler, 0L, value.handler)
+        override var features: NativeAddress?
+            get() = (features_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = features_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUSupportedWGSLLanguageFeatures : CStructure {
     actual var featureCount: ULong
-    actual var features: NativeAddress
+    actual var features: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -2777,9 +2777,9 @@ actual interface WGPUSupportedWGSLLanguageFeatures : CStructure {
         override var featureCount: ULong
             get() = (featureCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = featureCount_VH.set(handler.handler, 0L, value.toLong())
-        override var features: NativeAddress
-            get() = (features_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = features_VH.set(handler.handler, 0L, value.handler)
+        override var features: NativeAddress?
+            get() = (features_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = features_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
@@ -2787,11 +2787,11 @@ actual interface WGPUSurfaceCapabilities : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var usages: ULong
     actual var formatCount: ULong
-    actual var formats: NativeAddress
+    actual var formats: NativeAddress?
     actual var presentModeCount: ULong
-    actual var presentModes: NativeAddress
+    actual var presentModes: NativeAddress?
     actual var alphaModeCount: ULong
-    actual var alphaModes: NativeAddress
+    actual var alphaModes: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -2838,21 +2838,21 @@ actual interface WGPUSurfaceCapabilities : CStructure {
         override var formatCount: ULong
             get() = (formatCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = formatCount_VH.set(handler.handler, 0L, value.toLong())
-        override var formats: NativeAddress
-            get() = (formats_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = formats_VH.set(handler.handler, 0L, value.handler)
+        override var formats: NativeAddress?
+            get() = (formats_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = formats_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var presentModeCount: ULong
             get() = (presentModeCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = presentModeCount_VH.set(handler.handler, 0L, value.toLong())
-        override var presentModes: NativeAddress
-            get() = (presentModes_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = presentModes_VH.set(handler.handler, 0L, value.handler)
+        override var presentModes: NativeAddress?
+            get() = (presentModes_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = presentModes_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var alphaModeCount: ULong
             get() = (alphaModeCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = alphaModeCount_VH.set(handler.handler, 0L, value.toLong())
-        override var alphaModes: NativeAddress
-            get() = (alphaModes_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = alphaModes_VH.set(handler.handler, 0L, value.handler)
+        override var alphaModes: NativeAddress?
+            get() = (alphaModes_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = alphaModes_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
@@ -2908,7 +2908,7 @@ actual interface WGPUSurfaceConfiguration : CStructure {
     actual var width: UInt
     actual var height: UInt
     actual var viewFormatCount: ULong
-    actual var viewFormats: NativeAddress
+    actual var viewFormats: NativeAddress?
     actual var alphaMode: WGPUCompositeAlphaMode
     actual var presentMode: WGPUPresentMode
     actual override val handler: NativeAddress
@@ -2974,9 +2974,9 @@ actual interface WGPUSurfaceConfiguration : CStructure {
         override var viewFormatCount: ULong
             get() = (viewFormatCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = viewFormatCount_VH.set(handler.handler, 0L, value.toLong())
-        override var viewFormats: NativeAddress
-            get() = (viewFormats_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = viewFormats_VH.set(handler.handler, 0L, value.handler)
+        override var viewFormats: NativeAddress?
+            get() = (viewFormats_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = viewFormats_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var alphaMode: WGPUCompositeAlphaMode
             get() = (alphaMode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCompositeAlphaMode
             set(value) = alphaMode_VH.set(handler.handler, 0L, value.toInt())
@@ -2988,7 +2988,7 @@ actual interface WGPUSurfaceConfiguration : CStructure {
 
 actual interface WGPUSurfaceSourceAndroidNativeWindow : CStructure {
     actual var chain: WGPUChainedStruct
-    actual var window: NativeAddress
+    actual var window: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -3018,15 +3018,15 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow : CStructure {
             set(value) {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
             }
-        override var window: NativeAddress
-            get() = (window_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = window_VH.set(handler.handler, 0L, value.handler)
+        override var window: NativeAddress?
+            get() = (window_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = window_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUSurfaceSourceMetalLayer : CStructure {
     actual var chain: WGPUChainedStruct
-    actual var layer: NativeAddress
+    actual var layer: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -3056,16 +3056,16 @@ actual interface WGPUSurfaceSourceMetalLayer : CStructure {
             set(value) {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
             }
-        override var layer: NativeAddress
-            get() = (layer_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = layer_VH.set(handler.handler, 0L, value.handler)
+        override var layer: NativeAddress?
+            get() = (layer_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = layer_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUSurfaceSourceWaylandSurface : CStructure {
     actual var chain: WGPUChainedStruct
-    actual var display: NativeAddress
-    actual var surface: NativeAddress
+    actual var display: NativeAddress?
+    actual var surface: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -3097,19 +3097,19 @@ actual interface WGPUSurfaceSourceWaylandSurface : CStructure {
             set(value) {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
             }
-        override var display: NativeAddress
-            get() = (display_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = display_VH.set(handler.handler, 0L, value.handler)
-        override var surface: NativeAddress
-            get() = (surface_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = surface_VH.set(handler.handler, 0L, value.handler)
+        override var display: NativeAddress?
+            get() = (display_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = display_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var surface: NativeAddress?
+            get() = (surface_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = surface_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUSurfaceSourceWindowsHWND : CStructure {
     actual var chain: WGPUChainedStruct
-    actual var hinstance: NativeAddress
-    actual var hwnd: NativeAddress
+    actual var hinstance: NativeAddress?
+    actual var hwnd: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -3141,18 +3141,18 @@ actual interface WGPUSurfaceSourceWindowsHWND : CStructure {
             set(value) {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
             }
-        override var hinstance: NativeAddress
-            get() = (hinstance_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = hinstance_VH.set(handler.handler, 0L, value.handler)
-        override var hwnd: NativeAddress
-            get() = (hwnd_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = hwnd_VH.set(handler.handler, 0L, value.handler)
+        override var hinstance: NativeAddress?
+            get() = (hinstance_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = hinstance_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var hwnd: NativeAddress?
+            get() = (hwnd_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = hwnd_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
 actual interface WGPUSurfaceSourceXCBWindow : CStructure {
     actual var chain: WGPUChainedStruct
-    actual var connection: NativeAddress
+    actual var connection: NativeAddress?
     actual var window: UInt
     actual override val handler: NativeAddress
     actual companion object {
@@ -3186,9 +3186,9 @@ actual interface WGPUSurfaceSourceXCBWindow : CStructure {
             set(value) {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
             }
-        override var connection: NativeAddress
-            get() = (connection_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = connection_VH.set(handler.handler, 0L, value.handler)
+        override var connection: NativeAddress?
+            get() = (connection_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = connection_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var window: UInt
             get() = (window_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
             set(value) = window_VH.set(handler.handler, 0L, value.toInt())
@@ -3197,7 +3197,7 @@ actual interface WGPUSurfaceSourceXCBWindow : CStructure {
 
 actual interface WGPUSurfaceSourceXlibWindow : CStructure {
     actual var chain: WGPUChainedStruct
-    actual var display: NativeAddress
+    actual var display: NativeAddress?
     actual var window: ULong
     actual override val handler: NativeAddress
     actual companion object {
@@ -3230,9 +3230,9 @@ actual interface WGPUSurfaceSourceXlibWindow : CStructure {
             set(value) {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
             }
-        override var display: NativeAddress
-            get() = (display_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = display_VH.set(handler.handler, 0L, value.handler)
+        override var display: NativeAddress?
+            get() = (display_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = display_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var window: ULong
             get() = (window_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = window_VH.set(handler.handler, 0L, value.toLong())
@@ -3979,7 +3979,7 @@ actual interface WGPUFutureWaitInfo : CStructure {
 actual interface WGPUInstanceDescriptor : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var requiredFeatureCount: ULong
-    actual var requiredFeatures: NativeAddress
+    actual var requiredFeatures: NativeAddress?
     actual var requiredLimits: WGPUInstanceLimits?
     actual override val handler: NativeAddress
     actual companion object {
@@ -4016,9 +4016,9 @@ actual interface WGPUInstanceDescriptor : CStructure {
         override var requiredFeatureCount: ULong
             get() = (requiredFeatureCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = requiredFeatureCount_VH.set(handler.handler, 0L, value.toLong())
-        override var requiredFeatures: NativeAddress
-            get() = (requiredFeatures_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = requiredFeatures_VH.set(handler.handler, 0L, value.handler)
+        override var requiredFeatures: NativeAddress?
+            get() = (requiredFeatures_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = requiredFeatures_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var requiredLimits: WGPUInstanceLimits?
             get() = (requiredLimits_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUInstanceLimits(it) }
             set(value) = requiredLimits_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
@@ -4593,7 +4593,7 @@ actual interface WGPUTextureDescriptor : CStructure {
     actual var mipLevelCount: UInt
     actual var sampleCount: UInt
     actual var viewFormatCount: ULong
-    actual var viewFormats: NativeAddress
+    actual var viewFormats: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -4665,9 +4665,9 @@ actual interface WGPUTextureDescriptor : CStructure {
         override var viewFormatCount: ULong
             get() = (viewFormatCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = viewFormatCount_VH.set(handler.handler, 0L, value.toLong())
-        override var viewFormats: NativeAddress
-            get() = (viewFormats_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = viewFormats_VH.set(handler.handler, 0L, value.handler)
+        override var viewFormats: NativeAddress?
+            get() = (viewFormats_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = viewFormats_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
@@ -4938,7 +4938,7 @@ actual interface WGPUDeviceDescriptor : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var label: WGPUStringView
     actual var requiredFeatureCount: ULong
-    actual var requiredFeatures: NativeAddress
+    actual var requiredFeatures: NativeAddress?
     actual var requiredLimits: WGPULimits?
     actual var defaultQueue: WGPUQueueDescriptor
     actual var deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
@@ -4987,9 +4987,9 @@ actual interface WGPUDeviceDescriptor : CStructure {
         override var requiredFeatureCount: ULong
             get() = (requiredFeatureCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = requiredFeatureCount_VH.set(handler.handler, 0L, value.toLong())
-        override var requiredFeatures: NativeAddress
-            get() = (requiredFeatures_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = requiredFeatures_VH.set(handler.handler, 0L, value.handler)
+        override var requiredFeatures: NativeAddress?
+            get() = (requiredFeatures_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = requiredFeatures_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var requiredLimits: WGPULimits?
             get() = (requiredLimits_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPULimits(it) }
             set(value) = requiredLimits_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
@@ -6910,7 +6910,7 @@ actual fun wgpuTextureViewRelease(textureView: WGPUTextureView?): Unit {
 }
 
 actual interface WGPUXlibDisplayHandle : CStructure {
-    actual var display: NativeAddress
+    actual var display: NativeAddress?
     actual var screen: Int
     actual override val handler: NativeAddress
     actual companion object {
@@ -6938,9 +6938,9 @@ actual interface WGPUXlibDisplayHandle : CStructure {
     
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUXlibDisplayHandle {
-        override var display: NativeAddress
-            get() = (display_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = display_VH.set(handler.handler, 0L, value.handler)
+        override var display: NativeAddress?
+            get() = (display_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = display_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var screen: Int
             get() = screen_VH.get(handler.handler, 0L) as Int
             set(value) = screen_VH.set(handler.handler, 0L, value)
@@ -6948,7 +6948,7 @@ actual interface WGPUXlibDisplayHandle : CStructure {
 }
 
 actual interface WGPUXcbDisplayHandle : CStructure {
-    actual var connection: NativeAddress
+    actual var connection: NativeAddress?
     actual var screen: Int
     actual override val handler: NativeAddress
     actual companion object {
@@ -6976,9 +6976,9 @@ actual interface WGPUXcbDisplayHandle : CStructure {
     
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUXcbDisplayHandle {
-        override var connection: NativeAddress
-            get() = (connection_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = connection_VH.set(handler.handler, 0L, value.handler)
+        override var connection: NativeAddress?
+            get() = (connection_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = connection_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var screen: Int
             get() = screen_VH.get(handler.handler, 0L) as Int
             set(value) = screen_VH.set(handler.handler, 0L, value)
@@ -6986,7 +6986,7 @@ actual interface WGPUXcbDisplayHandle : CStructure {
 }
 
 actual interface WGPUWaylandDisplayHandle : CStructure {
-    actual var display: NativeAddress
+    actual var display: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -7010,9 +7010,9 @@ actual interface WGPUWaylandDisplayHandle : CStructure {
     
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUWaylandDisplayHandle {
-        override var display: NativeAddress
-            get() = (display_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = display_VH.set(handler.handler, 0L, value.handler)
+        override var display: NativeAddress?
+            get() = (display_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = display_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
@@ -7084,8 +7084,8 @@ actual interface WGPUInstanceExtras : CStructure {
     actual var dxcPath: WGPUStringView
     actual var dxcMaxShaderModel: WGPUDxcMaxShaderModel
     actual var dx12PresentationSystem: WGPUDx12SwapchainKind
-    actual var budgetForDeviceCreation: NativeAddress
-    actual var budgetForDeviceLoss: NativeAddress
+    actual var budgetForDeviceCreation: NativeAddress?
+    actual var budgetForDeviceLoss: NativeAddress?
     actual var displayHandle: WGPUNativeDisplayHandle
     actual override val handler: NativeAddress
     actual companion object {
@@ -7161,12 +7161,12 @@ actual interface WGPUInstanceExtras : CStructure {
         override var dx12PresentationSystem: WGPUDx12SwapchainKind
             get() = (dx12PresentationSystem_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUDx12SwapchainKind
             set(value) = dx12PresentationSystem_VH.set(handler.handler, 0L, value.toInt())
-        override var budgetForDeviceCreation: NativeAddress
-            get() = (budgetForDeviceCreation_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = budgetForDeviceCreation_VH.set(handler.handler, 0L, value.handler)
-        override var budgetForDeviceLoss: NativeAddress
-            get() = (budgetForDeviceLoss_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = budgetForDeviceLoss_VH.set(handler.handler, 0L, value.handler)
+        override var budgetForDeviceCreation: NativeAddress?
+            get() = (budgetForDeviceCreation_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = budgetForDeviceCreation_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
+        override var budgetForDeviceLoss: NativeAddress?
+            get() = (budgetForDeviceLoss_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = budgetForDeviceLoss_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var displayHandle: WGPUNativeDisplayHandle
             get() = WGPUNativeDisplayHandle(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("displayHandle")), Companion.layout.select(groupElement("displayHandle")).byteSize())))
             set(value) {
@@ -7404,7 +7404,7 @@ actual interface WGPUShaderSourceGLSL : CStructure {
 actual interface WGPUShaderModuleDescriptorSpirV : CStructure {
     actual var label: WGPUStringView
     actual var sourceSize: UInt
-    actual var source: NativeAddress
+    actual var source: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -7440,9 +7440,9 @@ actual interface WGPUShaderModuleDescriptorSpirV : CStructure {
         override var sourceSize: UInt
             get() = (sourceSize_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
             set(value) = sourceSize_VH.set(handler.handler, 0L, value.toInt())
-        override var source: NativeAddress
-            get() = (source_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = source_VH.set(handler.handler, 0L, value.handler)
+        override var source: NativeAddress?
+            get() = (source_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = source_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 
@@ -7824,7 +7824,7 @@ actual interface WGPUBindGroupLayoutEntryExtras : CStructure {
 
 actual interface WGPUQuerySetDescriptorExtras : CStructure {
     actual var chain: WGPUChainedStruct
-    actual var pipelineStatistics: NativeAddress
+    actual var pipelineStatistics: NativeAddress?
     actual var pipelineStatisticCount: ULong
     actual override val handler: NativeAddress
     actual companion object {
@@ -7857,9 +7857,9 @@ actual interface WGPUQuerySetDescriptorExtras : CStructure {
             set(value) {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
             }
-        override var pipelineStatistics: NativeAddress
-            get() = (pipelineStatistics_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = pipelineStatistics_VH.set(handler.handler, 0L, value.handler)
+        override var pipelineStatistics: NativeAddress?
+            get() = (pipelineStatistics_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = pipelineStatistics_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var pipelineStatisticCount: ULong
             get() = (pipelineStatisticCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = pipelineStatisticCount_VH.set(handler.handler, 0L, value.toLong())
@@ -7907,7 +7907,7 @@ actual interface WGPUSurfaceConfigurationExtras : CStructure {
 
 actual interface WGPUSurfaceSourceSwapChainPanel : CStructure {
     actual var chain: WGPUChainedStruct
-    actual var panelNative: NativeAddress
+    actual var panelNative: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
         val layout: GroupLayout = MemoryLayout.structLayout(
@@ -7937,9 +7937,9 @@ actual interface WGPUSurfaceSourceSwapChainPanel : CStructure {
             set(value) {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
             }
-        override var panelNative: NativeAddress
-            get() = (panelNative_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress) ?: NativeAddress(MemorySegment.NULL)
-            set(value) = panelNative_VH.set(handler.handler, 0L, value.handler)
+        override var panelNative: NativeAddress?
+            get() = (panelNative_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = panelNative_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
     }
 }
 

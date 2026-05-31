@@ -269,9 +269,9 @@ actual interface WGPUChainedStruct {
 actual interface WGPUBufferMapCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBufferMapCallbackInfo {
@@ -302,14 +302,14 @@ actual interface WGPUBufferMapCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -325,14 +325,14 @@ actual interface WGPUBufferMapCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -345,9 +345,9 @@ actual interface WGPUBufferMapCallbackInfo {
 actual interface WGPUCompilationInfoCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCompilationInfoCallbackInfo {
@@ -378,14 +378,14 @@ actual interface WGPUCompilationInfoCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -401,14 +401,14 @@ actual interface WGPUCompilationInfoCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -421,9 +421,9 @@ actual interface WGPUCompilationInfoCallbackInfo {
 actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCreateComputePipelineAsyncCallbackInfo {
@@ -454,14 +454,14 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -477,14 +477,14 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -497,9 +497,9 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
 actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCreateRenderPipelineAsyncCallbackInfo {
@@ -530,14 +530,14 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -553,14 +553,14 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -573,9 +573,9 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 actual interface WGPUDeviceLostCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUDeviceLostCallbackInfo {
@@ -606,14 +606,14 @@ actual interface WGPUDeviceLostCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -629,14 +629,14 @@ actual interface WGPUDeviceLostCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -649,9 +649,9 @@ actual interface WGPUDeviceLostCallbackInfo {
 actual interface WGPUPopErrorScopeCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUPopErrorScopeCallbackInfo {
@@ -682,14 +682,14 @@ actual interface WGPUPopErrorScopeCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -705,14 +705,14 @@ actual interface WGPUPopErrorScopeCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -725,9 +725,9 @@ actual interface WGPUPopErrorScopeCallbackInfo {
 actual interface WGPUQueueWorkDoneCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUQueueWorkDoneCallbackInfo {
@@ -758,14 +758,14 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -781,14 +781,14 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -801,9 +801,9 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
 actual interface WGPURequestAdapterCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURequestAdapterCallbackInfo {
@@ -834,14 +834,14 @@ actual interface WGPURequestAdapterCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -857,14 +857,14 @@ actual interface WGPURequestAdapterCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -877,9 +877,9 @@ actual interface WGPURequestAdapterCallbackInfo {
 actual interface WGPURequestDeviceCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURequestDeviceCallbackInfo {
@@ -910,14 +910,14 @@ actual interface WGPURequestDeviceCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -933,14 +933,14 @@ actual interface WGPURequestDeviceCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.mode.toUInt() as WGPUCallbackMode
             set(value) { handle.mode = value.toInt() }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -952,9 +952,9 @@ actual interface WGPURequestDeviceCallbackInfo {
 
 actual interface WGPUUncapturedErrorCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUUncapturedErrorCallbackInfo {
@@ -982,14 +982,14 @@ actual interface WGPUUncapturedErrorCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -1002,14 +1002,14 @@ actual interface WGPUUncapturedErrorCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
-        override var callback: NativeAddress
-            get() = handle.callback ?: com.sun.jna.Pointer.NULL
+        override var callback: NativeAddress?
+            get() = handle.callback
             set(value) { handle.callback = value }
-        override var userdata1: NativeAddress
-            get() = handle.userdata1 ?: com.sun.jna.Pointer.NULL
+        override var userdata1: NativeAddress?
+            get() = handle.userdata1
             set(value) { handle.userdata1 = value }
-        override var userdata2: NativeAddress
-            get() = handle.userdata2 ?: com.sun.jna.Pointer.NULL
+        override var userdata2: NativeAddress?
+            get() = handle.userdata2
             set(value) { handle.userdata2 = value }
         override val handler: NativeAddress
             get() {
@@ -2561,7 +2561,7 @@ actual interface WGPURenderBundleEncoderDescriptor {
     actual var nextInChain: WGPUChainedStruct?
     actual var label: WGPUStringView
     actual var colorFormatCount: ULong
-    actual var colorFormats: NativeAddress
+    actual var colorFormats: NativeAddress?
     actual var depthStencilFormat: WGPUTextureFormat
     actual var sampleCount: UInt
     actual var depthReadOnly: UInt
@@ -2599,8 +2599,8 @@ actual interface WGPURenderBundleEncoderDescriptor {
         override var colorFormatCount: ULong
             get() = handle.colorFormatCount.toULong() as ULong
             set(value) { handle.colorFormatCount = value.toLong() }
-        override var colorFormats: NativeAddress
-            get() = handle.colorFormats ?: com.sun.jna.Pointer.NULL
+        override var colorFormats: NativeAddress?
+            get() = handle.colorFormats
             set(value) { handle.colorFormats = value }
         override var depthStencilFormat: WGPUTextureFormat
             get() = handle.depthStencilFormat.toUInt() as WGPUTextureFormat
@@ -2631,8 +2631,8 @@ actual interface WGPURenderBundleEncoderDescriptor {
         override var colorFormatCount: ULong
             get() = handle.colorFormatCount.toULong() as ULong
             set(value) { handle.colorFormatCount = value.toLong() }
-        override var colorFormats: NativeAddress
-            get() = handle.colorFormats ?: com.sun.jna.Pointer.NULL
+        override var colorFormats: NativeAddress?
+            get() = handle.colorFormats
             set(value) { handle.colorFormats = value }
         override var depthStencilFormat: WGPUTextureFormat
             get() = handle.depthStencilFormat.toUInt() as WGPUTextureFormat
@@ -3058,7 +3058,7 @@ actual interface WGPUSamplerDescriptor {
 actual interface WGPUShaderSourceSPIRV {
     actual var chain: WGPUChainedStruct
     actual var codeSize: UInt
-    actual var code: NativeAddress
+    actual var code: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUShaderSourceSPIRV {
@@ -3089,8 +3089,8 @@ actual interface WGPUShaderSourceSPIRV {
         override var codeSize: UInt
             get() = handle.codeSize.toUInt() as UInt
             set(value) { handle.codeSize = value.toInt() }
-        override var code: NativeAddress
-            get() = handle.code ?: com.sun.jna.Pointer.NULL
+        override var code: NativeAddress?
+            get() = handle.code
             set(value) { handle.code = value }
         override val handler: NativeAddress
             get() {
@@ -3106,8 +3106,8 @@ actual interface WGPUShaderSourceSPIRV {
         override var codeSize: UInt
             get() = handle.codeSize.toUInt() as UInt
             set(value) { handle.codeSize = value.toInt() }
-        override var code: NativeAddress
-            get() = handle.code ?: com.sun.jna.Pointer.NULL
+        override var code: NativeAddress?
+            get() = handle.code
             set(value) { handle.code = value }
         override val handler: NativeAddress
             get() {
@@ -3312,7 +3312,7 @@ actual interface WGPUStorageTextureBindingLayout {
 
 actual interface WGPUSupportedFeatures {
     actual var featureCount: ULong
-    actual var features: NativeAddress
+    actual var features: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSupportedFeatures {
@@ -3340,8 +3340,8 @@ actual interface WGPUSupportedFeatures {
         override var featureCount: ULong
             get() = handle.featureCount.toULong() as ULong
             set(value) { handle.featureCount = value.toLong() }
-        override var features: NativeAddress
-            get() = handle.features ?: com.sun.jna.Pointer.NULL
+        override var features: NativeAddress?
+            get() = handle.features
             set(value) { handle.features = value }
         override val handler: NativeAddress
             get() {
@@ -3354,8 +3354,8 @@ actual interface WGPUSupportedFeatures {
         override var featureCount: ULong
             get() = handle.featureCount.toULong() as ULong
             set(value) { handle.featureCount = value.toLong() }
-        override var features: NativeAddress
-            get() = handle.features ?: com.sun.jna.Pointer.NULL
+        override var features: NativeAddress?
+            get() = handle.features
             set(value) { handle.features = value }
         override val handler: NativeAddress
             get() {
@@ -3367,7 +3367,7 @@ actual interface WGPUSupportedFeatures {
 
 actual interface WGPUSupportedInstanceFeatures {
     actual var featureCount: ULong
-    actual var features: NativeAddress
+    actual var features: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSupportedInstanceFeatures {
@@ -3395,8 +3395,8 @@ actual interface WGPUSupportedInstanceFeatures {
         override var featureCount: ULong
             get() = handle.featureCount.toULong() as ULong
             set(value) { handle.featureCount = value.toLong() }
-        override var features: NativeAddress
-            get() = handle.features ?: com.sun.jna.Pointer.NULL
+        override var features: NativeAddress?
+            get() = handle.features
             set(value) { handle.features = value }
         override val handler: NativeAddress
             get() {
@@ -3409,8 +3409,8 @@ actual interface WGPUSupportedInstanceFeatures {
         override var featureCount: ULong
             get() = handle.featureCount.toULong() as ULong
             set(value) { handle.featureCount = value.toLong() }
-        override var features: NativeAddress
-            get() = handle.features ?: com.sun.jna.Pointer.NULL
+        override var features: NativeAddress?
+            get() = handle.features
             set(value) { handle.features = value }
         override val handler: NativeAddress
             get() {
@@ -3422,7 +3422,7 @@ actual interface WGPUSupportedInstanceFeatures {
 
 actual interface WGPUSupportedWGSLLanguageFeatures {
     actual var featureCount: ULong
-    actual var features: NativeAddress
+    actual var features: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSupportedWGSLLanguageFeatures {
@@ -3450,8 +3450,8 @@ actual interface WGPUSupportedWGSLLanguageFeatures {
         override var featureCount: ULong
             get() = handle.featureCount.toULong() as ULong
             set(value) { handle.featureCount = value.toLong() }
-        override var features: NativeAddress
-            get() = handle.features ?: com.sun.jna.Pointer.NULL
+        override var features: NativeAddress?
+            get() = handle.features
             set(value) { handle.features = value }
         override val handler: NativeAddress
             get() {
@@ -3464,8 +3464,8 @@ actual interface WGPUSupportedWGSLLanguageFeatures {
         override var featureCount: ULong
             get() = handle.featureCount.toULong() as ULong
             set(value) { handle.featureCount = value.toLong() }
-        override var features: NativeAddress
-            get() = handle.features ?: com.sun.jna.Pointer.NULL
+        override var features: NativeAddress?
+            get() = handle.features
             set(value) { handle.features = value }
         override val handler: NativeAddress
             get() {
@@ -3479,11 +3479,11 @@ actual interface WGPUSurfaceCapabilities {
     actual var nextInChain: WGPUChainedStruct?
     actual var usages: ULong
     actual var formatCount: ULong
-    actual var formats: NativeAddress
+    actual var formats: NativeAddress?
     actual var presentModeCount: ULong
-    actual var presentModes: NativeAddress
+    actual var presentModes: NativeAddress?
     actual var alphaModeCount: ULong
-    actual var alphaModes: NativeAddress
+    actual var alphaModes: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceCapabilities {
@@ -3517,20 +3517,20 @@ actual interface WGPUSurfaceCapabilities {
         override var formatCount: ULong
             get() = handle.formatCount.toULong() as ULong
             set(value) { handle.formatCount = value.toLong() }
-        override var formats: NativeAddress
-            get() = handle.formats ?: com.sun.jna.Pointer.NULL
+        override var formats: NativeAddress?
+            get() = handle.formats
             set(value) { handle.formats = value }
         override var presentModeCount: ULong
             get() = handle.presentModeCount.toULong() as ULong
             set(value) { handle.presentModeCount = value.toLong() }
-        override var presentModes: NativeAddress
-            get() = handle.presentModes ?: com.sun.jna.Pointer.NULL
+        override var presentModes: NativeAddress?
+            get() = handle.presentModes
             set(value) { handle.presentModes = value }
         override var alphaModeCount: ULong
             get() = handle.alphaModeCount.toULong() as ULong
             set(value) { handle.alphaModeCount = value.toLong() }
-        override var alphaModes: NativeAddress
-            get() = handle.alphaModes ?: com.sun.jna.Pointer.NULL
+        override var alphaModes: NativeAddress?
+            get() = handle.alphaModes
             set(value) { handle.alphaModes = value }
         override val handler: NativeAddress
             get() {
@@ -3549,20 +3549,20 @@ actual interface WGPUSurfaceCapabilities {
         override var formatCount: ULong
             get() = handle.formatCount.toULong() as ULong
             set(value) { handle.formatCount = value.toLong() }
-        override var formats: NativeAddress
-            get() = handle.formats ?: com.sun.jna.Pointer.NULL
+        override var formats: NativeAddress?
+            get() = handle.formats
             set(value) { handle.formats = value }
         override var presentModeCount: ULong
             get() = handle.presentModeCount.toULong() as ULong
             set(value) { handle.presentModeCount = value.toLong() }
-        override var presentModes: NativeAddress
-            get() = handle.presentModes ?: com.sun.jna.Pointer.NULL
+        override var presentModes: NativeAddress?
+            get() = handle.presentModes
             set(value) { handle.presentModes = value }
         override var alphaModeCount: ULong
             get() = handle.alphaModeCount.toULong() as ULong
             set(value) { handle.alphaModeCount = value.toLong() }
-        override var alphaModes: NativeAddress
-            get() = handle.alphaModes ?: com.sun.jna.Pointer.NULL
+        override var alphaModes: NativeAddress?
+            get() = handle.alphaModes
             set(value) { handle.alphaModes = value }
         override val handler: NativeAddress
             get() {
@@ -3642,7 +3642,7 @@ actual interface WGPUSurfaceConfiguration {
     actual var width: UInt
     actual var height: UInt
     actual var viewFormatCount: ULong
-    actual var viewFormats: NativeAddress
+    actual var viewFormats: NativeAddress?
     actual var alphaMode: WGPUCompositeAlphaMode
     actual var presentMode: WGPUPresentMode
     actual val handler: NativeAddress
@@ -3690,8 +3690,8 @@ actual interface WGPUSurfaceConfiguration {
         override var viewFormatCount: ULong
             get() = handle.viewFormatCount.toULong() as ULong
             set(value) { handle.viewFormatCount = value.toLong() }
-        override var viewFormats: NativeAddress
-            get() = handle.viewFormats ?: com.sun.jna.Pointer.NULL
+        override var viewFormats: NativeAddress?
+            get() = handle.viewFormats
             set(value) { handle.viewFormats = value }
         override var alphaMode: WGPUCompositeAlphaMode
             get() = handle.alphaMode.toUInt() as WGPUCompositeAlphaMode
@@ -3728,8 +3728,8 @@ actual interface WGPUSurfaceConfiguration {
         override var viewFormatCount: ULong
             get() = handle.viewFormatCount.toULong() as ULong
             set(value) { handle.viewFormatCount = value.toLong() }
-        override var viewFormats: NativeAddress
-            get() = handle.viewFormats ?: com.sun.jna.Pointer.NULL
+        override var viewFormats: NativeAddress?
+            get() = handle.viewFormats
             set(value) { handle.viewFormats = value }
         override var alphaMode: WGPUCompositeAlphaMode
             get() = handle.alphaMode.toUInt() as WGPUCompositeAlphaMode
@@ -3747,7 +3747,7 @@ actual interface WGPUSurfaceConfiguration {
 
 actual interface WGPUSurfaceSourceAndroidNativeWindow {
     actual var chain: WGPUChainedStruct
-    actual var window: NativeAddress
+    actual var window: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceAndroidNativeWindow {
@@ -3775,8 +3775,8 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var window: NativeAddress
-            get() = handle.window ?: com.sun.jna.Pointer.NULL
+        override var window: NativeAddress?
+            get() = handle.window
             set(value) { handle.window = value }
         override val handler: NativeAddress
             get() {
@@ -3789,8 +3789,8 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var window: NativeAddress
-            get() = handle.window ?: com.sun.jna.Pointer.NULL
+        override var window: NativeAddress?
+            get() = handle.window
             set(value) { handle.window = value }
         override val handler: NativeAddress
             get() {
@@ -3802,7 +3802,7 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
 
 actual interface WGPUSurfaceSourceMetalLayer {
     actual var chain: WGPUChainedStruct
-    actual var layer: NativeAddress
+    actual var layer: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceMetalLayer {
@@ -3830,8 +3830,8 @@ actual interface WGPUSurfaceSourceMetalLayer {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var layer: NativeAddress
-            get() = handle.layer ?: com.sun.jna.Pointer.NULL
+        override var layer: NativeAddress?
+            get() = handle.layer
             set(value) { handle.layer = value }
         override val handler: NativeAddress
             get() {
@@ -3844,8 +3844,8 @@ actual interface WGPUSurfaceSourceMetalLayer {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var layer: NativeAddress
-            get() = handle.layer ?: com.sun.jna.Pointer.NULL
+        override var layer: NativeAddress?
+            get() = handle.layer
             set(value) { handle.layer = value }
         override val handler: NativeAddress
             get() {
@@ -3857,8 +3857,8 @@ actual interface WGPUSurfaceSourceMetalLayer {
 
 actual interface WGPUSurfaceSourceWaylandSurface {
     actual var chain: WGPUChainedStruct
-    actual var display: NativeAddress
-    actual var surface: NativeAddress
+    actual var display: NativeAddress?
+    actual var surface: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceWaylandSurface {
@@ -3886,11 +3886,11 @@ actual interface WGPUSurfaceSourceWaylandSurface {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var display: NativeAddress
-            get() = handle.display ?: com.sun.jna.Pointer.NULL
+        override var display: NativeAddress?
+            get() = handle.display
             set(value) { handle.display = value }
-        override var surface: NativeAddress
-            get() = handle.surface ?: com.sun.jna.Pointer.NULL
+        override var surface: NativeAddress?
+            get() = handle.surface
             set(value) { handle.surface = value }
         override val handler: NativeAddress
             get() {
@@ -3903,11 +3903,11 @@ actual interface WGPUSurfaceSourceWaylandSurface {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var display: NativeAddress
-            get() = handle.display ?: com.sun.jna.Pointer.NULL
+        override var display: NativeAddress?
+            get() = handle.display
             set(value) { handle.display = value }
-        override var surface: NativeAddress
-            get() = handle.surface ?: com.sun.jna.Pointer.NULL
+        override var surface: NativeAddress?
+            get() = handle.surface
             set(value) { handle.surface = value }
         override val handler: NativeAddress
             get() {
@@ -3919,8 +3919,8 @@ actual interface WGPUSurfaceSourceWaylandSurface {
 
 actual interface WGPUSurfaceSourceWindowsHWND {
     actual var chain: WGPUChainedStruct
-    actual var hinstance: NativeAddress
-    actual var hwnd: NativeAddress
+    actual var hinstance: NativeAddress?
+    actual var hwnd: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceWindowsHWND {
@@ -3948,11 +3948,11 @@ actual interface WGPUSurfaceSourceWindowsHWND {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var hinstance: NativeAddress
-            get() = handle.hinstance ?: com.sun.jna.Pointer.NULL
+        override var hinstance: NativeAddress?
+            get() = handle.hinstance
             set(value) { handle.hinstance = value }
-        override var hwnd: NativeAddress
-            get() = handle.hwnd ?: com.sun.jna.Pointer.NULL
+        override var hwnd: NativeAddress?
+            get() = handle.hwnd
             set(value) { handle.hwnd = value }
         override val handler: NativeAddress
             get() {
@@ -3965,11 +3965,11 @@ actual interface WGPUSurfaceSourceWindowsHWND {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var hinstance: NativeAddress
-            get() = handle.hinstance ?: com.sun.jna.Pointer.NULL
+        override var hinstance: NativeAddress?
+            get() = handle.hinstance
             set(value) { handle.hinstance = value }
-        override var hwnd: NativeAddress
-            get() = handle.hwnd ?: com.sun.jna.Pointer.NULL
+        override var hwnd: NativeAddress?
+            get() = handle.hwnd
             set(value) { handle.hwnd = value }
         override val handler: NativeAddress
             get() {
@@ -3981,7 +3981,7 @@ actual interface WGPUSurfaceSourceWindowsHWND {
 
 actual interface WGPUSurfaceSourceXCBWindow {
     actual var chain: WGPUChainedStruct
-    actual var connection: NativeAddress
+    actual var connection: NativeAddress?
     actual var window: UInt
     actual val handler: NativeAddress
     actual companion object {
@@ -4010,8 +4010,8 @@ actual interface WGPUSurfaceSourceXCBWindow {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var connection: NativeAddress
-            get() = handle.connection ?: com.sun.jna.Pointer.NULL
+        override var connection: NativeAddress?
+            get() = handle.connection
             set(value) { handle.connection = value }
         override var window: UInt
             get() = handle.window.toUInt() as UInt
@@ -4027,8 +4027,8 @@ actual interface WGPUSurfaceSourceXCBWindow {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var connection: NativeAddress
-            get() = handle.connection ?: com.sun.jna.Pointer.NULL
+        override var connection: NativeAddress?
+            get() = handle.connection
             set(value) { handle.connection = value }
         override var window: UInt
             get() = handle.window.toUInt() as UInt
@@ -4043,7 +4043,7 @@ actual interface WGPUSurfaceSourceXCBWindow {
 
 actual interface WGPUSurfaceSourceXlibWindow {
     actual var chain: WGPUChainedStruct
-    actual var display: NativeAddress
+    actual var display: NativeAddress?
     actual var window: ULong
     actual val handler: NativeAddress
     actual companion object {
@@ -4072,8 +4072,8 @@ actual interface WGPUSurfaceSourceXlibWindow {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var display: NativeAddress
-            get() = handle.display ?: com.sun.jna.Pointer.NULL
+        override var display: NativeAddress?
+            get() = handle.display
             set(value) { handle.display = value }
         override var window: ULong
             get() = handle.window.toULong() as ULong
@@ -4089,8 +4089,8 @@ actual interface WGPUSurfaceSourceXlibWindow {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var display: NativeAddress
-            get() = handle.display ?: com.sun.jna.Pointer.NULL
+        override var display: NativeAddress?
+            get() = handle.display
             set(value) { handle.display = value }
         override var window: ULong
             get() = handle.window.toULong() as ULong
@@ -5107,7 +5107,7 @@ actual interface WGPUFutureWaitInfo {
 actual interface WGPUInstanceDescriptor {
     actual var nextInChain: WGPUChainedStruct?
     actual var requiredFeatureCount: ULong
-    actual var requiredFeatures: NativeAddress
+    actual var requiredFeatures: NativeAddress?
     actual var requiredLimits: WGPUInstanceLimits?
     actual val handler: NativeAddress
     actual companion object {
@@ -5139,8 +5139,8 @@ actual interface WGPUInstanceDescriptor {
         override var requiredFeatureCount: ULong
             get() = handle.requiredFeatureCount.toULong() as ULong
             set(value) { handle.requiredFeatureCount = value.toLong() }
-        override var requiredFeatures: NativeAddress
-            get() = handle.requiredFeatures ?: com.sun.jna.Pointer.NULL
+        override var requiredFeatures: NativeAddress?
+            get() = handle.requiredFeatures
             set(value) { handle.requiredFeatures = value }
         override var requiredLimits: WGPUInstanceLimits?
             get() = handle.requiredLimits?.let { WGPUInstanceLimits(it) }
@@ -5159,8 +5159,8 @@ actual interface WGPUInstanceDescriptor {
         override var requiredFeatureCount: ULong
             get() = handle.requiredFeatureCount.toULong() as ULong
             set(value) { handle.requiredFeatureCount = value.toLong() }
-        override var requiredFeatures: NativeAddress
-            get() = handle.requiredFeatures ?: com.sun.jna.Pointer.NULL
+        override var requiredFeatures: NativeAddress?
+            get() = handle.requiredFeatures
             set(value) { handle.requiredFeatures = value }
         override var requiredLimits: WGPUInstanceLimits?
             get() = handle.requiredLimits?.let { WGPUInstanceLimits(it) }
@@ -5917,7 +5917,7 @@ actual interface WGPUTextureDescriptor {
     actual var mipLevelCount: UInt
     actual var sampleCount: UInt
     actual var viewFormatCount: ULong
-    actual var viewFormats: NativeAddress
+    actual var viewFormats: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUTextureDescriptor {
@@ -5969,8 +5969,8 @@ actual interface WGPUTextureDescriptor {
         override var viewFormatCount: ULong
             get() = handle.viewFormatCount.toULong() as ULong
             set(value) { handle.viewFormatCount = value.toLong() }
-        override var viewFormats: NativeAddress
-            get() = handle.viewFormats ?: com.sun.jna.Pointer.NULL
+        override var viewFormats: NativeAddress?
+            get() = handle.viewFormats
             set(value) { handle.viewFormats = value }
         override val handler: NativeAddress
             get() {
@@ -6007,8 +6007,8 @@ actual interface WGPUTextureDescriptor {
         override var viewFormatCount: ULong
             get() = handle.viewFormatCount.toULong() as ULong
             set(value) { handle.viewFormatCount = value.toLong() }
-        override var viewFormats: NativeAddress
-            get() = handle.viewFormats ?: com.sun.jna.Pointer.NULL
+        override var viewFormats: NativeAddress?
+            get() = handle.viewFormats
             set(value) { handle.viewFormats = value }
         override val handler: NativeAddress
             get() {
@@ -6381,7 +6381,7 @@ actual interface WGPUDeviceDescriptor {
     actual var nextInChain: WGPUChainedStruct?
     actual var label: WGPUStringView
     actual var requiredFeatureCount: ULong
-    actual var requiredFeatures: NativeAddress
+    actual var requiredFeatures: NativeAddress?
     actual var requiredLimits: WGPULimits?
     actual var defaultQueue: WGPUQueueDescriptor
     actual var deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
@@ -6419,8 +6419,8 @@ actual interface WGPUDeviceDescriptor {
         override var requiredFeatureCount: ULong
             get() = handle.requiredFeatureCount.toULong() as ULong
             set(value) { handle.requiredFeatureCount = value.toLong() }
-        override var requiredFeatures: NativeAddress
-            get() = handle.requiredFeatures ?: com.sun.jna.Pointer.NULL
+        override var requiredFeatures: NativeAddress?
+            get() = handle.requiredFeatures
             set(value) { handle.requiredFeatures = value }
         override var requiredLimits: WGPULimits?
             get() = handle.requiredLimits?.let { WGPULimits(it) }
@@ -6451,8 +6451,8 @@ actual interface WGPUDeviceDescriptor {
         override var requiredFeatureCount: ULong
             get() = handle.requiredFeatureCount.toULong() as ULong
             set(value) { handle.requiredFeatureCount = value.toLong() }
-        override var requiredFeatures: NativeAddress
-            get() = handle.requiredFeatures ?: com.sun.jna.Pointer.NULL
+        override var requiredFeatures: NativeAddress?
+            get() = handle.requiredFeatures
             set(value) { handle.requiredFeatures = value }
         override var requiredLimits: WGPULimits?
             get() = handle.requiredLimits?.let { WGPULimits(it) }
@@ -7550,7 +7550,7 @@ actual fun wgpuTextureViewRelease(textureView: WGPUTextureView?): Unit =
     error("wgpuTextureViewRelease is not implemented for Android/JNA generated bindings")
 
 actual interface WGPUXlibDisplayHandle {
-    actual var display: NativeAddress
+    actual var display: NativeAddress?
     actual var screen: Int
     actual val handler: NativeAddress
     actual companion object {
@@ -7576,8 +7576,8 @@ actual interface WGPUXlibDisplayHandle {
     }
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByReference = io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByReference(com.sun.jna.Pointer.NULL)) : WGPUXlibDisplayHandle {
-        override var display: NativeAddress
-            get() = handle.display ?: com.sun.jna.Pointer.NULL
+        override var display: NativeAddress?
+            get() = handle.display
             set(value) { handle.display = value }
         override var screen: Int
             get() = handle.screen as Int
@@ -7590,8 +7590,8 @@ actual interface WGPUXlibDisplayHandle {
     }
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue = io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue(com.sun.jna.Pointer.NULL)) : WGPUXlibDisplayHandle {
-        override var display: NativeAddress
-            get() = handle.display ?: com.sun.jna.Pointer.NULL
+        override var display: NativeAddress?
+            get() = handle.display
             set(value) { handle.display = value }
         override var screen: Int
             get() = handle.screen as Int
@@ -7605,7 +7605,7 @@ actual interface WGPUXlibDisplayHandle {
 }
 
 actual interface WGPUXcbDisplayHandle {
-    actual var connection: NativeAddress
+    actual var connection: NativeAddress?
     actual var screen: Int
     actual val handler: NativeAddress
     actual companion object {
@@ -7631,8 +7631,8 @@ actual interface WGPUXcbDisplayHandle {
     }
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByReference = io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByReference(com.sun.jna.Pointer.NULL)) : WGPUXcbDisplayHandle {
-        override var connection: NativeAddress
-            get() = handle.connection ?: com.sun.jna.Pointer.NULL
+        override var connection: NativeAddress?
+            get() = handle.connection
             set(value) { handle.connection = value }
         override var screen: Int
             get() = handle.screen as Int
@@ -7645,8 +7645,8 @@ actual interface WGPUXcbDisplayHandle {
     }
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue = io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue(com.sun.jna.Pointer.NULL)) : WGPUXcbDisplayHandle {
-        override var connection: NativeAddress
-            get() = handle.connection ?: com.sun.jna.Pointer.NULL
+        override var connection: NativeAddress?
+            get() = handle.connection
             set(value) { handle.connection = value }
         override var screen: Int
             get() = handle.screen as Int
@@ -7660,7 +7660,7 @@ actual interface WGPUXcbDisplayHandle {
 }
 
 actual interface WGPUWaylandDisplayHandle {
-    actual var display: NativeAddress
+    actual var display: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUWaylandDisplayHandle {
@@ -7685,8 +7685,8 @@ actual interface WGPUWaylandDisplayHandle {
     }
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByReference = io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByReference(com.sun.jna.Pointer.NULL)) : WGPUWaylandDisplayHandle {
-        override var display: NativeAddress
-            get() = handle.display ?: com.sun.jna.Pointer.NULL
+        override var display: NativeAddress?
+            get() = handle.display
             set(value) { handle.display = value }
         override val handler: NativeAddress
             get() {
@@ -7696,8 +7696,8 @@ actual interface WGPUWaylandDisplayHandle {
     }
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue = io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue(com.sun.jna.Pointer.NULL)) : WGPUWaylandDisplayHandle {
-        override var display: NativeAddress
-            get() = handle.display ?: com.sun.jna.Pointer.NULL
+        override var display: NativeAddress?
+            get() = handle.display
             set(value) { handle.display = value }
         override val handler: NativeAddress
             get() {
@@ -7847,8 +7847,8 @@ actual interface WGPUInstanceExtras {
     actual var dxcPath: WGPUStringView
     actual var dxcMaxShaderModel: WGPUDxcMaxShaderModel
     actual var dx12PresentationSystem: WGPUDx12SwapchainKind
-    actual var budgetForDeviceCreation: NativeAddress
-    actual var budgetForDeviceLoss: NativeAddress
+    actual var budgetForDeviceCreation: NativeAddress?
+    actual var budgetForDeviceLoss: NativeAddress?
     actual var displayHandle: WGPUNativeDisplayHandle
     actual val handler: NativeAddress
     actual companion object {
@@ -7901,11 +7901,11 @@ actual interface WGPUInstanceExtras {
         override var dx12PresentationSystem: WGPUDx12SwapchainKind
             get() = handle.dx12PresentationSystem.toUInt() as WGPUDx12SwapchainKind
             set(value) { handle.dx12PresentationSystem = value.toInt() }
-        override var budgetForDeviceCreation: NativeAddress
-            get() = handle.budgetForDeviceCreation ?: com.sun.jna.Pointer.NULL
+        override var budgetForDeviceCreation: NativeAddress?
+            get() = handle.budgetForDeviceCreation
             set(value) { handle.budgetForDeviceCreation = value }
-        override var budgetForDeviceLoss: NativeAddress
-            get() = handle.budgetForDeviceLoss ?: com.sun.jna.Pointer.NULL
+        override var budgetForDeviceLoss: NativeAddress?
+            get() = handle.budgetForDeviceLoss
             set(value) { handle.budgetForDeviceLoss = value }
         override var displayHandle: WGPUNativeDisplayHandle
             get() = handle.displayHandle?.let { WGPUNativeDisplayHandle.ByReference(io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByReference(it)) } ?: error("displayHandle is null")
@@ -7945,11 +7945,11 @@ actual interface WGPUInstanceExtras {
         override var dx12PresentationSystem: WGPUDx12SwapchainKind
             get() = handle.dx12PresentationSystem.toUInt() as WGPUDx12SwapchainKind
             set(value) { handle.dx12PresentationSystem = value.toInt() }
-        override var budgetForDeviceCreation: NativeAddress
-            get() = handle.budgetForDeviceCreation ?: com.sun.jna.Pointer.NULL
+        override var budgetForDeviceCreation: NativeAddress?
+            get() = handle.budgetForDeviceCreation
             set(value) { handle.budgetForDeviceCreation = value }
-        override var budgetForDeviceLoss: NativeAddress
-            get() = handle.budgetForDeviceLoss ?: com.sun.jna.Pointer.NULL
+        override var budgetForDeviceLoss: NativeAddress?
+            get() = handle.budgetForDeviceLoss
             set(value) { handle.budgetForDeviceLoss = value }
         override var displayHandle: WGPUNativeDisplayHandle
             get() = handle.displayHandle?.let { WGPUNativeDisplayHandle.ByReference(io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByReference(it)) } ?: error("displayHandle is null")
@@ -8275,7 +8275,7 @@ actual interface WGPUShaderSourceGLSL {
 actual interface WGPUShaderModuleDescriptorSpirV {
     actual var label: WGPUStringView
     actual var sourceSize: UInt
-    actual var source: NativeAddress
+    actual var source: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUShaderModuleDescriptorSpirV {
@@ -8306,8 +8306,8 @@ actual interface WGPUShaderModuleDescriptorSpirV {
         override var sourceSize: UInt
             get() = handle.sourceSize.toUInt() as UInt
             set(value) { handle.sourceSize = value.toInt() }
-        override var source: NativeAddress
-            get() = handle.source ?: com.sun.jna.Pointer.NULL
+        override var source: NativeAddress?
+            get() = handle.source
             set(value) { handle.source = value }
         override val handler: NativeAddress
             get() {
@@ -8323,8 +8323,8 @@ actual interface WGPUShaderModuleDescriptorSpirV {
         override var sourceSize: UInt
             get() = handle.sourceSize.toUInt() as UInt
             set(value) { handle.sourceSize = value.toInt() }
-        override var source: NativeAddress
-            get() = handle.source ?: com.sun.jna.Pointer.NULL
+        override var source: NativeAddress?
+            get() = handle.source
             set(value) { handle.source = value }
         override val handler: NativeAddress
             get() {
@@ -8820,7 +8820,7 @@ actual interface WGPUBindGroupLayoutEntryExtras {
 
 actual interface WGPUQuerySetDescriptorExtras {
     actual var chain: WGPUChainedStruct
-    actual var pipelineStatistics: NativeAddress
+    actual var pipelineStatistics: NativeAddress?
     actual var pipelineStatisticCount: ULong
     actual val handler: NativeAddress
     actual companion object {
@@ -8849,8 +8849,8 @@ actual interface WGPUQuerySetDescriptorExtras {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var pipelineStatistics: NativeAddress
-            get() = handle.pipelineStatistics ?: com.sun.jna.Pointer.NULL
+        override var pipelineStatistics: NativeAddress?
+            get() = handle.pipelineStatistics
             set(value) { handle.pipelineStatistics = value }
         override var pipelineStatisticCount: ULong
             get() = handle.pipelineStatisticCount.toULong() as ULong
@@ -8866,8 +8866,8 @@ actual interface WGPUQuerySetDescriptorExtras {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var pipelineStatistics: NativeAddress
-            get() = handle.pipelineStatistics ?: com.sun.jna.Pointer.NULL
+        override var pipelineStatistics: NativeAddress?
+            get() = handle.pipelineStatistics
             set(value) { handle.pipelineStatistics = value }
         override var pipelineStatisticCount: ULong
             get() = handle.pipelineStatisticCount.toULong() as ULong
@@ -8937,7 +8937,7 @@ actual interface WGPUSurfaceConfigurationExtras {
 
 actual interface WGPUSurfaceSourceSwapChainPanel {
     actual var chain: WGPUChainedStruct
-    actual var panelNative: NativeAddress
+    actual var panelNative: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceSwapChainPanel {
@@ -8965,8 +8965,8 @@ actual interface WGPUSurfaceSourceSwapChainPanel {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var panelNative: NativeAddress
-            get() = handle.panelNative ?: com.sun.jna.Pointer.NULL
+        override var panelNative: NativeAddress?
+            get() = handle.panelNative
             set(value) { handle.panelNative = value }
         override val handler: NativeAddress
             get() {
@@ -8979,8 +8979,8 @@ actual interface WGPUSurfaceSourceSwapChainPanel {
         override var chain: WGPUChainedStruct
             get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
             set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
-        override var panelNative: NativeAddress
-            get() = handle.panelNative ?: com.sun.jna.Pointer.NULL
+        override var panelNative: NativeAddress?
+            get() = handle.panelNative
             set(value) { handle.panelNative = value }
         override val handler: NativeAddress
             get() {

@@ -793,9 +793,9 @@ expect interface WGPUChainedStruct {
 expect interface WGPUBufferMapCallbackInfo {
     var nextInChain: WGPUChainedStruct?
     var mode: WGPUCallbackMode
-    var callback: NativeAddress
-    var userdata1: NativeAddress
-    var userdata2: NativeAddress
+    var callback: NativeAddress?
+    var userdata1: NativeAddress?
+    var userdata2: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUBufferMapCallbackInfo
@@ -807,9 +807,9 @@ expect interface WGPUBufferMapCallbackInfo {
 expect interface WGPUCompilationInfoCallbackInfo {
     var nextInChain: WGPUChainedStruct?
     var mode: WGPUCallbackMode
-    var callback: NativeAddress
-    var userdata1: NativeAddress
-    var userdata2: NativeAddress
+    var callback: NativeAddress?
+    var userdata1: NativeAddress?
+    var userdata2: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUCompilationInfoCallbackInfo
@@ -821,9 +821,9 @@ expect interface WGPUCompilationInfoCallbackInfo {
 expect interface WGPUCreateComputePipelineAsyncCallbackInfo {
     var nextInChain: WGPUChainedStruct?
     var mode: WGPUCallbackMode
-    var callback: NativeAddress
-    var userdata1: NativeAddress
-    var userdata2: NativeAddress
+    var callback: NativeAddress?
+    var userdata1: NativeAddress?
+    var userdata2: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUCreateComputePipelineAsyncCallbackInfo
@@ -835,9 +835,9 @@ expect interface WGPUCreateComputePipelineAsyncCallbackInfo {
 expect interface WGPUCreateRenderPipelineAsyncCallbackInfo {
     var nextInChain: WGPUChainedStruct?
     var mode: WGPUCallbackMode
-    var callback: NativeAddress
-    var userdata1: NativeAddress
-    var userdata2: NativeAddress
+    var callback: NativeAddress?
+    var userdata1: NativeAddress?
+    var userdata2: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUCreateRenderPipelineAsyncCallbackInfo
@@ -849,9 +849,9 @@ expect interface WGPUCreateRenderPipelineAsyncCallbackInfo {
 expect interface WGPUDeviceLostCallbackInfo {
     var nextInChain: WGPUChainedStruct?
     var mode: WGPUCallbackMode
-    var callback: NativeAddress
-    var userdata1: NativeAddress
-    var userdata2: NativeAddress
+    var callback: NativeAddress?
+    var userdata1: NativeAddress?
+    var userdata2: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUDeviceLostCallbackInfo
@@ -863,9 +863,9 @@ expect interface WGPUDeviceLostCallbackInfo {
 expect interface WGPUPopErrorScopeCallbackInfo {
     var nextInChain: WGPUChainedStruct?
     var mode: WGPUCallbackMode
-    var callback: NativeAddress
-    var userdata1: NativeAddress
-    var userdata2: NativeAddress
+    var callback: NativeAddress?
+    var userdata1: NativeAddress?
+    var userdata2: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUPopErrorScopeCallbackInfo
@@ -877,9 +877,9 @@ expect interface WGPUPopErrorScopeCallbackInfo {
 expect interface WGPUQueueWorkDoneCallbackInfo {
     var nextInChain: WGPUChainedStruct?
     var mode: WGPUCallbackMode
-    var callback: NativeAddress
-    var userdata1: NativeAddress
-    var userdata2: NativeAddress
+    var callback: NativeAddress?
+    var userdata1: NativeAddress?
+    var userdata2: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUQueueWorkDoneCallbackInfo
@@ -891,9 +891,9 @@ expect interface WGPUQueueWorkDoneCallbackInfo {
 expect interface WGPURequestAdapterCallbackInfo {
     var nextInChain: WGPUChainedStruct?
     var mode: WGPUCallbackMode
-    var callback: NativeAddress
-    var userdata1: NativeAddress
-    var userdata2: NativeAddress
+    var callback: NativeAddress?
+    var userdata1: NativeAddress?
+    var userdata2: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPURequestAdapterCallbackInfo
@@ -905,9 +905,9 @@ expect interface WGPURequestAdapterCallbackInfo {
 expect interface WGPURequestDeviceCallbackInfo {
     var nextInChain: WGPUChainedStruct?
     var mode: WGPUCallbackMode
-    var callback: NativeAddress
-    var userdata1: NativeAddress
-    var userdata2: NativeAddress
+    var callback: NativeAddress?
+    var userdata1: NativeAddress?
+    var userdata2: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPURequestDeviceCallbackInfo
@@ -918,9 +918,9 @@ expect interface WGPURequestDeviceCallbackInfo {
 
 expect interface WGPUUncapturedErrorCallbackInfo {
     var nextInChain: WGPUChainedStruct?
-    var callback: NativeAddress
-    var userdata1: NativeAddress
-    var userdata2: NativeAddress
+    var callback: NativeAddress?
+    var userdata1: NativeAddress?
+    var userdata2: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUUncapturedErrorCallbackInfo
@@ -1225,7 +1225,7 @@ expect interface WGPURenderBundleEncoderDescriptor {
     var nextInChain: WGPUChainedStruct?
     var label: WGPUStringView
     var colorFormatCount: ULong
-    var colorFormats: NativeAddress
+    var colorFormats: NativeAddress?
     var depthStencilFormat: WGPUTextureFormat
     var sampleCount: UInt
     var depthReadOnly: UInt
@@ -1314,7 +1314,7 @@ expect interface WGPUSamplerDescriptor {
 expect interface WGPUShaderSourceSPIRV {
     var chain: WGPUChainedStruct
     var codeSize: UInt
-    var code: NativeAddress
+    var code: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUShaderSourceSPIRV
@@ -1362,7 +1362,7 @@ expect interface WGPUStorageTextureBindingLayout {
 
 expect interface WGPUSupportedFeatures {
     var featureCount: ULong
-    var features: NativeAddress
+    var features: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUSupportedFeatures
@@ -1373,7 +1373,7 @@ expect interface WGPUSupportedFeatures {
 
 expect interface WGPUSupportedInstanceFeatures {
     var featureCount: ULong
-    var features: NativeAddress
+    var features: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUSupportedInstanceFeatures
@@ -1384,7 +1384,7 @@ expect interface WGPUSupportedInstanceFeatures {
 
 expect interface WGPUSupportedWGSLLanguageFeatures {
     var featureCount: ULong
-    var features: NativeAddress
+    var features: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUSupportedWGSLLanguageFeatures
@@ -1397,11 +1397,11 @@ expect interface WGPUSurfaceCapabilities {
     var nextInChain: WGPUChainedStruct?
     var usages: ULong
     var formatCount: ULong
-    var formats: NativeAddress
+    var formats: NativeAddress?
     var presentModeCount: ULong
-    var presentModes: NativeAddress
+    var presentModes: NativeAddress?
     var alphaModeCount: ULong
-    var alphaModes: NativeAddress
+    var alphaModes: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUSurfaceCapabilities
@@ -1430,7 +1430,7 @@ expect interface WGPUSurfaceConfiguration {
     var width: UInt
     var height: UInt
     var viewFormatCount: ULong
-    var viewFormats: NativeAddress
+    var viewFormats: NativeAddress?
     var alphaMode: WGPUCompositeAlphaMode
     var presentMode: WGPUPresentMode
     val handler: NativeAddress
@@ -1443,7 +1443,7 @@ expect interface WGPUSurfaceConfiguration {
 
 expect interface WGPUSurfaceSourceAndroidNativeWindow {
     var chain: WGPUChainedStruct
-    var window: NativeAddress
+    var window: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUSurfaceSourceAndroidNativeWindow
@@ -1454,7 +1454,7 @@ expect interface WGPUSurfaceSourceAndroidNativeWindow {
 
 expect interface WGPUSurfaceSourceMetalLayer {
     var chain: WGPUChainedStruct
-    var layer: NativeAddress
+    var layer: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUSurfaceSourceMetalLayer
@@ -1465,8 +1465,8 @@ expect interface WGPUSurfaceSourceMetalLayer {
 
 expect interface WGPUSurfaceSourceWaylandSurface {
     var chain: WGPUChainedStruct
-    var display: NativeAddress
-    var surface: NativeAddress
+    var display: NativeAddress?
+    var surface: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUSurfaceSourceWaylandSurface
@@ -1477,8 +1477,8 @@ expect interface WGPUSurfaceSourceWaylandSurface {
 
 expect interface WGPUSurfaceSourceWindowsHWND {
     var chain: WGPUChainedStruct
-    var hinstance: NativeAddress
-    var hwnd: NativeAddress
+    var hinstance: NativeAddress?
+    var hwnd: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUSurfaceSourceWindowsHWND
@@ -1489,7 +1489,7 @@ expect interface WGPUSurfaceSourceWindowsHWND {
 
 expect interface WGPUSurfaceSourceXCBWindow {
     var chain: WGPUChainedStruct
-    var connection: NativeAddress
+    var connection: NativeAddress?
     var window: UInt
     val handler: NativeAddress
     companion object {
@@ -1501,7 +1501,7 @@ expect interface WGPUSurfaceSourceXCBWindow {
 
 expect interface WGPUSurfaceSourceXlibWindow {
     var chain: WGPUChainedStruct
-    var display: NativeAddress
+    var display: NativeAddress?
     var window: ULong
     val handler: NativeAddress
     companion object {
@@ -1701,7 +1701,7 @@ expect interface WGPUFutureWaitInfo {
 expect interface WGPUInstanceDescriptor {
     var nextInChain: WGPUChainedStruct?
     var requiredFeatureCount: ULong
-    var requiredFeatures: NativeAddress
+    var requiredFeatures: NativeAddress?
     var requiredLimits: WGPUInstanceLimits?
     val handler: NativeAddress
     companion object {
@@ -1851,7 +1851,7 @@ expect interface WGPUTextureDescriptor {
     var mipLevelCount: UInt
     var sampleCount: UInt
     var viewFormatCount: ULong
-    var viewFormats: NativeAddress
+    var viewFormats: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUTextureDescriptor
@@ -1931,7 +1931,7 @@ expect interface WGPUDeviceDescriptor {
     var nextInChain: WGPUChainedStruct?
     var label: WGPUStringView
     var requiredFeatureCount: ULong
-    var requiredFeatures: NativeAddress
+    var requiredFeatures: NativeAddress?
     var requiredLimits: WGPULimits?
     var defaultQueue: WGPUQueueDescriptor
     var deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
@@ -2541,7 +2541,7 @@ const val WGPUNativeDisplayHandleType_Wayland : WGPUNativeDisplayHandleType = 3u
 const val WGPUNativeDisplayHandleType_Force32 : WGPUNativeDisplayHandleType = 2147483647u
 
 expect interface WGPUXlibDisplayHandle {
-    var display: NativeAddress
+    var display: NativeAddress?
     var screen: Int
     val handler: NativeAddress
     companion object {
@@ -2552,7 +2552,7 @@ expect interface WGPUXlibDisplayHandle {
 }
 
 expect interface WGPUXcbDisplayHandle {
-    var connection: NativeAddress
+    var connection: NativeAddress?
     var screen: Int
     val handler: NativeAddress
     companion object {
@@ -2563,7 +2563,7 @@ expect interface WGPUXcbDisplayHandle {
 }
 
 expect interface WGPUWaylandDisplayHandle {
-    var display: NativeAddress
+    var display: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUWaylandDisplayHandle
@@ -2598,8 +2598,8 @@ expect interface WGPUInstanceExtras {
     var dxcPath: WGPUStringView
     var dxcMaxShaderModel: WGPUDxcMaxShaderModel
     var dx12PresentationSystem: WGPUDx12SwapchainKind
-    var budgetForDeviceCreation: NativeAddress
-    var budgetForDeviceLoss: NativeAddress
+    var budgetForDeviceCreation: NativeAddress?
+    var budgetForDeviceLoss: NativeAddress?
     var displayHandle: WGPUNativeDisplayHandle
     val handler: NativeAddress
     companion object {
@@ -2672,7 +2672,7 @@ expect interface WGPUShaderSourceGLSL {
 expect interface WGPUShaderModuleDescriptorSpirV {
     var label: WGPUStringView
     var sourceSize: UInt
-    var source: NativeAddress
+    var source: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUShaderModuleDescriptorSpirV
@@ -2771,7 +2771,7 @@ expect interface WGPUBindGroupLayoutEntryExtras {
 
 expect interface WGPUQuerySetDescriptorExtras {
     var chain: WGPUChainedStruct
-    var pipelineStatistics: NativeAddress
+    var pipelineStatistics: NativeAddress?
     var pipelineStatisticCount: ULong
     val handler: NativeAddress
     companion object {
@@ -2794,7 +2794,7 @@ expect interface WGPUSurfaceConfigurationExtras {
 
 expect interface WGPUSurfaceSourceSwapChainPanel {
     var chain: WGPUChainedStruct
-    var panelNative: NativeAddress
+    var panelNative: NativeAddress?
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUSurfaceSourceSwapChainPanel

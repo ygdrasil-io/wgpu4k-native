@@ -51,6 +51,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
         val surfaceTexture = WGPUSurfaceTexture.allocate(scope)
         wgpuSurfaceGetCurrentTexture(surface, surfaceTexture)
 
+        if (surfaceTexture.status == WGPUSurfaceGetCurrentTextureStatus_Occluded) return@memoryScope
         if (surfaceTexture.status > WGPUSurfaceGetCurrentTextureStatus_SuccessSuboptimal) error("surface status is KO with status ${surfaceTexture.status}")
         surfaceTexture.texture ?: error("fail to get texture")
 

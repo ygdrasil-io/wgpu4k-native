@@ -106,84 +106,174 @@ actual value class WGPUTexture actual constructor(actual val handler: NativeAddr
 
 actual value class WGPUTextureView actual constructor(actual val handler: NativeAddress)
 
+private var WGPUBufferMapCallback_callback: ((status: WGPUMapAsyncStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
+private val WGPUBufferMapCallback_static = staticCFunction<WGPUMapAsyncStatus, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, message, userdata1, userdata2 ->
+    WGPUBufferMapCallback_callback?.invoke(status, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
+}
+
 actual class WGPUBufferMapCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUMapAsyncStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUBufferMapCallback =
-            error("WGPUBufferMapCallback allocation is not implemented on Native")
+    actual override fun close() {
+        if (handler.rawValue == NativeAddress(WGPUBufferMapCallback_static).rawValue) WGPUBufferMapCallback_callback = null
     }
+    actual companion object {
+        actual fun allocate(callback: (status: WGPUMapAsyncStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUBufferMapCallback {
+            WGPUBufferMapCallback_callback = callback
+            return WGPUBufferMapCallback(NativeAddress(WGPUBufferMapCallback_static))
+        }
+}
+}
+
+private var WGPUCompilationInfoCallback_callback: ((status: WGPUCompilationInfoRequestStatus, compilationInfo: NativeAddress?, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
+private val WGPUCompilationInfoCallback_static = staticCFunction<WGPUCompilationInfoRequestStatus, COpaquePointer?, COpaquePointer?, COpaquePointer?, Unit> { status, compilationInfo, userdata1, userdata2 ->
+    WGPUCompilationInfoCallback_callback?.invoke(status, compilationInfo?.let(::NativeAddress), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 }
 
 actual class WGPUCompilationInfoCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUCompilationInfoRequestStatus, compilationInfo: NativeAddress?, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCompilationInfoCallback =
-            error("WGPUCompilationInfoCallback allocation is not implemented on Native")
+    actual override fun close() {
+        if (handler.rawValue == NativeAddress(WGPUCompilationInfoCallback_static).rawValue) WGPUCompilationInfoCallback_callback = null
     }
+    actual companion object {
+        actual fun allocate(callback: (status: WGPUCompilationInfoRequestStatus, compilationInfo: NativeAddress?, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCompilationInfoCallback {
+            WGPUCompilationInfoCallback_callback = callback
+            return WGPUCompilationInfoCallback(NativeAddress(WGPUCompilationInfoCallback_static))
+        }
+}
+}
+
+private var WGPUCreateComputePipelineAsyncCallback_callback: ((status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
+private val WGPUCreateComputePipelineAsyncCallback_static = staticCFunction<WGPUCreatePipelineAsyncStatus, COpaquePointer?, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, pipeline, message, userdata1, userdata2 ->
+    WGPUCreateComputePipelineAsyncCallback_callback?.invoke(status, pipeline?.let(::NativeAddress)?.let { WGPUComputePipeline(it) }, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 }
 
 actual class WGPUCreateComputePipelineAsyncCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCreateComputePipelineAsyncCallback =
-            error("WGPUCreateComputePipelineAsyncCallback allocation is not implemented on Native")
+    actual override fun close() {
+        if (handler.rawValue == NativeAddress(WGPUCreateComputePipelineAsyncCallback_static).rawValue) WGPUCreateComputePipelineAsyncCallback_callback = null
     }
+    actual companion object {
+        actual fun allocate(callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCreateComputePipelineAsyncCallback {
+            WGPUCreateComputePipelineAsyncCallback_callback = callback
+            return WGPUCreateComputePipelineAsyncCallback(NativeAddress(WGPUCreateComputePipelineAsyncCallback_static))
+        }
+}
+}
+
+private var WGPUCreateRenderPipelineAsyncCallback_callback: ((status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
+private val WGPUCreateRenderPipelineAsyncCallback_static = staticCFunction<WGPUCreatePipelineAsyncStatus, COpaquePointer?, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, pipeline, message, userdata1, userdata2 ->
+    WGPUCreateRenderPipelineAsyncCallback_callback?.invoke(status, pipeline?.let(::NativeAddress)?.let { WGPURenderPipeline(it) }, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 }
 
 actual class WGPUCreateRenderPipelineAsyncCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCreateRenderPipelineAsyncCallback =
-            error("WGPUCreateRenderPipelineAsyncCallback allocation is not implemented on Native")
+    actual override fun close() {
+        if (handler.rawValue == NativeAddress(WGPUCreateRenderPipelineAsyncCallback_static).rawValue) WGPUCreateRenderPipelineAsyncCallback_callback = null
     }
+    actual companion object {
+        actual fun allocate(callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCreateRenderPipelineAsyncCallback {
+            WGPUCreateRenderPipelineAsyncCallback_callback = callback
+            return WGPUCreateRenderPipelineAsyncCallback(NativeAddress(WGPUCreateRenderPipelineAsyncCallback_static))
+        }
+}
+}
+
+private var WGPUDeviceLostCallback_callback: ((device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
+private val WGPUDeviceLostCallback_static = staticCFunction<COpaquePointer?, WGPUDeviceLostReason, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { device, reason, message, userdata1, userdata2 ->
+    WGPUDeviceLostCallback_callback?.invoke(device?.let(::NativeAddress)?.let { WGPUDevice(it) }, reason, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 }
 
 actual class WGPUDeviceLostCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUDeviceLostCallback =
-            error("WGPUDeviceLostCallback allocation is not implemented on Native")
+    actual override fun close() {
+        if (handler.rawValue == NativeAddress(WGPUDeviceLostCallback_static).rawValue) WGPUDeviceLostCallback_callback = null
     }
+    actual companion object {
+        actual fun allocate(callback: (device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUDeviceLostCallback {
+            WGPUDeviceLostCallback_callback = callback
+            return WGPUDeviceLostCallback(NativeAddress(WGPUDeviceLostCallback_static))
+        }
+}
+}
+
+private var WGPUPopErrorScopeCallback_callback: ((status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
+private val WGPUPopErrorScopeCallback_static = staticCFunction<WGPUPopErrorScopeStatus, WGPUErrorType, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, type, message, userdata1, userdata2 ->
+    WGPUPopErrorScopeCallback_callback?.invoke(status, type, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 }
 
 actual class WGPUPopErrorScopeCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUPopErrorScopeCallback =
-            error("WGPUPopErrorScopeCallback allocation is not implemented on Native")
+    actual override fun close() {
+        if (handler.rawValue == NativeAddress(WGPUPopErrorScopeCallback_static).rawValue) WGPUPopErrorScopeCallback_callback = null
     }
+    actual companion object {
+        actual fun allocate(callback: (status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUPopErrorScopeCallback {
+            WGPUPopErrorScopeCallback_callback = callback
+            return WGPUPopErrorScopeCallback(NativeAddress(WGPUPopErrorScopeCallback_static))
+        }
+}
+}
+
+private var WGPUQueueWorkDoneCallback_callback: ((status: WGPUQueueWorkDoneStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
+private val WGPUQueueWorkDoneCallback_static = staticCFunction<WGPUQueueWorkDoneStatus, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, message, userdata1, userdata2 ->
+    WGPUQueueWorkDoneCallback_callback?.invoke(status, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 }
 
 actual class WGPUQueueWorkDoneCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUQueueWorkDoneStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUQueueWorkDoneCallback =
-            error("WGPUQueueWorkDoneCallback allocation is not implemented on Native")
+    actual override fun close() {
+        if (handler.rawValue == NativeAddress(WGPUQueueWorkDoneCallback_static).rawValue) WGPUQueueWorkDoneCallback_callback = null
     }
+    actual companion object {
+        actual fun allocate(callback: (status: WGPUQueueWorkDoneStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUQueueWorkDoneCallback {
+            WGPUQueueWorkDoneCallback_callback = callback
+            return WGPUQueueWorkDoneCallback(NativeAddress(WGPUQueueWorkDoneCallback_static))
+        }
+}
+}
+
+private var WGPURequestAdapterCallback_callback: ((status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
+private val WGPURequestAdapterCallback_static = staticCFunction<WGPURequestAdapterStatus, COpaquePointer?, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, adapter, message, userdata1, userdata2 ->
+    WGPURequestAdapterCallback_callback?.invoke(status, adapter?.let(::NativeAddress)?.let { WGPUAdapter(it) }, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 }
 
 actual class WGPURequestAdapterCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPURequestAdapterCallback =
-            error("WGPURequestAdapterCallback allocation is not implemented on Native")
+    actual override fun close() {
+        if (handler.rawValue == NativeAddress(WGPURequestAdapterCallback_static).rawValue) WGPURequestAdapterCallback_callback = null
     }
+    actual companion object {
+        actual fun allocate(callback: (status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPURequestAdapterCallback {
+            WGPURequestAdapterCallback_callback = callback
+            return WGPURequestAdapterCallback(NativeAddress(WGPURequestAdapterCallback_static))
+        }
+}
+}
+
+private var WGPURequestDeviceCallback_callback: ((status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
+private val WGPURequestDeviceCallback_static = staticCFunction<WGPURequestDeviceStatus, COpaquePointer?, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, device, message, userdata1, userdata2 ->
+    WGPURequestDeviceCallback_callback?.invoke(status, device?.let(::NativeAddress)?.let { WGPUDevice(it) }, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 }
 
 actual class WGPURequestDeviceCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPURequestDeviceCallback =
-            error("WGPURequestDeviceCallback allocation is not implemented on Native")
+    actual override fun close() {
+        if (handler.rawValue == NativeAddress(WGPURequestDeviceCallback_static).rawValue) WGPURequestDeviceCallback_callback = null
     }
+    actual companion object {
+        actual fun allocate(callback: (status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPURequestDeviceCallback {
+            WGPURequestDeviceCallback_callback = callback
+            return WGPURequestDeviceCallback(NativeAddress(WGPURequestDeviceCallback_static))
+        }
+}
+}
+
+private var WGPUUncapturedErrorCallback_callback: ((device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
+private val WGPUUncapturedErrorCallback_static = staticCFunction<COpaquePointer?, WGPUErrorType, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { device, type, message, userdata1, userdata2 ->
+    WGPUUncapturedErrorCallback_callback?.invoke(device?.let(::NativeAddress)?.let { WGPUDevice(it) }, type, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
 }
 
 actual class WGPUUncapturedErrorCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUUncapturedErrorCallback =
-            error("WGPUUncapturedErrorCallback allocation is not implemented on Native")
+    actual override fun close() {
+        if (handler.rawValue == NativeAddress(WGPUUncapturedErrorCallback_static).rawValue) WGPUUncapturedErrorCallback_callback = null
     }
+    actual companion object {
+        actual fun allocate(callback: (device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUUncapturedErrorCallback {
+            WGPUUncapturedErrorCallback_callback = callback
+            return WGPUUncapturedErrorCallback(NativeAddress(WGPUUncapturedErrorCallback_static))
+        }
+}
 }
 
 actual interface WGPUChainedStruct {
@@ -239,9 +329,9 @@ fun WGPUChainedStruct.toCValue(): CValue<webgpu.native.WGPUChainedStruct> = cVal
 actual interface WGPUBufferMapCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBufferMapCallbackInfo = ByReference(address)
@@ -269,14 +359,14 @@ actual interface WGPUBufferMapCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.useContents { this.mode as WGPUCallbackMode }
             set(value) { error("Setters not supported on ByValue") }
-        override var callback: NativeAddress
-            get() = handle.useContents { this.callback?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var callback: NativeAddress?
+            get() = handle.useContents { this.callback?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata1: NativeAddress
-            get() = handle.useContents { this.userdata1?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata1: NativeAddress?
+            get() = handle.useContents { this.userdata1?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata2: NativeAddress
-            get() = handle.useContents { this.userdata2?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata2: NativeAddress?
+            get() = handle.useContents { this.userdata2?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -290,32 +380,32 @@ actual interface WGPUBufferMapCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = struct.mode as WGPUCallbackMode
             set(value) { struct.mode = value }
-        override var callback: NativeAddress
-            get() = struct.callback?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.callback = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata1: NativeAddress
-            get() = struct.userdata1?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata1 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata2: NativeAddress
-            get() = struct.userdata2?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata2 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var callback: NativeAddress?
+            get() = struct.callback?.let(::NativeAddress)
+            set(value) { struct.callback = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata1: NativeAddress?
+            get() = struct.userdata1?.let(::NativeAddress)
+            set(value) { struct.userdata1 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata2: NativeAddress?
+            get() = struct.userdata2?.let(::NativeAddress)
+            set(value) { struct.userdata2 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPUBufferMapCallbackInfo.toCValue(): CValue<webgpu.native.WGPUBufferMapCallbackInfo> = cValue {
     this.nextInChain = this@toCValue.nextInChain?.handler?.pointer?.takeIf { this@toCValue.nextInChain?.handler?.rawValue != 0L }?.reinterpret()
     this.mode = this@toCValue.mode
-    this.callback = this@toCValue.callback.pointer?.takeIf { this@toCValue.callback.rawValue != 0L }?.reinterpret()
-    this.userdata1 = this@toCValue.userdata1.pointer?.takeIf { this@toCValue.userdata1.rawValue != 0L }?.reinterpret()
-    this.userdata2 = this@toCValue.userdata2.pointer?.takeIf { this@toCValue.userdata2.rawValue != 0L }?.reinterpret()
+    this.callback = this@toCValue.callback?.pointer?.takeIf { this@toCValue.callback?.rawValue != 0L }?.reinterpret()
+    this.userdata1 = this@toCValue.userdata1?.pointer?.takeIf { this@toCValue.userdata1?.rawValue != 0L }?.reinterpret()
+    this.userdata2 = this@toCValue.userdata2?.pointer?.takeIf { this@toCValue.userdata2?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUCompilationInfoCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCompilationInfoCallbackInfo = ByReference(address)
@@ -343,14 +433,14 @@ actual interface WGPUCompilationInfoCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.useContents { this.mode as WGPUCallbackMode }
             set(value) { error("Setters not supported on ByValue") }
-        override var callback: NativeAddress
-            get() = handle.useContents { this.callback?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var callback: NativeAddress?
+            get() = handle.useContents { this.callback?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata1: NativeAddress
-            get() = handle.useContents { this.userdata1?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata1: NativeAddress?
+            get() = handle.useContents { this.userdata1?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata2: NativeAddress
-            get() = handle.useContents { this.userdata2?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata2: NativeAddress?
+            get() = handle.useContents { this.userdata2?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -364,32 +454,32 @@ actual interface WGPUCompilationInfoCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = struct.mode as WGPUCallbackMode
             set(value) { struct.mode = value }
-        override var callback: NativeAddress
-            get() = struct.callback?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.callback = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata1: NativeAddress
-            get() = struct.userdata1?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata1 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata2: NativeAddress
-            get() = struct.userdata2?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata2 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var callback: NativeAddress?
+            get() = struct.callback?.let(::NativeAddress)
+            set(value) { struct.callback = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata1: NativeAddress?
+            get() = struct.userdata1?.let(::NativeAddress)
+            set(value) { struct.userdata1 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata2: NativeAddress?
+            get() = struct.userdata2?.let(::NativeAddress)
+            set(value) { struct.userdata2 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPUCompilationInfoCallbackInfo.toCValue(): CValue<webgpu.native.WGPUCompilationInfoCallbackInfo> = cValue {
     this.nextInChain = this@toCValue.nextInChain?.handler?.pointer?.takeIf { this@toCValue.nextInChain?.handler?.rawValue != 0L }?.reinterpret()
     this.mode = this@toCValue.mode
-    this.callback = this@toCValue.callback.pointer?.takeIf { this@toCValue.callback.rawValue != 0L }?.reinterpret()
-    this.userdata1 = this@toCValue.userdata1.pointer?.takeIf { this@toCValue.userdata1.rawValue != 0L }?.reinterpret()
-    this.userdata2 = this@toCValue.userdata2.pointer?.takeIf { this@toCValue.userdata2.rawValue != 0L }?.reinterpret()
+    this.callback = this@toCValue.callback?.pointer?.takeIf { this@toCValue.callback?.rawValue != 0L }?.reinterpret()
+    this.userdata1 = this@toCValue.userdata1?.pointer?.takeIf { this@toCValue.userdata1?.rawValue != 0L }?.reinterpret()
+    this.userdata2 = this@toCValue.userdata2?.pointer?.takeIf { this@toCValue.userdata2?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCreateComputePipelineAsyncCallbackInfo = ByReference(address)
@@ -417,14 +507,14 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.useContents { this.mode as WGPUCallbackMode }
             set(value) { error("Setters not supported on ByValue") }
-        override var callback: NativeAddress
-            get() = handle.useContents { this.callback?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var callback: NativeAddress?
+            get() = handle.useContents { this.callback?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata1: NativeAddress
-            get() = handle.useContents { this.userdata1?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata1: NativeAddress?
+            get() = handle.useContents { this.userdata1?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata2: NativeAddress
-            get() = handle.useContents { this.userdata2?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata2: NativeAddress?
+            get() = handle.useContents { this.userdata2?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -438,32 +528,32 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = struct.mode as WGPUCallbackMode
             set(value) { struct.mode = value }
-        override var callback: NativeAddress
-            get() = struct.callback?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.callback = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata1: NativeAddress
-            get() = struct.userdata1?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata1 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata2: NativeAddress
-            get() = struct.userdata2?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata2 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var callback: NativeAddress?
+            get() = struct.callback?.let(::NativeAddress)
+            set(value) { struct.callback = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata1: NativeAddress?
+            get() = struct.userdata1?.let(::NativeAddress)
+            set(value) { struct.userdata1 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata2: NativeAddress?
+            get() = struct.userdata2?.let(::NativeAddress)
+            set(value) { struct.userdata2 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPUCreateComputePipelineAsyncCallbackInfo.toCValue(): CValue<webgpu.native.WGPUCreateComputePipelineAsyncCallbackInfo> = cValue {
     this.nextInChain = this@toCValue.nextInChain?.handler?.pointer?.takeIf { this@toCValue.nextInChain?.handler?.rawValue != 0L }?.reinterpret()
     this.mode = this@toCValue.mode
-    this.callback = this@toCValue.callback.pointer?.takeIf { this@toCValue.callback.rawValue != 0L }?.reinterpret()
-    this.userdata1 = this@toCValue.userdata1.pointer?.takeIf { this@toCValue.userdata1.rawValue != 0L }?.reinterpret()
-    this.userdata2 = this@toCValue.userdata2.pointer?.takeIf { this@toCValue.userdata2.rawValue != 0L }?.reinterpret()
+    this.callback = this@toCValue.callback?.pointer?.takeIf { this@toCValue.callback?.rawValue != 0L }?.reinterpret()
+    this.userdata1 = this@toCValue.userdata1?.pointer?.takeIf { this@toCValue.userdata1?.rawValue != 0L }?.reinterpret()
+    this.userdata2 = this@toCValue.userdata2?.pointer?.takeIf { this@toCValue.userdata2?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCreateRenderPipelineAsyncCallbackInfo = ByReference(address)
@@ -491,14 +581,14 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.useContents { this.mode as WGPUCallbackMode }
             set(value) { error("Setters not supported on ByValue") }
-        override var callback: NativeAddress
-            get() = handle.useContents { this.callback?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var callback: NativeAddress?
+            get() = handle.useContents { this.callback?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata1: NativeAddress
-            get() = handle.useContents { this.userdata1?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata1: NativeAddress?
+            get() = handle.useContents { this.userdata1?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata2: NativeAddress
-            get() = handle.useContents { this.userdata2?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata2: NativeAddress?
+            get() = handle.useContents { this.userdata2?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -512,32 +602,32 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = struct.mode as WGPUCallbackMode
             set(value) { struct.mode = value }
-        override var callback: NativeAddress
-            get() = struct.callback?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.callback = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata1: NativeAddress
-            get() = struct.userdata1?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata1 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata2: NativeAddress
-            get() = struct.userdata2?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata2 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var callback: NativeAddress?
+            get() = struct.callback?.let(::NativeAddress)
+            set(value) { struct.callback = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata1: NativeAddress?
+            get() = struct.userdata1?.let(::NativeAddress)
+            set(value) { struct.userdata1 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata2: NativeAddress?
+            get() = struct.userdata2?.let(::NativeAddress)
+            set(value) { struct.userdata2 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPUCreateRenderPipelineAsyncCallbackInfo.toCValue(): CValue<webgpu.native.WGPUCreateRenderPipelineAsyncCallbackInfo> = cValue {
     this.nextInChain = this@toCValue.nextInChain?.handler?.pointer?.takeIf { this@toCValue.nextInChain?.handler?.rawValue != 0L }?.reinterpret()
     this.mode = this@toCValue.mode
-    this.callback = this@toCValue.callback.pointer?.takeIf { this@toCValue.callback.rawValue != 0L }?.reinterpret()
-    this.userdata1 = this@toCValue.userdata1.pointer?.takeIf { this@toCValue.userdata1.rawValue != 0L }?.reinterpret()
-    this.userdata2 = this@toCValue.userdata2.pointer?.takeIf { this@toCValue.userdata2.rawValue != 0L }?.reinterpret()
+    this.callback = this@toCValue.callback?.pointer?.takeIf { this@toCValue.callback?.rawValue != 0L }?.reinterpret()
+    this.userdata1 = this@toCValue.userdata1?.pointer?.takeIf { this@toCValue.userdata1?.rawValue != 0L }?.reinterpret()
+    this.userdata2 = this@toCValue.userdata2?.pointer?.takeIf { this@toCValue.userdata2?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUDeviceLostCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUDeviceLostCallbackInfo = ByReference(address)
@@ -565,14 +655,14 @@ actual interface WGPUDeviceLostCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.useContents { this.mode as WGPUCallbackMode }
             set(value) { error("Setters not supported on ByValue") }
-        override var callback: NativeAddress
-            get() = handle.useContents { this.callback?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var callback: NativeAddress?
+            get() = handle.useContents { this.callback?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata1: NativeAddress
-            get() = handle.useContents { this.userdata1?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata1: NativeAddress?
+            get() = handle.useContents { this.userdata1?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata2: NativeAddress
-            get() = handle.useContents { this.userdata2?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata2: NativeAddress?
+            get() = handle.useContents { this.userdata2?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -586,32 +676,32 @@ actual interface WGPUDeviceLostCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = struct.mode as WGPUCallbackMode
             set(value) { struct.mode = value }
-        override var callback: NativeAddress
-            get() = struct.callback?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.callback = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata1: NativeAddress
-            get() = struct.userdata1?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata1 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata2: NativeAddress
-            get() = struct.userdata2?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata2 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var callback: NativeAddress?
+            get() = struct.callback?.let(::NativeAddress)
+            set(value) { struct.callback = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata1: NativeAddress?
+            get() = struct.userdata1?.let(::NativeAddress)
+            set(value) { struct.userdata1 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata2: NativeAddress?
+            get() = struct.userdata2?.let(::NativeAddress)
+            set(value) { struct.userdata2 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPUDeviceLostCallbackInfo.toCValue(): CValue<webgpu.native.WGPUDeviceLostCallbackInfo> = cValue {
     this.nextInChain = this@toCValue.nextInChain?.handler?.pointer?.takeIf { this@toCValue.nextInChain?.handler?.rawValue != 0L }?.reinterpret()
     this.mode = this@toCValue.mode
-    this.callback = this@toCValue.callback.pointer?.takeIf { this@toCValue.callback.rawValue != 0L }?.reinterpret()
-    this.userdata1 = this@toCValue.userdata1.pointer?.takeIf { this@toCValue.userdata1.rawValue != 0L }?.reinterpret()
-    this.userdata2 = this@toCValue.userdata2.pointer?.takeIf { this@toCValue.userdata2.rawValue != 0L }?.reinterpret()
+    this.callback = this@toCValue.callback?.pointer?.takeIf { this@toCValue.callback?.rawValue != 0L }?.reinterpret()
+    this.userdata1 = this@toCValue.userdata1?.pointer?.takeIf { this@toCValue.userdata1?.rawValue != 0L }?.reinterpret()
+    this.userdata2 = this@toCValue.userdata2?.pointer?.takeIf { this@toCValue.userdata2?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUPopErrorScopeCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUPopErrorScopeCallbackInfo = ByReference(address)
@@ -639,14 +729,14 @@ actual interface WGPUPopErrorScopeCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.useContents { this.mode as WGPUCallbackMode }
             set(value) { error("Setters not supported on ByValue") }
-        override var callback: NativeAddress
-            get() = handle.useContents { this.callback?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var callback: NativeAddress?
+            get() = handle.useContents { this.callback?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata1: NativeAddress
-            get() = handle.useContents { this.userdata1?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata1: NativeAddress?
+            get() = handle.useContents { this.userdata1?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata2: NativeAddress
-            get() = handle.useContents { this.userdata2?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata2: NativeAddress?
+            get() = handle.useContents { this.userdata2?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -660,32 +750,32 @@ actual interface WGPUPopErrorScopeCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = struct.mode as WGPUCallbackMode
             set(value) { struct.mode = value }
-        override var callback: NativeAddress
-            get() = struct.callback?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.callback = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata1: NativeAddress
-            get() = struct.userdata1?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata1 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata2: NativeAddress
-            get() = struct.userdata2?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata2 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var callback: NativeAddress?
+            get() = struct.callback?.let(::NativeAddress)
+            set(value) { struct.callback = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata1: NativeAddress?
+            get() = struct.userdata1?.let(::NativeAddress)
+            set(value) { struct.userdata1 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata2: NativeAddress?
+            get() = struct.userdata2?.let(::NativeAddress)
+            set(value) { struct.userdata2 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPUPopErrorScopeCallbackInfo.toCValue(): CValue<webgpu.native.WGPUPopErrorScopeCallbackInfo> = cValue {
     this.nextInChain = this@toCValue.nextInChain?.handler?.pointer?.takeIf { this@toCValue.nextInChain?.handler?.rawValue != 0L }?.reinterpret()
     this.mode = this@toCValue.mode
-    this.callback = this@toCValue.callback.pointer?.takeIf { this@toCValue.callback.rawValue != 0L }?.reinterpret()
-    this.userdata1 = this@toCValue.userdata1.pointer?.takeIf { this@toCValue.userdata1.rawValue != 0L }?.reinterpret()
-    this.userdata2 = this@toCValue.userdata2.pointer?.takeIf { this@toCValue.userdata2.rawValue != 0L }?.reinterpret()
+    this.callback = this@toCValue.callback?.pointer?.takeIf { this@toCValue.callback?.rawValue != 0L }?.reinterpret()
+    this.userdata1 = this@toCValue.userdata1?.pointer?.takeIf { this@toCValue.userdata1?.rawValue != 0L }?.reinterpret()
+    this.userdata2 = this@toCValue.userdata2?.pointer?.takeIf { this@toCValue.userdata2?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUQueueWorkDoneCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUQueueWorkDoneCallbackInfo = ByReference(address)
@@ -713,14 +803,14 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.useContents { this.mode as WGPUCallbackMode }
             set(value) { error("Setters not supported on ByValue") }
-        override var callback: NativeAddress
-            get() = handle.useContents { this.callback?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var callback: NativeAddress?
+            get() = handle.useContents { this.callback?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata1: NativeAddress
-            get() = handle.useContents { this.userdata1?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata1: NativeAddress?
+            get() = handle.useContents { this.userdata1?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata2: NativeAddress
-            get() = handle.useContents { this.userdata2?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata2: NativeAddress?
+            get() = handle.useContents { this.userdata2?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -734,32 +824,32 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = struct.mode as WGPUCallbackMode
             set(value) { struct.mode = value }
-        override var callback: NativeAddress
-            get() = struct.callback?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.callback = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata1: NativeAddress
-            get() = struct.userdata1?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata1 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata2: NativeAddress
-            get() = struct.userdata2?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata2 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var callback: NativeAddress?
+            get() = struct.callback?.let(::NativeAddress)
+            set(value) { struct.callback = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata1: NativeAddress?
+            get() = struct.userdata1?.let(::NativeAddress)
+            set(value) { struct.userdata1 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata2: NativeAddress?
+            get() = struct.userdata2?.let(::NativeAddress)
+            set(value) { struct.userdata2 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPUQueueWorkDoneCallbackInfo.toCValue(): CValue<webgpu.native.WGPUQueueWorkDoneCallbackInfo> = cValue {
     this.nextInChain = this@toCValue.nextInChain?.handler?.pointer?.takeIf { this@toCValue.nextInChain?.handler?.rawValue != 0L }?.reinterpret()
     this.mode = this@toCValue.mode
-    this.callback = this@toCValue.callback.pointer?.takeIf { this@toCValue.callback.rawValue != 0L }?.reinterpret()
-    this.userdata1 = this@toCValue.userdata1.pointer?.takeIf { this@toCValue.userdata1.rawValue != 0L }?.reinterpret()
-    this.userdata2 = this@toCValue.userdata2.pointer?.takeIf { this@toCValue.userdata2.rawValue != 0L }?.reinterpret()
+    this.callback = this@toCValue.callback?.pointer?.takeIf { this@toCValue.callback?.rawValue != 0L }?.reinterpret()
+    this.userdata1 = this@toCValue.userdata1?.pointer?.takeIf { this@toCValue.userdata1?.rawValue != 0L }?.reinterpret()
+    this.userdata2 = this@toCValue.userdata2?.pointer?.takeIf { this@toCValue.userdata2?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPURequestAdapterCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURequestAdapterCallbackInfo = ByReference(address)
@@ -787,14 +877,14 @@ actual interface WGPURequestAdapterCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.useContents { this.mode as WGPUCallbackMode }
             set(value) { error("Setters not supported on ByValue") }
-        override var callback: NativeAddress
-            get() = handle.useContents { this.callback?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var callback: NativeAddress?
+            get() = handle.useContents { this.callback?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata1: NativeAddress
-            get() = handle.useContents { this.userdata1?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata1: NativeAddress?
+            get() = handle.useContents { this.userdata1?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata2: NativeAddress
-            get() = handle.useContents { this.userdata2?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata2: NativeAddress?
+            get() = handle.useContents { this.userdata2?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -808,32 +898,32 @@ actual interface WGPURequestAdapterCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = struct.mode as WGPUCallbackMode
             set(value) { struct.mode = value }
-        override var callback: NativeAddress
-            get() = struct.callback?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.callback = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata1: NativeAddress
-            get() = struct.userdata1?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata1 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata2: NativeAddress
-            get() = struct.userdata2?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata2 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var callback: NativeAddress?
+            get() = struct.callback?.let(::NativeAddress)
+            set(value) { struct.callback = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata1: NativeAddress?
+            get() = struct.userdata1?.let(::NativeAddress)
+            set(value) { struct.userdata1 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata2: NativeAddress?
+            get() = struct.userdata2?.let(::NativeAddress)
+            set(value) { struct.userdata2 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPURequestAdapterCallbackInfo.toCValue(): CValue<webgpu.native.WGPURequestAdapterCallbackInfo> = cValue {
     this.nextInChain = this@toCValue.nextInChain?.handler?.pointer?.takeIf { this@toCValue.nextInChain?.handler?.rawValue != 0L }?.reinterpret()
     this.mode = this@toCValue.mode
-    this.callback = this@toCValue.callback.pointer?.takeIf { this@toCValue.callback.rawValue != 0L }?.reinterpret()
-    this.userdata1 = this@toCValue.userdata1.pointer?.takeIf { this@toCValue.userdata1.rawValue != 0L }?.reinterpret()
-    this.userdata2 = this@toCValue.userdata2.pointer?.takeIf { this@toCValue.userdata2.rawValue != 0L }?.reinterpret()
+    this.callback = this@toCValue.callback?.pointer?.takeIf { this@toCValue.callback?.rawValue != 0L }?.reinterpret()
+    this.userdata1 = this@toCValue.userdata1?.pointer?.takeIf { this@toCValue.userdata1?.rawValue != 0L }?.reinterpret()
+    this.userdata2 = this@toCValue.userdata2?.pointer?.takeIf { this@toCValue.userdata2?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPURequestDeviceCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
     actual var mode: WGPUCallbackMode
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURequestDeviceCallbackInfo = ByReference(address)
@@ -861,14 +951,14 @@ actual interface WGPURequestDeviceCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = handle.useContents { this.mode as WGPUCallbackMode }
             set(value) { error("Setters not supported on ByValue") }
-        override var callback: NativeAddress
-            get() = handle.useContents { this.callback?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var callback: NativeAddress?
+            get() = handle.useContents { this.callback?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata1: NativeAddress
-            get() = handle.useContents { this.userdata1?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata1: NativeAddress?
+            get() = handle.useContents { this.userdata1?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata2: NativeAddress
-            get() = handle.useContents { this.userdata2?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata2: NativeAddress?
+            get() = handle.useContents { this.userdata2?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -882,31 +972,31 @@ actual interface WGPURequestDeviceCallbackInfo {
         override var mode: WGPUCallbackMode
             get() = struct.mode as WGPUCallbackMode
             set(value) { struct.mode = value }
-        override var callback: NativeAddress
-            get() = struct.callback?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.callback = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata1: NativeAddress
-            get() = struct.userdata1?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata1 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata2: NativeAddress
-            get() = struct.userdata2?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata2 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var callback: NativeAddress?
+            get() = struct.callback?.let(::NativeAddress)
+            set(value) { struct.callback = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata1: NativeAddress?
+            get() = struct.userdata1?.let(::NativeAddress)
+            set(value) { struct.userdata1 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata2: NativeAddress?
+            get() = struct.userdata2?.let(::NativeAddress)
+            set(value) { struct.userdata2 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPURequestDeviceCallbackInfo.toCValue(): CValue<webgpu.native.WGPURequestDeviceCallbackInfo> = cValue {
     this.nextInChain = this@toCValue.nextInChain?.handler?.pointer?.takeIf { this@toCValue.nextInChain?.handler?.rawValue != 0L }?.reinterpret()
     this.mode = this@toCValue.mode
-    this.callback = this@toCValue.callback.pointer?.takeIf { this@toCValue.callback.rawValue != 0L }?.reinterpret()
-    this.userdata1 = this@toCValue.userdata1.pointer?.takeIf { this@toCValue.userdata1.rawValue != 0L }?.reinterpret()
-    this.userdata2 = this@toCValue.userdata2.pointer?.takeIf { this@toCValue.userdata2.rawValue != 0L }?.reinterpret()
+    this.callback = this@toCValue.callback?.pointer?.takeIf { this@toCValue.callback?.rawValue != 0L }?.reinterpret()
+    this.userdata1 = this@toCValue.userdata1?.pointer?.takeIf { this@toCValue.userdata1?.rawValue != 0L }?.reinterpret()
+    this.userdata2 = this@toCValue.userdata2?.pointer?.takeIf { this@toCValue.userdata2?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUUncapturedErrorCallbackInfo {
     actual var nextInChain: WGPUChainedStruct?
-    actual var callback: NativeAddress
-    actual var userdata1: NativeAddress
-    actual var userdata2: NativeAddress
+    actual var callback: NativeAddress?
+    actual var userdata1: NativeAddress?
+    actual var userdata2: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUUncapturedErrorCallbackInfo = ByReference(address)
@@ -931,14 +1021,14 @@ actual interface WGPUUncapturedErrorCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
             get() = handle.useContents { this.nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) } }
             set(value) { error("Setters not supported on ByValue") }
-        override var callback: NativeAddress
-            get() = handle.useContents { this.callback?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var callback: NativeAddress?
+            get() = handle.useContents { this.callback?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata1: NativeAddress
-            get() = handle.useContents { this.userdata1?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata1: NativeAddress?
+            get() = handle.useContents { this.userdata1?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var userdata2: NativeAddress
-            get() = handle.useContents { this.userdata2?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var userdata2: NativeAddress?
+            get() = handle.useContents { this.userdata2?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -949,23 +1039,23 @@ actual interface WGPUUncapturedErrorCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
             get() = struct.nextInChain?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) { struct.nextInChain = value?.handler?.pointer?.takeIf { value.handler.rawValue != 0L }?.reinterpret() }
-        override var callback: NativeAddress
-            get() = struct.callback?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.callback = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata1: NativeAddress
-            get() = struct.userdata1?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata1 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var userdata2: NativeAddress
-            get() = struct.userdata2?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.userdata2 = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var callback: NativeAddress?
+            get() = struct.callback?.let(::NativeAddress)
+            set(value) { struct.callback = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata1: NativeAddress?
+            get() = struct.userdata1?.let(::NativeAddress)
+            set(value) { struct.userdata1 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var userdata2: NativeAddress?
+            get() = struct.userdata2?.let(::NativeAddress)
+            set(value) { struct.userdata2 = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPUUncapturedErrorCallbackInfo.toCValue(): CValue<webgpu.native.WGPUUncapturedErrorCallbackInfo> = cValue {
     this.nextInChain = this@toCValue.nextInChain?.handler?.pointer?.takeIf { this@toCValue.nextInChain?.handler?.rawValue != 0L }?.reinterpret()
-    this.callback = this@toCValue.callback.pointer?.takeIf { this@toCValue.callback.rawValue != 0L }?.reinterpret()
-    this.userdata1 = this@toCValue.userdata1.pointer?.takeIf { this@toCValue.userdata1.rawValue != 0L }?.reinterpret()
-    this.userdata2 = this@toCValue.userdata2.pointer?.takeIf { this@toCValue.userdata2.rawValue != 0L }?.reinterpret()
+    this.callback = this@toCValue.callback?.pointer?.takeIf { this@toCValue.callback?.rawValue != 0L }?.reinterpret()
+    this.userdata1 = this@toCValue.userdata1?.pointer?.takeIf { this@toCValue.userdata1?.rawValue != 0L }?.reinterpret()
+    this.userdata2 = this@toCValue.userdata2?.pointer?.takeIf { this@toCValue.userdata2?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUAdapterInfo {
@@ -2626,7 +2716,7 @@ actual interface WGPURenderBundleEncoderDescriptor {
     actual var nextInChain: WGPUChainedStruct?
     actual var label: WGPUStringView
     actual var colorFormatCount: ULong
-    actual var colorFormats: NativeAddress
+    actual var colorFormats: NativeAddress?
     actual var depthStencilFormat: WGPUTextureFormat
     actual var sampleCount: UInt
     actual var depthReadOnly: UInt
@@ -2661,8 +2751,8 @@ actual interface WGPURenderBundleEncoderDescriptor {
         override var colorFormatCount: ULong
             get() = handle.useContents { this.colorFormatCount }
             set(value) { error("Setters not supported on ByValue") }
-        override var colorFormats: NativeAddress
-            get() = handle.useContents { this.colorFormats?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var colorFormats: NativeAddress?
+            get() = handle.useContents { this.colorFormats?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         override var depthStencilFormat: WGPUTextureFormat
             get() = handle.useContents { this.depthStencilFormat as WGPUTextureFormat }
@@ -2698,9 +2788,9 @@ actual interface WGPURenderBundleEncoderDescriptor {
         override var colorFormatCount: ULong
             get() = struct.colorFormatCount
             set(value) { struct.colorFormatCount = value }
-        override var colorFormats: NativeAddress
-            get() = struct.colorFormats?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.colorFormats = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var colorFormats: NativeAddress?
+            get() = struct.colorFormats?.let(::NativeAddress)
+            set(value) { struct.colorFormats = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
         override var depthStencilFormat: WGPUTextureFormat
             get() = struct.depthStencilFormat as WGPUTextureFormat
             set(value) { struct.depthStencilFormat = value }
@@ -2725,7 +2815,7 @@ fun WGPURenderBundleEncoderDescriptor.toCValue(): CValue<webgpu.native.WGPURende
         dest_label[i.toInt()] = src_label[i.toInt()]
     }
     this.colorFormatCount = this@toCValue.colorFormatCount
-    this.colorFormats = this@toCValue.colorFormats.pointer?.takeIf { this@toCValue.colorFormats.rawValue != 0L }?.reinterpret()
+    this.colorFormats = this@toCValue.colorFormats?.pointer?.takeIf { this@toCValue.colorFormats?.rawValue != 0L }?.reinterpret()
     this.depthStencilFormat = this@toCValue.depthStencilFormat
     this.sampleCount = this@toCValue.sampleCount
     this.depthReadOnly = this@toCValue.depthReadOnly
@@ -3165,7 +3255,7 @@ fun WGPUSamplerDescriptor.toCValue(): CValue<webgpu.native.WGPUSamplerDescriptor
 actual interface WGPUShaderSourceSPIRV {
     actual var chain: WGPUChainedStruct
     actual var codeSize: UInt
-    actual var code: NativeAddress
+    actual var code: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUShaderSourceSPIRV = ByReference(address)
@@ -3193,8 +3283,8 @@ actual interface WGPUShaderSourceSPIRV {
         override var codeSize: UInt
             get() = handle.useContents { this.codeSize }
             set(value) { error("Setters not supported on ByValue") }
-        override var code: NativeAddress
-            get() = handle.useContents { this.code?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var code: NativeAddress?
+            get() = handle.useContents { this.code?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -3215,9 +3305,9 @@ actual interface WGPUShaderSourceSPIRV {
         override var codeSize: UInt
             get() = struct.codeSize
             set(value) { struct.codeSize = value }
-        override var code: NativeAddress
-            get() = struct.code?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.code = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var code: NativeAddress?
+            get() = struct.code?.let(::NativeAddress)
+            set(value) { struct.code = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
@@ -3229,7 +3319,7 @@ fun WGPUShaderSourceSPIRV.toCValue(): CValue<webgpu.native.WGPUShaderSourceSPIRV
         dest_chain[i.toInt()] = src_chain[i.toInt()]
     }
     this.codeSize = this@toCValue.codeSize
-    this.code = this@toCValue.code.pointer?.takeIf { this@toCValue.code.rawValue != 0L }?.reinterpret()
+    this.code = this@toCValue.code?.pointer?.takeIf { this@toCValue.code?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUShaderSourceWGSL {
@@ -3440,7 +3530,7 @@ fun WGPUStorageTextureBindingLayout.toCValue(): CValue<webgpu.native.WGPUStorage
 
 actual interface WGPUSupportedFeatures {
     actual var featureCount: ULong
-    actual var features: NativeAddress
+    actual var features: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSupportedFeatures = ByReference(address)
@@ -3465,8 +3555,8 @@ actual interface WGPUSupportedFeatures {
         override var featureCount: ULong
             get() = handle.useContents { this.featureCount }
             set(value) { error("Setters not supported on ByValue") }
-        override var features: NativeAddress
-            get() = handle.useContents { this.features?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var features: NativeAddress?
+            get() = handle.useContents { this.features?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -3477,20 +3567,20 @@ actual interface WGPUSupportedFeatures {
         override var featureCount: ULong
             get() = struct.featureCount
             set(value) { struct.featureCount = value }
-        override var features: NativeAddress
-            get() = struct.features?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.features = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var features: NativeAddress?
+            get() = struct.features?.let(::NativeAddress)
+            set(value) { struct.features = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPUSupportedFeatures.toCValue(): CValue<webgpu.native.WGPUSupportedFeatures> = cValue {
     this.featureCount = this@toCValue.featureCount
-    this.features = this@toCValue.features.pointer?.takeIf { this@toCValue.features.rawValue != 0L }?.reinterpret()
+    this.features = this@toCValue.features?.pointer?.takeIf { this@toCValue.features?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUSupportedInstanceFeatures {
     actual var featureCount: ULong
-    actual var features: NativeAddress
+    actual var features: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSupportedInstanceFeatures = ByReference(address)
@@ -3515,8 +3605,8 @@ actual interface WGPUSupportedInstanceFeatures {
         override var featureCount: ULong
             get() = handle.useContents { this.featureCount }
             set(value) { error("Setters not supported on ByValue") }
-        override var features: NativeAddress
-            get() = handle.useContents { this.features?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var features: NativeAddress?
+            get() = handle.useContents { this.features?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -3527,20 +3617,20 @@ actual interface WGPUSupportedInstanceFeatures {
         override var featureCount: ULong
             get() = struct.featureCount
             set(value) { struct.featureCount = value }
-        override var features: NativeAddress
-            get() = struct.features?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.features = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var features: NativeAddress?
+            get() = struct.features?.let(::NativeAddress)
+            set(value) { struct.features = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPUSupportedInstanceFeatures.toCValue(): CValue<webgpu.native.WGPUSupportedInstanceFeatures> = cValue {
     this.featureCount = this@toCValue.featureCount
-    this.features = this@toCValue.features.pointer?.takeIf { this@toCValue.features.rawValue != 0L }?.reinterpret()
+    this.features = this@toCValue.features?.pointer?.takeIf { this@toCValue.features?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUSupportedWGSLLanguageFeatures {
     actual var featureCount: ULong
-    actual var features: NativeAddress
+    actual var features: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSupportedWGSLLanguageFeatures = ByReference(address)
@@ -3565,8 +3655,8 @@ actual interface WGPUSupportedWGSLLanguageFeatures {
         override var featureCount: ULong
             get() = handle.useContents { this.featureCount }
             set(value) { error("Setters not supported on ByValue") }
-        override var features: NativeAddress
-            get() = handle.useContents { this.features?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var features: NativeAddress?
+            get() = handle.useContents { this.features?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -3577,26 +3667,26 @@ actual interface WGPUSupportedWGSLLanguageFeatures {
         override var featureCount: ULong
             get() = struct.featureCount
             set(value) { struct.featureCount = value }
-        override var features: NativeAddress
-            get() = struct.features?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.features = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var features: NativeAddress?
+            get() = struct.features?.let(::NativeAddress)
+            set(value) { struct.features = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPUSupportedWGSLLanguageFeatures.toCValue(): CValue<webgpu.native.WGPUSupportedWGSLLanguageFeatures> = cValue {
     this.featureCount = this@toCValue.featureCount
-    this.features = this@toCValue.features.pointer?.takeIf { this@toCValue.features.rawValue != 0L }?.reinterpret()
+    this.features = this@toCValue.features?.pointer?.takeIf { this@toCValue.features?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUSurfaceCapabilities {
     actual var nextInChain: WGPUChainedStruct?
     actual var usages: ULong
     actual var formatCount: ULong
-    actual var formats: NativeAddress
+    actual var formats: NativeAddress?
     actual var presentModeCount: ULong
-    actual var presentModes: NativeAddress
+    actual var presentModes: NativeAddress?
     actual var alphaModeCount: ULong
-    actual var alphaModes: NativeAddress
+    actual var alphaModes: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceCapabilities = ByReference(address)
@@ -3627,20 +3717,20 @@ actual interface WGPUSurfaceCapabilities {
         override var formatCount: ULong
             get() = handle.useContents { this.formatCount }
             set(value) { error("Setters not supported on ByValue") }
-        override var formats: NativeAddress
-            get() = handle.useContents { this.formats?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var formats: NativeAddress?
+            get() = handle.useContents { this.formats?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         override var presentModeCount: ULong
             get() = handle.useContents { this.presentModeCount }
             set(value) { error("Setters not supported on ByValue") }
-        override var presentModes: NativeAddress
-            get() = handle.useContents { this.presentModes?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var presentModes: NativeAddress?
+            get() = handle.useContents { this.presentModes?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         override var alphaModeCount: ULong
             get() = handle.useContents { this.alphaModeCount }
             set(value) { error("Setters not supported on ByValue") }
-        override var alphaModes: NativeAddress
-            get() = handle.useContents { this.alphaModes?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var alphaModes: NativeAddress?
+            get() = handle.useContents { this.alphaModes?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -3657,21 +3747,21 @@ actual interface WGPUSurfaceCapabilities {
         override var formatCount: ULong
             get() = struct.formatCount
             set(value) { struct.formatCount = value }
-        override var formats: NativeAddress
-            get() = struct.formats?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.formats = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var formats: NativeAddress?
+            get() = struct.formats?.let(::NativeAddress)
+            set(value) { struct.formats = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
         override var presentModeCount: ULong
             get() = struct.presentModeCount
             set(value) { struct.presentModeCount = value }
-        override var presentModes: NativeAddress
-            get() = struct.presentModes?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.presentModes = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var presentModes: NativeAddress?
+            get() = struct.presentModes?.let(::NativeAddress)
+            set(value) { struct.presentModes = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
         override var alphaModeCount: ULong
             get() = struct.alphaModeCount
             set(value) { struct.alphaModeCount = value }
-        override var alphaModes: NativeAddress
-            get() = struct.alphaModes?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.alphaModes = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var alphaModes: NativeAddress?
+            get() = struct.alphaModes?.let(::NativeAddress)
+            set(value) { struct.alphaModes = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
@@ -3679,11 +3769,11 @@ fun WGPUSurfaceCapabilities.toCValue(): CValue<webgpu.native.WGPUSurfaceCapabili
     this.nextInChain = this@toCValue.nextInChain?.handler?.pointer?.takeIf { this@toCValue.nextInChain?.handler?.rawValue != 0L }?.reinterpret()
     this.usages = this@toCValue.usages
     this.formatCount = this@toCValue.formatCount
-    this.formats = this@toCValue.formats.pointer?.takeIf { this@toCValue.formats.rawValue != 0L }?.reinterpret()
+    this.formats = this@toCValue.formats?.pointer?.takeIf { this@toCValue.formats?.rawValue != 0L }?.reinterpret()
     this.presentModeCount = this@toCValue.presentModeCount
-    this.presentModes = this@toCValue.presentModes.pointer?.takeIf { this@toCValue.presentModes.rawValue != 0L }?.reinterpret()
+    this.presentModes = this@toCValue.presentModes?.pointer?.takeIf { this@toCValue.presentModes?.rawValue != 0L }?.reinterpret()
     this.alphaModeCount = this@toCValue.alphaModeCount
-    this.alphaModes = this@toCValue.alphaModes.pointer?.takeIf { this@toCValue.alphaModes.rawValue != 0L }?.reinterpret()
+    this.alphaModes = this@toCValue.alphaModes?.pointer?.takeIf { this@toCValue.alphaModes?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUSurfaceColorManagement {
@@ -3764,7 +3854,7 @@ actual interface WGPUSurfaceConfiguration {
     actual var width: UInt
     actual var height: UInt
     actual var viewFormatCount: ULong
-    actual var viewFormats: NativeAddress
+    actual var viewFormats: NativeAddress?
     actual var alphaMode: WGPUCompositeAlphaMode
     actual var presentMode: WGPUPresentMode
     actual val handler: NativeAddress
@@ -3809,8 +3899,8 @@ actual interface WGPUSurfaceConfiguration {
         override var viewFormatCount: ULong
             get() = handle.useContents { this.viewFormatCount }
             set(value) { error("Setters not supported on ByValue") }
-        override var viewFormats: NativeAddress
-            get() = handle.useContents { this.viewFormats?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var viewFormats: NativeAddress?
+            get() = handle.useContents { this.viewFormats?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         override var alphaMode: WGPUCompositeAlphaMode
             get() = handle.useContents { this.alphaMode as WGPUCompositeAlphaMode }
@@ -3845,9 +3935,9 @@ actual interface WGPUSurfaceConfiguration {
         override var viewFormatCount: ULong
             get() = struct.viewFormatCount
             set(value) { struct.viewFormatCount = value }
-        override var viewFormats: NativeAddress
-            get() = struct.viewFormats?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.viewFormats = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var viewFormats: NativeAddress?
+            get() = struct.viewFormats?.let(::NativeAddress)
+            set(value) { struct.viewFormats = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
         override var alphaMode: WGPUCompositeAlphaMode
             get() = struct.alphaMode as WGPUCompositeAlphaMode
             set(value) { struct.alphaMode = value }
@@ -3865,14 +3955,14 @@ fun WGPUSurfaceConfiguration.toCValue(): CValue<webgpu.native.WGPUSurfaceConfigu
     this.width = this@toCValue.width
     this.height = this@toCValue.height
     this.viewFormatCount = this@toCValue.viewFormatCount
-    this.viewFormats = this@toCValue.viewFormats.pointer?.takeIf { this@toCValue.viewFormats.rawValue != 0L }?.reinterpret()
+    this.viewFormats = this@toCValue.viewFormats?.pointer?.takeIf { this@toCValue.viewFormats?.rawValue != 0L }?.reinterpret()
     this.alphaMode = this@toCValue.alphaMode
     this.presentMode = this@toCValue.presentMode
 }
 
 actual interface WGPUSurfaceSourceAndroidNativeWindow {
     actual var chain: WGPUChainedStruct
-    actual var window: NativeAddress
+    actual var window: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceAndroidNativeWindow = ByReference(address)
@@ -3897,8 +3987,8 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
         override var chain: WGPUChainedStruct
             get() = handle.useContents { WGPUChainedStruct.ByReference(NativeAddress(this.chain.ptr)) }
             set(value) { error("Setters not supported on ByValue") }
-        override var window: NativeAddress
-            get() = handle.useContents { this.window?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var window: NativeAddress?
+            get() = handle.useContents { this.window?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -3916,9 +4006,9 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
                     destBytes[i.toInt()] = srcBytes[i.toInt()]
                 }
             }
-        override var window: NativeAddress
-            get() = struct.window?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.window = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var window: NativeAddress?
+            get() = struct.window?.let(::NativeAddress)
+            set(value) { struct.window = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
@@ -3929,12 +4019,12 @@ fun WGPUSurfaceSourceAndroidNativeWindow.toCValue(): CValue<webgpu.native.WGPUSu
     for (i in 0L until size_chain) {
         dest_chain[i.toInt()] = src_chain[i.toInt()]
     }
-    this.window = this@toCValue.window.pointer?.takeIf { this@toCValue.window.rawValue != 0L }?.reinterpret()
+    this.window = this@toCValue.window?.pointer?.takeIf { this@toCValue.window?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUSurfaceSourceMetalLayer {
     actual var chain: WGPUChainedStruct
-    actual var layer: NativeAddress
+    actual var layer: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceMetalLayer = ByReference(address)
@@ -3959,8 +4049,8 @@ actual interface WGPUSurfaceSourceMetalLayer {
         override var chain: WGPUChainedStruct
             get() = handle.useContents { WGPUChainedStruct.ByReference(NativeAddress(this.chain.ptr)) }
             set(value) { error("Setters not supported on ByValue") }
-        override var layer: NativeAddress
-            get() = handle.useContents { this.layer?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var layer: NativeAddress?
+            get() = handle.useContents { this.layer?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -3978,9 +4068,9 @@ actual interface WGPUSurfaceSourceMetalLayer {
                     destBytes[i.toInt()] = srcBytes[i.toInt()]
                 }
             }
-        override var layer: NativeAddress
-            get() = struct.layer?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.layer = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var layer: NativeAddress?
+            get() = struct.layer?.let(::NativeAddress)
+            set(value) { struct.layer = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
@@ -3991,13 +4081,13 @@ fun WGPUSurfaceSourceMetalLayer.toCValue(): CValue<webgpu.native.WGPUSurfaceSour
     for (i in 0L until size_chain) {
         dest_chain[i.toInt()] = src_chain[i.toInt()]
     }
-    this.layer = this@toCValue.layer.pointer?.takeIf { this@toCValue.layer.rawValue != 0L }?.reinterpret()
+    this.layer = this@toCValue.layer?.pointer?.takeIf { this@toCValue.layer?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUSurfaceSourceWaylandSurface {
     actual var chain: WGPUChainedStruct
-    actual var display: NativeAddress
-    actual var surface: NativeAddress
+    actual var display: NativeAddress?
+    actual var surface: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceWaylandSurface = ByReference(address)
@@ -4022,11 +4112,11 @@ actual interface WGPUSurfaceSourceWaylandSurface {
         override var chain: WGPUChainedStruct
             get() = handle.useContents { WGPUChainedStruct.ByReference(NativeAddress(this.chain.ptr)) }
             set(value) { error("Setters not supported on ByValue") }
-        override var display: NativeAddress
-            get() = handle.useContents { this.display?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var display: NativeAddress?
+            get() = handle.useContents { this.display?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var surface: NativeAddress
-            get() = handle.useContents { this.surface?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var surface: NativeAddress?
+            get() = handle.useContents { this.surface?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -4044,12 +4134,12 @@ actual interface WGPUSurfaceSourceWaylandSurface {
                     destBytes[i.toInt()] = srcBytes[i.toInt()]
                 }
             }
-        override var display: NativeAddress
-            get() = struct.display?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.display = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var surface: NativeAddress
-            get() = struct.surface?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.surface = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var display: NativeAddress?
+            get() = struct.display?.let(::NativeAddress)
+            set(value) { struct.display = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var surface: NativeAddress?
+            get() = struct.surface?.let(::NativeAddress)
+            set(value) { struct.surface = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
@@ -4060,14 +4150,14 @@ fun WGPUSurfaceSourceWaylandSurface.toCValue(): CValue<webgpu.native.WGPUSurface
     for (i in 0L until size_chain) {
         dest_chain[i.toInt()] = src_chain[i.toInt()]
     }
-    this.display = this@toCValue.display.pointer?.takeIf { this@toCValue.display.rawValue != 0L }?.reinterpret()
-    this.surface = this@toCValue.surface.pointer?.takeIf { this@toCValue.surface.rawValue != 0L }?.reinterpret()
+    this.display = this@toCValue.display?.pointer?.takeIf { this@toCValue.display?.rawValue != 0L }?.reinterpret()
+    this.surface = this@toCValue.surface?.pointer?.takeIf { this@toCValue.surface?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUSurfaceSourceWindowsHWND {
     actual var chain: WGPUChainedStruct
-    actual var hinstance: NativeAddress
-    actual var hwnd: NativeAddress
+    actual var hinstance: NativeAddress?
+    actual var hwnd: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceWindowsHWND = ByReference(address)
@@ -4092,11 +4182,11 @@ actual interface WGPUSurfaceSourceWindowsHWND {
         override var chain: WGPUChainedStruct
             get() = handle.useContents { WGPUChainedStruct.ByReference(NativeAddress(this.chain.ptr)) }
             set(value) { error("Setters not supported on ByValue") }
-        override var hinstance: NativeAddress
-            get() = handle.useContents { this.hinstance?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var hinstance: NativeAddress?
+            get() = handle.useContents { this.hinstance?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var hwnd: NativeAddress
-            get() = handle.useContents { this.hwnd?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var hwnd: NativeAddress?
+            get() = handle.useContents { this.hwnd?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -4114,12 +4204,12 @@ actual interface WGPUSurfaceSourceWindowsHWND {
                     destBytes[i.toInt()] = srcBytes[i.toInt()]
                 }
             }
-        override var hinstance: NativeAddress
-            get() = struct.hinstance?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.hinstance = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var hwnd: NativeAddress
-            get() = struct.hwnd?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.hwnd = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var hinstance: NativeAddress?
+            get() = struct.hinstance?.let(::NativeAddress)
+            set(value) { struct.hinstance = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var hwnd: NativeAddress?
+            get() = struct.hwnd?.let(::NativeAddress)
+            set(value) { struct.hwnd = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
@@ -4130,13 +4220,13 @@ fun WGPUSurfaceSourceWindowsHWND.toCValue(): CValue<webgpu.native.WGPUSurfaceSou
     for (i in 0L until size_chain) {
         dest_chain[i.toInt()] = src_chain[i.toInt()]
     }
-    this.hinstance = this@toCValue.hinstance.pointer?.takeIf { this@toCValue.hinstance.rawValue != 0L }?.reinterpret()
-    this.hwnd = this@toCValue.hwnd.pointer?.takeIf { this@toCValue.hwnd.rawValue != 0L }?.reinterpret()
+    this.hinstance = this@toCValue.hinstance?.pointer?.takeIf { this@toCValue.hinstance?.rawValue != 0L }?.reinterpret()
+    this.hwnd = this@toCValue.hwnd?.pointer?.takeIf { this@toCValue.hwnd?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUSurfaceSourceXCBWindow {
     actual var chain: WGPUChainedStruct
-    actual var connection: NativeAddress
+    actual var connection: NativeAddress?
     actual var window: UInt
     actual val handler: NativeAddress
     actual companion object {
@@ -4162,8 +4252,8 @@ actual interface WGPUSurfaceSourceXCBWindow {
         override var chain: WGPUChainedStruct
             get() = handle.useContents { WGPUChainedStruct.ByReference(NativeAddress(this.chain.ptr)) }
             set(value) { error("Setters not supported on ByValue") }
-        override var connection: NativeAddress
-            get() = handle.useContents { this.connection?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var connection: NativeAddress?
+            get() = handle.useContents { this.connection?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         override var window: UInt
             get() = handle.useContents { this.window }
@@ -4184,9 +4274,9 @@ actual interface WGPUSurfaceSourceXCBWindow {
                     destBytes[i.toInt()] = srcBytes[i.toInt()]
                 }
             }
-        override var connection: NativeAddress
-            get() = struct.connection?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.connection = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var connection: NativeAddress?
+            get() = struct.connection?.let(::NativeAddress)
+            set(value) { struct.connection = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
         override var window: UInt
             get() = struct.window
             set(value) { struct.window = value }
@@ -4200,13 +4290,13 @@ fun WGPUSurfaceSourceXCBWindow.toCValue(): CValue<webgpu.native.WGPUSurfaceSourc
     for (i in 0L until size_chain) {
         dest_chain[i.toInt()] = src_chain[i.toInt()]
     }
-    this.connection = this@toCValue.connection.pointer?.takeIf { this@toCValue.connection.rawValue != 0L }?.reinterpret()
+    this.connection = this@toCValue.connection?.pointer?.takeIf { this@toCValue.connection?.rawValue != 0L }?.reinterpret()
     this.window = this@toCValue.window
 }
 
 actual interface WGPUSurfaceSourceXlibWindow {
     actual var chain: WGPUChainedStruct
-    actual var display: NativeAddress
+    actual var display: NativeAddress?
     actual var window: ULong
     actual val handler: NativeAddress
     actual companion object {
@@ -4232,8 +4322,8 @@ actual interface WGPUSurfaceSourceXlibWindow {
         override var chain: WGPUChainedStruct
             get() = handle.useContents { WGPUChainedStruct.ByReference(NativeAddress(this.chain.ptr)) }
             set(value) { error("Setters not supported on ByValue") }
-        override var display: NativeAddress
-            get() = handle.useContents { this.display?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var display: NativeAddress?
+            get() = handle.useContents { this.display?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         override var window: ULong
             get() = handle.useContents { this.window }
@@ -4254,9 +4344,9 @@ actual interface WGPUSurfaceSourceXlibWindow {
                     destBytes[i.toInt()] = srcBytes[i.toInt()]
                 }
             }
-        override var display: NativeAddress
-            get() = struct.display?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.display = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var display: NativeAddress?
+            get() = struct.display?.let(::NativeAddress)
+            set(value) { struct.display = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
         override var window: ULong
             get() = struct.window
             set(value) { struct.window = value }
@@ -4270,7 +4360,7 @@ fun WGPUSurfaceSourceXlibWindow.toCValue(): CValue<webgpu.native.WGPUSurfaceSour
     for (i in 0L until size_chain) {
         dest_chain[i.toInt()] = src_chain[i.toInt()]
     }
-    this.display = this@toCValue.display.pointer?.takeIf { this@toCValue.display.rawValue != 0L }?.reinterpret()
+    this.display = this@toCValue.display?.pointer?.takeIf { this@toCValue.display?.rawValue != 0L }?.reinterpret()
     this.window = this@toCValue.window
 }
 
@@ -5385,7 +5475,7 @@ fun WGPUFutureWaitInfo.toCValue(): CValue<webgpu.native.WGPUFutureWaitInfo> = cV
 actual interface WGPUInstanceDescriptor {
     actual var nextInChain: WGPUChainedStruct?
     actual var requiredFeatureCount: ULong
-    actual var requiredFeatures: NativeAddress
+    actual var requiredFeatures: NativeAddress?
     actual var requiredLimits: WGPUInstanceLimits?
     actual val handler: NativeAddress
     actual companion object {
@@ -5414,8 +5504,8 @@ actual interface WGPUInstanceDescriptor {
         override var requiredFeatureCount: ULong
             get() = handle.useContents { this.requiredFeatureCount }
             set(value) { error("Setters not supported on ByValue") }
-        override var requiredFeatures: NativeAddress
-            get() = handle.useContents { this.requiredFeatures?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var requiredFeatures: NativeAddress?
+            get() = handle.useContents { this.requiredFeatures?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         override var requiredLimits: WGPUInstanceLimits?
             get() = handle.useContents { this.requiredLimits?.let(::NativeAddress)?.let { WGPUInstanceLimits(it) } }
@@ -5432,9 +5522,9 @@ actual interface WGPUInstanceDescriptor {
         override var requiredFeatureCount: ULong
             get() = struct.requiredFeatureCount
             set(value) { struct.requiredFeatureCount = value }
-        override var requiredFeatures: NativeAddress
-            get() = struct.requiredFeatures?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.requiredFeatures = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var requiredFeatures: NativeAddress?
+            get() = struct.requiredFeatures?.let(::NativeAddress)
+            set(value) { struct.requiredFeatures = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
         override var requiredLimits: WGPUInstanceLimits?
             get() = struct.requiredLimits?.let(::NativeAddress)?.let { WGPUInstanceLimits(it) }
             set(value) { struct.requiredLimits = value?.handler?.pointer?.takeIf { value.handler.rawValue != 0L }?.reinterpret() }
@@ -5444,7 +5534,7 @@ actual interface WGPUInstanceDescriptor {
 fun WGPUInstanceDescriptor.toCValue(): CValue<webgpu.native.WGPUInstanceDescriptor> = cValue {
     this.nextInChain = this@toCValue.nextInChain?.handler?.pointer?.takeIf { this@toCValue.nextInChain?.handler?.rawValue != 0L }?.reinterpret()
     this.requiredFeatureCount = this@toCValue.requiredFeatureCount
-    this.requiredFeatures = this@toCValue.requiredFeatures.pointer?.takeIf { this@toCValue.requiredFeatures.rawValue != 0L }?.reinterpret()
+    this.requiredFeatures = this@toCValue.requiredFeatures?.pointer?.takeIf { this@toCValue.requiredFeatures?.rawValue != 0L }?.reinterpret()
     this.requiredLimits = this@toCValue.requiredLimits?.handler?.pointer?.takeIf { this@toCValue.requiredLimits?.handler?.rawValue != 0L }?.reinterpret()
 }
 
@@ -6278,7 +6368,7 @@ actual interface WGPUTextureDescriptor {
     actual var mipLevelCount: UInt
     actual var sampleCount: UInt
     actual var viewFormatCount: ULong
-    actual var viewFormats: NativeAddress
+    actual var viewFormats: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUTextureDescriptor = ByReference(address)
@@ -6327,8 +6417,8 @@ actual interface WGPUTextureDescriptor {
         override var viewFormatCount: ULong
             get() = handle.useContents { this.viewFormatCount }
             set(value) { error("Setters not supported on ByValue") }
-        override var viewFormats: NativeAddress
-            get() = handle.useContents { this.viewFormats?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var viewFormats: NativeAddress?
+            get() = handle.useContents { this.viewFormats?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -6377,9 +6467,9 @@ actual interface WGPUTextureDescriptor {
         override var viewFormatCount: ULong
             get() = struct.viewFormatCount
             set(value) { struct.viewFormatCount = value }
-        override var viewFormats: NativeAddress
-            get() = struct.viewFormats?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.viewFormats = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var viewFormats: NativeAddress?
+            get() = struct.viewFormats?.let(::NativeAddress)
+            set(value) { struct.viewFormats = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
@@ -6403,7 +6493,7 @@ fun WGPUTextureDescriptor.toCValue(): CValue<webgpu.native.WGPUTextureDescriptor
     this.mipLevelCount = this@toCValue.mipLevelCount
     this.sampleCount = this@toCValue.sampleCount
     this.viewFormatCount = this@toCValue.viewFormatCount
-    this.viewFormats = this@toCValue.viewFormats.pointer?.takeIf { this@toCValue.viewFormats.rawValue != 0L }?.reinterpret()
+    this.viewFormats = this@toCValue.viewFormats?.pointer?.takeIf { this@toCValue.viewFormats?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUVertexBufferLayout {
@@ -6804,7 +6894,7 @@ actual interface WGPUDeviceDescriptor {
     actual var nextInChain: WGPUChainedStruct?
     actual var label: WGPUStringView
     actual var requiredFeatureCount: ULong
-    actual var requiredFeatures: NativeAddress
+    actual var requiredFeatures: NativeAddress?
     actual var requiredLimits: WGPULimits?
     actual var defaultQueue: WGPUQueueDescriptor
     actual var deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
@@ -6839,8 +6929,8 @@ actual interface WGPUDeviceDescriptor {
         override var requiredFeatureCount: ULong
             get() = handle.useContents { this.requiredFeatureCount }
             set(value) { error("Setters not supported on ByValue") }
-        override var requiredFeatures: NativeAddress
-            get() = handle.useContents { this.requiredFeatures?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var requiredFeatures: NativeAddress?
+            get() = handle.useContents { this.requiredFeatures?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         override var requiredLimits: WGPULimits?
             get() = handle.useContents { this.requiredLimits?.let(::NativeAddress)?.let { WGPULimits(it) } }
@@ -6876,9 +6966,9 @@ actual interface WGPUDeviceDescriptor {
         override var requiredFeatureCount: ULong
             get() = struct.requiredFeatureCount
             set(value) { struct.requiredFeatureCount = value }
-        override var requiredFeatures: NativeAddress
-            get() = struct.requiredFeatures?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.requiredFeatures = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var requiredFeatures: NativeAddress?
+            get() = struct.requiredFeatures?.let(::NativeAddress)
+            set(value) { struct.requiredFeatures = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
         override var requiredLimits: WGPULimits?
             get() = struct.requiredLimits?.let(::NativeAddress)?.let { WGPULimits(it) }
             set(value) { struct.requiredLimits = value?.handler?.pointer?.takeIf { value.handler.rawValue != 0L }?.reinterpret() }
@@ -6924,7 +7014,7 @@ fun WGPUDeviceDescriptor.toCValue(): CValue<webgpu.native.WGPUDeviceDescriptor> 
         dest_label[i.toInt()] = src_label[i.toInt()]
     }
     this.requiredFeatureCount = this@toCValue.requiredFeatureCount
-    this.requiredFeatures = this@toCValue.requiredFeatures.pointer?.takeIf { this@toCValue.requiredFeatures.rawValue != 0L }?.reinterpret()
+    this.requiredFeatures = this@toCValue.requiredFeatures?.pointer?.takeIf { this@toCValue.requiredFeatures?.rawValue != 0L }?.reinterpret()
     this.requiredLimits = this@toCValue.requiredLimits?.handler?.pointer?.takeIf { this@toCValue.requiredLimits?.handler?.rawValue != 0L }?.reinterpret()
     val dest_defaultQueue = this.defaultQueue.ptr.reinterpret<ByteVar>()
     val src_defaultQueue = this@toCValue.defaultQueue.handler.pointer.reinterpret<ByteVar>()
@@ -7524,605 +7614,941 @@ fun WGPURenderPipelineDescriptor.toCValue(): CValue<webgpu.native.WGPURenderPipe
     this.fragment = this@toCValue.fragment?.handler?.pointer?.takeIf { this@toCValue.fragment?.handler?.rawValue != 0L }?.reinterpret()
 }
 
-actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance? =
-    error("wgpuCreateInstance is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuGetInstanceFeatures(features: WGPUSupportedInstanceFeatures?): Unit =
-    error("wgpuGetInstanceFeatures is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuGetInstanceLimits(limits: WGPUInstanceLimits?): WGPUStatus =
-    error("wgpuGetInstanceLimits is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuHasInstanceFeature(feature: WGPUInstanceFeatureName): UInt =
-    error("wgpuHasInstanceFeature is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuGetProcAddress(procName: WGPUStringView): NativeAddress? =
-    error("wgpuGetProcAddress is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuAdapterGetFeatures(adapter: WGPUAdapter?, features: WGPUSupportedFeatures?): Unit =
-    error("wgpuAdapterGetFeatures is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuAdapterGetInfo(adapter: WGPUAdapter?, info: WGPUAdapterInfo?): WGPUStatus =
-    error("wgpuAdapterGetInfo is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuAdapterGetLimits(adapter: WGPUAdapter?, limits: WGPULimits?): WGPUStatus =
-    error("wgpuAdapterGetLimits is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuAdapterHasFeature(adapter: WGPUAdapter?, feature: WGPUFeatureName): UInt =
-    error("wgpuAdapterHasFeature is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuAdapterRequestDevice(adapter: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): WGPUFuture =
-    error("wgpuAdapterRequestDevice is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuAdapterAddRef(adapter: WGPUAdapter?): Unit =
-    error("wgpuAdapterAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuAdapterRelease(adapter: WGPUAdapter?): Unit =
-    error("wgpuAdapterRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuAdapterInfoFreeMembers(adapterInfo: WGPUAdapterInfo): Unit =
-    error("wgpuAdapterInfoFreeMembers is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBindGroupSetLabel(bindGroup: WGPUBindGroup?, label: WGPUStringView): Unit =
-    error("wgpuBindGroupSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBindGroupAddRef(bindGroup: WGPUBindGroup?): Unit =
-    error("wgpuBindGroupAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBindGroupRelease(bindGroup: WGPUBindGroup?): Unit =
-    error("wgpuBindGroupRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBindGroupLayoutSetLabel(bindGroupLayout: WGPUBindGroupLayout?, label: WGPUStringView): Unit =
-    error("wgpuBindGroupLayoutSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBindGroupLayoutAddRef(bindGroupLayout: WGPUBindGroupLayout?): Unit =
-    error("wgpuBindGroupLayoutAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBindGroupLayoutRelease(bindGroupLayout: WGPUBindGroupLayout?): Unit =
-    error("wgpuBindGroupLayoutRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferDestroy(buffer: WGPUBuffer?): Unit =
-    error("wgpuBufferDestroy is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferGetConstMappedRange(buffer: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress? =
-    error("wgpuBufferGetConstMappedRange is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferGetMappedRange(buffer: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress? =
-    error("wgpuBufferGetMappedRange is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferGetMapState(buffer: WGPUBuffer?): WGPUBufferMapState =
-    error("wgpuBufferGetMapState is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferGetSize(buffer: WGPUBuffer?): ULong =
-    error("wgpuBufferGetSize is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferGetUsage(buffer: WGPUBuffer?): ULong =
-    error("wgpuBufferGetUsage is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferMapAsync(buffer: WGPUBuffer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo): WGPUFuture =
-    error("wgpuBufferMapAsync is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferReadMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus =
-    error("wgpuBufferReadMappedRange is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferSetLabel(buffer: WGPUBuffer?, label: WGPUStringView): Unit =
-    error("wgpuBufferSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferUnmap(buffer: WGPUBuffer?): Unit =
-    error("wgpuBufferUnmap is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferWriteMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus =
-    error("wgpuBufferWriteMappedRange is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferAddRef(buffer: WGPUBuffer?): Unit =
-    error("wgpuBufferAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuBufferRelease(buffer: WGPUBuffer?): Unit =
-    error("wgpuBufferRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandBufferSetLabel(commandBuffer: WGPUCommandBuffer?, label: WGPUStringView): Unit =
-    error("wgpuCommandBufferSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandBufferAddRef(commandBuffer: WGPUCommandBuffer?): Unit =
-    error("wgpuCommandBufferAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandBufferRelease(commandBuffer: WGPUCommandBuffer?): Unit =
-    error("wgpuCommandBufferRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderBeginComputePass(commandEncoder: WGPUCommandEncoder?, descriptor: WGPUComputePassDescriptor?): WGPUComputePassEncoder? =
-    error("wgpuCommandEncoderBeginComputePass is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderBeginRenderPass(commandEncoder: WGPUCommandEncoder?, descriptor: WGPURenderPassDescriptor?): WGPURenderPassEncoder? =
-    error("wgpuCommandEncoderBeginRenderPass is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderClearBuffer(commandEncoder: WGPUCommandEncoder?, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit =
-    error("wgpuCommandEncoderClearBuffer is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderCopyBufferToBuffer(commandEncoder: WGPUCommandEncoder?, source: WGPUBuffer?, sourceOffset: ULong, destination: WGPUBuffer?, destinationOffset: ULong, size: ULong): Unit =
-    error("wgpuCommandEncoderCopyBufferToBuffer is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderCopyBufferToTexture(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyBufferInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit =
-    error("wgpuCommandEncoderCopyBufferToTexture is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderCopyTextureToBuffer(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyBufferInfo?, copySize: WGPUExtent3D?): Unit =
-    error("wgpuCommandEncoderCopyTextureToBuffer is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderCopyTextureToTexture(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit =
-    error("wgpuCommandEncoderCopyTextureToTexture is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderFinish(commandEncoder: WGPUCommandEncoder?, descriptor: WGPUCommandBufferDescriptor?): WGPUCommandBuffer? =
-    error("wgpuCommandEncoderFinish is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderInsertDebugMarker(commandEncoder: WGPUCommandEncoder?, markerLabel: WGPUStringView): Unit =
-    error("wgpuCommandEncoderInsertDebugMarker is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderPopDebugGroup(commandEncoder: WGPUCommandEncoder?): Unit =
-    error("wgpuCommandEncoderPopDebugGroup is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderPushDebugGroup(commandEncoder: WGPUCommandEncoder?, groupLabel: WGPUStringView): Unit =
-    error("wgpuCommandEncoderPushDebugGroup is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderResolveQuerySet(commandEncoder: WGPUCommandEncoder?, querySet: WGPUQuerySet?, firstQuery: UInt, queryCount: UInt, destination: WGPUBuffer?, destinationOffset: ULong): Unit =
-    error("wgpuCommandEncoderResolveQuerySet is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderSetLabel(commandEncoder: WGPUCommandEncoder?, label: WGPUStringView): Unit =
-    error("wgpuCommandEncoderSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderWriteTimestamp(commandEncoder: WGPUCommandEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit =
-    error("wgpuCommandEncoderWriteTimestamp is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderAddRef(commandEncoder: WGPUCommandEncoder?): Unit =
-    error("wgpuCommandEncoderAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuCommandEncoderRelease(commandEncoder: WGPUCommandEncoder?): Unit =
-    error("wgpuCommandEncoderRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePassEncoderDispatchWorkgroups(computePassEncoder: WGPUComputePassEncoder?, workgroupCountX: UInt, workgroupCountY: UInt, workgroupCountZ: UInt): Unit =
-    error("wgpuComputePassEncoderDispatchWorkgroups is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(computePassEncoder: WGPUComputePassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit =
-    error("wgpuComputePassEncoderDispatchWorkgroupsIndirect is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePassEncoderEnd(computePassEncoder: WGPUComputePassEncoder?): Unit =
-    error("wgpuComputePassEncoderEnd is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePassEncoderInsertDebugMarker(computePassEncoder: WGPUComputePassEncoder?, markerLabel: WGPUStringView): Unit =
-    error("wgpuComputePassEncoderInsertDebugMarker is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePassEncoderPopDebugGroup(computePassEncoder: WGPUComputePassEncoder?): Unit =
-    error("wgpuComputePassEncoderPopDebugGroup is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePassEncoderPushDebugGroup(computePassEncoder: WGPUComputePassEncoder?, groupLabel: WGPUStringView): Unit =
-    error("wgpuComputePassEncoderPushDebugGroup is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit =
-    error("wgpuComputePassEncoderSetBindGroup is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEncoder?, label: WGPUStringView): Unit =
-    error("wgpuComputePassEncoderSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePassEncoderSetPipeline(computePassEncoder: WGPUComputePassEncoder?, pipeline: WGPUComputePipeline?): Unit =
-    error("wgpuComputePassEncoderSetPipeline is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePassEncoderAddRef(computePassEncoder: WGPUComputePassEncoder?): Unit =
-    error("wgpuComputePassEncoderAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePassEncoderRelease(computePassEncoder: WGPUComputePassEncoder?): Unit =
-    error("wgpuComputePassEncoderRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePipelineGetBindGroupLayout(computePipeline: WGPUComputePipeline?, groupIndex: UInt): WGPUBindGroupLayout? =
-    error("wgpuComputePipelineGetBindGroupLayout is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePipelineSetLabel(computePipeline: WGPUComputePipeline?, label: WGPUStringView): Unit =
-    error("wgpuComputePipelineSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePipelineAddRef(computePipeline: WGPUComputePipeline?): Unit =
-    error("wgpuComputePipelineAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuComputePipelineRelease(computePipeline: WGPUComputePipeline?): Unit =
-    error("wgpuComputePipelineRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateBindGroup(device: WGPUDevice?, descriptor: WGPUBindGroupDescriptor?): WGPUBindGroup? =
-    error("wgpuDeviceCreateBindGroup is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateBindGroupLayout(device: WGPUDevice?, descriptor: WGPUBindGroupLayoutDescriptor?): WGPUBindGroupLayout? =
-    error("wgpuDeviceCreateBindGroupLayout is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateBuffer(device: WGPUDevice?, descriptor: WGPUBufferDescriptor?): WGPUBuffer? =
-    error("wgpuDeviceCreateBuffer is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateCommandEncoder(device: WGPUDevice?, descriptor: WGPUCommandEncoderDescriptor?): WGPUCommandEncoder? =
-    error("wgpuDeviceCreateCommandEncoder is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateComputePipeline(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?): WGPUComputePipeline? =
-    error("wgpuDeviceCreateComputePipeline is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateComputePipelineAsync(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): WGPUFuture =
-    error("wgpuDeviceCreateComputePipelineAsync is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreatePipelineLayout(device: WGPUDevice?, descriptor: WGPUPipelineLayoutDescriptor?): WGPUPipelineLayout? =
-    error("wgpuDeviceCreatePipelineLayout is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateQuerySet(device: WGPUDevice?, descriptor: WGPUQuerySetDescriptor?): WGPUQuerySet? =
-    error("wgpuDeviceCreateQuerySet is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateRenderBundleEncoder(device: WGPUDevice?, descriptor: WGPURenderBundleEncoderDescriptor?): WGPURenderBundleEncoder? =
-    error("wgpuDeviceCreateRenderBundleEncoder is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateRenderPipeline(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?): WGPURenderPipeline? =
-    error("wgpuDeviceCreateRenderPipeline is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateRenderPipelineAsync(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): WGPUFuture =
-    error("wgpuDeviceCreateRenderPipelineAsync is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateSampler(device: WGPUDevice?, descriptor: WGPUSamplerDescriptor?): WGPUSampler? =
-    error("wgpuDeviceCreateSampler is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateShaderModule(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?): WGPUShaderModule? =
-    error("wgpuDeviceCreateShaderModule is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceCreateTexture(device: WGPUDevice?, descriptor: WGPUTextureDescriptor?): WGPUTexture? =
-    error("wgpuDeviceCreateTexture is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceDestroy(device: WGPUDevice?): Unit =
-    error("wgpuDeviceDestroy is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceGetAdapterInfo(device: WGPUDevice?, adapterInfo: WGPUAdapterInfo?): WGPUStatus =
-    error("wgpuDeviceGetAdapterInfo is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceGetFeatures(device: WGPUDevice?, features: WGPUSupportedFeatures?): Unit =
-    error("wgpuDeviceGetFeatures is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceGetLimits(device: WGPUDevice?, limits: WGPULimits?): WGPUStatus =
-    error("wgpuDeviceGetLimits is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceGetLostFuture(device: WGPUDevice?): WGPUFuture =
-    error("wgpuDeviceGetLostFuture is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceGetQueue(device: WGPUDevice?): WGPUQueue? =
-    error("wgpuDeviceGetQueue is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceHasFeature(device: WGPUDevice?, feature: WGPUFeatureName): UInt =
-    error("wgpuDeviceHasFeature is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDevicePopErrorScope(device: WGPUDevice?, callbackInfo: WGPUPopErrorScopeCallbackInfo): WGPUFuture =
-    error("wgpuDevicePopErrorScope is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDevicePushErrorScope(device: WGPUDevice?, filter: WGPUErrorFilter): Unit =
-    error("wgpuDevicePushErrorScope is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceSetLabel(device: WGPUDevice?, label: WGPUStringView): Unit =
-    error("wgpuDeviceSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceAddRef(device: WGPUDevice?): Unit =
-    error("wgpuDeviceAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuDeviceRelease(device: WGPUDevice?): Unit =
-    error("wgpuDeviceRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuExternalTextureSetLabel(externalTexture: WGPUExternalTexture?, label: WGPUStringView): Unit =
-    error("wgpuExternalTextureSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuExternalTextureAddRef(externalTexture: WGPUExternalTexture?): Unit =
-    error("wgpuExternalTextureAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuExternalTextureRelease(externalTexture: WGPUExternalTexture?): Unit =
-    error("wgpuExternalTextureRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuInstanceCreateSurface(instance: WGPUInstance?, descriptor: WGPUSurfaceDescriptor?): WGPUSurface? =
-    error("wgpuInstanceCreateSurface is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuInstanceGetWGSLLanguageFeatures(instance: WGPUInstance?, features: WGPUSupportedWGSLLanguageFeatures?): Unit =
-    error("wgpuInstanceGetWGSLLanguageFeatures is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuInstanceHasWGSLLanguageFeature(instance: WGPUInstance?, feature: WGPUWGSLLanguageFeatureName): UInt =
-    error("wgpuInstanceHasWGSLLanguageFeature is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuInstanceProcessEvents(instance: WGPUInstance?): Unit =
-    error("wgpuInstanceProcessEvents is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuInstanceRequestAdapter(instance: WGPUInstance?, options: WGPURequestAdapterOptions?, callbackInfo: WGPURequestAdapterCallbackInfo): WGPUFuture =
-    error("wgpuInstanceRequestAdapter is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuInstanceWaitAny(instance: WGPUInstance?, futureCount: ULong, futures: WGPUFutureWaitInfo?, timeoutNS: ULong): WGPUWaitStatus =
-    error("wgpuInstanceWaitAny is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuInstanceAddRef(instance: WGPUInstance?): Unit =
-    error("wgpuInstanceAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuInstanceRelease(instance: WGPUInstance?): Unit =
-    error("wgpuInstanceRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuPipelineLayoutSetLabel(pipelineLayout: WGPUPipelineLayout?, label: WGPUStringView): Unit =
-    error("wgpuPipelineLayoutSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuPipelineLayoutAddRef(pipelineLayout: WGPUPipelineLayout?): Unit =
-    error("wgpuPipelineLayoutAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuPipelineLayoutRelease(pipelineLayout: WGPUPipelineLayout?): Unit =
-    error("wgpuPipelineLayoutRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQuerySetDestroy(querySet: WGPUQuerySet?): Unit =
-    error("wgpuQuerySetDestroy is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQuerySetGetCount(querySet: WGPUQuerySet?): UInt =
-    error("wgpuQuerySetGetCount is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQuerySetGetType(querySet: WGPUQuerySet?): WGPUQueryType =
-    error("wgpuQuerySetGetType is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQuerySetSetLabel(querySet: WGPUQuerySet?, label: WGPUStringView): Unit =
-    error("wgpuQuerySetSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQuerySetAddRef(querySet: WGPUQuerySet?): Unit =
-    error("wgpuQuerySetAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQuerySetRelease(querySet: WGPUQuerySet?): Unit =
-    error("wgpuQuerySetRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQueueOnSubmittedWorkDone(queue: WGPUQueue?, callbackInfo: WGPUQueueWorkDoneCallbackInfo): WGPUFuture =
-    error("wgpuQueueOnSubmittedWorkDone is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit =
-    error("wgpuQueueSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: WGPUCommandBuffer?): Unit =
-    error("wgpuQueueSubmit is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQueueWriteBuffer(queue: WGPUQueue?, buffer: WGPUBuffer?, bufferOffset: ULong, data: NativeAddress?, size: ULong): Unit =
-    error("wgpuQueueWriteBuffer is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQueueWriteTexture(queue: WGPUQueue?, destination: WGPUTexelCopyTextureInfo?, data: NativeAddress?, dataSize: ULong, dataLayout: WGPUTexelCopyBufferLayout?, writeSize: WGPUExtent3D?): Unit =
-    error("wgpuQueueWriteTexture is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQueueAddRef(queue: WGPUQueue?): Unit =
-    error("wgpuQueueAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuQueueRelease(queue: WGPUQueue?): Unit =
-    error("wgpuQueueRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleSetLabel(renderBundle: WGPURenderBundle?, label: WGPUStringView): Unit =
-    error("wgpuRenderBundleSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleAddRef(renderBundle: WGPURenderBundle?): Unit =
-    error("wgpuRenderBundleAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleRelease(renderBundle: WGPURenderBundle?): Unit =
-    error("wgpuRenderBundleRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderDraw(renderBundleEncoder: WGPURenderBundleEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit =
-    error("wgpuRenderBundleEncoderDraw is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder: WGPURenderBundleEncoder?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit =
-    error("wgpuRenderBundleEncoderDrawIndexed is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit =
-    error("wgpuRenderBundleEncoderDrawIndexedIndirect is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderDrawIndirect(renderBundleEncoder: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit =
-    error("wgpuRenderBundleEncoderDrawIndirect is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderFinish(renderBundleEncoder: WGPURenderBundleEncoder?, descriptor: WGPURenderBundleDescriptor?): WGPURenderBundle? =
-    error("wgpuRenderBundleEncoderFinish is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder: WGPURenderBundleEncoder?, markerLabel: WGPUStringView): Unit =
-    error("wgpuRenderBundleEncoderInsertDebugMarker is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder?): Unit =
-    error("wgpuRenderBundleEncoderPopDebugGroup is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupLabel: WGPUStringView): Unit =
-    error("wgpuRenderBundleEncoderPushDebugGroup is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit =
-    error("wgpuRenderBundleEncoderSetBindGroup is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit =
-    error("wgpuRenderBundleEncoderSetIndexBuffer is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderSetLabel(renderBundleEncoder: WGPURenderBundleEncoder?, label: WGPUStringView): Unit =
-    error("wgpuRenderBundleEncoderSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder: WGPURenderBundleEncoder?, pipeline: WGPURenderPipeline?): Unit =
-    error("wgpuRenderBundleEncoderSetPipeline is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderSetVertexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit =
-    error("wgpuRenderBundleEncoderSetVertexBuffer is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderAddRef(renderBundleEncoder: WGPURenderBundleEncoder?): Unit =
-    error("wgpuRenderBundleEncoderAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderBundleEncoderRelease(renderBundleEncoder: WGPURenderBundleEncoder?): Unit =
-    error("wgpuRenderBundleEncoderRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderBeginOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?, queryIndex: UInt): Unit =
-    error("wgpuRenderPassEncoderBeginOcclusionQuery is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderDraw(renderPassEncoder: WGPURenderPassEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit =
-    error("wgpuRenderPassEncoderDraw is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderDrawIndexed(renderPassEncoder: WGPURenderPassEncoder?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit =
-    error("wgpuRenderPassEncoderDrawIndexed is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderDrawIndexedIndirect(renderPassEncoder: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit =
-    error("wgpuRenderPassEncoderDrawIndexedIndirect is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderDrawIndirect(renderPassEncoder: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit =
-    error("wgpuRenderPassEncoderDrawIndirect is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderEnd(renderPassEncoder: WGPURenderPassEncoder?): Unit =
-    error("wgpuRenderPassEncoderEnd is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit =
-    error("wgpuRenderPassEncoderEndOcclusionQuery is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder?, bundleCount: ULong, bundles: WGPURenderBundle?): Unit =
-    error("wgpuRenderPassEncoderExecuteBundles is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: WGPURenderPassEncoder?, markerLabel: WGPUStringView): Unit =
-    error("wgpuRenderPassEncoderInsertDebugMarker is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder: WGPURenderPassEncoder?): Unit =
-    error("wgpuRenderPassEncoderPopDebugGroup is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: WGPURenderPassEncoder?, groupLabel: WGPUStringView): Unit =
-    error("wgpuRenderPassEncoderPushDebugGroup is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit =
-    error("wgpuRenderPassEncoderSetBindGroup is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder?, color: WGPUColor?): Unit =
-    error("wgpuRenderPassEncoderSetBlendConstant is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit =
-    error("wgpuRenderPassEncoderSetIndexBuffer is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderSetLabel(renderPassEncoder: WGPURenderPassEncoder?, label: WGPUStringView): Unit =
-    error("wgpuRenderPassEncoderSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderSetPipeline(renderPassEncoder: WGPURenderPassEncoder?, pipeline: WGPURenderPipeline?): Unit =
-    error("wgpuRenderPassEncoderSetPipeline is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderSetScissorRect(renderPassEncoder: WGPURenderPassEncoder?, x: UInt, y: UInt, width: UInt, height: UInt): Unit =
-    error("wgpuRenderPassEncoderSetScissorRect is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderSetStencilReference(renderPassEncoder: WGPURenderPassEncoder?, reference: UInt): Unit =
-    error("wgpuRenderPassEncoderSetStencilReference is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder: WGPURenderPassEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit =
-    error("wgpuRenderPassEncoderSetVertexBuffer is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderSetViewport(renderPassEncoder: WGPURenderPassEncoder?, x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float): Unit =
-    error("wgpuRenderPassEncoderSetViewport is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderAddRef(renderPassEncoder: WGPURenderPassEncoder?): Unit =
-    error("wgpuRenderPassEncoderAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPassEncoderRelease(renderPassEncoder: WGPURenderPassEncoder?): Unit =
-    error("wgpuRenderPassEncoderRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPipelineGetBindGroupLayout(renderPipeline: WGPURenderPipeline?, groupIndex: UInt): WGPUBindGroupLayout? =
-    error("wgpuRenderPipelineGetBindGroupLayout is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPipelineSetLabel(renderPipeline: WGPURenderPipeline?, label: WGPUStringView): Unit =
-    error("wgpuRenderPipelineSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPipelineAddRef(renderPipeline: WGPURenderPipeline?): Unit =
-    error("wgpuRenderPipelineAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuRenderPipelineRelease(renderPipeline: WGPURenderPipeline?): Unit =
-    error("wgpuRenderPipelineRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSamplerSetLabel(sampler: WGPUSampler?, label: WGPUStringView): Unit =
-    error("wgpuSamplerSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSamplerAddRef(sampler: WGPUSampler?): Unit =
-    error("wgpuSamplerAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSamplerRelease(sampler: WGPUSampler?): Unit =
-    error("wgpuSamplerRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuShaderModuleGetCompilationInfo(shaderModule: WGPUShaderModule?, callbackInfo: WGPUCompilationInfoCallbackInfo): WGPUFuture =
-    error("wgpuShaderModuleGetCompilationInfo is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuShaderModuleSetLabel(shaderModule: WGPUShaderModule?, label: WGPUStringView): Unit =
-    error("wgpuShaderModuleSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuShaderModuleAddRef(shaderModule: WGPUShaderModule?): Unit =
-    error("wgpuShaderModuleAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuShaderModuleRelease(shaderModule: WGPUShaderModule?): Unit =
-    error("wgpuShaderModuleRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSupportedFeaturesFreeMembers(supportedFeatures: WGPUSupportedFeatures): Unit =
-    error("wgpuSupportedFeaturesFreeMembers is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSupportedInstanceFeaturesFreeMembers(supportedInstanceFeatures: WGPUSupportedInstanceFeatures): Unit =
-    error("wgpuSupportedInstanceFeaturesFreeMembers is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSupportedWGSLLanguageFeaturesFreeMembers(supportedWGSLLanguageFeatures: WGPUSupportedWGSLLanguageFeatures): Unit =
-    error("wgpuSupportedWGSLLanguageFeaturesFreeMembers is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSurfaceConfigure(surface: WGPUSurface?, config: WGPUSurfaceConfiguration?): Unit =
-    error("wgpuSurfaceConfigure is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus =
-    error("wgpuSurfaceGetCapabilities is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit =
-    error("wgpuSurfaceGetCurrentTexture is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSurfacePresent(surface: WGPUSurface?): WGPUStatus =
-    error("wgpuSurfacePresent is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSurfaceSetLabel(surface: WGPUSurface?, label: WGPUStringView): Unit =
-    error("wgpuSurfaceSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSurfaceUnconfigure(surface: WGPUSurface?): Unit =
-    error("wgpuSurfaceUnconfigure is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSurfaceAddRef(surface: WGPUSurface?): Unit =
-    error("wgpuSurfaceAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSurfaceRelease(surface: WGPUSurface?): Unit =
-    error("wgpuSurfaceRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuSurfaceCapabilitiesFreeMembers(surfaceCapabilities: WGPUSurfaceCapabilities): Unit =
-    error("wgpuSurfaceCapabilitiesFreeMembers is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureCreateView(texture: WGPUTexture?, descriptor: WGPUTextureViewDescriptor?): WGPUTextureView? =
-    error("wgpuTextureCreateView is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureDestroy(texture: WGPUTexture?): Unit =
-    error("wgpuTextureDestroy is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureGetDepthOrArrayLayers(texture: WGPUTexture?): UInt =
-    error("wgpuTextureGetDepthOrArrayLayers is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureGetDimension(texture: WGPUTexture?): WGPUTextureDimension =
-    error("wgpuTextureGetDimension is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureGetFormat(texture: WGPUTexture?): WGPUTextureFormat =
-    error("wgpuTextureGetFormat is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureGetHeight(texture: WGPUTexture?): UInt =
-    error("wgpuTextureGetHeight is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureGetMipLevelCount(texture: WGPUTexture?): UInt =
-    error("wgpuTextureGetMipLevelCount is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureGetSampleCount(texture: WGPUTexture?): UInt =
-    error("wgpuTextureGetSampleCount is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureGetTextureBindingViewDimension(texture: WGPUTexture?): WGPUTextureViewDimension =
-    error("wgpuTextureGetTextureBindingViewDimension is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureGetUsage(texture: WGPUTexture?): ULong =
-    error("wgpuTextureGetUsage is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureGetWidth(texture: WGPUTexture?): UInt =
-    error("wgpuTextureGetWidth is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureSetLabel(texture: WGPUTexture?, label: WGPUStringView): Unit =
-    error("wgpuTextureSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureAddRef(texture: WGPUTexture?): Unit =
-    error("wgpuTextureAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureRelease(texture: WGPUTexture?): Unit =
-    error("wgpuTextureRelease is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureViewSetLabel(textureView: WGPUTextureView?, label: WGPUStringView): Unit =
-    error("wgpuTextureViewSetLabel is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureViewAddRef(textureView: WGPUTextureView?): Unit =
-    error("wgpuTextureViewAddRef is not implemented for Kotlin/Native generated bindings")
-
-actual fun wgpuTextureViewRelease(textureView: WGPUTextureView?): Unit =
-    error("wgpuTextureViewRelease is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance? {
+    return webgpu.native.wgpuCreateInstance(descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUInstance(it) }
+}
+
+actual fun wgpuGetInstanceFeatures(features: WGPUSupportedInstanceFeatures?): Unit {
+    webgpu.native.wgpuGetInstanceFeatures(features?.handler?.pointer?.takeIf { features.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuGetInstanceLimits(limits: WGPUInstanceLimits?): WGPUStatus {
+    return webgpu.native.wgpuGetInstanceLimits(limits?.handler?.pointer?.takeIf { limits.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuHasInstanceFeature(feature: WGPUInstanceFeatureName): UInt {
+    return webgpu.native.wgpuHasInstanceFeature(feature)
+}
+
+actual fun wgpuGetProcAddress(procName: WGPUStringView): NativeAddress? {
+    return webgpu.native.wgpuGetProcAddress(procName.toCValue())?.let(::NativeAddress)
+}
+
+actual fun wgpuAdapterGetFeatures(adapter: WGPUAdapter?, features: WGPUSupportedFeatures?): Unit {
+    webgpu.native.wgpuAdapterGetFeatures(adapter?.handler?.pointer?.takeIf { adapter.handler.rawValue != 0L }?.reinterpret(), features?.handler?.pointer?.takeIf { features.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuAdapterGetInfo(adapter: WGPUAdapter?, info: WGPUAdapterInfo?): WGPUStatus {
+    return webgpu.native.wgpuAdapterGetInfo(adapter?.handler?.pointer?.takeIf { adapter.handler.rawValue != 0L }?.reinterpret(), info?.handler?.pointer?.takeIf { info.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuAdapterGetLimits(adapter: WGPUAdapter?, limits: WGPULimits?): WGPUStatus {
+    return webgpu.native.wgpuAdapterGetLimits(adapter?.handler?.pointer?.takeIf { adapter.handler.rawValue != 0L }?.reinterpret(), limits?.handler?.pointer?.takeIf { limits.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuAdapterHasFeature(adapter: WGPUAdapter?, feature: WGPUFeatureName): UInt {
+    return webgpu.native.wgpuAdapterHasFeature(adapter?.handler?.pointer?.takeIf { adapter.handler.rawValue != 0L }?.reinterpret(), feature)
+}
+
+actual fun wgpuAdapterRequestDevice(adapter: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(webgpu.native.wgpuAdapterRequestDevice(adapter?.handler?.pointer?.takeIf { adapter.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret(), callbackInfo.toCValue()))
+}
+
+actual fun wgpuAdapterAddRef(adapter: WGPUAdapter?): Unit {
+    webgpu.native.wgpuAdapterAddRef(adapter?.handler?.pointer?.takeIf { adapter.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuAdapterRelease(adapter: WGPUAdapter?): Unit {
+    webgpu.native.wgpuAdapterRelease(adapter?.handler?.pointer?.takeIf { adapter.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuAdapterInfoFreeMembers(adapterInfo: WGPUAdapterInfo): Unit {
+    webgpu.native.wgpuAdapterInfoFreeMembers(adapterInfo.toCValue())
+    return
+}
+
+actual fun wgpuBindGroupSetLabel(bindGroup: WGPUBindGroup?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuBindGroupSetLabel(bindGroup?.handler?.pointer?.takeIf { bindGroup.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuBindGroupAddRef(bindGroup: WGPUBindGroup?): Unit {
+    webgpu.native.wgpuBindGroupAddRef(bindGroup?.handler?.pointer?.takeIf { bindGroup.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuBindGroupRelease(bindGroup: WGPUBindGroup?): Unit {
+    webgpu.native.wgpuBindGroupRelease(bindGroup?.handler?.pointer?.takeIf { bindGroup.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuBindGroupLayoutSetLabel(bindGroupLayout: WGPUBindGroupLayout?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuBindGroupLayoutSetLabel(bindGroupLayout?.handler?.pointer?.takeIf { bindGroupLayout.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuBindGroupLayoutAddRef(bindGroupLayout: WGPUBindGroupLayout?): Unit {
+    webgpu.native.wgpuBindGroupLayoutAddRef(bindGroupLayout?.handler?.pointer?.takeIf { bindGroupLayout.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuBindGroupLayoutRelease(bindGroupLayout: WGPUBindGroupLayout?): Unit {
+    webgpu.native.wgpuBindGroupLayoutRelease(bindGroupLayout?.handler?.pointer?.takeIf { bindGroupLayout.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuBufferDestroy(buffer: WGPUBuffer?): Unit {
+    webgpu.native.wgpuBufferDestroy(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuBufferGetConstMappedRange(buffer: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress? {
+    return webgpu.native.wgpuBufferGetConstMappedRange(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), offset, size)?.let(::NativeAddress)
+}
+
+actual fun wgpuBufferGetMappedRange(buffer: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress? {
+    return webgpu.native.wgpuBufferGetMappedRange(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), offset, size)?.let(::NativeAddress)
+}
+
+actual fun wgpuBufferGetMapState(buffer: WGPUBuffer?): WGPUBufferMapState {
+    return webgpu.native.wgpuBufferGetMapState(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuBufferGetSize(buffer: WGPUBuffer?): ULong {
+    return webgpu.native.wgpuBufferGetSize(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuBufferGetUsage(buffer: WGPUBuffer?): ULong {
+    return webgpu.native.wgpuBufferGetUsage(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuBufferMapAsync(buffer: WGPUBuffer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(webgpu.native.wgpuBufferMapAsync(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), mode, offset, size, callbackInfo.toCValue()))
+}
+
+actual fun wgpuBufferReadMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus {
+    return webgpu.native.wgpuBufferReadMappedRange(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), offset, data?.pointer?.takeIf { data.rawValue != 0L }, size)
+}
+
+actual fun wgpuBufferSetLabel(buffer: WGPUBuffer?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuBufferSetLabel(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuBufferUnmap(buffer: WGPUBuffer?): Unit {
+    webgpu.native.wgpuBufferUnmap(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuBufferWriteMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus {
+    return webgpu.native.wgpuBufferWriteMappedRange(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), offset, data?.pointer?.takeIf { data.rawValue != 0L }, size)
+}
+
+actual fun wgpuBufferAddRef(buffer: WGPUBuffer?): Unit {
+    webgpu.native.wgpuBufferAddRef(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuBufferRelease(buffer: WGPUBuffer?): Unit {
+    webgpu.native.wgpuBufferRelease(buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuCommandBufferSetLabel(commandBuffer: WGPUCommandBuffer?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuCommandBufferSetLabel(commandBuffer?.handler?.pointer?.takeIf { commandBuffer.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuCommandBufferAddRef(commandBuffer: WGPUCommandBuffer?): Unit {
+    webgpu.native.wgpuCommandBufferAddRef(commandBuffer?.handler?.pointer?.takeIf { commandBuffer.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuCommandBufferRelease(commandBuffer: WGPUCommandBuffer?): Unit {
+    webgpu.native.wgpuCommandBufferRelease(commandBuffer?.handler?.pointer?.takeIf { commandBuffer.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuCommandEncoderBeginComputePass(commandEncoder: WGPUCommandEncoder?, descriptor: WGPUComputePassDescriptor?): WGPUComputePassEncoder? {
+    return webgpu.native.wgpuCommandEncoderBeginComputePass(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUComputePassEncoder(it) }
+}
+
+actual fun wgpuCommandEncoderBeginRenderPass(commandEncoder: WGPUCommandEncoder?, descriptor: WGPURenderPassDescriptor?): WGPURenderPassEncoder? {
+    return webgpu.native.wgpuCommandEncoderBeginRenderPass(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPURenderPassEncoder(it) }
+}
+
+actual fun wgpuCommandEncoderClearBuffer(commandEncoder: WGPUCommandEncoder?, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit {
+    webgpu.native.wgpuCommandEncoderClearBuffer(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), offset, size)
+    return
+}
+
+actual fun wgpuCommandEncoderCopyBufferToBuffer(commandEncoder: WGPUCommandEncoder?, source: WGPUBuffer?, sourceOffset: ULong, destination: WGPUBuffer?, destinationOffset: ULong, size: ULong): Unit {
+    webgpu.native.wgpuCommandEncoderCopyBufferToBuffer(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), source?.handler?.pointer?.takeIf { source.handler.rawValue != 0L }?.reinterpret(), sourceOffset, destination?.handler?.pointer?.takeIf { destination.handler.rawValue != 0L }?.reinterpret(), destinationOffset, size)
+    return
+}
+
+actual fun wgpuCommandEncoderCopyBufferToTexture(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyBufferInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit {
+    webgpu.native.wgpuCommandEncoderCopyBufferToTexture(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), source?.handler?.pointer?.takeIf { source.handler.rawValue != 0L }?.reinterpret(), destination?.handler?.pointer?.takeIf { destination.handler.rawValue != 0L }?.reinterpret(), copySize?.handler?.pointer?.takeIf { copySize.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuCommandEncoderCopyTextureToBuffer(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyBufferInfo?, copySize: WGPUExtent3D?): Unit {
+    webgpu.native.wgpuCommandEncoderCopyTextureToBuffer(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), source?.handler?.pointer?.takeIf { source.handler.rawValue != 0L }?.reinterpret(), destination?.handler?.pointer?.takeIf { destination.handler.rawValue != 0L }?.reinterpret(), copySize?.handler?.pointer?.takeIf { copySize.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuCommandEncoderCopyTextureToTexture(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit {
+    webgpu.native.wgpuCommandEncoderCopyTextureToTexture(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), source?.handler?.pointer?.takeIf { source.handler.rawValue != 0L }?.reinterpret(), destination?.handler?.pointer?.takeIf { destination.handler.rawValue != 0L }?.reinterpret(), copySize?.handler?.pointer?.takeIf { copySize.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuCommandEncoderFinish(commandEncoder: WGPUCommandEncoder?, descriptor: WGPUCommandBufferDescriptor?): WGPUCommandBuffer? {
+    return webgpu.native.wgpuCommandEncoderFinish(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUCommandBuffer(it) }
+}
+
+actual fun wgpuCommandEncoderInsertDebugMarker(commandEncoder: WGPUCommandEncoder?, markerLabel: WGPUStringView): Unit {
+    webgpu.native.wgpuCommandEncoderInsertDebugMarker(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), markerLabel.toCValue())
+    return
+}
+
+actual fun wgpuCommandEncoderPopDebugGroup(commandEncoder: WGPUCommandEncoder?): Unit {
+    webgpu.native.wgpuCommandEncoderPopDebugGroup(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuCommandEncoderPushDebugGroup(commandEncoder: WGPUCommandEncoder?, groupLabel: WGPUStringView): Unit {
+    webgpu.native.wgpuCommandEncoderPushDebugGroup(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), groupLabel.toCValue())
+    return
+}
+
+actual fun wgpuCommandEncoderResolveQuerySet(commandEncoder: WGPUCommandEncoder?, querySet: WGPUQuerySet?, firstQuery: UInt, queryCount: UInt, destination: WGPUBuffer?, destinationOffset: ULong): Unit {
+    webgpu.native.wgpuCommandEncoderResolveQuerySet(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), querySet?.handler?.pointer?.takeIf { querySet.handler.rawValue != 0L }?.reinterpret(), firstQuery, queryCount, destination?.handler?.pointer?.takeIf { destination.handler.rawValue != 0L }?.reinterpret(), destinationOffset)
+    return
+}
+
+actual fun wgpuCommandEncoderSetLabel(commandEncoder: WGPUCommandEncoder?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuCommandEncoderSetLabel(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuCommandEncoderWriteTimestamp(commandEncoder: WGPUCommandEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
+    webgpu.native.wgpuCommandEncoderWriteTimestamp(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), querySet?.handler?.pointer?.takeIf { querySet.handler.rawValue != 0L }?.reinterpret(), queryIndex)
+    return
+}
+
+actual fun wgpuCommandEncoderAddRef(commandEncoder: WGPUCommandEncoder?): Unit {
+    webgpu.native.wgpuCommandEncoderAddRef(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuCommandEncoderRelease(commandEncoder: WGPUCommandEncoder?): Unit {
+    webgpu.native.wgpuCommandEncoderRelease(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuComputePassEncoderDispatchWorkgroups(computePassEncoder: WGPUComputePassEncoder?, workgroupCountX: UInt, workgroupCountY: UInt, workgroupCountZ: UInt): Unit {
+    webgpu.native.wgpuComputePassEncoderDispatchWorkgroups(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret(), workgroupCountX, workgroupCountY, workgroupCountZ)
+    return
+}
+
+actual fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(computePassEncoder: WGPUComputePassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
+    webgpu.native.wgpuComputePassEncoderDispatchWorkgroupsIndirect(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret(), indirectBuffer?.handler?.pointer?.takeIf { indirectBuffer.handler.rawValue != 0L }?.reinterpret(), indirectOffset)
+    return
+}
+
+actual fun wgpuComputePassEncoderEnd(computePassEncoder: WGPUComputePassEncoder?): Unit {
+    webgpu.native.wgpuComputePassEncoderEnd(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuComputePassEncoderInsertDebugMarker(computePassEncoder: WGPUComputePassEncoder?, markerLabel: WGPUStringView): Unit {
+    webgpu.native.wgpuComputePassEncoderInsertDebugMarker(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret(), markerLabel.toCValue())
+    return
+}
+
+actual fun wgpuComputePassEncoderPopDebugGroup(computePassEncoder: WGPUComputePassEncoder?): Unit {
+    webgpu.native.wgpuComputePassEncoderPopDebugGroup(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuComputePassEncoderPushDebugGroup(computePassEncoder: WGPUComputePassEncoder?, groupLabel: WGPUStringView): Unit {
+    webgpu.native.wgpuComputePassEncoderPushDebugGroup(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret(), groupLabel.toCValue())
+    return
+}
+
+actual fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit {
+    webgpu.native.wgpuComputePassEncoderSetBindGroup(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret(), groupIndex, group?.handler?.pointer?.takeIf { group.handler.rawValue != 0L }?.reinterpret(), dynamicOffsetCount, dynamicOffsets?.pointer?.takeIf { dynamicOffsets.rawValue != 0L }?.reinterpret<UIntVar>())
+    return
+}
+
+actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEncoder?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuComputePassEncoderSetLabel(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuComputePassEncoderSetPipeline(computePassEncoder: WGPUComputePassEncoder?, pipeline: WGPUComputePipeline?): Unit {
+    webgpu.native.wgpuComputePassEncoderSetPipeline(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret(), pipeline?.handler?.pointer?.takeIf { pipeline.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuComputePassEncoderAddRef(computePassEncoder: WGPUComputePassEncoder?): Unit {
+    webgpu.native.wgpuComputePassEncoderAddRef(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuComputePassEncoderRelease(computePassEncoder: WGPUComputePassEncoder?): Unit {
+    webgpu.native.wgpuComputePassEncoderRelease(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuComputePipelineGetBindGroupLayout(computePipeline: WGPUComputePipeline?, groupIndex: UInt): WGPUBindGroupLayout? {
+    return webgpu.native.wgpuComputePipelineGetBindGroupLayout(computePipeline?.handler?.pointer?.takeIf { computePipeline.handler.rawValue != 0L }?.reinterpret(), groupIndex)?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
+}
+
+actual fun wgpuComputePipelineSetLabel(computePipeline: WGPUComputePipeline?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuComputePipelineSetLabel(computePipeline?.handler?.pointer?.takeIf { computePipeline.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuComputePipelineAddRef(computePipeline: WGPUComputePipeline?): Unit {
+    webgpu.native.wgpuComputePipelineAddRef(computePipeline?.handler?.pointer?.takeIf { computePipeline.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuComputePipelineRelease(computePipeline: WGPUComputePipeline?): Unit {
+    webgpu.native.wgpuComputePipelineRelease(computePipeline?.handler?.pointer?.takeIf { computePipeline.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuDeviceCreateBindGroup(device: WGPUDevice?, descriptor: WGPUBindGroupDescriptor?): WGPUBindGroup? {
+    return webgpu.native.wgpuDeviceCreateBindGroup(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUBindGroup(it) }
+}
+
+actual fun wgpuDeviceCreateBindGroupLayout(device: WGPUDevice?, descriptor: WGPUBindGroupLayoutDescriptor?): WGPUBindGroupLayout? {
+    return webgpu.native.wgpuDeviceCreateBindGroupLayout(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
+}
+
+actual fun wgpuDeviceCreateBuffer(device: WGPUDevice?, descriptor: WGPUBufferDescriptor?): WGPUBuffer? {
+    return webgpu.native.wgpuDeviceCreateBuffer(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUBuffer(it) }
+}
+
+actual fun wgpuDeviceCreateCommandEncoder(device: WGPUDevice?, descriptor: WGPUCommandEncoderDescriptor?): WGPUCommandEncoder? {
+    return webgpu.native.wgpuDeviceCreateCommandEncoder(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUCommandEncoder(it) }
+}
+
+actual fun wgpuDeviceCreateComputePipeline(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?): WGPUComputePipeline? {
+    return webgpu.native.wgpuDeviceCreateComputePipeline(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUComputePipeline(it) }
+}
+
+actual fun wgpuDeviceCreateComputePipelineAsync(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(webgpu.native.wgpuDeviceCreateComputePipelineAsync(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret(), callbackInfo.toCValue()))
+}
+
+actual fun wgpuDeviceCreatePipelineLayout(device: WGPUDevice?, descriptor: WGPUPipelineLayoutDescriptor?): WGPUPipelineLayout? {
+    return webgpu.native.wgpuDeviceCreatePipelineLayout(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUPipelineLayout(it) }
+}
+
+actual fun wgpuDeviceCreateQuerySet(device: WGPUDevice?, descriptor: WGPUQuerySetDescriptor?): WGPUQuerySet? {
+    return webgpu.native.wgpuDeviceCreateQuerySet(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUQuerySet(it) }
+}
+
+actual fun wgpuDeviceCreateRenderBundleEncoder(device: WGPUDevice?, descriptor: WGPURenderBundleEncoderDescriptor?): WGPURenderBundleEncoder? {
+    return webgpu.native.wgpuDeviceCreateRenderBundleEncoder(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPURenderBundleEncoder(it) }
+}
+
+actual fun wgpuDeviceCreateRenderPipeline(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?): WGPURenderPipeline? {
+    return webgpu.native.wgpuDeviceCreateRenderPipeline(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPURenderPipeline(it) }
+}
+
+actual fun wgpuDeviceCreateRenderPipelineAsync(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(webgpu.native.wgpuDeviceCreateRenderPipelineAsync(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret(), callbackInfo.toCValue()))
+}
+
+actual fun wgpuDeviceCreateSampler(device: WGPUDevice?, descriptor: WGPUSamplerDescriptor?): WGPUSampler? {
+    return webgpu.native.wgpuDeviceCreateSampler(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUSampler(it) }
+}
+
+actual fun wgpuDeviceCreateShaderModule(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?): WGPUShaderModule? {
+    return webgpu.native.wgpuDeviceCreateShaderModule(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
+}
+
+actual fun wgpuDeviceCreateTexture(device: WGPUDevice?, descriptor: WGPUTextureDescriptor?): WGPUTexture? {
+    return webgpu.native.wgpuDeviceCreateTexture(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUTexture(it) }
+}
+
+actual fun wgpuDeviceDestroy(device: WGPUDevice?): Unit {
+    webgpu.native.wgpuDeviceDestroy(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuDeviceGetAdapterInfo(device: WGPUDevice?, adapterInfo: WGPUAdapterInfo?): WGPUStatus {
+    return webgpu.native.wgpuDeviceGetAdapterInfo(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), adapterInfo?.handler?.pointer?.takeIf { adapterInfo.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuDeviceGetFeatures(device: WGPUDevice?, features: WGPUSupportedFeatures?): Unit {
+    webgpu.native.wgpuDeviceGetFeatures(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), features?.handler?.pointer?.takeIf { features.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuDeviceGetLimits(device: WGPUDevice?, limits: WGPULimits?): WGPUStatus {
+    return webgpu.native.wgpuDeviceGetLimits(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), limits?.handler?.pointer?.takeIf { limits.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuDeviceGetLostFuture(device: WGPUDevice?): WGPUFuture {
+    return WGPUFuture.ByValue(webgpu.native.wgpuDeviceGetLostFuture(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret()))
+}
+
+actual fun wgpuDeviceGetQueue(device: WGPUDevice?): WGPUQueue? {
+    return webgpu.native.wgpuDeviceGetQueue(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUQueue(it) }
+}
+
+actual fun wgpuDeviceHasFeature(device: WGPUDevice?, feature: WGPUFeatureName): UInt {
+    return webgpu.native.wgpuDeviceHasFeature(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), feature)
+}
+
+actual fun wgpuDevicePopErrorScope(device: WGPUDevice?, callbackInfo: WGPUPopErrorScopeCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(webgpu.native.wgpuDevicePopErrorScope(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), callbackInfo.toCValue()))
+}
+
+actual fun wgpuDevicePushErrorScope(device: WGPUDevice?, filter: WGPUErrorFilter): Unit {
+    webgpu.native.wgpuDevicePushErrorScope(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), filter)
+    return
+}
+
+actual fun wgpuDeviceSetLabel(device: WGPUDevice?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuDeviceSetLabel(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuDeviceAddRef(device: WGPUDevice?): Unit {
+    webgpu.native.wgpuDeviceAddRef(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuDeviceRelease(device: WGPUDevice?): Unit {
+    webgpu.native.wgpuDeviceRelease(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuExternalTextureSetLabel(externalTexture: WGPUExternalTexture?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuExternalTextureSetLabel(externalTexture?.handler?.pointer?.takeIf { externalTexture.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuExternalTextureAddRef(externalTexture: WGPUExternalTexture?): Unit {
+    webgpu.native.wgpuExternalTextureAddRef(externalTexture?.handler?.pointer?.takeIf { externalTexture.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuExternalTextureRelease(externalTexture: WGPUExternalTexture?): Unit {
+    webgpu.native.wgpuExternalTextureRelease(externalTexture?.handler?.pointer?.takeIf { externalTexture.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuInstanceCreateSurface(instance: WGPUInstance?, descriptor: WGPUSurfaceDescriptor?): WGPUSurface? {
+    return webgpu.native.wgpuInstanceCreateSurface(instance?.handler?.pointer?.takeIf { instance.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUSurface(it) }
+}
+
+actual fun wgpuInstanceGetWGSLLanguageFeatures(instance: WGPUInstance?, features: WGPUSupportedWGSLLanguageFeatures?): Unit {
+    webgpu.native.wgpuInstanceGetWGSLLanguageFeatures(instance?.handler?.pointer?.takeIf { instance.handler.rawValue != 0L }?.reinterpret(), features?.handler?.pointer?.takeIf { features.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuInstanceHasWGSLLanguageFeature(instance: WGPUInstance?, feature: WGPUWGSLLanguageFeatureName): UInt {
+    return webgpu.native.wgpuInstanceHasWGSLLanguageFeature(instance?.handler?.pointer?.takeIf { instance.handler.rawValue != 0L }?.reinterpret(), feature)
+}
+
+actual fun wgpuInstanceProcessEvents(instance: WGPUInstance?): Unit {
+    webgpu.native.wgpuInstanceProcessEvents(instance?.handler?.pointer?.takeIf { instance.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuInstanceRequestAdapter(instance: WGPUInstance?, options: WGPURequestAdapterOptions?, callbackInfo: WGPURequestAdapterCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(webgpu.native.wgpuInstanceRequestAdapter(instance?.handler?.pointer?.takeIf { instance.handler.rawValue != 0L }?.reinterpret(), options?.handler?.pointer?.takeIf { options.handler.rawValue != 0L }?.reinterpret(), callbackInfo.toCValue()))
+}
+
+actual fun wgpuInstanceWaitAny(instance: WGPUInstance?, futureCount: ULong, futures: WGPUFutureWaitInfo?, timeoutNS: ULong): WGPUWaitStatus {
+    return webgpu.native.wgpuInstanceWaitAny(instance?.handler?.pointer?.takeIf { instance.handler.rawValue != 0L }?.reinterpret(), futureCount, futures?.handler?.pointer?.takeIf { futures.handler.rawValue != 0L }?.reinterpret(), timeoutNS)
+}
+
+actual fun wgpuInstanceAddRef(instance: WGPUInstance?): Unit {
+    webgpu.native.wgpuInstanceAddRef(instance?.handler?.pointer?.takeIf { instance.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuInstanceRelease(instance: WGPUInstance?): Unit {
+    webgpu.native.wgpuInstanceRelease(instance?.handler?.pointer?.takeIf { instance.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuPipelineLayoutSetLabel(pipelineLayout: WGPUPipelineLayout?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuPipelineLayoutSetLabel(pipelineLayout?.handler?.pointer?.takeIf { pipelineLayout.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuPipelineLayoutAddRef(pipelineLayout: WGPUPipelineLayout?): Unit {
+    webgpu.native.wgpuPipelineLayoutAddRef(pipelineLayout?.handler?.pointer?.takeIf { pipelineLayout.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuPipelineLayoutRelease(pipelineLayout: WGPUPipelineLayout?): Unit {
+    webgpu.native.wgpuPipelineLayoutRelease(pipelineLayout?.handler?.pointer?.takeIf { pipelineLayout.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuQuerySetDestroy(querySet: WGPUQuerySet?): Unit {
+    webgpu.native.wgpuQuerySetDestroy(querySet?.handler?.pointer?.takeIf { querySet.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuQuerySetGetCount(querySet: WGPUQuerySet?): UInt {
+    return webgpu.native.wgpuQuerySetGetCount(querySet?.handler?.pointer?.takeIf { querySet.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuQuerySetGetType(querySet: WGPUQuerySet?): WGPUQueryType {
+    return webgpu.native.wgpuQuerySetGetType(querySet?.handler?.pointer?.takeIf { querySet.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuQuerySetSetLabel(querySet: WGPUQuerySet?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuQuerySetSetLabel(querySet?.handler?.pointer?.takeIf { querySet.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuQuerySetAddRef(querySet: WGPUQuerySet?): Unit {
+    webgpu.native.wgpuQuerySetAddRef(querySet?.handler?.pointer?.takeIf { querySet.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuQuerySetRelease(querySet: WGPUQuerySet?): Unit {
+    webgpu.native.wgpuQuerySetRelease(querySet?.handler?.pointer?.takeIf { querySet.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuQueueOnSubmittedWorkDone(queue: WGPUQueue?, callbackInfo: WGPUQueueWorkDoneCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(webgpu.native.wgpuQueueOnSubmittedWorkDone(queue?.handler?.pointer?.takeIf { queue.handler.rawValue != 0L }?.reinterpret(), callbackInfo.toCValue()))
+}
+
+actual fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuQueueSetLabel(queue?.handler?.pointer?.takeIf { queue.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: WGPUCommandBuffer?): Unit {
+    webgpu.native.wgpuQueueSubmit(queue?.handler?.pointer?.takeIf { queue.handler.rawValue != 0L }?.reinterpret(), commandCount, commands?.handler?.pointer?.takeIf { commands.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuQueueWriteBuffer(queue: WGPUQueue?, buffer: WGPUBuffer?, bufferOffset: ULong, data: NativeAddress?, size: ULong): Unit {
+    webgpu.native.wgpuQueueWriteBuffer(queue?.handler?.pointer?.takeIf { queue.handler.rawValue != 0L }?.reinterpret(), buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), bufferOffset, data?.pointer?.takeIf { data.rawValue != 0L }, size)
+    return
+}
+
+actual fun wgpuQueueWriteTexture(queue: WGPUQueue?, destination: WGPUTexelCopyTextureInfo?, data: NativeAddress?, dataSize: ULong, dataLayout: WGPUTexelCopyBufferLayout?, writeSize: WGPUExtent3D?): Unit {
+    webgpu.native.wgpuQueueWriteTexture(queue?.handler?.pointer?.takeIf { queue.handler.rawValue != 0L }?.reinterpret(), destination?.handler?.pointer?.takeIf { destination.handler.rawValue != 0L }?.reinterpret(), data?.pointer?.takeIf { data.rawValue != 0L }, dataSize, dataLayout?.handler?.pointer?.takeIf { dataLayout.handler.rawValue != 0L }?.reinterpret(), writeSize?.handler?.pointer?.takeIf { writeSize.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuQueueAddRef(queue: WGPUQueue?): Unit {
+    webgpu.native.wgpuQueueAddRef(queue?.handler?.pointer?.takeIf { queue.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuQueueRelease(queue: WGPUQueue?): Unit {
+    webgpu.native.wgpuQueueRelease(queue?.handler?.pointer?.takeIf { queue.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderBundleSetLabel(renderBundle: WGPURenderBundle?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuRenderBundleSetLabel(renderBundle?.handler?.pointer?.takeIf { renderBundle.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuRenderBundleAddRef(renderBundle: WGPURenderBundle?): Unit {
+    webgpu.native.wgpuRenderBundleAddRef(renderBundle?.handler?.pointer?.takeIf { renderBundle.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderBundleRelease(renderBundle: WGPURenderBundle?): Unit {
+    webgpu.native.wgpuRenderBundleRelease(renderBundle?.handler?.pointer?.takeIf { renderBundle.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderDraw(renderBundleEncoder: WGPURenderBundleEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit {
+    webgpu.native.wgpuRenderBundleEncoderDraw(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), vertexCount, instanceCount, firstVertex, firstInstance)
+    return
+}
+
+actual fun wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder: WGPURenderBundleEncoder?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit {
+    webgpu.native.wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), indexCount, instanceCount, firstIndex, baseVertex, firstInstance)
+    return
+}
+
+actual fun wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
+    webgpu.native.wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), indirectBuffer?.handler?.pointer?.takeIf { indirectBuffer.handler.rawValue != 0L }?.reinterpret(), indirectOffset)
+    return
+}
+
+actual fun wgpuRenderBundleEncoderDrawIndirect(renderBundleEncoder: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
+    webgpu.native.wgpuRenderBundleEncoderDrawIndirect(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), indirectBuffer?.handler?.pointer?.takeIf { indirectBuffer.handler.rawValue != 0L }?.reinterpret(), indirectOffset)
+    return
+}
+
+actual fun wgpuRenderBundleEncoderFinish(renderBundleEncoder: WGPURenderBundleEncoder?, descriptor: WGPURenderBundleDescriptor?): WGPURenderBundle? {
+    return webgpu.native.wgpuRenderBundleEncoderFinish(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPURenderBundle(it) }
+}
+
+actual fun wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder: WGPURenderBundleEncoder?, markerLabel: WGPUStringView): Unit {
+    webgpu.native.wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), markerLabel.toCValue())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder?): Unit {
+    webgpu.native.wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupLabel: WGPUStringView): Unit {
+    webgpu.native.wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), groupLabel.toCValue())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit {
+    webgpu.native.wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), groupIndex, group?.handler?.pointer?.takeIf { group.handler.rawValue != 0L }?.reinterpret(), dynamicOffsetCount, dynamicOffsets?.pointer?.takeIf { dynamicOffsets.rawValue != 0L }?.reinterpret<UIntVar>())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit {
+    webgpu.native.wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), format, offset, size)
+    return
+}
+
+actual fun wgpuRenderBundleEncoderSetLabel(renderBundleEncoder: WGPURenderBundleEncoder?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuRenderBundleEncoderSetLabel(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder: WGPURenderBundleEncoder?, pipeline: WGPURenderPipeline?): Unit {
+    webgpu.native.wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), pipeline?.handler?.pointer?.takeIf { pipeline.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderSetVertexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit {
+    webgpu.native.wgpuRenderBundleEncoderSetVertexBuffer(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), slot, buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), offset, size)
+    return
+}
+
+actual fun wgpuRenderBundleEncoderAddRef(renderBundleEncoder: WGPURenderBundleEncoder?): Unit {
+    webgpu.native.wgpuRenderBundleEncoderAddRef(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderRelease(renderBundleEncoder: WGPURenderBundleEncoder?): Unit {
+    webgpu.native.wgpuRenderBundleEncoderRelease(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderPassEncoderBeginOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?, queryIndex: UInt): Unit {
+    webgpu.native.wgpuRenderPassEncoderBeginOcclusionQuery(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), queryIndex)
+    return
+}
+
+actual fun wgpuRenderPassEncoderDraw(renderPassEncoder: WGPURenderPassEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit {
+    webgpu.native.wgpuRenderPassEncoderDraw(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), vertexCount, instanceCount, firstVertex, firstInstance)
+    return
+}
+
+actual fun wgpuRenderPassEncoderDrawIndexed(renderPassEncoder: WGPURenderPassEncoder?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit {
+    webgpu.native.wgpuRenderPassEncoderDrawIndexed(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), indexCount, instanceCount, firstIndex, baseVertex, firstInstance)
+    return
+}
+
+actual fun wgpuRenderPassEncoderDrawIndexedIndirect(renderPassEncoder: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
+    webgpu.native.wgpuRenderPassEncoderDrawIndexedIndirect(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), indirectBuffer?.handler?.pointer?.takeIf { indirectBuffer.handler.rawValue != 0L }?.reinterpret(), indirectOffset)
+    return
+}
+
+actual fun wgpuRenderPassEncoderDrawIndirect(renderPassEncoder: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
+    webgpu.native.wgpuRenderPassEncoderDrawIndirect(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), indirectBuffer?.handler?.pointer?.takeIf { indirectBuffer.handler.rawValue != 0L }?.reinterpret(), indirectOffset)
+    return
+}
+
+actual fun wgpuRenderPassEncoderEnd(renderPassEncoder: WGPURenderPassEncoder?): Unit {
+    webgpu.native.wgpuRenderPassEncoderEnd(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit {
+    webgpu.native.wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder?, bundleCount: ULong, bundles: WGPURenderBundle?): Unit {
+    webgpu.native.wgpuRenderPassEncoderExecuteBundles(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), bundleCount, bundles?.handler?.pointer?.takeIf { bundles.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: WGPURenderPassEncoder?, markerLabel: WGPUStringView): Unit {
+    webgpu.native.wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), markerLabel.toCValue())
+    return
+}
+
+actual fun wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder: WGPURenderPassEncoder?): Unit {
+    webgpu.native.wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: WGPURenderPassEncoder?, groupLabel: WGPUStringView): Unit {
+    webgpu.native.wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), groupLabel.toCValue())
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit {
+    webgpu.native.wgpuRenderPassEncoderSetBindGroup(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), groupIndex, group?.handler?.pointer?.takeIf { group.handler.rawValue != 0L }?.reinterpret(), dynamicOffsetCount, dynamicOffsets?.pointer?.takeIf { dynamicOffsets.rawValue != 0L }?.reinterpret<UIntVar>())
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder?, color: WGPUColor?): Unit {
+    webgpu.native.wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), color?.handler?.pointer?.takeIf { color.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit {
+    webgpu.native.wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), format, offset, size)
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetLabel(renderPassEncoder: WGPURenderPassEncoder?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuRenderPassEncoderSetLabel(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetPipeline(renderPassEncoder: WGPURenderPassEncoder?, pipeline: WGPURenderPipeline?): Unit {
+    webgpu.native.wgpuRenderPassEncoderSetPipeline(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), pipeline?.handler?.pointer?.takeIf { pipeline.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetScissorRect(renderPassEncoder: WGPURenderPassEncoder?, x: UInt, y: UInt, width: UInt, height: UInt): Unit {
+    webgpu.native.wgpuRenderPassEncoderSetScissorRect(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), x, y, width, height)
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetStencilReference(renderPassEncoder: WGPURenderPassEncoder?, reference: UInt): Unit {
+    webgpu.native.wgpuRenderPassEncoderSetStencilReference(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), reference)
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder: WGPURenderPassEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit {
+    webgpu.native.wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), slot, buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), offset, size)
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetViewport(renderPassEncoder: WGPURenderPassEncoder?, x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float): Unit {
+    webgpu.native.wgpuRenderPassEncoderSetViewport(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), x, y, width, height, minDepth, maxDepth)
+    return
+}
+
+actual fun wgpuRenderPassEncoderAddRef(renderPassEncoder: WGPURenderPassEncoder?): Unit {
+    webgpu.native.wgpuRenderPassEncoderAddRef(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderPassEncoderRelease(renderPassEncoder: WGPURenderPassEncoder?): Unit {
+    webgpu.native.wgpuRenderPassEncoderRelease(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderPipelineGetBindGroupLayout(renderPipeline: WGPURenderPipeline?, groupIndex: UInt): WGPUBindGroupLayout? {
+    return webgpu.native.wgpuRenderPipelineGetBindGroupLayout(renderPipeline?.handler?.pointer?.takeIf { renderPipeline.handler.rawValue != 0L }?.reinterpret(), groupIndex)?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
+}
+
+actual fun wgpuRenderPipelineSetLabel(renderPipeline: WGPURenderPipeline?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuRenderPipelineSetLabel(renderPipeline?.handler?.pointer?.takeIf { renderPipeline.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuRenderPipelineAddRef(renderPipeline: WGPURenderPipeline?): Unit {
+    webgpu.native.wgpuRenderPipelineAddRef(renderPipeline?.handler?.pointer?.takeIf { renderPipeline.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderPipelineRelease(renderPipeline: WGPURenderPipeline?): Unit {
+    webgpu.native.wgpuRenderPipelineRelease(renderPipeline?.handler?.pointer?.takeIf { renderPipeline.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuSamplerSetLabel(sampler: WGPUSampler?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuSamplerSetLabel(sampler?.handler?.pointer?.takeIf { sampler.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuSamplerAddRef(sampler: WGPUSampler?): Unit {
+    webgpu.native.wgpuSamplerAddRef(sampler?.handler?.pointer?.takeIf { sampler.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuSamplerRelease(sampler: WGPUSampler?): Unit {
+    webgpu.native.wgpuSamplerRelease(sampler?.handler?.pointer?.takeIf { sampler.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuShaderModuleGetCompilationInfo(shaderModule: WGPUShaderModule?, callbackInfo: WGPUCompilationInfoCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(webgpu.native.wgpuShaderModuleGetCompilationInfo(shaderModule?.handler?.pointer?.takeIf { shaderModule.handler.rawValue != 0L }?.reinterpret(), callbackInfo.toCValue()))
+}
+
+actual fun wgpuShaderModuleSetLabel(shaderModule: WGPUShaderModule?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuShaderModuleSetLabel(shaderModule?.handler?.pointer?.takeIf { shaderModule.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuShaderModuleAddRef(shaderModule: WGPUShaderModule?): Unit {
+    webgpu.native.wgpuShaderModuleAddRef(shaderModule?.handler?.pointer?.takeIf { shaderModule.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuShaderModuleRelease(shaderModule: WGPUShaderModule?): Unit {
+    webgpu.native.wgpuShaderModuleRelease(shaderModule?.handler?.pointer?.takeIf { shaderModule.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuSupportedFeaturesFreeMembers(supportedFeatures: WGPUSupportedFeatures): Unit {
+    webgpu.native.wgpuSupportedFeaturesFreeMembers(supportedFeatures.toCValue())
+    return
+}
+
+actual fun wgpuSupportedInstanceFeaturesFreeMembers(supportedInstanceFeatures: WGPUSupportedInstanceFeatures): Unit {
+    webgpu.native.wgpuSupportedInstanceFeaturesFreeMembers(supportedInstanceFeatures.toCValue())
+    return
+}
+
+actual fun wgpuSupportedWGSLLanguageFeaturesFreeMembers(supportedWGSLLanguageFeatures: WGPUSupportedWGSLLanguageFeatures): Unit {
+    webgpu.native.wgpuSupportedWGSLLanguageFeaturesFreeMembers(supportedWGSLLanguageFeatures.toCValue())
+    return
+}
+
+actual fun wgpuSurfaceConfigure(surface: WGPUSurface?, config: WGPUSurfaceConfiguration?): Unit {
+    webgpu.native.wgpuSurfaceConfigure(surface?.handler?.pointer?.takeIf { surface.handler.rawValue != 0L }?.reinterpret(), config?.handler?.pointer?.takeIf { config.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus {
+    return webgpu.native.wgpuSurfaceGetCapabilities(surface?.handler?.pointer?.takeIf { surface.handler.rawValue != 0L }?.reinterpret(), adapter?.handler?.pointer?.takeIf { adapter.handler.rawValue != 0L }?.reinterpret(), capabilities?.handler?.pointer?.takeIf { capabilities.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit {
+    webgpu.native.wgpuSurfaceGetCurrentTexture(surface?.handler?.pointer?.takeIf { surface.handler.rawValue != 0L }?.reinterpret(), surfaceTexture?.handler?.pointer?.takeIf { surfaceTexture.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuSurfacePresent(surface: WGPUSurface?): WGPUStatus {
+    return webgpu.native.wgpuSurfacePresent(surface?.handler?.pointer?.takeIf { surface.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuSurfaceSetLabel(surface: WGPUSurface?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuSurfaceSetLabel(surface?.handler?.pointer?.takeIf { surface.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuSurfaceUnconfigure(surface: WGPUSurface?): Unit {
+    webgpu.native.wgpuSurfaceUnconfigure(surface?.handler?.pointer?.takeIf { surface.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuSurfaceAddRef(surface: WGPUSurface?): Unit {
+    webgpu.native.wgpuSurfaceAddRef(surface?.handler?.pointer?.takeIf { surface.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuSurfaceRelease(surface: WGPUSurface?): Unit {
+    webgpu.native.wgpuSurfaceRelease(surface?.handler?.pointer?.takeIf { surface.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuSurfaceCapabilitiesFreeMembers(surfaceCapabilities: WGPUSurfaceCapabilities): Unit {
+    webgpu.native.wgpuSurfaceCapabilitiesFreeMembers(surfaceCapabilities.toCValue())
+    return
+}
+
+actual fun wgpuTextureCreateView(texture: WGPUTexture?, descriptor: WGPUTextureViewDescriptor?): WGPUTextureView? {
+    return webgpu.native.wgpuTextureCreateView(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUTextureView(it) }
+}
+
+actual fun wgpuTextureDestroy(texture: WGPUTexture?): Unit {
+    webgpu.native.wgpuTextureDestroy(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuTextureGetDepthOrArrayLayers(texture: WGPUTexture?): UInt {
+    return webgpu.native.wgpuTextureGetDepthOrArrayLayers(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuTextureGetDimension(texture: WGPUTexture?): WGPUTextureDimension {
+    return webgpu.native.wgpuTextureGetDimension(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuTextureGetFormat(texture: WGPUTexture?): WGPUTextureFormat {
+    return webgpu.native.wgpuTextureGetFormat(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuTextureGetHeight(texture: WGPUTexture?): UInt {
+    return webgpu.native.wgpuTextureGetHeight(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuTextureGetMipLevelCount(texture: WGPUTexture?): UInt {
+    return webgpu.native.wgpuTextureGetMipLevelCount(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuTextureGetSampleCount(texture: WGPUTexture?): UInt {
+    return webgpu.native.wgpuTextureGetSampleCount(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuTextureGetTextureBindingViewDimension(texture: WGPUTexture?): WGPUTextureViewDimension {
+    return webgpu.native.wgpuTextureGetTextureBindingViewDimension(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuTextureGetUsage(texture: WGPUTexture?): ULong {
+    return webgpu.native.wgpuTextureGetUsage(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuTextureGetWidth(texture: WGPUTexture?): UInt {
+    return webgpu.native.wgpuTextureGetWidth(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuTextureSetLabel(texture: WGPUTexture?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuTextureSetLabel(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuTextureAddRef(texture: WGPUTexture?): Unit {
+    webgpu.native.wgpuTextureAddRef(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuTextureRelease(texture: WGPUTexture?): Unit {
+    webgpu.native.wgpuTextureRelease(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuTextureViewSetLabel(textureView: WGPUTextureView?, label: WGPUStringView): Unit {
+    webgpu.native.wgpuTextureViewSetLabel(textureView?.handler?.pointer?.takeIf { textureView.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
+    return
+}
+
+actual fun wgpuTextureViewAddRef(textureView: WGPUTextureView?): Unit {
+    webgpu.native.wgpuTextureViewAddRef(textureView?.handler?.pointer?.takeIf { textureView.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuTextureViewRelease(textureView: WGPUTextureView?): Unit {
+    webgpu.native.wgpuTextureViewRelease(textureView?.handler?.pointer?.takeIf { textureView.handler.rawValue != 0L }?.reinterpret())
+    return
+}
 
 actual interface WGPUXlibDisplayHandle {
-    actual var display: NativeAddress
+    actual var display: NativeAddress?
     actual var screen: Int
     actual val handler: NativeAddress
     actual companion object {
@@ -8145,8 +8571,8 @@ actual interface WGPUXlibDisplayHandle {
         override val handler: NativeAddress
             get() = error("should not be call on CValue")
         
-        override var display: NativeAddress
-            get() = handle.useContents { this.display?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var display: NativeAddress?
+            get() = handle.useContents { this.display?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         override var screen: Int
             get() = handle.useContents { this.screen }
@@ -8157,9 +8583,9 @@ actual interface WGPUXlibDisplayHandle {
         private val struct: webgpu.native.WGPUXlibDisplayHandle
             get() = handler.pointer.reinterpret<webgpu.native.WGPUXlibDisplayHandle>().pointed
         
-        override var display: NativeAddress
-            get() = struct.display?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.display = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var display: NativeAddress?
+            get() = struct.display?.let(::NativeAddress)
+            set(value) { struct.display = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
         override var screen: Int
             get() = struct.screen
             set(value) { struct.screen = value }
@@ -8167,12 +8593,12 @@ actual interface WGPUXlibDisplayHandle {
 }
 
 fun WGPUXlibDisplayHandle.toCValue(): CValue<webgpu.native.WGPUXlibDisplayHandle> = cValue {
-    this.display = this@toCValue.display.pointer?.takeIf { this@toCValue.display.rawValue != 0L }?.reinterpret()
+    this.display = this@toCValue.display?.pointer?.takeIf { this@toCValue.display?.rawValue != 0L }?.reinterpret()
     this.screen = this@toCValue.screen
 }
 
 actual interface WGPUXcbDisplayHandle {
-    actual var connection: NativeAddress
+    actual var connection: NativeAddress?
     actual var screen: Int
     actual val handler: NativeAddress
     actual companion object {
@@ -8195,8 +8621,8 @@ actual interface WGPUXcbDisplayHandle {
         override val handler: NativeAddress
             get() = error("should not be call on CValue")
         
-        override var connection: NativeAddress
-            get() = handle.useContents { this.connection?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var connection: NativeAddress?
+            get() = handle.useContents { this.connection?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         override var screen: Int
             get() = handle.useContents { this.screen }
@@ -8207,9 +8633,9 @@ actual interface WGPUXcbDisplayHandle {
         private val struct: webgpu.native.WGPUXcbDisplayHandle
             get() = handler.pointer.reinterpret<webgpu.native.WGPUXcbDisplayHandle>().pointed
         
-        override var connection: NativeAddress
-            get() = struct.connection?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.connection = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var connection: NativeAddress?
+            get() = struct.connection?.let(::NativeAddress)
+            set(value) { struct.connection = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
         override var screen: Int
             get() = struct.screen
             set(value) { struct.screen = value }
@@ -8217,12 +8643,12 @@ actual interface WGPUXcbDisplayHandle {
 }
 
 fun WGPUXcbDisplayHandle.toCValue(): CValue<webgpu.native.WGPUXcbDisplayHandle> = cValue {
-    this.connection = this@toCValue.connection.pointer?.takeIf { this@toCValue.connection.rawValue != 0L }?.reinterpret()
+    this.connection = this@toCValue.connection?.pointer?.takeIf { this@toCValue.connection?.rawValue != 0L }?.reinterpret()
     this.screen = this@toCValue.screen
 }
 
 actual interface WGPUWaylandDisplayHandle {
-    actual var display: NativeAddress
+    actual var display: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUWaylandDisplayHandle = ByReference(address)
@@ -8244,8 +8670,8 @@ actual interface WGPUWaylandDisplayHandle {
         override val handler: NativeAddress
             get() = error("should not be call on CValue")
         
-        override var display: NativeAddress
-            get() = handle.useContents { this.display?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var display: NativeAddress?
+            get() = handle.useContents { this.display?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -8253,14 +8679,14 @@ actual interface WGPUWaylandDisplayHandle {
         private val struct: webgpu.native.WGPUWaylandDisplayHandle
             get() = handler.pointer.reinterpret<webgpu.native.WGPUWaylandDisplayHandle>().pointed
         
-        override var display: NativeAddress
-            get() = struct.display?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.display = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var display: NativeAddress?
+            get() = struct.display?.let(::NativeAddress)
+            set(value) { struct.display = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
 fun WGPUWaylandDisplayHandle.toCValue(): CValue<webgpu.native.WGPUWaylandDisplayHandle> = cValue {
-    this.display = this@toCValue.display.pointer?.takeIf { this@toCValue.display.rawValue != 0L }?.reinterpret()
+    this.display = this@toCValue.display?.pointer?.takeIf { this@toCValue.display?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUNativeDisplayHandle {
@@ -8372,8 +8798,8 @@ actual interface WGPUInstanceExtras {
     actual var dxcPath: WGPUStringView
     actual var dxcMaxShaderModel: WGPUDxcMaxShaderModel
     actual var dx12PresentationSystem: WGPUDx12SwapchainKind
-    actual var budgetForDeviceCreation: NativeAddress
-    actual var budgetForDeviceLoss: NativeAddress
+    actual var budgetForDeviceCreation: NativeAddress?
+    actual var budgetForDeviceLoss: NativeAddress?
     actual var displayHandle: WGPUNativeDisplayHandle
     actual val handler: NativeAddress
     actual companion object {
@@ -8423,11 +8849,11 @@ actual interface WGPUInstanceExtras {
         override var dx12PresentationSystem: WGPUDx12SwapchainKind
             get() = handle.useContents { this.dx12PresentationSystem as WGPUDx12SwapchainKind }
             set(value) { error("Setters not supported on ByValue") }
-        override var budgetForDeviceCreation: NativeAddress
-            get() = handle.useContents { this.budgetForDeviceCreation?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var budgetForDeviceCreation: NativeAddress?
+            get() = handle.useContents { this.budgetForDeviceCreation?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
-        override var budgetForDeviceLoss: NativeAddress
-            get() = handle.useContents { this.budgetForDeviceLoss?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var budgetForDeviceLoss: NativeAddress?
+            get() = handle.useContents { this.budgetForDeviceLoss?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         override var displayHandle: WGPUNativeDisplayHandle
             get() = handle.useContents { WGPUNativeDisplayHandle.ByReference(NativeAddress(this.displayHandle.ptr)) }
@@ -8479,12 +8905,12 @@ actual interface WGPUInstanceExtras {
         override var dx12PresentationSystem: WGPUDx12SwapchainKind
             get() = struct.dx12PresentationSystem as WGPUDx12SwapchainKind
             set(value) { struct.dx12PresentationSystem = value }
-        override var budgetForDeviceCreation: NativeAddress
-            get() = struct.budgetForDeviceCreation?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.budgetForDeviceCreation = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
-        override var budgetForDeviceLoss: NativeAddress
-            get() = struct.budgetForDeviceLoss?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.budgetForDeviceLoss = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var budgetForDeviceCreation: NativeAddress?
+            get() = struct.budgetForDeviceCreation?.let(::NativeAddress)
+            set(value) { struct.budgetForDeviceCreation = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var budgetForDeviceLoss: NativeAddress?
+            get() = struct.budgetForDeviceLoss?.let(::NativeAddress)
+            set(value) { struct.budgetForDeviceLoss = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
         override var displayHandle: WGPUNativeDisplayHandle
             get() = WGPUNativeDisplayHandle.ByReference(NativeAddress(struct.displayHandle.ptr))
             set(value) {
@@ -8518,8 +8944,8 @@ fun WGPUInstanceExtras.toCValue(): CValue<webgpu.native.WGPUInstanceExtras> = cV
     }
     this.dxcMaxShaderModel = this@toCValue.dxcMaxShaderModel
     this.dx12PresentationSystem = this@toCValue.dx12PresentationSystem
-    this.budgetForDeviceCreation = this@toCValue.budgetForDeviceCreation.pointer?.takeIf { this@toCValue.budgetForDeviceCreation.rawValue != 0L }?.reinterpret()
-    this.budgetForDeviceLoss = this@toCValue.budgetForDeviceLoss.pointer?.takeIf { this@toCValue.budgetForDeviceLoss.rawValue != 0L }?.reinterpret()
+    this.budgetForDeviceCreation = this@toCValue.budgetForDeviceCreation?.pointer?.takeIf { this@toCValue.budgetForDeviceCreation?.rawValue != 0L }?.reinterpret()
+    this.budgetForDeviceLoss = this@toCValue.budgetForDeviceLoss?.pointer?.takeIf { this@toCValue.budgetForDeviceLoss?.rawValue != 0L }?.reinterpret()
     val dest_displayHandle = this.displayHandle.ptr.reinterpret<ByteVar>()
     val src_displayHandle = this@toCValue.displayHandle.handler.pointer.reinterpret<ByteVar>()
     val size_displayHandle = sizeOf<webgpu.native.WGPUNativeDisplayHandle>().toLong()
@@ -8917,7 +9343,7 @@ fun WGPUShaderSourceGLSL.toCValue(): CValue<webgpu.native.WGPUShaderSourceGLSL> 
 actual interface WGPUShaderModuleDescriptorSpirV {
     actual var label: WGPUStringView
     actual var sourceSize: UInt
-    actual var source: NativeAddress
+    actual var source: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUShaderModuleDescriptorSpirV = ByReference(address)
@@ -8945,8 +9371,8 @@ actual interface WGPUShaderModuleDescriptorSpirV {
         override var sourceSize: UInt
             get() = handle.useContents { this.sourceSize }
             set(value) { error("Setters not supported on ByValue") }
-        override var source: NativeAddress
-            get() = handle.useContents { this.source?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var source: NativeAddress?
+            get() = handle.useContents { this.source?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -8967,9 +9393,9 @@ actual interface WGPUShaderModuleDescriptorSpirV {
         override var sourceSize: UInt
             get() = struct.sourceSize
             set(value) { struct.sourceSize = value }
-        override var source: NativeAddress
-            get() = struct.source?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.source = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var source: NativeAddress?
+            get() = struct.source?.let(::NativeAddress)
+            set(value) { struct.source = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
@@ -8981,7 +9407,7 @@ fun WGPUShaderModuleDescriptorSpirV.toCValue(): CValue<webgpu.native.WGPUShaderM
         dest_label[i.toInt()] = src_label[i.toInt()]
     }
     this.sourceSize = this@toCValue.sourceSize
-    this.source = this@toCValue.source.pointer?.takeIf { this@toCValue.source.rawValue != 0L }?.reinterpret()
+    this.source = this@toCValue.source?.pointer?.takeIf { this@toCValue.source?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPURegistryReport {
@@ -9714,7 +10140,7 @@ fun WGPUBindGroupLayoutEntryExtras.toCValue(): CValue<webgpu.native.WGPUBindGrou
 
 actual interface WGPUQuerySetDescriptorExtras {
     actual var chain: WGPUChainedStruct
-    actual var pipelineStatistics: NativeAddress
+    actual var pipelineStatistics: NativeAddress?
     actual var pipelineStatisticCount: ULong
     actual val handler: NativeAddress
     actual companion object {
@@ -9740,8 +10166,8 @@ actual interface WGPUQuerySetDescriptorExtras {
         override var chain: WGPUChainedStruct
             get() = handle.useContents { WGPUChainedStruct.ByReference(NativeAddress(this.chain.ptr)) }
             set(value) { error("Setters not supported on ByValue") }
-        override var pipelineStatistics: NativeAddress
-            get() = handle.useContents { this.pipelineStatistics?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var pipelineStatistics: NativeAddress?
+            get() = handle.useContents { this.pipelineStatistics?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         override var pipelineStatisticCount: ULong
             get() = handle.useContents { this.pipelineStatisticCount }
@@ -9762,9 +10188,9 @@ actual interface WGPUQuerySetDescriptorExtras {
                     destBytes[i.toInt()] = srcBytes[i.toInt()]
                 }
             }
-        override var pipelineStatistics: NativeAddress
-            get() = struct.pipelineStatistics?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.pipelineStatistics = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var pipelineStatistics: NativeAddress?
+            get() = struct.pipelineStatistics?.let(::NativeAddress)
+            set(value) { struct.pipelineStatistics = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
         override var pipelineStatisticCount: ULong
             get() = struct.pipelineStatisticCount
             set(value) { struct.pipelineStatisticCount = value }
@@ -9778,7 +10204,7 @@ fun WGPUQuerySetDescriptorExtras.toCValue(): CValue<webgpu.native.WGPUQuerySetDe
     for (i in 0L until size_chain) {
         dest_chain[i.toInt()] = src_chain[i.toInt()]
     }
-    this.pipelineStatistics = this@toCValue.pipelineStatistics.pointer?.takeIf { this@toCValue.pipelineStatistics.rawValue != 0L }?.reinterpret()
+    this.pipelineStatistics = this@toCValue.pipelineStatistics?.pointer?.takeIf { this@toCValue.pipelineStatistics?.rawValue != 0L }?.reinterpret()
     this.pipelineStatisticCount = this@toCValue.pipelineStatisticCount
 }
 
@@ -9846,7 +10272,7 @@ fun WGPUSurfaceConfigurationExtras.toCValue(): CValue<webgpu.native.WGPUSurfaceC
 
 actual interface WGPUSurfaceSourceSwapChainPanel {
     actual var chain: WGPUChainedStruct
-    actual var panelNative: NativeAddress
+    actual var panelNative: NativeAddress?
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceSwapChainPanel = ByReference(address)
@@ -9871,8 +10297,8 @@ actual interface WGPUSurfaceSourceSwapChainPanel {
         override var chain: WGPUChainedStruct
             get() = handle.useContents { WGPUChainedStruct.ByReference(NativeAddress(this.chain.ptr)) }
             set(value) { error("Setters not supported on ByValue") }
-        override var panelNative: NativeAddress
-            get() = handle.useContents { this.panelNative?.let(::NativeAddress) ?: NativeAddress(0L) }
+        override var panelNative: NativeAddress?
+            get() = handle.useContents { this.panelNative?.let(::NativeAddress) }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -9890,9 +10316,9 @@ actual interface WGPUSurfaceSourceSwapChainPanel {
                     destBytes[i.toInt()] = srcBytes[i.toInt()]
                 }
             }
-        override var panelNative: NativeAddress
-            get() = struct.panelNative?.let(::NativeAddress) ?: NativeAddress(0L)
-            set(value) { struct.panelNative = value.pointer.takeIf { value.rawValue != 0L }?.reinterpret() }
+        override var panelNative: NativeAddress?
+            get() = struct.panelNative?.let(::NativeAddress)
+            set(value) { struct.panelNative = value?.pointer?.takeIf { value.rawValue != 0L }?.reinterpret() }
     }
 }
 
@@ -9903,7 +10329,7 @@ fun WGPUSurfaceSourceSwapChainPanel.toCValue(): CValue<webgpu.native.WGPUSurface
     for (i in 0L until size_chain) {
         dest_chain[i.toInt()] = src_chain[i.toInt()]
     }
-    this.panelNative = this@toCValue.panelNative.pointer?.takeIf { this@toCValue.panelNative.rawValue != 0L }?.reinterpret()
+    this.panelNative = this@toCValue.panelNative?.pointer?.takeIf { this@toCValue.panelNative?.rawValue != 0L }?.reinterpret()
 }
 
 actual interface WGPUPrimitiveStateExtras {
@@ -9976,92 +10402,145 @@ fun WGPUPrimitiveStateExtras.toCValue(): CValue<webgpu.native.WGPUPrimitiveState
     this.conservative = this@toCValue.conservative
 }
 
-actual class WGPULogCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (level: WGPULogLevel, message: WGPUStringView, userdata: NativeAddress?) -> Unit): WGPULogCallback =
-            error("WGPULogCallback allocation is not implemented on Native")
-    }
+private var WGPULogCallback_callback: ((level: WGPULogLevel, message: WGPUStringView, userdata: NativeAddress?) -> Unit)? = null
+private val WGPULogCallback_static = staticCFunction<WGPULogLevel, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, Unit> { level, message, userdata ->
+    WGPULogCallback_callback?.invoke(level, WGPUStringView.ByValue(message), userdata?.let(::NativeAddress))
 }
 
-actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit =
-    error("wgpuGenerateReport is not implemented for Kotlin/Native generated bindings")
+actual class WGPULogCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
+    actual override fun close() {
+        if (handler.rawValue == NativeAddress(WGPULogCallback_static).rawValue) WGPULogCallback_callback = null
+    }
+    actual companion object {
+        actual fun allocate(callback: (level: WGPULogLevel, message: WGPUStringView, userdata: NativeAddress?) -> Unit): WGPULogCallback {
+            WGPULogCallback_callback = callback
+            return WGPULogCallback(NativeAddress(WGPULogCallback_static))
+        }
+}
+}
 
-actual fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: WGPUAdapter?): ULong =
-    error("wgpuInstanceEnumerateAdapters is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit {
+    webgpu.native.wgpuGenerateReport(instance?.handler?.pointer?.takeIf { instance.handler.rawValue != 0L }?.reinterpret(), report?.handler?.pointer?.takeIf { report.handler.rawValue != 0L }?.reinterpret())
+    return
+}
 
-actual fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: WGPUCommandBuffer?): ULong =
-    error("wgpuQueueSubmitForIndex is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: WGPUAdapter?): ULong {
+    return webgpu.native.wgpuInstanceEnumerateAdapters(instance?.handler?.pointer?.takeIf { instance.handler.rawValue != 0L }?.reinterpret(), options?.handler?.pointer?.takeIf { options.handler.rawValue != 0L }?.reinterpret(), adapters?.handler?.pointer?.takeIf { adapters.handler.rawValue != 0L }?.reinterpret())
+}
 
-actual fun wgpuQueueGetTimestampPeriod(queue: WGPUQueue?): Float =
-    error("wgpuQueueGetTimestampPeriod is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: WGPUCommandBuffer?): ULong {
+    return webgpu.native.wgpuQueueSubmitForIndex(queue?.handler?.pointer?.takeIf { queue.handler.rawValue != 0L }?.reinterpret(), commandCount, commands?.handler?.pointer?.takeIf { commands.handler.rawValue != 0L }?.reinterpret())
+}
 
-actual fun wgpuDevicePoll(device: WGPUDevice?, wait: UInt, submissionIndex: NativeAddress?): UInt =
-    error("wgpuDevicePoll is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuQueueGetTimestampPeriod(queue: WGPUQueue?): Float {
+    return webgpu.native.wgpuQueueGetTimestampPeriod(queue?.handler?.pointer?.takeIf { queue.handler.rawValue != 0L }?.reinterpret())
+}
 
-actual fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptorSpirV?): WGPUShaderModule? =
-    error("wgpuDeviceCreateShaderModuleSpirV is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuDevicePoll(device: WGPUDevice?, wait: UInt, submissionIndex: NativeAddress?): UInt {
+    return webgpu.native.wgpuDevicePoll(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), wait, submissionIndex?.pointer?.takeIf { submissionIndex.rawValue != 0L }?.reinterpret<ULongVar>())
+}
 
-actual fun wgpuSetLogCallback(callback: WGPULogCallback?, userdata: NativeAddress?): Unit =
-    error("wgpuSetLogCallback is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptorSpirV?): WGPUShaderModule? {
+    return webgpu.native.wgpuDeviceCreateShaderModuleSpirV(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
+}
 
-actual fun wgpuSetLogLevel(level: WGPULogLevel): Unit =
-    error("wgpuSetLogLevel is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuSetLogCallback(callback: WGPULogCallback?, userdata: NativeAddress?): Unit {
+    webgpu.native.wgpuSetLogCallback(callback?.handler?.pointer?.takeIf { callback.handler.rawValue != 0L }?.reinterpret(), userdata?.pointer?.takeIf { userdata.rawValue != 0L })
+    return
+}
 
-actual fun wgpuGetVersion(): UInt =
-    error("wgpuGetVersion is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuSetLogLevel(level: WGPULogLevel): Unit {
+    webgpu.native.wgpuSetLogLevel(level)
+    return
+}
 
-actual fun wgpuDeviceGetNativeMetalDevice(device: WGPUDevice?): NativeAddress? =
-    error("wgpuDeviceGetNativeMetalDevice is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuGetVersion(): UInt {
+    return webgpu.native.wgpuGetVersion()
+}
 
-actual fun wgpuQueueGetNativeMetalCommandQueue(queue: WGPUQueue?): NativeAddress? =
-    error("wgpuQueueGetNativeMetalCommandQueue is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuDeviceGetNativeMetalDevice(device: WGPUDevice?): NativeAddress? {
+    return webgpu.native.wgpuDeviceGetNativeMetalDevice(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)
+}
 
-actual fun wgpuTextureGetNativeMetalTexture(texture: WGPUTexture?): NativeAddress? =
-    error("wgpuTextureGetNativeMetalTexture is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuQueueGetNativeMetalCommandQueue(queue: WGPUQueue?): NativeAddress? {
+    return webgpu.native.wgpuQueueGetNativeMetalCommandQueue(queue?.handler?.pointer?.takeIf { queue.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)
+}
 
-actual fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit =
-    error("wgpuRenderPassEncoderSetImmediates is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuTextureGetNativeMetalTexture(texture: WGPUTexture?): NativeAddress? {
+    return webgpu.native.wgpuTextureGetNativeMetalTexture(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)
+}
 
-actual fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit =
-    error("wgpuComputePassEncoderSetImmediates is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
+    webgpu.native.wgpuRenderPassEncoderSetImmediates(encoder?.handler?.pointer?.takeIf { encoder.handler.rawValue != 0L }?.reinterpret(), offset, sizeBytes, data?.pointer?.takeIf { data.rawValue != 0L })
+    return
+}
 
-actual fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit =
-    error("wgpuRenderBundleEncoderSetImmediates is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
+    webgpu.native.wgpuComputePassEncoderSetImmediates(encoder?.handler?.pointer?.takeIf { encoder.handler.rawValue != 0L }?.reinterpret(), offset, sizeBytes, data?.pointer?.takeIf { data.rawValue != 0L })
+    return
+}
 
-actual fun wgpuRenderPassEncoderMultiDrawIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit =
-    error("wgpuRenderPassEncoderMultiDrawIndirect is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
+    webgpu.native.wgpuRenderBundleEncoderSetImmediates(encoder?.handler?.pointer?.takeIf { encoder.handler.rawValue != 0L }?.reinterpret(), offset, sizeBytes, data?.pointer?.takeIf { data.rawValue != 0L })
+    return
+}
 
-actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit =
-    error("wgpuRenderPassEncoderMultiDrawIndexedIndirect is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuRenderPassEncoderMultiDrawIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit {
+    webgpu.native.wgpuRenderPassEncoderMultiDrawIndirect(encoder?.handler?.pointer?.takeIf { encoder.handler.rawValue != 0L }?.reinterpret(), buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), offset, count)
+    return
+}
 
-actual fun wgpuRenderPassEncoderMultiDrawIndirectCount(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count_buffer: WGPUBuffer?, count_buffer_offset: ULong, max_count: UInt): Unit =
-    error("wgpuRenderPassEncoderMultiDrawIndirectCount is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit {
+    webgpu.native.wgpuRenderPassEncoderMultiDrawIndexedIndirect(encoder?.handler?.pointer?.takeIf { encoder.handler.rawValue != 0L }?.reinterpret(), buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), offset, count)
+    return
+}
 
-actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count_buffer: WGPUBuffer?, count_buffer_offset: ULong, max_count: UInt): Unit =
-    error("wgpuRenderPassEncoderMultiDrawIndexedIndirectCount is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuRenderPassEncoderMultiDrawIndirectCount(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count_buffer: WGPUBuffer?, count_buffer_offset: ULong, max_count: UInt): Unit {
+    webgpu.native.wgpuRenderPassEncoderMultiDrawIndirectCount(encoder?.handler?.pointer?.takeIf { encoder.handler.rawValue != 0L }?.reinterpret(), buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), offset, count_buffer?.handler?.pointer?.takeIf { count_buffer.handler.rawValue != 0L }?.reinterpret(), count_buffer_offset, max_count)
+    return
+}
 
-actual fun wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit =
-    error("wgpuComputePassEncoderBeginPipelineStatisticsQuery is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count_buffer: WGPUBuffer?, count_buffer_offset: ULong, max_count: UInt): Unit {
+    webgpu.native.wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(encoder?.handler?.pointer?.takeIf { encoder.handler.rawValue != 0L }?.reinterpret(), buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), offset, count_buffer?.handler?.pointer?.takeIf { count_buffer.handler.rawValue != 0L }?.reinterpret(), count_buffer_offset, max_count)
+    return
+}
 
-actual fun wgpuComputePassEncoderEndPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder?): Unit =
-    error("wgpuComputePassEncoderEndPipelineStatisticsQuery is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
+    webgpu.native.wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret(), querySet?.handler?.pointer?.takeIf { querySet.handler.rawValue != 0L }?.reinterpret(), queryIndex)
+    return
+}
 
-actual fun wgpuRenderPassEncoderBeginPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit =
-    error("wgpuRenderPassEncoderBeginPipelineStatisticsQuery is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuComputePassEncoderEndPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder?): Unit {
+    webgpu.native.wgpuComputePassEncoderEndPipelineStatisticsQuery(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
 
-actual fun wgpuRenderPassEncoderEndPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit =
-    error("wgpuRenderPassEncoderEndPipelineStatisticsQuery is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuRenderPassEncoderBeginPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
+    webgpu.native.wgpuRenderPassEncoderBeginPipelineStatisticsQuery(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), querySet?.handler?.pointer?.takeIf { querySet.handler.rawValue != 0L }?.reinterpret(), queryIndex)
+    return
+}
 
-actual fun wgpuComputePassEncoderWriteTimestamp(computePassEncoder: WGPUComputePassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit =
-    error("wgpuComputePassEncoderWriteTimestamp is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuRenderPassEncoderEndPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit {
+    webgpu.native.wgpuRenderPassEncoderEndPipelineStatisticsQuery(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret())
+    return
+}
 
-actual fun wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: WGPURenderPassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit =
-    error("wgpuRenderPassEncoderWriteTimestamp is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuComputePassEncoderWriteTimestamp(computePassEncoder: WGPUComputePassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
+    webgpu.native.wgpuComputePassEncoderWriteTimestamp(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret(), querySet?.handler?.pointer?.takeIf { querySet.handler.rawValue != 0L }?.reinterpret(), queryIndex)
+    return
+}
 
-actual fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): UInt =
-    error("wgpuDeviceStartGraphicsDebuggerCapture is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: WGPURenderPassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
+    webgpu.native.wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), querySet?.handler?.pointer?.takeIf { querySet.handler.rawValue != 0L }?.reinterpret(), queryIndex)
+    return
+}
 
-actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit =
-    error("wgpuDeviceStopGraphicsDebuggerCapture is not implemented for Kotlin/Native generated bindings")
+actual fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): UInt {
+    return webgpu.native.wgpuDeviceStartGraphicsDebuggerCapture(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret())
+}
+
+actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit {
+    webgpu.native.wgpuDeviceStopGraphicsDebuggerCapture(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret())
+    return
+}
 
