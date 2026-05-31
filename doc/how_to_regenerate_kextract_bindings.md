@@ -10,8 +10,6 @@ This document covers the `kextract` pipeline:
 2. Run `kextract` on one or more headers.
 3. Validate the generation.
 
-It does not replace [`doc/binding-generation.md`](./binding-generation.md), which documents the YAML-based `:wgpu4k-native:generateBinding` flow.
-
 ## Prerequisites
 
 - JDK 25 installed.

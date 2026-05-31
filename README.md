@@ -15,7 +15,6 @@ This library uses the Firefox backend written in Rust, [available here](https://
 
 ## Documentation
 
-- [Binding generation (YAML pipeline)](doc/binding-generation.md)
 - [How to regenerate kextract bindings (C/ObjC headers)](doc/how_to_regenerate_kextract_bindings.md)
 
 ## How to Run the demo

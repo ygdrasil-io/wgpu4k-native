@@ -12,7 +12,6 @@ plugins {
     com.android.library
     alias(libs.plugins.kotest)
     alias(libs.plugins.ksp)
-    id("generator")
 }
 
 val buildNativeResourcesDirectory = project.file("build").resolve("native")
@@ -312,4 +311,3 @@ tasks.register<Exec>("generateBindingsFromHeader") {
         project.file("build/native/wgpu.h").absolutePath
     ) + clangArgs
 }
-
