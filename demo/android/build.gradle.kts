@@ -59,7 +59,7 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.android.native.helper)
-            implementation(projects.demo.common)
+            implementation(project(":demo:common"))
             implementation(libs.activity.compose)
             implementation("org.graphiks.kadre:kadre:1.0.0")
         }

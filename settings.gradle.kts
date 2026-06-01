@@ -1,5 +1,4 @@
 rootProject.name = "wgpu4k-native-root"
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
 	repositories {

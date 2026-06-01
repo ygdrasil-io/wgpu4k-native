@@ -72,7 +72,7 @@ kotlin {
 
         commonMain {
             dependencies {
-                implementation(projects.demo.common)
+                implementation(project(":demo:common"))
             }
         }
 

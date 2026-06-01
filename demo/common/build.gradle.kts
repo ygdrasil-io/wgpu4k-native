@@ -79,7 +79,7 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                api(projects.wgpu4kNative)
+                api(project(":wgpu4k-native"))
             }
         }
 
