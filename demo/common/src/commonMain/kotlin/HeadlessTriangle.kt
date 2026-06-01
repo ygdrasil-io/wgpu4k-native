@@ -104,7 +104,7 @@ fun renderHeadlessTriangle(width: Int = 64, height: Int = 64): HeadlessTriangleI
 
         var attempts = 0
         while (mapStatus == null && attempts++ < 10_000) {
-            wgpuInstanceProcessEvents(instance)
+            waitForHeadlessMapEvent(instance)
         }
         check(mapStatus == WGPUMapAsyncStatus_Success) { "buffer map did not complete" }
 
@@ -133,6 +133,8 @@ fun renderHeadlessTriangle(width: Int = 64, height: Int = 64): HeadlessTriangleI
 
     return HeadlessTriangleImage(width, height, pixels)
 }
+
+expect fun waitForHeadlessMapEvent(instance: WGPUInstance)
 
 private fun createHeadlessTrianglePipeline(
     device: WGPUDevice,
