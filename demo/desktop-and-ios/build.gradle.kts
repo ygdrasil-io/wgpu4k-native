@@ -124,6 +124,16 @@ tasks.register<JavaExec>("runJvm") {
     classpath = sourceSets["jvmMain"].runtimeClasspath
 }
 
+tasks.register<JavaExec>("runJvmHeadless") {
+    group = "run"
+    mainClass = "io.ygdrasil.wgpu.HeadlessMainKt"
+    jvmArgs(
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+        "--enable-native-access=ALL-UNNAMED"
+    )
+    classpath = sourceSets["jvmMain"].runtimeClasspath
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(25)

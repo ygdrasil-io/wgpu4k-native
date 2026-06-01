@@ -17,8 +17,26 @@ import glfw.glfwWindowHint
 import glfw.glfwWindowShouldClose
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.convert
+import kotlinx.cinterop.usePinned
+import platform.posix.fclose
+import platform.posix.fopen
+import platform.posix.fwrite
+import platform.posix.mkdir
 
-fun main() {
+fun main(args: Array<String>) {
+    if ("--headless" in args) {
+        configureLogs(WGPULogLevel_Warn)
+        val image = renderHeadlessTriangle()
+        val outputPath = "build/headless/triangle.ppm"
+        mkdir("build", 511.convert())
+        mkdir("build/headless", 511.convert())
+        writePpm(image, outputPath)
+        println("Wrote $outputPath")
+        return
+    }
+
     val width = 640
     val height = 480
     val title = "GLFW+WebGPU"
@@ -54,3 +72,26 @@ fun main() {
 }
 
 expect fun getSurface(instance: WGPUInstance, window: CPointer<GLFWwindow>): WGPUSurface
+
+private fun writePpm(image: HeadlessTriangleImage, path: String) {
+    val file = fopen(path, "wb") ?: error("fail to open $path")
+    try {
+        val header = "P6\n${image.width} ${image.height}\n255\n".encodeToByteArray()
+        header.usePinned {
+            fwrite(it.addressOf(0), 1.convert(), header.size.convert(), file)
+        }
+
+        val rgb = ByteArray(image.width * image.height * 3)
+        var destination = 0
+        for (source in image.rgba.indices step 4) {
+            rgb[destination++] = image.rgba[source]
+            rgb[destination++] = image.rgba[source + 1]
+            rgb[destination++] = image.rgba[source + 2]
+        }
+        rgb.usePinned {
+            fwrite(it.addressOf(0), 1.convert(), rgb.size.convert(), file)
+        }
+    } finally {
+        fclose(file)
+    }
+}
