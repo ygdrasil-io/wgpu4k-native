@@ -21,7 +21,7 @@ fun captureFrame(path: String) = memoryScope { scope ->
     val bufferSize = (alignedBytesPerRow * CaptureHeight).toULong()
 
     val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
-    val adapter = getAdapter(instance = instance)
+    val adapter = getAdapter(surface = null, instance = instance)
     val device = getDevice(adapter)
     val queue = wgpuDeviceGetQueue(device) ?: error("fail to get queue")
 

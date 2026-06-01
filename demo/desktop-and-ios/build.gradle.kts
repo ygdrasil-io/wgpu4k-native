@@ -97,6 +97,7 @@ kotlin {
 
         jvmMain {
             dependencies {
+                implementation("org.graphiks.kadre:kadre:1.0.0")
                 api(libs.rococoa)
                 api(libs.jnaPlatform)
                 val lwjglVersion = "3.3.6"
