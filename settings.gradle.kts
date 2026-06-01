@@ -11,6 +11,9 @@ pluginManagement {
 
 includeBuild("Kadre") {
 	name = "kadre-build"
+	dependencySubstitution {
+		substitute(module("org.graphiks.kadre:kadre")).using(project(":kadre"))
+	}
 }
 
 dependencyResolutionManagement {
