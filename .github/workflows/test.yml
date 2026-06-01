@@ -44,5 +44,4 @@ jobs:
       - name: Verify JVM headless render
         run: ./gradlew :demo:desktop-and-ios:verifyJvmHeadlessRender
       - name: Verify Native headless render
-        if: runner.os != 'Windows'
         run: ./gradlew :demo:desktop-and-ios:verifyNativeHeadlessRender

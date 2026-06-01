@@ -9,9 +9,11 @@ plugins {
 
 val os = DefaultNativePlatform.getCurrentOperatingSystem()
 val nativeTargetName = when {
+    project.findProperty("demo.nativeTarget") == "mingwX64" -> "mingwX64"
     os.isLinux && System.getProperty("os.arch") != "aarch64" -> "linuxX64"
     os.isMacOsX && System.getProperty("os.arch") == "aarch64" -> "macosArm64"
     os.isMacOsX -> "macosX64"
+    os.isWindows -> "mingwX64"
     else -> null
 }
 
@@ -43,8 +45,7 @@ kotlin {
         nativeTargetName == "linuxX64" -> linuxX64()
         nativeTargetName == "macosArm64" -> macosArm64()
         nativeTargetName == "macosX64" -> macosX64()
-        // Disable native on windows until linking issues are note solved
-        //hostOs.startsWith("Windows") -> mingwX64()
+        nativeTargetName == "mingwX64" -> mingwX64()
         else -> null // Not supported
     }
 
@@ -76,6 +77,7 @@ kotlin {
         }
 
         val desktopMain by creating {
+            dependsOn(commonMain.get())
             dependencies {
                 implementation(libs.ygdrasil.glfw.native)
             }
@@ -86,6 +88,10 @@ kotlin {
         }
 
         linuxMain {
+            dependsOn(desktopMain)
+        }
+
+        mingwMain {
             dependsOn(desktopMain)
         }
 
@@ -167,8 +173,9 @@ if (nativeTargetName != null) {
         group = "run"
         dependsOn("linkDebugExecutable$capitalizedNativeTargetName")
         workingDir = projectDir
+        val executableName = if (nativeTargetName == "mingwX64") "desktop-and-ios.exe" else "desktop-and-ios.kexe"
         commandLine(
-            layout.buildDirectory.file("bin/$nativeTargetName/debugExecutable/desktop-and-ios.kexe").get().asFile.absolutePath,
+            layout.buildDirectory.file("bin/$nativeTargetName/debugExecutable/$executableName").get().asFile.absolutePath,
             "--headless"
         )
     }

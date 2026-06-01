@@ -23,15 +23,13 @@ import kotlinx.cinterop.usePinned
 import platform.posix.fclose
 import platform.posix.fopen
 import platform.posix.fwrite
-import platform.posix.mkdir
 
 fun main(args: Array<String>) {
     if ("--headless" in args) {
         configureLogs(WGPULogLevel_Warn)
         val image = renderHeadlessTriangle()
         val outputPath = "build/headless/triangle.ppm"
-        mkdir("build", 511.convert())
-        mkdir("build/headless", 511.convert())
+        ensureHeadlessOutputDirectory()
         writePpm(image, outputPath)
         println("Wrote $outputPath")
         return
@@ -72,6 +70,8 @@ fun main(args: Array<String>) {
 }
 
 expect fun getSurface(instance: WGPUInstance, window: CPointer<GLFWwindow>): WGPUSurface
+
+expect fun ensureHeadlessOutputDirectory()
 
 private fun writePpm(image: HeadlessTriangleImage, path: String) {
     val file = fopen(path, "wb") ?: error("fail to open $path")
