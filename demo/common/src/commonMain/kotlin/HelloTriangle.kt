@@ -51,11 +51,19 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
         val surfaceTexture = WGPUSurfaceTexture.allocate(scope)
         wgpuSurfaceGetCurrentTexture(surface, surfaceTexture)
 
-        if (surfaceTexture.status == WGPUSurfaceGetCurrentTextureStatus_Occluded) return@memoryScope
-        if (surfaceTexture.status > WGPUSurfaceGetCurrentTextureStatus_SuccessSuboptimal) error("surface status is KO with status ${surfaceTexture.status}")
-        surfaceTexture.texture ?: error("fail to get texture")
+        when (surfaceTexture.status) {
+            WGPUSurfaceGetCurrentTextureStatus_SuccessOptimal,
+            WGPUSurfaceGetCurrentTextureStatus_SuccessSuboptimal -> Unit
+            WGPUSurfaceGetCurrentTextureStatus_Timeout,
+            WGPUSurfaceGetCurrentTextureStatus_Outdated,
+            WGPUSurfaceGetCurrentTextureStatus_Lost,
+            WGPUSurfaceGetCurrentTextureStatus_Occluded -> return@memoryScope
+            else -> error("surface status is KO with status ${surfaceTexture.status}")
+        }
 
-        val frame = wgpuTextureCreateView(surfaceTexture.texture, null) ?: error("fail to create view")
+        val texture = surfaceTexture.texture ?: return@memoryScope
+
+        val frame = wgpuTextureCreateView(texture, null) ?: error("fail to create view")
 
         val renderPipeline = renderPipeline ?: error("fail to create get pipeline")
 
@@ -91,7 +99,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
         wgpuCommandBufferRelease(commandBuffer)
         wgpuCommandEncoderRelease(commandEncoder)
         wgpuTextureViewRelease(frame)
-        wgpuTextureRelease(surfaceTexture.texture)
+        wgpuTextureRelease(texture)
 
     }
 }

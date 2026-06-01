@@ -9,6 +9,10 @@ pluginManagement {
 	}
 }
 
+includeBuild("Kadre") {
+	name = "kadre-build"
+}
+
 dependencyResolutionManagement {
 	repositories {
 		google()

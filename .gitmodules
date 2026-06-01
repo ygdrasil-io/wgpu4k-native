@@ -1,3 +1,6 @@
 [submodule "kextract"]
 	path = kextract
 	url = https://github.com/klang-toolkit/kextract
+[submodule "Kadre"]
+	path = Kadre
+	url = https://github.com/ygdrasil-io/poc-koreos
