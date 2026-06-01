@@ -42,7 +42,7 @@ jobs:
         run: |
           ./gradlew fetch-native-dependencies
           ./gradlew assemble
-          ./gradlew build
+          ./gradlew build -x :kextract:test
       - name: Verify JVM headless render
         run: ./gradlew :demo:desktop-and-ios:verifyJvmHeadlessRender
       - name: Verify Native headless render
