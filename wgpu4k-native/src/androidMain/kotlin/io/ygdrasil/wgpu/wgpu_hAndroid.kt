@@ -1059,17 +1059,49 @@ actual interface WGPUAdapterInfo {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var vendor: WGPUStringView
-            get() = handle.vendor?.let { WGPUStringView.ByReference(it) } ?: error("vendor is null")
-            set(value) { handle.vendor = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("vendor")
+                return WGPUStringView.ByValue(handle.vendor)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.vendor.size())
+                handle.readField("vendor")
+                handle.vendor.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("vendor")
+            }
         override var architecture: WGPUStringView
-            get() = handle.architecture?.let { WGPUStringView.ByReference(it) } ?: error("architecture is null")
-            set(value) { handle.architecture = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("architecture")
+                return WGPUStringView.ByValue(handle.architecture)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.architecture.size())
+                handle.readField("architecture")
+                handle.architecture.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("architecture")
+            }
         override var device: WGPUStringView
-            get() = handle.device?.let { WGPUStringView.ByReference(it) } ?: error("device is null")
-            set(value) { handle.device = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("device")
+                return WGPUStringView.ByValue(handle.device)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.device.size())
+                handle.readField("device")
+                handle.device.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("device")
+            }
         override var description: WGPUStringView
-            get() = handle.description?.let { WGPUStringView.ByReference(it) } ?: error("description is null")
-            set(value) { handle.description = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("description")
+                return WGPUStringView.ByValue(handle.description)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.description.size())
+                handle.readField("description")
+                handle.description.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("description")
+            }
         override var backendType: WGPUBackendType
             get() = handle.backendType.toUInt() as WGPUBackendType
             set(value) { handle.backendType = value.toInt() }
@@ -1100,17 +1132,49 @@ actual interface WGPUAdapterInfo {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var vendor: WGPUStringView
-            get() = handle.vendor?.let { WGPUStringView.ByReference(it) } ?: error("vendor is null")
-            set(value) { handle.vendor = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("vendor")
+                return WGPUStringView.ByValue(handle.vendor)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.vendor.size())
+                handle.readField("vendor")
+                handle.vendor.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("vendor")
+            }
         override var architecture: WGPUStringView
-            get() = handle.architecture?.let { WGPUStringView.ByReference(it) } ?: error("architecture is null")
-            set(value) { handle.architecture = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("architecture")
+                return WGPUStringView.ByValue(handle.architecture)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.architecture.size())
+                handle.readField("architecture")
+                handle.architecture.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("architecture")
+            }
         override var device: WGPUStringView
-            get() = handle.device?.let { WGPUStringView.ByReference(it) } ?: error("device is null")
-            set(value) { handle.device = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("device")
+                return WGPUStringView.ByValue(handle.device)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.device.size())
+                handle.readField("device")
+                handle.device.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("device")
+            }
         override var description: WGPUStringView
-            get() = handle.description?.let { WGPUStringView.ByReference(it) } ?: error("description is null")
-            set(value) { handle.description = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("description")
+                return WGPUStringView.ByValue(handle.description)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.description.size())
+                handle.readField("description")
+                handle.description.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("description")
+            }
         override var backendType: WGPUBackendType
             get() = handle.backendType.toUInt() as WGPUBackendType
             set(value) { handle.backendType = value.toInt() }
@@ -1302,8 +1366,16 @@ actual interface WGPUBufferDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var usage: ULong
             get() = handle.usage.toULong() as ULong
             set(value) { handle.usage = value.toLong() }
@@ -1325,8 +1397,16 @@ actual interface WGPUBufferDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var usage: ULong
             get() = handle.usage.toULong() as ULong
             set(value) { handle.usage = value.toLong() }
@@ -1444,8 +1524,16 @@ actual interface WGPUCommandBufferDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -1458,8 +1546,16 @@ actual interface WGPUCommandBufferDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -1499,8 +1595,16 @@ actual interface WGPUCommandEncoderDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -1513,8 +1617,16 @@ actual interface WGPUCommandEncoderDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -1554,8 +1666,16 @@ actual interface WGPUCompatibilityModeLimits {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUCompatibilityModeLimits.ByReference = io.ygdrasil.wgpu.android.WGPUCompatibilityModeLimits.ByReference(com.sun.jna.Pointer.NULL)) : WGPUCompatibilityModeLimits {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var maxStorageBuffersInVertexStage: UInt
             get() = handle.maxStorageBuffersInVertexStage.toUInt() as UInt
             set(value) { handle.maxStorageBuffersInVertexStage = value.toInt() }
@@ -1577,8 +1697,16 @@ actual interface WGPUCompatibilityModeLimits {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUCompatibilityModeLimits.ByValue = io.ygdrasil.wgpu.android.WGPUCompatibilityModeLimits.ByValue(com.sun.jna.Pointer.NULL)) : WGPUCompatibilityModeLimits {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var maxStorageBuffersInVertexStage: UInt
             get() = handle.maxStorageBuffersInVertexStage.toUInt() as UInt
             set(value) { handle.maxStorageBuffersInVertexStage = value.toInt() }
@@ -1635,8 +1763,16 @@ actual interface WGPUCompilationMessage {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var message: WGPUStringView
-            get() = handle.message?.let { WGPUStringView.ByReference(it) } ?: error("message is null")
-            set(value) { handle.message = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("message")
+                return WGPUStringView.ByValue(handle.message)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.message.size())
+                handle.readField("message")
+                handle.message.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("message")
+            }
         override var type: WGPUCompilationMessageType
             get() = handle.type.toUInt() as WGPUCompilationMessageType
             set(value) { handle.type = value.toInt() }
@@ -1664,8 +1800,16 @@ actual interface WGPUCompilationMessage {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var message: WGPUStringView
-            get() = handle.message?.let { WGPUStringView.ByReference(it) } ?: error("message is null")
-            set(value) { handle.message = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("message")
+                return WGPUStringView.ByValue(handle.message)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.message.size())
+                handle.readField("message")
+                handle.message.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("message")
+            }
         override var type: WGPUCompilationMessageType
             get() = handle.type.toUInt() as WGPUCompilationMessageType
             set(value) { handle.type = value.toInt() }
@@ -1721,8 +1865,16 @@ actual interface WGPUConstantEntry {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var key: WGPUStringView
-            get() = handle.key?.let { WGPUStringView.ByReference(it) } ?: error("key is null")
-            set(value) { handle.key = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("key")
+                return WGPUStringView.ByValue(handle.key)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.key.size())
+                handle.readField("key")
+                handle.key.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("key")
+            }
         override var value: Double
             get() = handle.value as Double
             set(value) { handle.value = value }
@@ -1738,8 +1890,16 @@ actual interface WGPUConstantEntry {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var key: WGPUStringView
-            get() = handle.key?.let { WGPUStringView.ByReference(it) } ?: error("key is null")
-            set(value) { handle.key = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("key")
+                return WGPUStringView.ByValue(handle.key)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.key.size())
+                handle.readField("key")
+                handle.key.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("key")
+            }
         override var value: Double
             get() = handle.value as Double
             set(value) { handle.value = value }
@@ -1841,8 +2001,16 @@ actual interface WGPUExternalTextureBindingEntry {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUExternalTextureBindingEntry.ByReference = io.ygdrasil.wgpu.android.WGPUExternalTextureBindingEntry.ByReference(com.sun.jna.Pointer.NULL)) : WGPUExternalTextureBindingEntry {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var externalTexture: WGPUExternalTexture?
             get() = handle.externalTexture?.let { WGPUExternalTexture(it) }
             set(value) { handle.externalTexture = value?.handler }
@@ -1855,8 +2023,16 @@ actual interface WGPUExternalTextureBindingEntry {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUExternalTextureBindingEntry.ByValue = io.ygdrasil.wgpu.android.WGPUExternalTextureBindingEntry.ByValue(com.sun.jna.Pointer.NULL)) : WGPUExternalTextureBindingEntry {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var externalTexture: WGPUExternalTexture?
             get() = handle.externalTexture?.let { WGPUExternalTexture(it) }
             set(value) { handle.externalTexture = value?.handler }
@@ -1895,8 +2071,16 @@ actual interface WGPUExternalTextureBindingLayout {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUExternalTextureBindingLayout.ByReference = io.ygdrasil.wgpu.android.WGPUExternalTextureBindingLayout.ByReference(com.sun.jna.Pointer.NULL)) : WGPUExternalTextureBindingLayout {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -1906,8 +2090,16 @@ actual interface WGPUExternalTextureBindingLayout {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUExternalTextureBindingLayout.ByValue = io.ygdrasil.wgpu.android.WGPUExternalTextureBindingLayout.ByValue(com.sun.jna.Pointer.NULL)) : WGPUExternalTextureBindingLayout {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -2253,8 +2445,16 @@ actual interface WGPUPipelineLayoutDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var bindGroupLayoutCount: ULong
             get() = handle.bindGroupLayoutCount.toULong() as ULong
             set(value) { handle.bindGroupLayoutCount = value.toLong() }
@@ -2276,8 +2476,16 @@ actual interface WGPUPipelineLayoutDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var bindGroupLayoutCount: ULong
             get() = handle.bindGroupLayoutCount.toULong() as ULong
             set(value) { handle.bindGroupLayoutCount = value.toLong() }
@@ -2411,8 +2619,16 @@ actual interface WGPUQuerySetDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var type: WGPUQueryType
             get() = handle.type.toUInt() as WGPUQueryType
             set(value) { handle.type = value.toInt() }
@@ -2431,8 +2647,16 @@ actual interface WGPUQuerySetDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var type: WGPUQueryType
             get() = handle.type.toUInt() as WGPUQueryType
             set(value) { handle.type = value.toInt() }
@@ -2478,8 +2702,16 @@ actual interface WGPUQueueDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -2492,8 +2724,16 @@ actual interface WGPUQueueDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -2533,8 +2773,16 @@ actual interface WGPURenderBundleDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -2547,8 +2795,16 @@ actual interface WGPURenderBundleDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -2594,8 +2850,16 @@ actual interface WGPURenderBundleEncoderDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var colorFormatCount: ULong
             get() = handle.colorFormatCount.toULong() as ULong
             set(value) { handle.colorFormatCount = value.toLong() }
@@ -2626,8 +2890,16 @@ actual interface WGPURenderBundleEncoderDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var colorFormatCount: ULong
             get() = handle.colorFormatCount.toULong() as ULong
             set(value) { handle.colorFormatCount = value.toLong() }
@@ -2793,8 +3065,16 @@ actual interface WGPURenderPassMaxDrawCount {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPURenderPassMaxDrawCount.ByReference = io.ygdrasil.wgpu.android.WGPURenderPassMaxDrawCount.ByReference(com.sun.jna.Pointer.NULL)) : WGPURenderPassMaxDrawCount {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var maxDrawCount: ULong
             get() = handle.maxDrawCount.toULong() as ULong
             set(value) { handle.maxDrawCount = value.toLong() }
@@ -2807,8 +3087,16 @@ actual interface WGPURenderPassMaxDrawCount {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPURenderPassMaxDrawCount.ByValue = io.ygdrasil.wgpu.android.WGPURenderPassMaxDrawCount.ByValue(com.sun.jna.Pointer.NULL)) : WGPURenderPassMaxDrawCount {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var maxDrawCount: ULong
             get() = handle.maxDrawCount.toULong() as ULong
             set(value) { handle.maxDrawCount = value.toLong() }
@@ -2848,8 +3136,16 @@ actual interface WGPURequestAdapterWebXROptions {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPURequestAdapterWebXROptions.ByReference = io.ygdrasil.wgpu.android.WGPURequestAdapterWebXROptions.ByReference(com.sun.jna.Pointer.NULL)) : WGPURequestAdapterWebXROptions {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var xrCompatible: UInt
             get() = handle.xrCompatible.toUInt() as UInt
             set(value) { handle.xrCompatible = value.toInt() }
@@ -2862,8 +3158,16 @@ actual interface WGPURequestAdapterWebXROptions {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPURequestAdapterWebXROptions.ByValue = io.ygdrasil.wgpu.android.WGPURequestAdapterWebXROptions.ByValue(com.sun.jna.Pointer.NULL)) : WGPURequestAdapterWebXROptions {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var xrCompatible: UInt
             get() = handle.xrCompatible.toUInt() as UInt
             set(value) { handle.xrCompatible = value.toInt() }
@@ -2971,8 +3275,16 @@ actual interface WGPUSamplerDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var addressModeU: WGPUAddressMode
             get() = handle.addressModeU.toUInt() as WGPUAddressMode
             set(value) { handle.addressModeU = value.toInt() }
@@ -3015,8 +3327,16 @@ actual interface WGPUSamplerDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var addressModeU: WGPUAddressMode
             get() = handle.addressModeU.toUInt() as WGPUAddressMode
             set(value) { handle.addressModeU = value.toInt() }
@@ -3084,8 +3404,16 @@ actual interface WGPUShaderSourceSPIRV {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUShaderSourceSPIRV.ByReference = io.ygdrasil.wgpu.android.WGPUShaderSourceSPIRV.ByReference(com.sun.jna.Pointer.NULL)) : WGPUShaderSourceSPIRV {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var codeSize: UInt
             get() = handle.codeSize.toUInt() as UInt
             set(value) { handle.codeSize = value.toInt() }
@@ -3101,8 +3429,16 @@ actual interface WGPUShaderSourceSPIRV {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUShaderSourceSPIRV.ByValue = io.ygdrasil.wgpu.android.WGPUShaderSourceSPIRV.ByValue(com.sun.jna.Pointer.NULL)) : WGPUShaderSourceSPIRV {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var codeSize: UInt
             get() = handle.codeSize.toUInt() as UInt
             set(value) { handle.codeSize = value.toInt() }
@@ -3145,11 +3481,27 @@ actual interface WGPUShaderSourceWGSL {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUShaderSourceWGSL.ByReference = io.ygdrasil.wgpu.android.WGPUShaderSourceWGSL.ByReference(com.sun.jna.Pointer.NULL)) : WGPUShaderSourceWGSL {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var code: WGPUStringView
-            get() = handle.code?.let { WGPUStringView.ByReference(it) } ?: error("code is null")
-            set(value) { handle.code = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("code")
+                return WGPUStringView.ByValue(handle.code)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.code.size())
+                handle.readField("code")
+                handle.code.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("code")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -3159,11 +3511,27 @@ actual interface WGPUShaderSourceWGSL {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUShaderSourceWGSL.ByValue = io.ygdrasil.wgpu.android.WGPUShaderSourceWGSL.ByValue(com.sun.jna.Pointer.NULL)) : WGPUShaderSourceWGSL {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var code: WGPUStringView
-            get() = handle.code?.let { WGPUStringView.ByReference(it) } ?: error("code is null")
-            set(value) { handle.code = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("code")
+                return WGPUStringView.ByValue(handle.code)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.code.size())
+                handle.readField("code")
+                handle.code.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("code")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -3601,8 +3969,16 @@ actual interface WGPUSurfaceColorManagement {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceColorManagement.ByReference = io.ygdrasil.wgpu.android.WGPUSurfaceColorManagement.ByReference(com.sun.jna.Pointer.NULL)) : WGPUSurfaceColorManagement {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var colorSpace: WGPUPredefinedColorSpace
             get() = handle.colorSpace.toUInt() as WGPUPredefinedColorSpace
             set(value) { handle.colorSpace = value.toInt() }
@@ -3618,8 +3994,16 @@ actual interface WGPUSurfaceColorManagement {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceColorManagement.ByValue = io.ygdrasil.wgpu.android.WGPUSurfaceColorManagement.ByValue(com.sun.jna.Pointer.NULL)) : WGPUSurfaceColorManagement {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var colorSpace: WGPUPredefinedColorSpace
             get() = handle.colorSpace.toUInt() as WGPUPredefinedColorSpace
             set(value) { handle.colorSpace = value.toInt() }
@@ -3773,8 +4157,16 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByReference = io.ygdrasil.wgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByReference(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceAndroidNativeWindow {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var window: NativeAddress?
             get() = handle.window
             set(value) { handle.window = value }
@@ -3787,8 +4179,16 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByValue = io.ygdrasil.wgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByValue(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceAndroidNativeWindow {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var window: NativeAddress?
             get() = handle.window
             set(value) { handle.window = value }
@@ -3828,8 +4228,16 @@ actual interface WGPUSurfaceSourceMetalLayer {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceMetalLayer.ByReference = io.ygdrasil.wgpu.android.WGPUSurfaceSourceMetalLayer.ByReference(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceMetalLayer {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var layer: NativeAddress?
             get() = handle.layer
             set(value) { handle.layer = value }
@@ -3842,8 +4250,16 @@ actual interface WGPUSurfaceSourceMetalLayer {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceMetalLayer.ByValue = io.ygdrasil.wgpu.android.WGPUSurfaceSourceMetalLayer.ByValue(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceMetalLayer {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var layer: NativeAddress?
             get() = handle.layer
             set(value) { handle.layer = value }
@@ -3884,8 +4300,16 @@ actual interface WGPUSurfaceSourceWaylandSurface {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceWaylandSurface.ByReference = io.ygdrasil.wgpu.android.WGPUSurfaceSourceWaylandSurface.ByReference(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceWaylandSurface {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var display: NativeAddress?
             get() = handle.display
             set(value) { handle.display = value }
@@ -3901,8 +4325,16 @@ actual interface WGPUSurfaceSourceWaylandSurface {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceWaylandSurface.ByValue = io.ygdrasil.wgpu.android.WGPUSurfaceSourceWaylandSurface.ByValue(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceWaylandSurface {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var display: NativeAddress?
             get() = handle.display
             set(value) { handle.display = value }
@@ -3946,8 +4378,16 @@ actual interface WGPUSurfaceSourceWindowsHWND {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceWindowsHWND.ByReference = io.ygdrasil.wgpu.android.WGPUSurfaceSourceWindowsHWND.ByReference(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceWindowsHWND {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var hinstance: NativeAddress?
             get() = handle.hinstance
             set(value) { handle.hinstance = value }
@@ -3963,8 +4403,16 @@ actual interface WGPUSurfaceSourceWindowsHWND {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceWindowsHWND.ByValue = io.ygdrasil.wgpu.android.WGPUSurfaceSourceWindowsHWND.ByValue(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceWindowsHWND {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var hinstance: NativeAddress?
             get() = handle.hinstance
             set(value) { handle.hinstance = value }
@@ -4008,8 +4456,16 @@ actual interface WGPUSurfaceSourceXCBWindow {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceXCBWindow.ByReference = io.ygdrasil.wgpu.android.WGPUSurfaceSourceXCBWindow.ByReference(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceXCBWindow {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var connection: NativeAddress?
             get() = handle.connection
             set(value) { handle.connection = value }
@@ -4025,8 +4481,16 @@ actual interface WGPUSurfaceSourceXCBWindow {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceXCBWindow.ByValue = io.ygdrasil.wgpu.android.WGPUSurfaceSourceXCBWindow.ByValue(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceXCBWindow {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var connection: NativeAddress?
             get() = handle.connection
             set(value) { handle.connection = value }
@@ -4070,8 +4534,16 @@ actual interface WGPUSurfaceSourceXlibWindow {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceXlibWindow.ByReference = io.ygdrasil.wgpu.android.WGPUSurfaceSourceXlibWindow.ByReference(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceXlibWindow {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var display: NativeAddress?
             get() = handle.display
             set(value) { handle.display = value }
@@ -4087,8 +4559,16 @@ actual interface WGPUSurfaceSourceXlibWindow {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceXlibWindow.ByValue = io.ygdrasil.wgpu.android.WGPUSurfaceSourceXlibWindow.ByValue(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceXlibWindow {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var display: NativeAddress?
             get() = handle.display
             set(value) { handle.display = value }
@@ -4324,8 +4804,16 @@ actual interface WGPUTextureBindingViewDimension {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUTextureBindingViewDimension.ByReference = io.ygdrasil.wgpu.android.WGPUTextureBindingViewDimension.ByReference(com.sun.jna.Pointer.NULL)) : WGPUTextureBindingViewDimension {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var textureBindingViewDimension: WGPUTextureViewDimension
             get() = handle.textureBindingViewDimension.toUInt() as WGPUTextureViewDimension
             set(value) { handle.textureBindingViewDimension = value.toInt() }
@@ -4338,8 +4826,16 @@ actual interface WGPUTextureBindingViewDimension {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUTextureBindingViewDimension.ByValue = io.ygdrasil.wgpu.android.WGPUTextureBindingViewDimension.ByValue(com.sun.jna.Pointer.NULL)) : WGPUTextureBindingViewDimension {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var textureBindingViewDimension: WGPUTextureViewDimension
             get() = handle.textureBindingViewDimension.toUInt() as WGPUTextureViewDimension
             set(value) { handle.textureBindingViewDimension = value.toInt() }
@@ -4625,17 +5121,49 @@ actual interface WGPUBindGroupLayoutEntry {
             get() = handle.bindingArraySize.toUInt() as UInt
             set(value) { handle.bindingArraySize = value.toInt() }
         override var buffer: WGPUBufferBindingLayout
-            get() = handle.buffer?.let { WGPUBufferBindingLayout(it) } ?: error("buffer is null")
-            set(value) { handle.buffer = value.handler }
+            get() {
+                handle.readField("buffer")
+                return WGPUBufferBindingLayout.ByValue(handle.buffer)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.buffer.size())
+                handle.readField("buffer")
+                handle.buffer.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("buffer")
+            }
         override var sampler: WGPUSamplerBindingLayout
-            get() = handle.sampler?.let { WGPUSamplerBindingLayout(it) } ?: error("sampler is null")
-            set(value) { handle.sampler = value.handler }
+            get() {
+                handle.readField("sampler")
+                return WGPUSamplerBindingLayout.ByValue(handle.sampler)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.sampler.size())
+                handle.readField("sampler")
+                handle.sampler.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("sampler")
+            }
         override var texture: WGPUTextureBindingLayout
-            get() = handle.texture?.let { WGPUTextureBindingLayout(it) } ?: error("texture is null")
-            set(value) { handle.texture = value.handler }
+            get() {
+                handle.readField("texture")
+                return WGPUTextureBindingLayout.ByValue(handle.texture)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.texture.size())
+                handle.readField("texture")
+                handle.texture.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("texture")
+            }
         override var storageTexture: WGPUStorageTextureBindingLayout
-            get() = handle.storageTexture?.let { WGPUStorageTextureBindingLayout(it) } ?: error("storageTexture is null")
-            set(value) { handle.storageTexture = value.handler }
+            get() {
+                handle.readField("storageTexture")
+                return WGPUStorageTextureBindingLayout.ByValue(handle.storageTexture)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.storageTexture.size())
+                handle.readField("storageTexture")
+                handle.storageTexture.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("storageTexture")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -4657,17 +5185,49 @@ actual interface WGPUBindGroupLayoutEntry {
             get() = handle.bindingArraySize.toUInt() as UInt
             set(value) { handle.bindingArraySize = value.toInt() }
         override var buffer: WGPUBufferBindingLayout
-            get() = handle.buffer?.let { WGPUBufferBindingLayout(it) } ?: error("buffer is null")
-            set(value) { handle.buffer = value.handler }
+            get() {
+                handle.readField("buffer")
+                return WGPUBufferBindingLayout.ByValue(handle.buffer)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.buffer.size())
+                handle.readField("buffer")
+                handle.buffer.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("buffer")
+            }
         override var sampler: WGPUSamplerBindingLayout
-            get() = handle.sampler?.let { WGPUSamplerBindingLayout(it) } ?: error("sampler is null")
-            set(value) { handle.sampler = value.handler }
+            get() {
+                handle.readField("sampler")
+                return WGPUSamplerBindingLayout.ByValue(handle.sampler)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.sampler.size())
+                handle.readField("sampler")
+                handle.sampler.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("sampler")
+            }
         override var texture: WGPUTextureBindingLayout
-            get() = handle.texture?.let { WGPUTextureBindingLayout(it) } ?: error("texture is null")
-            set(value) { handle.texture = value.handler }
+            get() {
+                handle.readField("texture")
+                return WGPUTextureBindingLayout.ByValue(handle.texture)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.texture.size())
+                handle.readField("texture")
+                handle.texture.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("texture")
+            }
         override var storageTexture: WGPUStorageTextureBindingLayout
-            get() = handle.storageTexture?.let { WGPUStorageTextureBindingLayout(it) } ?: error("storageTexture is null")
-            set(value) { handle.storageTexture = value.handler }
+            get() {
+                handle.readField("storageTexture")
+                return WGPUStorageTextureBindingLayout.ByValue(handle.storageTexture)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.storageTexture.size())
+                handle.readField("storageTexture")
+                handle.storageTexture.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("storageTexture")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -4704,11 +5264,27 @@ actual interface WGPUBlendState {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUBlendState.ByReference = io.ygdrasil.wgpu.android.WGPUBlendState.ByReference(com.sun.jna.Pointer.NULL)) : WGPUBlendState {
         override var color: WGPUBlendComponent
-            get() = handle.color?.let { WGPUBlendComponent(it) } ?: error("color is null")
-            set(value) { handle.color = value.handler }
+            get() {
+                handle.readField("color")
+                return WGPUBlendComponent.ByValue(handle.color)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.color.size())
+                handle.readField("color")
+                handle.color.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("color")
+            }
         override var alpha: WGPUBlendComponent
-            get() = handle.alpha?.let { WGPUBlendComponent(it) } ?: error("alpha is null")
-            set(value) { handle.alpha = value.handler }
+            get() {
+                handle.readField("alpha")
+                return WGPUBlendComponent.ByValue(handle.alpha)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.alpha.size())
+                handle.readField("alpha")
+                handle.alpha.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("alpha")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -4718,11 +5294,27 @@ actual interface WGPUBlendState {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUBlendState.ByValue = io.ygdrasil.wgpu.android.WGPUBlendState.ByValue(com.sun.jna.Pointer.NULL)) : WGPUBlendState {
         override var color: WGPUBlendComponent
-            get() = handle.color?.let { WGPUBlendComponent(it) } ?: error("color is null")
-            set(value) { handle.color = value.handler }
+            get() {
+                handle.readField("color")
+                return WGPUBlendComponent.ByValue(handle.color)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.color.size())
+                handle.readField("color")
+                handle.color.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("color")
+            }
         override var alpha: WGPUBlendComponent
-            get() = handle.alpha?.let { WGPUBlendComponent(it) } ?: error("alpha is null")
-            set(value) { handle.alpha = value.handler }
+            get() {
+                handle.readField("alpha")
+                return WGPUBlendComponent.ByValue(handle.alpha)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.alpha.size())
+                handle.readField("alpha")
+                handle.alpha.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("alpha")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -4825,8 +5417,16 @@ actual interface WGPUComputePassDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var timestampWrites: WGPUPassTimestampWrites?
             get() = handle.timestampWrites?.let { WGPUPassTimestampWrites(it) }
             set(value) { handle.timestampWrites = value?.handler }
@@ -4842,8 +5442,16 @@ actual interface WGPUComputePassDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var timestampWrites: WGPUPassTimestampWrites?
             get() = handle.timestampWrites?.let { WGPUPassTimestampWrites(it) }
             set(value) { handle.timestampWrites = value?.handler }
@@ -4892,8 +5500,16 @@ actual interface WGPUComputeState {
             get() = handle.module?.let { WGPUShaderModule(it) }
             set(value) { handle.module = value?.handler }
         override var entryPoint: WGPUStringView
-            get() = handle.entryPoint?.let { WGPUStringView.ByReference(it) } ?: error("entryPoint is null")
-            set(value) { handle.entryPoint = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("entryPoint")
+                return WGPUStringView.ByValue(handle.entryPoint)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.entryPoint.size())
+                handle.readField("entryPoint")
+                handle.entryPoint.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("entryPoint")
+            }
         override var constantCount: ULong
             get() = handle.constantCount.toULong() as ULong
             set(value) { handle.constantCount = value.toLong() }
@@ -4915,8 +5531,16 @@ actual interface WGPUComputeState {
             get() = handle.module?.let { WGPUShaderModule(it) }
             set(value) { handle.module = value?.handler }
         override var entryPoint: WGPUStringView
-            get() = handle.entryPoint?.let { WGPUStringView.ByReference(it) } ?: error("entryPoint is null")
-            set(value) { handle.entryPoint = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("entryPoint")
+                return WGPUStringView.ByValue(handle.entryPoint)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.entryPoint.size())
+                handle.readField("entryPoint")
+                handle.entryPoint.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("entryPoint")
+            }
         override var constantCount: ULong
             get() = handle.constantCount.toULong() as ULong
             set(value) { handle.constantCount = value.toLong() }
@@ -4980,11 +5604,27 @@ actual interface WGPUDepthStencilState {
             get() = handle.depthCompare.toUInt() as WGPUCompareFunction
             set(value) { handle.depthCompare = value.toInt() }
         override var stencilFront: WGPUStencilFaceState
-            get() = handle.stencilFront?.let { WGPUStencilFaceState(it) } ?: error("stencilFront is null")
-            set(value) { handle.stencilFront = value.handler }
+            get() {
+                handle.readField("stencilFront")
+                return WGPUStencilFaceState.ByValue(handle.stencilFront)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.stencilFront.size())
+                handle.readField("stencilFront")
+                handle.stencilFront.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("stencilFront")
+            }
         override var stencilBack: WGPUStencilFaceState
-            get() = handle.stencilBack?.let { WGPUStencilFaceState(it) } ?: error("stencilBack is null")
-            set(value) { handle.stencilBack = value.handler }
+            get() {
+                handle.readField("stencilBack")
+                return WGPUStencilFaceState.ByValue(handle.stencilBack)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.stencilBack.size())
+                handle.readField("stencilBack")
+                handle.stencilBack.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("stencilBack")
+            }
         override var stencilReadMask: UInt
             get() = handle.stencilReadMask.toUInt() as UInt
             set(value) { handle.stencilReadMask = value.toInt() }
@@ -5021,11 +5661,27 @@ actual interface WGPUDepthStencilState {
             get() = handle.depthCompare.toUInt() as WGPUCompareFunction
             set(value) { handle.depthCompare = value.toInt() }
         override var stencilFront: WGPUStencilFaceState
-            get() = handle.stencilFront?.let { WGPUStencilFaceState(it) } ?: error("stencilFront is null")
-            set(value) { handle.stencilFront = value.handler }
+            get() {
+                handle.readField("stencilFront")
+                return WGPUStencilFaceState.ByValue(handle.stencilFront)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.stencilFront.size())
+                handle.readField("stencilFront")
+                handle.stencilFront.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("stencilFront")
+            }
         override var stencilBack: WGPUStencilFaceState
-            get() = handle.stencilBack?.let { WGPUStencilFaceState(it) } ?: error("stencilBack is null")
-            set(value) { handle.stencilBack = value.handler }
+            get() {
+                handle.readField("stencilBack")
+                return WGPUStencilFaceState.ByValue(handle.stencilBack)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.stencilBack.size())
+                handle.readField("stencilBack")
+                handle.stencilBack.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("stencilBack")
+            }
         override var stencilReadMask: UInt
             get() = handle.stencilReadMask.toUInt() as UInt
             set(value) { handle.stencilReadMask = value.toInt() }
@@ -5077,8 +5733,16 @@ actual interface WGPUFutureWaitInfo {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUFutureWaitInfo.ByReference = io.ygdrasil.wgpu.android.WGPUFutureWaitInfo.ByReference(com.sun.jna.Pointer.NULL)) : WGPUFutureWaitInfo {
         override var future: WGPUFuture
-            get() = handle.future?.let { WGPUFuture(it) } ?: error("future is null")
-            set(value) { handle.future = value.handler }
+            get() {
+                handle.readField("future")
+                return WGPUFuture.ByValue(handle.future)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.future.size())
+                handle.readField("future")
+                handle.future.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("future")
+            }
         override var completed: UInt
             get() = handle.completed.toUInt() as UInt
             set(value) { handle.completed = value.toInt() }
@@ -5091,8 +5755,16 @@ actual interface WGPUFutureWaitInfo {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUFutureWaitInfo.ByValue = io.ygdrasil.wgpu.android.WGPUFutureWaitInfo.ByValue(com.sun.jna.Pointer.NULL)) : WGPUFutureWaitInfo {
         override var future: WGPUFuture
-            get() = handle.future?.let { WGPUFuture(it) } ?: error("future is null")
-            set(value) { handle.future = value.handler }
+            get() {
+                handle.readField("future")
+                return WGPUFuture.ByValue(handle.future)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.future.size())
+                handle.readField("future")
+                handle.future.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("future")
+            }
         override var completed: UInt
             get() = handle.completed.toUInt() as UInt
             set(value) { handle.completed = value.toInt() }
@@ -5496,8 +6168,16 @@ actual interface WGPURenderPassColorAttachment {
             get() = handle.storeOp.toUInt() as WGPUStoreOp
             set(value) { handle.storeOp = value.toInt() }
         override var clearValue: WGPUColor
-            get() = handle.clearValue?.let { WGPUColor(it) } ?: error("clearValue is null")
-            set(value) { handle.clearValue = value.handler }
+            get() {
+                handle.readField("clearValue")
+                return WGPUColor.ByValue(handle.clearValue)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.clearValue.size())
+                handle.readField("clearValue")
+                handle.clearValue.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("clearValue")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -5525,8 +6205,16 @@ actual interface WGPURenderPassColorAttachment {
             get() = handle.storeOp.toUInt() as WGPUStoreOp
             set(value) { handle.storeOp = value.toInt() }
         override var clearValue: WGPUColor
-            get() = handle.clearValue?.let { WGPUColor(it) } ?: error("clearValue is null")
-            set(value) { handle.clearValue = value.handler }
+            get() {
+                handle.readField("clearValue")
+                return WGPUColor.ByValue(handle.clearValue)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.clearValue.size())
+                handle.readField("clearValue")
+                handle.clearValue.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("clearValue")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -5649,8 +6337,16 @@ actual interface WGPUShaderModuleDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -5663,8 +6359,16 @@ actual interface WGPUShaderModuleDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -5704,8 +6408,16 @@ actual interface WGPUSurfaceDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -5718,8 +6430,16 @@ actual interface WGPUSurfaceDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -5756,8 +6476,16 @@ actual interface WGPUTexelCopyBufferInfo {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUTexelCopyBufferInfo.ByReference = io.ygdrasil.wgpu.android.WGPUTexelCopyBufferInfo.ByReference(com.sun.jna.Pointer.NULL)) : WGPUTexelCopyBufferInfo {
         override var layout: WGPUTexelCopyBufferLayout
-            get() = handle.layout?.let { WGPUTexelCopyBufferLayout(it) } ?: error("layout is null")
-            set(value) { handle.layout = value.handler }
+            get() {
+                handle.readField("layout")
+                return WGPUTexelCopyBufferLayout.ByValue(handle.layout)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.layout.size())
+                handle.readField("layout")
+                handle.layout.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("layout")
+            }
         override var buffer: WGPUBuffer?
             get() = handle.buffer?.let { WGPUBuffer(it) }
             set(value) { handle.buffer = value?.handler }
@@ -5770,8 +6498,16 @@ actual interface WGPUTexelCopyBufferInfo {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUTexelCopyBufferInfo.ByValue = io.ygdrasil.wgpu.android.WGPUTexelCopyBufferInfo.ByValue(com.sun.jna.Pointer.NULL)) : WGPUTexelCopyBufferInfo {
         override var layout: WGPUTexelCopyBufferLayout
-            get() = handle.layout?.let { WGPUTexelCopyBufferLayout(it) } ?: error("layout is null")
-            set(value) { handle.layout = value.handler }
+            get() {
+                handle.readField("layout")
+                return WGPUTexelCopyBufferLayout.ByValue(handle.layout)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.layout.size())
+                handle.readField("layout")
+                handle.layout.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("layout")
+            }
         override var buffer: WGPUBuffer?
             get() = handle.buffer?.let { WGPUBuffer(it) }
             set(value) { handle.buffer = value?.handler }
@@ -5819,8 +6555,16 @@ actual interface WGPUTexelCopyTextureInfo {
             get() = handle.mipLevel.toUInt() as UInt
             set(value) { handle.mipLevel = value.toInt() }
         override var origin: WGPUOrigin3D
-            get() = handle.origin?.let { WGPUOrigin3D(it) } ?: error("origin is null")
-            set(value) { handle.origin = value.handler }
+            get() {
+                handle.readField("origin")
+                return WGPUOrigin3D.ByValue(handle.origin)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.origin.size())
+                handle.readField("origin")
+                handle.origin.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("origin")
+            }
         override var aspect: WGPUTextureAspect
             get() = handle.aspect.toUInt() as WGPUTextureAspect
             set(value) { handle.aspect = value.toInt() }
@@ -5839,8 +6583,16 @@ actual interface WGPUTexelCopyTextureInfo {
             get() = handle.mipLevel.toUInt() as UInt
             set(value) { handle.mipLevel = value.toInt() }
         override var origin: WGPUOrigin3D
-            get() = handle.origin?.let { WGPUOrigin3D(it) } ?: error("origin is null")
-            set(value) { handle.origin = value.handler }
+            get() {
+                handle.readField("origin")
+                return WGPUOrigin3D.ByValue(handle.origin)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.origin.size())
+                handle.readField("origin")
+                handle.origin.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("origin")
+            }
         override var aspect: WGPUTextureAspect
             get() = handle.aspect.toUInt() as WGPUTextureAspect
             set(value) { handle.aspect = value.toInt() }
@@ -5880,11 +6632,27 @@ actual interface WGPUTextureComponentSwizzleDescriptor {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzleDescriptor.ByReference = io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzleDescriptor.ByReference(com.sun.jna.Pointer.NULL)) : WGPUTextureComponentSwizzleDescriptor {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var swizzle: WGPUTextureComponentSwizzle
-            get() = handle.swizzle?.let { WGPUTextureComponentSwizzle(it) } ?: error("swizzle is null")
-            set(value) { handle.swizzle = value.handler }
+            get() {
+                handle.readField("swizzle")
+                return WGPUTextureComponentSwizzle.ByValue(handle.swizzle)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.swizzle.size())
+                handle.readField("swizzle")
+                handle.swizzle.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("swizzle")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -5894,11 +6662,27 @@ actual interface WGPUTextureComponentSwizzleDescriptor {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzleDescriptor.ByValue = io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzleDescriptor.ByValue(com.sun.jna.Pointer.NULL)) : WGPUTextureComponentSwizzleDescriptor {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var swizzle: WGPUTextureComponentSwizzle
-            get() = handle.swizzle?.let { WGPUTextureComponentSwizzle(it) } ?: error("swizzle is null")
-            set(value) { handle.swizzle = value.handler }
+            get() {
+                handle.readField("swizzle")
+                return WGPUTextureComponentSwizzle.ByValue(handle.swizzle)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.swizzle.size())
+                handle.readField("swizzle")
+                handle.swizzle.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("swizzle")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -5946,8 +6730,16 @@ actual interface WGPUTextureDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var usage: ULong
             get() = handle.usage.toULong() as ULong
             set(value) { handle.usage = value.toLong() }
@@ -5955,8 +6747,16 @@ actual interface WGPUTextureDescriptor {
             get() = handle.dimension.toUInt() as WGPUTextureDimension
             set(value) { handle.dimension = value.toInt() }
         override var size: WGPUExtent3D
-            get() = handle.size?.let { WGPUExtent3D(it) } ?: error("size is null")
-            set(value) { handle.size = value.handler }
+            get() {
+                handle.readField("size")
+                return WGPUExtent3D.ByValue(handle.size)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.size.size())
+                handle.readField("size")
+                handle.size.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("size")
+            }
         override var format: WGPUTextureFormat
             get() = handle.format.toUInt() as WGPUTextureFormat
             set(value) { handle.format = value.toInt() }
@@ -5984,8 +6784,16 @@ actual interface WGPUTextureDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var usage: ULong
             get() = handle.usage.toULong() as ULong
             set(value) { handle.usage = value.toLong() }
@@ -5993,8 +6801,16 @@ actual interface WGPUTextureDescriptor {
             get() = handle.dimension.toUInt() as WGPUTextureDimension
             set(value) { handle.dimension = value.toInt() }
         override var size: WGPUExtent3D
-            get() = handle.size?.let { WGPUExtent3D(it) } ?: error("size is null")
-            set(value) { handle.size = value.handler }
+            get() {
+                handle.readField("size")
+                return WGPUExtent3D.ByValue(handle.size)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.size.size())
+                handle.readField("size")
+                handle.size.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("size")
+            }
         override var format: WGPUTextureFormat
             get() = handle.format.toUInt() as WGPUTextureFormat
             set(value) { handle.format = value.toInt() }
@@ -6128,8 +6944,16 @@ actual interface WGPUBindGroupDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var layout: WGPUBindGroupLayout?
             get() = handle.layout?.let { WGPUBindGroupLayout(it) }
             set(value) { handle.layout = value?.handler }
@@ -6151,8 +6975,16 @@ actual interface WGPUBindGroupDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var layout: WGPUBindGroupLayout?
             get() = handle.layout?.let { WGPUBindGroupLayout(it) }
             set(value) { handle.layout = value?.handler }
@@ -6203,8 +7035,16 @@ actual interface WGPUBindGroupLayoutDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var entryCount: ULong
             get() = handle.entryCount.toULong() as ULong
             set(value) { handle.entryCount = value.toLong() }
@@ -6223,8 +7063,16 @@ actual interface WGPUBindGroupLayoutDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var entryCount: ULong
             get() = handle.entryCount.toULong() as ULong
             set(value) { handle.entryCount = value.toLong() }
@@ -6341,14 +7189,30 @@ actual interface WGPUComputePipelineDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var layout: WGPUPipelineLayout?
             get() = handle.layout?.let { WGPUPipelineLayout(it) }
             set(value) { handle.layout = value?.handler }
         override var compute: WGPUComputeState
-            get() = handle.compute?.let { WGPUComputeState(it) } ?: error("compute is null")
-            set(value) { handle.compute = value.handler }
+            get() {
+                handle.readField("compute")
+                return WGPUComputeState.ByValue(handle.compute)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.compute.size())
+                handle.readField("compute")
+                handle.compute.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("compute")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -6361,14 +7225,30 @@ actual interface WGPUComputePipelineDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var layout: WGPUPipelineLayout?
             get() = handle.layout?.let { WGPUPipelineLayout(it) }
             set(value) { handle.layout = value?.handler }
         override var compute: WGPUComputeState
-            get() = handle.compute?.let { WGPUComputeState(it) } ?: error("compute is null")
-            set(value) { handle.compute = value.handler }
+            get() {
+                handle.readField("compute")
+                return WGPUComputeState.ByValue(handle.compute)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.compute.size())
+                handle.readField("compute")
+                handle.compute.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("compute")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -6414,8 +7294,16 @@ actual interface WGPUDeviceDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var requiredFeatureCount: ULong
             get() = handle.requiredFeatureCount.toULong() as ULong
             set(value) { handle.requiredFeatureCount = value.toLong() }
@@ -6426,14 +7314,38 @@ actual interface WGPUDeviceDescriptor {
             get() = handle.requiredLimits?.let { WGPULimits(it) }
             set(value) { handle.requiredLimits = value?.handler }
         override var defaultQueue: WGPUQueueDescriptor
-            get() = handle.defaultQueue?.let { WGPUQueueDescriptor(it) } ?: error("defaultQueue is null")
-            set(value) { handle.defaultQueue = value.handler }
+            get() {
+                handle.readField("defaultQueue")
+                return WGPUQueueDescriptor.ByValue(handle.defaultQueue)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.defaultQueue.size())
+                handle.readField("defaultQueue")
+                handle.defaultQueue.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("defaultQueue")
+            }
         override var deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
-            get() = handle.deviceLostCallbackInfo?.let { WGPUDeviceLostCallbackInfo(it) } ?: error("deviceLostCallbackInfo is null")
-            set(value) { handle.deviceLostCallbackInfo = value.handler }
+            get() {
+                handle.readField("deviceLostCallbackInfo")
+                return WGPUDeviceLostCallbackInfo.ByValue(handle.deviceLostCallbackInfo)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.deviceLostCallbackInfo.size())
+                handle.readField("deviceLostCallbackInfo")
+                handle.deviceLostCallbackInfo.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("deviceLostCallbackInfo")
+            }
         override var uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
-            get() = handle.uncapturedErrorCallbackInfo?.let { WGPUUncapturedErrorCallbackInfo(it) } ?: error("uncapturedErrorCallbackInfo is null")
-            set(value) { handle.uncapturedErrorCallbackInfo = value.handler }
+            get() {
+                handle.readField("uncapturedErrorCallbackInfo")
+                return WGPUUncapturedErrorCallbackInfo.ByValue(handle.uncapturedErrorCallbackInfo)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.uncapturedErrorCallbackInfo.size())
+                handle.readField("uncapturedErrorCallbackInfo")
+                handle.uncapturedErrorCallbackInfo.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("uncapturedErrorCallbackInfo")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -6446,8 +7358,16 @@ actual interface WGPUDeviceDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var requiredFeatureCount: ULong
             get() = handle.requiredFeatureCount.toULong() as ULong
             set(value) { handle.requiredFeatureCount = value.toLong() }
@@ -6458,14 +7378,38 @@ actual interface WGPUDeviceDescriptor {
             get() = handle.requiredLimits?.let { WGPULimits(it) }
             set(value) { handle.requiredLimits = value?.handler }
         override var defaultQueue: WGPUQueueDescriptor
-            get() = handle.defaultQueue?.let { WGPUQueueDescriptor(it) } ?: error("defaultQueue is null")
-            set(value) { handle.defaultQueue = value.handler }
+            get() {
+                handle.readField("defaultQueue")
+                return WGPUQueueDescriptor.ByValue(handle.defaultQueue)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.defaultQueue.size())
+                handle.readField("defaultQueue")
+                handle.defaultQueue.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("defaultQueue")
+            }
         override var deviceLostCallbackInfo: WGPUDeviceLostCallbackInfo
-            get() = handle.deviceLostCallbackInfo?.let { WGPUDeviceLostCallbackInfo(it) } ?: error("deviceLostCallbackInfo is null")
-            set(value) { handle.deviceLostCallbackInfo = value.handler }
+            get() {
+                handle.readField("deviceLostCallbackInfo")
+                return WGPUDeviceLostCallbackInfo.ByValue(handle.deviceLostCallbackInfo)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.deviceLostCallbackInfo.size())
+                handle.readField("deviceLostCallbackInfo")
+                handle.deviceLostCallbackInfo.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("deviceLostCallbackInfo")
+            }
         override var uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
-            get() = handle.uncapturedErrorCallbackInfo?.let { WGPUUncapturedErrorCallbackInfo(it) } ?: error("uncapturedErrorCallbackInfo is null")
-            set(value) { handle.uncapturedErrorCallbackInfo = value.handler }
+            get() {
+                handle.readField("uncapturedErrorCallbackInfo")
+                return WGPUUncapturedErrorCallbackInfo.ByValue(handle.uncapturedErrorCallbackInfo)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.uncapturedErrorCallbackInfo.size())
+                handle.readField("uncapturedErrorCallbackInfo")
+                handle.uncapturedErrorCallbackInfo.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("uncapturedErrorCallbackInfo")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -6510,8 +7454,16 @@ actual interface WGPURenderPassDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var colorAttachmentCount: ULong
             get() = handle.colorAttachmentCount.toULong() as ULong
             set(value) { handle.colorAttachmentCount = value.toLong() }
@@ -6539,8 +7491,16 @@ actual interface WGPURenderPassDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var colorAttachmentCount: ULong
             get() = handle.colorAttachmentCount.toULong() as ULong
             set(value) { handle.colorAttachmentCount = value.toLong() }
@@ -6603,8 +7563,16 @@ actual interface WGPUTextureViewDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var format: WGPUTextureFormat
             get() = handle.format.toUInt() as WGPUTextureFormat
             set(value) { handle.format = value.toInt() }
@@ -6641,8 +7609,16 @@ actual interface WGPUTextureViewDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var format: WGPUTextureFormat
             get() = handle.format.toUInt() as WGPUTextureFormat
             set(value) { handle.format = value.toInt() }
@@ -6714,8 +7690,16 @@ actual interface WGPUVertexState {
             get() = handle.module?.let { WGPUShaderModule(it) }
             set(value) { handle.module = value?.handler }
         override var entryPoint: WGPUStringView
-            get() = handle.entryPoint?.let { WGPUStringView.ByReference(it) } ?: error("entryPoint is null")
-            set(value) { handle.entryPoint = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("entryPoint")
+                return WGPUStringView.ByValue(handle.entryPoint)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.entryPoint.size())
+                handle.readField("entryPoint")
+                handle.entryPoint.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("entryPoint")
+            }
         override var constantCount: ULong
             get() = handle.constantCount.toULong() as ULong
             set(value) { handle.constantCount = value.toLong() }
@@ -6743,8 +7727,16 @@ actual interface WGPUVertexState {
             get() = handle.module?.let { WGPUShaderModule(it) }
             set(value) { handle.module = value?.handler }
         override var entryPoint: WGPUStringView
-            get() = handle.entryPoint?.let { WGPUStringView.ByReference(it) } ?: error("entryPoint is null")
-            set(value) { handle.entryPoint = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("entryPoint")
+                return WGPUStringView.ByValue(handle.entryPoint)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.entryPoint.size())
+                handle.readField("entryPoint")
+                handle.entryPoint.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("entryPoint")
+            }
         override var constantCount: ULong
             get() = handle.constantCount.toULong() as ULong
             set(value) { handle.constantCount = value.toLong() }
@@ -6804,8 +7796,16 @@ actual interface WGPUFragmentState {
             get() = handle.module?.let { WGPUShaderModule(it) }
             set(value) { handle.module = value?.handler }
         override var entryPoint: WGPUStringView
-            get() = handle.entryPoint?.let { WGPUStringView.ByReference(it) } ?: error("entryPoint is null")
-            set(value) { handle.entryPoint = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("entryPoint")
+                return WGPUStringView.ByValue(handle.entryPoint)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.entryPoint.size())
+                handle.readField("entryPoint")
+                handle.entryPoint.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("entryPoint")
+            }
         override var constantCount: ULong
             get() = handle.constantCount.toULong() as ULong
             set(value) { handle.constantCount = value.toLong() }
@@ -6833,8 +7833,16 @@ actual interface WGPUFragmentState {
             get() = handle.module?.let { WGPUShaderModule(it) }
             set(value) { handle.module = value?.handler }
         override var entryPoint: WGPUStringView
-            get() = handle.entryPoint?.let { WGPUStringView.ByReference(it) } ?: error("entryPoint is null")
-            set(value) { handle.entryPoint = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("entryPoint")
+                return WGPUStringView.ByValue(handle.entryPoint)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.entryPoint.size())
+                handle.readField("entryPoint")
+                handle.entryPoint.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("entryPoint")
+            }
         override var constantCount: ULong
             get() = handle.constantCount.toULong() as ULong
             set(value) { handle.constantCount = value.toLong() }
@@ -6892,23 +7900,55 @@ actual interface WGPURenderPipelineDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var layout: WGPUPipelineLayout?
             get() = handle.layout?.let { WGPUPipelineLayout(it) }
             set(value) { handle.layout = value?.handler }
         override var vertex: WGPUVertexState
-            get() = handle.vertex?.let { WGPUVertexState(it) } ?: error("vertex is null")
-            set(value) { handle.vertex = value.handler }
+            get() {
+                handle.readField("vertex")
+                return WGPUVertexState.ByValue(handle.vertex)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.vertex.size())
+                handle.readField("vertex")
+                handle.vertex.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("vertex")
+            }
         override var primitive: WGPUPrimitiveState
-            get() = handle.primitive?.let { WGPUPrimitiveState(it) } ?: error("primitive is null")
-            set(value) { handle.primitive = value.handler }
+            get() {
+                handle.readField("primitive")
+                return WGPUPrimitiveState.ByValue(handle.primitive)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.primitive.size())
+                handle.readField("primitive")
+                handle.primitive.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("primitive")
+            }
         override var depthStencil: WGPUDepthStencilState?
             get() = handle.depthStencil?.let { WGPUDepthStencilState(it) }
             set(value) { handle.depthStencil = value?.handler }
         override var multisample: WGPUMultisampleState
-            get() = handle.multisample?.let { WGPUMultisampleState(it) } ?: error("multisample is null")
-            set(value) { handle.multisample = value.handler }
+            get() {
+                handle.readField("multisample")
+                return WGPUMultisampleState.ByValue(handle.multisample)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.multisample.size())
+                handle.readField("multisample")
+                handle.multisample.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("multisample")
+            }
         override var fragment: WGPUFragmentState?
             get() = handle.fragment?.let { WGPUFragmentState(it) }
             set(value) { handle.fragment = value?.handler }
@@ -6924,23 +7964,55 @@ actual interface WGPURenderPipelineDescriptor {
             get() = handle.nextInChain?.let { WGPUChainedStruct(it) }
             set(value) { handle.nextInChain = value?.handler }
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var layout: WGPUPipelineLayout?
             get() = handle.layout?.let { WGPUPipelineLayout(it) }
             set(value) { handle.layout = value?.handler }
         override var vertex: WGPUVertexState
-            get() = handle.vertex?.let { WGPUVertexState(it) } ?: error("vertex is null")
-            set(value) { handle.vertex = value.handler }
+            get() {
+                handle.readField("vertex")
+                return WGPUVertexState.ByValue(handle.vertex)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.vertex.size())
+                handle.readField("vertex")
+                handle.vertex.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("vertex")
+            }
         override var primitive: WGPUPrimitiveState
-            get() = handle.primitive?.let { WGPUPrimitiveState(it) } ?: error("primitive is null")
-            set(value) { handle.primitive = value.handler }
+            get() {
+                handle.readField("primitive")
+                return WGPUPrimitiveState.ByValue(handle.primitive)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.primitive.size())
+                handle.readField("primitive")
+                handle.primitive.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("primitive")
+            }
         override var depthStencil: WGPUDepthStencilState?
             get() = handle.depthStencil?.let { WGPUDepthStencilState(it) }
             set(value) { handle.depthStencil = value?.handler }
         override var multisample: WGPUMultisampleState
-            get() = handle.multisample?.let { WGPUMultisampleState(it) } ?: error("multisample is null")
-            set(value) { handle.multisample = value.handler }
+            get() {
+                handle.readField("multisample")
+                return WGPUMultisampleState.ByValue(handle.multisample)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.multisample.size())
+                handle.readField("multisample")
+                handle.multisample.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("multisample")
+            }
         override var fragment: WGPUFragmentState?
             get() = handle.fragment?.let { WGPUFragmentState(it) }
             set(value) { handle.fragment = value?.handler }
@@ -7739,46 +8811,49 @@ actual interface WGPUNativeDisplayHandle {
             get() {
                 handle.read()
                 if (type != WGPUNativeDisplayHandleType_Xlib) return null
-                handle.data.setType(io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue::class.java)
-                handle.data.read()
-                return WGPUXlibDisplayHandle.ByReference(io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByReference(handle.data.xlib.pointer))
+                handle.data.readField("xlib")
+                return WGPUXlibDisplayHandle.ByValue(handle.data.xlib)
             }
         override fun setXlib(value: WGPUXlibDisplayHandle) {
             handle.type = WGPUNativeDisplayHandleType_Xlib.toInt()
-            handle.data.setType(io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue::class.java)
-            handle.data.xlib = io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue(value.handler)
-            handle.data.write()
-            handle.write()
+            val copy = io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue(value.handler)
+            copy.read()
+            handle.data.xlib = copy
+            handle.data.writeField("xlib")
+            handle.writeField("type")
+            handle.writeField("data")
         }
         override val xcb: WGPUXcbDisplayHandle?
             get() {
                 handle.read()
                 if (type != WGPUNativeDisplayHandleType_Xcb) return null
-                handle.data.setType(io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue::class.java)
-                handle.data.read()
-                return WGPUXcbDisplayHandle.ByReference(io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByReference(handle.data.xcb.pointer))
+                handle.data.readField("xcb")
+                return WGPUXcbDisplayHandle.ByValue(handle.data.xcb)
             }
         override fun setXcb(value: WGPUXcbDisplayHandle) {
             handle.type = WGPUNativeDisplayHandleType_Xcb.toInt()
-            handle.data.setType(io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue::class.java)
-            handle.data.xcb = io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue(value.handler)
-            handle.data.write()
-            handle.write()
+            val copy = io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue(value.handler)
+            copy.read()
+            handle.data.xcb = copy
+            handle.data.writeField("xcb")
+            handle.writeField("type")
+            handle.writeField("data")
         }
         override val wayland: WGPUWaylandDisplayHandle?
             get() {
                 handle.read()
                 if (type != WGPUNativeDisplayHandleType_Wayland) return null
-                handle.data.setType(io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue::class.java)
-                handle.data.read()
-                return WGPUWaylandDisplayHandle.ByReference(io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByReference(handle.data.wayland.pointer))
+                handle.data.readField("wayland")
+                return WGPUWaylandDisplayHandle.ByValue(handle.data.wayland)
             }
         override fun setWayland(value: WGPUWaylandDisplayHandle) {
             handle.type = WGPUNativeDisplayHandleType_Wayland.toInt()
-            handle.data.setType(io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue::class.java)
-            handle.data.wayland = io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue(value.handler)
-            handle.data.write()
-            handle.write()
+            val copy = io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue(value.handler)
+            copy.read()
+            handle.data.wayland = copy
+            handle.data.writeField("wayland")
+            handle.writeField("type")
+            handle.writeField("data")
         }
         override val handler: NativeAddress
             get() { handle.write(); return handle.pointer }
@@ -7791,46 +8866,49 @@ actual interface WGPUNativeDisplayHandle {
             get() {
                 handle.read()
                 if (type != WGPUNativeDisplayHandleType_Xlib) return null
-                handle.data.setType(io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue::class.java)
-                handle.data.read()
-                return WGPUXlibDisplayHandle.ByReference(io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByReference(handle.data.xlib.pointer))
+                handle.data.readField("xlib")
+                return WGPUXlibDisplayHandle.ByValue(handle.data.xlib)
             }
         override fun setXlib(value: WGPUXlibDisplayHandle) {
             handle.type = WGPUNativeDisplayHandleType_Xlib.toInt()
-            handle.data.setType(io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue::class.java)
-            handle.data.xlib = io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue(value.handler)
-            handle.data.write()
-            handle.write()
+            val copy = io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue(value.handler)
+            copy.read()
+            handle.data.xlib = copy
+            handle.data.writeField("xlib")
+            handle.writeField("type")
+            handle.writeField("data")
         }
         override val xcb: WGPUXcbDisplayHandle?
             get() {
                 handle.read()
                 if (type != WGPUNativeDisplayHandleType_Xcb) return null
-                handle.data.setType(io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue::class.java)
-                handle.data.read()
-                return WGPUXcbDisplayHandle.ByReference(io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByReference(handle.data.xcb.pointer))
+                handle.data.readField("xcb")
+                return WGPUXcbDisplayHandle.ByValue(handle.data.xcb)
             }
         override fun setXcb(value: WGPUXcbDisplayHandle) {
             handle.type = WGPUNativeDisplayHandleType_Xcb.toInt()
-            handle.data.setType(io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue::class.java)
-            handle.data.xcb = io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue(value.handler)
-            handle.data.write()
-            handle.write()
+            val copy = io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue(value.handler)
+            copy.read()
+            handle.data.xcb = copy
+            handle.data.writeField("xcb")
+            handle.writeField("type")
+            handle.writeField("data")
         }
         override val wayland: WGPUWaylandDisplayHandle?
             get() {
                 handle.read()
                 if (type != WGPUNativeDisplayHandleType_Wayland) return null
-                handle.data.setType(io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue::class.java)
-                handle.data.read()
-                return WGPUWaylandDisplayHandle.ByReference(io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByReference(handle.data.wayland.pointer))
+                handle.data.readField("wayland")
+                return WGPUWaylandDisplayHandle.ByValue(handle.data.wayland)
             }
         override fun setWayland(value: WGPUWaylandDisplayHandle) {
             handle.type = WGPUNativeDisplayHandleType_Wayland.toInt()
-            handle.data.setType(io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue::class.java)
-            handle.data.wayland = io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue(value.handler)
-            handle.data.write()
-            handle.write()
+            val copy = io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue(value.handler)
+            copy.read()
+            handle.data.wayland = copy
+            handle.data.writeField("wayland")
+            handle.writeField("type")
+            handle.writeField("data")
         }
         override val handler: NativeAddress
             get() { handle.write(); return handle.pointer }
@@ -7875,8 +8953,16 @@ actual interface WGPUInstanceExtras {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByReference = io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByReference(com.sun.jna.Pointer.NULL)) : WGPUInstanceExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var backends: ULong
             get() = handle.backends.toULong() as ULong
             set(value) { handle.backends = value.toLong() }
@@ -7893,8 +8979,16 @@ actual interface WGPUInstanceExtras {
             get() = handle.glFenceBehaviour.toUInt() as WGPUGLFenceBehaviour
             set(value) { handle.glFenceBehaviour = value.toInt() }
         override var dxcPath: WGPUStringView
-            get() = handle.dxcPath?.let { WGPUStringView.ByReference(it) } ?: error("dxcPath is null")
-            set(value) { handle.dxcPath = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("dxcPath")
+                return WGPUStringView.ByValue(handle.dxcPath)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.dxcPath.size())
+                handle.readField("dxcPath")
+                handle.dxcPath.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("dxcPath")
+            }
         override var dxcMaxShaderModel: WGPUDxcMaxShaderModel
             get() = handle.dxcMaxShaderModel.toUInt() as WGPUDxcMaxShaderModel
             set(value) { handle.dxcMaxShaderModel = value.toInt() }
@@ -7908,8 +9002,16 @@ actual interface WGPUInstanceExtras {
             get() = handle.budgetForDeviceLoss
             set(value) { handle.budgetForDeviceLoss = value }
         override var displayHandle: WGPUNativeDisplayHandle
-            get() = handle.displayHandle?.let { WGPUNativeDisplayHandle.ByReference(io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByReference(it)) } ?: error("displayHandle is null")
-            set(value) { handle.displayHandle = (value as WGPUNativeDisplayHandle.ByReference).handle.pointer }
+            get() {
+                handle.readField("displayHandle")
+                return WGPUNativeDisplayHandle.ByValue(handle.displayHandle)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.displayHandle.size())
+                handle.readField("displayHandle")
+                handle.displayHandle.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("displayHandle")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -7919,8 +9021,16 @@ actual interface WGPUInstanceExtras {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByValue = io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByValue(com.sun.jna.Pointer.NULL)) : WGPUInstanceExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var backends: ULong
             get() = handle.backends.toULong() as ULong
             set(value) { handle.backends = value.toLong() }
@@ -7937,8 +9047,16 @@ actual interface WGPUInstanceExtras {
             get() = handle.glFenceBehaviour.toUInt() as WGPUGLFenceBehaviour
             set(value) { handle.glFenceBehaviour = value.toInt() }
         override var dxcPath: WGPUStringView
-            get() = handle.dxcPath?.let { WGPUStringView.ByReference(it) } ?: error("dxcPath is null")
-            set(value) { handle.dxcPath = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("dxcPath")
+                return WGPUStringView.ByValue(handle.dxcPath)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.dxcPath.size())
+                handle.readField("dxcPath")
+                handle.dxcPath.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("dxcPath")
+            }
         override var dxcMaxShaderModel: WGPUDxcMaxShaderModel
             get() = handle.dxcMaxShaderModel.toUInt() as WGPUDxcMaxShaderModel
             set(value) { handle.dxcMaxShaderModel = value.toInt() }
@@ -7952,8 +9070,16 @@ actual interface WGPUInstanceExtras {
             get() = handle.budgetForDeviceLoss
             set(value) { handle.budgetForDeviceLoss = value }
         override var displayHandle: WGPUNativeDisplayHandle
-            get() = handle.displayHandle?.let { WGPUNativeDisplayHandle.ByReference(io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByReference(it)) } ?: error("displayHandle is null")
-            set(value) { handle.displayHandle = (value as WGPUNativeDisplayHandle.ByReference).handle.pointer }
+            get() {
+                handle.readField("displayHandle")
+                return WGPUNativeDisplayHandle.ByValue(handle.displayHandle)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.displayHandle.size())
+                handle.readField("displayHandle")
+                handle.displayHandle.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("displayHandle")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -7990,11 +9116,27 @@ actual interface WGPUDeviceExtras {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUDeviceExtras.ByReference = io.ygdrasil.wgpu.android.WGPUDeviceExtras.ByReference(com.sun.jna.Pointer.NULL)) : WGPUDeviceExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var tracePath: WGPUStringView
-            get() = handle.tracePath?.let { WGPUStringView.ByReference(it) } ?: error("tracePath is null")
-            set(value) { handle.tracePath = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("tracePath")
+                return WGPUStringView.ByValue(handle.tracePath)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.tracePath.size())
+                handle.readField("tracePath")
+                handle.tracePath.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("tracePath")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -8004,11 +9146,27 @@ actual interface WGPUDeviceExtras {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUDeviceExtras.ByValue = io.ygdrasil.wgpu.android.WGPUDeviceExtras.ByValue(com.sun.jna.Pointer.NULL)) : WGPUDeviceExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var tracePath: WGPUStringView
-            get() = handle.tracePath?.let { WGPUStringView.ByReference(it) } ?: error("tracePath is null")
-            set(value) { handle.tracePath = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("tracePath")
+                return WGPUStringView.ByValue(handle.tracePath)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.tracePath.size())
+                handle.readField("tracePath")
+                handle.tracePath.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("tracePath")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -8047,8 +9205,16 @@ actual interface WGPUNativeLimits {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUNativeLimits.ByReference = io.ygdrasil.wgpu.android.WGPUNativeLimits.ByReference(com.sun.jna.Pointer.NULL)) : WGPUNativeLimits {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var maxImmediateSize: UInt
             get() = handle.maxImmediateSize.toUInt() as UInt
             set(value) { handle.maxImmediateSize = value.toInt() }
@@ -8067,8 +9233,16 @@ actual interface WGPUNativeLimits {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUNativeLimits.ByValue = io.ygdrasil.wgpu.android.WGPUNativeLimits.ByValue(com.sun.jna.Pointer.NULL)) : WGPUNativeLimits {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var maxImmediateSize: UInt
             get() = handle.maxImmediateSize.toUInt() as UInt
             set(value) { handle.maxImmediateSize = value.toInt() }
@@ -8114,8 +9288,16 @@ actual interface WGPUPipelineLayoutExtras {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUPipelineLayoutExtras.ByReference = io.ygdrasil.wgpu.android.WGPUPipelineLayoutExtras.ByReference(com.sun.jna.Pointer.NULL)) : WGPUPipelineLayoutExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var immediateDataSize: UInt
             get() = handle.immediateDataSize.toUInt() as UInt
             set(value) { handle.immediateDataSize = value.toInt() }
@@ -8128,8 +9310,16 @@ actual interface WGPUPipelineLayoutExtras {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUPipelineLayoutExtras.ByValue = io.ygdrasil.wgpu.android.WGPUPipelineLayoutExtras.ByValue(com.sun.jna.Pointer.NULL)) : WGPUPipelineLayoutExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var immediateDataSize: UInt
             get() = handle.immediateDataSize.toUInt() as UInt
             set(value) { handle.immediateDataSize = value.toInt() }
@@ -8169,11 +9359,27 @@ actual interface WGPUShaderDefine {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUShaderDefine.ByReference = io.ygdrasil.wgpu.android.WGPUShaderDefine.ByReference(com.sun.jna.Pointer.NULL)) : WGPUShaderDefine {
         override var name: WGPUStringView
-            get() = handle.name?.let { WGPUStringView.ByReference(it) } ?: error("name is null")
-            set(value) { handle.name = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("name")
+                return WGPUStringView.ByValue(handle.name)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.name.size())
+                handle.readField("name")
+                handle.name.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("name")
+            }
         override var value: WGPUStringView
-            get() = handle.value?.let { WGPUStringView.ByReference(it) } ?: error("value is null")
-            set(value) { handle.value = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("value")
+                return WGPUStringView.ByValue(handle.value)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.value.size())
+                handle.readField("value")
+                handle.value.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("value")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -8183,11 +9389,27 @@ actual interface WGPUShaderDefine {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUShaderDefine.ByValue = io.ygdrasil.wgpu.android.WGPUShaderDefine.ByValue(com.sun.jna.Pointer.NULL)) : WGPUShaderDefine {
         override var name: WGPUStringView
-            get() = handle.name?.let { WGPUStringView.ByReference(it) } ?: error("name is null")
-            set(value) { handle.name = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("name")
+                return WGPUStringView.ByValue(handle.name)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.name.size())
+                handle.readField("name")
+                handle.name.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("name")
+            }
         override var value: WGPUStringView
-            get() = handle.value?.let { WGPUStringView.ByReference(it) } ?: error("value is null")
-            set(value) { handle.value = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("value")
+                return WGPUStringView.ByValue(handle.value)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.value.size())
+                handle.readField("value")
+                handle.value.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("value")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -8227,14 +9449,30 @@ actual interface WGPUShaderSourceGLSL {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUShaderSourceGLSL.ByReference = io.ygdrasil.wgpu.android.WGPUShaderSourceGLSL.ByReference(com.sun.jna.Pointer.NULL)) : WGPUShaderSourceGLSL {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var stage: ULong
             get() = handle.stage.toULong() as ULong
             set(value) { handle.stage = value.toLong() }
         override var code: WGPUStringView
-            get() = handle.code?.let { WGPUStringView.ByReference(it) } ?: error("code is null")
-            set(value) { handle.code = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("code")
+                return WGPUStringView.ByValue(handle.code)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.code.size())
+                handle.readField("code")
+                handle.code.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("code")
+            }
         override var defineCount: UInt
             get() = handle.defineCount.toUInt() as UInt
             set(value) { handle.defineCount = value.toInt() }
@@ -8250,14 +9488,30 @@ actual interface WGPUShaderSourceGLSL {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUShaderSourceGLSL.ByValue = io.ygdrasil.wgpu.android.WGPUShaderSourceGLSL.ByValue(com.sun.jna.Pointer.NULL)) : WGPUShaderSourceGLSL {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var stage: ULong
             get() = handle.stage.toULong() as ULong
             set(value) { handle.stage = value.toLong() }
         override var code: WGPUStringView
-            get() = handle.code?.let { WGPUStringView.ByReference(it) } ?: error("code is null")
-            set(value) { handle.code = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("code")
+                return WGPUStringView.ByValue(handle.code)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.code.size())
+                handle.readField("code")
+                handle.code.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("code")
+            }
         override var defineCount: UInt
             get() = handle.defineCount.toUInt() as UInt
             set(value) { handle.defineCount = value.toInt() }
@@ -8301,8 +9555,16 @@ actual interface WGPUShaderModuleDescriptorSpirV {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptorSpirV.ByReference = io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptorSpirV.ByReference(com.sun.jna.Pointer.NULL)) : WGPUShaderModuleDescriptorSpirV {
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var sourceSize: UInt
             get() = handle.sourceSize.toUInt() as UInt
             set(value) { handle.sourceSize = value.toInt() }
@@ -8318,8 +9580,16 @@ actual interface WGPUShaderModuleDescriptorSpirV {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptorSpirV.ByValue = io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptorSpirV.ByValue(com.sun.jna.Pointer.NULL)) : WGPUShaderModuleDescriptorSpirV {
         override var label: WGPUStringView
-            get() = handle.label?.let { WGPUStringView.ByReference(it) } ?: error("label is null")
-            set(value) { handle.label = (value as WGPUStringView.ByReference).handle }
+            get() {
+                handle.readField("label")
+                return WGPUStringView.ByValue(handle.label)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.label.size())
+                handle.readField("label")
+                handle.label.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("label")
+            }
         override var sourceSize: UInt
             get() = handle.sourceSize.toUInt() as UInt
             set(value) { handle.sourceSize = value.toInt() }
@@ -8446,56 +9716,192 @@ actual interface WGPUHubReport {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUHubReport.ByReference = io.ygdrasil.wgpu.android.WGPUHubReport.ByReference(com.sun.jna.Pointer.NULL)) : WGPUHubReport {
         override var adapters: WGPURegistryReport
-            get() = handle.adapters?.let { WGPURegistryReport.ByReference(it) } ?: error("adapters is null")
-            set(value) { handle.adapters = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("adapters")
+                return WGPURegistryReport.ByValue(handle.adapters)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.adapters.size())
+                handle.readField("adapters")
+                handle.adapters.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("adapters")
+            }
         override var devices: WGPURegistryReport
-            get() = handle.devices?.let { WGPURegistryReport.ByReference(it) } ?: error("devices is null")
-            set(value) { handle.devices = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("devices")
+                return WGPURegistryReport.ByValue(handle.devices)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.devices.size())
+                handle.readField("devices")
+                handle.devices.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("devices")
+            }
         override var queues: WGPURegistryReport
-            get() = handle.queues?.let { WGPURegistryReport.ByReference(it) } ?: error("queues is null")
-            set(value) { handle.queues = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("queues")
+                return WGPURegistryReport.ByValue(handle.queues)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.queues.size())
+                handle.readField("queues")
+                handle.queues.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("queues")
+            }
         override var pipelineLayouts: WGPURegistryReport
-            get() = handle.pipelineLayouts?.let { WGPURegistryReport.ByReference(it) } ?: error("pipelineLayouts is null")
-            set(value) { handle.pipelineLayouts = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("pipelineLayouts")
+                return WGPURegistryReport.ByValue(handle.pipelineLayouts)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.pipelineLayouts.size())
+                handle.readField("pipelineLayouts")
+                handle.pipelineLayouts.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("pipelineLayouts")
+            }
         override var shaderModules: WGPURegistryReport
-            get() = handle.shaderModules?.let { WGPURegistryReport.ByReference(it) } ?: error("shaderModules is null")
-            set(value) { handle.shaderModules = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("shaderModules")
+                return WGPURegistryReport.ByValue(handle.shaderModules)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.shaderModules.size())
+                handle.readField("shaderModules")
+                handle.shaderModules.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("shaderModules")
+            }
         override var bindGroupLayouts: WGPURegistryReport
-            get() = handle.bindGroupLayouts?.let { WGPURegistryReport.ByReference(it) } ?: error("bindGroupLayouts is null")
-            set(value) { handle.bindGroupLayouts = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("bindGroupLayouts")
+                return WGPURegistryReport.ByValue(handle.bindGroupLayouts)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.bindGroupLayouts.size())
+                handle.readField("bindGroupLayouts")
+                handle.bindGroupLayouts.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("bindGroupLayouts")
+            }
         override var bindGroups: WGPURegistryReport
-            get() = handle.bindGroups?.let { WGPURegistryReport.ByReference(it) } ?: error("bindGroups is null")
-            set(value) { handle.bindGroups = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("bindGroups")
+                return WGPURegistryReport.ByValue(handle.bindGroups)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.bindGroups.size())
+                handle.readField("bindGroups")
+                handle.bindGroups.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("bindGroups")
+            }
         override var commandBuffers: WGPURegistryReport
-            get() = handle.commandBuffers?.let { WGPURegistryReport.ByReference(it) } ?: error("commandBuffers is null")
-            set(value) { handle.commandBuffers = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("commandBuffers")
+                return WGPURegistryReport.ByValue(handle.commandBuffers)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.commandBuffers.size())
+                handle.readField("commandBuffers")
+                handle.commandBuffers.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("commandBuffers")
+            }
         override var renderBundles: WGPURegistryReport
-            get() = handle.renderBundles?.let { WGPURegistryReport.ByReference(it) } ?: error("renderBundles is null")
-            set(value) { handle.renderBundles = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("renderBundles")
+                return WGPURegistryReport.ByValue(handle.renderBundles)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.renderBundles.size())
+                handle.readField("renderBundles")
+                handle.renderBundles.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("renderBundles")
+            }
         override var renderPipelines: WGPURegistryReport
-            get() = handle.renderPipelines?.let { WGPURegistryReport.ByReference(it) } ?: error("renderPipelines is null")
-            set(value) { handle.renderPipelines = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("renderPipelines")
+                return WGPURegistryReport.ByValue(handle.renderPipelines)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.renderPipelines.size())
+                handle.readField("renderPipelines")
+                handle.renderPipelines.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("renderPipelines")
+            }
         override var computePipelines: WGPURegistryReport
-            get() = handle.computePipelines?.let { WGPURegistryReport.ByReference(it) } ?: error("computePipelines is null")
-            set(value) { handle.computePipelines = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("computePipelines")
+                return WGPURegistryReport.ByValue(handle.computePipelines)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.computePipelines.size())
+                handle.readField("computePipelines")
+                handle.computePipelines.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("computePipelines")
+            }
         override var pipelineCaches: WGPURegistryReport
-            get() = handle.pipelineCaches?.let { WGPURegistryReport.ByReference(it) } ?: error("pipelineCaches is null")
-            set(value) { handle.pipelineCaches = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("pipelineCaches")
+                return WGPURegistryReport.ByValue(handle.pipelineCaches)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.pipelineCaches.size())
+                handle.readField("pipelineCaches")
+                handle.pipelineCaches.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("pipelineCaches")
+            }
         override var querySets: WGPURegistryReport
-            get() = handle.querySets?.let { WGPURegistryReport.ByReference(it) } ?: error("querySets is null")
-            set(value) { handle.querySets = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("querySets")
+                return WGPURegistryReport.ByValue(handle.querySets)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.querySets.size())
+                handle.readField("querySets")
+                handle.querySets.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("querySets")
+            }
         override var buffers: WGPURegistryReport
-            get() = handle.buffers?.let { WGPURegistryReport.ByReference(it) } ?: error("buffers is null")
-            set(value) { handle.buffers = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("buffers")
+                return WGPURegistryReport.ByValue(handle.buffers)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.buffers.size())
+                handle.readField("buffers")
+                handle.buffers.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("buffers")
+            }
         override var textures: WGPURegistryReport
-            get() = handle.textures?.let { WGPURegistryReport.ByReference(it) } ?: error("textures is null")
-            set(value) { handle.textures = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("textures")
+                return WGPURegistryReport.ByValue(handle.textures)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.textures.size())
+                handle.readField("textures")
+                handle.textures.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("textures")
+            }
         override var textureViews: WGPURegistryReport
-            get() = handle.textureViews?.let { WGPURegistryReport.ByReference(it) } ?: error("textureViews is null")
-            set(value) { handle.textureViews = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("textureViews")
+                return WGPURegistryReport.ByValue(handle.textureViews)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.textureViews.size())
+                handle.readField("textureViews")
+                handle.textureViews.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("textureViews")
+            }
         override var samplers: WGPURegistryReport
-            get() = handle.samplers?.let { WGPURegistryReport.ByReference(it) } ?: error("samplers is null")
-            set(value) { handle.samplers = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("samplers")
+                return WGPURegistryReport.ByValue(handle.samplers)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.samplers.size())
+                handle.readField("samplers")
+                handle.samplers.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("samplers")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -8505,56 +9911,192 @@ actual interface WGPUHubReport {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUHubReport.ByValue = io.ygdrasil.wgpu.android.WGPUHubReport.ByValue(com.sun.jna.Pointer.NULL)) : WGPUHubReport {
         override var adapters: WGPURegistryReport
-            get() = handle.adapters?.let { WGPURegistryReport.ByReference(it) } ?: error("adapters is null")
-            set(value) { handle.adapters = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("adapters")
+                return WGPURegistryReport.ByValue(handle.adapters)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.adapters.size())
+                handle.readField("adapters")
+                handle.adapters.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("adapters")
+            }
         override var devices: WGPURegistryReport
-            get() = handle.devices?.let { WGPURegistryReport.ByReference(it) } ?: error("devices is null")
-            set(value) { handle.devices = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("devices")
+                return WGPURegistryReport.ByValue(handle.devices)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.devices.size())
+                handle.readField("devices")
+                handle.devices.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("devices")
+            }
         override var queues: WGPURegistryReport
-            get() = handle.queues?.let { WGPURegistryReport.ByReference(it) } ?: error("queues is null")
-            set(value) { handle.queues = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("queues")
+                return WGPURegistryReport.ByValue(handle.queues)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.queues.size())
+                handle.readField("queues")
+                handle.queues.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("queues")
+            }
         override var pipelineLayouts: WGPURegistryReport
-            get() = handle.pipelineLayouts?.let { WGPURegistryReport.ByReference(it) } ?: error("pipelineLayouts is null")
-            set(value) { handle.pipelineLayouts = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("pipelineLayouts")
+                return WGPURegistryReport.ByValue(handle.pipelineLayouts)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.pipelineLayouts.size())
+                handle.readField("pipelineLayouts")
+                handle.pipelineLayouts.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("pipelineLayouts")
+            }
         override var shaderModules: WGPURegistryReport
-            get() = handle.shaderModules?.let { WGPURegistryReport.ByReference(it) } ?: error("shaderModules is null")
-            set(value) { handle.shaderModules = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("shaderModules")
+                return WGPURegistryReport.ByValue(handle.shaderModules)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.shaderModules.size())
+                handle.readField("shaderModules")
+                handle.shaderModules.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("shaderModules")
+            }
         override var bindGroupLayouts: WGPURegistryReport
-            get() = handle.bindGroupLayouts?.let { WGPURegistryReport.ByReference(it) } ?: error("bindGroupLayouts is null")
-            set(value) { handle.bindGroupLayouts = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("bindGroupLayouts")
+                return WGPURegistryReport.ByValue(handle.bindGroupLayouts)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.bindGroupLayouts.size())
+                handle.readField("bindGroupLayouts")
+                handle.bindGroupLayouts.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("bindGroupLayouts")
+            }
         override var bindGroups: WGPURegistryReport
-            get() = handle.bindGroups?.let { WGPURegistryReport.ByReference(it) } ?: error("bindGroups is null")
-            set(value) { handle.bindGroups = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("bindGroups")
+                return WGPURegistryReport.ByValue(handle.bindGroups)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.bindGroups.size())
+                handle.readField("bindGroups")
+                handle.bindGroups.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("bindGroups")
+            }
         override var commandBuffers: WGPURegistryReport
-            get() = handle.commandBuffers?.let { WGPURegistryReport.ByReference(it) } ?: error("commandBuffers is null")
-            set(value) { handle.commandBuffers = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("commandBuffers")
+                return WGPURegistryReport.ByValue(handle.commandBuffers)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.commandBuffers.size())
+                handle.readField("commandBuffers")
+                handle.commandBuffers.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("commandBuffers")
+            }
         override var renderBundles: WGPURegistryReport
-            get() = handle.renderBundles?.let { WGPURegistryReport.ByReference(it) } ?: error("renderBundles is null")
-            set(value) { handle.renderBundles = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("renderBundles")
+                return WGPURegistryReport.ByValue(handle.renderBundles)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.renderBundles.size())
+                handle.readField("renderBundles")
+                handle.renderBundles.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("renderBundles")
+            }
         override var renderPipelines: WGPURegistryReport
-            get() = handle.renderPipelines?.let { WGPURegistryReport.ByReference(it) } ?: error("renderPipelines is null")
-            set(value) { handle.renderPipelines = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("renderPipelines")
+                return WGPURegistryReport.ByValue(handle.renderPipelines)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.renderPipelines.size())
+                handle.readField("renderPipelines")
+                handle.renderPipelines.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("renderPipelines")
+            }
         override var computePipelines: WGPURegistryReport
-            get() = handle.computePipelines?.let { WGPURegistryReport.ByReference(it) } ?: error("computePipelines is null")
-            set(value) { handle.computePipelines = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("computePipelines")
+                return WGPURegistryReport.ByValue(handle.computePipelines)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.computePipelines.size())
+                handle.readField("computePipelines")
+                handle.computePipelines.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("computePipelines")
+            }
         override var pipelineCaches: WGPURegistryReport
-            get() = handle.pipelineCaches?.let { WGPURegistryReport.ByReference(it) } ?: error("pipelineCaches is null")
-            set(value) { handle.pipelineCaches = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("pipelineCaches")
+                return WGPURegistryReport.ByValue(handle.pipelineCaches)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.pipelineCaches.size())
+                handle.readField("pipelineCaches")
+                handle.pipelineCaches.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("pipelineCaches")
+            }
         override var querySets: WGPURegistryReport
-            get() = handle.querySets?.let { WGPURegistryReport.ByReference(it) } ?: error("querySets is null")
-            set(value) { handle.querySets = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("querySets")
+                return WGPURegistryReport.ByValue(handle.querySets)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.querySets.size())
+                handle.readField("querySets")
+                handle.querySets.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("querySets")
+            }
         override var buffers: WGPURegistryReport
-            get() = handle.buffers?.let { WGPURegistryReport.ByReference(it) } ?: error("buffers is null")
-            set(value) { handle.buffers = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("buffers")
+                return WGPURegistryReport.ByValue(handle.buffers)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.buffers.size())
+                handle.readField("buffers")
+                handle.buffers.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("buffers")
+            }
         override var textures: WGPURegistryReport
-            get() = handle.textures?.let { WGPURegistryReport.ByReference(it) } ?: error("textures is null")
-            set(value) { handle.textures = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("textures")
+                return WGPURegistryReport.ByValue(handle.textures)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.textures.size())
+                handle.readField("textures")
+                handle.textures.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("textures")
+            }
         override var textureViews: WGPURegistryReport
-            get() = handle.textureViews?.let { WGPURegistryReport.ByReference(it) } ?: error("textureViews is null")
-            set(value) { handle.textureViews = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("textureViews")
+                return WGPURegistryReport.ByValue(handle.textureViews)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.textureViews.size())
+                handle.readField("textureViews")
+                handle.textureViews.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("textureViews")
+            }
         override var samplers: WGPURegistryReport
-            get() = handle.samplers?.let { WGPURegistryReport.ByReference(it) } ?: error("samplers is null")
-            set(value) { handle.samplers = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("samplers")
+                return WGPURegistryReport.ByValue(handle.samplers)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.samplers.size())
+                handle.readField("samplers")
+                handle.samplers.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("samplers")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -8591,11 +10133,27 @@ actual interface WGPUGlobalReport {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUGlobalReport.ByReference = io.ygdrasil.wgpu.android.WGPUGlobalReport.ByReference(com.sun.jna.Pointer.NULL)) : WGPUGlobalReport {
         override var surfaces: WGPURegistryReport
-            get() = handle.surfaces?.let { WGPURegistryReport.ByReference(it) } ?: error("surfaces is null")
-            set(value) { handle.surfaces = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("surfaces")
+                return WGPURegistryReport.ByValue(handle.surfaces)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.surfaces.size())
+                handle.readField("surfaces")
+                handle.surfaces.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("surfaces")
+            }
         override var hub: WGPUHubReport
-            get() = handle.hub?.let { WGPUHubReport.ByReference(it) } ?: error("hub is null")
-            set(value) { handle.hub = (value as WGPUHubReport.ByReference).handle }
+            get() {
+                handle.readField("hub")
+                return WGPUHubReport.ByValue(handle.hub)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.hub.size())
+                handle.readField("hub")
+                handle.hub.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("hub")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -8605,11 +10163,27 @@ actual interface WGPUGlobalReport {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUGlobalReport.ByValue = io.ygdrasil.wgpu.android.WGPUGlobalReport.ByValue(com.sun.jna.Pointer.NULL)) : WGPUGlobalReport {
         override var surfaces: WGPURegistryReport
-            get() = handle.surfaces?.let { WGPURegistryReport.ByReference(it) } ?: error("surfaces is null")
-            set(value) { handle.surfaces = (value as WGPURegistryReport.ByReference).handle }
+            get() {
+                handle.readField("surfaces")
+                return WGPURegistryReport.ByValue(handle.surfaces)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.surfaces.size())
+                handle.readField("surfaces")
+                handle.surfaces.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("surfaces")
+            }
         override var hub: WGPUHubReport
-            get() = handle.hub?.let { WGPUHubReport.ByReference(it) } ?: error("hub is null")
-            set(value) { handle.hub = (value as WGPUHubReport.ByReference).handle }
+            get() {
+                handle.readField("hub")
+                return WGPUHubReport.ByValue(handle.hub)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.hub.size())
+                handle.readField("hub")
+                handle.hub.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("hub")
+            }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -8706,8 +10280,16 @@ actual interface WGPUBindGroupEntryExtras {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUBindGroupEntryExtras.ByReference = io.ygdrasil.wgpu.android.WGPUBindGroupEntryExtras.ByReference(com.sun.jna.Pointer.NULL)) : WGPUBindGroupEntryExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var buffers: WGPUBuffer?
             get() = handle.buffers?.let { WGPUBuffer(it) }
             set(value) { handle.buffers = value?.handler }
@@ -8735,8 +10317,16 @@ actual interface WGPUBindGroupEntryExtras {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUBindGroupEntryExtras.ByValue = io.ygdrasil.wgpu.android.WGPUBindGroupEntryExtras.ByValue(com.sun.jna.Pointer.NULL)) : WGPUBindGroupEntryExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var buffers: WGPUBuffer?
             get() = handle.buffers?.let { WGPUBuffer(it) }
             set(value) { handle.buffers = value?.handler }
@@ -8791,8 +10381,16 @@ actual interface WGPUBindGroupLayoutEntryExtras {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntryExtras.ByReference = io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntryExtras.ByReference(com.sun.jna.Pointer.NULL)) : WGPUBindGroupLayoutEntryExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var count: UInt
             get() = handle.count.toUInt() as UInt
             set(value) { handle.count = value.toInt() }
@@ -8805,8 +10403,16 @@ actual interface WGPUBindGroupLayoutEntryExtras {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntryExtras.ByValue = io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntryExtras.ByValue(com.sun.jna.Pointer.NULL)) : WGPUBindGroupLayoutEntryExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var count: UInt
             get() = handle.count.toUInt() as UInt
             set(value) { handle.count = value.toInt() }
@@ -8847,8 +10453,16 @@ actual interface WGPUQuerySetDescriptorExtras {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUQuerySetDescriptorExtras.ByReference = io.ygdrasil.wgpu.android.WGPUQuerySetDescriptorExtras.ByReference(com.sun.jna.Pointer.NULL)) : WGPUQuerySetDescriptorExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var pipelineStatistics: NativeAddress?
             get() = handle.pipelineStatistics
             set(value) { handle.pipelineStatistics = value }
@@ -8864,8 +10478,16 @@ actual interface WGPUQuerySetDescriptorExtras {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUQuerySetDescriptorExtras.ByValue = io.ygdrasil.wgpu.android.WGPUQuerySetDescriptorExtras.ByValue(com.sun.jna.Pointer.NULL)) : WGPUQuerySetDescriptorExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var pipelineStatistics: NativeAddress?
             get() = handle.pipelineStatistics
             set(value) { handle.pipelineStatistics = value }
@@ -8908,8 +10530,16 @@ actual interface WGPUSurfaceConfigurationExtras {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceConfigurationExtras.ByReference = io.ygdrasil.wgpu.android.WGPUSurfaceConfigurationExtras.ByReference(com.sun.jna.Pointer.NULL)) : WGPUSurfaceConfigurationExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var desiredMaximumFrameLatency: UInt
             get() = handle.desiredMaximumFrameLatency.toUInt() as UInt
             set(value) { handle.desiredMaximumFrameLatency = value.toInt() }
@@ -8922,8 +10552,16 @@ actual interface WGPUSurfaceConfigurationExtras {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceConfigurationExtras.ByValue = io.ygdrasil.wgpu.android.WGPUSurfaceConfigurationExtras.ByValue(com.sun.jna.Pointer.NULL)) : WGPUSurfaceConfigurationExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var desiredMaximumFrameLatency: UInt
             get() = handle.desiredMaximumFrameLatency.toUInt() as UInt
             set(value) { handle.desiredMaximumFrameLatency = value.toInt() }
@@ -8963,8 +10601,16 @@ actual interface WGPUSurfaceSourceSwapChainPanel {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceSwapChainPanel.ByReference = io.ygdrasil.wgpu.android.WGPUSurfaceSourceSwapChainPanel.ByReference(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceSwapChainPanel {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var panelNative: NativeAddress?
             get() = handle.panelNative
             set(value) { handle.panelNative = value }
@@ -8977,8 +10623,16 @@ actual interface WGPUSurfaceSourceSwapChainPanel {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUSurfaceSourceSwapChainPanel.ByValue = io.ygdrasil.wgpu.android.WGPUSurfaceSourceSwapChainPanel.ByValue(com.sun.jna.Pointer.NULL)) : WGPUSurfaceSourceSwapChainPanel {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var panelNative: NativeAddress?
             get() = handle.panelNative
             set(value) { handle.panelNative = value }
@@ -9019,8 +10673,16 @@ actual interface WGPUPrimitiveStateExtras {
     
     class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUPrimitiveStateExtras.ByReference = io.ygdrasil.wgpu.android.WGPUPrimitiveStateExtras.ByReference(com.sun.jna.Pointer.NULL)) : WGPUPrimitiveStateExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var polygonMode: WGPUPolygonMode
             get() = handle.polygonMode.toUInt() as WGPUPolygonMode
             set(value) { handle.polygonMode = value.toInt() }
@@ -9036,8 +10698,16 @@ actual interface WGPUPrimitiveStateExtras {
     
     class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUPrimitiveStateExtras.ByValue = io.ygdrasil.wgpu.android.WGPUPrimitiveStateExtras.ByValue(com.sun.jna.Pointer.NULL)) : WGPUPrimitiveStateExtras {
         override var chain: WGPUChainedStruct
-            get() = handle.chain?.let { WGPUChainedStruct.ByReference(it) } ?: error("chain is null")
-            set(value) { handle.chain = (value as WGPUChainedStruct.ByReference).handle }
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
         override var polygonMode: WGPUPolygonMode
             get() = handle.polygonMode.toUInt() as WGPUPolygonMode
             set(value) { handle.polygonMode = value.toInt() }

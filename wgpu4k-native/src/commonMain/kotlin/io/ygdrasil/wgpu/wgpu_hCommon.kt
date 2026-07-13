@@ -197,6 +197,12 @@ expect value class WGPUTexture(val handler: NativeAddress)
 
 expect value class WGPUTextureView(val handler: NativeAddress)
 
+/**
+ * \defgroup Enumerations Enumerations
+ * \brief Enums.
+ *
+ * @{
+ */
 typealias WGPUAdapterType = UInt
 const val WGPUAdapterType_DiscreteGPU : WGPUAdapterType = 1u
 const val WGPUAdapterType_IntegratedGPU : WGPUAdapterType = 2u
@@ -410,6 +416,9 @@ const val WGPUBufferMapState_Pending : WGPUBufferMapState = 2u
 const val WGPUBufferMapState_Mapped : WGPUBufferMapState = 3u
 const val WGPUBufferMapState_Force32 : WGPUBufferMapState = 2147483647u
 
+/**
+ * The callback mode controls how a callback for an asynchronous operation may be fired. See @ref Asynchronous-Operations for how these are used.
+ */
 typealias WGPUCallbackMode = UInt
 /**
  * Callbacks created with `WGPUCallbackMode_WaitAnyOnly`:
@@ -537,6 +546,9 @@ const val WGPUComponentSwizzle_A : WGPUComponentSwizzle = 6u
  */
 const val WGPUComponentSwizzle_Force32 : WGPUComponentSwizzle = 2147483647u
 
+/**
+ * Describes how frames are composited with other contents on the screen when @ref wgpuSurfacePresent is called.
+ */
 typealias WGPUCompositeAlphaMode = UInt
 /**
  * `0`. Lets the WebGPU implementation choose the best mode (supported, and with the best performance) between @ref WGPUCompositeAlphaMode_Opaque or @ref WGPUCompositeAlphaMode_Inherit.
@@ -634,6 +646,9 @@ const val WGPUErrorType_Internal : WGPUErrorType = 4u
 const val WGPUErrorType_Unknown : WGPUErrorType = 5u
 const val WGPUErrorType_Force32 : WGPUErrorType = 2147483647u
 
+/**
+ * See @ref WGPURequestAdapterOptions::featureLevel.
+ */
 typealias WGPUFeatureLevel = UInt
 /**
  * `0`. Indicates no value is passed for this argument. See @ref SentinelValues.
@@ -870,6 +885,9 @@ const val WGPUPredefinedColorSpace_SRGB : WGPUPredefinedColorSpace = 1u
 const val WGPUPredefinedColorSpace_DisplayP3 : WGPUPredefinedColorSpace = 2u
 const val WGPUPredefinedColorSpace_Force32 : WGPUPredefinedColorSpace = 2147483647u
 
+/**
+ * Describes when and in which order frames are presented on the screen when @ref wgpuSurfacePresent is called.
+ */
 typealias WGPUPresentMode = UInt
 /**
  * `0`. Present mode is not specified. Use the default.
@@ -1017,6 +1035,11 @@ const val WGPUSamplerBindingType_Comparison : WGPUSamplerBindingType = 4u
  */
 const val WGPUSamplerBindingType_Force32 : WGPUSamplerBindingType = 2147483647u
 
+/**
+ * Status code returned (synchronously) from many operations. Generally
+ * indicates an invalid input like an unknown enum value or @ref OutStructChainError.
+ * Read the function's documentation for specific error conditions.
+ */
 typealias WGPUStatus = UInt
 const val WGPUStatus_Success : WGPUStatus = 1u
 const val WGPUStatus_Error : WGPUStatus = 2u
@@ -1129,6 +1152,9 @@ const val WGPUSType_CompatibilityModeLimits : WGPUSType = 15u
 const val WGPUSType_TextureBindingViewDimension : WGPUSType = 16u
 const val WGPUSType_Force32 : WGPUSType = 2147483647u
 
+/**
+ * The status enum for @ref wgpuSurfaceGetCurrentTexture.
+ */
 typealias WGPUSurfaceGetCurrentTextureStatus = UInt
 /**
  * Yay! Everything is good and we can render this frame.
@@ -1754,6 +1780,9 @@ const val WGPUVertexStepMode_Instance : WGPUVertexStepMode = 2u
  */
 const val WGPUVertexStepMode_Force32 : WGPUVertexStepMode = 2147483647u
 
+/**
+ * Status returned from a call to ::wgpuInstanceWaitAny.
+ */
 typealias WGPUWaitStatus = UInt
 /**
  * At least one WGPUFuture completed successfully.
@@ -1786,6 +1815,12 @@ const val WGPUWGSLLanguageFeatureName_SubgroupUniformity : WGPUWGSLLanguageFeatu
 const val WGPUWGSLLanguageFeatureName_TextureFormatsTier1 : WGPUWGSLLanguageFeatureName = 9u
 const val WGPUWGSLLanguageFeatureName_Force32 : WGPUWGSLLanguageFeatureName = 2147483647u
 
+/**
+ * See also @ref CallbackError.
+ *
+ * @param message
+ * This parameter is @ref PassedWithoutOwnership.
+ */
 expect class WGPUBufferMapCallback : AutoCloseable {
     val handler: NativeAddress
     override fun close()
@@ -1794,6 +1829,14 @@ expect class WGPUBufferMapCallback : AutoCloseable {
     }
 }
 
+/**
+ * See also @ref CallbackError.
+ *
+ * @param compilationInfo
+ * This argument contains multiple @ref ImplementationAllocatedStructChain roots.
+ * Arbitrary chains must be handled gracefully by the application!
+ * This parameter is @ref PassedWithoutOwnership.
+ */
 expect class WGPUCompilationInfoCallback : AutoCloseable {
     val handler: NativeAddress
     override fun close()
@@ -1802,6 +1845,12 @@ expect class WGPUCompilationInfoCallback : AutoCloseable {
     }
 }
 
+/**
+ * See also @ref CallbackError.
+ *
+ * @param pipeline
+ * This parameter is @ref PassedWithOwnership.
+ */
 expect class WGPUCreateComputePipelineAsyncCallback : AutoCloseable {
     val handler: NativeAddress
     override fun close()
@@ -1810,6 +1859,12 @@ expect class WGPUCreateComputePipelineAsyncCallback : AutoCloseable {
     }
 }
 
+/**
+ * See also @ref CallbackError.
+ *
+ * @param pipeline
+ * This parameter is @ref PassedWithOwnership.
+ */
 expect class WGPUCreateRenderPipelineAsyncCallback : AutoCloseable {
     val handler: NativeAddress
     override fun close()
@@ -1818,6 +1873,23 @@ expect class WGPUCreateRenderPipelineAsyncCallback : AutoCloseable {
     }
 }
 
+/**
+ * See also @ref CallbackError.
+ *
+ * @param device
+ * Pointer to the device which was lost. This is always a non-null pointer.
+ * The pointed-to @ref WGPUDevice will be null if, and only if, either:
+ * (1) The `reason` is @ref WGPUDeviceLostReason_FailedCreation.
+ * (2) The last ref of the device has been (or is being) released: see @ref DeviceRelease.
+ * This parameter is @ref PassedWithoutOwnership.
+ *
+ * @param reason
+ * An error code explaining why the device was lost.
+ *
+ * @param message
+ * A @ref LocalizableHumanReadableMessageString describing why the device was lost.
+ * This parameter is @ref PassedWithoutOwnership.
+ */
 expect class WGPUDeviceLostCallback : AutoCloseable {
     val handler: NativeAddress
     override fun close()
@@ -1826,6 +1898,23 @@ expect class WGPUDeviceLostCallback : AutoCloseable {
     }
 }
 
+/**
+ * See also @ref CallbackError.
+ *
+ * @param status
+ * See @ref WGPUPopErrorScopeStatus.
+ *
+ * @param type
+ * The type of the error caught by the scope, or @ref WGPUErrorType_NoError if there was none.
+ * If the `status` is not @ref WGPUPopErrorScopeStatus_Success, this is @ref WGPUErrorType_NoError.
+ *
+ * @param message
+ * If the `status` is not @ref WGPUPopErrorScopeStatus_Success **or**
+ * the `type` is not @ref WGPUErrorType_NoError, this is a non-empty
+ * @ref LocalizableHumanReadableMessageString;
+ * otherwise, this is an empty string.
+ * This parameter is @ref PassedWithoutOwnership.
+ */
 expect class WGPUPopErrorScopeCallback : AutoCloseable {
     val handler: NativeAddress
     override fun close()
@@ -1834,6 +1923,18 @@ expect class WGPUPopErrorScopeCallback : AutoCloseable {
     }
 }
 
+/**
+ * See also @ref CallbackError.
+ *
+ * @param status
+ * See @ref WGPUQueueWorkDoneStatus.
+ *
+ * @param message
+ * If the `status` is not @ref WGPUQueueWorkDoneStatus_Success,
+ * this is a non-empty @ref LocalizableHumanReadableMessageString;
+ * otherwise, this is an empty string.
+ * This parameter is @ref PassedWithoutOwnership.
+ */
 expect class WGPUQueueWorkDoneCallback : AutoCloseable {
     val handler: NativeAddress
     override fun close()
@@ -1842,6 +1943,15 @@ expect class WGPUQueueWorkDoneCallback : AutoCloseable {
     }
 }
 
+/**
+ * See also @ref CallbackError.
+ *
+ * @param adapter
+ * This parameter is @ref PassedWithOwnership.
+ *
+ * @param message
+ * This parameter is @ref PassedWithoutOwnership.
+ */
 expect class WGPURequestAdapterCallback : AutoCloseable {
     val handler: NativeAddress
     override fun close()
@@ -1850,6 +1960,15 @@ expect class WGPURequestAdapterCallback : AutoCloseable {
     }
 }
 
+/**
+ * See also @ref CallbackError.
+ *
+ * @param device
+ * This parameter is @ref PassedWithOwnership.
+ *
+ * @param message
+ * This parameter is @ref PassedWithoutOwnership.
+ */
 expect class WGPURequestDeviceCallback : AutoCloseable {
     val handler: NativeAddress
     override fun close()
@@ -1858,6 +1977,15 @@ expect class WGPURequestDeviceCallback : AutoCloseable {
     }
 }
 
+/**
+ * See also @ref CallbackError.
+ *
+ * @param device
+ * This parameter is @ref PassedWithoutOwnership.
+ *
+ * @param message
+ * This parameter is @ref PassedWithoutOwnership.
+ */
 expect class WGPUUncapturedErrorCallback : AutoCloseable {
     val handler: NativeAddress
     override fun close()
@@ -5711,6 +5839,11 @@ const val WGPUSType_PrimitiveStateExtras : WGPUNativeSType = 196620u
  */
 const val WGPUNativeSType_Force32 : WGPUNativeSType = 2147483647u
 
+/**
+ * Additional surface-get-current-texture status codes defined by wgpu-native.
+ *
+ * These extend the standard @c WGPUSurfaceGetCurrentTextureStatus values.
+ */
 typealias WGPUNativeSurfaceGetCurrentTextureStatus = UInt
 /**
  * The surface texture was not acquired because the window is occluded
@@ -5767,6 +5900,13 @@ const val WGPUSurfaceGetCurrentTextureStatus_Occluded : WGPUNativeSurfaceGetCurr
  */
 const val WGPUNativeSurfaceGetCurrentTextureStatus_Force32 : WGPUNativeSurfaceGetCurrentTextureStatus = 2147483647u
 
+/**
+ * Native-only device features.
+ *
+ * These extend the standard @c WGPUFeatureName values and can be passed to
+ * @c WGPUDeviceDescriptor::requiredFeatures to request additional
+ * capabilities when creating a device.
+ */
 typealias WGPUNativeFeature = UInt
 /**
  * Allows the use of immediate data: small, fast blocks of memory
@@ -6444,6 +6584,14 @@ const val WGPUDx12SwapchainKind_DxgiFromVisual : WGPUDx12SwapchainKind = 2u
  */
 const val WGPUDx12SwapchainKind_Force32 : WGPUDx12SwapchainKind = 2147483647u
 
+/**
+ * Discriminant for @ref WGPUNativeDisplayHandle.
+ *
+ * Identifies which platform's display connection is stored in the tagged union.
+ * Use @ref WGPUNativeDisplayHandleType_None (the default when zero-initialized) when
+ * no display handle is needed. Platforms with no display connection data (Windows,
+ * macOS, iOS, Android) should use @ref WGPUNativeDisplayHandleType_None.
+ */
 typealias WGPUNativeDisplayHandleType = UInt
 /**
  * No display handle provided.

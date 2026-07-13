@@ -2,6 +2,7 @@ package io.ygdrasil.wgpu.android
 
 import com.sun.jna.Pointer
 import com.sun.jna.Structure
+import com.sun.jna.Union
 
 open class WGPUStringView(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var data: Pointer? = null
@@ -130,10 +131,10 @@ open class WGPUUncapturedErrorCallbackInfo(pointer: Pointer? = null) : Structure
 
 open class WGPUAdapterInfo(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var vendor: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
-    @JvmField var architecture: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
-    @JvmField var device: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
-    @JvmField var description: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var vendor: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
+    @JvmField var architecture: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
+    @JvmField var device: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
+    @JvmField var description: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var backendType: Int = 0
     @JvmField var adapterType: Int = 0
     @JvmField var vendorID: Int = 0
@@ -166,7 +167,7 @@ open class WGPUBufferBindingLayout(pointer: Pointer? = null) : Structure(pointer
 
 open class WGPUBufferDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var usage: Long = 0L
     @JvmField var size: Long = 0L
     @JvmField var mappedAtCreation: Int = 0
@@ -187,7 +188,7 @@ open class WGPUColor(pointer: Pointer? = null) : Structure(pointer) {
 
 open class WGPUCommandBufferDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     override fun getFieldOrder() = listOf<String>("nextInChain", "label")
     class ByReference(pointer: Pointer? = null) : WGPUCommandBufferDescriptor(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUCommandBufferDescriptor(pointer), Structure.ByValue
@@ -195,14 +196,14 @@ open class WGPUCommandBufferDescriptor(pointer: Pointer? = null) : Structure(poi
 
 open class WGPUCommandEncoderDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     override fun getFieldOrder() = listOf<String>("nextInChain", "label")
     class ByReference(pointer: Pointer? = null) : WGPUCommandEncoderDescriptor(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUCommandEncoderDescriptor(pointer), Structure.ByValue
 }
 
 open class WGPUCompatibilityModeLimits(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var maxStorageBuffersInVertexStage: Int = 0
     @JvmField var maxStorageTexturesInVertexStage: Int = 0
     @JvmField var maxStorageBuffersInFragmentStage: Int = 0
@@ -214,7 +215,7 @@ open class WGPUCompatibilityModeLimits(pointer: Pointer? = null) : Structure(poi
 
 open class WGPUCompilationMessage(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var message: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var type: Int = 0
     @JvmField var lineNum: Long = 0L
     @JvmField var linePos: Long = 0L
@@ -227,7 +228,7 @@ open class WGPUCompilationMessage(pointer: Pointer? = null) : Structure(pointer)
 
 open class WGPUConstantEntry(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var key: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var key: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var value: Double = 0.0
     override fun getFieldOrder() = listOf<String>("nextInChain", "key", "value")
     class ByReference(pointer: Pointer? = null) : WGPUConstantEntry(pointer), Structure.ByReference
@@ -244,7 +245,7 @@ open class WGPUExtent3D(pointer: Pointer? = null) : Structure(pointer) {
 }
 
 open class WGPUExternalTextureBindingEntry(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var externalTexture: Pointer? = null
     override fun getFieldOrder() = listOf<String>("chain", "externalTexture")
     class ByReference(pointer: Pointer? = null) : WGPUExternalTextureBindingEntry(pointer), Structure.ByReference
@@ -252,7 +253,7 @@ open class WGPUExternalTextureBindingEntry(pointer: Pointer? = null) : Structure
 }
 
 open class WGPUExternalTextureBindingLayout(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     override fun getFieldOrder() = listOf<String>("chain")
     class ByReference(pointer: Pointer? = null) : WGPUExternalTextureBindingLayout(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUExternalTextureBindingLayout(pointer), Structure.ByValue
@@ -304,7 +305,7 @@ open class WGPUPassTimestampWrites(pointer: Pointer? = null) : Structure(pointer
 
 open class WGPUPipelineLayoutDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var bindGroupLayoutCount: Long = 0L
     @JvmField var bindGroupLayouts: Pointer? = null
     @JvmField var immediateSize: Int = 0
@@ -327,7 +328,7 @@ open class WGPUPrimitiveState(pointer: Pointer? = null) : Structure(pointer) {
 
 open class WGPUQuerySetDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var type: Int = 0
     @JvmField var count: Int = 0
     override fun getFieldOrder() = listOf<String>("nextInChain", "label", "type", "count")
@@ -337,7 +338,7 @@ open class WGPUQuerySetDescriptor(pointer: Pointer? = null) : Structure(pointer)
 
 open class WGPUQueueDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     override fun getFieldOrder() = listOf<String>("nextInChain", "label")
     class ByReference(pointer: Pointer? = null) : WGPUQueueDescriptor(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUQueueDescriptor(pointer), Structure.ByValue
@@ -345,7 +346,7 @@ open class WGPUQueueDescriptor(pointer: Pointer? = null) : Structure(pointer) {
 
 open class WGPURenderBundleDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     override fun getFieldOrder() = listOf<String>("nextInChain", "label")
     class ByReference(pointer: Pointer? = null) : WGPURenderBundleDescriptor(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPURenderBundleDescriptor(pointer), Structure.ByValue
@@ -353,7 +354,7 @@ open class WGPURenderBundleDescriptor(pointer: Pointer? = null) : Structure(poin
 
 open class WGPURenderBundleEncoderDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var colorFormatCount: Long = 0L
     @JvmField var colorFormats: Pointer? = null
     @JvmField var depthStencilFormat: Int = 0
@@ -382,7 +383,7 @@ open class WGPURenderPassDepthStencilAttachment(pointer: Pointer? = null) : Stru
 }
 
 open class WGPURenderPassMaxDrawCount(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var maxDrawCount: Long = 0L
     override fun getFieldOrder() = listOf<String>("chain", "maxDrawCount")
     class ByReference(pointer: Pointer? = null) : WGPURenderPassMaxDrawCount(pointer), Structure.ByReference
@@ -390,7 +391,7 @@ open class WGPURenderPassMaxDrawCount(pointer: Pointer? = null) : Structure(poin
 }
 
 open class WGPURequestAdapterWebXROptions(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var xrCompatible: Int = 0
     override fun getFieldOrder() = listOf<String>("chain", "xrCompatible")
     class ByReference(pointer: Pointer? = null) : WGPURequestAdapterWebXROptions(pointer), Structure.ByReference
@@ -407,7 +408,7 @@ open class WGPUSamplerBindingLayout(pointer: Pointer? = null) : Structure(pointe
 
 open class WGPUSamplerDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var addressModeU: Int = 0
     @JvmField var addressModeV: Int = 0
     @JvmField var addressModeW: Int = 0
@@ -424,7 +425,7 @@ open class WGPUSamplerDescriptor(pointer: Pointer? = null) : Structure(pointer) 
 }
 
 open class WGPUShaderSourceSPIRV(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var codeSize: Int = 0
     @JvmField var code: Pointer? = null
     override fun getFieldOrder() = listOf<String>("chain", "codeSize", "code")
@@ -433,8 +434,8 @@ open class WGPUShaderSourceSPIRV(pointer: Pointer? = null) : Structure(pointer) 
 }
 
 open class WGPUShaderSourceWGSL(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
-    @JvmField var code: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
+    @JvmField var code: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     override fun getFieldOrder() = listOf<String>("chain", "code")
     class ByReference(pointer: Pointer? = null) : WGPUShaderSourceWGSL(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUShaderSourceWGSL(pointer), Structure.ByValue
@@ -499,7 +500,7 @@ open class WGPUSurfaceCapabilities(pointer: Pointer? = null) : Structure(pointer
 }
 
 open class WGPUSurfaceColorManagement(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var colorSpace: Int = 0
     @JvmField var toneMappingMode: Int = 0
     override fun getFieldOrder() = listOf<String>("chain", "colorSpace", "toneMappingMode")
@@ -524,7 +525,7 @@ open class WGPUSurfaceConfiguration(pointer: Pointer? = null) : Structure(pointe
 }
 
 open class WGPUSurfaceSourceAndroidNativeWindow(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var window: Pointer? = null
     override fun getFieldOrder() = listOf<String>("chain", "window")
     class ByReference(pointer: Pointer? = null) : WGPUSurfaceSourceAndroidNativeWindow(pointer), Structure.ByReference
@@ -532,7 +533,7 @@ open class WGPUSurfaceSourceAndroidNativeWindow(pointer: Pointer? = null) : Stru
 }
 
 open class WGPUSurfaceSourceMetalLayer(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var layer: Pointer? = null
     override fun getFieldOrder() = listOf<String>("chain", "layer")
     class ByReference(pointer: Pointer? = null) : WGPUSurfaceSourceMetalLayer(pointer), Structure.ByReference
@@ -540,7 +541,7 @@ open class WGPUSurfaceSourceMetalLayer(pointer: Pointer? = null) : Structure(poi
 }
 
 open class WGPUSurfaceSourceWaylandSurface(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var display: Pointer? = null
     @JvmField var surface: Pointer? = null
     override fun getFieldOrder() = listOf<String>("chain", "display", "surface")
@@ -549,7 +550,7 @@ open class WGPUSurfaceSourceWaylandSurface(pointer: Pointer? = null) : Structure
 }
 
 open class WGPUSurfaceSourceWindowsHWND(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var hinstance: Pointer? = null
     @JvmField var hwnd: Pointer? = null
     override fun getFieldOrder() = listOf<String>("chain", "hinstance", "hwnd")
@@ -558,7 +559,7 @@ open class WGPUSurfaceSourceWindowsHWND(pointer: Pointer? = null) : Structure(po
 }
 
 open class WGPUSurfaceSourceXCBWindow(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var connection: Pointer? = null
     @JvmField var window: Int = 0
     override fun getFieldOrder() = listOf<String>("chain", "connection", "window")
@@ -567,7 +568,7 @@ open class WGPUSurfaceSourceXCBWindow(pointer: Pointer? = null) : Structure(poin
 }
 
 open class WGPUSurfaceSourceXlibWindow(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var display: Pointer? = null
     @JvmField var window: Long = 0L
     override fun getFieldOrder() = listOf<String>("chain", "display", "window")
@@ -604,7 +605,7 @@ open class WGPUTextureBindingLayout(pointer: Pointer? = null) : Structure(pointe
 }
 
 open class WGPUTextureBindingViewDimension(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var textureBindingViewDimension: Int = 0
     override fun getFieldOrder() = listOf<String>("chain", "textureBindingViewDimension")
     class ByReference(pointer: Pointer? = null) : WGPUTextureBindingViewDimension(pointer), Structure.ByReference
@@ -649,18 +650,18 @@ open class WGPUBindGroupLayoutEntry(pointer: Pointer? = null) : Structure(pointe
     @JvmField var binding: Int = 0
     @JvmField var visibility: Long = 0L
     @JvmField var bindingArraySize: Int = 0
-    @JvmField var buffer: Pointer? = null
-    @JvmField var sampler: Pointer? = null
-    @JvmField var texture: Pointer? = null
-    @JvmField var storageTexture: Pointer? = null
+    @JvmField var buffer: io.ygdrasil.wgpu.android.WGPUBufferBindingLayout.ByValue = io.ygdrasil.wgpu.android.WGPUBufferBindingLayout.ByValue()
+    @JvmField var sampler: io.ygdrasil.wgpu.android.WGPUSamplerBindingLayout.ByValue = io.ygdrasil.wgpu.android.WGPUSamplerBindingLayout.ByValue()
+    @JvmField var texture: io.ygdrasil.wgpu.android.WGPUTextureBindingLayout.ByValue = io.ygdrasil.wgpu.android.WGPUTextureBindingLayout.ByValue()
+    @JvmField var storageTexture: io.ygdrasil.wgpu.android.WGPUStorageTextureBindingLayout.ByValue = io.ygdrasil.wgpu.android.WGPUStorageTextureBindingLayout.ByValue()
     override fun getFieldOrder() = listOf<String>("nextInChain", "binding", "visibility", "bindingArraySize", "buffer", "sampler", "texture", "storageTexture")
     class ByReference(pointer: Pointer? = null) : WGPUBindGroupLayoutEntry(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUBindGroupLayoutEntry(pointer), Structure.ByValue
 }
 
 open class WGPUBlendState(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var color: Pointer? = null
-    @JvmField var alpha: Pointer? = null
+    @JvmField var color: io.ygdrasil.wgpu.android.WGPUBlendComponent.ByValue = io.ygdrasil.wgpu.android.WGPUBlendComponent.ByValue()
+    @JvmField var alpha: io.ygdrasil.wgpu.android.WGPUBlendComponent.ByValue = io.ygdrasil.wgpu.android.WGPUBlendComponent.ByValue()
     override fun getFieldOrder() = listOf<String>("color", "alpha")
     class ByReference(pointer: Pointer? = null) : WGPUBlendState(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUBlendState(pointer), Structure.ByValue
@@ -677,7 +678,7 @@ open class WGPUCompilationInfo(pointer: Pointer? = null) : Structure(pointer) {
 
 open class WGPUComputePassDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var timestampWrites: Pointer? = null
     override fun getFieldOrder() = listOf<String>("nextInChain", "label", "timestampWrites")
     class ByReference(pointer: Pointer? = null) : WGPUComputePassDescriptor(pointer), Structure.ByReference
@@ -687,7 +688,7 @@ open class WGPUComputePassDescriptor(pointer: Pointer? = null) : Structure(point
 open class WGPUComputeState(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
     @JvmField var module: Pointer? = null
-    @JvmField var entryPoint: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var entryPoint: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var constantCount: Long = 0L
     @JvmField var constants: Pointer? = null
     override fun getFieldOrder() = listOf<String>("nextInChain", "module", "entryPoint", "constantCount", "constants")
@@ -700,8 +701,8 @@ open class WGPUDepthStencilState(pointer: Pointer? = null) : Structure(pointer) 
     @JvmField var format: Int = 0
     @JvmField var depthWriteEnabled: Int = 0
     @JvmField var depthCompare: Int = 0
-    @JvmField var stencilFront: Pointer? = null
-    @JvmField var stencilBack: Pointer? = null
+    @JvmField var stencilFront: io.ygdrasil.wgpu.android.WGPUStencilFaceState.ByValue = io.ygdrasil.wgpu.android.WGPUStencilFaceState.ByValue()
+    @JvmField var stencilBack: io.ygdrasil.wgpu.android.WGPUStencilFaceState.ByValue = io.ygdrasil.wgpu.android.WGPUStencilFaceState.ByValue()
     @JvmField var stencilReadMask: Int = 0
     @JvmField var stencilWriteMask: Int = 0
     @JvmField var depthBias: Int = 0
@@ -713,7 +714,7 @@ open class WGPUDepthStencilState(pointer: Pointer? = null) : Structure(pointer) 
 }
 
 open class WGPUFutureWaitInfo(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var future: Pointer? = null
+    @JvmField var future: io.ygdrasil.wgpu.android.WGPUFuture.ByValue = io.ygdrasil.wgpu.android.WGPUFuture.ByValue()
     @JvmField var completed: Int = 0
     override fun getFieldOrder() = listOf<String>("future", "completed")
     class ByReference(pointer: Pointer? = null) : WGPUFutureWaitInfo(pointer), Structure.ByReference
@@ -776,7 +777,7 @@ open class WGPURenderPassColorAttachment(pointer: Pointer? = null) : Structure(p
     @JvmField var resolveTarget: Pointer? = null
     @JvmField var loadOp: Int = 0
     @JvmField var storeOp: Int = 0
-    @JvmField var clearValue: Pointer? = null
+    @JvmField var clearValue: io.ygdrasil.wgpu.android.WGPUColor.ByValue = io.ygdrasil.wgpu.android.WGPUColor.ByValue()
     override fun getFieldOrder() = listOf<String>("nextInChain", "view", "depthSlice", "resolveTarget", "loadOp", "storeOp", "clearValue")
     class ByReference(pointer: Pointer? = null) : WGPURenderPassColorAttachment(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPURenderPassColorAttachment(pointer), Structure.ByValue
@@ -796,7 +797,7 @@ open class WGPURequestAdapterOptions(pointer: Pointer? = null) : Structure(point
 
 open class WGPUShaderModuleDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     override fun getFieldOrder() = listOf<String>("nextInChain", "label")
     class ByReference(pointer: Pointer? = null) : WGPUShaderModuleDescriptor(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUShaderModuleDescriptor(pointer), Structure.ByValue
@@ -804,14 +805,14 @@ open class WGPUShaderModuleDescriptor(pointer: Pointer? = null) : Structure(poin
 
 open class WGPUSurfaceDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     override fun getFieldOrder() = listOf<String>("nextInChain", "label")
     class ByReference(pointer: Pointer? = null) : WGPUSurfaceDescriptor(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUSurfaceDescriptor(pointer), Structure.ByValue
 }
 
 open class WGPUTexelCopyBufferInfo(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var layout: Pointer? = null
+    @JvmField var layout: io.ygdrasil.wgpu.android.WGPUTexelCopyBufferLayout.ByValue = io.ygdrasil.wgpu.android.WGPUTexelCopyBufferLayout.ByValue()
     @JvmField var buffer: Pointer? = null
     override fun getFieldOrder() = listOf<String>("layout", "buffer")
     class ByReference(pointer: Pointer? = null) : WGPUTexelCopyBufferInfo(pointer), Structure.ByReference
@@ -821,7 +822,7 @@ open class WGPUTexelCopyBufferInfo(pointer: Pointer? = null) : Structure(pointer
 open class WGPUTexelCopyTextureInfo(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var texture: Pointer? = null
     @JvmField var mipLevel: Int = 0
-    @JvmField var origin: Pointer? = null
+    @JvmField var origin: io.ygdrasil.wgpu.android.WGPUOrigin3D.ByValue = io.ygdrasil.wgpu.android.WGPUOrigin3D.ByValue()
     @JvmField var aspect: Int = 0
     override fun getFieldOrder() = listOf<String>("texture", "mipLevel", "origin", "aspect")
     class ByReference(pointer: Pointer? = null) : WGPUTexelCopyTextureInfo(pointer), Structure.ByReference
@@ -829,8 +830,8 @@ open class WGPUTexelCopyTextureInfo(pointer: Pointer? = null) : Structure(pointe
 }
 
 open class WGPUTextureComponentSwizzleDescriptor(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
-    @JvmField var swizzle: Pointer? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
+    @JvmField var swizzle: io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzle.ByValue = io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzle.ByValue()
     override fun getFieldOrder() = listOf<String>("chain", "swizzle")
     class ByReference(pointer: Pointer? = null) : WGPUTextureComponentSwizzleDescriptor(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUTextureComponentSwizzleDescriptor(pointer), Structure.ByValue
@@ -838,10 +839,10 @@ open class WGPUTextureComponentSwizzleDescriptor(pointer: Pointer? = null) : Str
 
 open class WGPUTextureDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var usage: Long = 0L
     @JvmField var dimension: Int = 0
-    @JvmField var size: Pointer? = null
+    @JvmField var size: io.ygdrasil.wgpu.android.WGPUExtent3D.ByValue = io.ygdrasil.wgpu.android.WGPUExtent3D.ByValue()
     @JvmField var format: Int = 0
     @JvmField var mipLevelCount: Int = 0
     @JvmField var sampleCount: Int = 0
@@ -865,7 +866,7 @@ open class WGPUVertexBufferLayout(pointer: Pointer? = null) : Structure(pointer)
 
 open class WGPUBindGroupDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var layout: Pointer? = null
     @JvmField var entryCount: Long = 0L
     @JvmField var entries: Pointer? = null
@@ -876,7 +877,7 @@ open class WGPUBindGroupDescriptor(pointer: Pointer? = null) : Structure(pointer
 
 open class WGPUBindGroupLayoutDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var entryCount: Long = 0L
     @JvmField var entries: Pointer? = null
     override fun getFieldOrder() = listOf<String>("nextInChain", "label", "entryCount", "entries")
@@ -896,9 +897,9 @@ open class WGPUColorTargetState(pointer: Pointer? = null) : Structure(pointer) {
 
 open class WGPUComputePipelineDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var layout: Pointer? = null
-    @JvmField var compute: Pointer? = null
+    @JvmField var compute: io.ygdrasil.wgpu.android.WGPUComputeState.ByValue = io.ygdrasil.wgpu.android.WGPUComputeState.ByValue()
     override fun getFieldOrder() = listOf<String>("nextInChain", "label", "layout", "compute")
     class ByReference(pointer: Pointer? = null) : WGPUComputePipelineDescriptor(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUComputePipelineDescriptor(pointer), Structure.ByValue
@@ -906,13 +907,13 @@ open class WGPUComputePipelineDescriptor(pointer: Pointer? = null) : Structure(p
 
 open class WGPUDeviceDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var requiredFeatureCount: Long = 0L
     @JvmField var requiredFeatures: Pointer? = null
     @JvmField var requiredLimits: Pointer? = null
-    @JvmField var defaultQueue: Pointer? = null
-    @JvmField var deviceLostCallbackInfo: Pointer? = null
-    @JvmField var uncapturedErrorCallbackInfo: Pointer? = null
+    @JvmField var defaultQueue: io.ygdrasil.wgpu.android.WGPUQueueDescriptor.ByValue = io.ygdrasil.wgpu.android.WGPUQueueDescriptor.ByValue()
+    @JvmField var deviceLostCallbackInfo: io.ygdrasil.wgpu.android.WGPUDeviceLostCallbackInfo.ByValue = io.ygdrasil.wgpu.android.WGPUDeviceLostCallbackInfo.ByValue()
+    @JvmField var uncapturedErrorCallbackInfo: io.ygdrasil.wgpu.android.WGPUUncapturedErrorCallbackInfo.ByValue = io.ygdrasil.wgpu.android.WGPUUncapturedErrorCallbackInfo.ByValue()
     override fun getFieldOrder() = listOf<String>("nextInChain", "label", "requiredFeatureCount", "requiredFeatures", "requiredLimits", "defaultQueue", "deviceLostCallbackInfo", "uncapturedErrorCallbackInfo")
     class ByReference(pointer: Pointer? = null) : WGPUDeviceDescriptor(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUDeviceDescriptor(pointer), Structure.ByValue
@@ -920,7 +921,7 @@ open class WGPUDeviceDescriptor(pointer: Pointer? = null) : Structure(pointer) {
 
 open class WGPURenderPassDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var colorAttachmentCount: Long = 0L
     @JvmField var colorAttachments: Pointer? = null
     @JvmField var depthStencilAttachment: Pointer? = null
@@ -933,7 +934,7 @@ open class WGPURenderPassDescriptor(pointer: Pointer? = null) : Structure(pointe
 
 open class WGPUTextureViewDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var format: Int = 0
     @JvmField var dimension: Int = 0
     @JvmField var baseMipLevel: Int = 0
@@ -950,7 +951,7 @@ open class WGPUTextureViewDescriptor(pointer: Pointer? = null) : Structure(point
 open class WGPUVertexState(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
     @JvmField var module: Pointer? = null
-    @JvmField var entryPoint: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var entryPoint: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var constantCount: Long = 0L
     @JvmField var constants: Pointer? = null
     @JvmField var bufferCount: Long = 0L
@@ -963,7 +964,7 @@ open class WGPUVertexState(pointer: Pointer? = null) : Structure(pointer) {
 open class WGPUFragmentState(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
     @JvmField var module: Pointer? = null
-    @JvmField var entryPoint: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var entryPoint: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var constantCount: Long = 0L
     @JvmField var constants: Pointer? = null
     @JvmField var targetCount: Long = 0L
@@ -975,12 +976,12 @@ open class WGPUFragmentState(pointer: Pointer? = null) : Structure(pointer) {
 
 open class WGPURenderPipelineDescriptor(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var nextInChain: Pointer? = null
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var layout: Pointer? = null
-    @JvmField var vertex: Pointer? = null
-    @JvmField var primitive: Pointer? = null
+    @JvmField var vertex: io.ygdrasil.wgpu.android.WGPUVertexState.ByValue = io.ygdrasil.wgpu.android.WGPUVertexState.ByValue()
+    @JvmField var primitive: io.ygdrasil.wgpu.android.WGPUPrimitiveState.ByValue = io.ygdrasil.wgpu.android.WGPUPrimitiveState.ByValue()
     @JvmField var depthStencil: Pointer? = null
-    @JvmField var multisample: Pointer? = null
+    @JvmField var multisample: io.ygdrasil.wgpu.android.WGPUMultisampleState.ByValue = io.ygdrasil.wgpu.android.WGPUMultisampleState.ByValue()
     @JvmField var fragment: Pointer? = null
     override fun getFieldOrder() = listOf<String>("nextInChain", "label", "layout", "vertex", "primitive", "depthStencil", "multisample", "fragment")
     class ByReference(pointer: Pointer? = null) : WGPURenderPipelineDescriptor(pointer), Structure.ByReference
@@ -1014,7 +1015,7 @@ open class WGPUNativeDisplayHandle(pointer: Pointer? = null) : Structure(pointer
     @JvmField var type: Int = 0
     @JvmField var data: Data = Data()
     override fun getFieldOrder() = listOf<String>("type", "data")
-    class Data : com.sun.jna.Union() {
+    class Data : com.sun.jna.Union(), Structure.ByValue {
         @JvmField var xlib: WGPUXlibDisplayHandle.ByValue = WGPUXlibDisplayHandle.ByValue()
         @JvmField var xcb: WGPUXcbDisplayHandle.ByValue = WGPUXcbDisplayHandle.ByValue()
         @JvmField var wayland: WGPUWaylandDisplayHandle.ByValue = WGPUWaylandDisplayHandle.ByValue()
@@ -1024,33 +1025,33 @@ open class WGPUNativeDisplayHandle(pointer: Pointer? = null) : Structure(pointer
 }
 
 open class WGPUInstanceExtras(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var backends: Long = 0L
     @JvmField var flags: Long = 0L
     @JvmField var dx12ShaderCompiler: Int = 0
     @JvmField var gles3MinorVersion: Int = 0
     @JvmField var glFenceBehaviour: Int = 0
-    @JvmField var dxcPath: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var dxcPath: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var dxcMaxShaderModel: Int = 0
     @JvmField var dx12PresentationSystem: Int = 0
     @JvmField var budgetForDeviceCreation: Pointer? = null
     @JvmField var budgetForDeviceLoss: Pointer? = null
-    @JvmField var displayHandle: Pointer? = null
+    @JvmField var displayHandle: io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByValue = io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByValue()
     override fun getFieldOrder() = listOf<String>("chain", "backends", "flags", "dx12ShaderCompiler", "gles3MinorVersion", "glFenceBehaviour", "dxcPath", "dxcMaxShaderModel", "dx12PresentationSystem", "budgetForDeviceCreation", "budgetForDeviceLoss", "displayHandle")
     class ByReference(pointer: Pointer? = null) : WGPUInstanceExtras(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUInstanceExtras(pointer), Structure.ByValue
 }
 
 open class WGPUDeviceExtras(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
-    @JvmField var tracePath: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
+    @JvmField var tracePath: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     override fun getFieldOrder() = listOf<String>("chain", "tracePath")
     class ByReference(pointer: Pointer? = null) : WGPUDeviceExtras(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUDeviceExtras(pointer), Structure.ByValue
 }
 
 open class WGPUNativeLimits(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var maxImmediateSize: Int = 0
     @JvmField var maxNonSamplerBindings: Int = 0
     @JvmField var maxBindingArrayElementsPerShaderStage: Int = 0
@@ -1060,7 +1061,7 @@ open class WGPUNativeLimits(pointer: Pointer? = null) : Structure(pointer) {
 }
 
 open class WGPUPipelineLayoutExtras(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var immediateDataSize: Int = 0
     override fun getFieldOrder() = listOf<String>("chain", "immediateDataSize")
     class ByReference(pointer: Pointer? = null) : WGPUPipelineLayoutExtras(pointer), Structure.ByReference
@@ -1068,17 +1069,17 @@ open class WGPUPipelineLayoutExtras(pointer: Pointer? = null) : Structure(pointe
 }
 
 open class WGPUShaderDefine(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var name: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
-    @JvmField var value: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var name: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
+    @JvmField var value: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     override fun getFieldOrder() = listOf<String>("name", "value")
     class ByReference(pointer: Pointer? = null) : WGPUShaderDefine(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUShaderDefine(pointer), Structure.ByValue
 }
 
 open class WGPUShaderSourceGLSL(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var stage: Long = 0L
-    @JvmField var code: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var code: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var defineCount: Int = 0
     @JvmField var defines: Pointer? = null
     override fun getFieldOrder() = listOf<String>("chain", "stage", "code", "defineCount", "defines")
@@ -1087,7 +1088,7 @@ open class WGPUShaderSourceGLSL(pointer: Pointer? = null) : Structure(pointer) {
 }
 
 open class WGPUShaderModuleDescriptorSpirV(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByReference? = null
+    @JvmField var label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
     @JvmField var sourceSize: Int = 0
     @JvmField var source: Pointer? = null
     override fun getFieldOrder() = listOf<String>("label", "sourceSize", "source")
@@ -1106,31 +1107,31 @@ open class WGPURegistryReport(pointer: Pointer? = null) : Structure(pointer) {
 }
 
 open class WGPUHubReport(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var adapters: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var devices: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var queues: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var pipelineLayouts: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var shaderModules: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var bindGroupLayouts: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var bindGroups: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var commandBuffers: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var renderBundles: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var renderPipelines: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var computePipelines: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var pipelineCaches: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var querySets: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var buffers: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var textures: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var textureViews: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var samplers: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
+    @JvmField var adapters: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var devices: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var queues: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var pipelineLayouts: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var shaderModules: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var bindGroupLayouts: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var bindGroups: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var commandBuffers: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var renderBundles: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var renderPipelines: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var computePipelines: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var pipelineCaches: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var querySets: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var buffers: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var textures: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var textureViews: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var samplers: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
     override fun getFieldOrder() = listOf<String>("adapters", "devices", "queues", "pipelineLayouts", "shaderModules", "bindGroupLayouts", "bindGroups", "commandBuffers", "renderBundles", "renderPipelines", "computePipelines", "pipelineCaches", "querySets", "buffers", "textures", "textureViews", "samplers")
     class ByReference(pointer: Pointer? = null) : WGPUHubReport(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUHubReport(pointer), Structure.ByValue
 }
 
 open class WGPUGlobalReport(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var surfaces: io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference? = null
-    @JvmField var hub: io.ygdrasil.wgpu.android.WGPUHubReport.ByReference? = null
+    @JvmField var surfaces: io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+    @JvmField var hub: io.ygdrasil.wgpu.android.WGPUHubReport.ByValue = io.ygdrasil.wgpu.android.WGPUHubReport.ByValue()
     override fun getFieldOrder() = listOf<String>("surfaces", "hub")
     class ByReference(pointer: Pointer? = null) : WGPUGlobalReport(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUGlobalReport(pointer), Structure.ByValue
@@ -1145,7 +1146,7 @@ open class WGPUInstanceEnumerateAdapterOptions(pointer: Pointer? = null) : Struc
 }
 
 open class WGPUBindGroupEntryExtras(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var buffers: Pointer? = null
     @JvmField var bufferCount: Long = 0L
     @JvmField var samplers: Pointer? = null
@@ -1158,7 +1159,7 @@ open class WGPUBindGroupEntryExtras(pointer: Pointer? = null) : Structure(pointe
 }
 
 open class WGPUBindGroupLayoutEntryExtras(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var count: Int = 0
     override fun getFieldOrder() = listOf<String>("chain", "count")
     class ByReference(pointer: Pointer? = null) : WGPUBindGroupLayoutEntryExtras(pointer), Structure.ByReference
@@ -1166,7 +1167,7 @@ open class WGPUBindGroupLayoutEntryExtras(pointer: Pointer? = null) : Structure(
 }
 
 open class WGPUQuerySetDescriptorExtras(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var pipelineStatistics: Pointer? = null
     @JvmField var pipelineStatisticCount: Long = 0L
     override fun getFieldOrder() = listOf<String>("chain", "pipelineStatistics", "pipelineStatisticCount")
@@ -1175,7 +1176,7 @@ open class WGPUQuerySetDescriptorExtras(pointer: Pointer? = null) : Structure(po
 }
 
 open class WGPUSurfaceConfigurationExtras(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var desiredMaximumFrameLatency: Int = 0
     override fun getFieldOrder() = listOf<String>("chain", "desiredMaximumFrameLatency")
     class ByReference(pointer: Pointer? = null) : WGPUSurfaceConfigurationExtras(pointer), Structure.ByReference
@@ -1183,7 +1184,7 @@ open class WGPUSurfaceConfigurationExtras(pointer: Pointer? = null) : Structure(
 }
 
 open class WGPUSurfaceSourceSwapChainPanel(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var panelNative: Pointer? = null
     override fun getFieldOrder() = listOf<String>("chain", "panelNative")
     class ByReference(pointer: Pointer? = null) : WGPUSurfaceSourceSwapChainPanel(pointer), Structure.ByReference
@@ -1191,7 +1192,7 @@ open class WGPUSurfaceSourceSwapChainPanel(pointer: Pointer? = null) : Structure
 }
 
 open class WGPUPrimitiveStateExtras(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference? = null
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
     @JvmField var polygonMode: Int = 0
     @JvmField var conservative: Int = 0
     override fun getFieldOrder() = listOf<String>("chain", "polygonMode", "conservative")
