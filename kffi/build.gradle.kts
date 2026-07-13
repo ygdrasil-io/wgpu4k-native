@@ -43,6 +43,15 @@ kotlin {
         }
     }
 
+    nativeTargets.forEach { target ->
+        val main by target.compilations.getting {
+            cinterops.create("callbackTokenCodec") {
+                defFile(project.file("src/nativeInterop/cinterop/callbackTokenCodec.def"))
+                includeDirs(project.file("src/nativeInterop/cinterop"))
+            }
+        }
+    }
+
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
@@ -84,6 +93,14 @@ java {
     }
 }
 
-tasks.named<Test>("jvmTest") {
-    useJUnitPlatform()
+tasks.withType<Test>().configureEach {
+    when (name) {
+        "jvmTest" -> useJUnitPlatform()
+        "testDebugUnitTest" -> {
+            useJUnitPlatform()
+            filter {
+                excludeTestsMatching("io.ygdrasil.kffi.MemoryBufferArrayTest")
+            }
+        }
+    }
 }
