@@ -83,3 +83,7 @@ java {
         languageVersion = JavaLanguageVersion.of(25)
     }
 }
+
+tasks.named<Test>("jvmTest") {
+    useJUnitPlatform()
+}
