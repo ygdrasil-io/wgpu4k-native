@@ -62,6 +62,7 @@ The refresh and callback changes should remain reviewable as separate commits or
 - Make closure idempotent and safe in the presence of late native calls.
 - Ensure a one-shot registration delivers at most once.
 - Prevent Kotlin exceptions from crossing the FFI boundary.
+- Make any no-userdata re-arming visibly unsafe and require a compiler-enforced opt-in.
 - Require explicit WebGPU callback modes on the safe API path.
 - Preserve raw bindings for low-level and unsupported use cases.
 - Generate the behavior from `kextract`; do not patch generated WebGPU files manually.
@@ -74,7 +75,7 @@ The refresh and callback changes should remain reviewable as separate commits or
 - Hide `wgpuInstanceProcessEvents`, `wgpuInstanceWaitAny`, or `wgpuDevicePoll` behind a single policy.
 - Implement Android/JNA upcalls in this iteration.
 - Support C callbacks with non-`void` return values in this iteration.
-- Guarantee safe reuse of a callback type without `userdata` unless native quiescence is explicitly configured.
+- Provide or verify native quiescence for callers that explicitly opt into re-arming a callback type without `userdata`.
 - Preserve source or binary compatibility with `CallbackHolder` and `allocate(callback)`.
 
 ## Chosen architecture
@@ -152,6 +153,14 @@ interface CallbackRegistration<C : Callback> : AutoCloseable {
 
     override fun close()
 }
+
+@RequiresOptIn(
+    level = RequiresOptIn.Level.ERROR,
+    message = "Re-arming a callback without userdata can route a delayed native call to the wrong Kotlin lambda unless native quiescence has already been established.",
+)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.BINARY)
+annotation class UnsafeCallbackRearmApi
 ```
 
 The exact `expect`/`actual` split is an implementation concern, but these semantics are required.
@@ -171,20 +180,36 @@ val registration = WGPUQueueWorkDoneCallback.register(
 
 The registration owns the registry entry, not the process-lifetime trampoline. There is no garbage-collector-driven close. A `REPEATING` registration must be closed by its logical owner.
 
+For a callback type without `userdata`, the generator also exposes `rearmAfterNativeQuiescence` under `@UnsafeCallbackRearmApi`. Calling it requires `@OptIn(UnsafeCallbackRearmApi::class)` or an equivalent compiler opt-in. Matching direct-function convenience overloads carry the same annotation and transactional behavior. The operation name and annotation are part of the safety contract; no unqualified `rearm` or automatic retry API is generated.
+
 ## Token and trampoline design
 
 For callbacks with compatible `userdata`:
 
 1. A process-wide atomic counter allocates a non-zero token.
 2. Tokens are never reused during the process lifetime.
-3. The token must fit the target `uintptr_t`; registration fails on exhaustion instead of wrapping.
-4. The token is represented as an opaque `NativeAddress` and must never be dereferenced.
+3. A platform `TokenCodec` encodes the unsigned token as an opaque `NativeAddress` and decodes it without dereferencing.
+4. The token must fit the codec's target `uintptr_t`; registration fails on exhaustion instead of wrapping.
 5. The registry entry stores the callback-type descriptor, delivery policy, state, lambda, and error handler.
 6. The trampoline supplies its expected callback-type descriptor during lookup, preventing cross-type dispatch.
 
+The internal codec contract is normative:
+
+```kotlin
+internal interface TokenCodec {
+    val pointerBits: Int
+    val maxToken: ULong
+
+    fun encode(token: ULong): NativeAddress
+    fun decode(address: NativeAddress?): ULong?
+}
+```
+
+Each platform implementation uses unsigned arithmetic, declares an allowlist of supported ABIs and pointer widths, rejects zero and out-of-range values before registry insertion, and verifies encode/decode round trips in platform tests. A target with an unsupported pointer model fails explicitly instead of compiling an unverified fallback.
+
 JVM generates one lazily initialized FFM upcall stub per callback type in `Arena.global()`. Kotlin/Native generates one `staticCFunction` per callback type. Neither resource is tied to a registration or memory scope.
 
-The integer-to-pointer representation is deliberately internal. It is supported only on targets where an opaque `void*` round trip through `uintptr_t` is valid. Unsupported pointer models must fail at build or registration time rather than falling back to dereferenceable short-lived context memory.
+The integer-to-pointer representation is deliberately internal. Because converting arbitrary integers to pointers is implementation-defined in C, support requires a verified `void*`/`uintptr_t` round trip on every allowed target ABI. Unsupported pointer models must fail at build or registration time rather than falling back to dereferenceable short-lived context memory.
 
 ## Lifecycle and concurrency semantics
 
@@ -223,17 +248,35 @@ UNUSED -> ACTIVE -> RETIRED
 - late calls hit the permanent trampoline and are ignored;
 - raw APIs remain available for expert-managed lifetimes.
 
-Consumer configuration may opt a no-userdata callback into re-arming only when the native API explicitly guarantees that no earlier callback can occur after unregistration or replacement. That guarantee must be documented next to the configuration.
+Configuration alone does not make re-arming safe and cannot enable it transparently. The only generated escape hatch is the error-level opt-in operation:
+
+```kotlin
+@UnsafeCallbackRearmApi
+fun rearmAfterNativeQuiescence(...): CallbackRegistration<C>
+```
+
+The caller must complete any native unregistration, stop, join, or other documented synchronous quiescence operation before calling this function. The function then performs the explicit `RETIRED -> ACTIVE` transition. It neither invokes nor verifies native quiescence. If the caller's guarantee is false, a delayed old callback can be delivered to the new lambda; this behavior is intentionally classified as unsafe rather than as a safe configured capability.
 
 ## Exception handling
 
 No Kotlin exception may cross the FFI boundary.
 
-Every generated trampoline catches `Throwable` around user code:
+Every generated trampoline places one outer `try/catch(Throwable)` around its complete body, including:
 
-- the registration remains consumed for `ONCE`;
-- the exception is passed to the registration's `CallbackExceptionHandler`;
-- if the error handler also throws, a platform fallback reports both failures without returning an exception to native code.
+- token decoding;
+- registry lookup and callback-type validation;
+- native-to-Kotlin argument conversion;
+- state claim or repeating-entry acquisition;
+- user-code invocation;
+- normal error-handler selection.
+
+When any of these steps fails:
+
+- an `ONCE` registration remains consumed when the failure occurs after its claim; a pre-claim routing failure does not count as a delivery;
+- the exception is passed to the registration's `CallbackExceptionHandler` when the entry and handler are available;
+- otherwise a registry-independent platform fallback handles it;
+- if the error handler also throws, the fallback receives both failures;
+- the fallback itself is guarded by a final catch that prevents propagation across FFI even if reporting fails.
 
 The default handler uses the platform uncaught-exception mechanism when one is safely available, otherwise `stderr`. It must not silently discard the error.
 
@@ -253,11 +296,15 @@ Callbacks returning a value remain explicitly unsupported.
 
 ### Direct callback functions
 
-For a function that accepts a callback and its routing userdata directly, the raw binding remains available. A safe overload:
+For a function that accepts a callback and its routing userdata directly, the raw binding remains available. A safe overload uses the internal states `PREPARED`, `ACTIVE`, and `ABORTED` in addition to the public terminal states. It:
 
-1. creates the typed registration;
-2. passes `registration.callback` and `registration.userdata` to the raw function;
-3. returns the registration to the caller.
+1. resolves native symbols, validates arguments, and performs all binding preparation that can be completed before registry publication;
+2. creates a `PREPARED` typed registration;
+3. publishes it as `ACTIVE` immediately before the downcall, allowing a native implementation to invoke the callback reentrantly;
+4. passes `registration.callback` and `registration.userdata` to the raw function;
+5. returns the registration only after the downcall returns normally.
+
+If preparation fails before publication, the entry becomes `ABORTED` without publishing a registry entry or consuming a no-userdata slot; a token value allocated during failed preparation may be discarded but is never reused. If an exception occurs after publication, the overload closes and removes a userdata-backed entry so any late call is a no-op. A no-userdata entry becomes `RETIRED`, because the binding cannot generally prove that native code was never entered or that the callback was not retained. No failure path leaves a live lambda in the registry.
 
 The application cannot accidentally substitute unrelated userdata on this safe path.
 
@@ -265,15 +312,20 @@ The application cannot accidentally substitute unrelated userdata on this safe p
 
 Safe callback-info generation is opt-in because a generic C generator cannot assume that every native API copies a structure or assigns the same meaning to a field named `mode`.
 
-The `wgpu4k-native` generator configuration declares:
+The `wgpu4k-native` generator configuration uses typed declarations keyed by canonical declaration identifiers. A callback-info binding entry declares:
 
-- the callback-info structures eligible for safe allocation;
-- the callback field;
+- the callback-info structure identifier;
+- the owning function identifier and parameter path, including nested descriptor paths;
+- the callback field identifier and exact callback typedef;
 - the reserved routing userdata field;
-- the application userdata fields;
-- an optional mode field;
-- accepted mode constants when that field exists;
-- that the owning native API consumes or copies the structure contents during the call and does not retain the allocation address.
+- distinct application userdata fields;
+- an optional mode field and its exact type;
+- accepted mode constant identifiers when that field exists;
+- an explicit `CONSUMED_DURING_CALL` lifetime convention stating that the owning native API copies the contents and does not retain the allocation address.
+
+A direct-function binding entry similarly identifies the owning function, callback parameter, and routing userdata parameter.
+
+At generation time, `kextract` validates that every canonical identifier exists exactly once, referenced fields and parameters have the expected types, userdata fields are distinct, the reserved field is the callback's last compatible userdata, the callback typedef matches the registration type, mode constants belong to the declared mode type, and the owning API/lifetime convention is present. Stale, incomplete, duplicate, or ambiguous entries fail generation; structural name matching cannot silently override configured metadata.
 
 For mode-bearing WebGPU callback-info structures, the accepted modes are:
 
@@ -338,6 +390,7 @@ The raw C-level path remains available for unsupported or expert-managed cases.
 
 - Tokens are non-zero, unique, and not reused.
 - Token allocation fails instead of wrapping.
+- Every supported `TokenCodec` passes unsigned boundary and encode/decode tests; unsupported ABIs fail explicitly.
 - `close()` is idempotent.
 - Concurrent `ONCE` delivery invokes at most one lambda.
 - A race between close and delivery has one observable winner.
@@ -348,7 +401,8 @@ The raw C-level path remains available for unsupported or expert-managed cases.
 - Failure in `onError` reaches the fallback reporter.
 - A no-userdata second registration is rejected while active.
 - A no-userdata type is retired after close or one-shot completion.
-- Re-arming is tested only for explicitly quiescent configured callbacks.
+- Safe re-registration of a retired no-userdata type is rejected.
+- `rearmAfterNativeQuiescence` requires `UnsafeCallbackRearmApi` opt-in and is tested only after fixture-provided synchronous quiescence.
 
 ### `kextract` generation tests
 
@@ -360,7 +414,9 @@ The raw C-level path remains available for unsupported or expert-managed cases.
 - Callback-info factories require a registration and require a mode only for structures that define one.
 - Invalid WebGPU modes are rejected for mode-bearing structures.
 - No-userdata callbacks generate retirement behavior.
+- No-userdata re-arming is emitted only under the error-level opt-in marker.
 - Ambiguous signatures fail generation with useful diagnostics.
+- Stale canonical IDs, mismatched callback/userdata pairs, overlapping fields, invalid mode constants, and missing lifetime conventions fail generation.
 - Android output clearly reports unsupported registration.
 - Existing KMP, variadic, Windows, and Objective-C generator coverage remains green after the refresh.
 
@@ -374,9 +430,14 @@ A small native fixture stores a callback and userdata, then can:
 - invoke from another thread;
 - invoke twice;
 - invoke many registrations in shuffled order;
-- invoke after registration close.
+- invoke after registration close;
+- synchronously unregister and establish quiescence for a no-userdata callback;
+- expose test-only counts for created trampolines and active registry entries;
+- inject registration failures before and after registry publication;
+- return unknown or deliberately mismatched tokens;
+- trigger callback and error-handler exceptions from a native thread.
 
-The fixture runs on JVM and at least one Kotlin/Native target. It proves the real FFI path rather than only generated text.
+The fixture runs on JVM and at least one Kotlin/Native target. Concurrent initialization must create one trampoline per callback type. Massive create/deliver/close loops must return registry counts to their baseline, including rollback paths. Unknown tokens, conversion failures, callback exceptions, and error-handler exceptions must remain contained on the native calling thread. The fixture proves the real FFI and resource-lifetime paths rather than only generated text.
 
 ### Headless `wgpu-native` integration
 
@@ -402,11 +463,15 @@ The `wgpu4k-native` portion is complete when:
 5. Late callbacks after close are safe no-ops.
 6. `ONCE` delivers at most once under duplicate and concurrent native calls.
 7. `REPEATING` remains active until explicitly closed.
-8. No-userdata callbacks cannot be unsafely reused without a configured quiescence guarantee.
+8. No-userdata callbacks remain retired by default; re-arming requires `UnsafeCallbackRearmApi` and an externally established native-quiescence guarantee.
 9. Safe WebGPU callback-info creation requires a valid explicit mode whenever the structure defines a mode field.
-10. Delayed fixture and headless WebGPU tests pass on JVM and Kotlin/Native with bounded timeouts.
-11. Generated sources are reproducible and require no manual patching.
-12. Android/JNA limitations are explicit at compile-time documentation and runtime failure points.
+10. Every trampoline contains the complete outer exception barrier and non-throwing fallback path.
+11. Direct safe overload failures cannot retain an active registry entry or silently free a possibly retained no-userdata callback.
+12. `TokenCodec` is allowlisted and round-trip-tested on every supported target ABI.
+13. Generator configuration is schema-validated against canonical declarations and exact types.
+14. Delayed fixture and headless WebGPU tests pass on JVM and Kotlin/Native with bounded timeouts.
+15. Generated sources are reproducible and require no manual patching.
+16. Android/JNA limitations are explicit at compile-time documentation and runtime failure points.
 
 The original coroutine-level issue is fully resolved only after the later `wgpu4k` change adds structured cancellation, exactly-once continuation resumption, and off-render-thread event pumping.
 
@@ -433,10 +498,12 @@ Rejected because it introduces an arbitrary concurrency limit and still risks mi
 ## Risks and mitigations
 
 - **`kextract` refresh conflicts:** keep the forward-port separate and verify equivalent generated output before callback changes.
-- **Opaque token portability:** support only pointer models with a verified `uintptr_t` round trip and fail fast elsewhere.
+- **Opaque token portability:** use an unsigned platform `TokenCodec`, allowlist verified target ABIs, test boundary round trips through C, and fail fast elsewhere.
 - **Token exhaustion:** never wrap or reuse; fail registration with a diagnostic.
 - **Registry leaks:** `ONCE` removes itself; `REPEATING` ownership and close requirements are documented and tested.
-- **No-userdata late calls:** retire the type by default; permit re-arming only with configured native quiescence.
-- **Exceptions at the FFI boundary:** catch all `Throwable`, invoke an error handler, then use a non-throwing platform fallback.
+- **No-userdata late calls:** retire the type by default; expose re-arming only through an error-level unsafe opt-in that requires externally established native quiescence.
+- **Registration failure:** publish only after fallible preparation, roll back userdata entries, and conservatively retire published no-userdata entries.
+- **Exceptions at the FFI boundary:** wrap the complete trampoline, invoke an error handler when available, and protect a registry-independent non-throwing platform fallback.
+- **Configuration drift:** resolve canonical declaration IDs and validate exact types, pairing, ownership, and lifetime semantics during generation.
 - **Event-thread surprises:** document that spontaneous callbacks may occur on arbitrary threads; keep dispatch in `wgpu4k`.
 - **Generated API drift:** run generator tests and a clean-regeneration CI check.
