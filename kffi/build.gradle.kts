@@ -1,5 +1,105 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+val callbackFixtureSource = layout.projectDirectory.file("src/ffiTest/resources/callback_fixture.c")
+val callbackFixtureHeader = layout.projectDirectory.file("src/ffiTest/resources/callback_fixture.h")
+val callbackFixtureOutputDirectory = layout.buildDirectory.dir("callback-fixture")
+val callbackFixtureHost = providers.gradleProperty("kffi.callbackFixture.hostForTest")
+    .orNull
+    ?.lowercase()
+    ?: when {
+        System.getProperty("os.name").contains("mac", ignoreCase = true) -> "macos"
+        System.getProperty("os.name").contains("linux", ignoreCase = true) -> "linux"
+        System.getProperty("os.name").contains("windows", ignoreCase = true) -> "windows"
+        else -> error("Unsupported callback fixture host: ${System.getProperty("os.name")}")
+    }
+require(callbackFixtureHost in setOf("macos", "linux", "windows")) {
+    "Unsupported callback fixture host override: $callbackFixtureHost"
+}
+val callbackFixtureSharedLibrary = when (callbackFixtureHost) {
+    "macos" -> callbackFixtureOutputDirectory.map { it.file("libcallback_fixture.dylib") }
+    "linux" -> callbackFixtureOutputDirectory.map { it.file("libcallback_fixture.so") }
+    "windows" -> null
+    else -> error("Unsupported callback fixture host: $callbackFixtureHost")
+}
+val callbackFixtureObject = callbackFixtureOutputDirectory.map { it.file("callback_fixture.o") }
+val callbackFixtureArchive = callbackFixtureOutputDirectory.map { it.file("libcallback_fixture.a") }
+
+val compileCallbackFixtureShared = callbackFixtureSharedLibrary?.let { sharedLibrary ->
+    tasks.register<Exec>("compileCallbackFixtureShared") {
+        group = "verification"
+        description = "Compiles the delayed callback C fixture for JVM FFM tests."
+        inputs.files(callbackFixtureSource, callbackFixtureHeader)
+        outputs.file(sharedLibrary)
+        doFirst {
+            callbackFixtureOutputDirectory.get().asFile.mkdirs()
+        }
+        commandLine(
+            buildList {
+                addAll(listOf("cc", "-std=c11", "-fPIC", "-pthread"))
+                add(
+                    when (callbackFixtureHost) {
+                        "macos" -> "-dynamiclib"
+                        "linux" -> "-shared"
+                        else -> error("No pthread shared fixture on $callbackFixtureHost")
+                    },
+                )
+                addAll(
+                    listOf(
+                        callbackFixtureSource.asFile.absolutePath,
+                        "-o",
+                        sharedLibrary.get().asFile.absolutePath,
+                    ),
+                )
+            },
+        )
+    }
+}
+
+val compileCallbackFixtureObject = if (callbackFixtureHost == "macos") {
+    tasks.register<Exec>("compileCallbackFixtureObject") {
+        group = "verification"
+        description = "Compiles the delayed callback C fixture object for macOS Native tests."
+        inputs.files(callbackFixtureSource, callbackFixtureHeader)
+        outputs.file(callbackFixtureObject)
+        doFirst {
+            callbackFixtureOutputDirectory.get().asFile.mkdirs()
+        }
+        commandLine(
+            "cc",
+            "-std=c11",
+            "-fPIC",
+            "-pthread",
+            "-arch",
+            "arm64",
+            "-c",
+            callbackFixtureSource.asFile.absolutePath,
+            "-o",
+            callbackFixtureObject.get().asFile.absolutePath,
+        )
+    }
+} else {
+    null
+}
+
+val archiveCallbackFixture = compileCallbackFixtureObject?.let { compileObject ->
+    tasks.register<Exec>("archiveCallbackFixture") {
+        group = "verification"
+        description = "Archives the delayed callback C fixture for macosArm64Test cinterop."
+        dependsOn(compileObject)
+        inputs.file(callbackFixtureObject)
+        outputs.file(callbackFixtureArchive)
+        doFirst {
+            callbackFixtureOutputDirectory.get().asFile.mkdirs()
+        }
+        commandLine(
+            "ar",
+            "rcs",
+            callbackFixtureArchive.get().asFile.absolutePath,
+            callbackFixtureObject.get().asFile.absolutePath,
+        )
+    }
+}
+
 plugins {
     `kotlin-multiplatform`
     com.android.library
@@ -9,11 +109,13 @@ plugins {
 
 kotlin {
 
+    val macosArm64Target = macosArm64()
+
     val nativeTargets = listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64(),
-        macosArm64(),
+        macosArm64Target,
         macosX64(),
         linuxArm64(),
         linuxX64(),
@@ -49,6 +151,19 @@ kotlin {
                 defFile(project.file("src/nativeInterop/cinterop/callbackTokenCodec.def"))
                 includeDirs(project.file("src/nativeInterop/cinterop"))
             }
+        }
+    }
+
+    if (callbackFixtureHost == "macos") {
+        val callbackFixtureInterop = macosArm64Target.compilations.getByName("test").cinterops.create(
+            "callbackFixture",
+        ) {
+            defFile(project.file("src/nativeInterop/cinterop/callbackFixture.def"))
+            includeDirs(project.file("src/ffiTest/resources"))
+            extraOpts("-libraryPath", callbackFixtureOutputDirectory.get().asFile.absolutePath)
+        }
+        tasks.named(callbackFixtureInterop.interopProcessingTaskName) {
+            dependsOn(requireNotNull(archiveCallbackFixture))
         }
     }
 
@@ -102,5 +217,34 @@ tasks.withType<Test>().configureEach {
                 excludeTestsMatching("io.ygdrasil.kffi.MemoryBufferArrayTest")
             }
         }
+    }
+}
+
+tasks.named<Test>("jvmTest") {
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
+    when (callbackFixtureHost) {
+        "macos", "linux" -> {
+            val sharedLibrary = requireNotNull(callbackFixtureSharedLibrary)
+            dependsOn(requireNotNull(compileCallbackFixtureShared))
+            inputs.file(sharedLibrary)
+            doFirst {
+                systemProperty(
+                    "kffi.callback.fixture.library",
+                    sharedLibrary.get().asFile.absolutePath,
+                )
+            }
+        }
+
+        "windows" -> filter {
+            // callback_fixture.c requires pthreads; keep every other JVM test in Windows CI.
+            excludeTestsMatching("io.ygdrasil.kffi.CallbackFfiJvmTest")
+        }
+    }
+}
+
+archiveCallbackFixture?.let { archiveFixture ->
+    tasks.named("macosArm64Test") {
+        dependsOn(archiveFixture)
+        inputs.file(callbackFixtureArchive)
     }
 }
