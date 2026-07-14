@@ -38,13 +38,19 @@ and is the only layer that can bound a deadlock after the downcall has started.
 `getAdapter` and `getDevice` will no longer use `AllowSpontaneous` with unsynchronized local
 variables. Both helpers will:
 
-- register an `ONCE` callback whose payload is published through atomics, with status published
-  last;
+- register an `ONCE` callback whose completed payload is atomically published only after the
+  owned handle and copied message are available;
 - allocate callback info in a short-lived scope to preserve the lifetime stress contract;
 - use `WaitAnyOnly` and pump the returned future through `wgpuInstanceWaitAny` with non-blocking
   waits and a monotonic deadline;
 - close the registration in `finally` and release any late or unsuccessful owned handle exactly
   once.
+
+Request state retains handle ownership until close and runtime quiescence have both completed. If
+waiting or cleanup fails, the state atomically enters a disposed mode: an already-published handle
+is released once, and any callback that publishes after disposal releases its incoming handle
+instead of making a result observable. Result resolution and ownership transfer happen only after
+successful cleanup.
 
 `wgpu-native` v29 currently does not implement futures for adapter/device requests: both functions
 ignore the requested callback mode, invoke the callback synchronously, and return `NULL_FUTURE`

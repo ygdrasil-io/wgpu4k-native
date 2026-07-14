@@ -18,8 +18,12 @@
 - A zero future remains rejected by default. The named v29 compatibility opt-in may accept it only
   when the callback is already complete and its registration is quiescent; it must never pump a
   zero future or accept incomplete/non-quiescent state.
-- Publish request status only after the owned handle and copied message.
+- Publish a completed request snapshot only after the owned handle and copied message are
+  available; never expose completion without the corresponding payload.
 - Transfer or release each adapter/device handle exactly once, including failure and late-cleanup paths.
+- Retain handle ownership in request state until registration close and runtime quiescence both
+  succeed. Cleanup failure must atomically dispose the state and release both published and late
+  handles exactly once.
 - Keep blocking or repeated event pumping outside graphical render loops.
 - Keep the stress invariants: 64 real submissions, 1,000 concurrent registrations per mode, 900/100 deterministic delivery/suppression for `WaitAnyOnly` and `AllowProcessEvents`, 1,000/0 for `AllowSpontaneous`, no duplicates, and exactly two validation errors.
 - Print `pending=0` only after every relevant registration is closed and quiescent.
@@ -56,7 +60,8 @@
 
 **Interfaces:**
 - Produces: `internal const val CallbackWaitPhaseTimeoutSeconds = 20`.
-- Produces: `CallbackRequestState<S : Any, H : Any>`, whose `publish` stores handle, message, then status.
+- Produces: `CallbackRequestState<S : Any, H : Any>`, whose completed snapshot contains status,
+  handle, and copied message, and whose disposed state releases published or late handles.
 - Produces: `awaitCallbackCondition(phase, timeout, isComplete, pendingDiagnostic, pump)`.
 - Produces: `awaitCallbackFuture(futureId, phase, timeout, isComplete, waitOnce)`.
 - Produces: `ZeroFuturePolicy`, defaulting to strict rejection with an explicit
@@ -85,7 +90,7 @@ import kotlin.time.Duration
 class CallbackCoordinationTest {
     @Test
     fun callbackFuturePumpsUntilStatusIsPublished() {
-        val state = CallbackRequestState<UInt, String>()
+        val state = CallbackRequestState<UInt, String>(release = {})
         var calls = 0
         awaitCallbackFuture(
             futureId = 41uL,
@@ -148,6 +153,34 @@ class CallbackCoordinationTest {
                 )
             }
         }
+    }
+
+    @Test
+    fun cleanupFailureDisposesAndReleasesAPublishedHandleExactlyOnce() {
+        var releases = 0
+        val state = CallbackRequestState<UInt, String> { releases += 1 }
+        state.publish(7u, "owned", "ready")
+
+        state.dispose()
+        state.dispose()
+
+        assertEquals(1, releases)
+        assertFalse(state.isComplete)
+        assertNull(state.takeHandle())
+    }
+
+    @Test
+    fun latePublicationAfterDisposalReleasesItsHandleAndStaysIncomplete() {
+        var released: String? = null
+        val state = CallbackRequestState<UInt, String> { released = it }
+        state.dispose()
+
+        state.publish(7u, "late", "too late")
+
+        assertEquals("late", released)
+        assertFalse(state.isComplete)
+        assertNull(state.snapshot().status)
+        assertNull(state.takeHandle())
     }
 
     @Test
@@ -218,23 +251,85 @@ internal enum class ZeroFuturePolicy {
     ALLOW_COMPLETED_SYNCHRONOUSLY,
 }
 
-internal class CallbackRequestState<S : Any, H : Any> {
-    private val status = AtomicReference<S?>(null)
-    private val handle = AtomicReference<H?>(null)
-    private val message = AtomicReference<String?>(null)
+private sealed interface CallbackRequestValue<out S : Any, out H : Any> {
+    data object Pending : CallbackRequestValue<Nothing, Nothing>
+    data class Completed<S : Any, H : Any>(
+        val status: S,
+        val handle: H?,
+        val message: String?,
+    ) : CallbackRequestValue<S, H>
+    data class Transferred<S : Any>(
+        val status: S,
+        val message: String?,
+    ) : CallbackRequestValue<S, Nothing>
+    data object Disposed : CallbackRequestValue<Nothing, Nothing>
+}
 
-    val isComplete: Boolean get() = status.load() != null
+internal class CallbackRequestState<S : Any, H : Any>(
+    private val release: (H) -> Unit,
+) {
+    private val value = AtomicReference<CallbackRequestValue<S, H>>(CallbackRequestValue.Pending)
+
+    val isComplete: Boolean
+        get() = when (value.load()) {
+            is CallbackRequestValue.Completed,
+            is CallbackRequestValue.Transferred,
+            -> true
+            CallbackRequestValue.Pending,
+            CallbackRequestValue.Disposed,
+            -> false
+        }
 
     fun publish(status: S, handle: H?, message: String?) {
-        this.handle.store(handle)
-        this.message.store(message)
-        this.status.store(status)
+        val completed = CallbackRequestValue.Completed(status, handle, message)
+        if (!value.compareAndSet(CallbackRequestValue.Pending, completed)) {
+            handle?.let(release)
+        }
     }
 
-    fun snapshot(): CallbackRequestSnapshot<S> =
-        CallbackRequestSnapshot(status.load(), message.load())
+    fun snapshot(): CallbackRequestSnapshot<S> = when (val current = value.load()) {
+        is CallbackRequestValue.Completed -> CallbackRequestSnapshot(current.status, current.message)
+        is CallbackRequestValue.Transferred -> CallbackRequestSnapshot(current.status, current.message)
+        CallbackRequestValue.Pending,
+        CallbackRequestValue.Disposed,
+        -> CallbackRequestSnapshot(null, null)
+    }
 
-    fun takeHandle(): H? = handle.exchange(null)
+    fun takeHandle(): H? {
+        while (true) {
+            when (val current = value.load()) {
+                is CallbackRequestValue.Completed -> {
+                    if (
+                        value.compareAndSet(
+                            current,
+                            CallbackRequestValue.Transferred(current.status, current.message),
+                        )
+                    ) return current.handle
+                }
+                is CallbackRequestValue.Transferred,
+                CallbackRequestValue.Pending,
+                CallbackRequestValue.Disposed,
+                -> return null
+            }
+        }
+    }
+
+    fun dispose() {
+        while (true) {
+            when (val current = value.load()) {
+                CallbackRequestValue.Disposed -> return
+                CallbackRequestValue.Pending,
+                is CallbackRequestValue.Transferred,
+                -> if (value.compareAndSet(current, CallbackRequestValue.Disposed)) return
+                is CallbackRequestValue.Completed -> {
+                    if (value.compareAndSet(current, CallbackRequestValue.Disposed)) {
+                        current.handle?.let(release)
+                        return
+                    }
+                }
+            }
+        }
+    }
 }
 
 internal fun awaitCallbackFuture(
@@ -314,11 +409,13 @@ Implement both helpers with the same ownership transaction. For device, the comp
 
 ```kotlin
 fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
-    val state = CallbackRequestState<WGPURequestDeviceStatus, WGPUDevice>()
+    val state = CallbackRequestState<WGPURequestDeviceStatus, WGPUDevice>(::wgpuDeviceRelease)
     val registration = WGPURequestDeviceCallback.register(CallbackPolicy.ONCE) { status, device, message, _ ->
         state.publish(status, device, message.data?.toKString(message.length))
     }
     var futureId = 0uL
+    var requestCompleted = false
+    var cleanupCompleted = false
     try {
         futureId = memoryScope { scope ->
             val info = WGPURequestDeviceCallbackInfo.allocate(
@@ -336,37 +433,44 @@ fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
             isQuiescent = { registration.isQuiescent },
             waitOnce = { waitAnyOnce(instance, it) },
         )
-        val snapshot = state.snapshot()
-        return resolveDeviceRequestResult(
-            snapshot.status,
-            state.takeHandle(),
-            snapshot.message,
-            ::wgpuDeviceRelease,
-        )
+        requestCompleted = true
     } finally {
-        registration.close()
-        awaitCallbackCondition(
-            phase = "request-device-cleanup",
-            isComplete = { registration.isQuiescent },
-            pendingDiagnostic = { "future-id=$futureId registrationQuiescent=false" },
-            pump = {
-                if (futureId != 0uL) {
-                    val status = waitAnyOnce(instance, futureId)
-                    check(status == WGPUWaitStatus_Success || status == WGPUWaitStatus_TimedOut) {
-                        "request-device-cleanup waitAny status=$status future-id=$futureId"
+        try {
+            registration.close()
+            awaitCallbackCondition(
+                phase = "request-device-cleanup",
+                isComplete = { registration.isQuiescent },
+                pendingDiagnostic = { "future-id=$futureId registrationQuiescent=false" },
+                pump = {
+                    if (futureId != 0uL) {
+                        val status = waitAnyOnce(instance, futureId)
+                        check(status == WGPUWaitStatus_Success || status == WGPUWaitStatus_TimedOut) {
+                            "request-device-cleanup waitAny status=$status future-id=$futureId"
+                        }
                     }
-                }
-            },
-        )
-        state.takeHandle()?.let(::wgpuDeviceRelease)
+                },
+            )
+            cleanupCompleted = true
+        } finally {
+            if (!requestCompleted || !cleanupCompleted) state.dispose()
+        }
     }
+    val snapshot = state.snapshot()
+    return resolveDeviceRequestResult(
+        snapshot.status,
+        state.takeHandle(),
+        snapshot.message,
+        ::wgpuDeviceRelease,
+    )
 }
 ```
 
 Use the identical flow, including close-then-quiesce cleanup, for adapter, allocating `WGPURequestAdapterOptions` and
 `WGPURequestAdapterCallbackInfo` in the downcall scope and releasing through
-`wgpuAdapterRelease`. Status is always the last callback publication; the callback-info allocation
-scope closes before deferred delivery on conforming implementations. Both helpers must opt in to
+`wgpuAdapterRelease`. Neither helper may call `takeHandle()` or resolve a result until cleanup has
+completed successfully. Any request or cleanup failure calls `dispose()` so an already-published
+or later-published handle is released once. The callback-info allocation scope closes before
+deferred delivery on conforming implementations. Both helpers must opt in to
 `ALLOW_COMPLETED_SYNCHRONOUSLY` explicitly for `wgpu-native` v29, which invokes these two callbacks
 during the downcall and returns `NULL_FUTURE`. The opt-in succeeds only after both atomic completion
 and runtime quiescence have been observed; all nonzero futures follow the normal bounded `waitAny`
