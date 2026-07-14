@@ -11004,7 +11004,7 @@ internal actual fun WGPULogCallback.Companion.prepare(
     )
 }
 
-internal actual fun wgpuSetLogCallbackCallbackBindingPreflight(): Nothing {
+internal actual fun wgpuSetLogCallbackCallbackBindingPreflight(): (NativeAddress?, NativeAddress?) -> Unit {
     throw UnsupportedOperationException(
         "Android/JNA safe callback bindings are not supported; use raw bindings or an Android Native target",
     )
