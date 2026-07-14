@@ -1,5 +1,11 @@
-@file:OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@file:OptIn(
+    ExperimentalForeignApi::class,
+    ExperimentalNativeApi::class,
+    kotlin.concurrent.atomics.ExperimentalAtomicApi::class,
+)
 
+import io.ygdrasil.kffi.CallbackPolicy
+import io.ygdrasil.kffi.CallbackRegistration
 import io.ygdrasil.kffi.NativeAddress
 import io.ygdrasil.kffi.Pointer
 import io.ygdrasil.wgpu.HelloTriangleScene
@@ -29,6 +35,7 @@ import platform.android.ANativeActivity
 import platform.android.ANativeWindow_getHeight
 import platform.android.ANativeWindow_getWidth
 import platform.android.__android_log_print
+import kotlin.concurrent.atomics.AtomicInt
 import kotlin.experimental.ExperimentalNativeApi
 
 private const val LOG_TAG = "NativeActivity"
@@ -73,10 +80,14 @@ fun ANativeActivity_onCreate(
     callbacks.pointed.onNativeWindowCreated = onNativeWindowCreatedCallback.reinterpret()
 }
 
-private var logCallback: WGPULogCallback? = null
+private val logCallbackConfigurationLock = AtomicInt(0)
+private var logCallback: CallbackRegistration<WGPULogCallback>? = null
 
-private fun configureLogs(logLevel: WGPULogLevel = WGPULogLevel_Trace) {
-    val callback = WGPULogCallback.allocate { level, message, _ ->
+private fun configureLogs(logLevel: WGPULogLevel = WGPULogLevel_Trace) = withLogCallbackConfigurationLock {
+    val previous = logCallback
+    previous?.close()
+    wgpuSetLogLevel(logLevel)
+    val replacement = wgpuSetLogCallback(policy = CallbackPolicy.REPEATING) { level, message ->
         val kMessage = message.data?.toKString(message.length)
         when (level) {
             WGPULogLevel_Error -> println("ERROR : $kMessage}")
@@ -86,10 +97,18 @@ private fun configureLogs(logLevel: WGPULogLevel = WGPULogLevel_Trace) {
             WGPULogLevel_Trace -> println("TRACE : $kMessage")
         }
     }
-    logCallback?.close()
-    logCallback = callback
-    wgpuSetLogLevel(logLevel)
-    wgpuSetLogCallback(callback, null)
+    logCallback = replacement
+}
+
+private fun <T> withLogCallbackConfigurationLock(block: () -> T): T {
+    while (!logCallbackConfigurationLock.compareAndSet(0, 1)) {
+        // Logger reconfiguration is rare and must remain multiplatform without a scheduler dependency.
+    }
+    try {
+        return block()
+    } finally {
+        logCallbackConfigurationLock.store(0)
+    }
 }
 
 private fun COpaquePointer.toNativeAddress() = Pointer(reinterpret())

@@ -1,5 +1,6 @@
 package io.ygdrasil.wgpu
 
+import io.ygdrasil.kffi.CallbackPolicy
 import io.ygdrasil.kffi.MemoryAllocator
 import io.ygdrasil.kffi.MemoryBuffer
 import io.ygdrasil.kffi.memoryScope
@@ -17,6 +18,7 @@ fun renderHeadlessTriangle(width: Int = 64, height: Int = 64): HeadlessTriangleI
     val format = WGPUTextureFormat_RGBA8Unorm
     val queue = wgpuDeviceGetQueue(device) ?: error("fail to get queue")
     var mapStatus: WGPUMapAsyncStatus? = null
+    var mapMessage: String? = null
 
     val pixels = memoryScope { scope ->
         val texture = WGPUTextureDescriptor.allocate(scope).apply {
@@ -87,51 +89,59 @@ fun renderHeadlessTriangle(width: Int = 64, height: Int = 64): HeadlessTriangleI
         val commandBuffer = wgpuCommandEncoderFinish(commandEncoder, null) ?: error("fail to finish command buffer")
         wgpuQueueSubmit(queue, 1u, scope.bufferOfAddress(commandBuffer.handler).let { WGPUCommandBuffer(it.handler) })
 
-        val mapCallback = WGPUBufferMapCallback.allocate { status, message, _, _ ->
-            if (status != WGPUMapAsyncStatus_Success) {
-                val details = message.data?.toKString(message.length)
-                error("map failed with status $status: $details")
-            }
+        val mapCallback = WGPUBufferMapCallback.register(CallbackPolicy.ONCE) { status, message, _ ->
             mapStatus = status
+            mapMessage = message.data?.toKString(message.length)
         }
-        val callbackInfo = WGPUBufferMapCallbackInfo.allocate(scope).apply {
-            mode = WGPUCallbackMode_AllowProcessEvents
-            callback = mapCallback.handler
-            userdata2 = scope.bufferOfAddress(mapCallback.handler).handler
-        }
+        try {
+            val callbackInfo = WGPUBufferMapCallbackInfo.allocate(
+                scope,
+                WGPUCallbackMode_AllowProcessEvents,
+                mapCallback,
+            )
 
-        wgpuBufferMapAsync(readbackBuffer, WGPUMapMode_Read, 0uL, bufferSize, callbackInfo)
+            wgpuBufferMapAsync(readbackBuffer, WGPUMapMode_Read, 0uL, bufferSize, callbackInfo)
 
-        var attempts = 0
-        while (mapStatus == null && attempts++ < 10_000) {
-            waitForHeadlessMapEvent(instance)
-        }
-        check(mapStatus == WGPUMapAsyncStatus_Success) { "buffer map did not complete" }
-
-        val mapped = wgpuBufferGetConstMappedRange(readbackBuffer, 0uL, bufferSize)
-            ?: error("fail to get mapped range")
-        val mappedBuffer = MemoryBuffer(mapped, bufferSize)
-        ByteArray(width * height * 4).also { pixels ->
-            for (row in 0 until height) {
-                mappedBuffer.readBytes(
-                    pixels,
-                    arrayIndex = (row * width * 4).toULong(),
-                    bufferOffset = (row.toUInt() * bytesPerRow).toULong(),
-                    size = (width * 4).toULong()
-                )
+            var attempts = 0
+            while (mapStatus == null && attempts++ < 10_000) {
+                waitForHeadlessMapEvent(instance)
             }
-            wgpuBufferUnmap(readbackBuffer)
-            wgpuBufferRelease(readbackBuffer)
-            wgpuCommandBufferRelease(commandBuffer)
-            wgpuCommandEncoderRelease(commandEncoder)
+            requireSuccessfulMapResult(mapStatus, mapMessage)
+
+            val mapped = wgpuBufferGetConstMappedRange(readbackBuffer, 0uL, bufferSize)
+                ?: error("fail to get mapped range")
+            val mappedBuffer = MemoryBuffer(mapped, bufferSize)
+            ByteArray(width * height * 4).also { pixels ->
+                for (row in 0 until height) {
+                    mappedBuffer.readBytes(
+                        pixels,
+                        arrayIndex = (row * width * 4).toULong(),
+                        bufferOffset = (row.toUInt() * bytesPerRow).toULong(),
+                        size = (width * 4).toULong()
+                    )
+                }
+                wgpuBufferUnmap(readbackBuffer)
+                wgpuBufferRelease(readbackBuffer)
+                wgpuCommandBufferRelease(commandBuffer)
+                wgpuCommandEncoderRelease(commandEncoder)
+                wgpuRenderPipelineRelease(pipeline)
+                wgpuTextureViewRelease(textureView)
+                wgpuTextureRelease(texture)
+            }
+        } finally {
             mapCallback.close()
-            wgpuRenderPipelineRelease(pipeline)
-            wgpuTextureViewRelease(textureView)
-            wgpuTextureRelease(texture)
         }
     }
 
     return HeadlessTriangleImage(width, height, pixels)
+}
+
+internal fun requireSuccessfulMapResult(status: WGPUMapAsyncStatus?, message: String?) {
+    when {
+        status == null -> error("buffer map did not complete")
+        status != WGPUMapAsyncStatus_Success ->
+            error("map failed with status $status${message?.takeIf { it.isNotEmpty() }?.let { ": $it" }.orEmpty()}")
+    }
 }
 
 expect fun waitForHeadlessMapEvent(instance: WGPUInstance)

@@ -1,15 +1,24 @@
+@file:OptIn(kotlin.concurrent.atomics.ExperimentalAtomicApi::class)
+
 package io.ygdrasil.wgpu
 
 import io.ygdrasil.kffi.ArrayHolder
+import io.ygdrasil.kffi.CallbackPolicy
+import io.ygdrasil.kffi.CallbackRegistration
 import io.ygdrasil.kffi.MemoryAllocator
 import io.ygdrasil.kffi.NativeAddress
 import io.ygdrasil.kffi.memoryScope
+import kotlin.concurrent.atomics.AtomicInt
 
 val allocator = MemoryAllocator()
-private var logCallback: WGPULogCallback? = null
+private val logCallbackConfigurationLock = AtomicInt(0)
+private var logCallback: CallbackRegistration<WGPULogCallback>? = null
 
-fun configureLogs(logLevel: WGPULogLevel = WGPULogLevel_Trace) {
-    val callback = WGPULogCallback.allocate { level, message, _ ->
+fun configureLogs(logLevel: WGPULogLevel = WGPULogLevel_Trace) = withLogCallbackConfigurationLock {
+    val previous = logCallback
+    previous?.close()
+    wgpuSetLogLevel(logLevel)
+    val replacement = wgpuSetLogCallback(policy = CallbackPolicy.REPEATING) { level, message ->
         val kMessage = message.data?.toKString(message.length)
         when (level) {
             WGPULogLevel_Error -> println("ERROR : $kMessage}")
@@ -19,10 +28,18 @@ fun configureLogs(logLevel: WGPULogLevel = WGPULogLevel_Trace) {
             WGPULogLevel_Trace -> println("TRACE : $kMessage")
         }
     }
-    logCallback?.close()
-    logCallback = callback
-    wgpuSetLogLevel(logLevel)
-    wgpuSetLogCallback(callback, null)
+    logCallback = replacement
+}
+
+private fun <T> withLogCallbackConfigurationLock(block: () -> T): T {
+    while (!logCallbackConfigurationLock.compareAndSet(0, 1)) {
+        // Logger reconfiguration is rare and must remain multiplatform without a scheduler dependency.
+    }
+    try {
+        return block()
+    } finally {
+        logCallbackConfigurationLock.store(0)
+    }
 }
 
 
@@ -55,43 +72,85 @@ fun configureSurface(
 }
 
 fun getDevice(adapter: WGPUAdapter): WGPUDevice = memoryScope { scope ->
+    var requestStatus: WGPURequestDeviceStatus? = null
     var fetchedDevice: WGPUDevice? = null
+    var requestMessage: String? = null
 
-    val callback = WGPURequestDeviceCallback.allocate { status, device, _, _, _ ->
-        if (status != WGPURequestDeviceStatus_Success && device == null) error("fail to get device")
+    val callback = WGPURequestDeviceCallback.register(CallbackPolicy.ONCE) { status, device, message, _ ->
+        requestStatus = status
         fetchedDevice = device
+        requestMessage = message.data?.toKString(message.length)
     }
 
-    val callbackInfo = WGPURequestDeviceCallbackInfo.allocate(scope).apply {
-        this.callback = callback.handler
-        this.userdata2 = scope.bufferOfAddress(callback.handler).handler
+    try {
+        val callbackInfo = WGPURequestDeviceCallbackInfo.allocate(
+            scope,
+            WGPUCallbackMode_AllowSpontaneous,
+            callback,
+        )
+
+        wgpuAdapterRequestDevice(adapter, null, callbackInfo)
+
+        resolveDeviceRequestResult(
+            status = requestStatus,
+            device = fetchedDevice,
+            message = requestMessage,
+            release = { wgpuDeviceRelease(it) },
+        )
+    } finally {
+        callback.close()
     }
-
-    wgpuAdapterRequestDevice(adapter, null, callbackInfo)
-
-    fetchedDevice ?: error("fail to get device")
 }
 
+internal fun <D : Any> resolveDeviceRequestResult(
+    status: WGPURequestDeviceStatus?,
+    device: D?,
+    message: String?,
+    release: (D) -> Unit,
+): D {
+    if (status != WGPURequestDeviceStatus_Success) {
+        device?.let(release)
+        error("fail to get device with status $status${callbackMessageSuffix(message)}")
+    }
+    return device ?: error("fail to get device: success status returned no device")
+}
+
+private fun callbackMessageSuffix(message: String?): String =
+    message?.takeIf { it.isNotEmpty() }?.let { ": $it" }.orEmpty()
+
 fun getAdapter(surface: WGPUSurface?, instance: WGPUInstance, backendType: UInt = WGPUBackendType_Undefined) = memoryScope { scope ->
-    val callbackInfo = WGPURequestAdapterCallbackInfo.allocate(scope)
     val options = WGPURequestAdapterOptions.allocate(scope).apply {
         if (surface != null) compatibleSurface = surface
         this.backendType = backendType
     }
 
+    var requestStatus: WGPURequestAdapterStatus? = null
     var fetchedAdapter: WGPUAdapter? = null
+    var requestMessage: String? = null
 
-    val callback = WGPURequestAdapterCallback.allocate { status, adapter, _, _, _ ->
-        if (status != WGPURequestAdapterStatus_Success || adapter == null) error("fail to get adapter")
+    val callback = WGPURequestAdapterCallback.register(CallbackPolicy.ONCE) { status, adapter, message, _ ->
+        requestStatus = status
         fetchedAdapter = adapter
+        requestMessage = message.data?.toKString(message.length)
     }
 
-    callbackInfo.callback = callback.handler
-    callbackInfo.userdata2 = scope.bufferOfAddress(callback.handler).handler
+    try {
+        val callbackInfo = WGPURequestAdapterCallbackInfo.allocate(
+            scope,
+            WGPUCallbackMode_AllowSpontaneous,
+            callback,
+        )
 
-    wgpuInstanceRequestAdapter(instance, options, callbackInfo)
+        wgpuInstanceRequestAdapter(instance, options, callbackInfo)
 
-    fetchedAdapter ?: error("fail to get adapter")
+        if (requestStatus != WGPURequestAdapterStatus_Success) {
+            fetchedAdapter?.let(::wgpuAdapterRelease)
+            error("fail to get adapter with status $requestStatus${callbackMessageSuffix(requestMessage)}")
+        }
+        fetchedAdapter ?: error("fail to get adapter: success status returned no adapter")
+    } finally {
+        callback.close()
+    }
 }
 
 fun getSurfaceFromMetalLayer(instance: WGPUInstance, metalLayer: NativeAddress): WGPUSurface? = memoryScope { scope ->

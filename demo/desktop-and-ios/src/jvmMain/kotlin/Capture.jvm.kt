@@ -1,5 +1,6 @@
 package io.ygdrasil.wgpu
 
+import io.ygdrasil.kffi.CallbackPolicy
 import io.ygdrasil.kffi.MemoryBuffer
 import ffi.LibraryLoader
 import io.ygdrasil.kffi.memoryScope
@@ -177,24 +178,28 @@ private fun createCapturePipeline(device: WGPUDevice) = memoryScope { scope ->
 
 private fun mapBufferForRead(device: WGPUDevice, buffer: WGPUBuffer, size: ULong) = memoryScope { scope ->
     val status = AtomicReference<WGPUMapAsyncStatus?>()
-    val callback = WGPUBufferMapCallback.allocate { mapStatus, _, _, _ ->
+    val callback = WGPUBufferMapCallback.register(CallbackPolicy.ONCE) { mapStatus, _, _ ->
         status.set(mapStatus)
     }
-    val callbackInfo = WGPUBufferMapCallbackInfo.allocate(scope).apply {
-        mode = WGPUCallbackMode_AllowSpontaneous
-        this.callback = callback.handler
-        userdata2 = scope.bufferOfAddress(callback.handler).handler
-    }
 
-    wgpuBufferMapAsync(buffer, WGPUMapMode_Read, 0u, size, callbackInfo)
-    while (status.get() == null) {
-        wgpuDevicePoll(device, 1u, null)
-    }
-    callback.close()
+    try {
+        val callbackInfo = WGPUBufferMapCallbackInfo.allocate(
+            scope,
+            WGPUCallbackMode_AllowSpontaneous,
+            callback,
+        )
 
-    val result = status.get()
-    if (result != WGPUMapAsyncStatus_Success) {
-        error("mapAsync failed with status $result")
+        wgpuBufferMapAsync(buffer, WGPUMapMode_Read, 0u, size, callbackInfo)
+        while (status.get() == null) {
+            wgpuDevicePoll(device, 1u, null)
+        }
+
+        val result = status.get()
+        if (result != WGPUMapAsyncStatus_Success) {
+            error("mapAsync failed with status $result")
+        }
+    } finally {
+        callback.close()
     }
 }
 

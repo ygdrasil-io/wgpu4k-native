@@ -83,6 +83,12 @@ kotlin {
             }
         }
 
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
     }
 
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
