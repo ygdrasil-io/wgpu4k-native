@@ -79,6 +79,16 @@ Stress event pumping will use non-blocking `wgpuDevicePoll(..., 0u, ...)` calls 
 deadline remains authoritative. The repeating uncaptured-error registration will be closed before
 the scenario asserts exact callback counts or prints `pending=0`.
 
+`wgpu-native` v29 also leaves queue futures unimplemented: `wgpuQueueOnSubmittedWorkDone` ignores
+the requested mode, registers the completion closure, and returns `NULL_FUTURE`. Queue stress will
+therefore keep strict zero-future rejection by default and use a named v29-only opt-in for an
+all-zero batch. Under that opt-in, progress uses repeated non-blocking device polls and never calls
+`waitAny` with zero. A mixed zero/nonzero batch is always an error; an all-nonzero batch uses the
+normal mode-specific pumping. Stress diagnostics explicitly report the poll-only compatibility
+path and `upstreamModeValidation=unavailable`: the delivery/suppression totals validate KFFI
+registration ownership under each configured mode, but do not claim that v29 honored the upstream
+mode scheduling contract.
+
 `CallbackRegistration` will expose a read-only `isQuiescent` state backed by runtime acquisition
 tracking for both `ONCE` and `REPEATING` deliveries. It becomes true only when the registration is
 closed or claimed and every delivery that successfully entered the runtime has returned. Teardown

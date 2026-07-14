@@ -30,6 +30,9 @@
   be non-inline so non-local returns cannot bypass publication or rethrow.
 - Keep blocking or repeated event pumping outside graphical render loops.
 - Keep the stress invariants: 64 real submissions, 1,000 concurrent registrations per mode, 900/100 deterministic delivery/suppression for `WaitAnyOnly` and `AllowProcessEvents`, 1,000/0 for `AllowSpontaneous`, no duplicates, and exactly two validation errors.
+- Queue futures are strict by default. The named v29 poll-only opt-in accepts only an all-zero ID
+  set, never calls `waitAny` for it, and rejects mixed zero/nonzero IDs. Diagnostics must state that
+  upstream mode scheduling is unavailable rather than claiming v29 validated it.
 - Print `pending=0` only after every relevant registration is closed and quiescent.
 - Android/JNA is compile-verified only because its generated WebGPU request and wait functions remain pre-existing runtime stubs.
 - Use test-driven development, preserve unrelated changes, and do not push.
@@ -599,6 +602,8 @@ rtk git commit -m "fix(demo): await device requests deterministically"
 **Interfaces:**
 - Produces: `CallbackDiagnostic(status: UInt, message: String?)` and atomic `recordFirst`.
 - Produces: `closeAndAwaitCallbackQuiescence(...)` using the Task 1 `awaitCallbackCondition` helper.
+- Produces: strict `QueueZeroFuturePolicy`, resolved `QueueFuturePumping`, and deterministic
+  selection between normal wait-any pumping and the explicit v29 poll-only compatibility path.
 - Consumes: `CallbackRegistration.isQuiescent` from the KFFI plan.
 - Preserves: all stress counts and callback modes from the amended Task 11 design.
 
@@ -655,6 +660,44 @@ fun quiescenceTimeoutReportsThePhaseAndInFlightCount() {
 
 Also test that `awaitCallbackCondition` performs no pump when its condition is already true.
 
+Add deterministic queue-future selection tests:
+
+```kotlin
+@Test
+fun nonZeroQueueFuturesSelectWaitAnyPumping() {
+    assertEquals(
+        QueueFuturePumping.WAIT_ANY,
+        selectQueueFuturePumping(
+            futureIds = listOf(1uL, 2uL),
+            zeroFuturePolicy = QueueZeroFuturePolicy.REJECT,
+        ),
+    )
+}
+
+@Test
+fun allZeroQueueFuturesRequireTheExplicitV29OptIn() {
+    assertFailsWith<IllegalStateException> {
+        selectQueueFuturePumping(listOf(0uL, 0uL), QueueZeroFuturePolicy.REJECT)
+    }
+    assertEquals(
+        QueueFuturePumping.WGPU_NATIVE_V29_POLL_ONLY,
+        selectQueueFuturePumping(
+            listOf(0uL, 0uL),
+            QueueZeroFuturePolicy.ALLOW_WGPU_NATIVE_V29_POLL_ONLY,
+        ),
+    )
+}
+
+@Test
+fun mixedZeroAndNonZeroQueueFuturesAreAlwaysRejected() {
+    QueueZeroFuturePolicy.entries.forEach { policy ->
+        assertFailsWith<IllegalStateException> {
+            selectQueueFuturePumping(listOf(0uL, 1uL), policy)
+        }
+    }
+}
+```
+
 - [ ] **Step 2: Run the common JVM tests and verify RED**
 
 Run:
@@ -705,6 +748,41 @@ registration. Production passes `errorRegistration::close`, `errorRegistration::
 
 - [ ] **Step 4: Remove blocking stress polls and retain the first queue failure**
 
+Add strict queue-future strategy selection in `CallbackStress.kt`:
+
+```kotlin
+internal enum class QueueZeroFuturePolicy {
+    REJECT,
+    ALLOW_WGPU_NATIVE_V29_POLL_ONLY,
+}
+
+internal enum class QueueFuturePumping {
+    WAIT_ANY,
+    WGPU_NATIVE_V29_POLL_ONLY,
+}
+
+internal fun selectQueueFuturePumping(
+    futureIds: List<ULong>,
+    zeroFuturePolicy: QueueZeroFuturePolicy = QueueZeroFuturePolicy.REJECT,
+): QueueFuturePumping {
+    check(futureIds.isNotEmpty()) { "queue callback future set is empty" }
+    val zeroCount = futureIds.count { it == 0uL }
+    check(zeroCount == 0 || zeroCount == futureIds.size) {
+        "queue callback futures mix zero and nonzero IDs"
+    }
+    if (zeroCount == 0) return QueueFuturePumping.WAIT_ANY
+    check(zeroFuturePolicy == QueueZeroFuturePolicy.ALLOW_WGPU_NATIVE_V29_POLL_ONLY) {
+        "queue callback futures are all zero without the wgpu-native v29 opt-in"
+    }
+    return QueueFuturePumping.WGPU_NATIVE_V29_POLL_ONLY
+}
+```
+
+Every queue phase must pass `ALLOW_WGPU_NATIVE_V29_POLL_ONLY` explicitly. Selection happens once
+after all registrations return their futures. The compatibility strategy never invokes
+`pumpWaitAnyBatches`; it progresses only through `wgpuDevicePoll(device, 0u, null)`. A normal
+all-nonzero set retains the mode-specific path below.
+
 In `runQueueCallbackPhase`, add `AtomicReference<CallbackDiagnostic?>(null)` for the first failing
 queue result. Copy the callback message and call `recordFirst(status, message)` when status is not
 `WGPUQueueWorkDoneStatus_Success`; include that object in the failed-status assertion.
@@ -714,7 +792,9 @@ Replace both `wgpuDevicePoll(device, 1u, null)` calls. The `WaitAnyOnly` loop be
 ```kotlin
 while (queueCallbacksCompleted.load() < expectedDeliveries) {
     wgpuDevicePoll(device, 0u, null)
-    pumpWaitAnyBatches(instance, futureIds, modeName)
+    if (futurePumping == QueueFuturePumping.WAIT_ANY) {
+        pumpWaitAnyBatches(instance, futureIds, modeName)
+    }
     if (deadline.hasPassedNow()) failQueuePhase(modeName, "delivery", calls, suppressBeforeDelivery)
 }
 ```
@@ -803,7 +883,10 @@ rtk git diff --check
 
 Expected: the `rg` command returns no match; JVM and Native stress report 900/100, 900/100, and
 1,000/0 with no duplicates, exactly two validation errors, `registration=closed`, `inFlight=0`,
-and `pending=0`; both renders pass.
+and `pending=0`; both renders pass. With bundled wgpu-native v29, each queue-mode summary also
+reports `futurePumping=poll0-v29 upstreamModeValidation=unavailable`. This explicitly means the
+counts validate KFFI delivery/suppression and teardown under registrations configured with each
+mode, while upstream v29's mode scheduler itself remains unimplemented and unverified.
 
 - [ ] **Step 8: Commit the deterministic stress teardown**
 
