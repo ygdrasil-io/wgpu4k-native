@@ -157,9 +157,16 @@ All callback type names, parameter names, and generated references will pass thr
 Kotlin name-mangling policy. Each emitted function will allocate unique identifiers while reserving
 synthetic names such as `callback`, `policy`, `onError`, registration locals, and prepared carriers.
 
-Tests will cover Kotlin keywords, invalid C identifier characters where representable by the model,
-duplicate normalized names, and collisions with every synthetic parameter introduced by direct and
-factory helpers.
+The allocator must also reject mangler outputs that Kotlin itself reserves, including identifiers
+made only of underscores, and the shared keyword policy must cover reserved future keywords such as
+`typeof`. Generator-wide callback names must begin with every unqualified KFFI/runtime identifier
+used by the generated callback sources reserved. A C callback typedef named `Callback`,
+`CallbackType`, `CallbackPolicy`, or another imported runtime symbol must therefore be suffixed
+rather than shadowing the imported type or generating a self-referential interface.
+
+Tests will cover Kotlin keywords (including `typeof`), underscore-only names, invalid C identifier
+characters where representable by the model, duplicate normalized names, imported runtime type
+collisions, and collisions with every synthetic parameter introduced by direct and factory helpers.
 
 ### 9. Make regeneration portable and complete
 

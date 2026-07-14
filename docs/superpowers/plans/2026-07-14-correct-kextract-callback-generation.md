@@ -206,6 +206,8 @@ rtk git commit -m "chore: update kextract callback validation"
 **Files:**
 - Create: `kextract/src/main/kotlin/org/graphiks/kextract/kotlin/utils/KotlinIdentifierAllocator.kt`
 - Create: `kextract/src/test/kotlin/org/graphiks/kextract/kotlin/utils/KotlinIdentifierAllocatorTest.kt`
+- Modify: `kextract/src/main/kotlin/org/graphiks/kextract/kotlin/utils/KotlinNameMangler.kt`
+- Modify: `kextract/src/test/kotlin/org/graphiks/kextract/kotlin/utils/KotlinNameManglerTest.kt`
 - Modify: `kextract/src/main/kotlin/org/graphiks/kextract/kotlin/callbacks/KotlinCallbackModel.kt`
 - Modify: `kextract/src/main/kotlin/org/graphiks/kextract/kotlin/callbacks/KotlinCallbackCommonEmitter.kt`
 - Modify: `kextract/src/main/kotlin/org/graphiks/kextract/kotlin/callbacks/KotlinCallbackJvmEmitter.kt`
@@ -217,6 +219,7 @@ rtk git commit -m "chore: update kextract callback validation"
 
 **Interfaces:**
 - Produces: `KotlinIdentifierAllocator.allocate(rawName, fallback)`.
+- Extends: the shared mangler keyword set with Kotlin's reserved future keyword `typeof`.
 - Adds: `runtimeTypeName` and `trampolineName` to `KotlinCallbackModel`.
 - Provides: a callback model lookup by canonical ID to the binding emitter.
 - Preserves: raw `canonicalId` and raw C symbol lookup strings.
@@ -322,6 +325,33 @@ For direct helper and callback-info parameters, use a new local allocator with a
 parameters reserved. Keep each `Declaration.Variable` in the rendered model so `rawCall` still maps
 the original C argument order. Callback type references come from the canonical-ID map, not
 `typedef.name()`.
+
+- [ ] **Step 4a: Close review gaps for reserved outputs and imported runtime names**
+
+Add RED tests before changing production:
+
+- allocator inputs `_`, `__`, and `___` must use their supplied fallback rather than returning the
+  Kotlin-reserved underscore-only identifier;
+- `typeof` must become `typeof_` through `KotlinNameMangler` and the allocator;
+- a generated callback typedef named `Callback` must compile as an allocated name such as
+  `Callback_2`, and its SAM supertype must remain the imported KFFI `Callback` rather than itself;
+- representative `CallbackType`, `CallbackPolicy`, and `CallbackRegistration` typedef collisions
+  must also allocate away from their imported KFFI/runtime names.
+
+Treat a mangled candidate as unusable when it is blank or consists only of underscores, then retry
+with the mangled fallback; if the fallback is also unusable, use `generated`. Add `typeof` to the
+shared reserved keyword set so it receives the normal trailing underscore.
+
+Initialize the generator-wide callback allocator with the complete set of unqualified KFFI/runtime
+type identifiers referenced by generated callback common/JVM/Native/Android sources, including at
+least `Callback`, `CallbackType`, `CallbackPolicy`, `CallbackRegistration`,
+`PreparedCallbackRegistration`, `CallbackExceptionHandler`, `CallbackRuntime`,
+`CallbackRuntimeApi`, `UnsafeCallbackRearmApi`, `NativeAddress`, `MemoryAllocator`, `CString`, and
+`ArrayHolder`. Keep this list centralized and tested. Do not rewrite canonical IDs, native symbol
+strings, or raw C argument mapping.
+
+Run the allocator, mangler, and callback integration tests with `--rerun-tasks`; capture the initial
+compiler/assertion failures and the final GREEN result. Then rerun the full Kextract suite.
 
 - [ ] **Step 5: Verify and commit both repositories**
 
