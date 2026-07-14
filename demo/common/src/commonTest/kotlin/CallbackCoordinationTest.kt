@@ -108,6 +108,21 @@ class CallbackCoordinationTest {
     }
 
     @Test
+    fun messageCopyFailureReleasesTheIncomingHandleExactlyOnce() {
+        var releases = 0
+        val failure = assertFailsWith<IllegalArgumentException> {
+            copyCallbackMessageOrRelease(
+                handle = "owned",
+                release = { releases += 1 },
+                copy = { throw IllegalArgumentException("copy failed") },
+            )
+        }
+
+        assertEquals("copy failed", failure.message)
+        assertEquals(1, releases)
+    }
+
+    @Test
     fun unexpectedWaitStatusIncludesThePhase() {
         val failure = assertFailsWith<IllegalStateException> {
             awaitCallbackFuture(1uL, "request-error", isComplete = { false }) {

@@ -74,7 +74,10 @@ fun configureSurface(
 fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
     val state = CallbackRequestState<WGPURequestDeviceStatus, WGPUDevice>(::wgpuDeviceRelease)
     val registration = WGPURequestDeviceCallback.register(CallbackPolicy.ONCE) { status, device, message, _ ->
-        state.publish(status, device, message.data?.toKString(message.length))
+        val copiedMessage = copyCallbackMessageOrRelease(device, ::wgpuDeviceRelease) {
+            message.data?.toKString(message.length)
+        }
+        state.publish(status, device, copiedMessage)
     }
     var futureId = 0uL
     var requestCompleted = false
@@ -163,7 +166,10 @@ fun getAdapter(
 ): WGPUAdapter {
     val state = CallbackRequestState<WGPURequestAdapterStatus, WGPUAdapter>(::wgpuAdapterRelease)
     val registration = WGPURequestAdapterCallback.register(CallbackPolicy.ONCE) { status, adapter, message, _ ->
-        state.publish(status, adapter, message.data?.toKString(message.length))
+        val copiedMessage = copyCallbackMessageOrRelease(adapter, ::wgpuAdapterRelease) {
+            message.data?.toKString(message.length)
+        }
+        state.publish(status, adapter, copiedMessage)
     }
     var futureId = 0uL
     var requestCompleted = false

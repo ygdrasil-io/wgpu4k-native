@@ -99,6 +99,17 @@ internal class CallbackRequestState<S : Any, H : Any>(
     }
 }
 
+internal inline fun <H : Any> copyCallbackMessageOrRelease(
+    handle: H?,
+    release: (H) -> Unit,
+    copy: () -> String?,
+): String? = try {
+    copy()
+} catch (failure: Throwable) {
+    handle?.let(release)
+    throw failure
+}
+
 internal fun awaitCallbackFuture(
     futureId: ULong,
     phase: String,
