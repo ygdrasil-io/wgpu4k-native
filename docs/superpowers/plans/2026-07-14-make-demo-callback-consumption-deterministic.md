@@ -46,6 +46,7 @@
 - `demo/common/src/commonMain/kotlin/CallbackStress.kt`: non-blocking queue/error stress and truthful teardown.
 - `demo/common/src/commonMain/kotlin/HeadlessTriangle.kt`: atomic first map result and new device signature.
 - `demo/desktop-and-ios/src/jvmMain/kotlin/Capture.jvm.kt`: first map status/message diagnostic and new device signature.
+- `demo/desktop-and-ios/build.gradle.kts`: bounded process verification for the real JVM capture path.
 - Remaining platform entry points: pass their instance to `getDevice`.
 
 ---
@@ -598,10 +599,13 @@ rtk git commit -m "fix(demo): await device requests deterministically"
 - Modify: `demo/common/src/commonMain/kotlin/CallbackStress.kt`
 - Modify: `demo/common/src/commonMain/kotlin/HeadlessTriangle.kt`
 - Modify: `demo/desktop-and-ios/src/jvmMain/kotlin/Capture.jvm.kt`
+- Modify: `demo/desktop-and-ios/build.gradle.kts`
 
 **Interfaces:**
 - Produces: `CallbackDiagnostic(status: UInt, message: String?)` and atomic `recordFirst`.
 - Produces: `closeAndAwaitCallbackQuiescence(...)` using the Task 1 `awaitCallbackCondition` helper.
+- Produces: one shared map wait/close boundary that returns the first diagnostic only after the
+  `ONCE` registration is closed and quiescent.
 - Produces: strict `QueueZeroFuturePolicy`, resolved `QueueFuturePumping`, and deterministic
   selection between normal wait-any pumping and the explicit v29 poll-only compatibility path.
 - Consumes: `CallbackRegistration.isQuiescent` from the KFFI plan.
@@ -659,6 +663,11 @@ fun quiescenceTimeoutReportsThePhaseAndInFlightCount() {
 ```
 
 Also test that `awaitCallbackCondition` performs no pump when its condition is already true.
+
+Add a deterministic map-specific test whose result never completes. With `Duration.ZERO`, prove
+that the injected pump runs, the error names the map phase, the registration is closed, and
+quiescence is established before the helper returns the timeout. This test must not call WebGPU;
+the injected pump represents one non-blocking event-pump iteration.
 
 Add deterministic queue-future selection tests:
 
@@ -741,6 +750,14 @@ internal fun closeAndAwaitCallbackQuiescence(
     )
 }
 ```
+
+Add a public, narrowly scoped map coordination function in the common demo module so the separate
+JVM capture module does not duplicate deadline logic. It accepts injected result, close, closed,
+quiescent, and pump lambdas. It must use `awaitCallbackCondition` for the result phase and
+`closeAndAwaitCallbackQuiescence` in `finally`, preserving the primary wait failure if cleanup also
+fails. It returns a single non-null `CallbackDiagnostic` snapshot only after cleanup succeeds. The
+function is public solely because `demo:desktop-and-ios` consumes it across a Gradle module
+boundary; the lower-level coordination helpers remain internal.
 
 Keep the injected lambdas so common tests can prove ordering without constructing a generated
 registration. Production passes `errorRegistration::close`, `errorRegistration::isClosed`, and
@@ -857,13 +874,22 @@ idempotent fallback. Print `callback-stress complete pending=0` only after this 
 
 In `HeadlessTriangle.kt`, replace `mapStatus` and `mapMessage` with
 `AtomicReference<CallbackDiagnostic?>(null)`. The callback calls `recordFirst` with the copied
-message; the pump loop reads one diagnostic snapshot and passes its fields to
-`requireSuccessfulMapResult`.
+message. Replace the fixed-attempt loop and bare `finally { mapCallback.close() }` with the shared
+map wait/close boundary, using `waitForHeadlessMapEvent(instance)` as its non-blocking pump. Pass the
+returned snapshot to `requireSuccessfulMapResult` only after the registration is closed and
+quiescent.
 
 In JVM `Capture.jvm.kt`, change its Java `AtomicReference<WGPUMapAsyncStatus?>` to
 `AtomicReference<CallbackDiagnostic?>`. The callback must copy the message and use
-`compareAndSet(null, CallbackDiagnostic(mapStatus, copiedMessage))`; after polling, call
-`requireSuccessfulMapResult(result?.status, result?.message)`.
+`compareAndSet(null, CallbackDiagnostic(mapStatus, copiedMessage))`. Replace the unbounded loop and
+blocking `wgpuDevicePoll(device, 1u, null)` with the shared map wait/close boundary pumped only by
+`wgpuDevicePoll(device, 0u, null)`. Call `requireSuccessfulMapResult` with the returned snapshot.
+
+In `demo/desktop-and-ios/build.gradle.kts`, generalize the existing bounded child-process helper and
+add `verifyJvmCapture`. It must run `MainKt --verify-capture <build output PNG>` in a child JVM with
+the same native-access flags, a two-minute process deadline, preserved stdout/stderr, and the native
+dependency plus JVM class tasks as prerequisites. The application already validates the PNG before
+returning, so a zero exit proves the real `Capture.jvm.kt` path completed and rendered correctly.
 
 - [ ] **Step 7: Run unit, static, stress, and render verification**
 
@@ -871,17 +897,19 @@ Run:
 
 ```bash
 rtk ./gradlew :demo:common:jvmTest :demo:common:macosArm64Test
-rtk rg -n 'wgpuDevicePoll\(device, 1u' demo/common/src/commonMain/kotlin/CallbackStress.kt
+rtk rg -n 'wgpuDevicePoll\([^\n]*1u' demo -g '*.kt'
 rtk ./gradlew \
   :demo:desktop-and-ios:verifyJvmCallbackStress \
   :demo:desktop-and-ios:verifyNativeCallbackStress
 rtk ./gradlew \
+  :demo:desktop-and-ios:verifyJvmCapture \
   :demo:desktop-and-ios:verifyJvmHeadlessRender \
   :demo:desktop-and-ios:verifyNativeHeadlessRender
 rtk git diff --check
 ```
 
-Expected: the `rg` command returns no match; JVM and Native stress report 900/100, 900/100, and
+Expected: the `rg` command returns no match; the real bounded JVM capture and both headless renders
+pass; JVM and Native stress report 900/100, 900/100, and
 1,000/0 with no duplicates, exactly two validation errors, `registration=closed`, `inFlight=0`,
 and `pending=0`; both renders pass. With bundled wgpu-native v29, each queue-mode summary also
 reports `futurePumping=poll0-v29 upstreamModeValidation=unavailable`. This explicitly means the
@@ -902,5 +930,6 @@ rtk git commit -m "test(demo): make callback stress teardown deterministic"
 Review each task from its recorded base commit. The reviewer must verify spec compliance and code
 quality, including status-last atomic publication, single handle transfer, explicit callback mode,
 bounded zero-timeout future pumping, every migrated caller, absence of blocking stress poll calls,
-runtime-backed quiescence before exact counts, first-failure messages, unchanged stress totals, and
-the documented Android/JNA compile-only limitation.
+runtime-backed quiescence before exact counts and mapped-resource release, a deterministic
+never-completing map timeout, bounded execution of the real JVM capture path, first-failure
+messages, unchanged stress totals, and the documented Android/JNA compile-only limitation.

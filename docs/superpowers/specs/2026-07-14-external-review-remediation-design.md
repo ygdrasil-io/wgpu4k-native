@@ -100,6 +100,15 @@ exactly two validation errors and print its final completion diagnostic.
 Diagnostics will retain the first unexpected queue, map, or error status and message so a failure
 reports its cause rather than only aggregate counts.
 
+All demo buffer-map waits, including the standalone JVM capture path, will use a monotonic deadline
+whose pump is non-blocking. In particular, no demo may call `wgpuDevicePoll(..., 1u, ...)`: JVM
+capture progresses with repeated `wgpuDevicePoll(..., 0u, ...)`, while the existing headless path
+uses its non-blocking process-events pump. A shared map-coordination boundary waits for the first
+atomic diagnostic, closes the `ONCE` registration in every exit path, and then waits for runtime
+quiescence before the mapped buffer or its owning device can be released. A deterministic timeout
+test will cover a map callback that never completes, and a bounded JVM capture process will exercise
+the real `--verify-capture` path because the headless render does not execute `Capture.jvm.kt`.
+
 ### 4. Preserve legacy Kextract behavior outside multiplatform generation
 
 Callback binding validation and callback analysis are part of the multiplatform callback feature,
@@ -171,6 +180,8 @@ host-executable tests remain mandatory on the available JVM and macOS Native env
 - Do not restore end-to-end device-loss stress.
 - Keep the public callback registration state machine and permanent trampoline ownership model.
 - Keep blocking or repeated event pumping outside graphical render loops.
+- Keep every demo device poll non-blocking; callback waits must be bounded by a monotonic deadline
+  and registration quiescence must precede release of callback-adjacent resources.
 - Preserve all unrelated changes and the current submodule revisions.
 - Use test-first changes for each defect and regenerate bindings only after generator tests pass.
 - Each implementation block receives an independent specification review and code-quality review.
