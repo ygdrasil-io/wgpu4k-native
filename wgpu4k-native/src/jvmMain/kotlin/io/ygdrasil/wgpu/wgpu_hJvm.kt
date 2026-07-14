@@ -1581,7 +1581,7 @@ actual interface WGPUPipelineLayoutDescriptor : CStructure {
     actual var nextInChain: WGPUChainedStruct?
     actual var label: WGPUStringView
     actual var bindGroupLayoutCount: ULong
-    actual var bindGroupLayouts: WGPUBindGroupLayout?
+    actual var bindGroupLayouts: NativeAddress?
     actual var immediateSize: UInt
     actual override val handler: NativeAddress
     actual companion object {
@@ -1625,9 +1625,9 @@ actual interface WGPUPipelineLayoutDescriptor : CStructure {
         override var bindGroupLayoutCount: ULong
             get() = (bindGroupLayoutCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = bindGroupLayoutCount_VH.set(handler.handler, 0L, value.toLong())
-        override var bindGroupLayouts: WGPUBindGroupLayout?
-            get() = (bindGroupLayouts_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
-            set(value) = bindGroupLayouts_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
+        override var bindGroupLayouts: NativeAddress?
+            get() = (bindGroupLayouts_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = bindGroupLayouts_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var immediateSize: UInt
             get() = (immediateSize_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
             set(value) = immediateSize_VH.set(handler.handler, 0L, value.toInt())
@@ -5953,8 +5953,8 @@ actual fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit {
 private val wgpuQueueSubmit_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
 private val wgpuQueueSubmit_ADDR: MemorySegment by lazy { findOrThrow("wgpuQueueSubmit") }
 private val wgpuQueueSubmit_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQueueSubmit_ADDR, wgpuQueueSubmit_DESC) }
-actual fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: WGPUCommandBuffer?): Unit {
-    wgpuQueueSubmit_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL, commandCount.toLong(), commands?.handler?.handler ?: MemorySegment.NULL)
+actual fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): Unit {
+    wgpuQueueSubmit_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL, commandCount.toLong(), commands?.handler ?: MemorySegment.NULL)
     return
 }
 
@@ -6192,8 +6192,8 @@ actual fun wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: WGPURenderP
 private val wgpuRenderPassEncoderExecuteBundles_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
 private val wgpuRenderPassEncoderExecuteBundles_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderExecuteBundles") }
 private val wgpuRenderPassEncoderExecuteBundles_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderExecuteBundles_ADDR, wgpuRenderPassEncoderExecuteBundles_DESC) }
-actual fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder?, bundleCount: ULong, bundles: WGPURenderBundle?): Unit {
-    wgpuRenderPassEncoderExecuteBundles_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, bundleCount.toLong(), bundles?.handler?.handler ?: MemorySegment.NULL)
+actual fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder?, bundleCount: ULong, bundles: NativeAddress?): Unit {
+    wgpuRenderPassEncoderExecuteBundles_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, bundleCount.toLong(), bundles?.handler ?: MemorySegment.NULL)
     return
 }
 
@@ -7423,11 +7423,11 @@ actual interface WGPUInstanceEnumerateAdapterOptions : CStructure {
 
 actual interface WGPUBindGroupEntryExtras : CStructure {
     actual var chain: WGPUChainedStruct
-    actual var buffers: WGPUBuffer?
+    actual var buffers: NativeAddress?
     actual var bufferCount: ULong
-    actual var samplers: WGPUSampler?
+    actual var samplers: NativeAddress?
     actual var samplerCount: ULong
-    actual var textureViews: WGPUTextureView?
+    actual var textureViews: NativeAddress?
     actual var textureViewCount: ULong
     actual override val handler: NativeAddress
     actual companion object {
@@ -7468,21 +7468,21 @@ actual interface WGPUBindGroupEntryExtras : CStructure {
             set(value) {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
             }
-        override var buffers: WGPUBuffer?
-            get() = (buffers_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUBuffer(it) }
-            set(value) = buffers_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
+        override var buffers: NativeAddress?
+            get() = (buffers_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = buffers_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var bufferCount: ULong
             get() = (bufferCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = bufferCount_VH.set(handler.handler, 0L, value.toLong())
-        override var samplers: WGPUSampler?
-            get() = (samplers_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUSampler(it) }
-            set(value) = samplers_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
+        override var samplers: NativeAddress?
+            get() = (samplers_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = samplers_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var samplerCount: ULong
             get() = (samplerCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = samplerCount_VH.set(handler.handler, 0L, value.toLong())
-        override var textureViews: WGPUTextureView?
-            get() = (textureViews_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUTextureView(it) }
-            set(value) = textureViews_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
+        override var textureViews: NativeAddress?
+            get() = (textureViews_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
+            set(value) = textureViews_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var textureViewCount: ULong
             get() = (textureViewCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = textureViewCount_VH.set(handler.handler, 0L, value.toLong())
@@ -7704,15 +7704,15 @@ actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?
 private val wgpuInstanceEnumerateAdapters_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
 private val wgpuInstanceEnumerateAdapters_ADDR: MemorySegment by lazy { findOrThrow("wgpuInstanceEnumerateAdapters") }
 private val wgpuInstanceEnumerateAdapters_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuInstanceEnumerateAdapters_ADDR, wgpuInstanceEnumerateAdapters_DESC) }
-actual fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: WGPUAdapter?): ULong {
-    return (wgpuInstanceEnumerateAdapters_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL, options?.handler?.handler ?: MemorySegment.NULL, adapters?.handler?.handler ?: MemorySegment.NULL) as Long).toULong()
+actual fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: NativeAddress?): ULong {
+    return (wgpuInstanceEnumerateAdapters_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL, options?.handler?.handler ?: MemorySegment.NULL, adapters?.handler ?: MemorySegment.NULL) as Long).toULong()
 }
 
 private val wgpuQueueSubmitForIndex_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
 private val wgpuQueueSubmitForIndex_ADDR: MemorySegment by lazy { findOrThrow("wgpuQueueSubmitForIndex") }
 private val wgpuQueueSubmitForIndex_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQueueSubmitForIndex_ADDR, wgpuQueueSubmitForIndex_DESC) }
-actual fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: WGPUCommandBuffer?): ULong {
-    return (wgpuQueueSubmitForIndex_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL, commandCount.toLong(), commands?.handler?.handler ?: MemorySegment.NULL) as Long).toULong()
+actual fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): ULong {
+    return (wgpuQueueSubmitForIndex_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL, commandCount.toLong(), commands?.handler ?: MemorySegment.NULL) as Long).toULong()
 }
 
 private val wgpuQueueGetTimestampPeriod_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_FLOAT, ValueLayout.ADDRESS)
@@ -8257,7 +8257,7 @@ private object WGPUDeviceLostCallbackTrampoline {
                 userdata = userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
             ) { callback ->
                 callback.invoke(
-                    device.takeIf { it != MemorySegment.NULL }?.reinterpret(ValueLayout.ADDRESS.byteSize())?.get(ValueLayout.ADDRESS, 0L)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUDevice(it) },
+                    device.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
                     reason.toUInt() as WGPUDeviceLostReason,
                     WGPUStringView(NativeAddress(message)),
                     userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
@@ -8585,7 +8585,7 @@ private object WGPUUncapturedErrorCallbackTrampoline {
                 userdata = userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
             ) { callback ->
                 callback.invoke(
-                    device.takeIf { it != MemorySegment.NULL }?.reinterpret(ValueLayout.ADDRESS.byteSize())?.get(ValueLayout.ADDRESS, 0L)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUDevice(it) },
+                    device.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
                     type.toUInt() as WGPUErrorType,
                     WGPUStringView(NativeAddress(message)),
                     userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
@@ -8686,8 +8686,14 @@ internal actual fun WGPULogCallback.Companion.prepare(
 )
 
 @Suppress("UNUSED_VARIABLE")
-internal actual fun wgpuSetLogCallbackCallbackBindingPreflight() {
+internal actual fun wgpuSetLogCallbackCallbackBindingPreflight(): (NativeAddress?, NativeAddress?) -> Unit {
     val address = wgpuSetLogCallback_ADDR
     val handle = wgpuSetLogCallback_HANDLE
+    return { callback, userdata ->
+        handle.invokeExact(
+            callback?.handler ?: MemorySegment.NULL,
+            userdata?.handler ?: MemorySegment.NULL,
+        )
+    }
 }
 

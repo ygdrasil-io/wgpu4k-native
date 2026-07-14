@@ -2340,7 +2340,7 @@ actual interface WGPUPipelineLayoutDescriptor {
     actual var nextInChain: WGPUChainedStruct?
     actual var label: WGPUStringView
     actual var bindGroupLayoutCount: ULong
-    actual var bindGroupLayouts: WGPUBindGroupLayout?
+    actual var bindGroupLayouts: NativeAddress?
     actual var immediateSize: UInt
     actual val handler: NativeAddress
     actual companion object {
@@ -2383,9 +2383,9 @@ actual interface WGPUPipelineLayoutDescriptor {
         override var bindGroupLayoutCount: ULong
             get() = handle.bindGroupLayoutCount.toULong() as ULong
             set(value) { handle.bindGroupLayoutCount = value.toLong() }
-        override var bindGroupLayouts: WGPUBindGroupLayout?
-            get() = handle.bindGroupLayouts?.let { WGPUBindGroupLayout(it) }
-            set(value) { handle.bindGroupLayouts = value?.handler }
+        override var bindGroupLayouts: NativeAddress?
+            get() = handle.bindGroupLayouts
+            set(value) { handle.bindGroupLayouts = value }
         override var immediateSize: UInt
             get() = handle.immediateSize.toUInt() as UInt
             set(value) { handle.immediateSize = value.toInt() }
@@ -2414,9 +2414,9 @@ actual interface WGPUPipelineLayoutDescriptor {
         override var bindGroupLayoutCount: ULong
             get() = handle.bindGroupLayoutCount.toULong() as ULong
             set(value) { handle.bindGroupLayoutCount = value.toLong() }
-        override var bindGroupLayouts: WGPUBindGroupLayout?
-            get() = handle.bindGroupLayouts?.let { WGPUBindGroupLayout(it) }
-            set(value) { handle.bindGroupLayouts = value?.handler }
+        override var bindGroupLayouts: NativeAddress?
+            get() = handle.bindGroupLayouts
+            set(value) { handle.bindGroupLayouts = value }
         override var immediateSize: UInt
             get() = handle.immediateSize.toUInt() as UInt
             set(value) { handle.immediateSize = value.toInt() }
@@ -8291,7 +8291,7 @@ actual fun wgpuQueueOnSubmittedWorkDone(queue: WGPUQueue?, callbackInfo: WGPUQue
 actual fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit =
     error("wgpuQueueSetLabel is not implemented for Android/JNA generated bindings")
 
-actual fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: WGPUCommandBuffer?): Unit =
+actual fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): Unit =
     error("wgpuQueueSubmit is not implemented for Android/JNA generated bindings")
 
 actual fun wgpuQueueWriteBuffer(queue: WGPUQueue?, buffer: WGPUBuffer?, bufferOffset: ULong, data: NativeAddress?, size: ULong): Unit =
@@ -8381,7 +8381,7 @@ actual fun wgpuRenderPassEncoderEnd(renderPassEncoder: WGPURenderPassEncoder?): 
 actual fun wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit =
     error("wgpuRenderPassEncoderEndOcclusionQuery is not implemented for Android/JNA generated bindings")
 
-actual fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder?, bundleCount: ULong, bundles: WGPURenderBundle?): Unit =
+actual fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder?, bundleCount: ULong, bundles: NativeAddress?): Unit =
     error("wgpuRenderPassEncoderExecuteBundles is not implemented for Android/JNA generated bindings")
 
 actual fun wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: WGPURenderPassEncoder?, markerLabel: WGPUStringView): Unit =
@@ -10174,11 +10174,11 @@ actual interface WGPUInstanceEnumerateAdapterOptions {
 
 actual interface WGPUBindGroupEntryExtras {
     actual var chain: WGPUChainedStruct
-    actual var buffers: WGPUBuffer?
+    actual var buffers: NativeAddress?
     actual var bufferCount: ULong
-    actual var samplers: WGPUSampler?
+    actual var samplers: NativeAddress?
     actual var samplerCount: ULong
-    actual var textureViews: WGPUTextureView?
+    actual var textureViews: NativeAddress?
     actual var textureViewCount: ULong
     actual val handler: NativeAddress
     actual companion object {
@@ -10215,21 +10215,21 @@ actual interface WGPUBindGroupEntryExtras {
                 handle.chain.pointer.write(0, bytes, 0, bytes.size)
                 handle.readField("chain")
             }
-        override var buffers: WGPUBuffer?
-            get() = handle.buffers?.let { WGPUBuffer(it) }
-            set(value) { handle.buffers = value?.handler }
+        override var buffers: NativeAddress?
+            get() = handle.buffers
+            set(value) { handle.buffers = value }
         override var bufferCount: ULong
             get() = handle.bufferCount.toULong() as ULong
             set(value) { handle.bufferCount = value.toLong() }
-        override var samplers: WGPUSampler?
-            get() = handle.samplers?.let { WGPUSampler(it) }
-            set(value) { handle.samplers = value?.handler }
+        override var samplers: NativeAddress?
+            get() = handle.samplers
+            set(value) { handle.samplers = value }
         override var samplerCount: ULong
             get() = handle.samplerCount.toULong() as ULong
             set(value) { handle.samplerCount = value.toLong() }
-        override var textureViews: WGPUTextureView?
-            get() = handle.textureViews?.let { WGPUTextureView(it) }
-            set(value) { handle.textureViews = value?.handler }
+        override var textureViews: NativeAddress?
+            get() = handle.textureViews
+            set(value) { handle.textureViews = value }
         override var textureViewCount: ULong
             get() = handle.textureViewCount.toULong() as ULong
             set(value) { handle.textureViewCount = value.toLong() }
@@ -10252,21 +10252,21 @@ actual interface WGPUBindGroupEntryExtras {
                 handle.chain.pointer.write(0, bytes, 0, bytes.size)
                 handle.readField("chain")
             }
-        override var buffers: WGPUBuffer?
-            get() = handle.buffers?.let { WGPUBuffer(it) }
-            set(value) { handle.buffers = value?.handler }
+        override var buffers: NativeAddress?
+            get() = handle.buffers
+            set(value) { handle.buffers = value }
         override var bufferCount: ULong
             get() = handle.bufferCount.toULong() as ULong
             set(value) { handle.bufferCount = value.toLong() }
-        override var samplers: WGPUSampler?
-            get() = handle.samplers?.let { WGPUSampler(it) }
-            set(value) { handle.samplers = value?.handler }
+        override var samplers: NativeAddress?
+            get() = handle.samplers
+            set(value) { handle.samplers = value }
         override var samplerCount: ULong
             get() = handle.samplerCount.toULong() as ULong
             set(value) { handle.samplerCount = value.toLong() }
-        override var textureViews: WGPUTextureView?
-            get() = handle.textureViews?.let { WGPUTextureView(it) }
-            set(value) { handle.textureViews = value?.handler }
+        override var textureViews: NativeAddress?
+            get() = handle.textureViews
+            set(value) { handle.textureViews = value }
         override var textureViewCount: ULong
             get() = handle.textureViewCount.toULong() as ULong
             set(value) { handle.textureViewCount = value.toLong() }
@@ -10650,10 +10650,10 @@ actual interface WGPUPrimitiveStateExtras {
 actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit =
     error("wgpuGenerateReport is not implemented for Android/JNA generated bindings")
 
-actual fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: WGPUAdapter?): ULong =
+actual fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: NativeAddress?): ULong =
     error("wgpuInstanceEnumerateAdapters is not implemented for Android/JNA generated bindings")
 
-actual fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: WGPUCommandBuffer?): ULong =
+actual fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): ULong =
     error("wgpuQueueSubmitForIndex is not implemented for Android/JNA generated bindings")
 
 actual fun wgpuQueueGetTimestampPeriod(queue: WGPUQueue?): Float =
@@ -11004,7 +11004,7 @@ internal actual fun WGPULogCallback.Companion.prepare(
     )
 }
 
-internal actual fun wgpuSetLogCallbackCallbackBindingPreflight() {
+internal actual fun wgpuSetLogCallbackCallbackBindingPreflight(): Nothing {
     throw UnsupportedOperationException(
         "Android/JNA safe callback bindings are not supported; use raw bindings or an Android Native target",
     )

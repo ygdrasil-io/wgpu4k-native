@@ -2564,7 +2564,7 @@ expect interface WGPUPipelineLayoutDescriptor {
     /**
      * The `INIT` macro sets this to `NULL`.
      */
-    var bindGroupLayouts: WGPUBindGroupLayout?
+    var bindGroupLayouts: NativeAddress?
     /**
      * The `INIT` macro sets this to `0`.
      */
@@ -5283,7 +5283,7 @@ expect fun wgpuQueueOnSubmittedWorkDone(queue: WGPUQueue?, callbackInfo: WGPUQue
 
 expect fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit
 
-expect fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: WGPUCommandBuffer?): Unit
+expect fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): Unit
 
 /**
  * Produces a @ref DeviceError both content-timeline (`size` alignment) and device-timeline
@@ -5369,7 +5369,7 @@ expect fun wgpuRenderPassEncoderEnd(renderPassEncoder: WGPURenderPassEncoder?): 
 
 expect fun wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit
 
-expect fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder?, bundleCount: ULong, bundles: WGPURenderBundle?): Unit
+expect fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder?, bundleCount: ULong, bundles: NativeAddress?): Unit
 
 expect fun wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: WGPURenderPassEncoder?, markerLabel: WGPUStringView): Unit
 
@@ -6779,11 +6779,11 @@ expect interface WGPUInstanceEnumerateAdapterOptions {
 
 expect interface WGPUBindGroupEntryExtras {
     var chain: WGPUChainedStruct
-    var buffers: WGPUBuffer?
+    var buffers: NativeAddress?
     var bufferCount: ULong
-    var samplers: WGPUSampler?
+    var samplers: NativeAddress?
     var samplerCount: ULong
-    var textureViews: WGPUTextureView?
+    var textureViews: NativeAddress?
     var textureViewCount: ULong
     val handler: NativeAddress
     companion object {
@@ -6940,9 +6940,9 @@ const val WGPUNativeTextureFormat_P010 : WGPUNativeTextureFormat = 196616u
 
 expect fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit
 
-expect fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: WGPUAdapter?): ULong
+expect fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: NativeAddress?): ULong
 
-expect fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: WGPUCommandBuffer?): ULong
+expect fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): ULong
 
 expect fun wgpuQueueGetTimestampPeriod(queue: WGPUQueue?): Float
 
@@ -7210,7 +7210,7 @@ internal expect fun WGPUCreateRenderPipelineAsyncCallback.Companion.prepare(
  */
 fun interface WGPUDeviceLostCallback : Callback {
     fun invoke(
-        device: WGPUDevice?,
+        device: NativeAddress?,
         reason: WGPUDeviceLostReason,
         message: WGPUStringView,
         userdata1: NativeAddress?,
@@ -7415,7 +7415,7 @@ internal expect fun WGPURequestDeviceCallback.Companion.prepare(
  */
 fun interface WGPUUncapturedErrorCallback : Callback {
     fun invoke(
-        device: WGPUDevice?,
+        device: NativeAddress?,
         type: WGPUErrorType,
         message: WGPUStringView,
         userdata1: NativeAddress?,
@@ -7467,7 +7467,7 @@ internal expect fun WGPULogCallback.Companion.prepare(
     callback: WGPULogCallback,
 ): PreparedCallbackRegistration<WGPULogCallback>
 
-internal expect fun wgpuSetLogCallbackCallbackBindingPreflight()
+internal expect fun wgpuSetLogCallbackCallbackBindingPreflight(): (NativeAddress?, NativeAddress?) -> Unit
 
 @OptIn(CallbackRuntimeApi::class)
 fun wgpuSetLogCallback(
@@ -7475,14 +7475,14 @@ fun wgpuSetLogCallback(
     onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
     callback: WGPULogCallback,
 ): CallbackRegistration<WGPULogCallback> {
-    wgpuSetLogCallbackCallbackBindingPreflight()
+    val preparedCall = wgpuSetLogCallbackCallbackBindingPreflight()
     val prepared = WGPULogCallback.prepare(
         policy = policy,
         onError = onError,
         callback = callback,
     )
     return CallbackRuntime.activateForNativeCall(prepared) { registration ->
-        wgpuSetLogCallback(registration.callback, registration.userdata)
+        preparedCall(registration.callback, registration.userdata)
     }
 }
 
