@@ -5,8 +5,14 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
-fun main() {
+fun main(args: Array<String>) {
     LibraryLoader.load()
+
+    if ("--callback-stress" in args) {
+        runCallbackStress()
+        return
+    }
+
     configureLogs(WGPULogLevel_Warn)
 
     val image = renderHeadlessTriangle()

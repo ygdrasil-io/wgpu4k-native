@@ -2,6 +2,9 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import javax.imageio.ImageIO
+import java.io.ByteArrayOutputStream
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 plugins {
     `kotlin-multiplatform`
@@ -148,6 +151,32 @@ tasks.register<JavaExec>("runJvmHeadless") {
     classpath = sourceSets["jvmMain"].runtimeClasspath
 }
 
+val callbackStressJavaLauncher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(25)
+}
+
+tasks.register("verifyJvmCallbackStress") {
+    group = "verification"
+    description = "Runs the bounded JVM WebGPU callback stress scenario."
+    dependsOn(":wgpu4k-native:fetch-native-dependencies", "jvmMainClasses")
+    doLast {
+        runBoundedCallbackStressProcess(
+            label = "JVM callback stress",
+            commandLine = listOf(
+                callbackStressJavaLauncher.get().executablePath.asFile.absolutePath,
+                "--add-opens=java.base/java.lang=ALL-UNNAMED",
+                "--enable-native-access=ALL-UNNAMED",
+                "-cp",
+                sourceSets["jvmMain"].runtimeClasspath.asPath,
+                "io.ygdrasil.wgpu.HeadlessMainKt",
+                "--callback-stress",
+            ),
+            workingDirectory = projectDir,
+            outputLogger = logger,
+        )
+    }
+}
+
 tasks.register("verifyJvmHeadlessRender") {
     group = "verification"
     dependsOn("runJvmHeadless")
@@ -190,6 +219,28 @@ if (nativeTargetName != null) {
             val file = outputFile.get().asFile
             check(file.isFile) { "Missing Native headless render output: ${file.absolutePath}" }
             verifyPpm(file)
+        }
+    }
+
+    tasks.register("verifyNativeCallbackStress") {
+        group = "verification"
+        description = "Runs the bounded host Kotlin/Native WebGPU callback stress scenario."
+        dependsOn(":wgpu4k-native:fetch-native-dependencies", "linkDebugExecutable$capitalizedNativeTargetName")
+        doLast {
+            val executableName = if (nativeTargetName == "mingwX64") "desktop-and-ios.exe" else "desktop-and-ios.kexe"
+            runBoundedCallbackStressProcess(
+                label = "Native callback stress ($nativeTargetName)",
+                commandLine = listOf(
+                    layout.buildDirectory
+                        .file("bin/$nativeTargetName/debugExecutable/$executableName")
+                        .get()
+                        .asFile
+                        .absolutePath,
+                    "--callback-stress",
+                ),
+                workingDirectory = projectDir,
+                outputLogger = logger,
+            )
         }
     }
 }
@@ -249,4 +300,54 @@ fun verifyHeadlessPixels(width: Int, height: Int, pixels: IntArray, source: Stri
 
     check(redPixels > 64) { "Headless image has too few red triangle pixels in $source: $redPixels" }
     check(greenPixels > 64) { "Headless image has too few green background pixels in $source: $greenPixels" }
+}
+
+fun runBoundedCallbackStressProcess(
+    label: String,
+    commandLine: List<String>,
+    workingDirectory: File,
+    outputLogger: org.gradle.api.logging.Logger,
+) {
+    val process = ProcessBuilder(commandLine)
+        .directory(workingDirectory)
+        .start()
+    val stdout = ByteArrayOutputStream()
+    val stderr = ByteArrayOutputStream()
+    val stdoutReader = thread(name = "$label stdout", isDaemon = true) {
+        process.inputStream.use { it.copyTo(stdout) }
+    }
+    val stderrReader = thread(name = "$label stderr", isDaemon = true) {
+        process.errorStream.use { it.copyTo(stderr) }
+    }
+
+    fun publishOutput() {
+        stdoutReader.join()
+        stderrReader.join()
+        stdout.toString(Charsets.UTF_8.name()).trimEnd().takeIf(String::isNotEmpty)?.let(outputLogger::lifecycle)
+        stderr.toString(Charsets.UTF_8.name()).trimEnd().takeIf(String::isNotEmpty)?.let(outputLogger::error)
+    }
+
+    val finished = try {
+        process.waitFor(2, TimeUnit.MINUTES)
+    } catch (failure: InterruptedException) {
+        process.destroyForcibly()
+        process.waitFor()
+        publishOutput()
+        Thread.currentThread().interrupt()
+        throw GradleException("$label interrupted", failure)
+    }
+
+    if (!finished) {
+        process.destroy()
+        if (!process.waitFor(5, TimeUnit.SECONDS)) {
+            process.destroyForcibly()
+            process.waitFor()
+        }
+        publishOutput()
+        throw GradleException("$label timed out after 2 minutes; stdout/stderr above are preserved")
+    }
+    publishOutput()
+    check(process.exitValue() == 0) {
+        "$label failed with exit code ${process.exitValue()}; stdout/stderr above are preserved"
+    }
 }

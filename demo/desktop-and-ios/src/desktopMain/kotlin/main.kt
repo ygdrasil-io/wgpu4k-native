@@ -25,6 +25,11 @@ import platform.posix.fopen
 import platform.posix.fwrite
 
 fun main(args: Array<String>) {
+    if ("--callback-stress" in args) {
+        runCallbackStress()
+        return
+    }
+
     if ("--headless" in args) {
         configureLogs(WGPULogLevel_Warn)
         val image = renderHeadlessTriangle()
