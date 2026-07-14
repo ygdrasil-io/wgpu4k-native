@@ -21,6 +21,31 @@ val callbackFixtureSharedLibrary = when (callbackFixtureHost) {
     "windows" -> null
     else -> error("Unsupported callback fixture host: $callbackFixtureHost")
 }
+val callbackFixtureWatchdogProbeSource =
+    layout.projectDirectory.file("src/ffiTest/resources/callback_fixture_watchdog_probe.c")
+val callbackFixtureWatchdogProbe = when (callbackFixtureHost) {
+    "macos", "linux" -> callbackFixtureOutputDirectory.map { it.file("callback_fixture_watchdog_probe") }
+    "windows" -> null
+    else -> error("Unsupported callback fixture host: $callbackFixtureHost")
+}
+val compileCallbackFixtureWatchdogProbe = callbackFixtureWatchdogProbe?.let { probe ->
+    tasks.register<Exec>("compileCallbackFixtureWatchdogProbe") {
+        group = "verification"
+        inputs.files(callbackFixtureSource, callbackFixtureHeader, callbackFixtureWatchdogProbeSource)
+        outputs.file(probe)
+        doFirst { callbackFixtureOutputDirectory.get().asFile.mkdirs() }
+        commandLine(
+            "cc",
+            "-std=c11",
+            "-pthread",
+            "-DFIXTURE_TEARDOWN_TIMEOUT_MS=100u",
+            callbackFixtureSource.asFile.absolutePath,
+            callbackFixtureWatchdogProbeSource.asFile.absolutePath,
+            "-o",
+            probe.get().asFile.absolutePath,
+        )
+    }
+}
 val callbackFixtureObject = callbackFixtureOutputDirectory.map { it.file("callback_fixture.o") }
 val callbackFixtureArchive = callbackFixtureOutputDirectory.map { it.file("libcallback_fixture.a") }
 
@@ -226,11 +251,18 @@ tasks.named<Test>("jvmTest") {
         "macos", "linux" -> {
             val sharedLibrary = requireNotNull(callbackFixtureSharedLibrary)
             dependsOn(requireNotNull(compileCallbackFixtureShared))
+            val watchdogProbe = requireNotNull(callbackFixtureWatchdogProbe)
+            dependsOn(requireNotNull(compileCallbackFixtureWatchdogProbe))
             inputs.file(sharedLibrary)
+            inputs.file(watchdogProbe)
             doFirst {
                 systemProperty(
                     "kffi.callback.fixture.library",
                     sharedLibrary.get().asFile.absolutePath,
+                )
+                systemProperty(
+                    "kffi.callback.fixture.watchdog.probe",
+                    watchdogProbe.get().asFile.absolutePath,
                 )
             }
         }
@@ -238,6 +270,7 @@ tasks.named<Test>("jvmTest") {
         "windows" -> filter {
             // callback_fixture.c requires pthreads; keep every other JVM test in Windows CI.
             excludeTestsMatching("io.ygdrasil.kffi.CallbackFfiJvmTest")
+            excludeTestsMatching("io.ygdrasil.kffi.CallbackFixtureWatchdogJvmTest")
         }
     }
 }
