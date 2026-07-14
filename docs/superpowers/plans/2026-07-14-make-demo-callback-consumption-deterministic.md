@@ -15,6 +15,9 @@
 - Do not modify, fork, upgrade, or replace `wgpu-native`.
 - Do not restore device-loss stress, an opt-in probe, allowed failure, ignored assertion, or hidden skip.
 - Adapter and device requests must use `WGPUCallbackMode_WaitAnyOnly`, atomics, zero-timeout `wgpuInstanceWaitAny`, and a 20-second monotonic deadline.
+- A zero future remains rejected by default. The named v29 compatibility opt-in may accept it only
+  when the callback is already complete and its registration is quiescent; it must never pump a
+  zero future or accept incomplete/non-quiescent state.
 - Publish request status only after the owned handle and copied message.
 - Transfer or release each adapter/device handle exactly once, including failure and late-cleanup paths.
 - Keep blocking or repeated event pumping outside graphical render loops.
@@ -56,6 +59,8 @@
 - Produces: `CallbackRequestState<S : Any, H : Any>`, whose `publish` stores handle, message, then status.
 - Produces: `awaitCallbackCondition(phase, timeout, isComplete, pendingDiagnostic, pump)`.
 - Produces: `awaitCallbackFuture(futureId, phase, timeout, isComplete, waitOnce)`.
+- Produces: `ZeroFuturePolicy`, defaulting to strict rejection with an explicit
+  `ALLOW_COMPLETED_SYNCHRONOUSLY` compatibility mode.
 - Produces: `waitAnyOnce(instance: WGPUInstance, futureId: ULong): WGPUWaitStatus`.
 - Changes: `fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice`.
 - Preserves: `fun getAdapter(surface, instance, backendType): WGPUAdapter`.
@@ -110,6 +115,39 @@ class CallbackCoordinationTest {
         }
         assertFalse(pumped)
         assertTrue(failure.message.orEmpty().contains("request-zero"))
+    }
+
+    @Test
+    fun synchronousZeroFutureRequiresExplicitCompletedAndQuiescentOptIn() {
+        var pumped = false
+        awaitCallbackFuture(
+            futureId = 0uL,
+            phase = "request-sync-zero",
+            zeroFuturePolicy = ZeroFuturePolicy.ALLOW_COMPLETED_SYNCHRONOUSLY,
+            isComplete = { true },
+            isQuiescent = { true },
+            waitOnce = {
+                pumped = true
+                WGPUWaitStatus_Success
+            },
+        )
+        assertFalse(pumped)
+    }
+
+    @Test
+    fun synchronousZeroFutureRejectsIncompleteOrNonQuiescentState() {
+        listOf(false to true, true to false).forEach { (complete, quiescent) ->
+            assertFailsWith<IllegalStateException> {
+                awaitCallbackFuture(
+                    futureId = 0uL,
+                    phase = "request-invalid-sync-zero",
+                    zeroFuturePolicy = ZeroFuturePolicy.ALLOW_COMPLETED_SYNCHRONOUSLY,
+                    isComplete = { complete },
+                    isQuiescent = { quiescent },
+                    waitOnce = { error("zero future must not be pumped") },
+                )
+            }
+        }
     }
 
     @Test
@@ -175,6 +213,11 @@ private val CallbackWaitPhaseTimeout = CallbackWaitPhaseTimeoutSeconds.seconds
 
 internal data class CallbackRequestSnapshot<S : Any>(val status: S?, val message: String?)
 
+internal enum class ZeroFuturePolicy {
+    REJECT,
+    ALLOW_COMPLETED_SYNCHRONOUSLY,
+}
+
 internal class CallbackRequestState<S : Any, H : Any> {
     private val status = AtomicReference<S?>(null)
     private val handle = AtomicReference<H?>(null)
@@ -198,10 +241,19 @@ internal fun awaitCallbackFuture(
     futureId: ULong,
     phase: String,
     timeout: Duration = CallbackWaitPhaseTimeout,
+    zeroFuturePolicy: ZeroFuturePolicy = ZeroFuturePolicy.REJECT,
     isComplete: () -> Boolean,
+    isQuiescent: () -> Boolean = { false },
     waitOnce: (ULong) -> WGPUWaitStatus,
 ) {
-    check(futureId != 0uL) { "$phase future-id=0" }
+    if (futureId == 0uL) {
+        check(
+            zeroFuturePolicy == ZeroFuturePolicy.ALLOW_COMPLETED_SYNCHRONOUSLY &&
+                isComplete() &&
+                isQuiescent(),
+        ) { "$phase future-id=0 without a completed quiescent synchronous callback" }
+        return
+    }
     awaitCallbackCondition(
         phase = phase,
         timeout = timeout,
@@ -279,7 +331,9 @@ fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
         awaitCallbackFuture(
             futureId = futureId,
             phase = "request-device",
+            zeroFuturePolicy = ZeroFuturePolicy.ALLOW_COMPLETED_SYNCHRONOUSLY,
             isComplete = { state.isComplete },
+            isQuiescent = { registration.isQuiescent },
             waitOnce = { waitAnyOnce(instance, it) },
         )
         val snapshot = state.snapshot()
@@ -312,7 +366,11 @@ fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
 Use the identical flow, including close-then-quiesce cleanup, for adapter, allocating `WGPURequestAdapterOptions` and
 `WGPURequestAdapterCallbackInfo` in the downcall scope and releasing through
 `wgpuAdapterRelease`. Status is always the last callback publication; the callback-info allocation
-scope closes before the deferred delivery.
+scope closes before deferred delivery on conforming implementations. Both helpers must opt in to
+`ALLOW_COMPLETED_SYNCHRONOUSLY` explicitly for `wgpu-native` v29, which invokes these two callbacks
+during the downcall and returns `NULL_FUTURE`. The opt-in succeeds only after both atomic completion
+and runtime quiescence have been observed; all nonzero futures follow the normal bounded `waitAny`
+path.
 
 - [ ] **Step 5: Migrate every device-request caller**
 

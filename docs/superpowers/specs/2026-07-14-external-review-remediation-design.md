@@ -46,6 +46,16 @@ variables. Both helpers will:
 - close the registration in `finally` and release any late or unsuccessful owned handle exactly
   once.
 
+`wgpu-native` v29 currently does not implement futures for adapter/device requests: both functions
+ignore the requested callback mode, invoke the callback synchronously, and return `NULL_FUTURE`
+with ID zero. The strict coordination helper will continue to reject a zero future by default. The
+two initialization helpers will use a named compatibility opt-in that accepts zero only when the
+callback has already published a complete result and the `ONCE` registration is quiescent. This
+path performs no pumping. A zero future with an incomplete or non-quiescent callback remains an
+immediate error. The explicit `WaitAnyOnly` mode is retained so conforming implementations use the
+normal bounded wait path and the upstream limitation stays visible rather than becoming a silent
+global relaxation.
+
 `getDevice` will accept the instance used for waiting, and every desktop, JVM, iOS, Android,
 Android Native, capture, and headless caller will be migrated.
 
