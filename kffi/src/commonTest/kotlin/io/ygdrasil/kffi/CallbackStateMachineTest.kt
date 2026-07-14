@@ -2,6 +2,7 @@
 
 package io.ygdrasil.kffi
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 
@@ -73,6 +74,16 @@ class CallbackStateMachineTest : FreeSpec({
         machine.leave()
         machine.isQuiescent shouldBe false
         machine.leave()
+        machine.isQuiescent shouldBe true
+    }
+
+    "leaving without an acquisition preserves closed quiescence" {
+        val machine = DeliveryStateMachine(CallbackPolicy.REPEATING)
+
+        machine.close() shouldBe true
+        val failure = shouldThrow<IllegalStateException> { machine.leave() }
+        failure.message shouldBe "Callback delivery left without entering"
+        machine.inFlight shouldBe 0
         machine.isQuiescent shouldBe true
     }
 

@@ -156,6 +156,35 @@ class CallbackRuntimeJvmTest : FreeSpec({
         }
     }
 
+    "a stale REPEATING acquisition cannot make closed quiescence regress" {
+        val activeRead = CountDownLatch(1)
+        val resumeStaleAttempt = CountDownLatch(1)
+        val machine = DeliveryStateMachine(
+            policy = CallbackPolicy.REPEATING,
+            beforeTryEnterCompareAndSet = {
+                activeRead.countDown()
+                check(resumeStaleAttempt.await(TIMEOUT_SECONDS, TimeUnit.SECONDS))
+            },
+        )
+        val executor = Executors.newSingleThreadExecutor()
+        try {
+            val staleAttempt = executor.submit<Boolean> { machine.tryEnter() }
+            check(activeRead.await(TIMEOUT_SECONDS, TimeUnit.SECONDS))
+
+            machine.close() shouldBe true
+            machine.isQuiescent shouldBe true
+            machine.inFlight shouldBe 0
+
+            resumeStaleAttempt.countDown()
+            staleAttempt.get(TIMEOUT_SECONDS, TimeUnit.SECONDS) shouldBe false
+            machine.isQuiescent shouldBe true
+            machine.inFlight shouldBe 0
+        } finally {
+            resumeStaleAttempt.countDown()
+            shutdown(executor)
+        }
+    }
+
     "callback failures reach the registration error handler" {
         withRegistryBaseline {
             val type = CallbackType<JvmTestCallback>("callback-failure", hasRoutingUserdata = true)

@@ -12,32 +12,42 @@ import kotlin.concurrent.atomics.AtomicReference
 internal enum class DeliveryState {
     PREPARED,
     ACTIVE,
+    CLAIMING,
     CLAIMED,
     CLOSED,
     ABORTED,
 }
 
+private class DeliverySnapshot(
+    val state: DeliveryState,
+    val inFlight: Int,
+)
+
 internal class DeliveryStateMachine(
     private val policy: CallbackPolicy,
     initialState: DeliveryState = DeliveryState.ACTIVE,
-    private val stateRef: AtomicReference<DeliveryState> = AtomicReference(initialState),
-    private val inFlightRef: AtomicInt = AtomicInt(0),
+    private val beforeTryEnterCompareAndSet: (() -> Unit)? = null,
 ) {
+    private val snapshotRef = AtomicReference(DeliverySnapshot(initialState, 0))
+
     val state: DeliveryState
-        get() = stateRef.load()
+        get() = snapshotRef.load().state
 
     val inFlight: Int
-        get() = inFlightRef.load()
+        get() = snapshotRef.load().inFlight
 
     val isClosed: Boolean
-        get() = state !in setOf(DeliveryState.PREPARED, DeliveryState.ACTIVE)
+        get() = snapshotRef.load().state !in setOf(DeliveryState.PREPARED, DeliveryState.ACTIVE)
 
     val isQuiescent: Boolean
-        get() = isClosed && inFlightRef.load() == 0
+        get() = snapshotRef.load().let { current ->
+            current.state !in setOf(DeliveryState.PREPARED, DeliveryState.ACTIVE) &&
+                current.inFlight == 0
+        }
 
-    fun activate(): Boolean = stateRef.compareAndSet(DeliveryState.PREPARED, DeliveryState.ACTIVE)
+    fun activate(): Boolean = transitionState(DeliveryState.PREPARED, DeliveryState.ACTIVE)
 
-    fun abort(): Boolean = stateRef.compareAndSet(DeliveryState.PREPARED, DeliveryState.ABORTED)
+    fun abort(): Boolean = transitionState(DeliveryState.PREPARED, DeliveryState.ABORTED)
 
     fun tryEnter(): Boolean = when (policy) {
         CallbackPolicy.ONCE -> tryEnterOnce()
@@ -45,26 +55,67 @@ internal class DeliveryStateMachine(
     }
 
     private fun tryEnterOnce(): Boolean {
-        if (stateRef.load() != DeliveryState.ACTIVE) return false
-        inFlightRef.fetchAndAdd(1)
-        if (stateRef.compareAndSet(DeliveryState.ACTIVE, DeliveryState.CLAIMED)) return true
-        inFlightRef.fetchAndAdd(-1)
-        return false
+        val current = snapshotRef.load()
+        if (current.state != DeliveryState.ACTIVE) return false
+        beforeTryEnterCompareAndSet?.invoke()
+        val claiming = DeliverySnapshot(DeliveryState.CLAIMING, 1)
+        if (!snapshotRef.compareAndSet(current, claiming)) return false
+        check(
+            snapshotRef.compareAndSet(
+                claiming,
+                DeliverySnapshot(DeliveryState.CLAIMED, claiming.inFlight),
+            ),
+        ) { "ONCE callback claim was unexpectedly modified" }
+        return true
     }
 
     private fun tryEnterRepeating(): Boolean {
-        if (stateRef.load() != DeliveryState.ACTIVE) return false
-        inFlightRef.fetchAndAdd(1)
-        if (stateRef.load() == DeliveryState.ACTIVE) return true
-        inFlightRef.fetchAndAdd(-1)
-        return false
+        while (true) {
+            val current = snapshotRef.load()
+            if (current.state != DeliveryState.ACTIVE) return false
+            beforeTryEnterCompareAndSet?.invoke()
+            if (
+                snapshotRef.compareAndSet(
+                    current,
+                    DeliverySnapshot(DeliveryState.ACTIVE, current.inFlight + 1),
+                )
+            ) {
+                return true
+            }
+        }
     }
 
     fun leave() {
-        check(inFlightRef.fetchAndAdd(-1) > 0) { "Callback delivery left without entering" }
+        while (true) {
+            val current = snapshotRef.load()
+            check(current.inFlight > 0) { "Callback delivery left without entering" }
+            if (
+                snapshotRef.compareAndSet(
+                    current,
+                    DeliverySnapshot(current.state, current.inFlight - 1),
+                )
+            ) {
+                return
+            }
+        }
     }
 
-    fun close(): Boolean = stateRef.compareAndSet(DeliveryState.ACTIVE, DeliveryState.CLOSED)
+    fun close(): Boolean = transitionState(DeliveryState.ACTIVE, DeliveryState.CLOSED)
+
+    private fun transitionState(expected: DeliveryState, updated: DeliveryState): Boolean {
+        while (true) {
+            val current = snapshotRef.load()
+            if (current.state != expected) return false
+            if (
+                snapshotRef.compareAndSet(
+                    current,
+                    DeliverySnapshot(updated, current.inFlight),
+                )
+            ) {
+                return true
+            }
+        }
+    }
 }
 
 internal enum class NoUserdataPhase {
@@ -133,9 +184,7 @@ internal class RegistryEntry<C : Callback>(
     val token: ULong?,
     initialState: DeliveryState,
 ) {
-    val state = AtomicReference(initialState)
-    val inFlight = AtomicInt(0)
-    val lifecycle = DeliveryStateMachine(policy, initialState, state, inFlight)
+    val lifecycle = DeliveryStateMachine(policy, initialState)
 }
 
 private class RuntimeCallbackRegistration<C : Callback>(
