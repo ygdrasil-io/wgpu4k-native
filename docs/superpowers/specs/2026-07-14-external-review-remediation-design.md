@@ -52,7 +52,10 @@ is released once, and any callback that publishes after disposal releases its in
 instead of making a result observable. Result resolution and ownership transfer happen only after
 successful cleanup. Before publication, the callback temporarily owns the incoming handle while it
 copies the native message. If message conversion fails, it releases that handle exactly once before
-propagating the exception to the runtime.
+propagating the original exception object to the runtime. If release itself fails, that secondary
+failure is attached as a suppressed exception rather than replacing the conversion failure. The
+helper is non-inline so a callback cannot escape through a non-local return before publication or
+rethrow.
 
 `wgpu-native` v29 currently does not implement futures for adapter/device requests: both functions
 ignore the requested callback mode, invoke the callback synchronously, and return `NULL_FUTURE`

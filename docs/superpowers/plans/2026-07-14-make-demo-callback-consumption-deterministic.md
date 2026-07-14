@@ -25,7 +25,9 @@
   succeed. Cleanup failure must atomically dispose the state and release both published and late
   handles exactly once.
 - While a callback copies its native message before publication, it owns the incoming handle
-  locally. A message-copy exception must release that handle exactly once before escaping.
+  locally. A message-copy exception must attempt to release that handle exactly once before
+  escaping as the same `Throwable`; a release failure is attached as suppressed. The helper must
+  be non-inline so non-local returns cannot bypass publication or rethrow.
 - Keep blocking or repeated event pumping outside graphical render loops.
 - Keep the stress invariants: 64 real submissions, 1,000 concurrent registrations per mode, 900/100 deterministic delivery/suppression for `WaitAnyOnly` and `AllowProcessEvents`, 1,000/0 for `AllowSpontaneous`, no duplicates, and exactly two validation errors.
 - Print `pending=0` only after every relevant registration is closed and quiescent.
@@ -88,6 +90,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertSame
 import kotlin.test.assertTrue
 import kotlin.time.Duration
 
@@ -190,16 +193,34 @@ class CallbackCoordinationTest {
     @Test
     fun messageCopyFailureReleasesTheIncomingHandleExactlyOnce() {
         var releases = 0
+        val copyFailure = IllegalArgumentException("copy failed")
         val failure = assertFailsWith<IllegalArgumentException> {
             copyCallbackMessageOrRelease(
                 handle = "owned",
                 release = { releases += 1 },
-                copy = { throw IllegalArgumentException("copy failed") },
+                copy = { throw copyFailure },
             )
         }
 
-        assertEquals("copy failed", failure.message)
+        assertSame(copyFailure, failure)
         assertEquals(1, releases)
+    }
+
+    @Test
+    fun releaseFailureIsSuppressedOnTheOriginalMessageCopyFailure() {
+        val copyFailure = IllegalArgumentException("copy failed")
+        val releaseFailure = IllegalStateException("release failed")
+
+        val failure = assertFailsWith<IllegalArgumentException> {
+            copyCallbackMessageOrRelease(
+                handle = "owned",
+                release = { throw releaseFailure },
+                copy = { throw copyFailure },
+            )
+        }
+
+        assertSame(copyFailure, failure)
+        assertEquals(listOf(releaseFailure), failure.suppressedExceptions)
     }
 
     @Test
@@ -351,14 +372,18 @@ internal class CallbackRequestState<S : Any, H : Any>(
     }
 }
 
-internal inline fun <H : Any> copyCallbackMessageOrRelease(
+internal fun <H : Any> copyCallbackMessageOrRelease(
     handle: H?,
     release: (H) -> Unit,
     copy: () -> String?,
 ): String? = try {
     copy()
 } catch (failure: Throwable) {
-    handle?.let(release)
+    try {
+        handle?.let(release)
+    } catch (releaseFailure: Throwable) {
+        if (releaseFailure !== failure) failure.addSuppressed(releaseFailure)
+    }
     throw failure
 }
 
