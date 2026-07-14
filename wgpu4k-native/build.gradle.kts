@@ -448,14 +448,25 @@ tasks.register("verifyGeneratedBindingsClean") {
             return process.waitFor() to output
         }
 
-        val (diffExitCode, diffOutput) = runGit(
+        val (stagedDiffExitCode, stagedDiffOutput) = runGit(
+            "diff",
+            "--cached",
+            "--exit-code",
+            "--",
+            "wgpu4k-native/src",
+        )
+        if (stagedDiffExitCode != 0) {
+            throw GradleException("Staged generated WebGPU sources differ from HEAD:\n$stagedDiffOutput")
+        }
+
+        val (worktreeDiffExitCode, worktreeDiffOutput) = runGit(
             "diff",
             "--exit-code",
             "--",
             "wgpu4k-native/src",
         )
-        if (diffExitCode != 0) {
-            throw GradleException("Generated WebGPU sources differ from Git:\n$diffOutput")
+        if (worktreeDiffExitCode != 0) {
+            throw GradleException("Generated WebGPU sources differ from the index:\n$worktreeDiffOutput")
         }
 
         val (untrackedExitCode, untrackedOutput) = runGit(
