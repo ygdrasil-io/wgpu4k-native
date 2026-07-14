@@ -1,9 +1,19 @@
 package io.ygdrasil.kffi
 
 import java.lang.foreign.MemorySegment
+import java.lang.foreign.ValueLayout
+
+internal fun validatedJvmCallbackPointerBits(addressByteSize: Long): Int {
+    require(addressByteSize == Long.SIZE_BYTES.toLong()) {
+        "KFFI callback tokens require an 8-byte JVM FFM address layout, " +
+            "found $addressByteSize bytes"
+    }
+    return Long.SIZE_BITS
+}
 
 internal actual object PlatformTokenCodec : TokenCodec {
-    override val pointerBits: Int = 64
+    override val pointerBits: Int =
+        validatedJvmCallbackPointerBits(ValueLayout.ADDRESS.byteSize())
     override val maxToken: ULong = Long.MAX_VALUE.toULong()
 
     override fun encode(token: ULong): NativeAddress {
