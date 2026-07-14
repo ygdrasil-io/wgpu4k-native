@@ -99,14 +99,18 @@ internal class CallbackRequestState<S : Any, H : Any>(
     }
 }
 
-internal inline fun <H : Any> copyCallbackMessageOrRelease(
+internal fun <H : Any> copyCallbackMessageOrRelease(
     handle: H?,
     release: (H) -> Unit,
     copy: () -> String?,
 ): String? = try {
     copy()
 } catch (failure: Throwable) {
-    handle?.let(release)
+    try {
+        handle?.let(release)
+    } catch (releaseFailure: Throwable) {
+        if (releaseFailure !== failure) failure.addSuppressed(releaseFailure)
+    }
     throw failure
 }
 

@@ -7,6 +7,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertSame
 import kotlin.test.assertTrue
 import kotlin.time.Duration
 
@@ -110,16 +111,51 @@ class CallbackCoordinationTest {
     @Test
     fun messageCopyFailureReleasesTheIncomingHandleExactlyOnce() {
         var releases = 0
+        val copyFailure = IllegalArgumentException("copy failed")
         val failure = assertFailsWith<IllegalArgumentException> {
             copyCallbackMessageOrRelease(
                 handle = "owned",
                 release = { releases += 1 },
-                copy = { throw IllegalArgumentException("copy failed") },
+                copy = { throw copyFailure },
             )
         }
 
-        assertEquals("copy failed", failure.message)
+        assertSame(copyFailure, failure)
         assertEquals(1, releases)
+    }
+
+    @Test
+    fun releaseFailureIsSuppressedOnTheOriginalMessageCopyFailure() {
+        val copyFailure = IllegalArgumentException("copy failed")
+        val releaseFailure = IllegalStateException("release failed")
+
+        val failure = assertFailsWith<IllegalArgumentException> {
+            copyCallbackMessageOrRelease(
+                handle = "owned",
+                release = { throw releaseFailure },
+                copy = { throw copyFailure },
+            )
+        }
+
+        assertSame(copyFailure, failure)
+        assertEquals(listOf(releaseFailure), failure.suppressedExceptions)
+    }
+
+    @Test
+    fun nullHandleCopyFailureDoesNotCallRelease() {
+        var releases = 0
+        val copyFailure = IllegalArgumentException("copy failed")
+
+        val failure = assertFailsWith<IllegalArgumentException> {
+            copyCallbackMessageOrRelease<String>(
+                handle = null,
+                release = { releases += 1 },
+                copy = { throw copyFailure },
+            )
+        }
+
+        assertSame(copyFailure, failure)
+        assertEquals(0, releases)
     }
 
     @Test
