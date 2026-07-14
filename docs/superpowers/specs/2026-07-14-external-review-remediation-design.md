@@ -58,11 +58,13 @@ Stress event pumping will use non-blocking `wgpuDevicePoll(..., 0u, ...)` calls 
 deadline remains authoritative. The repeating uncaptured-error registration will be closed before
 the scenario asserts exact callback counts or prints `pending=0`.
 
-An application-level in-flight counter will be incremented on callback entry and decremented as the
-last callback action. Teardown will wait, with the existing bounded event strategy, until that
-counter is zero after closure. Closure prevents new entries; the counter accounts for callbacks
-that had already entered. Only then may the stress scenario assert exactly two validation errors
-and print its final completion diagnostic.
+`CallbackRegistration` will expose a read-only `isQuiescent` state backed by runtime acquisition
+tracking for both `ONCE` and `REPEATING` deliveries. It becomes true only when the registration is
+closed or claimed and every delivery that successfully entered the runtime has returned. Teardown
+will close the error registration, then wait with the existing bounded event strategy for runtime
+quiescence. An application-level in-flight counter remains as a stress diagnostic, but is not the
+race-sensitive ownership authority. Only after both values are quiescent may the scenario assert
+exactly two validation errors and print its final completion diagnostic.
 
 Diagnostics will retain the first unexpected queue, map, or error status and message so a failure
 reports its cause rather than only aggregate counts.
