@@ -11,12 +11,65 @@ import kotlin.time.TimeSource
 internal const val CallbackWaitPhaseTimeoutSeconds = 20
 private val CallbackWaitPhaseTimeout = CallbackWaitPhaseTimeoutSeconds.seconds
 
+class GpuCleanupStack {
+    private val actions = mutableListOf<() -> Unit>()
+    private var closed = false
+
+    fun defer(action: () -> Unit) {
+        check(!closed) { "GPU cleanup stack is already closed" }
+        actions += action
+    }
+
+    fun close(primaryFailure: Throwable? = null) {
+        if (closed) return
+        closed = true
+        var failure = primaryFailure
+        actions.asReversed().forEach { action ->
+            try {
+                action()
+            } catch (cleanupFailure: Throwable) {
+                val current = failure
+                if (current == null) failure = cleanupFailure
+                else if (cleanupFailure !== current) current.addSuppressed(cleanupFailure)
+            }
+        }
+        actions.clear()
+        if (primaryFailure == null) failure?.let { throw it }
+    }
+}
+
 internal data class CallbackRequestSnapshot<S : Any>(val status: S?, val message: String?)
 
 data class CallbackDiagnostic(val status: UInt, val message: String?)
 
-internal fun AtomicReference<CallbackDiagnostic?>.recordFirst(status: UInt, message: String?) {
-    compareAndSet(null, CallbackDiagnostic(status, message))
+sealed interface CallbackOutcome<out T> {
+    data class Success<T>(val value: T) : CallbackOutcome<T>
+    data class Failure(val failure: Throwable) : CallbackOutcome<Nothing>
+}
+
+class CallbackOutcomeState<T> {
+    private val value = AtomicReference<CallbackOutcome<T>?>(null)
+
+    val isComplete: Boolean
+        get() = value.load() != null
+
+    fun publish(result: T): Boolean = value.compareAndSet(null, CallbackOutcome.Success(result))
+
+    fun publishFailure(failure: Throwable): Boolean =
+        value.compareAndSet(null, CallbackOutcome.Failure(failure))
+
+    fun publishCatching(block: () -> T): Boolean {
+        val outcome = try {
+            CallbackOutcome.Success(block())
+        } catch (failure: Throwable) {
+            CallbackOutcome.Failure(failure)
+        }
+        return value.compareAndSet(null, outcome)
+    }
+
+    fun outcome(): CallbackOutcome<T>? = value.load()
+
+    fun failureOrNull(): Throwable? = (value.load() as? CallbackOutcome.Failure)?.failure
 }
 
 internal enum class ZeroFuturePolicy {
@@ -35,6 +88,7 @@ private sealed interface CallbackRequestValue<out S : Any, out H : Any> {
         val status: S,
         val message: String?,
     ) : CallbackRequestValue<S, Nothing>
+    data class Failed(val failure: Throwable) : CallbackRequestValue<Nothing, Nothing>
     data object Disposed : CallbackRequestValue<Nothing, Nothing>
 }
 
@@ -47,6 +101,7 @@ internal class CallbackRequestState<S : Any, H : Any>(
         get() = when (value.load()) {
             is CallbackRequestValue.Completed,
             is CallbackRequestValue.Transferred,
+            is CallbackRequestValue.Failed,
             -> true
             CallbackRequestValue.Pending,
             CallbackRequestValue.Disposed,
@@ -60,9 +115,25 @@ internal class CallbackRequestState<S : Any, H : Any>(
         }
     }
 
+    fun publishCopied(status: S, handle: H?, copyMessage: () -> String?) {
+        val outcome = try {
+            CallbackRequestValue.Completed(status, handle, copyMessage())
+        } catch (failure: Throwable) {
+            releaseAfterFailure(handle, failure, release)
+            CallbackRequestValue.Failed(failure)
+        }
+        if (!value.compareAndSet(CallbackRequestValue.Pending, outcome)) {
+            if (outcome is CallbackRequestValue.Completed) outcome.handle?.let(release)
+        }
+    }
+
+    fun failureOrNull(): Throwable? =
+        (value.load() as? CallbackRequestValue.Failed)?.failure
+
     fun snapshot(): CallbackRequestSnapshot<S> = when (val current = value.load()) {
         is CallbackRequestValue.Completed -> CallbackRequestSnapshot(current.status, current.message)
         is CallbackRequestValue.Transferred -> CallbackRequestSnapshot(current.status, current.message)
+        is CallbackRequestValue.Failed -> CallbackRequestSnapshot(null, null)
         CallbackRequestValue.Pending,
         CallbackRequestValue.Disposed,
         -> CallbackRequestSnapshot(null, null)
@@ -80,6 +151,7 @@ internal class CallbackRequestState<S : Any, H : Any>(
                     ) return current.handle
                 }
                 is CallbackRequestValue.Transferred,
+                is CallbackRequestValue.Failed,
                 CallbackRequestValue.Pending,
                 CallbackRequestValue.Disposed,
                 -> return null
@@ -91,6 +163,7 @@ internal class CallbackRequestState<S : Any, H : Any>(
         while (true) {
             when (val current = value.load()) {
                 CallbackRequestValue.Disposed -> return
+                is CallbackRequestValue.Failed -> return
                 CallbackRequestValue.Pending,
                 is CallbackRequestValue.Transferred,
                 -> if (value.compareAndSet(current, CallbackRequestValue.Disposed)) return
@@ -112,12 +185,71 @@ internal fun <H : Any> copyCallbackMessageOrRelease(
 ): String? = try {
     copy()
 } catch (failure: Throwable) {
+    releaseAfterFailure(handle, failure, release)
+    throw failure
+}
+
+private fun <H : Any> releaseAfterFailure(
+    handle: H?,
+    failure: Throwable,
+    release: (H) -> Unit,
+) {
     try {
         handle?.let(release)
     } catch (releaseFailure: Throwable) {
         if (releaseFailure !== failure) failure.addSuppressed(releaseFailure)
     }
-    throw failure
+}
+
+internal fun <S : Any, H : Any> awaitCallbackRequestResult(
+    state: CallbackRequestState<S, H>,
+    phase: String,
+    timeout: Duration = CallbackWaitPhaseTimeout,
+    await: () -> Unit,
+    close: () -> Unit,
+    isClosed: () -> Boolean,
+    isQuiescent: () -> Boolean,
+    pump: () -> Unit,
+): CallbackRequestSnapshot<S> {
+    var primaryFailure: Throwable? = null
+    try {
+        await()
+    } catch (failure: Throwable) {
+        primaryFailure = failure
+    }
+
+    state.failureOrNull()?.let { callbackFailure ->
+        val primary = primaryFailure
+        if (primary == null) primaryFailure = callbackFailure
+        else if (callbackFailure !== primary) primary.addSuppressed(callbackFailure)
+    }
+
+    try {
+        closeAndAwaitCallbackQuiescence(
+            phase = "$phase-close",
+            timeout = timeout,
+            close = close,
+            isClosed = isClosed,
+            isQuiescent = isQuiescent,
+            applicationInFlight = { 0 },
+            pump = pump,
+        )
+    } catch (cleanupFailure: Throwable) {
+        val primary = primaryFailure
+        if (primary == null) primaryFailure = cleanupFailure
+        else if (cleanupFailure !== primary) primary.addSuppressed(cleanupFailure)
+    }
+
+    primaryFailure?.let { primary ->
+        try {
+            state.dispose()
+        } catch (disposeFailure: Throwable) {
+            if (disposeFailure !== primary) primary.addSuppressed(disposeFailure)
+        }
+        throw primary
+    }
+
+    return state.snapshot()
 }
 
 internal fun awaitCallbackFuture(
@@ -150,6 +282,33 @@ internal fun awaitCallbackFuture(
     }
 }
 
+internal fun awaitCallbackFutureOrPump(
+    futureId: ULong,
+    phase: String,
+    timeout: Duration = CallbackWaitPhaseTimeout,
+    isComplete: () -> Boolean,
+    pumpWithoutFuture: () -> Unit,
+    waitOnce: (ULong) -> WGPUWaitStatus,
+) {
+    if (futureId == 0uL) {
+        awaitCallbackCondition(
+            phase = phase,
+            timeout = timeout,
+            isComplete = isComplete,
+            pendingDiagnostic = { "future-id=0 explicit-event-pump" },
+            pump = pumpWithoutFuture,
+        )
+        return
+    }
+    awaitCallbackFuture(
+        futureId = futureId,
+        phase = phase,
+        timeout = timeout,
+        isComplete = isComplete,
+        waitOnce = waitOnce,
+    )
+}
+
 internal fun awaitCallbackCondition(
     phase: String,
     timeout: Duration = CallbackWaitPhaseTimeout,
@@ -167,7 +326,7 @@ internal fun awaitCallbackCondition(
 fun awaitMapCallbackResult(
     phase: String,
     timeout: Duration = CallbackWaitPhaseTimeout,
-    result: () -> CallbackDiagnostic?,
+    result: () -> CallbackOutcome<CallbackDiagnostic>?,
     close: () -> Unit,
     isClosed: () -> Boolean,
     isQuiescent: () -> Boolean,
@@ -180,37 +339,41 @@ fun awaitMapCallbackResult(
             phase = phase,
             timeout = timeout,
             isComplete = {
-                snapshot = result()
-                snapshot != null
+                when (val outcome = result()) {
+                    is CallbackOutcome.Success -> snapshot = outcome.value
+                    is CallbackOutcome.Failure -> primaryFailure = outcome.failure
+                    null -> Unit
+                }
+                snapshot != null || primaryFailure != null
             },
             pendingDiagnostic = { "result=pending" },
             pump = pump,
         )
     } catch (failure: Throwable) {
         primaryFailure = failure
-        throw failure
-    } finally {
-        try {
-            closeAndAwaitCallbackQuiescence(
-                phase = "$phase-close",
-                timeout = timeout,
-                close = close,
-                isClosed = isClosed,
-                isQuiescent = isQuiescent,
-                applicationInFlight = { 0 },
-                pump = pump,
-            )
-        } catch (cleanupFailure: Throwable) {
-            val primary = primaryFailure
-            if (primary == null) throw cleanupFailure
-            if (cleanupFailure !== primary) primary.addSuppressed(cleanupFailure)
-        }
     }
 
+    try {
+        closeAndAwaitCallbackQuiescence(
+            phase = "$phase-close",
+            timeout = timeout,
+            close = close,
+            isClosed = isClosed,
+            isQuiescent = isQuiescent,
+            applicationInFlight = { 0 },
+            pump = pump,
+        )
+    } catch (cleanupFailure: Throwable) {
+        val primary = primaryFailure
+        if (primary == null) primaryFailure = cleanupFailure
+        else if (cleanupFailure !== primary) primary.addSuppressed(cleanupFailure)
+    }
+
+    primaryFailure?.let { throw it }
     return snapshot ?: error("$phase completed without a diagnostic")
 }
 
-internal fun closeAndAwaitCallbackQuiescence(
+fun closeAndAwaitCallbackQuiescence(
     phase: String,
     timeout: Duration = CallbackWaitPhaseTimeout,
     close: () -> Unit,

@@ -92,7 +92,7 @@ class HelloTriangleScene(val device: WGPUDevice, val renderingContextFormat: UIn
 
         val commandBuffer = wgpuCommandEncoderFinish(commandEncoder, null) ?: error("fail to get finish command buffer")
 
-        wgpuQueueSubmit(queue, 1u, scope.bufferOfAddress(commandBuffer.handler).let { WGPUCommandBuffer(it.handler) })
+        wgpuQueueSubmit(queue, 1u, scope.bufferOfAddress(commandBuffer.handler).handler)
 
         wgpuSurfacePresent(surface)
 

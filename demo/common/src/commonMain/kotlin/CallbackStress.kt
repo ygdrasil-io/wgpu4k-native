@@ -6,7 +6,6 @@ import io.ygdrasil.kffi.CallbackPolicy
 import io.ygdrasil.kffi.CallbackRegistration
 import io.ygdrasil.kffi.memoryScope
 import kotlin.concurrent.atomics.AtomicInt
-import kotlin.concurrent.atomics.AtomicReference
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
@@ -48,12 +47,13 @@ fun runCallbackStress() {
     var device: WGPUDevice? = null
     var queue: WGPUQueue? = null
     var errorRegistration: CallbackRegistration<WGPUUncapturedErrorCallback>? = null
+    var primaryFailure: Throwable? = null
 
     val uncapturedErrorCalls = AtomicInt(0)
     val validationErrorCalls = AtomicInt(0)
     val errorCallbacksCompleted = AtomicInt(0)
     val errorCallbacksInFlight = AtomicInt(0)
-    val firstUnexpectedError = AtomicReference<CallbackDiagnostic?>(null)
+    val firstUnexpectedError = CallbackOutcomeState<CallbackDiagnostic>()
 
     try {
         adapter = requestStressAdapter(instance)
@@ -61,13 +61,17 @@ fun runCallbackStress() {
         errorRegistration = WGPUUncapturedErrorCallback.register(CallbackPolicy.REPEATING) { _, type, message, _ ->
             errorCallbacksInFlight.fetchAndAdd(1)
             try {
-                val messageText = message.data?.toKString(message.length)
                 val ordinal = uncapturedErrorCalls.fetchAndAdd(1) + 1
                 if (type == WGPUErrorType_Validation) validationErrorCalls.fetchAndAdd(1)
-                if (type != WGPUErrorType_Validation || ordinal > 2) {
-                    firstUnexpectedError.recordFirst(type, messageText)
+                try {
+                    val messageText = message.data?.toKString(message.length)
+                    if (type != WGPUErrorType_Validation || ordinal > 2) {
+                        firstUnexpectedError.publish(CallbackDiagnostic(type, messageText))
+                    }
+                    println("callback-stress uncaptured-error type=$type message=${messageText.orEmpty()}")
+                } catch (failure: Throwable) {
+                    firstUnexpectedError.publishFailure(failure)
                 }
-                println("callback-stress uncaptured-error type=$type message=${messageText.orEmpty()}")
             } finally {
                 errorCallbacksCompleted.fetchAndAdd(1)
                 errorCallbacksInFlight.fetchAndAdd(-1)
@@ -114,57 +118,76 @@ fun runCallbackStress() {
         )
 
         println("callback-stress complete pending=0")
+    } catch (failure: Throwable) {
+        primaryFailure = failure
+        throw failure
     } finally {
-        errorRegistration?.close()
-        queue?.let(::wgpuQueueRelease)
-        device?.let(::wgpuDeviceRelease)
-        adapter?.let(::wgpuAdapterRelease)
-        wgpuInstanceRelease(instance)
+        val cleanup = GpuCleanupStack().apply {
+            defer { wgpuInstanceRelease(instance) }
+            adapter?.let { ownedAdapter -> defer { wgpuAdapterRelease(ownedAdapter) } }
+            device?.let { ownedDevice -> defer { wgpuDeviceRelease(ownedDevice) } }
+            queue?.let { ownedQueue -> defer { wgpuQueueRelease(ownedQueue) } }
+            errorRegistration?.let { registration ->
+                defer {
+                    val ownedDevice = device
+                    if (ownedDevice == null) {
+                        registration.close()
+                    } else {
+                        closeAndAwaitCallbackQuiescence(
+                            phase = "callback-stress-uncaptured-error-final-close",
+                            close = registration::close,
+                            isClosed = { registration.isClosed },
+                            isQuiescent = { registration.isQuiescent },
+                            applicationInFlight = errorCallbacksInFlight::load,
+                            pump = { wgpuDevicePoll(ownedDevice, 0u, null) },
+                        )
+                    }
+                }
+            }
+        }
+        cleanup.close(primaryFailure)
     }
 }
 
 private fun requestStressAdapter(instance: WGPUInstance): WGPUAdapter {
-    val requestStatus = AtomicReference<WGPURequestAdapterStatus?>(null)
-    val requestedAdapter = AtomicReference<WGPUAdapter?>(null)
-    val requestMessage = AtomicReference<String?>(null)
+    val state = CallbackRequestState<WGPURequestAdapterStatus, WGPUAdapter>(::wgpuAdapterRelease)
     val requestRegistration = WGPURequestAdapterCallback.register(CallbackPolicy.ONCE) { status, adapter, message, _ ->
-        requestedAdapter.store(adapter)
-        requestMessage.store(message.data?.toKString(message.length))
-        requestStatus.store(status)
+        state.publishCopied(status, adapter) { message.data?.toKString(message.length) }
     }
+    var futureId = 0uL
 
-    try {
-        val futureId = memoryScope { scope ->
-            val options = WGPURequestAdapterOptions.allocate(scope)
-            val requestInfo = WGPURequestAdapterCallbackInfo.allocate(
-                scope,
-                WGPUCallbackMode_WaitAnyOnly,
-                requestRegistration,
+    val snapshot = awaitCallbackRequestResult(
+        state = state,
+        phase = "callback-stress-request-adapter",
+        await = {
+            futureId = memoryScope { scope ->
+                val options = WGPURequestAdapterOptions.allocate(scope)
+                val requestInfo = WGPURequestAdapterCallbackInfo.allocate(
+                    scope,
+                    WGPUCallbackMode_AllowProcessEvents,
+                    requestRegistration,
+                )
+                wgpuInstanceRequestAdapter(instance, options, requestInfo).id
+            }
+            awaitCallbackFutureOrPump(
+                futureId = futureId,
+                phase = "callback-stress-request-adapter",
+                isComplete = { state.isComplete },
+                pumpWithoutFuture = { wgpuInstanceProcessEvents(instance) },
+                waitOnce = { waitAnyOnce(instance, it) },
             )
-            wgpuInstanceRequestAdapter(instance, options, requestInfo).id
-        }
-
-        awaitSingleFuture(
-            instance = instance,
-            futureId = futureId,
-            modeName = "WaitAnyOnly",
-            phase = "request-adapter",
-            isComplete = { requestStatus.load() != null },
-            pendingIds = { listOf(0) },
-        )
-
-        val status = requestStatus.load()
-        val adapter = requestedAdapter.load()
-        val message = requestMessage.load()
-        if (status != WGPURequestAdapterStatus_Success) {
-            adapter?.let(::wgpuAdapterRelease)
-            val messageSuffix = message?.takeIf(String::isNotEmpty)?.let { ": $it" }.orEmpty()
-            error("callback-stress: failed to get adapter with status $status$messageSuffix")
-        }
-        return adapter ?: error("callback-stress: adapter request succeeded without an adapter")
-    } finally {
-        requestRegistration.close()
-    }
+        },
+        close = requestRegistration::close,
+        isClosed = { requestRegistration.isClosed },
+        isQuiescent = { requestRegistration.isQuiescent },
+        pump = { pumpStressRequestCleanup(instance, futureId, "request-adapter") },
+    )
+    return resolveAdapterRequestResult(
+        status = snapshot.status,
+        adapter = state.takeHandle(),
+        message = snapshot.message,
+        release = ::wgpuAdapterRelease,
+    )
 }
 
 private fun requestStressDevice(
@@ -172,49 +195,49 @@ private fun requestStressDevice(
     instance: WGPUInstance,
     errorRegistration: CallbackRegistration<WGPUUncapturedErrorCallback>,
 ): WGPUDevice {
-    val requestStatus = AtomicReference<WGPURequestDeviceStatus?>(null)
-    val requestedDevice = AtomicReference<WGPUDevice?>(null)
-    val requestMessage = AtomicReference<String?>(null)
+    val state = CallbackRequestState<WGPURequestDeviceStatus, WGPUDevice>(::wgpuDeviceRelease)
     val requestRegistration = WGPURequestDeviceCallback.register(CallbackPolicy.ONCE) { status, device, message, _ ->
-        requestedDevice.store(device)
-        requestMessage.store(message.data?.toKString(message.length))
-        requestStatus.store(status)
+        state.publishCopied(status, device) { message.data?.toKString(message.length) }
     }
+    var futureId = 0uL
 
-    try {
-        val futureId = memoryScope { scope ->
-            val descriptor = WGPUDeviceDescriptor.allocate(scope).apply {
-                uncapturedErrorCallbackInfo = WGPUUncapturedErrorCallbackInfo.allocate(
+    val snapshot = awaitCallbackRequestResult(
+        state = state,
+        phase = "callback-stress-request-device",
+        await = {
+            futureId = memoryScope { scope ->
+                val descriptor = WGPUDeviceDescriptor.allocate(scope).apply {
+                    uncapturedErrorCallbackInfo = WGPUUncapturedErrorCallbackInfo.allocate(
+                        scope,
+                        errorRegistration,
+                    )
+                }
+                val requestInfo = WGPURequestDeviceCallbackInfo.allocate(
                     scope,
-                    errorRegistration,
+                    WGPUCallbackMode_AllowProcessEvents,
+                    requestRegistration,
                 )
+                wgpuAdapterRequestDevice(adapter, descriptor, requestInfo).id
             }
-            val requestInfo = WGPURequestDeviceCallbackInfo.allocate(
-                scope,
-                WGPUCallbackMode_WaitAnyOnly,
-                requestRegistration,
+            awaitCallbackFutureOrPump(
+                futureId = futureId,
+                phase = "callback-stress-request-device",
+                isComplete = { state.isComplete },
+                pumpWithoutFuture = { wgpuInstanceProcessEvents(instance) },
+                waitOnce = { waitAnyOnce(instance, it) },
             )
-            wgpuAdapterRequestDevice(adapter, descriptor, requestInfo).id
-        }
-
-        awaitSingleFuture(
-            instance = instance,
-            futureId = futureId,
-            modeName = "WaitAnyOnly",
-            phase = "request-device",
-            isComplete = { requestStatus.load() != null },
-            pendingIds = { listOf(0) },
-        )
-
-        return resolveDeviceRequestResult(
-            status = requestStatus.load(),
-            device = requestedDevice.load(),
-            message = requestMessage.load(),
-            release = ::wgpuDeviceRelease,
-        )
-    } finally {
-        requestRegistration.close()
-    }
+        },
+        close = requestRegistration::close,
+        isClosed = { requestRegistration.isClosed },
+        isQuiescent = { requestRegistration.isQuiescent },
+        pump = { pumpStressRequestCleanup(instance, futureId, "request-device") },
+    )
+    return resolveDeviceRequestResult(
+        status = snapshot.status,
+        device = state.takeHandle(),
+        message = snapshot.message,
+        release = ::wgpuDeviceRelease,
+    )
 }
 
 private fun runQueueCallbackPhase(
@@ -231,10 +254,11 @@ private fun runQueueCallbackPhase(
     val queueCallbacksCompleted = AtomicInt(0)
     val duplicates = AtomicInt(0)
     val failedStatuses = AtomicInt(0)
-    val firstQueueFailure = AtomicReference<CallbackDiagnostic?>(null)
+    val firstQueueFailure = CallbackOutcomeState<CallbackDiagnostic>()
     val registrations = mutableListOf<CallbackRegistration<WGPUQueueWorkDoneCallback>>()
     val futureIds = mutableListOf<ULong>()
     val suppressBeforeDelivery = mode != WGPUCallbackMode_AllowSpontaneous
+    var primaryFailure: Throwable? = null
 
     try {
         repeat(CallbackStressRegistrationCount) { id ->
@@ -244,7 +268,9 @@ private fun runQueueCallbackPhase(
                     if (previous == 0) delivered.fetchAndAdd(1) else duplicates.fetchAndAdd(1)
                     if (status != WGPUQueueWorkDoneStatus_Success) {
                         failedStatuses.fetchAndAdd(1)
-                        firstQueueFailure.recordFirst(status, message.data?.toKString(message.length))
+                        firstQueueFailure.publishCatching {
+                            CallbackDiagnostic(status, message.data?.toKString(message.length))
+                        }
                     }
                 } finally {
                     queueCallbacksCompleted.fetchAndAdd(1)
@@ -338,9 +364,12 @@ private fun runQueueCallbackPhase(
         check(duplicates.load() == 0) {
             "callback-stress mode=$modeName duplicate deliveries=${duplicates.load()}"
         }
+        firstQueueFailure.failureOrNull()?.let { throw it }
+        val firstQueueDiagnostic =
+            (firstQueueFailure.outcome() as? CallbackOutcome.Success)?.value
         check(failedStatuses.load() == 0) {
             "callback-stress mode=$modeName failed queue statuses=${failedStatuses.load()} " +
-                "first=${firstQueueFailure.load()}"
+                "first=$firstQueueDiagnostic"
         }
         calls.forEachIndexed { id, count ->
             val expected = if (suppressBeforeDelivery && isSuppressedId(id)) 0 else 1
@@ -370,8 +399,31 @@ private fun runQueueCallbackPhase(
                 "duplicates=0 memoryScope=closed pending=0 futurePumping=$futurePumpingDiagnostic " +
                 "upstreamModeValidation=$upstreamModeValidation",
         )
+    } catch (failure: Throwable) {
+        primaryFailure = failure
+        throw failure
     } finally {
-        registrations.forEach(CallbackRegistration<WGPUQueueWorkDoneCallback>::close)
+        val cleanup = GpuCleanupStack()
+        registrations.forEach { registration ->
+            cleanup.defer {
+                closeAndAwaitCallbackQuiescence(
+                    phase = "callback-stress-$modeName-final-close",
+                    close = registration::close,
+                    isClosed = { registration.isClosed },
+                    isQuiescent = { registration.isQuiescent },
+                    applicationInFlight = { 0 },
+                    pump = {
+                        wgpuDevicePoll(device, 0u, null)
+                        wgpuInstanceProcessEvents(instance)
+                        val waitableFutureIds = futureIds.filter { futureId -> futureId != 0uL }
+                        if (waitableFutureIds.isNotEmpty()) {
+                            pumpWaitAnyBatches(instance, waitableFutureIds, modeName)
+                        }
+                    },
+                )
+            }
+        }
+        cleanup.close(primaryFailure)
     }
 }
 
@@ -398,7 +450,7 @@ private fun submitBoundedCopyWork(device: WGPUDevice, queue: WGPUQueue) {
                 wgpuCommandEncoderCopyBufferToBuffer(encoder, source, 0uL, destination, 0uL, 4uL)
                 commandBuffer = wgpuCommandEncoderFinish(encoder, null)
                     ?: error("callback-stress: failed to finish command buffer")
-                val commands = scope.bufferOfAddress(commandBuffer.handler).let { WGPUCommandBuffer(it.handler) }
+                val commands = scope.bufferOfAddress(commandBuffer.handler).handler
                 wgpuQueueSubmit(queue, 1uL, commands)
             } finally {
                 commandBuffer?.let(::wgpuCommandBufferRelease)
@@ -467,32 +519,14 @@ private fun pumpWaitAnyBatches(
     }
 }
 
-private fun awaitSingleFuture(
-    instance: WGPUInstance,
-    futureId: ULong,
-    modeName: String,
-    phase: String,
-    isComplete: () -> Boolean,
-    pendingIds: () -> List<Int>,
-) {
-    val deadline = TimeSource.Monotonic.markNow() + CallbackStressPhaseTimeout
-    while (!isComplete()) {
-        check(futureId != 0uL) {
-            "callback-stress mode=$modeName phase=$phase future-id=0 pending=${pendingIds()}"
-        }
-        val waitStatus = memoryScope { scope ->
-            val waitInfo = WGPUFutureWaitInfo.allocate(scope).apply {
-                future = WGPUFuture.allocate(scope).apply { id = futureId }
-                completed = 0u
-            }
-            wgpuInstanceWaitAny(instance, 1uL, waitInfo, 0uL)
-        }
-        check(waitStatus == WGPUWaitStatus_Success || waitStatus == WGPUWaitStatus_TimedOut) {
-            "callback-stress mode=$modeName phase=$phase waitAny status=$waitStatus pending=${pendingIds()}"
-        }
-        if (deadline.hasPassedNow()) {
-            error("callback-stress timeout mode=$modeName phase=$phase pending=${pendingIds()}")
-        }
+private fun pumpStressRequestCleanup(instance: WGPUInstance, futureId: ULong, phase: String) {
+    if (futureId == 0uL) {
+        wgpuInstanceProcessEvents(instance)
+        return
+    }
+    val status = waitAnyOnce(instance, futureId)
+    check(status == WGPUWaitStatus_Success || status == WGPUWaitStatus_TimedOut) {
+        "callback-stress $phase-close waitAny status=$status future-id=$futureId"
     }
 }
 
@@ -504,7 +538,7 @@ private fun runUncapturedErrorPhase(
     errorCallbacksCompleted: AtomicInt,
     errorCallbacksInFlight: AtomicInt,
     errorRegistration: CallbackRegistration<WGPUUncapturedErrorCallback>,
-    firstUnexpectedError: AtomicReference<CallbackDiagnostic?>,
+    firstUnexpectedError: CallbackOutcomeState<CallbackDiagnostic>,
 ) {
     val buffer = memoryScope { scope ->
         WGPUBufferDescriptor.allocate(scope).apply {
@@ -512,6 +546,7 @@ private fun runUncapturedErrorPhase(
             size = 4uL
         }.let { wgpuDeviceCreateBuffer(device, it) }
     } ?: error("callback-stress: failed to create validation buffer")
+    var primaryFailure: Throwable? = null
 
     try {
         memoryScope { scope ->
@@ -539,7 +574,8 @@ private fun runUncapturedErrorPhase(
             pump = { wgpuDevicePoll(device, 0u, null) },
         )
 
-        val unexpected = firstUnexpectedError.load()
+        firstUnexpectedError.failureOrNull()?.let { throw it }
+        val unexpected = (firstUnexpectedError.outcome() as? CallbackOutcome.Success)?.value
         check(errorCallbacksCompleted.load() == 2) {
             "callback-stress completed error callbacks=${errorCallbacksCompleted.load()} expected=2 " +
                 "firstUnexpected=$unexpected"
@@ -559,8 +595,13 @@ private fun runUncapturedErrorPhase(
             "callback-stress uncaptured-errors=2 validation-errors=2 " +
                 "registration=closed inFlight=0 pending=0",
         )
+    } catch (failure: Throwable) {
+        primaryFailure = failure
+        throw failure
     } finally {
-        wgpuBufferRelease(buffer)
+        GpuCleanupStack().apply {
+            defer { wgpuBufferRelease(buffer) }
+        }.close(primaryFailure)
     }
 }
 

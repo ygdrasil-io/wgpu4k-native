@@ -2,7 +2,6 @@
 
 package io.ygdrasil.wgpu
 
-import kotlin.concurrent.atomics.AtomicReference
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -82,6 +81,25 @@ class CallbackCoordinationTest {
     }
 
     @Test
+    fun zeroFutureCanUseAnExplicitEventPumpUntilCompletion() {
+        var complete = false
+        var pumpCalls = 0
+
+        awaitCallbackFutureOrPump(
+            futureId = 0uL,
+            phase = "request-zero-event-pump",
+            isComplete = { complete },
+            pumpWithoutFuture = {
+                pumpCalls += 1
+                if (pumpCalls == 2) complete = true
+            },
+            waitOnce = { error("zero future must not reach waitAny") },
+        )
+
+        assertEquals(2, pumpCalls)
+    }
+
+    @Test
     fun cleanupFailureDisposesAndReleasesAPublishedHandleExactlyOnce() {
         var releases = 0
         val state = CallbackRequestState<UInt, String> { releases += 1 }
@@ -157,6 +175,114 @@ class CallbackCoordinationTest {
 
         assertSame(copyFailure, failure)
         assertEquals(0, releases)
+    }
+
+    @Test
+    fun requestCopyFailurePublishesCompletionAndReleasesTheIncomingHandleExactlyOnce() {
+        var releases = 0
+        val copyFailure = IllegalArgumentException("copy failed")
+        val state = CallbackRequestState<UInt, String> { releases += 1 }
+
+        state.publishCopied(7u, "owned") { throw copyFailure }
+
+        assertTrue(state.isComplete)
+        assertSame(copyFailure, state.failureOrNull())
+        assertEquals(1, releases)
+        assertNull(state.takeHandle())
+    }
+
+    @Test
+    fun requestCopyFailurePreservesReleaseFailureAsSuppressed() {
+        val copyFailure = IllegalArgumentException("copy failed")
+        val releaseFailure = IllegalStateException("release failed")
+        val state = CallbackRequestState<UInt, String> { throw releaseFailure }
+
+        state.publishCopied(7u, "owned") { throw copyFailure }
+
+        assertSame(copyFailure, state.failureOrNull())
+        assertEquals(listOf(releaseFailure), copyFailure.suppressedExceptions)
+    }
+
+    @Test
+    fun requestFailureClosesAndQuiescesBeforeRethrowWithoutPumpingToTimeout() {
+        val copyFailure = IllegalArgumentException("copy failed")
+        val state = CallbackRequestState<UInt, String>(release = {})
+        var closed = false
+        var pumps = 0
+        state.publishCopied(7u, null) { throw copyFailure }
+
+        val failure = assertFailsWith<IllegalArgumentException> {
+            awaitCallbackRequestResult(
+                state = state,
+                phase = "request-copy",
+                await = {
+                    awaitCallbackCondition(
+                        phase = "request-copy",
+                        timeout = Duration.ZERO,
+                        isComplete = { state.isComplete },
+                        pendingDiagnostic = { "pending" },
+                        pump = { pumps += 1 },
+                    )
+                },
+                close = { closed = true },
+                isClosed = { closed },
+                isQuiescent = { closed },
+                pump = { pumps += 1 },
+            )
+        }
+
+        assertSame(copyFailure, failure)
+        assertTrue(closed)
+        assertEquals(0, pumps)
+    }
+
+    @Test
+    fun mapCopyFailureRemainsPrimaryWhenCallbackCleanupAlsoFails() {
+        val copyFailure = IllegalArgumentException("copy failed")
+        val cleanupFailure = IllegalStateException("cleanup failed")
+        val result = CallbackOutcomeState<CallbackDiagnostic>()
+        result.publishCatching { throw copyFailure }
+
+        val failure = assertFailsWith<IllegalArgumentException> {
+            awaitMapCallbackResult(
+                phase = "map-copy",
+                timeout = Duration.ZERO,
+                result = result::outcome,
+                close = { throw cleanupFailure },
+                isClosed = { false },
+                isQuiescent = { false },
+                pump = { error("completed failure must not pump") },
+            )
+        }
+
+        assertSame(copyFailure, failure)
+        assertEquals(listOf(cleanupFailure), failure.suppressedExceptions)
+    }
+
+    @Test
+    fun firstRequestFailureWinsAndLateHandlesAreReleasedWithoutOverwrite() {
+        val released = mutableListOf<String>()
+        val firstFailure = IllegalArgumentException("first")
+        val state = CallbackRequestState<UInt, String>(released::add)
+
+        state.publishCopied(7u, "first-handle") { throw firstFailure }
+        state.publish(8u, "late-handle", "late")
+        state.dispose()
+        state.publish(9u, "disposed-handle", "disposed")
+
+        assertSame(firstFailure, state.failureOrNull())
+        assertEquals(listOf("first-handle", "late-handle", "disposed-handle"), released)
+    }
+
+    @Test
+    fun firstDiagnosticCopyFailureCannotBeOverwrittenByLateSuccess() {
+        val copyFailure = IllegalArgumentException("copy failed")
+        val result = CallbackOutcomeState<CallbackDiagnostic>()
+
+        result.publishCatching { throw copyFailure }
+        result.publish(CallbackDiagnostic(7u, "late"))
+
+        assertSame(copyFailure, result.failureOrNull())
     }
 
     @Test
@@ -249,12 +375,15 @@ class CallbackCoordinationTest {
 
     @Test
     fun firstDiagnosticWins() {
-        val first = AtomicReference<CallbackDiagnostic?>(null)
+        val first = CallbackOutcomeState<CallbackDiagnostic>()
 
-        first.recordFirst(7u, "first")
-        first.recordFirst(8u, "second")
+        first.publish(CallbackDiagnostic(7u, "first"))
+        first.publish(CallbackDiagnostic(8u, "second"))
 
-        assertEquals(CallbackDiagnostic(7u, "first"), first.load())
+        assertEquals(
+            CallbackOutcome.Success(CallbackDiagnostic(7u, "first")),
+            first.outcome(),
+        )
     }
 
     @Test
