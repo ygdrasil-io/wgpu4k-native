@@ -753,20 +753,6 @@ executable = kextractLauncher.get().asFile.absolutePath
 Keep existing outputs and arguments. The host override is for configuration/dry-run tests only;
 never execute a foreign launcher on the wrong host.
 
-Review remediation: compute the actual host separately from the configured test host. Add a
-`doFirst` guard to `generateBindingsFromHeader` that rejects execution when they differ, with a
-diagnostic stating that `wgpu4k.bindingGeneration.hostForTest` is configuration-only. Test an
-actual foreign-host task invocation and prove this guard fires before the `.bat`/Unix launcher is
-started; the three configuration checks and dry-run must remain valid.
-
-Keep the verification task on public Gradle APIs. In addition to `inputs.dir(kextractDistribution)`,
-declare a scalar input property such as `kextractDistributionPath` from the same provider. The gate
-must compare `generationTask.inputs.properties["kextractDistributionPath"]` with the normalized
-absolute expected directory, verify the expected launcher and every existing distribution file are
-members of `generationTask.inputs.files`, and retain the header/callback checks. Remove all imports
-and casts to Gradle `internal` input/fingerprint APIs. This proves the exact directory value while
-remaining stable across wrapper upgrades.
-
 - [ ] **Step 3: Add a portable tracked-and-untracked cleanliness task**
 
 Register `verifyGeneratedBindingsClean`. In `doLast`, run `ProcessBuilder` from `rootDir` for:
