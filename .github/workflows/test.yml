@@ -91,9 +91,11 @@ jobs:
       - name: Run Windows Native tests
         if: matrix.os == 'windows-latest'
         run: ./gradlew :kffi:mingwX64Test :wgpu4k-native:mingwX64Test
-      - name: Regenerate WebGPU bindings
+      - name: Verify binding-generation configuration
+        run: ./gradlew :wgpu4k-native:verifyBindingGenerationConfiguration
+      - name: Regenerate and verify WebGPU bindings
         if: matrix.os == 'macos-latest'
-        run: ./gradlew :wgpu4k-native:generateBindingsFromHeader
-      - name: Verify generated WebGPU sources are clean
-        if: matrix.os == 'macos-latest'
-        run: git diff --exit-code -- wgpu4k-native/src
+        run: >-
+          ./gradlew
+          :wgpu4k-native:generateBindingsFromHeader
+          :wgpu4k-native:verifyGeneratedBindingsClean
