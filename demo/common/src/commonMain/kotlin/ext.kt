@@ -72,11 +72,13 @@ fun configureSurface(
 }
 
 fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
-    val state = CallbackRequestState<WGPURequestDeviceStatus, WGPUDevice>()
+    val state = CallbackRequestState<WGPURequestDeviceStatus, WGPUDevice>(::wgpuDeviceRelease)
     val registration = WGPURequestDeviceCallback.register(CallbackPolicy.ONCE) { status, device, message, _ ->
         state.publish(status, device, message.data?.toKString(message.length))
     }
     var futureId = 0uL
+    var requestCompleted = false
+    var cleanupCompleted = false
     try {
         futureId = memoryScope { scope ->
             val info = WGPURequestDeviceCallbackInfo.allocate(
@@ -94,16 +96,10 @@ fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
             isQuiescent = { registration.isQuiescent },
             waitOnce = { waitAnyOnce(instance, it) },
         )
-        val snapshot = state.snapshot()
-        return resolveDeviceRequestResult(
-            snapshot.status,
-            state.takeHandle(),
-            snapshot.message,
-            ::wgpuDeviceRelease,
-        )
+        requestCompleted = true
     } finally {
-        registration.close()
         try {
+            registration.close()
             awaitCallbackCondition(
                 phase = "request-device-cleanup",
                 isComplete = { registration.isQuiescent },
@@ -117,10 +113,18 @@ fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
                     }
                 },
             )
+            cleanupCompleted = true
         } finally {
-            state.takeHandle()?.let(::wgpuDeviceRelease)
+            if (!requestCompleted || !cleanupCompleted) state.dispose()
         }
     }
+    val snapshot = state.snapshot()
+    return resolveDeviceRequestResult(
+        snapshot.status,
+        state.takeHandle(),
+        snapshot.message,
+        ::wgpuDeviceRelease,
+    )
 }
 
 internal fun <D : Any> resolveDeviceRequestResult(
@@ -157,11 +161,13 @@ fun getAdapter(
     instance: WGPUInstance,
     backendType: UInt = WGPUBackendType_Undefined,
 ): WGPUAdapter {
-    val state = CallbackRequestState<WGPURequestAdapterStatus, WGPUAdapter>()
+    val state = CallbackRequestState<WGPURequestAdapterStatus, WGPUAdapter>(::wgpuAdapterRelease)
     val registration = WGPURequestAdapterCallback.register(CallbackPolicy.ONCE) { status, adapter, message, _ ->
         state.publish(status, adapter, message.data?.toKString(message.length))
     }
     var futureId = 0uL
+    var requestCompleted = false
+    var cleanupCompleted = false
     try {
         futureId = memoryScope { scope ->
             val options = WGPURequestAdapterOptions.allocate(scope).apply {
@@ -183,16 +189,10 @@ fun getAdapter(
             isQuiescent = { registration.isQuiescent },
             waitOnce = { waitAnyOnce(instance, it) },
         )
-        val snapshot = state.snapshot()
-        return resolveAdapterRequestResult(
-            snapshot.status,
-            state.takeHandle(),
-            snapshot.message,
-            ::wgpuAdapterRelease,
-        )
+        requestCompleted = true
     } finally {
-        registration.close()
         try {
+            registration.close()
             awaitCallbackCondition(
                 phase = "request-adapter-cleanup",
                 isComplete = { registration.isQuiescent },
@@ -206,10 +206,18 @@ fun getAdapter(
                     }
                 },
             )
+            cleanupCompleted = true
         } finally {
-            state.takeHandle()?.let(::wgpuAdapterRelease)
+            if (!requestCompleted || !cleanupCompleted) state.dispose()
         }
     }
+    val snapshot = state.snapshot()
+    return resolveAdapterRequestResult(
+        snapshot.status,
+        state.takeHandle(),
+        snapshot.message,
+        ::wgpuAdapterRelease,
+    )
 }
 
 fun getSurfaceFromMetalLayer(instance: WGPUInstance, metalLayer: NativeAddress): WGPUSurface? = memoryScope { scope ->

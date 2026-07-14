@@ -18,23 +18,85 @@ internal enum class ZeroFuturePolicy {
     ALLOW_COMPLETED_SYNCHRONOUSLY,
 }
 
-internal class CallbackRequestState<S : Any, H : Any> {
-    private val status = AtomicReference<S?>(null)
-    private val handle = AtomicReference<H?>(null)
-    private val message = AtomicReference<String?>(null)
+private sealed interface CallbackRequestValue<out S : Any, out H : Any> {
+    data object Pending : CallbackRequestValue<Nothing, Nothing>
+    data class Completed<S : Any, H : Any>(
+        val status: S,
+        val handle: H?,
+        val message: String?,
+    ) : CallbackRequestValue<S, H>
+    data class Transferred<S : Any>(
+        val status: S,
+        val message: String?,
+    ) : CallbackRequestValue<S, Nothing>
+    data object Disposed : CallbackRequestValue<Nothing, Nothing>
+}
 
-    val isComplete: Boolean get() = status.load() != null
+internal class CallbackRequestState<S : Any, H : Any>(
+    private val release: (H) -> Unit,
+) {
+    private val value = AtomicReference<CallbackRequestValue<S, H>>(CallbackRequestValue.Pending)
+
+    val isComplete: Boolean
+        get() = when (value.load()) {
+            is CallbackRequestValue.Completed,
+            is CallbackRequestValue.Transferred,
+            -> true
+            CallbackRequestValue.Pending,
+            CallbackRequestValue.Disposed,
+            -> false
+        }
 
     fun publish(status: S, handle: H?, message: String?) {
-        this.handle.store(handle)
-        this.message.store(message)
-        this.status.store(status)
+        val completed = CallbackRequestValue.Completed(status, handle, message)
+        if (!value.compareAndSet(CallbackRequestValue.Pending, completed)) {
+            handle?.let(release)
+        }
     }
 
-    fun snapshot(): CallbackRequestSnapshot<S> =
-        CallbackRequestSnapshot(status.load(), message.load())
+    fun snapshot(): CallbackRequestSnapshot<S> = when (val current = value.load()) {
+        is CallbackRequestValue.Completed -> CallbackRequestSnapshot(current.status, current.message)
+        is CallbackRequestValue.Transferred -> CallbackRequestSnapshot(current.status, current.message)
+        CallbackRequestValue.Pending,
+        CallbackRequestValue.Disposed,
+        -> CallbackRequestSnapshot(null, null)
+    }
 
-    fun takeHandle(): H? = handle.exchange(null)
+    fun takeHandle(): H? {
+        while (true) {
+            when (val current = value.load()) {
+                is CallbackRequestValue.Completed -> {
+                    if (
+                        value.compareAndSet(
+                            current,
+                            CallbackRequestValue.Transferred(current.status, current.message),
+                        )
+                    ) return current.handle
+                }
+                is CallbackRequestValue.Transferred,
+                CallbackRequestValue.Pending,
+                CallbackRequestValue.Disposed,
+                -> return null
+            }
+        }
+    }
+
+    fun dispose() {
+        while (true) {
+            when (val current = value.load()) {
+                CallbackRequestValue.Disposed -> return
+                CallbackRequestValue.Pending,
+                is CallbackRequestValue.Transferred,
+                -> if (value.compareAndSet(current, CallbackRequestValue.Disposed)) return
+                is CallbackRequestValue.Completed -> {
+                    if (value.compareAndSet(current, CallbackRequestValue.Disposed)) {
+                        current.handle?.let(release)
+                        return
+                    }
+                }
+            }
+        }
+    }
 }
 
 internal fun awaitCallbackFuture(

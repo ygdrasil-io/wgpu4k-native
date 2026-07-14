@@ -13,7 +13,7 @@ import kotlin.time.Duration
 class CallbackCoordinationTest {
     @Test
     fun callbackFuturePumpsUntilStatusIsPublished() {
-        val state = CallbackRequestState<UInt, String>()
+        val state = CallbackRequestState<UInt, String>(release = {})
         var calls = 0
         awaitCallbackFuture(
             futureId = 41uL,
@@ -77,6 +77,34 @@ class CallbackCoordinationTest {
             }
             assertTrue(failure.message.orEmpty().contains("request-invalid-sync-zero"))
         }
+    }
+
+    @Test
+    fun cleanupFailureDisposesAndReleasesAPublishedHandleExactlyOnce() {
+        var releases = 0
+        val state = CallbackRequestState<UInt, String> { releases += 1 }
+        state.publish(7u, "owned", "ready")
+
+        state.dispose()
+        state.dispose()
+
+        assertEquals(1, releases)
+        assertFalse(state.isComplete)
+        assertNull(state.takeHandle())
+    }
+
+    @Test
+    fun latePublicationAfterDisposalReleasesItsHandleAndStaysIncomplete() {
+        var released: String? = null
+        val state = CallbackRequestState<UInt, String> { released = it }
+        state.dispose()
+
+        state.publish(7u, "late", "too late")
+
+        assertEquals("late", released)
+        assertFalse(state.isComplete)
+        assertNull(state.snapshot().status)
+        assertNull(state.takeHandle())
     }
 
     @Test
