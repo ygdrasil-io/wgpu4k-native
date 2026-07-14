@@ -3,7 +3,13 @@
 package io.ygdrasil.wgpu
 
 import io.ygdrasil.kffi.NativeAddress
-import io.ygdrasil.kffi.CallbackHolder
+import io.ygdrasil.kffi.CallbackExceptionHandler
+import io.ygdrasil.kffi.CallbackPolicy
+import io.ygdrasil.kffi.CallbackRegistration
+import io.ygdrasil.kffi.CallbackRuntime
+import io.ygdrasil.kffi.CallbackRuntimeApi
+import io.ygdrasil.kffi.PreparedCallbackRegistration
+import io.ygdrasil.kffi.UnsafeCallbackRearmApi
 import io.ygdrasil.kffi.CString
 import io.ygdrasil.kffi.toCString
 import io.ygdrasil.kffi.ArrayHolder
@@ -105,176 +111,6 @@ actual value class WGPUSurface actual constructor(actual val handler: NativeAddr
 actual value class WGPUTexture actual constructor(actual val handler: NativeAddress)
 
 actual value class WGPUTextureView actual constructor(actual val handler: NativeAddress)
-
-private var WGPUBufferMapCallback_callback: ((status: WGPUMapAsyncStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
-private val WGPUBufferMapCallback_static = staticCFunction<WGPUMapAsyncStatus, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, message, userdata1, userdata2 ->
-    WGPUBufferMapCallback_callback?.invoke(status, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
-}
-
-actual class WGPUBufferMapCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() {
-        if (handler.rawValue == NativeAddress(WGPUBufferMapCallback_static).rawValue) WGPUBufferMapCallback_callback = null
-    }
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUMapAsyncStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUBufferMapCallback {
-            WGPUBufferMapCallback_callback = callback
-            return WGPUBufferMapCallback(NativeAddress(WGPUBufferMapCallback_static))
-        }
-}
-}
-
-private var WGPUCompilationInfoCallback_callback: ((status: WGPUCompilationInfoRequestStatus, compilationInfo: NativeAddress?, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
-private val WGPUCompilationInfoCallback_static = staticCFunction<WGPUCompilationInfoRequestStatus, COpaquePointer?, COpaquePointer?, COpaquePointer?, Unit> { status, compilationInfo, userdata1, userdata2 ->
-    WGPUCompilationInfoCallback_callback?.invoke(status, compilationInfo?.let(::NativeAddress), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
-}
-
-actual class WGPUCompilationInfoCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() {
-        if (handler.rawValue == NativeAddress(WGPUCompilationInfoCallback_static).rawValue) WGPUCompilationInfoCallback_callback = null
-    }
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUCompilationInfoRequestStatus, compilationInfo: NativeAddress?, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCompilationInfoCallback {
-            WGPUCompilationInfoCallback_callback = callback
-            return WGPUCompilationInfoCallback(NativeAddress(WGPUCompilationInfoCallback_static))
-        }
-}
-}
-
-private var WGPUCreateComputePipelineAsyncCallback_callback: ((status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
-private val WGPUCreateComputePipelineAsyncCallback_static = staticCFunction<WGPUCreatePipelineAsyncStatus, COpaquePointer?, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, pipeline, message, userdata1, userdata2 ->
-    WGPUCreateComputePipelineAsyncCallback_callback?.invoke(status, pipeline?.let(::NativeAddress)?.let { WGPUComputePipeline(it) }, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
-}
-
-actual class WGPUCreateComputePipelineAsyncCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() {
-        if (handler.rawValue == NativeAddress(WGPUCreateComputePipelineAsyncCallback_static).rawValue) WGPUCreateComputePipelineAsyncCallback_callback = null
-    }
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCreateComputePipelineAsyncCallback {
-            WGPUCreateComputePipelineAsyncCallback_callback = callback
-            return WGPUCreateComputePipelineAsyncCallback(NativeAddress(WGPUCreateComputePipelineAsyncCallback_static))
-        }
-}
-}
-
-private var WGPUCreateRenderPipelineAsyncCallback_callback: ((status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
-private val WGPUCreateRenderPipelineAsyncCallback_static = staticCFunction<WGPUCreatePipelineAsyncStatus, COpaquePointer?, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, pipeline, message, userdata1, userdata2 ->
-    WGPUCreateRenderPipelineAsyncCallback_callback?.invoke(status, pipeline?.let(::NativeAddress)?.let { WGPURenderPipeline(it) }, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
-}
-
-actual class WGPUCreateRenderPipelineAsyncCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() {
-        if (handler.rawValue == NativeAddress(WGPUCreateRenderPipelineAsyncCallback_static).rawValue) WGPUCreateRenderPipelineAsyncCallback_callback = null
-    }
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCreateRenderPipelineAsyncCallback {
-            WGPUCreateRenderPipelineAsyncCallback_callback = callback
-            return WGPUCreateRenderPipelineAsyncCallback(NativeAddress(WGPUCreateRenderPipelineAsyncCallback_static))
-        }
-}
-}
-
-private var WGPUDeviceLostCallback_callback: ((device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
-private val WGPUDeviceLostCallback_static = staticCFunction<COpaquePointer?, WGPUDeviceLostReason, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { device, reason, message, userdata1, userdata2 ->
-    WGPUDeviceLostCallback_callback?.invoke(device?.let(::NativeAddress)?.let { WGPUDevice(it) }, reason, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
-}
-
-actual class WGPUDeviceLostCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() {
-        if (handler.rawValue == NativeAddress(WGPUDeviceLostCallback_static).rawValue) WGPUDeviceLostCallback_callback = null
-    }
-    actual companion object {
-        actual fun allocate(callback: (device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUDeviceLostCallback {
-            WGPUDeviceLostCallback_callback = callback
-            return WGPUDeviceLostCallback(NativeAddress(WGPUDeviceLostCallback_static))
-        }
-}
-}
-
-private var WGPUPopErrorScopeCallback_callback: ((status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
-private val WGPUPopErrorScopeCallback_static = staticCFunction<WGPUPopErrorScopeStatus, WGPUErrorType, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, type, message, userdata1, userdata2 ->
-    WGPUPopErrorScopeCallback_callback?.invoke(status, type, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
-}
-
-actual class WGPUPopErrorScopeCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() {
-        if (handler.rawValue == NativeAddress(WGPUPopErrorScopeCallback_static).rawValue) WGPUPopErrorScopeCallback_callback = null
-    }
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUPopErrorScopeCallback {
-            WGPUPopErrorScopeCallback_callback = callback
-            return WGPUPopErrorScopeCallback(NativeAddress(WGPUPopErrorScopeCallback_static))
-        }
-}
-}
-
-private var WGPUQueueWorkDoneCallback_callback: ((status: WGPUQueueWorkDoneStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
-private val WGPUQueueWorkDoneCallback_static = staticCFunction<WGPUQueueWorkDoneStatus, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, message, userdata1, userdata2 ->
-    WGPUQueueWorkDoneCallback_callback?.invoke(status, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
-}
-
-actual class WGPUQueueWorkDoneCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() {
-        if (handler.rawValue == NativeAddress(WGPUQueueWorkDoneCallback_static).rawValue) WGPUQueueWorkDoneCallback_callback = null
-    }
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUQueueWorkDoneStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUQueueWorkDoneCallback {
-            WGPUQueueWorkDoneCallback_callback = callback
-            return WGPUQueueWorkDoneCallback(NativeAddress(WGPUQueueWorkDoneCallback_static))
-        }
-}
-}
-
-private var WGPURequestAdapterCallback_callback: ((status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
-private val WGPURequestAdapterCallback_static = staticCFunction<WGPURequestAdapterStatus, COpaquePointer?, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, adapter, message, userdata1, userdata2 ->
-    WGPURequestAdapterCallback_callback?.invoke(status, adapter?.let(::NativeAddress)?.let { WGPUAdapter(it) }, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
-}
-
-actual class WGPURequestAdapterCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() {
-        if (handler.rawValue == NativeAddress(WGPURequestAdapterCallback_static).rawValue) WGPURequestAdapterCallback_callback = null
-    }
-    actual companion object {
-        actual fun allocate(callback: (status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPURequestAdapterCallback {
-            WGPURequestAdapterCallback_callback = callback
-            return WGPURequestAdapterCallback(NativeAddress(WGPURequestAdapterCallback_static))
-        }
-}
-}
-
-private var WGPURequestDeviceCallback_callback: ((status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
-private val WGPURequestDeviceCallback_static = staticCFunction<WGPURequestDeviceStatus, COpaquePointer?, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, device, message, userdata1, userdata2 ->
-    WGPURequestDeviceCallback_callback?.invoke(status, device?.let(::NativeAddress)?.let { WGPUDevice(it) }, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
-}
-
-actual class WGPURequestDeviceCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() {
-        if (handler.rawValue == NativeAddress(WGPURequestDeviceCallback_static).rawValue) WGPURequestDeviceCallback_callback = null
-    }
-    actual companion object {
-        actual fun allocate(callback: (status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPURequestDeviceCallback {
-            WGPURequestDeviceCallback_callback = callback
-            return WGPURequestDeviceCallback(NativeAddress(WGPURequestDeviceCallback_static))
-        }
-}
-}
-
-private var WGPUUncapturedErrorCallback_callback: ((device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit)? = null
-private val WGPUUncapturedErrorCallback_static = staticCFunction<COpaquePointer?, WGPUErrorType, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { device, type, message, userdata1, userdata2 ->
-    WGPUUncapturedErrorCallback_callback?.invoke(device?.let(::NativeAddress)?.let { WGPUDevice(it) }, type, WGPUStringView.ByValue(message), userdata1?.let(::NativeAddress), userdata2?.let(::NativeAddress))
-}
-
-actual class WGPUUncapturedErrorCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() {
-        if (handler.rawValue == NativeAddress(WGPUUncapturedErrorCallback_static).rawValue) WGPUUncapturedErrorCallback_callback = null
-    }
-    actual companion object {
-        actual fun allocate(callback: (device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUUncapturedErrorCallback {
-            WGPUUncapturedErrorCallback_callback = callback
-            return WGPUUncapturedErrorCallback(NativeAddress(WGPUUncapturedErrorCallback_static))
-        }
-}
-}
 
 actual interface WGPUChainedStruct {
     actual var next: WGPUChainedStruct?
@@ -10402,23 +10238,6 @@ fun WGPUPrimitiveStateExtras.toCValue(): CValue<webgpu.native.WGPUPrimitiveState
     this.conservative = this@toCValue.conservative
 }
 
-private var WGPULogCallback_callback: ((level: WGPULogLevel, message: WGPUStringView, userdata: NativeAddress?) -> Unit)? = null
-private val WGPULogCallback_static = staticCFunction<WGPULogLevel, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, Unit> { level, message, userdata ->
-    WGPULogCallback_callback?.invoke(level, WGPUStringView.ByValue(message), userdata?.let(::NativeAddress))
-}
-
-actual class WGPULogCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() {
-        if (handler.rawValue == NativeAddress(WGPULogCallback_static).rawValue) WGPULogCallback_callback = null
-    }
-    actual companion object {
-        actual fun allocate(callback: (level: WGPULogLevel, message: WGPUStringView, userdata: NativeAddress?) -> Unit): WGPULogCallback {
-            WGPULogCallback_callback = callback
-            return WGPULogCallback(NativeAddress(WGPULogCallback_static))
-        }
-}
-}
-
 actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit {
     webgpu.native.wgpuGenerateReport(instance?.handler?.pointer?.takeIf { instance.handler.rawValue != 0L }?.reinterpret(), report?.handler?.pointer?.takeIf { report.handler.rawValue != 0L }?.reinterpret())
     return
@@ -10444,8 +10263,8 @@ actual fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WG
     return webgpu.native.wgpuDeviceCreateShaderModuleSpirV(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
 }
 
-actual fun wgpuSetLogCallback(callback: WGPULogCallback?, userdata: NativeAddress?): Unit {
-    webgpu.native.wgpuSetLogCallback(callback?.handler?.pointer?.takeIf { callback.handler.rawValue != 0L }?.reinterpret(), userdata?.pointer?.takeIf { userdata.rawValue != 0L })
+actual fun wgpuSetLogCallback(callback: NativeAddress?, userdata: NativeAddress?): Unit {
+    webgpu.native.wgpuSetLogCallback(callback?.pointer?.takeIf { callback.rawValue != 0L }?.reinterpret(), userdata?.pointer?.takeIf { userdata.rawValue != 0L })
     return
 }
 
@@ -10543,4 +10362,550 @@ actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit {
     webgpu.native.wgpuDeviceStopGraphicsDebuggerCapture(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret())
     return
 }
+
+@OptIn(CallbackRuntimeApi::class)
+private val WGPUProcTrampoline = staticCFunction<Unit> {
+    try {
+        CallbackRuntime.dispatchSafely(
+            type = WGPUProcType,
+            userdata = null,
+        ) { callback ->
+            callback.invoke()
+        }
+    } catch (failure: Throwable) {
+        CallbackRuntime.reportUnroutedFailure(failure)
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUProc.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUProc,
+): CallbackRegistration<WGPUProc> = CallbackRuntime.register(
+    type = WGPUProcType,
+    trampoline = NativeAddress(WGPUProcTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUProc.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUProc,
+): PreparedCallbackRegistration<WGPUProc> = CallbackRuntime.prepare(
+    type = WGPUProcType,
+    trampoline = NativeAddress(WGPUProcTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@UnsafeCallbackRearmApi
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUProc.Companion.rearmAfterNativeQuiescence(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUProc,
+): CallbackRegistration<WGPUProc> = CallbackRuntime.rearmAfterNativeQuiescence(
+    type = WGPUProcType,
+    trampoline = NativeAddress(WGPUProcTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private val WGPUBufferMapCallbackTrampoline = staticCFunction<UInt, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, message, userdata1, userdata2 ->
+    try {
+        CallbackRuntime.dispatchSafely(
+            type = WGPUBufferMapCallbackType,
+            userdata = userdata2?.let(::NativeAddress),
+        ) { callback ->
+            callback.invoke(
+                status.toUInt() as WGPUMapAsyncStatus,
+                WGPUStringView.ByValue(message),
+                userdata1?.let(::NativeAddress),
+            )
+        }
+    } catch (failure: Throwable) {
+        CallbackRuntime.reportUnroutedFailure(failure)
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUBufferMapCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUBufferMapCallback,
+): CallbackRegistration<WGPUBufferMapCallback> = CallbackRuntime.register(
+    type = WGPUBufferMapCallbackType,
+    trampoline = NativeAddress(WGPUBufferMapCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUBufferMapCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUBufferMapCallback,
+): PreparedCallbackRegistration<WGPUBufferMapCallback> = CallbackRuntime.prepare(
+    type = WGPUBufferMapCallbackType,
+    trampoline = NativeAddress(WGPUBufferMapCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private val WGPUCompilationInfoCallbackTrampoline = staticCFunction<UInt, COpaquePointer?, COpaquePointer?, COpaquePointer?, Unit> { status, compilationInfo, userdata1, userdata2 ->
+    try {
+        CallbackRuntime.dispatchSafely(
+            type = WGPUCompilationInfoCallbackType,
+            userdata = userdata2?.let(::NativeAddress),
+        ) { callback ->
+            callback.invoke(
+                status.toUInt() as WGPUCompilationInfoRequestStatus,
+                compilationInfo?.let(::NativeAddress),
+                userdata1?.let(::NativeAddress),
+            )
+        }
+    } catch (failure: Throwable) {
+        CallbackRuntime.reportUnroutedFailure(failure)
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUCompilationInfoCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCompilationInfoCallback,
+): CallbackRegistration<WGPUCompilationInfoCallback> = CallbackRuntime.register(
+    type = WGPUCompilationInfoCallbackType,
+    trampoline = NativeAddress(WGPUCompilationInfoCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUCompilationInfoCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCompilationInfoCallback,
+): PreparedCallbackRegistration<WGPUCompilationInfoCallback> = CallbackRuntime.prepare(
+    type = WGPUCompilationInfoCallbackType,
+    trampoline = NativeAddress(WGPUCompilationInfoCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private val WGPUCreateComputePipelineAsyncCallbackTrampoline = staticCFunction<UInt, COpaquePointer?, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, pipeline, message, userdata1, userdata2 ->
+    try {
+        CallbackRuntime.dispatchSafely(
+            type = WGPUCreateComputePipelineAsyncCallbackType,
+            userdata = userdata2?.let(::NativeAddress),
+        ) { callback ->
+            callback.invoke(
+                status.toUInt() as WGPUCreatePipelineAsyncStatus,
+                pipeline?.let(::NativeAddress)?.let { WGPUComputePipeline(it) },
+                WGPUStringView.ByValue(message),
+                userdata1?.let(::NativeAddress),
+            )
+        }
+    } catch (failure: Throwable) {
+        CallbackRuntime.reportUnroutedFailure(failure)
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUCreateComputePipelineAsyncCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCreateComputePipelineAsyncCallback,
+): CallbackRegistration<WGPUCreateComputePipelineAsyncCallback> = CallbackRuntime.register(
+    type = WGPUCreateComputePipelineAsyncCallbackType,
+    trampoline = NativeAddress(WGPUCreateComputePipelineAsyncCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUCreateComputePipelineAsyncCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCreateComputePipelineAsyncCallback,
+): PreparedCallbackRegistration<WGPUCreateComputePipelineAsyncCallback> = CallbackRuntime.prepare(
+    type = WGPUCreateComputePipelineAsyncCallbackType,
+    trampoline = NativeAddress(WGPUCreateComputePipelineAsyncCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private val WGPUCreateRenderPipelineAsyncCallbackTrampoline = staticCFunction<UInt, COpaquePointer?, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, pipeline, message, userdata1, userdata2 ->
+    try {
+        CallbackRuntime.dispatchSafely(
+            type = WGPUCreateRenderPipelineAsyncCallbackType,
+            userdata = userdata2?.let(::NativeAddress),
+        ) { callback ->
+            callback.invoke(
+                status.toUInt() as WGPUCreatePipelineAsyncStatus,
+                pipeline?.let(::NativeAddress)?.let { WGPURenderPipeline(it) },
+                WGPUStringView.ByValue(message),
+                userdata1?.let(::NativeAddress),
+            )
+        }
+    } catch (failure: Throwable) {
+        CallbackRuntime.reportUnroutedFailure(failure)
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUCreateRenderPipelineAsyncCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCreateRenderPipelineAsyncCallback,
+): CallbackRegistration<WGPUCreateRenderPipelineAsyncCallback> = CallbackRuntime.register(
+    type = WGPUCreateRenderPipelineAsyncCallbackType,
+    trampoline = NativeAddress(WGPUCreateRenderPipelineAsyncCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUCreateRenderPipelineAsyncCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCreateRenderPipelineAsyncCallback,
+): PreparedCallbackRegistration<WGPUCreateRenderPipelineAsyncCallback> = CallbackRuntime.prepare(
+    type = WGPUCreateRenderPipelineAsyncCallbackType,
+    trampoline = NativeAddress(WGPUCreateRenderPipelineAsyncCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private val WGPUDeviceLostCallbackTrampoline = staticCFunction<COpaquePointer?, UInt, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { device, reason, message, userdata1, userdata2 ->
+    try {
+        CallbackRuntime.dispatchSafely(
+            type = WGPUDeviceLostCallbackType,
+            userdata = userdata2?.let(::NativeAddress),
+        ) { callback ->
+            callback.invoke(
+                device?.reinterpret<COpaquePointerVar>()?.pointed?.value?.let(::NativeAddress)?.let { WGPUDevice(it) },
+                reason.toUInt() as WGPUDeviceLostReason,
+                WGPUStringView.ByValue(message),
+                userdata1?.let(::NativeAddress),
+            )
+        }
+    } catch (failure: Throwable) {
+        CallbackRuntime.reportUnroutedFailure(failure)
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUDeviceLostCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUDeviceLostCallback,
+): CallbackRegistration<WGPUDeviceLostCallback> = CallbackRuntime.register(
+    type = WGPUDeviceLostCallbackType,
+    trampoline = NativeAddress(WGPUDeviceLostCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUDeviceLostCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUDeviceLostCallback,
+): PreparedCallbackRegistration<WGPUDeviceLostCallback> = CallbackRuntime.prepare(
+    type = WGPUDeviceLostCallbackType,
+    trampoline = NativeAddress(WGPUDeviceLostCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private val WGPUPopErrorScopeCallbackTrampoline = staticCFunction<UInt, UInt, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, type, message, userdata1, userdata2 ->
+    try {
+        CallbackRuntime.dispatchSafely(
+            type = WGPUPopErrorScopeCallbackType,
+            userdata = userdata2?.let(::NativeAddress),
+        ) { callback ->
+            callback.invoke(
+                status.toUInt() as WGPUPopErrorScopeStatus,
+                type.toUInt() as WGPUErrorType,
+                WGPUStringView.ByValue(message),
+                userdata1?.let(::NativeAddress),
+            )
+        }
+    } catch (failure: Throwable) {
+        CallbackRuntime.reportUnroutedFailure(failure)
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUPopErrorScopeCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUPopErrorScopeCallback,
+): CallbackRegistration<WGPUPopErrorScopeCallback> = CallbackRuntime.register(
+    type = WGPUPopErrorScopeCallbackType,
+    trampoline = NativeAddress(WGPUPopErrorScopeCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUPopErrorScopeCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUPopErrorScopeCallback,
+): PreparedCallbackRegistration<WGPUPopErrorScopeCallback> = CallbackRuntime.prepare(
+    type = WGPUPopErrorScopeCallbackType,
+    trampoline = NativeAddress(WGPUPopErrorScopeCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private val WGPUQueueWorkDoneCallbackTrampoline = staticCFunction<UInt, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, message, userdata1, userdata2 ->
+    try {
+        CallbackRuntime.dispatchSafely(
+            type = WGPUQueueWorkDoneCallbackType,
+            userdata = userdata2?.let(::NativeAddress),
+        ) { callback ->
+            callback.invoke(
+                status.toUInt() as WGPUQueueWorkDoneStatus,
+                WGPUStringView.ByValue(message),
+                userdata1?.let(::NativeAddress),
+            )
+        }
+    } catch (failure: Throwable) {
+        CallbackRuntime.reportUnroutedFailure(failure)
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUQueueWorkDoneCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUQueueWorkDoneCallback,
+): CallbackRegistration<WGPUQueueWorkDoneCallback> = CallbackRuntime.register(
+    type = WGPUQueueWorkDoneCallbackType,
+    trampoline = NativeAddress(WGPUQueueWorkDoneCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUQueueWorkDoneCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUQueueWorkDoneCallback,
+): PreparedCallbackRegistration<WGPUQueueWorkDoneCallback> = CallbackRuntime.prepare(
+    type = WGPUQueueWorkDoneCallbackType,
+    trampoline = NativeAddress(WGPUQueueWorkDoneCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private val WGPURequestAdapterCallbackTrampoline = staticCFunction<UInt, COpaquePointer?, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, adapter, message, userdata1, userdata2 ->
+    try {
+        CallbackRuntime.dispatchSafely(
+            type = WGPURequestAdapterCallbackType,
+            userdata = userdata2?.let(::NativeAddress),
+        ) { callback ->
+            callback.invoke(
+                status.toUInt() as WGPURequestAdapterStatus,
+                adapter?.let(::NativeAddress)?.let { WGPUAdapter(it) },
+                WGPUStringView.ByValue(message),
+                userdata1?.let(::NativeAddress),
+            )
+        }
+    } catch (failure: Throwable) {
+        CallbackRuntime.reportUnroutedFailure(failure)
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPURequestAdapterCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPURequestAdapterCallback,
+): CallbackRegistration<WGPURequestAdapterCallback> = CallbackRuntime.register(
+    type = WGPURequestAdapterCallbackType,
+    trampoline = NativeAddress(WGPURequestAdapterCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPURequestAdapterCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPURequestAdapterCallback,
+): PreparedCallbackRegistration<WGPURequestAdapterCallback> = CallbackRuntime.prepare(
+    type = WGPURequestAdapterCallbackType,
+    trampoline = NativeAddress(WGPURequestAdapterCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private val WGPURequestDeviceCallbackTrampoline = staticCFunction<UInt, COpaquePointer?, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { status, device, message, userdata1, userdata2 ->
+    try {
+        CallbackRuntime.dispatchSafely(
+            type = WGPURequestDeviceCallbackType,
+            userdata = userdata2?.let(::NativeAddress),
+        ) { callback ->
+            callback.invoke(
+                status.toUInt() as WGPURequestDeviceStatus,
+                device?.let(::NativeAddress)?.let { WGPUDevice(it) },
+                WGPUStringView.ByValue(message),
+                userdata1?.let(::NativeAddress),
+            )
+        }
+    } catch (failure: Throwable) {
+        CallbackRuntime.reportUnroutedFailure(failure)
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPURequestDeviceCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPURequestDeviceCallback,
+): CallbackRegistration<WGPURequestDeviceCallback> = CallbackRuntime.register(
+    type = WGPURequestDeviceCallbackType,
+    trampoline = NativeAddress(WGPURequestDeviceCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPURequestDeviceCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPURequestDeviceCallback,
+): PreparedCallbackRegistration<WGPURequestDeviceCallback> = CallbackRuntime.prepare(
+    type = WGPURequestDeviceCallbackType,
+    trampoline = NativeAddress(WGPURequestDeviceCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private val WGPUUncapturedErrorCallbackTrampoline = staticCFunction<COpaquePointer?, UInt, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, COpaquePointer?, Unit> { device, type, message, userdata1, userdata2 ->
+    try {
+        CallbackRuntime.dispatchSafely(
+            type = WGPUUncapturedErrorCallbackType,
+            userdata = userdata2?.let(::NativeAddress),
+        ) { callback ->
+            callback.invoke(
+                device?.reinterpret<COpaquePointerVar>()?.pointed?.value?.let(::NativeAddress)?.let { WGPUDevice(it) },
+                type.toUInt() as WGPUErrorType,
+                WGPUStringView.ByValue(message),
+                userdata1?.let(::NativeAddress),
+            )
+        }
+    } catch (failure: Throwable) {
+        CallbackRuntime.reportUnroutedFailure(failure)
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUUncapturedErrorCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUUncapturedErrorCallback,
+): CallbackRegistration<WGPUUncapturedErrorCallback> = CallbackRuntime.register(
+    type = WGPUUncapturedErrorCallbackType,
+    trampoline = NativeAddress(WGPUUncapturedErrorCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUUncapturedErrorCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUUncapturedErrorCallback,
+): PreparedCallbackRegistration<WGPUUncapturedErrorCallback> = CallbackRuntime.prepare(
+    type = WGPUUncapturedErrorCallbackType,
+    trampoline = NativeAddress(WGPUUncapturedErrorCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private val WGPULogCallbackTrampoline = staticCFunction<UInt, CValue<webgpu.native.WGPUStringView>, COpaquePointer?, Unit> { level, message, userdata ->
+    try {
+        CallbackRuntime.dispatchSafely(
+            type = WGPULogCallbackType,
+            userdata = userdata?.let(::NativeAddress),
+        ) { callback ->
+            callback.invoke(
+                level.toUInt() as WGPULogLevel,
+                WGPUStringView.ByValue(message),
+            )
+        }
+    } catch (failure: Throwable) {
+        CallbackRuntime.reportUnroutedFailure(failure)
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPULogCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPULogCallback,
+): CallbackRegistration<WGPULogCallback> = CallbackRuntime.register(
+    type = WGPULogCallbackType,
+    trampoline = NativeAddress(WGPULogCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPULogCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPULogCallback,
+): PreparedCallbackRegistration<WGPULogCallback> = CallbackRuntime.prepare(
+    type = WGPULogCallbackType,
+    trampoline = NativeAddress(WGPULogCallbackTrampoline),
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+internal actual fun wgpuSetLogCallbackCallbackBindingPreflight() = Unit
 

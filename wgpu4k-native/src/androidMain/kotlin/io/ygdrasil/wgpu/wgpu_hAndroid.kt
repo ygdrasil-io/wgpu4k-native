@@ -1,7 +1,12 @@
 package io.ygdrasil.wgpu
 
 import io.ygdrasil.kffi.NativeAddress
-import io.ygdrasil.kffi.CallbackHolder
+import io.ygdrasil.kffi.CallbackExceptionHandler
+import io.ygdrasil.kffi.CallbackPolicy
+import io.ygdrasil.kffi.CallbackRegistration
+import io.ygdrasil.kffi.CallbackRuntimeApi
+import io.ygdrasil.kffi.PreparedCallbackRegistration
+import io.ygdrasil.kffi.UnsafeCallbackRearmApi
 import io.ygdrasil.kffi.CString
 import io.ygdrasil.kffi.ArrayHolder
 import io.ygdrasil.kffi.MemoryAllocator
@@ -130,86 +135,6 @@ actual value class WGPUTexture actual constructor(actual val handler: NativeAddr
 
 @kotlin.jvm.JvmInline
 actual value class WGPUTextureView actual constructor(actual val handler: NativeAddress)
-
-actual class WGPUBufferMapCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUMapAsyncStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUBufferMapCallback =
-            error("WGPUBufferMapCallback allocation is not implemented on Android")
-    }
-}
-
-actual class WGPUCompilationInfoCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUCompilationInfoRequestStatus, compilationInfo: NativeAddress?, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCompilationInfoCallback =
-            error("WGPUCompilationInfoCallback allocation is not implemented on Android")
-    }
-}
-
-actual class WGPUCreateComputePipelineAsyncCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCreateComputePipelineAsyncCallback =
-            error("WGPUCreateComputePipelineAsyncCallback allocation is not implemented on Android")
-    }
-}
-
-actual class WGPUCreateRenderPipelineAsyncCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCreateRenderPipelineAsyncCallback =
-            error("WGPUCreateRenderPipelineAsyncCallback allocation is not implemented on Android")
-    }
-}
-
-actual class WGPUDeviceLostCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUDeviceLostCallback =
-            error("WGPUDeviceLostCallback allocation is not implemented on Android")
-    }
-}
-
-actual class WGPUPopErrorScopeCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUPopErrorScopeCallback =
-            error("WGPUPopErrorScopeCallback allocation is not implemented on Android")
-    }
-}
-
-actual class WGPUQueueWorkDoneCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPUQueueWorkDoneStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUQueueWorkDoneCallback =
-            error("WGPUQueueWorkDoneCallback allocation is not implemented on Android")
-    }
-}
-
-actual class WGPURequestAdapterCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPURequestAdapterCallback =
-            error("WGPURequestAdapterCallback allocation is not implemented on Android")
-    }
-}
-
-actual class WGPURequestDeviceCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPURequestDeviceCallback =
-            error("WGPURequestDeviceCallback allocation is not implemented on Android")
-    }
-}
-
-actual class WGPUUncapturedErrorCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUUncapturedErrorCallback =
-            error("WGPUUncapturedErrorCallback allocation is not implemented on Android")
-    }
-}
 
 actual interface WGPUChainedStruct {
     actual var next: WGPUChainedStruct?
@@ -10722,14 +10647,6 @@ actual interface WGPUPrimitiveStateExtras {
     }
 }
 
-actual class WGPULogCallback private constructor(actual val handler: NativeAddress) : AutoCloseable {
-    actual override fun close() = Unit
-    actual companion object {
-        actual fun allocate(callback: (level: WGPULogLevel, message: WGPUStringView, userdata: NativeAddress?) -> Unit): WGPULogCallback =
-            error("WGPULogCallback allocation is not implemented on Android")
-    }
-}
-
 actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit =
     error("wgpuGenerateReport is not implemented for Android/JNA generated bindings")
 
@@ -10748,7 +10665,7 @@ actual fun wgpuDevicePoll(device: WGPUDevice?, wait: UInt, submissionIndex: Nati
 actual fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptorSpirV?): WGPUShaderModule? =
     error("wgpuDeviceCreateShaderModuleSpirV is not implemented for Android/JNA generated bindings")
 
-actual fun wgpuSetLogCallback(callback: WGPULogCallback?, userdata: NativeAddress?): Unit =
+actual fun wgpuSetLogCallback(callback: NativeAddress?, userdata: NativeAddress?): Unit =
     error("wgpuSetLogCallback is not implemented for Android/JNA generated bindings")
 
 actual fun wgpuSetLogLevel(level: WGPULogLevel): Unit =
@@ -10810,4 +10727,286 @@ actual fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): UInt =
 
 actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit =
     error("wgpuDeviceStopGraphicsDebuggerCapture is not implemented for Android/JNA generated bindings")
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUProc.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUProc,
+): CallbackRegistration<WGPUProc> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUProc.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUProc,
+): PreparedCallbackRegistration<WGPUProc> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@UnsafeCallbackRearmApi
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUProc.Companion.rearmAfterNativeQuiescence(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUProc,
+): CallbackRegistration<WGPUProc> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUBufferMapCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUBufferMapCallback,
+): CallbackRegistration<WGPUBufferMapCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUBufferMapCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUBufferMapCallback,
+): PreparedCallbackRegistration<WGPUBufferMapCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUCompilationInfoCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCompilationInfoCallback,
+): CallbackRegistration<WGPUCompilationInfoCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUCompilationInfoCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCompilationInfoCallback,
+): PreparedCallbackRegistration<WGPUCompilationInfoCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUCreateComputePipelineAsyncCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCreateComputePipelineAsyncCallback,
+): CallbackRegistration<WGPUCreateComputePipelineAsyncCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUCreateComputePipelineAsyncCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCreateComputePipelineAsyncCallback,
+): PreparedCallbackRegistration<WGPUCreateComputePipelineAsyncCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUCreateRenderPipelineAsyncCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCreateRenderPipelineAsyncCallback,
+): CallbackRegistration<WGPUCreateRenderPipelineAsyncCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUCreateRenderPipelineAsyncCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCreateRenderPipelineAsyncCallback,
+): PreparedCallbackRegistration<WGPUCreateRenderPipelineAsyncCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUDeviceLostCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUDeviceLostCallback,
+): CallbackRegistration<WGPUDeviceLostCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUDeviceLostCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUDeviceLostCallback,
+): PreparedCallbackRegistration<WGPUDeviceLostCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUPopErrorScopeCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUPopErrorScopeCallback,
+): CallbackRegistration<WGPUPopErrorScopeCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUPopErrorScopeCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUPopErrorScopeCallback,
+): PreparedCallbackRegistration<WGPUPopErrorScopeCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUQueueWorkDoneCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUQueueWorkDoneCallback,
+): CallbackRegistration<WGPUQueueWorkDoneCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUQueueWorkDoneCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUQueueWorkDoneCallback,
+): PreparedCallbackRegistration<WGPUQueueWorkDoneCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPURequestAdapterCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPURequestAdapterCallback,
+): CallbackRegistration<WGPURequestAdapterCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPURequestAdapterCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPURequestAdapterCallback,
+): PreparedCallbackRegistration<WGPURequestAdapterCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPURequestDeviceCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPURequestDeviceCallback,
+): CallbackRegistration<WGPURequestDeviceCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPURequestDeviceCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPURequestDeviceCallback,
+): PreparedCallbackRegistration<WGPURequestDeviceCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUUncapturedErrorCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUUncapturedErrorCallback,
+): CallbackRegistration<WGPUUncapturedErrorCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUUncapturedErrorCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUUncapturedErrorCallback,
+): PreparedCallbackRegistration<WGPUUncapturedErrorCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPULogCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPULogCallback,
+): CallbackRegistration<WGPULogCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPULogCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPULogCallback,
+): PreparedCallbackRegistration<WGPULogCallback> {
+    throw UnsupportedOperationException(
+        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+    )
+}
+
+internal actual fun wgpuSetLogCallbackCallbackBindingPreflight() {
+    throw UnsupportedOperationException(
+        "Android/JNA safe callback bindings are not supported; use raw bindings or an Android Native target",
+    )
+}
 

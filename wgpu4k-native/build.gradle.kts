@@ -292,6 +292,19 @@ tasks.register<Exec>("generateBindingsFromHeader") {
     dependsOn(":kextract:assemble")
 
     val kextractBin = project(":kextract").layout.buildDirectory.file("kextract/bin/kextract").get().asFile.absolutePath
+    val callbackBindings = project(":wgpu4k-native-specs")
+        .file("src/jvmMain/resources/callback-bindings.yml")
+    val nativeHeader = project.file("build/native/wgpu.h")
+    val webGpuHeader = project.file("build/native/webgpu.h")
+
+    inputs.files(callbackBindings, nativeHeader, webGpuHeader)
+    outputs.dirs(
+        project.file("src/commonMain/kotlin"),
+        project.file("src/jvmMain/kotlin"),
+        project.file("src/nativeMain/kotlin"),
+        project.file("src/androidMain/kotlin"),
+    )
+
     executable = kextractBin
 
     val isMac = System.getProperty("os.name").contains("Mac", ignoreCase = true)
@@ -300,7 +313,9 @@ tasks.register<Exec>("generateBindingsFromHeader") {
         val sdkPath = providers.exec {
             commandLine("xcrun", "--show-sdk-path")
         }.standardOutput.asText.get().trim()
-        clangArgs.addAll(listOf("-A", "-isysroot", "-A", sdkPath))
+        clangArgs.addAll(
+            listOf("-D", "__MATH_H__", "-A", "-ffreestanding", "-A", "-isysroot", "-A", sdkPath),
+        )
     }
 
     args = listOf(
@@ -308,6 +323,9 @@ tasks.register<Exec>("generateBindingsFromHeader") {
         "--target-package", "io.ygdrasil.wgpu",
         "--output", project.file("src").absolutePath,
         "--library", "wgpu_native",
-        project.file("build/native/wgpu.h").absolutePath
+        "--callback-bindings",
+        callbackBindings.absolutePath,
+        "-D", "WGPU_SKIP_PROCS",
+        nativeHeader.absolutePath,
     ) + clangArgs
 }

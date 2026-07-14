@@ -1,7 +1,13 @@
 package io.ygdrasil.wgpu
 
 import io.ygdrasil.kffi.NativeAddress
-import io.ygdrasil.kffi.CallbackHolder
+import io.ygdrasil.kffi.CallbackExceptionHandler
+import io.ygdrasil.kffi.CallbackPolicy
+import io.ygdrasil.kffi.CallbackRegistration
+import io.ygdrasil.kffi.CallbackRuntime
+import io.ygdrasil.kffi.CallbackRuntimeApi
+import io.ygdrasil.kffi.PreparedCallbackRegistration
+import io.ygdrasil.kffi.UnsafeCallbackRearmApi
 import io.ygdrasil.kffi.CString
 import io.ygdrasil.kffi.ArrayHolder
 import io.ygdrasil.kffi.MemoryAllocator
@@ -118,306 +124,6 @@ actual value class WGPUTexture actual constructor(actual val handler: NativeAddr
 
 @kotlin.jvm.JvmInline
 actual value class WGPUTextureView actual constructor(actual val handler: NativeAddress)
-
-actual class WGPUBufferMapCallback private constructor(
-    private var segment: MemorySegment,
-    private val arena: Arena,
-    private val callback: (status: WGPUMapAsyncStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit
-) : AutoCloseable {
-    actual val handler: NativeAddress
-        get() = NativeAddress(segment)
-    
-    fun invoke(status: Int, message: MemorySegment, userdata1: MemorySegment, userdata2: MemorySegment) {
-        callback(status.toUInt() as WGPUMapAsyncStatus, WGPUStringView(NativeAddress(message)), userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress), userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress))
-    }
-    
-    actual override fun close() {
-        arena.close()
-    }
-    
-    actual companion object {
-        private val DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-        actual fun allocate(callback: (status: WGPUMapAsyncStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUBufferMapCallback {
-            val arena = Arena.ofShared()
-            val holder = WGPUBufferMapCallback(MemorySegment.NULL, arena, callback)
-            val handle = MethodHandles.lookup()
-                .findVirtual(WGPUBufferMapCallback::class.java, "invoke", DESC.toMethodType())
-                .bindTo(holder)
-            holder.segment = Linker.nativeLinker().upcallStub(handle, DESC, arena)
-            return holder
-        }
-    }
-}
-
-actual class WGPUCompilationInfoCallback private constructor(
-    private var segment: MemorySegment,
-    private val arena: Arena,
-    private val callback: (status: WGPUCompilationInfoRequestStatus, compilationInfo: NativeAddress?, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit
-) : AutoCloseable {
-    actual val handler: NativeAddress
-        get() = NativeAddress(segment)
-    
-    fun invoke(status: Int, compilationInfo: MemorySegment, userdata1: MemorySegment, userdata2: MemorySegment) {
-        callback(status.toUInt() as WGPUCompilationInfoRequestStatus, compilationInfo.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress), userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress), userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress))
-    }
-    
-    actual override fun close() {
-        arena.close()
-    }
-    
-    actual companion object {
-        private val DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-        actual fun allocate(callback: (status: WGPUCompilationInfoRequestStatus, compilationInfo: NativeAddress?, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCompilationInfoCallback {
-            val arena = Arena.ofShared()
-            val holder = WGPUCompilationInfoCallback(MemorySegment.NULL, arena, callback)
-            val handle = MethodHandles.lookup()
-                .findVirtual(WGPUCompilationInfoCallback::class.java, "invoke", DESC.toMethodType())
-                .bindTo(holder)
-            holder.segment = Linker.nativeLinker().upcallStub(handle, DESC, arena)
-            return holder
-        }
-    }
-}
-
-actual class WGPUCreateComputePipelineAsyncCallback private constructor(
-    private var segment: MemorySegment,
-    private val arena: Arena,
-    private val callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit
-) : AutoCloseable {
-    actual val handler: NativeAddress
-        get() = NativeAddress(segment)
-    
-    fun invoke(status: Int, pipeline: MemorySegment, message: MemorySegment, userdata1: MemorySegment, userdata2: MemorySegment) {
-        callback(status.toUInt() as WGPUCreatePipelineAsyncStatus, pipeline.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUComputePipeline(it) }, WGPUStringView(NativeAddress(message)), userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress), userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress))
-    }
-    
-    actual override fun close() {
-        arena.close()
-    }
-    
-    actual companion object {
-        private val DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-        actual fun allocate(callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCreateComputePipelineAsyncCallback {
-            val arena = Arena.ofShared()
-            val holder = WGPUCreateComputePipelineAsyncCallback(MemorySegment.NULL, arena, callback)
-            val handle = MethodHandles.lookup()
-                .findVirtual(WGPUCreateComputePipelineAsyncCallback::class.java, "invoke", DESC.toMethodType())
-                .bindTo(holder)
-            holder.segment = Linker.nativeLinker().upcallStub(handle, DESC, arena)
-            return holder
-        }
-    }
-}
-
-actual class WGPUCreateRenderPipelineAsyncCallback private constructor(
-    private var segment: MemorySegment,
-    private val arena: Arena,
-    private val callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit
-) : AutoCloseable {
-    actual val handler: NativeAddress
-        get() = NativeAddress(segment)
-    
-    fun invoke(status: Int, pipeline: MemorySegment, message: MemorySegment, userdata1: MemorySegment, userdata2: MemorySegment) {
-        callback(status.toUInt() as WGPUCreatePipelineAsyncStatus, pipeline.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPURenderPipeline(it) }, WGPUStringView(NativeAddress(message)), userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress), userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress))
-    }
-    
-    actual override fun close() {
-        arena.close()
-    }
-    
-    actual companion object {
-        private val DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-        actual fun allocate(callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCreateRenderPipelineAsyncCallback {
-            val arena = Arena.ofShared()
-            val holder = WGPUCreateRenderPipelineAsyncCallback(MemorySegment.NULL, arena, callback)
-            val handle = MethodHandles.lookup()
-                .findVirtual(WGPUCreateRenderPipelineAsyncCallback::class.java, "invoke", DESC.toMethodType())
-                .bindTo(holder)
-            holder.segment = Linker.nativeLinker().upcallStub(handle, DESC, arena)
-            return holder
-        }
-    }
-}
-
-actual class WGPUDeviceLostCallback private constructor(
-    private var segment: MemorySegment,
-    private val arena: Arena,
-    private val callback: (device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit
-) : AutoCloseable {
-    actual val handler: NativeAddress
-        get() = NativeAddress(segment)
-    
-    fun invoke(device: MemorySegment, reason: Int, message: MemorySegment, userdata1: MemorySegment, userdata2: MemorySegment) {
-        callback(device.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUDevice(it) }, reason.toUInt() as WGPUDeviceLostReason, WGPUStringView(NativeAddress(message)), userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress), userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress))
-    }
-    
-    actual override fun close() {
-        arena.close()
-    }
-    
-    actual companion object {
-        private val DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-        actual fun allocate(callback: (device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUDeviceLostCallback {
-            val arena = Arena.ofShared()
-            val holder = WGPUDeviceLostCallback(MemorySegment.NULL, arena, callback)
-            val handle = MethodHandles.lookup()
-                .findVirtual(WGPUDeviceLostCallback::class.java, "invoke", DESC.toMethodType())
-                .bindTo(holder)
-            holder.segment = Linker.nativeLinker().upcallStub(handle, DESC, arena)
-            return holder
-        }
-    }
-}
-
-actual class WGPUPopErrorScopeCallback private constructor(
-    private var segment: MemorySegment,
-    private val arena: Arena,
-    private val callback: (status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit
-) : AutoCloseable {
-    actual val handler: NativeAddress
-        get() = NativeAddress(segment)
-    
-    fun invoke(status: Int, type: Int, message: MemorySegment, userdata1: MemorySegment, userdata2: MemorySegment) {
-        callback(status.toUInt() as WGPUPopErrorScopeStatus, type.toUInt() as WGPUErrorType, WGPUStringView(NativeAddress(message)), userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress), userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress))
-    }
-    
-    actual override fun close() {
-        arena.close()
-    }
-    
-    actual companion object {
-        private val DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-        actual fun allocate(callback: (status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUPopErrorScopeCallback {
-            val arena = Arena.ofShared()
-            val holder = WGPUPopErrorScopeCallback(MemorySegment.NULL, arena, callback)
-            val handle = MethodHandles.lookup()
-                .findVirtual(WGPUPopErrorScopeCallback::class.java, "invoke", DESC.toMethodType())
-                .bindTo(holder)
-            holder.segment = Linker.nativeLinker().upcallStub(handle, DESC, arena)
-            return holder
-        }
-    }
-}
-
-actual class WGPUQueueWorkDoneCallback private constructor(
-    private var segment: MemorySegment,
-    private val arena: Arena,
-    private val callback: (status: WGPUQueueWorkDoneStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit
-) : AutoCloseable {
-    actual val handler: NativeAddress
-        get() = NativeAddress(segment)
-    
-    fun invoke(status: Int, message: MemorySegment, userdata1: MemorySegment, userdata2: MemorySegment) {
-        callback(status.toUInt() as WGPUQueueWorkDoneStatus, WGPUStringView(NativeAddress(message)), userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress), userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress))
-    }
-    
-    actual override fun close() {
-        arena.close()
-    }
-    
-    actual companion object {
-        private val DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-        actual fun allocate(callback: (status: WGPUQueueWorkDoneStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUQueueWorkDoneCallback {
-            val arena = Arena.ofShared()
-            val holder = WGPUQueueWorkDoneCallback(MemorySegment.NULL, arena, callback)
-            val handle = MethodHandles.lookup()
-                .findVirtual(WGPUQueueWorkDoneCallback::class.java, "invoke", DESC.toMethodType())
-                .bindTo(holder)
-            holder.segment = Linker.nativeLinker().upcallStub(handle, DESC, arena)
-            return holder
-        }
-    }
-}
-
-actual class WGPURequestAdapterCallback private constructor(
-    private var segment: MemorySegment,
-    private val arena: Arena,
-    private val callback: (status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit
-) : AutoCloseable {
-    actual val handler: NativeAddress
-        get() = NativeAddress(segment)
-    
-    fun invoke(status: Int, adapter: MemorySegment, message: MemorySegment, userdata1: MemorySegment, userdata2: MemorySegment) {
-        callback(status.toUInt() as WGPURequestAdapterStatus, adapter.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUAdapter(it) }, WGPUStringView(NativeAddress(message)), userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress), userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress))
-    }
-    
-    actual override fun close() {
-        arena.close()
-    }
-    
-    actual companion object {
-        private val DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-        actual fun allocate(callback: (status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPURequestAdapterCallback {
-            val arena = Arena.ofShared()
-            val holder = WGPURequestAdapterCallback(MemorySegment.NULL, arena, callback)
-            val handle = MethodHandles.lookup()
-                .findVirtual(WGPURequestAdapterCallback::class.java, "invoke", DESC.toMethodType())
-                .bindTo(holder)
-            holder.segment = Linker.nativeLinker().upcallStub(handle, DESC, arena)
-            return holder
-        }
-    }
-}
-
-actual class WGPURequestDeviceCallback private constructor(
-    private var segment: MemorySegment,
-    private val arena: Arena,
-    private val callback: (status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit
-) : AutoCloseable {
-    actual val handler: NativeAddress
-        get() = NativeAddress(segment)
-    
-    fun invoke(status: Int, device: MemorySegment, message: MemorySegment, userdata1: MemorySegment, userdata2: MemorySegment) {
-        callback(status.toUInt() as WGPURequestDeviceStatus, device.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUDevice(it) }, WGPUStringView(NativeAddress(message)), userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress), userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress))
-    }
-    
-    actual override fun close() {
-        arena.close()
-    }
-    
-    actual companion object {
-        private val DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-        actual fun allocate(callback: (status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPURequestDeviceCallback {
-            val arena = Arena.ofShared()
-            val holder = WGPURequestDeviceCallback(MemorySegment.NULL, arena, callback)
-            val handle = MethodHandles.lookup()
-                .findVirtual(WGPURequestDeviceCallback::class.java, "invoke", DESC.toMethodType())
-                .bindTo(holder)
-            holder.segment = Linker.nativeLinker().upcallStub(handle, DESC, arena)
-            return holder
-        }
-    }
-}
-
-actual class WGPUUncapturedErrorCallback private constructor(
-    private var segment: MemorySegment,
-    private val arena: Arena,
-    private val callback: (device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit
-) : AutoCloseable {
-    actual val handler: NativeAddress
-        get() = NativeAddress(segment)
-    
-    fun invoke(device: MemorySegment, type: Int, message: MemorySegment, userdata1: MemorySegment, userdata2: MemorySegment) {
-        callback(device.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUDevice(it) }, type.toUInt() as WGPUErrorType, WGPUStringView(NativeAddress(message)), userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress), userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress))
-    }
-    
-    actual override fun close() {
-        arena.close()
-    }
-    
-    actual companion object {
-        private val DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-        actual fun allocate(callback: (device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUUncapturedErrorCallback {
-            val arena = Arena.ofShared()
-            val holder = WGPUUncapturedErrorCallback(MemorySegment.NULL, arena, callback)
-            val handle = MethodHandles.lookup()
-                .findVirtual(WGPUUncapturedErrorCallback::class.java, "invoke", DESC.toMethodType())
-                .bindTo(holder)
-            holder.segment = Linker.nativeLinker().upcallStub(handle, DESC, arena)
-            return holder
-        }
-    }
-}
 
 actual interface WGPUChainedStruct : CStructure {
     actual var next: WGPUChainedStruct?
@@ -7987,36 +7693,6 @@ actual interface WGPUPrimitiveStateExtras : CStructure {
     }
 }
 
-actual class WGPULogCallback private constructor(
-    private var segment: MemorySegment,
-    private val arena: Arena,
-    private val callback: (level: WGPULogLevel, message: WGPUStringView, userdata: NativeAddress?) -> Unit
-) : AutoCloseable {
-    actual val handler: NativeAddress
-        get() = NativeAddress(segment)
-    
-    fun invoke(level: Int, message: MemorySegment, userdata: MemorySegment) {
-        callback(level.toUInt() as WGPULogLevel, WGPUStringView(NativeAddress(message)), userdata.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress))
-    }
-    
-    actual override fun close() {
-        arena.close()
-    }
-    
-    actual companion object {
-        private val DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, WGPUStringView.layout, ValueLayout.ADDRESS)
-        actual fun allocate(callback: (level: WGPULogLevel, message: WGPUStringView, userdata: NativeAddress?) -> Unit): WGPULogCallback {
-            val arena = Arena.ofShared()
-            val holder = WGPULogCallback(MemorySegment.NULL, arena, callback)
-            val handle = MethodHandles.lookup()
-                .findVirtual(WGPULogCallback::class.java, "invoke", DESC.toMethodType())
-                .bindTo(holder)
-            holder.segment = Linker.nativeLinker().upcallStub(handle, DESC, arena)
-            return holder
-        }
-    }
-}
-
 private val wgpuGenerateReport_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
 private val wgpuGenerateReport_ADDR: MemorySegment by lazy { findOrThrow("wgpuGenerateReport") }
 private val wgpuGenerateReport_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuGenerateReport_ADDR, wgpuGenerateReport_DESC) }
@@ -8063,8 +7739,8 @@ actual fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WG
 private val wgpuSetLogCallback_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
 private val wgpuSetLogCallback_ADDR: MemorySegment by lazy { findOrThrow("wgpuSetLogCallback") }
 private val wgpuSetLogCallback_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSetLogCallback_ADDR, wgpuSetLogCallback_DESC) }
-actual fun wgpuSetLogCallback(callback: WGPULogCallback?, userdata: NativeAddress?): Unit {
-    wgpuSetLogCallback_HANDLE.invokeExact(callback?.handler?.handler ?: MemorySegment.NULL, userdata?.handler ?: MemorySegment.NULL)
+actual fun wgpuSetLogCallback(callback: NativeAddress?, userdata: NativeAddress?): Unit {
+    wgpuSetLogCallback_HANDLE.invokeExact(callback?.handler ?: MemorySegment.NULL, userdata?.handler ?: MemorySegment.NULL)
     return
 }
 
@@ -8221,5 +7897,797 @@ private val wgpuDeviceStopGraphicsDebuggerCapture_HANDLE: MethodHandle by lazy {
 actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit {
     wgpuDeviceStopGraphicsDebuggerCapture_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL)
     return
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUProcTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid()
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            WGPUProcTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+    
+    @JvmStatic
+    private fun invoke(
+    ) {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUProcType,
+                userdata = null,
+            ) { callback ->
+                callback.invoke()
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUProc.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUProc,
+): CallbackRegistration<WGPUProc> = CallbackRuntime.register(
+    type = WGPUProcType,
+    trampoline = WGPUProcTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUProc.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUProc,
+): PreparedCallbackRegistration<WGPUProc> = CallbackRuntime.prepare(
+    type = WGPUProcType,
+    trampoline = WGPUProcTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@UnsafeCallbackRearmApi
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUProc.Companion.rearmAfterNativeQuiescence(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUProc,
+): CallbackRegistration<WGPUProc> = CallbackRuntime.rearmAfterNativeQuiescence(
+    type = WGPUProcType,
+    trampoline = WGPUProcTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUBufferMapCallbackTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            WGPUBufferMapCallbackTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+    
+    @JvmStatic
+    private fun invoke(
+        status: Int,
+        message: MemorySegment,
+        userdata1: MemorySegment,
+        userdata2: MemorySegment,
+    ) {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUBufferMapCallbackType,
+                userdata = userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPUMapAsyncStatus,
+                    WGPUStringView(NativeAddress(message)),
+                    userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUBufferMapCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUBufferMapCallback,
+): CallbackRegistration<WGPUBufferMapCallback> = CallbackRuntime.register(
+    type = WGPUBufferMapCallbackType,
+    trampoline = WGPUBufferMapCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUBufferMapCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUBufferMapCallback,
+): PreparedCallbackRegistration<WGPUBufferMapCallback> = CallbackRuntime.prepare(
+    type = WGPUBufferMapCallbackType,
+    trampoline = WGPUBufferMapCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUCompilationInfoCallbackTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            WGPUCompilationInfoCallbackTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+    
+    @JvmStatic
+    private fun invoke(
+        status: Int,
+        compilationInfo: MemorySegment,
+        userdata1: MemorySegment,
+        userdata2: MemorySegment,
+    ) {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUCompilationInfoCallbackType,
+                userdata = userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPUCompilationInfoRequestStatus,
+                    compilationInfo.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+                    userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUCompilationInfoCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCompilationInfoCallback,
+): CallbackRegistration<WGPUCompilationInfoCallback> = CallbackRuntime.register(
+    type = WGPUCompilationInfoCallbackType,
+    trampoline = WGPUCompilationInfoCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUCompilationInfoCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCompilationInfoCallback,
+): PreparedCallbackRegistration<WGPUCompilationInfoCallback> = CallbackRuntime.prepare(
+    type = WGPUCompilationInfoCallbackType,
+    trampoline = WGPUCompilationInfoCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUCreateComputePipelineAsyncCallbackTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            WGPUCreateComputePipelineAsyncCallbackTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+    
+    @JvmStatic
+    private fun invoke(
+        status: Int,
+        pipeline: MemorySegment,
+        message: MemorySegment,
+        userdata1: MemorySegment,
+        userdata2: MemorySegment,
+    ) {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUCreateComputePipelineAsyncCallbackType,
+                userdata = userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPUCreatePipelineAsyncStatus,
+                    pipeline.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUComputePipeline(it) },
+                    WGPUStringView(NativeAddress(message)),
+                    userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUCreateComputePipelineAsyncCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCreateComputePipelineAsyncCallback,
+): CallbackRegistration<WGPUCreateComputePipelineAsyncCallback> = CallbackRuntime.register(
+    type = WGPUCreateComputePipelineAsyncCallbackType,
+    trampoline = WGPUCreateComputePipelineAsyncCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUCreateComputePipelineAsyncCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCreateComputePipelineAsyncCallback,
+): PreparedCallbackRegistration<WGPUCreateComputePipelineAsyncCallback> = CallbackRuntime.prepare(
+    type = WGPUCreateComputePipelineAsyncCallbackType,
+    trampoline = WGPUCreateComputePipelineAsyncCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUCreateRenderPipelineAsyncCallbackTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            WGPUCreateRenderPipelineAsyncCallbackTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+    
+    @JvmStatic
+    private fun invoke(
+        status: Int,
+        pipeline: MemorySegment,
+        message: MemorySegment,
+        userdata1: MemorySegment,
+        userdata2: MemorySegment,
+    ) {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUCreateRenderPipelineAsyncCallbackType,
+                userdata = userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPUCreatePipelineAsyncStatus,
+                    pipeline.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPURenderPipeline(it) },
+                    WGPUStringView(NativeAddress(message)),
+                    userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUCreateRenderPipelineAsyncCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCreateRenderPipelineAsyncCallback,
+): CallbackRegistration<WGPUCreateRenderPipelineAsyncCallback> = CallbackRuntime.register(
+    type = WGPUCreateRenderPipelineAsyncCallbackType,
+    trampoline = WGPUCreateRenderPipelineAsyncCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUCreateRenderPipelineAsyncCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUCreateRenderPipelineAsyncCallback,
+): PreparedCallbackRegistration<WGPUCreateRenderPipelineAsyncCallback> = CallbackRuntime.prepare(
+    type = WGPUCreateRenderPipelineAsyncCallbackType,
+    trampoline = WGPUCreateRenderPipelineAsyncCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUDeviceLostCallbackTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            WGPUDeviceLostCallbackTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+    
+    @JvmStatic
+    private fun invoke(
+        device: MemorySegment,
+        reason: Int,
+        message: MemorySegment,
+        userdata1: MemorySegment,
+        userdata2: MemorySegment,
+    ) {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUDeviceLostCallbackType,
+                userdata = userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+            ) { callback ->
+                callback.invoke(
+                    device.takeIf { it != MemorySegment.NULL }?.reinterpret(ValueLayout.ADDRESS.byteSize())?.get(ValueLayout.ADDRESS, 0L)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUDevice(it) },
+                    reason.toUInt() as WGPUDeviceLostReason,
+                    WGPUStringView(NativeAddress(message)),
+                    userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUDeviceLostCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUDeviceLostCallback,
+): CallbackRegistration<WGPUDeviceLostCallback> = CallbackRuntime.register(
+    type = WGPUDeviceLostCallbackType,
+    trampoline = WGPUDeviceLostCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUDeviceLostCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUDeviceLostCallback,
+): PreparedCallbackRegistration<WGPUDeviceLostCallback> = CallbackRuntime.prepare(
+    type = WGPUDeviceLostCallbackType,
+    trampoline = WGPUDeviceLostCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUPopErrorScopeCallbackTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            WGPUPopErrorScopeCallbackTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+    
+    @JvmStatic
+    private fun invoke(
+        status: Int,
+        type: Int,
+        message: MemorySegment,
+        userdata1: MemorySegment,
+        userdata2: MemorySegment,
+    ) {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUPopErrorScopeCallbackType,
+                userdata = userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPUPopErrorScopeStatus,
+                    type.toUInt() as WGPUErrorType,
+                    WGPUStringView(NativeAddress(message)),
+                    userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUPopErrorScopeCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUPopErrorScopeCallback,
+): CallbackRegistration<WGPUPopErrorScopeCallback> = CallbackRuntime.register(
+    type = WGPUPopErrorScopeCallbackType,
+    trampoline = WGPUPopErrorScopeCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUPopErrorScopeCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUPopErrorScopeCallback,
+): PreparedCallbackRegistration<WGPUPopErrorScopeCallback> = CallbackRuntime.prepare(
+    type = WGPUPopErrorScopeCallbackType,
+    trampoline = WGPUPopErrorScopeCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUQueueWorkDoneCallbackTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            WGPUQueueWorkDoneCallbackTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+    
+    @JvmStatic
+    private fun invoke(
+        status: Int,
+        message: MemorySegment,
+        userdata1: MemorySegment,
+        userdata2: MemorySegment,
+    ) {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUQueueWorkDoneCallbackType,
+                userdata = userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPUQueueWorkDoneStatus,
+                    WGPUStringView(NativeAddress(message)),
+                    userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUQueueWorkDoneCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUQueueWorkDoneCallback,
+): CallbackRegistration<WGPUQueueWorkDoneCallback> = CallbackRuntime.register(
+    type = WGPUQueueWorkDoneCallbackType,
+    trampoline = WGPUQueueWorkDoneCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUQueueWorkDoneCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUQueueWorkDoneCallback,
+): PreparedCallbackRegistration<WGPUQueueWorkDoneCallback> = CallbackRuntime.prepare(
+    type = WGPUQueueWorkDoneCallbackType,
+    trampoline = WGPUQueueWorkDoneCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPURequestAdapterCallbackTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            WGPURequestAdapterCallbackTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+    
+    @JvmStatic
+    private fun invoke(
+        status: Int,
+        adapter: MemorySegment,
+        message: MemorySegment,
+        userdata1: MemorySegment,
+        userdata2: MemorySegment,
+    ) {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPURequestAdapterCallbackType,
+                userdata = userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPURequestAdapterStatus,
+                    adapter.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUAdapter(it) },
+                    WGPUStringView(NativeAddress(message)),
+                    userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPURequestAdapterCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPURequestAdapterCallback,
+): CallbackRegistration<WGPURequestAdapterCallback> = CallbackRuntime.register(
+    type = WGPURequestAdapterCallbackType,
+    trampoline = WGPURequestAdapterCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPURequestAdapterCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPURequestAdapterCallback,
+): PreparedCallbackRegistration<WGPURequestAdapterCallback> = CallbackRuntime.prepare(
+    type = WGPURequestAdapterCallbackType,
+    trampoline = WGPURequestAdapterCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPURequestDeviceCallbackTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            WGPURequestDeviceCallbackTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+    
+    @JvmStatic
+    private fun invoke(
+        status: Int,
+        device: MemorySegment,
+        message: MemorySegment,
+        userdata1: MemorySegment,
+        userdata2: MemorySegment,
+    ) {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPURequestDeviceCallbackType,
+                userdata = userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPURequestDeviceStatus,
+                    device.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUDevice(it) },
+                    WGPUStringView(NativeAddress(message)),
+                    userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPURequestDeviceCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPURequestDeviceCallback,
+): CallbackRegistration<WGPURequestDeviceCallback> = CallbackRuntime.register(
+    type = WGPURequestDeviceCallbackType,
+    trampoline = WGPURequestDeviceCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPURequestDeviceCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPURequestDeviceCallback,
+): PreparedCallbackRegistration<WGPURequestDeviceCallback> = CallbackRuntime.prepare(
+    type = WGPURequestDeviceCallbackType,
+    trampoline = WGPURequestDeviceCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUUncapturedErrorCallbackTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, WGPUStringView.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            WGPUUncapturedErrorCallbackTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+    
+    @JvmStatic
+    private fun invoke(
+        device: MemorySegment,
+        type: Int,
+        message: MemorySegment,
+        userdata1: MemorySegment,
+        userdata2: MemorySegment,
+    ) {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUUncapturedErrorCallbackType,
+                userdata = userdata2.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+            ) { callback ->
+                callback.invoke(
+                    device.takeIf { it != MemorySegment.NULL }?.reinterpret(ValueLayout.ADDRESS.byteSize())?.get(ValueLayout.ADDRESS, 0L)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUDevice(it) },
+                    type.toUInt() as WGPUErrorType,
+                    WGPUStringView(NativeAddress(message)),
+                    userdata1.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPUUncapturedErrorCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUUncapturedErrorCallback,
+): CallbackRegistration<WGPUUncapturedErrorCallback> = CallbackRuntime.register(
+    type = WGPUUncapturedErrorCallbackType,
+    trampoline = WGPUUncapturedErrorCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPUUncapturedErrorCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPUUncapturedErrorCallback,
+): PreparedCallbackRegistration<WGPUUncapturedErrorCallback> = CallbackRuntime.prepare(
+    type = WGPUUncapturedErrorCallbackType,
+    trampoline = WGPUUncapturedErrorCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPULogCallbackTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, WGPUStringView.layout, ValueLayout.ADDRESS)
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            WGPULogCallbackTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+    
+    @JvmStatic
+    private fun invoke(
+        level: Int,
+        message: MemorySegment,
+        userdata: MemorySegment,
+    ) {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPULogCallbackType,
+                userdata = userdata.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress),
+            ) { callback ->
+                callback.invoke(
+                    level.toUInt() as WGPULogLevel,
+                    WGPUStringView(NativeAddress(message)),
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+}
+
+@OptIn(CallbackRuntimeApi::class)
+actual fun WGPULogCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPULogCallback,
+): CallbackRegistration<WGPULogCallback> = CallbackRuntime.register(
+    type = WGPULogCallbackType,
+    trampoline = WGPULogCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@OptIn(CallbackRuntimeApi::class)
+internal actual fun WGPULogCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler,
+    callback: WGPULogCallback,
+): PreparedCallbackRegistration<WGPULogCallback> = CallbackRuntime.prepare(
+    type = WGPULogCallbackType,
+    trampoline = WGPULogCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+@Suppress("UNUSED_VARIABLE")
+internal actual fun wgpuSetLogCallbackCallbackBindingPreflight() {
+    val address = wgpuSetLogCallback_ADDR
+    val handle = wgpuSetLogCallback_HANDLE
 }
 

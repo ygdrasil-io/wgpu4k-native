@@ -1,7 +1,15 @@
 package io.ygdrasil.wgpu
 
 import io.ygdrasil.kffi.NativeAddress
-import io.ygdrasil.kffi.CallbackHolder
+import io.ygdrasil.kffi.Callback
+import io.ygdrasil.kffi.CallbackExceptionHandler
+import io.ygdrasil.kffi.CallbackPolicy
+import io.ygdrasil.kffi.CallbackRegistration
+import io.ygdrasil.kffi.CallbackRuntime
+import io.ygdrasil.kffi.CallbackRuntimeApi
+import io.ygdrasil.kffi.CallbackType
+import io.ygdrasil.kffi.PreparedCallbackRegistration
+import io.ygdrasil.kffi.UnsafeCallbackRearmApi
 import io.ygdrasil.kffi.CString
 import io.ygdrasil.kffi.ArrayHolder
 import io.ygdrasil.kffi.MemoryAllocator
@@ -1814,185 +1822,6 @@ const val WGPUWGSLLanguageFeatureName_TextureAndSamplerLet : WGPUWGSLLanguageFea
 const val WGPUWGSLLanguageFeatureName_SubgroupUniformity : WGPUWGSLLanguageFeatureName = 8u
 const val WGPUWGSLLanguageFeatureName_TextureFormatsTier1 : WGPUWGSLLanguageFeatureName = 9u
 const val WGPUWGSLLanguageFeatureName_Force32 : WGPUWGSLLanguageFeatureName = 2147483647u
-
-/**
- * See also @ref CallbackError.
- *
- * @param message
- * This parameter is @ref PassedWithoutOwnership.
- */
-expect class WGPUBufferMapCallback : AutoCloseable {
-    val handler: NativeAddress
-    override fun close()
-    companion object {
-        fun allocate(callback: (status: WGPUMapAsyncStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUBufferMapCallback
-    }
-}
-
-/**
- * See also @ref CallbackError.
- *
- * @param compilationInfo
- * This argument contains multiple @ref ImplementationAllocatedStructChain roots.
- * Arbitrary chains must be handled gracefully by the application!
- * This parameter is @ref PassedWithoutOwnership.
- */
-expect class WGPUCompilationInfoCallback : AutoCloseable {
-    val handler: NativeAddress
-    override fun close()
-    companion object {
-        fun allocate(callback: (status: WGPUCompilationInfoRequestStatus, compilationInfo: NativeAddress?, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCompilationInfoCallback
-    }
-}
-
-/**
- * See also @ref CallbackError.
- *
- * @param pipeline
- * This parameter is @ref PassedWithOwnership.
- */
-expect class WGPUCreateComputePipelineAsyncCallback : AutoCloseable {
-    val handler: NativeAddress
-    override fun close()
-    companion object {
-        fun allocate(callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPUComputePipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCreateComputePipelineAsyncCallback
-    }
-}
-
-/**
- * See also @ref CallbackError.
- *
- * @param pipeline
- * This parameter is @ref PassedWithOwnership.
- */
-expect class WGPUCreateRenderPipelineAsyncCallback : AutoCloseable {
-    val handler: NativeAddress
-    override fun close()
-    companion object {
-        fun allocate(callback: (status: WGPUCreatePipelineAsyncStatus, pipeline: WGPURenderPipeline?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUCreateRenderPipelineAsyncCallback
-    }
-}
-
-/**
- * See also @ref CallbackError.
- *
- * @param device
- * Pointer to the device which was lost. This is always a non-null pointer.
- * The pointed-to @ref WGPUDevice will be null if, and only if, either:
- * (1) The `reason` is @ref WGPUDeviceLostReason_FailedCreation.
- * (2) The last ref of the device has been (or is being) released: see @ref DeviceRelease.
- * This parameter is @ref PassedWithoutOwnership.
- *
- * @param reason
- * An error code explaining why the device was lost.
- *
- * @param message
- * A @ref LocalizableHumanReadableMessageString describing why the device was lost.
- * This parameter is @ref PassedWithoutOwnership.
- */
-expect class WGPUDeviceLostCallback : AutoCloseable {
-    val handler: NativeAddress
-    override fun close()
-    companion object {
-        fun allocate(callback: (device: WGPUDevice?, reason: WGPUDeviceLostReason, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUDeviceLostCallback
-    }
-}
-
-/**
- * See also @ref CallbackError.
- *
- * @param status
- * See @ref WGPUPopErrorScopeStatus.
- *
- * @param type
- * The type of the error caught by the scope, or @ref WGPUErrorType_NoError if there was none.
- * If the `status` is not @ref WGPUPopErrorScopeStatus_Success, this is @ref WGPUErrorType_NoError.
- *
- * @param message
- * If the `status` is not @ref WGPUPopErrorScopeStatus_Success **or**
- * the `type` is not @ref WGPUErrorType_NoError, this is a non-empty
- * @ref LocalizableHumanReadableMessageString;
- * otherwise, this is an empty string.
- * This parameter is @ref PassedWithoutOwnership.
- */
-expect class WGPUPopErrorScopeCallback : AutoCloseable {
-    val handler: NativeAddress
-    override fun close()
-    companion object {
-        fun allocate(callback: (status: WGPUPopErrorScopeStatus, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUPopErrorScopeCallback
-    }
-}
-
-/**
- * See also @ref CallbackError.
- *
- * @param status
- * See @ref WGPUQueueWorkDoneStatus.
- *
- * @param message
- * If the `status` is not @ref WGPUQueueWorkDoneStatus_Success,
- * this is a non-empty @ref LocalizableHumanReadableMessageString;
- * otherwise, this is an empty string.
- * This parameter is @ref PassedWithoutOwnership.
- */
-expect class WGPUQueueWorkDoneCallback : AutoCloseable {
-    val handler: NativeAddress
-    override fun close()
-    companion object {
-        fun allocate(callback: (status: WGPUQueueWorkDoneStatus, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUQueueWorkDoneCallback
-    }
-}
-
-/**
- * See also @ref CallbackError.
- *
- * @param adapter
- * This parameter is @ref PassedWithOwnership.
- *
- * @param message
- * This parameter is @ref PassedWithoutOwnership.
- */
-expect class WGPURequestAdapterCallback : AutoCloseable {
-    val handler: NativeAddress
-    override fun close()
-    companion object {
-        fun allocate(callback: (status: WGPURequestAdapterStatus, adapter: WGPUAdapter?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPURequestAdapterCallback
-    }
-}
-
-/**
- * See also @ref CallbackError.
- *
- * @param device
- * This parameter is @ref PassedWithOwnership.
- *
- * @param message
- * This parameter is @ref PassedWithoutOwnership.
- */
-expect class WGPURequestDeviceCallback : AutoCloseable {
-    val handler: NativeAddress
-    override fun close()
-    companion object {
-        fun allocate(callback: (status: WGPURequestDeviceStatus, device: WGPUDevice?, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPURequestDeviceCallback
-    }
-}
-
-/**
- * See also @ref CallbackError.
- *
- * @param device
- * This parameter is @ref PassedWithoutOwnership.
- *
- * @param message
- * This parameter is @ref PassedWithoutOwnership.
- */
-expect class WGPUUncapturedErrorCallback : AutoCloseable {
-    val handler: NativeAddress
-    override fun close()
-    companion object {
-        fun allocate(callback: (device: WGPUDevice?, type: WGPUErrorType, message: WGPUStringView, userdata1: NativeAddress?, userdata2: NativeAddress?) -> Unit): WGPUUncapturedErrorCallback
-    }
-}
 
 /**
  * @} * /
@@ -7063,14 +6892,6 @@ expect interface WGPUPrimitiveStateExtras {
     }
 }
 
-expect class WGPULogCallback : AutoCloseable {
-    val handler: NativeAddress
-    override fun close()
-    companion object {
-        fun allocate(callback: (level: WGPULogLevel, message: WGPUStringView, userdata: NativeAddress?) -> Unit): WGPULogCallback
-    }
-}
-
 typealias WGPUNativeTextureFormat = UInt
 const val WGPUNativeTextureFormat_R16Unorm : WGPUNativeTextureFormat = 196609u
 /**
@@ -7129,13 +6950,7 @@ expect fun wgpuDevicePoll(device: WGPUDevice?, wait: UInt, submissionIndex: Nati
 
 expect fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptorSpirV?): WGPUShaderModule?
 
-expect fun wgpuSetLogCallback(callback: WGPULogCallback?, userdata: NativeAddress?): Unit
-
-fun wgpuSetLogCallback(userdata: NativeAddress? = null, callback: (level: WGPULogLevel, message: WGPUStringView, userdata: NativeAddress?) -> Unit): WGPULogCallback {
-    val holder = WGPULogCallback.allocate(callback)
-    wgpuSetLogCallback(holder, userdata)
-    return holder
-}
+expect fun wgpuSetLogCallback(callback: NativeAddress?, userdata: NativeAddress?): Unit
 
 expect fun wgpuSetLogLevel(level: WGPULogLevel): Unit
 
@@ -7197,4 +7012,710 @@ expect fun wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: WGPURenderPass
 expect fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): UInt
 
 expect fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit
+
+/**
+ * @}
+ */
+fun interface WGPUProc : Callback {
+    fun invoke()
+    companion object
+}
+
+@CallbackRuntimeApi
+internal val WGPUProcType: CallbackType<WGPUProc> = CallbackType(
+    canonicalId = "typedef:WGPUProc",
+    hasRoutingUserdata = false,
+)
+
+expect fun WGPUProc.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUProc,
+): CallbackRegistration<WGPUProc>
+
+@CallbackRuntimeApi
+internal expect fun WGPUProc.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUProc,
+): PreparedCallbackRegistration<WGPUProc>
+
+@UnsafeCallbackRearmApi
+expect fun WGPUProc.Companion.rearmAfterNativeQuiescence(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUProc,
+): CallbackRegistration<WGPUProc>
+
+/**
+ * See also @ref CallbackError.
+ *
+ * @param message
+ * This parameter is @ref PassedWithoutOwnership.
+ */
+fun interface WGPUBufferMapCallback : Callback {
+    fun invoke(
+        status: WGPUMapAsyncStatus,
+        message: WGPUStringView,
+        userdata1: NativeAddress?,
+    )
+
+    companion object
+}
+
+@CallbackRuntimeApi
+internal val WGPUBufferMapCallbackType: CallbackType<WGPUBufferMapCallback> = CallbackType(
+    canonicalId = "typedef:WGPUBufferMapCallback",
+    hasRoutingUserdata = true,
+)
+
+expect fun WGPUBufferMapCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUBufferMapCallback,
+): CallbackRegistration<WGPUBufferMapCallback>
+
+@CallbackRuntimeApi
+internal expect fun WGPUBufferMapCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUBufferMapCallback,
+): PreparedCallbackRegistration<WGPUBufferMapCallback>
+
+/**
+ * See also @ref CallbackError.
+ *
+ * @param compilationInfo
+ * This argument contains multiple @ref ImplementationAllocatedStructChain roots.
+ * Arbitrary chains must be handled gracefully by the application!
+ * This parameter is @ref PassedWithoutOwnership.
+ */
+fun interface WGPUCompilationInfoCallback : Callback {
+    fun invoke(
+        status: WGPUCompilationInfoRequestStatus,
+        compilationInfo: NativeAddress?,
+        userdata1: NativeAddress?,
+    )
+
+    companion object
+}
+
+@CallbackRuntimeApi
+internal val WGPUCompilationInfoCallbackType: CallbackType<WGPUCompilationInfoCallback> = CallbackType(
+    canonicalId = "typedef:WGPUCompilationInfoCallback",
+    hasRoutingUserdata = true,
+)
+
+expect fun WGPUCompilationInfoCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUCompilationInfoCallback,
+): CallbackRegistration<WGPUCompilationInfoCallback>
+
+@CallbackRuntimeApi
+internal expect fun WGPUCompilationInfoCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUCompilationInfoCallback,
+): PreparedCallbackRegistration<WGPUCompilationInfoCallback>
+
+/**
+ * See also @ref CallbackError.
+ *
+ * @param pipeline
+ * This parameter is @ref PassedWithOwnership.
+ */
+fun interface WGPUCreateComputePipelineAsyncCallback : Callback {
+    fun invoke(
+        status: WGPUCreatePipelineAsyncStatus,
+        pipeline: WGPUComputePipeline?,
+        message: WGPUStringView,
+        userdata1: NativeAddress?,
+    )
+
+    companion object
+}
+
+@CallbackRuntimeApi
+internal val WGPUCreateComputePipelineAsyncCallbackType: CallbackType<WGPUCreateComputePipelineAsyncCallback> = CallbackType(
+    canonicalId = "typedef:WGPUCreateComputePipelineAsyncCallback",
+    hasRoutingUserdata = true,
+)
+
+expect fun WGPUCreateComputePipelineAsyncCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUCreateComputePipelineAsyncCallback,
+): CallbackRegistration<WGPUCreateComputePipelineAsyncCallback>
+
+@CallbackRuntimeApi
+internal expect fun WGPUCreateComputePipelineAsyncCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUCreateComputePipelineAsyncCallback,
+): PreparedCallbackRegistration<WGPUCreateComputePipelineAsyncCallback>
+
+/**
+ * See also @ref CallbackError.
+ *
+ * @param pipeline
+ * This parameter is @ref PassedWithOwnership.
+ */
+fun interface WGPUCreateRenderPipelineAsyncCallback : Callback {
+    fun invoke(
+        status: WGPUCreatePipelineAsyncStatus,
+        pipeline: WGPURenderPipeline?,
+        message: WGPUStringView,
+        userdata1: NativeAddress?,
+    )
+
+    companion object
+}
+
+@CallbackRuntimeApi
+internal val WGPUCreateRenderPipelineAsyncCallbackType: CallbackType<WGPUCreateRenderPipelineAsyncCallback> = CallbackType(
+    canonicalId = "typedef:WGPUCreateRenderPipelineAsyncCallback",
+    hasRoutingUserdata = true,
+)
+
+expect fun WGPUCreateRenderPipelineAsyncCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUCreateRenderPipelineAsyncCallback,
+): CallbackRegistration<WGPUCreateRenderPipelineAsyncCallback>
+
+@CallbackRuntimeApi
+internal expect fun WGPUCreateRenderPipelineAsyncCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUCreateRenderPipelineAsyncCallback,
+): PreparedCallbackRegistration<WGPUCreateRenderPipelineAsyncCallback>
+
+/**
+ * See also @ref CallbackError.
+ *
+ * @param device
+ * Pointer to the device which was lost. This is always a non-null pointer.
+ * The pointed-to @ref WGPUDevice will be null if, and only if, either:
+ * (1) The `reason` is @ref WGPUDeviceLostReason_FailedCreation.
+ * (2) The last ref of the device has been (or is being) released: see @ref DeviceRelease.
+ * This parameter is @ref PassedWithoutOwnership.
+ *
+ * @param reason
+ * An error code explaining why the device was lost.
+ *
+ * @param message
+ * A @ref LocalizableHumanReadableMessageString describing why the device was lost.
+ * This parameter is @ref PassedWithoutOwnership.
+ */
+fun interface WGPUDeviceLostCallback : Callback {
+    fun invoke(
+        device: WGPUDevice?,
+        reason: WGPUDeviceLostReason,
+        message: WGPUStringView,
+        userdata1: NativeAddress?,
+    )
+
+    companion object
+}
+
+@CallbackRuntimeApi
+internal val WGPUDeviceLostCallbackType: CallbackType<WGPUDeviceLostCallback> = CallbackType(
+    canonicalId = "typedef:WGPUDeviceLostCallback",
+    hasRoutingUserdata = true,
+)
+
+expect fun WGPUDeviceLostCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUDeviceLostCallback,
+): CallbackRegistration<WGPUDeviceLostCallback>
+
+@CallbackRuntimeApi
+internal expect fun WGPUDeviceLostCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUDeviceLostCallback,
+): PreparedCallbackRegistration<WGPUDeviceLostCallback>
+
+/**
+ * See also @ref CallbackError.
+ *
+ * @param status
+ * See @ref WGPUPopErrorScopeStatus.
+ *
+ * @param type
+ * The type of the error caught by the scope, or @ref WGPUErrorType_NoError if there was none.
+ * If the `status` is not @ref WGPUPopErrorScopeStatus_Success, this is @ref WGPUErrorType_NoError.
+ *
+ * @param message
+ * If the `status` is not @ref WGPUPopErrorScopeStatus_Success **or**
+ * the `type` is not @ref WGPUErrorType_NoError, this is a non-empty
+ * @ref LocalizableHumanReadableMessageString;
+ * otherwise, this is an empty string.
+ * This parameter is @ref PassedWithoutOwnership.
+ */
+fun interface WGPUPopErrorScopeCallback : Callback {
+    fun invoke(
+        status: WGPUPopErrorScopeStatus,
+        type: WGPUErrorType,
+        message: WGPUStringView,
+        userdata1: NativeAddress?,
+    )
+
+    companion object
+}
+
+@CallbackRuntimeApi
+internal val WGPUPopErrorScopeCallbackType: CallbackType<WGPUPopErrorScopeCallback> = CallbackType(
+    canonicalId = "typedef:WGPUPopErrorScopeCallback",
+    hasRoutingUserdata = true,
+)
+
+expect fun WGPUPopErrorScopeCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUPopErrorScopeCallback,
+): CallbackRegistration<WGPUPopErrorScopeCallback>
+
+@CallbackRuntimeApi
+internal expect fun WGPUPopErrorScopeCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUPopErrorScopeCallback,
+): PreparedCallbackRegistration<WGPUPopErrorScopeCallback>
+
+/**
+ * See also @ref CallbackError.
+ *
+ * @param status
+ * See @ref WGPUQueueWorkDoneStatus.
+ *
+ * @param message
+ * If the `status` is not @ref WGPUQueueWorkDoneStatus_Success,
+ * this is a non-empty @ref LocalizableHumanReadableMessageString;
+ * otherwise, this is an empty string.
+ * This parameter is @ref PassedWithoutOwnership.
+ */
+fun interface WGPUQueueWorkDoneCallback : Callback {
+    fun invoke(
+        status: WGPUQueueWorkDoneStatus,
+        message: WGPUStringView,
+        userdata1: NativeAddress?,
+    )
+
+    companion object
+}
+
+@CallbackRuntimeApi
+internal val WGPUQueueWorkDoneCallbackType: CallbackType<WGPUQueueWorkDoneCallback> = CallbackType(
+    canonicalId = "typedef:WGPUQueueWorkDoneCallback",
+    hasRoutingUserdata = true,
+)
+
+expect fun WGPUQueueWorkDoneCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUQueueWorkDoneCallback,
+): CallbackRegistration<WGPUQueueWorkDoneCallback>
+
+@CallbackRuntimeApi
+internal expect fun WGPUQueueWorkDoneCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUQueueWorkDoneCallback,
+): PreparedCallbackRegistration<WGPUQueueWorkDoneCallback>
+
+/**
+ * See also @ref CallbackError.
+ *
+ * @param adapter
+ * This parameter is @ref PassedWithOwnership.
+ *
+ * @param message
+ * This parameter is @ref PassedWithoutOwnership.
+ */
+fun interface WGPURequestAdapterCallback : Callback {
+    fun invoke(
+        status: WGPURequestAdapterStatus,
+        adapter: WGPUAdapter?,
+        message: WGPUStringView,
+        userdata1: NativeAddress?,
+    )
+
+    companion object
+}
+
+@CallbackRuntimeApi
+internal val WGPURequestAdapterCallbackType: CallbackType<WGPURequestAdapterCallback> = CallbackType(
+    canonicalId = "typedef:WGPURequestAdapterCallback",
+    hasRoutingUserdata = true,
+)
+
+expect fun WGPURequestAdapterCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPURequestAdapterCallback,
+): CallbackRegistration<WGPURequestAdapterCallback>
+
+@CallbackRuntimeApi
+internal expect fun WGPURequestAdapterCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPURequestAdapterCallback,
+): PreparedCallbackRegistration<WGPURequestAdapterCallback>
+
+/**
+ * See also @ref CallbackError.
+ *
+ * @param device
+ * This parameter is @ref PassedWithOwnership.
+ *
+ * @param message
+ * This parameter is @ref PassedWithoutOwnership.
+ */
+fun interface WGPURequestDeviceCallback : Callback {
+    fun invoke(
+        status: WGPURequestDeviceStatus,
+        device: WGPUDevice?,
+        message: WGPUStringView,
+        userdata1: NativeAddress?,
+    )
+
+    companion object
+}
+
+@CallbackRuntimeApi
+internal val WGPURequestDeviceCallbackType: CallbackType<WGPURequestDeviceCallback> = CallbackType(
+    canonicalId = "typedef:WGPURequestDeviceCallback",
+    hasRoutingUserdata = true,
+)
+
+expect fun WGPURequestDeviceCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPURequestDeviceCallback,
+): CallbackRegistration<WGPURequestDeviceCallback>
+
+@CallbackRuntimeApi
+internal expect fun WGPURequestDeviceCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPURequestDeviceCallback,
+): PreparedCallbackRegistration<WGPURequestDeviceCallback>
+
+/**
+ * See also @ref CallbackError.
+ *
+ * @param device
+ * This parameter is @ref PassedWithoutOwnership.
+ *
+ * @param message
+ * This parameter is @ref PassedWithoutOwnership.
+ */
+fun interface WGPUUncapturedErrorCallback : Callback {
+    fun invoke(
+        device: WGPUDevice?,
+        type: WGPUErrorType,
+        message: WGPUStringView,
+        userdata1: NativeAddress?,
+    )
+
+    companion object
+}
+
+@CallbackRuntimeApi
+internal val WGPUUncapturedErrorCallbackType: CallbackType<WGPUUncapturedErrorCallback> = CallbackType(
+    canonicalId = "typedef:WGPUUncapturedErrorCallback",
+    hasRoutingUserdata = true,
+)
+
+expect fun WGPUUncapturedErrorCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUUncapturedErrorCallback,
+): CallbackRegistration<WGPUUncapturedErrorCallback>
+
+@CallbackRuntimeApi
+internal expect fun WGPUUncapturedErrorCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPUUncapturedErrorCallback,
+): PreparedCallbackRegistration<WGPUUncapturedErrorCallback>
+
+fun interface WGPULogCallback : Callback {
+    fun invoke(level: WGPULogLevel, message: WGPUStringView)
+    companion object
+}
+
+@CallbackRuntimeApi
+internal val WGPULogCallbackType: CallbackType<WGPULogCallback> = CallbackType(
+    canonicalId = "typedef:WGPULogCallback",
+    hasRoutingUserdata = true,
+)
+
+expect fun WGPULogCallback.Companion.register(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPULogCallback,
+): CallbackRegistration<WGPULogCallback>
+
+@CallbackRuntimeApi
+internal expect fun WGPULogCallback.Companion.prepare(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPULogCallback,
+): PreparedCallbackRegistration<WGPULogCallback>
+
+internal expect fun wgpuSetLogCallbackCallbackBindingPreflight()
+
+@OptIn(CallbackRuntimeApi::class)
+fun wgpuSetLogCallback(
+    policy: CallbackPolicy,
+    onError: CallbackExceptionHandler = CallbackExceptionHandler.Default,
+    callback: WGPULogCallback,
+): CallbackRegistration<WGPULogCallback> {
+    wgpuSetLogCallbackCallbackBindingPreflight()
+    val prepared = WGPULogCallback.prepare(
+        policy = policy,
+        onError = onError,
+        callback = callback,
+    )
+    return CallbackRuntime.activateForNativeCall(prepared) { registration ->
+        wgpuSetLogCallback(registration.callback, registration.userdata)
+    }
+}
+
+/**
+ * CONSUMED_DURING_CALL: the owning native call copies the callback-info value or containing descriptor, so the allocator scope may close after the call while the registration remains live.
+ *
+ * This factory does not own [registration].
+ */
+fun WGPUBufferMapCallbackInfo.Companion.allocate(
+    allocator: MemoryAllocator,
+    mode: WGPUCallbackMode,
+    registration: CallbackRegistration<WGPUBufferMapCallback>,
+    userdata1: NativeAddress? = null,
+): WGPUBufferMapCallbackInfo {
+    require(
+        mode == WGPUCallbackMode_WaitAnyOnly ||
+            mode == WGPUCallbackMode_AllowProcessEvents ||
+            mode == WGPUCallbackMode_AllowSpontaneous,
+    )
+    val info = allocate(allocator)
+    info.mode = mode
+    info.callback = registration.callback
+    info.userdata2 = registration.userdata
+    info.userdata1 = userdata1
+    return info
+}
+
+/**
+ * CONSUMED_DURING_CALL: the owning native call copies the callback-info value or containing descriptor, so the allocator scope may close after the call while the registration remains live.
+ *
+ * This factory does not own [registration].
+ */
+fun WGPUCompilationInfoCallbackInfo.Companion.allocate(
+    allocator: MemoryAllocator,
+    mode: WGPUCallbackMode,
+    registration: CallbackRegistration<WGPUCompilationInfoCallback>,
+    userdata1: NativeAddress? = null,
+): WGPUCompilationInfoCallbackInfo {
+    require(
+        mode == WGPUCallbackMode_WaitAnyOnly ||
+            mode == WGPUCallbackMode_AllowProcessEvents ||
+            mode == WGPUCallbackMode_AllowSpontaneous,
+    )
+    val info = allocate(allocator)
+    info.mode = mode
+    info.callback = registration.callback
+    info.userdata2 = registration.userdata
+    info.userdata1 = userdata1
+    return info
+}
+
+/**
+ * CONSUMED_DURING_CALL: the owning native call copies the callback-info value or containing descriptor, so the allocator scope may close after the call while the registration remains live.
+ *
+ * This factory does not own [registration].
+ */
+fun WGPUCreateComputePipelineAsyncCallbackInfo.Companion.allocate(
+    allocator: MemoryAllocator,
+    mode: WGPUCallbackMode,
+    registration: CallbackRegistration<WGPUCreateComputePipelineAsyncCallback>,
+    userdata1: NativeAddress? = null,
+): WGPUCreateComputePipelineAsyncCallbackInfo {
+    require(
+        mode == WGPUCallbackMode_WaitAnyOnly ||
+            mode == WGPUCallbackMode_AllowProcessEvents ||
+            mode == WGPUCallbackMode_AllowSpontaneous,
+    )
+    val info = allocate(allocator)
+    info.mode = mode
+    info.callback = registration.callback
+    info.userdata2 = registration.userdata
+    info.userdata1 = userdata1
+    return info
+}
+
+/**
+ * CONSUMED_DURING_CALL: the owning native call copies the callback-info value or containing descriptor, so the allocator scope may close after the call while the registration remains live.
+ *
+ * This factory does not own [registration].
+ */
+fun WGPUCreateRenderPipelineAsyncCallbackInfo.Companion.allocate(
+    allocator: MemoryAllocator,
+    mode: WGPUCallbackMode,
+    registration: CallbackRegistration<WGPUCreateRenderPipelineAsyncCallback>,
+    userdata1: NativeAddress? = null,
+): WGPUCreateRenderPipelineAsyncCallbackInfo {
+    require(
+        mode == WGPUCallbackMode_WaitAnyOnly ||
+            mode == WGPUCallbackMode_AllowProcessEvents ||
+            mode == WGPUCallbackMode_AllowSpontaneous,
+    )
+    val info = allocate(allocator)
+    info.mode = mode
+    info.callback = registration.callback
+    info.userdata2 = registration.userdata
+    info.userdata1 = userdata1
+    return info
+}
+
+/**
+ * CONSUMED_DURING_CALL: the owning native call copies the callback-info value or containing descriptor, so the allocator scope may close after the call while the registration remains live.
+ *
+ * This factory does not own [registration].
+ */
+fun WGPUDeviceLostCallbackInfo.Companion.allocate(
+    allocator: MemoryAllocator,
+    mode: WGPUCallbackMode,
+    registration: CallbackRegistration<WGPUDeviceLostCallback>,
+    userdata1: NativeAddress? = null,
+): WGPUDeviceLostCallbackInfo {
+    require(
+        mode == WGPUCallbackMode_WaitAnyOnly ||
+            mode == WGPUCallbackMode_AllowProcessEvents ||
+            mode == WGPUCallbackMode_AllowSpontaneous,
+    )
+    val info = allocate(allocator)
+    info.mode = mode
+    info.callback = registration.callback
+    info.userdata2 = registration.userdata
+    info.userdata1 = userdata1
+    return info
+}
+
+/**
+ * CONSUMED_DURING_CALL: the owning native call copies the callback-info value or containing descriptor, so the allocator scope may close after the call while the registration remains live.
+ *
+ * This factory does not own [registration].
+ */
+fun WGPUPopErrorScopeCallbackInfo.Companion.allocate(
+    allocator: MemoryAllocator,
+    mode: WGPUCallbackMode,
+    registration: CallbackRegistration<WGPUPopErrorScopeCallback>,
+    userdata1: NativeAddress? = null,
+): WGPUPopErrorScopeCallbackInfo {
+    require(
+        mode == WGPUCallbackMode_WaitAnyOnly ||
+            mode == WGPUCallbackMode_AllowProcessEvents ||
+            mode == WGPUCallbackMode_AllowSpontaneous,
+    )
+    val info = allocate(allocator)
+    info.mode = mode
+    info.callback = registration.callback
+    info.userdata2 = registration.userdata
+    info.userdata1 = userdata1
+    return info
+}
+
+/**
+ * CONSUMED_DURING_CALL: the owning native call copies the callback-info value or containing descriptor, so the allocator scope may close after the call while the registration remains live.
+ *
+ * This factory does not own [registration].
+ */
+fun WGPUQueueWorkDoneCallbackInfo.Companion.allocate(
+    allocator: MemoryAllocator,
+    mode: WGPUCallbackMode,
+    registration: CallbackRegistration<WGPUQueueWorkDoneCallback>,
+    userdata1: NativeAddress? = null,
+): WGPUQueueWorkDoneCallbackInfo {
+    require(
+        mode == WGPUCallbackMode_WaitAnyOnly ||
+            mode == WGPUCallbackMode_AllowProcessEvents ||
+            mode == WGPUCallbackMode_AllowSpontaneous,
+    )
+    val info = allocate(allocator)
+    info.mode = mode
+    info.callback = registration.callback
+    info.userdata2 = registration.userdata
+    info.userdata1 = userdata1
+    return info
+}
+
+/**
+ * CONSUMED_DURING_CALL: the owning native call copies the callback-info value or containing descriptor, so the allocator scope may close after the call while the registration remains live.
+ *
+ * This factory does not own [registration].
+ */
+fun WGPURequestAdapterCallbackInfo.Companion.allocate(
+    allocator: MemoryAllocator,
+    mode: WGPUCallbackMode,
+    registration: CallbackRegistration<WGPURequestAdapterCallback>,
+    userdata1: NativeAddress? = null,
+): WGPURequestAdapterCallbackInfo {
+    require(
+        mode == WGPUCallbackMode_WaitAnyOnly ||
+            mode == WGPUCallbackMode_AllowProcessEvents ||
+            mode == WGPUCallbackMode_AllowSpontaneous,
+    )
+    val info = allocate(allocator)
+    info.mode = mode
+    info.callback = registration.callback
+    info.userdata2 = registration.userdata
+    info.userdata1 = userdata1
+    return info
+}
+
+/**
+ * CONSUMED_DURING_CALL: the owning native call copies the callback-info value or containing descriptor, so the allocator scope may close after the call while the registration remains live.
+ *
+ * This factory does not own [registration].
+ */
+fun WGPURequestDeviceCallbackInfo.Companion.allocate(
+    allocator: MemoryAllocator,
+    mode: WGPUCallbackMode,
+    registration: CallbackRegistration<WGPURequestDeviceCallback>,
+    userdata1: NativeAddress? = null,
+): WGPURequestDeviceCallbackInfo {
+    require(
+        mode == WGPUCallbackMode_WaitAnyOnly ||
+            mode == WGPUCallbackMode_AllowProcessEvents ||
+            mode == WGPUCallbackMode_AllowSpontaneous,
+    )
+    val info = allocate(allocator)
+    info.mode = mode
+    info.callback = registration.callback
+    info.userdata2 = registration.userdata
+    info.userdata1 = userdata1
+    return info
+}
+
+/**
+ * CONSUMED_DURING_CALL: the owning native call copies the callback-info value or containing descriptor, so the allocator scope may close after the call while the registration remains live.
+ *
+ * This factory does not own [registration].
+ */
+fun WGPUUncapturedErrorCallbackInfo.Companion.allocate(
+    allocator: MemoryAllocator,
+    registration: CallbackRegistration<WGPUUncapturedErrorCallback>,
+    userdata1: NativeAddress? = null,
+): WGPUUncapturedErrorCallbackInfo {
+    val info = allocate(allocator)
+    info.callback = registration.callback
+    info.userdata2 = registration.userdata
+    info.userdata1 = userdata1
+    return info
+}
 
