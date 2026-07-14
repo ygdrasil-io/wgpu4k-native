@@ -71,34 +71,55 @@ fun configureSurface(
     }
 }
 
-fun getDevice(adapter: WGPUAdapter): WGPUDevice = memoryScope { scope ->
-    var requestStatus: WGPURequestDeviceStatus? = null
-    var fetchedDevice: WGPUDevice? = null
-    var requestMessage: String? = null
-
-    val callback = WGPURequestDeviceCallback.register(CallbackPolicy.ONCE) { status, device, message, _ ->
-        requestStatus = status
-        fetchedDevice = device
-        requestMessage = message.data?.toKString(message.length)
+fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
+    val state = CallbackRequestState<WGPURequestDeviceStatus, WGPUDevice>()
+    val registration = WGPURequestDeviceCallback.register(CallbackPolicy.ONCE) { status, device, message, _ ->
+        state.publish(status, device, message.data?.toKString(message.length))
     }
-
+    var futureId = 0uL
     try {
-        val callbackInfo = WGPURequestDeviceCallbackInfo.allocate(
-            scope,
-            WGPUCallbackMode_AllowSpontaneous,
-            callback,
+        futureId = memoryScope { scope ->
+            val info = WGPURequestDeviceCallbackInfo.allocate(
+                scope,
+                WGPUCallbackMode_WaitAnyOnly,
+                registration,
+            )
+            wgpuAdapterRequestDevice(adapter, null, info).id
+        }
+        awaitCallbackFuture(
+            futureId = futureId,
+            phase = "request-device",
+            zeroFuturePolicy = ZeroFuturePolicy.ALLOW_COMPLETED_SYNCHRONOUSLY,
+            isComplete = { state.isComplete },
+            isQuiescent = { registration.isQuiescent },
+            waitOnce = { waitAnyOnce(instance, it) },
         )
-
-        wgpuAdapterRequestDevice(adapter, null, callbackInfo)
-
-        resolveDeviceRequestResult(
-            status = requestStatus,
-            device = fetchedDevice,
-            message = requestMessage,
-            release = { wgpuDeviceRelease(it) },
+        val snapshot = state.snapshot()
+        return resolveDeviceRequestResult(
+            snapshot.status,
+            state.takeHandle(),
+            snapshot.message,
+            ::wgpuDeviceRelease,
         )
     } finally {
-        callback.close()
+        registration.close()
+        try {
+            awaitCallbackCondition(
+                phase = "request-device-cleanup",
+                isComplete = { registration.isQuiescent },
+                pendingDiagnostic = { "future-id=$futureId registrationQuiescent=false" },
+                pump = {
+                    if (futureId != 0uL) {
+                        val status = waitAnyOnce(instance, futureId)
+                        check(status == WGPUWaitStatus_Success || status == WGPUWaitStatus_TimedOut) {
+                            "request-device-cleanup waitAny status=$status future-id=$futureId"
+                        }
+                    }
+                },
+            )
+        } finally {
+            state.takeHandle()?.let(::wgpuDeviceRelease)
+        }
     }
 }
 
@@ -118,38 +139,76 @@ internal fun <D : Any> resolveDeviceRequestResult(
 private fun callbackMessageSuffix(message: String?): String =
     message?.takeIf { it.isNotEmpty() }?.let { ": $it" }.orEmpty()
 
-fun getAdapter(surface: WGPUSurface?, instance: WGPUInstance, backendType: UInt = WGPUBackendType_Undefined) = memoryScope { scope ->
-    val options = WGPURequestAdapterOptions.allocate(scope).apply {
-        if (surface != null) compatibleSurface = surface
-        this.backendType = backendType
+internal fun <A : Any> resolveAdapterRequestResult(
+    status: WGPURequestAdapterStatus?,
+    adapter: A?,
+    message: String?,
+    release: (A) -> Unit,
+): A {
+    if (status != WGPURequestAdapterStatus_Success) {
+        adapter?.let(release)
+        error("fail to get adapter with status $status${callbackMessageSuffix(message)}")
     }
+    return adapter ?: error("fail to get adapter: success status returned no adapter")
+}
 
-    var requestStatus: WGPURequestAdapterStatus? = null
-    var fetchedAdapter: WGPUAdapter? = null
-    var requestMessage: String? = null
-
-    val callback = WGPURequestAdapterCallback.register(CallbackPolicy.ONCE) { status, adapter, message, _ ->
-        requestStatus = status
-        fetchedAdapter = adapter
-        requestMessage = message.data?.toKString(message.length)
+fun getAdapter(
+    surface: WGPUSurface?,
+    instance: WGPUInstance,
+    backendType: UInt = WGPUBackendType_Undefined,
+): WGPUAdapter {
+    val state = CallbackRequestState<WGPURequestAdapterStatus, WGPUAdapter>()
+    val registration = WGPURequestAdapterCallback.register(CallbackPolicy.ONCE) { status, adapter, message, _ ->
+        state.publish(status, adapter, message.data?.toKString(message.length))
     }
-
+    var futureId = 0uL
     try {
-        val callbackInfo = WGPURequestAdapterCallbackInfo.allocate(
-            scope,
-            WGPUCallbackMode_AllowSpontaneous,
-            callback,
-        )
-
-        wgpuInstanceRequestAdapter(instance, options, callbackInfo)
-
-        if (requestStatus != WGPURequestAdapterStatus_Success) {
-            fetchedAdapter?.let(::wgpuAdapterRelease)
-            error("fail to get adapter with status $requestStatus${callbackMessageSuffix(requestMessage)}")
+        futureId = memoryScope { scope ->
+            val options = WGPURequestAdapterOptions.allocate(scope).apply {
+                if (surface != null) compatibleSurface = surface
+                this.backendType = backendType
+            }
+            val info = WGPURequestAdapterCallbackInfo.allocate(
+                scope,
+                WGPUCallbackMode_WaitAnyOnly,
+                registration,
+            )
+            wgpuInstanceRequestAdapter(instance, options, info).id
         }
-        fetchedAdapter ?: error("fail to get adapter: success status returned no adapter")
+        awaitCallbackFuture(
+            futureId = futureId,
+            phase = "request-adapter",
+            zeroFuturePolicy = ZeroFuturePolicy.ALLOW_COMPLETED_SYNCHRONOUSLY,
+            isComplete = { state.isComplete },
+            isQuiescent = { registration.isQuiescent },
+            waitOnce = { waitAnyOnce(instance, it) },
+        )
+        val snapshot = state.snapshot()
+        return resolveAdapterRequestResult(
+            snapshot.status,
+            state.takeHandle(),
+            snapshot.message,
+            ::wgpuAdapterRelease,
+        )
     } finally {
-        callback.close()
+        registration.close()
+        try {
+            awaitCallbackCondition(
+                phase = "request-adapter-cleanup",
+                isComplete = { registration.isQuiescent },
+                pendingDiagnostic = { "future-id=$futureId registrationQuiescent=false" },
+                pump = {
+                    if (futureId != 0uL) {
+                        val status = waitAnyOnce(instance, futureId)
+                        check(status == WGPUWaitStatus_Success || status == WGPUWaitStatus_TimedOut) {
+                            "request-adapter-cleanup waitAny status=$status future-id=$futureId"
+                        }
+                    }
+                },
+            )
+        } finally {
+            state.takeHandle()?.let(::wgpuAdapterRelease)
+        }
     }
 }
 

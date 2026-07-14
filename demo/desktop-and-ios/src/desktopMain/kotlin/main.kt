@@ -57,7 +57,7 @@ fun main(args: Array<String>) {
     val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
     val surface = getSurface(instance, windowHandler)
     val adapter = getAdapter(surface, instance)
-    val device = getDevice(adapter)
+    val device = getDevice(adapter, instance)
     val surfaceCapabilities = surfaceCapabilities(surface, adapter)
     configureSurface(device, width, height, surface, surfaceCapabilities.formats.first(), surfaceCapabilities.alphaModes.first(), listOf(surfaceCapabilities.formats.first()))
 

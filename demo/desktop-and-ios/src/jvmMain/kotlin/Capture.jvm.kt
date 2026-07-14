@@ -23,7 +23,7 @@ fun captureFrame(path: String) = memoryScope { scope ->
 
     val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
     val adapter = getAdapter(surface = null, instance = instance)
-    val device = getDevice(adapter)
+    val device = getDevice(adapter, instance)
     val queue = wgpuDeviceGetQueue(device) ?: error("fail to get queue")
 
     val texture = WGPUTextureDescriptor.allocate(scope).apply {

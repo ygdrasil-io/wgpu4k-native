@@ -78,7 +78,7 @@ private class HelloTriangleAndroidKadreApp : ApplicationHandler {
         val createdInstance = wgpuCreateInstance(null) ?: error("fail to create instance")
         val createdSurface = getSurface(createdInstance, currentWindow.rawWindowHandle)
         val createdAdapter = getAdapter(createdSurface, createdInstance)
-        val createdDevice = getDevice(createdAdapter)
+        val createdDevice = getDevice(createdAdapter, createdInstance)
         val capabilities = surfaceCapabilities(createdSurface, createdAdapter)
         val format = capabilities.formats.first()
         val selectedAlphaMode = capabilities.alphaModes.firstOrNull { it == WGPUCompositeAlphaMode_Opaque }

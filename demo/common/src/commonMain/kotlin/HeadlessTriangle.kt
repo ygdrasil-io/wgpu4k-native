@@ -14,7 +14,7 @@ data class HeadlessTriangleImage(
 fun renderHeadlessTriangle(width: Int = 64, height: Int = 64): HeadlessTriangleImage {
     val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
     val adapter = getAdapter(surface = null, instance = instance)
-    val device = getDevice(adapter)
+    val device = getDevice(adapter, instance)
     val format = WGPUTextureFormat_RGBA8Unorm
     val queue = wgpuDeviceGetQueue(device) ?: error("fail to get queue")
     var mapStatus: WGPUMapAsyncStatus? = null
