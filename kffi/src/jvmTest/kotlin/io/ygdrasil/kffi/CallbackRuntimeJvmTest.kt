@@ -141,10 +141,12 @@ class CallbackRuntimeJvmTest : FreeSpec({
                 }
                 check(entered.await(TIMEOUT_SECONDS, TimeUnit.SECONDS))
                 registration.close()
+                registration.isQuiescent shouldBe false
                 CallbackRuntime.dispatchSafely(type, registration.userdata) { it.invoke() }
                 calls.load() shouldBe 1
                 release.countDown()
                 inFlight.get(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                registration.isQuiescent shouldBe true
             } finally {
                 release.countDown()
                 registration.close()

@@ -32,13 +32,24 @@ internal class DeliveryStateMachine(
     val isClosed: Boolean
         get() = state !in setOf(DeliveryState.PREPARED, DeliveryState.ACTIVE)
 
+    val isQuiescent: Boolean
+        get() = isClosed && inFlightRef.load() == 0
+
     fun activate(): Boolean = stateRef.compareAndSet(DeliveryState.PREPARED, DeliveryState.ACTIVE)
 
     fun abort(): Boolean = stateRef.compareAndSet(DeliveryState.PREPARED, DeliveryState.ABORTED)
 
     fun tryEnter(): Boolean = when (policy) {
-        CallbackPolicy.ONCE -> stateRef.compareAndSet(DeliveryState.ACTIVE, DeliveryState.CLAIMED)
+        CallbackPolicy.ONCE -> tryEnterOnce()
         CallbackPolicy.REPEATING -> tryEnterRepeating()
+    }
+
+    private fun tryEnterOnce(): Boolean {
+        if (stateRef.load() != DeliveryState.ACTIVE) return false
+        inFlightRef.fetchAndAdd(1)
+        if (stateRef.compareAndSet(DeliveryState.ACTIVE, DeliveryState.CLAIMED)) return true
+        inFlightRef.fetchAndAdd(-1)
+        return false
     }
 
     private fun tryEnterRepeating(): Boolean {
@@ -50,7 +61,6 @@ internal class DeliveryStateMachine(
     }
 
     fun leave() {
-        check(policy == CallbackPolicy.REPEATING) { "Only REPEATING callbacks have in-flight deliveries" }
         check(inFlightRef.fetchAndAdd(-1) > 0) { "Callback delivery left without entering" }
     }
 
@@ -139,6 +149,9 @@ private class RuntimeCallbackRegistration<C : Callback>(
     override val isClosed: Boolean
         get() = entry.lifecycle.isClosed
 
+    override val isQuiescent: Boolean
+        get() = entry.lifecycle.isQuiescent
+
     override fun close() {
         CallbackRuntime.close(entry)
     }
@@ -166,7 +179,7 @@ private class AcquiredDelivery<C : Callback>(
     val entry: RegistryEntry<C>,
 ) {
     fun complete() {
-        if (entry.policy == CallbackPolicy.REPEATING) entry.lifecycle.leave()
+        entry.lifecycle.leave()
     }
 }
 

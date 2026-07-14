@@ -32,6 +32,16 @@ class CallbackStateMachineTest : FreeSpec({
         }
     }
 
+    "ONCE is closed but not quiescent until its acquired delivery leaves" {
+        val machine = DeliveryStateMachine(CallbackPolicy.ONCE)
+
+        machine.tryEnter() shouldBe true
+        machine.isClosed shouldBe true
+        machine.isQuiescent shouldBe false
+        machine.leave()
+        machine.isQuiescent shouldBe true
+    }
+
     "REPEATING close rejects new entries" {
         val machine = DeliveryStateMachine(CallbackPolicy.REPEATING)
 
@@ -51,6 +61,19 @@ class CallbackStateMachineTest : FreeSpec({
         machine.inFlight shouldBe 1
         machine.leave()
         machine.inFlight shouldBe 0
+    }
+
+    "REPEATING close becomes quiescent only after every acquired delivery leaves" {
+        val machine = DeliveryStateMachine(CallbackPolicy.REPEATING)
+
+        machine.tryEnter() shouldBe true
+        machine.tryEnter() shouldBe true
+        machine.close() shouldBe true
+        machine.isQuiescent shouldBe false
+        machine.leave()
+        machine.isQuiescent shouldBe false
+        machine.leave()
+        machine.isQuiescent shouldBe true
     }
 
     "no-userdata slot moves UNUSED to ACTIVE to RETIRED" {

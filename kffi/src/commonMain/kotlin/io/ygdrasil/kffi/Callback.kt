@@ -21,6 +21,9 @@ interface CallbackRegistration<C : Callback> : AutoCloseable {
     val policy: CallbackPolicy
     val isClosed: Boolean
 
+    /** True only after closure and after every acquired native delivery has returned. */
+    val isQuiescent: Boolean
+
     override fun close()
 }
 
