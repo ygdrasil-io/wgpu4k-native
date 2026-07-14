@@ -183,23 +183,22 @@ private fun mapBufferForRead(device: WGPUDevice, buffer: WGPUBuffer, size: ULong
         result.compareAndSet(null, CallbackDiagnostic(mapStatus, copiedMessage))
     }
 
-    try {
-        val callbackInfo = WGPUBufferMapCallbackInfo.allocate(
-            scope,
-            WGPUCallbackMode_AllowSpontaneous,
-            callback,
-        )
+    val callbackInfo = WGPUBufferMapCallbackInfo.allocate(
+        scope,
+        WGPUCallbackMode_AllowSpontaneous,
+        callback,
+    )
 
-        wgpuBufferMapAsync(buffer, WGPUMapMode_Read, 0u, size, callbackInfo)
-        while (result.get() == null) {
-            wgpuDevicePoll(device, 1u, null)
-        }
-
-        val snapshot = result.get()
-        requireSuccessfulMapResult(snapshot?.status, snapshot?.message)
-    } finally {
-        callback.close()
-    }
+    wgpuBufferMapAsync(buffer, WGPUMapMode_Read, 0u, size, callbackInfo)
+    val snapshot = awaitMapCallbackResult(
+        phase = "capture-buffer-map",
+        result = result::get,
+        close = callback::close,
+        isClosed = { callback.isClosed },
+        isQuiescent = { callback.isQuiescent },
+        pump = { wgpuDevicePoll(device, 0u, null) },
+    )
+    requireSuccessfulMapResult(snapshot.status, snapshot.message)
 }
 
 private fun writePng(bytes: ByteArray, bytesPerRow: Int, path: String) {

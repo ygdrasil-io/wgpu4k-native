@@ -164,6 +164,52 @@ internal fun awaitCallbackCondition(
     }
 }
 
+fun awaitMapCallbackResult(
+    phase: String,
+    timeout: Duration = CallbackWaitPhaseTimeout,
+    result: () -> CallbackDiagnostic?,
+    close: () -> Unit,
+    isClosed: () -> Boolean,
+    isQuiescent: () -> Boolean,
+    pump: () -> Unit,
+): CallbackDiagnostic {
+    var snapshot: CallbackDiagnostic? = null
+    var primaryFailure: Throwable? = null
+    try {
+        awaitCallbackCondition(
+            phase = phase,
+            timeout = timeout,
+            isComplete = {
+                snapshot = result()
+                snapshot != null
+            },
+            pendingDiagnostic = { "result=pending" },
+            pump = pump,
+        )
+    } catch (failure: Throwable) {
+        primaryFailure = failure
+        throw failure
+    } finally {
+        try {
+            closeAndAwaitCallbackQuiescence(
+                phase = "$phase-close",
+                timeout = timeout,
+                close = close,
+                isClosed = isClosed,
+                isQuiescent = isQuiescent,
+                applicationInFlight = { 0 },
+                pump = pump,
+            )
+        } catch (cleanupFailure: Throwable) {
+            val primary = primaryFailure
+            if (primary == null) throw cleanupFailure
+            if (cleanupFailure !== primary) primary.addSuppressed(cleanupFailure)
+        }
+    }
+
+    return snapshot ?: error("$phase completed without a diagnostic")
+}
+
 internal fun closeAndAwaitCallbackQuiescence(
     phase: String,
     timeout: Duration = CallbackWaitPhaseTimeout,

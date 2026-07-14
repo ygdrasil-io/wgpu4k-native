@@ -201,6 +201,53 @@ class CallbackCoordinationTest {
     }
 
     @Test
+    fun neverCompletingMapClosesAndQuiescesBeforeReturningTheTimeout() {
+        var closed = false
+        var quiescent = false
+        var pumps = 0
+
+        val failure = assertFailsWith<IllegalStateException> {
+            awaitMapCallbackResult(
+                phase = "map-timeout",
+                timeout = Duration.ZERO,
+                result = { null },
+                close = {
+                    closed = true
+                    quiescent = true
+                },
+                isClosed = { closed },
+                isQuiescent = { quiescent },
+                pump = { pumps += 1 },
+            )
+        }
+
+        assertEquals(1, pumps)
+        assertTrue(failure.message.orEmpty().contains("map-timeout"))
+        assertTrue(closed)
+        assertTrue(quiescent)
+    }
+
+    @Test
+    fun mapWaitPreservesItsPrimaryFailureWhenCleanupAlsoFails() {
+        val cleanupFailure = IllegalStateException("cleanup failed")
+
+        val failure = assertFailsWith<IllegalStateException> {
+            awaitMapCallbackResult(
+                phase = "map-primary",
+                timeout = Duration.ZERO,
+                result = { null },
+                close = { throw cleanupFailure },
+                isClosed = { false },
+                isQuiescent = { false },
+                pump = {},
+            )
+        }
+
+        assertTrue(failure.message.orEmpty().contains("map-primary"))
+        assertEquals(listOf(cleanupFailure), failure.suppressedExceptions)
+    }
+
+    @Test
     fun firstDiagnosticWins() {
         val first = AtomicReference<CallbackDiagnostic?>(null)
 

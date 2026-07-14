@@ -160,7 +160,7 @@ tasks.register("verifyJvmCallbackStress") {
     description = "Runs the bounded JVM WebGPU callback stress scenario."
     dependsOn(":wgpu4k-native:fetch-native-dependencies", "jvmMainClasses")
     doLast {
-        runBoundedCallbackStressProcess(
+        runBoundedProcess(
             label = "JVM callback stress",
             commandLine = listOf(
                 callbackStressJavaLauncher.get().executablePath.asFile.absolutePath,
@@ -170,6 +170,35 @@ tasks.register("verifyJvmCallbackStress") {
                 sourceSets["jvmMain"].runtimeClasspath.asPath,
                 "io.ygdrasil.wgpu.HeadlessMainKt",
                 "--callback-stress",
+            ),
+            workingDirectory = projectDir,
+            outputLogger = logger,
+        )
+    }
+}
+
+tasks.register("verifyJvmCapture") {
+    group = "verification"
+    description = "Runs the bounded JVM WebGPU capture verification."
+    dependsOn(":wgpu4k-native:fetch-native-dependencies", "jvmMainClasses")
+    val outputFile = layout.buildDirectory.file("capture/triangle.png")
+    outputs.file(outputFile)
+    outputs.upToDateWhen { false }
+    doLast {
+        val file = outputFile.get().asFile
+        file.parentFile.mkdirs()
+        if (file.exists()) check(file.delete()) { "Unable to remove stale JVM capture: ${file.absolutePath}" }
+        runBoundedProcess(
+            label = "JVM capture",
+            commandLine = listOf(
+                callbackStressJavaLauncher.get().executablePath.asFile.absolutePath,
+                "--add-opens=java.base/java.lang=ALL-UNNAMED",
+                "--enable-native-access=ALL-UNNAMED",
+                "-cp",
+                sourceSets["jvmMain"].runtimeClasspath.asPath,
+                "io.ygdrasil.wgpu.MainKt",
+                "--verify-capture",
+                file.absolutePath,
             ),
             workingDirectory = projectDir,
             outputLogger = logger,
@@ -228,7 +257,7 @@ if (nativeTargetName != null) {
         dependsOn(":wgpu4k-native:fetch-native-dependencies", "linkDebugExecutable$capitalizedNativeTargetName")
         doLast {
             val executableName = if (nativeTargetName == "mingwX64") "desktop-and-ios.exe" else "desktop-and-ios.kexe"
-            runBoundedCallbackStressProcess(
+            runBoundedProcess(
                 label = "Native callback stress ($nativeTargetName)",
                 commandLine = listOf(
                     layout.buildDirectory
@@ -302,7 +331,7 @@ fun verifyHeadlessPixels(width: Int, height: Int, pixels: IntArray, source: Stri
     check(greenPixels > 64) { "Headless image has too few green background pixels in $source: $greenPixels" }
 }
 
-fun runBoundedCallbackStressProcess(
+fun runBoundedProcess(
     label: String,
     commandLine: List<String>,
     workingDirectory: File,

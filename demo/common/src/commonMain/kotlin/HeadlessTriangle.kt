@@ -95,45 +95,43 @@ fun renderHeadlessTriangle(width: Int = 64, height: Int = 64): HeadlessTriangleI
             val copiedMessage = message.data?.toKString(message.length)
             mapResult.recordFirst(status, copiedMessage)
         }
-        try {
-            val callbackInfo = WGPUBufferMapCallbackInfo.allocate(
-                scope,
-                WGPUCallbackMode_AllowProcessEvents,
-                mapCallback,
-            )
+        val callbackInfo = WGPUBufferMapCallbackInfo.allocate(
+            scope,
+            WGPUCallbackMode_AllowProcessEvents,
+            mapCallback,
+        )
 
-            wgpuBufferMapAsync(readbackBuffer, WGPUMapMode_Read, 0uL, bufferSize, callbackInfo)
+        wgpuBufferMapAsync(readbackBuffer, WGPUMapMode_Read, 0uL, bufferSize, callbackInfo)
 
-            var attempts = 0
-            var result = mapResult.load()
-            while (result == null && attempts++ < 10_000) {
-                waitForHeadlessMapEvent(instance)
-                result = mapResult.load()
+        val result = awaitMapCallbackResult(
+            phase = "headless-buffer-map",
+            result = { mapResult.load() },
+            close = { mapCallback.close() },
+            isClosed = { mapCallback.isClosed },
+            isQuiescent = { mapCallback.isQuiescent },
+            pump = { waitForHeadlessMapEvent(instance) },
+        )
+        requireSuccessfulMapResult(result.status, result.message)
+
+        val mapped = wgpuBufferGetConstMappedRange(readbackBuffer, 0uL, bufferSize)
+            ?: error("fail to get mapped range")
+        val mappedBuffer = MemoryBuffer(mapped, bufferSize)
+        ByteArray(width * height * 4).also { pixels ->
+            for (row in 0 until height) {
+                mappedBuffer.readBytes(
+                    pixels,
+                    arrayIndex = (row * width * 4).toULong(),
+                    bufferOffset = (row.toUInt() * bytesPerRow).toULong(),
+                    size = (width * 4).toULong()
+                )
             }
-            requireSuccessfulMapResult(result?.status, result?.message)
-
-            val mapped = wgpuBufferGetConstMappedRange(readbackBuffer, 0uL, bufferSize)
-                ?: error("fail to get mapped range")
-            val mappedBuffer = MemoryBuffer(mapped, bufferSize)
-            ByteArray(width * height * 4).also { pixels ->
-                for (row in 0 until height) {
-                    mappedBuffer.readBytes(
-                        pixels,
-                        arrayIndex = (row * width * 4).toULong(),
-                        bufferOffset = (row.toUInt() * bytesPerRow).toULong(),
-                        size = (width * 4).toULong()
-                    )
-                }
-                wgpuBufferUnmap(readbackBuffer)
-                wgpuBufferRelease(readbackBuffer)
-                wgpuCommandBufferRelease(commandBuffer)
-                wgpuCommandEncoderRelease(commandEncoder)
-                wgpuRenderPipelineRelease(pipeline)
-                wgpuTextureViewRelease(textureView)
-                wgpuTextureRelease(texture)
-            }
-        } finally {
-            mapCallback.close()
+            wgpuBufferUnmap(readbackBuffer)
+            wgpuBufferRelease(readbackBuffer)
+            wgpuCommandBufferRelease(commandBuffer)
+            wgpuCommandEncoderRelease(commandEncoder)
+            wgpuRenderPipelineRelease(pipeline)
+            wgpuTextureViewRelease(textureView)
+            wgpuTextureRelease(texture)
         }
     }
 
