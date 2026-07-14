@@ -24,6 +24,8 @@
 - Retain handle ownership in request state until registration close and runtime quiescence both
   succeed. Cleanup failure must atomically dispose the state and release both published and late
   handles exactly once.
+- While a callback copies its native message before publication, it owns the incoming handle
+  locally. A message-copy exception must release that handle exactly once before escaping.
 - Keep blocking or repeated event pumping outside graphical render loops.
 - Keep the stress invariants: 64 real submissions, 1,000 concurrent registrations per mode, 900/100 deterministic delivery/suppression for `WaitAnyOnly` and `AllowProcessEvents`, 1,000/0 for `AllowSpontaneous`, no duplicates, and exactly two validation errors.
 - Print `pending=0` only after every relevant registration is closed and quiescent.
@@ -62,6 +64,8 @@
 - Produces: `internal const val CallbackWaitPhaseTimeoutSeconds = 20`.
 - Produces: `CallbackRequestState<S : Any, H : Any>`, whose completed snapshot contains status,
   handle, and copied message, and whose disposed state releases published or late handles.
+- Produces: `copyCallbackMessageOrRelease(handle, release, copy)`, which protects the pre-publication
+  ownership window if native message conversion throws.
 - Produces: `awaitCallbackCondition(phase, timeout, isComplete, pendingDiagnostic, pump)`.
 - Produces: `awaitCallbackFuture(futureId, phase, timeout, isComplete, waitOnce)`.
 - Produces: `ZeroFuturePolicy`, defaulting to strict rejection with an explicit
@@ -181,6 +185,21 @@ class CallbackCoordinationTest {
         assertFalse(state.isComplete)
         assertNull(state.snapshot().status)
         assertNull(state.takeHandle())
+    }
+
+    @Test
+    fun messageCopyFailureReleasesTheIncomingHandleExactlyOnce() {
+        var releases = 0
+        val failure = assertFailsWith<IllegalArgumentException> {
+            copyCallbackMessageOrRelease(
+                handle = "owned",
+                release = { releases += 1 },
+                copy = { throw IllegalArgumentException("copy failed") },
+            )
+        }
+
+        assertEquals("copy failed", failure.message)
+        assertEquals(1, releases)
     }
 
     @Test
@@ -332,6 +351,17 @@ internal class CallbackRequestState<S : Any, H : Any>(
     }
 }
 
+internal inline fun <H : Any> copyCallbackMessageOrRelease(
+    handle: H?,
+    release: (H) -> Unit,
+    copy: () -> String?,
+): String? = try {
+    copy()
+} catch (failure: Throwable) {
+    handle?.let(release)
+    throw failure
+}
+
 internal fun awaitCallbackFuture(
     futureId: ULong,
     phase: String,
@@ -411,7 +441,10 @@ Implement both helpers with the same ownership transaction. For device, the comp
 fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
     val state = CallbackRequestState<WGPURequestDeviceStatus, WGPUDevice>(::wgpuDeviceRelease)
     val registration = WGPURequestDeviceCallback.register(CallbackPolicy.ONCE) { status, device, message, _ ->
-        state.publish(status, device, message.data?.toKString(message.length))
+        val copiedMessage = copyCallbackMessageOrRelease(device, ::wgpuDeviceRelease) {
+            message.data?.toKString(message.length)
+        }
+        state.publish(status, device, copiedMessage)
     }
     var futureId = 0uL
     var requestCompleted = false
@@ -469,7 +502,9 @@ Use the identical flow, including close-then-quiesce cleanup, for adapter, alloc
 `WGPURequestAdapterCallbackInfo` in the downcall scope and releasing through
 `wgpuAdapterRelease`. Neither helper may call `takeHandle()` or resolve a result until cleanup has
 completed successfully. Any request or cleanup failure calls `dispose()` so an already-published
-or later-published handle is released once. The callback-info allocation scope closes before
+or later-published handle is released once. Both callbacks must wrap native message conversion in
+`copyCallbackMessageOrRelease` so an exception before publication also releases the incoming
+handle. The callback-info allocation scope closes before
 deferred delivery on conforming implementations. Both helpers must opt in to
 `ALLOW_COMPLETED_SYNCHRONOUSLY` explicitly for `wgpu-native` v29, which invokes these two callbacks
 during the downcall and returns `NULL_FUTURE`. The opt-in succeeds only after both atomic completion

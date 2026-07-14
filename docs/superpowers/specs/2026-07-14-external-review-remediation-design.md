@@ -50,7 +50,9 @@ Request state retains handle ownership until close and runtime quiescence have b
 waiting or cleanup fails, the state atomically enters a disposed mode: an already-published handle
 is released once, and any callback that publishes after disposal releases its incoming handle
 instead of making a result observable. Result resolution and ownership transfer happen only after
-successful cleanup.
+successful cleanup. Before publication, the callback temporarily owns the incoming handle while it
+copies the native message. If message conversion fails, it releases that handle exactly once before
+propagating the exception to the runtime.
 
 `wgpu-native` v29 currently does not implement futures for adapter/device requests: both functions
 ignore the requested callback mode, invoke the callback synchronously, and return `NULL_FUTURE`
