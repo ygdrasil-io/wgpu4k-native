@@ -61,13 +61,15 @@ and width.
 JVM aggregate generation treats Clang metadata as authoritative:
 
 - `ClangOffsetOf` supplies each field offset;
-- `ClangAlignOf` supplies effective field and record alignment;
+- `ClangAlignOf` supplies natural field alignment and effective record alignment;
 - the Clang record size supplies final padding and `byteSize` validation.
 
 For a member whose effective alignment is lower than the natural FFM layout alignment, the emitted
-member layout uses `withByteAlignment(...)` before `withName(...)`. Explicit sequence layouts and
-nested aggregate layouts receive the same treatment. Padding is inserted from the difference
-between consecutive Clang offsets, not inferred from natural JVM alignment.
+member layout uses `withByteAlignment(...)` before `withName(...)`. Effective member alignment is
+the strictest value compatible with its natural alignment, the containing record alignment, and
+its Clang offset. Explicit sequence layouts and nested aggregate layouts receive the same
+treatment. Padding is inserted from the difference between consecutive Clang offsets, not inferred
+from natural JVM alignment.
 
 Preflight rejects negative, non-byte-addressable, overlapping, or out-of-bounds offsets for normal
 struct fields. Union fields continue to share offset zero. Generated layouts must initialize
@@ -105,4 +107,3 @@ Each defect is fixed with a red-green TDD cycle:
   truncation or `WrongMethodTypeException`.
 - Existing callback ABI tests remain green after adopting the shared model.
 - No intentional Android/JNA behavior change or Android-specific fix is included.
-
