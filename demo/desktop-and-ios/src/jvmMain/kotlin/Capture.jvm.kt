@@ -177,9 +177,10 @@ private fun createCapturePipeline(device: WGPUDevice) = memoryScope { scope ->
 }
 
 private fun mapBufferForRead(device: WGPUDevice, buffer: WGPUBuffer, size: ULong) = memoryScope { scope ->
-    val status = AtomicReference<WGPUMapAsyncStatus?>()
-    val callback = WGPUBufferMapCallback.register(CallbackPolicy.ONCE) { mapStatus, _, _ ->
-        status.set(mapStatus)
+    val result = AtomicReference<CallbackDiagnostic?>()
+    val callback = WGPUBufferMapCallback.register(CallbackPolicy.ONCE) { mapStatus, message, _ ->
+        val copiedMessage = message.data?.toKString(message.length)
+        result.compareAndSet(null, CallbackDiagnostic(mapStatus, copiedMessage))
     }
 
     try {
@@ -190,14 +191,12 @@ private fun mapBufferForRead(device: WGPUDevice, buffer: WGPUBuffer, size: ULong
         )
 
         wgpuBufferMapAsync(buffer, WGPUMapMode_Read, 0u, size, callbackInfo)
-        while (status.get() == null) {
+        while (result.get() == null) {
             wgpuDevicePoll(device, 1u, null)
         }
 
-        val result = status.get()
-        if (result != WGPUMapAsyncStatus_Success) {
-            error("mapAsync failed with status $result")
-        }
+        val snapshot = result.get()
+        requireSuccessfulMapResult(snapshot?.status, snapshot?.message)
     } finally {
         callback.close()
     }

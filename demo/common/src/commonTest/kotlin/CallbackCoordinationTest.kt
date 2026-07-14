@@ -2,6 +2,7 @@
 
 package io.ygdrasil.wgpu
 
+import kotlin.concurrent.atomics.AtomicReference
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -183,5 +184,103 @@ class CallbackCoordinationTest {
             }
         }
         assertEquals(1, calls)
+    }
+
+    @Test
+    fun completedConditionDoesNotPump() {
+        var pumped = false
+
+        awaitCallbackCondition(
+            phase = "already-complete",
+            isComplete = { true },
+            pendingDiagnostic = { "pending" },
+            pump = { pumped = true },
+        )
+
+        assertFalse(pumped)
+    }
+
+    @Test
+    fun firstDiagnosticWins() {
+        val first = AtomicReference<CallbackDiagnostic?>(null)
+
+        first.recordFirst(7u, "first")
+        first.recordFirst(8u, "second")
+
+        assertEquals(CallbackDiagnostic(7u, "first"), first.load())
+    }
+
+    @Test
+    fun closePrecedesQuiescencePumping() {
+        var closed = false
+        var inFlight = 1
+        var pumps = 0
+
+        closeAndAwaitCallbackQuiescence(
+            phase = "error-close",
+            close = { closed = true },
+            isClosed = { closed },
+            isQuiescent = { closed && inFlight == 0 },
+            applicationInFlight = { inFlight },
+            pump = {
+                assertTrue(closed)
+                pumps += 1
+                inFlight = 0
+            },
+        )
+
+        assertEquals(1, pumps)
+    }
+
+    @Test
+    fun quiescenceTimeoutReportsThePhaseAndInFlightCount() {
+        val failure = assertFailsWith<IllegalStateException> {
+            closeAndAwaitCallbackQuiescence(
+                phase = "error-timeout",
+                timeout = Duration.ZERO,
+                close = {},
+                isClosed = { true },
+                isQuiescent = { false },
+                applicationInFlight = { 3 },
+                pump = {},
+            )
+        }
+
+        assertTrue(failure.message.orEmpty().contains("error-timeout"))
+        assertTrue(failure.message.orEmpty().contains("inFlight=3"))
+    }
+
+    @Test
+    fun nonZeroQueueFuturesSelectWaitAnyPumping() {
+        assertEquals(
+            QueueFuturePumping.WAIT_ANY,
+            selectQueueFuturePumping(
+                futureIds = listOf(1uL, 2uL),
+                zeroFuturePolicy = QueueZeroFuturePolicy.REJECT,
+            ),
+        )
+    }
+
+    @Test
+    fun allZeroQueueFuturesRequireTheExplicitV29OptIn() {
+        assertFailsWith<IllegalStateException> {
+            selectQueueFuturePumping(listOf(0uL, 0uL), QueueZeroFuturePolicy.REJECT)
+        }
+        assertEquals(
+            QueueFuturePumping.WGPU_NATIVE_V29_POLL_ONLY,
+            selectQueueFuturePumping(
+                listOf(0uL, 0uL),
+                QueueZeroFuturePolicy.ALLOW_WGPU_NATIVE_V29_POLL_ONLY,
+            ),
+        )
+    }
+
+    @Test
+    fun mixedZeroAndNonZeroQueueFuturesAreAlwaysRejected() {
+        QueueZeroFuturePolicy.entries.forEach { policy ->
+            assertFailsWith<IllegalStateException> {
+                selectQueueFuturePumping(listOf(0uL, 1uL), policy)
+            }
+        }
     }
 }

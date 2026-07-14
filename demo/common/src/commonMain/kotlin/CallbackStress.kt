@@ -16,6 +16,32 @@ private const val WaitAnyBatchSize = 64
 private const val SuppressionStride = 10
 private val CallbackStressPhaseTimeout = 20.seconds
 
+internal enum class QueueZeroFuturePolicy {
+    REJECT,
+    ALLOW_WGPU_NATIVE_V29_POLL_ONLY,
+}
+
+internal enum class QueueFuturePumping {
+    WAIT_ANY,
+    WGPU_NATIVE_V29_POLL_ONLY,
+}
+
+internal fun selectQueueFuturePumping(
+    futureIds: List<ULong>,
+    zeroFuturePolicy: QueueZeroFuturePolicy = QueueZeroFuturePolicy.REJECT,
+): QueueFuturePumping {
+    check(futureIds.isNotEmpty()) { "queue callback future set is empty" }
+    val zeroCount = futureIds.count { it == 0uL }
+    check(zeroCount == 0 || zeroCount == futureIds.size) {
+        "queue callback futures mix zero and nonzero IDs"
+    }
+    if (zeroCount == 0) return QueueFuturePumping.WAIT_ANY
+    check(zeroFuturePolicy == QueueZeroFuturePolicy.ALLOW_WGPU_NATIVE_V29_POLL_ONLY) {
+        "queue callback futures are all zero without the wgpu-native v29 opt-in"
+    }
+    return QueueFuturePumping.WGPU_NATIVE_V29_POLL_ONLY
+}
+
 fun runCallbackStress() {
     val instance = wgpuCreateInstance(null) ?: error("callback-stress: failed to create instance")
     var adapter: WGPUAdapter? = null
@@ -26,20 +52,25 @@ fun runCallbackStress() {
     val uncapturedErrorCalls = AtomicInt(0)
     val validationErrorCalls = AtomicInt(0)
     val errorCallbacksCompleted = AtomicInt(0)
+    val errorCallbacksInFlight = AtomicInt(0)
+    val firstUnexpectedError = AtomicReference<CallbackDiagnostic?>(null)
 
     try {
         adapter = requestStressAdapter(instance)
 
         errorRegistration = WGPUUncapturedErrorCallback.register(CallbackPolicy.REPEATING) { _, type, message, _ ->
+            errorCallbacksInFlight.fetchAndAdd(1)
             try {
-                uncapturedErrorCalls.fetchAndAdd(1)
+                val messageText = message.data?.toKString(message.length)
+                val ordinal = uncapturedErrorCalls.fetchAndAdd(1) + 1
                 if (type == WGPUErrorType_Validation) validationErrorCalls.fetchAndAdd(1)
-                println(
-                    "callback-stress uncaptured-error type=$type " +
-                        "message=${message.data?.toKString(message.length).orEmpty()}",
-                )
+                if (type != WGPUErrorType_Validation || ordinal > 2) {
+                    firstUnexpectedError.recordFirst(type, messageText)
+                }
+                println("callback-stress uncaptured-error type=$type message=${messageText.orEmpty()}")
             } finally {
                 errorCallbacksCompleted.fetchAndAdd(1)
+                errorCallbacksInFlight.fetchAndAdd(-1)
             }
         }
         device = requestStressDevice(
@@ -49,9 +80,27 @@ fun runCallbackStress() {
         )
         queue = wgpuDeviceGetQueue(device) ?: error("callback-stress: failed to get queue")
 
-        runQueueCallbackPhase(instance, device, queue, WGPUCallbackMode_WaitAnyOnly)
-        runQueueCallbackPhase(instance, device, queue, WGPUCallbackMode_AllowProcessEvents)
-        runQueueCallbackPhase(instance, device, queue, WGPUCallbackMode_AllowSpontaneous)
+        runQueueCallbackPhase(
+            instance,
+            device,
+            queue,
+            WGPUCallbackMode_WaitAnyOnly,
+            QueueZeroFuturePolicy.ALLOW_WGPU_NATIVE_V29_POLL_ONLY,
+        )
+        runQueueCallbackPhase(
+            instance,
+            device,
+            queue,
+            WGPUCallbackMode_AllowProcessEvents,
+            QueueZeroFuturePolicy.ALLOW_WGPU_NATIVE_V29_POLL_ONLY,
+        )
+        runQueueCallbackPhase(
+            instance,
+            device,
+            queue,
+            WGPUCallbackMode_AllowSpontaneous,
+            QueueZeroFuturePolicy.ALLOW_WGPU_NATIVE_V29_POLL_ONLY,
+        )
 
         runUncapturedErrorPhase(
             device = device,
@@ -59,11 +108,11 @@ fun runCallbackStress() {
             uncapturedErrorCalls = uncapturedErrorCalls,
             validationErrorCalls = validationErrorCalls,
             errorCallbacksCompleted = errorCallbacksCompleted,
+            errorCallbacksInFlight = errorCallbacksInFlight,
+            errorRegistration = errorRegistration,
+            firstUnexpectedError = firstUnexpectedError,
         )
 
-        check(errorRegistration.isClosed.not()) {
-            "callback-stress: repeating uncaptured-error registration closed before teardown"
-        }
         println("callback-stress complete pending=0")
     } finally {
         errorRegistration?.close()
@@ -173,6 +222,7 @@ private fun runQueueCallbackPhase(
     device: WGPUDevice,
     queue: WGPUQueue,
     mode: WGPUCallbackMode,
+    zeroFuturePolicy: QueueZeroFuturePolicy,
 ) {
     val modeName = callbackModeName(mode)
     val deadline = TimeSource.Monotonic.markNow() + CallbackStressPhaseTimeout
@@ -181,17 +231,21 @@ private fun runQueueCallbackPhase(
     val queueCallbacksCompleted = AtomicInt(0)
     val duplicates = AtomicInt(0)
     val failedStatuses = AtomicInt(0)
+    val firstQueueFailure = AtomicReference<CallbackDiagnostic?>(null)
     val registrations = mutableListOf<CallbackRegistration<WGPUQueueWorkDoneCallback>>()
     val futureIds = mutableListOf<ULong>()
     val suppressBeforeDelivery = mode != WGPUCallbackMode_AllowSpontaneous
 
     try {
         repeat(CallbackStressRegistrationCount) { id ->
-            val registration = WGPUQueueWorkDoneCallback.register(CallbackPolicy.ONCE) { status, _, _ ->
+            val registration = WGPUQueueWorkDoneCallback.register(CallbackPolicy.ONCE) { status, message, _ ->
                 try {
                     val previous = calls[id].fetchAndAdd(1)
                     if (previous == 0) delivered.fetchAndAdd(1) else duplicates.fetchAndAdd(1)
-                    if (status != WGPUQueueWorkDoneStatus_Success) failedStatuses.fetchAndAdd(1)
+                    if (status != WGPUQueueWorkDoneStatus_Success) {
+                        failedStatuses.fetchAndAdd(1)
+                        firstQueueFailure.recordFirst(status, message.data?.toKString(message.length))
+                    }
                 } finally {
                     queueCallbacksCompleted.fetchAndAdd(1)
                 }
@@ -220,6 +274,7 @@ private fun runQueueCallbackPhase(
                 failQueuePhase(modeName, "create-futures", calls, suppressBeforeDelivery)
             }
         }
+        val futurePumping = selectQueueFuturePumping(futureIds, zeroFuturePolicy)
 
         if (suppressBeforeDelivery) {
             registrations.forEachIndexed { id, registration ->
@@ -238,48 +293,43 @@ private fun runQueueCallbackPhase(
             CallbackStressRegistrationCount
         }
 
-        when (mode) {
-            WGPUCallbackMode_WaitAnyOnly -> {
-                wgpuDevicePoll(device, 1u, null)
-                while (queueCallbacksCompleted.load() < expectedDeliveries) {
-                    pumpWaitAnyBatches(instance, futureIds, modeName)
-                    if (deadline.hasPassedNow()) {
-                        failQueuePhase(modeName, "delivery", calls, suppressBeforeDelivery)
-                    }
-                }
+        while (queueCallbacksCompleted.load() < expectedDeliveries) {
+            pumpQueueCallbackEvents(
+                instance = instance,
+                device = device,
+                futureIds = futureIds,
+                mode = mode,
+                modeName = modeName,
+                futurePumping = futurePumping,
+            )
+            if (deadline.hasPassedNow()) {
+                failQueuePhase(modeName, "delivery", calls, suppressBeforeDelivery)
             }
-
-            WGPUCallbackMode_AllowProcessEvents -> {
-                while (queueCallbacksCompleted.load() < expectedDeliveries) {
-                    wgpuInstanceProcessEvents(instance)
-                    if (deadline.hasPassedNow()) {
-                        failQueuePhase(modeName, "delivery", calls, suppressBeforeDelivery)
-                    }
-                }
-            }
-
-            WGPUCallbackMode_AllowSpontaneous -> {
-                wgpuDevicePoll(device, 1u, null)
-                while (queueCallbacksCompleted.load() < expectedDeliveries) {
-                    wgpuDevicePoll(device, 0u, null)
-                    if (deadline.hasPassedNow()) {
-                        failQueuePhase(modeName, "delivery", calls, suppressBeforeDelivery)
-                    }
-                }
-            }
-
-            else -> error("callback-stress: unsupported callback mode $mode")
         }
 
-        when (mode) {
-            WGPUCallbackMode_WaitAnyOnly -> {
-                if (futureIds.all { it != 0uL }) pumpWaitAnyBatches(instance, futureIds, modeName)
+        while (registrations.any { registration -> registration.isQuiescent.not() }) {
+            pumpQueueCallbackEvents(
+                instance = instance,
+                device = device,
+                futureIds = futureIds,
+                mode = mode,
+                modeName = modeName,
+                futurePumping = futurePumping,
+            )
+            if (deadline.hasPassedNow()) {
+                val pending = registrations.indices.filter { id -> registrations[id].isQuiescent.not() }
+                error("callback-stress timeout mode=$modeName phase=quiescence pending=$pending")
             }
-
-            WGPUCallbackMode_AllowProcessEvents -> wgpuInstanceProcessEvents(instance)
-            WGPUCallbackMode_AllowSpontaneous -> wgpuDevicePoll(device, 0u, null)
-            else -> error("callback-stress: unsupported callback mode $mode")
         }
+
+        pumpQueueCallbackEvents(
+            instance = instance,
+            device = device,
+            futureIds = futureIds,
+            mode = mode,
+            modeName = modeName,
+            futurePumping = futurePumping,
+        )
 
         check(queueCallbacksCompleted.load() == expectedDeliveries) {
             "callback-stress mode=$modeName completed=${queueCallbacksCompleted.load()} " +
@@ -289,7 +339,8 @@ private fun runQueueCallbackPhase(
             "callback-stress mode=$modeName duplicate deliveries=${duplicates.load()}"
         }
         check(failedStatuses.load() == 0) {
-            "callback-stress mode=$modeName failed queue statuses=${failedStatuses.load()}"
+            "callback-stress mode=$modeName failed queue statuses=${failedStatuses.load()} " +
+                "first=${firstQueueFailure.load()}"
         }
         calls.forEachIndexed { id, count ->
             val expected = if (suppressBeforeDelivery && isSuppressedId(id)) 0 else 1
@@ -299,13 +350,25 @@ private fun runQueueCallbackPhase(
             check(registrations[id].isClosed) {
                 "callback-stress mode=$modeName id=$id registration remained active"
             }
+            check(registrations[id].isQuiescent) {
+                "callback-stress mode=$modeName id=$id registration remained non-quiescent"
+            }
         }
 
         val suppressed = if (suppressBeforeDelivery) suppressedRegistrationCount() else 0
+        val futurePumpingDiagnostic = when (futurePumping) {
+            QueueFuturePumping.WAIT_ANY -> "waitAny"
+            QueueFuturePumping.WGPU_NATIVE_V29_POLL_ONLY -> "poll0-v29"
+        }
+        val upstreamModeValidation = when (futurePumping) {
+            QueueFuturePumping.WAIT_ANY -> "verified"
+            QueueFuturePumping.WGPU_NATIVE_V29_POLL_ONLY -> "unavailable"
+        }
         println(
             "callback-stress mode=$modeName registrations=$CallbackStressRegistrationCount " +
                 "submissions=$CallbackStressSubmissionCount delivered=${delivered.load()} suppressed=$suppressed " +
-                "duplicates=0 memoryScope=closed pending=0",
+                "duplicates=0 memoryScope=closed pending=0 futurePumping=$futurePumpingDiagnostic " +
+                "upstreamModeValidation=$upstreamModeValidation",
         )
     } finally {
         registrations.forEach(CallbackRegistration<WGPUQueueWorkDoneCallback>::close)
@@ -344,6 +407,31 @@ private fun submitBoundedCopyWork(device: WGPUDevice, queue: WGPUQueue) {
                 source?.let(::wgpuBufferRelease)
             }
         }
+    }
+}
+
+private fun pumpQueueCallbackEvents(
+    instance: WGPUInstance,
+    device: WGPUDevice,
+    futureIds: List<ULong>,
+    mode: WGPUCallbackMode,
+    modeName: String,
+    futurePumping: QueueFuturePumping,
+) {
+    if (futurePumping == QueueFuturePumping.WGPU_NATIVE_V29_POLL_ONLY) {
+        wgpuDevicePoll(device, 0u, null)
+        return
+    }
+
+    when (mode) {
+        WGPUCallbackMode_WaitAnyOnly -> {
+            wgpuDevicePoll(device, 0u, null)
+            pumpWaitAnyBatches(instance, futureIds, modeName)
+        }
+
+        WGPUCallbackMode_AllowProcessEvents -> wgpuInstanceProcessEvents(instance)
+        WGPUCallbackMode_AllowSpontaneous -> wgpuDevicePoll(device, 0u, null)
+        else -> error("callback-stress: unsupported callback mode $mode")
     }
 }
 
@@ -414,6 +502,9 @@ private fun runUncapturedErrorPhase(
     uncapturedErrorCalls: AtomicInt,
     validationErrorCalls: AtomicInt,
     errorCallbacksCompleted: AtomicInt,
+    errorCallbacksInFlight: AtomicInt,
+    errorRegistration: CallbackRegistration<WGPUUncapturedErrorCallback>,
+    firstUnexpectedError: AtomicReference<CallbackDiagnostic?>,
 ) {
     val buffer = memoryScope { scope ->
         WGPUBufferDescriptor.allocate(scope).apply {
@@ -435,18 +526,39 @@ private fun runUncapturedErrorPhase(
             phase = "uncaptured-errors",
             counter = errorCallbacksCompleted,
             expected = 2,
+            applicationInFlight = errorCallbacksInFlight::load,
             pump = { wgpuDevicePoll(device, 0u, null) },
         )
+
+        closeAndAwaitCallbackQuiescence(
+            phase = "uncaptured-error-close",
+            close = errorRegistration::close,
+            isClosed = { errorRegistration.isClosed },
+            isQuiescent = { errorRegistration.isQuiescent },
+            applicationInFlight = errorCallbacksInFlight::load,
+            pump = { wgpuDevicePoll(device, 0u, null) },
+        )
+
+        val unexpected = firstUnexpectedError.load()
         check(errorCallbacksCompleted.load() == 2) {
-            "callback-stress completed error callbacks=${errorCallbacksCompleted.load()} expected=2"
+            "callback-stress completed error callbacks=${errorCallbacksCompleted.load()} expected=2 " +
+                "firstUnexpected=$unexpected"
         }
         check(uncapturedErrorCalls.load() == 2) {
-            "callback-stress uncaptured-errors=${uncapturedErrorCalls.load()} expected=2"
+            "callback-stress uncaptured-errors=${uncapturedErrorCalls.load()} expected=2 " +
+                "firstUnexpected=$unexpected"
         }
         check(validationErrorCalls.load() == 2) {
-            "callback-stress validation-errors=${validationErrorCalls.load()} expected=2"
+            "callback-stress validation-errors=${validationErrorCalls.load()} expected=2 " +
+                "firstUnexpected=$unexpected"
         }
-        println("callback-stress uncaptured-errors=2 validation-errors=2 pending=0")
+        check(unexpected == null) {
+            "callback-stress unexpected uncaptured-error $unexpected"
+        }
+        println(
+            "callback-stress uncaptured-errors=2 validation-errors=2 " +
+                "registration=closed inFlight=0 pending=0",
+        )
     } finally {
         wgpuBufferRelease(buffer)
     }
@@ -457,6 +569,7 @@ private fun awaitAtomicCount(
     phase: String,
     counter: AtomicInt,
     expected: Int,
+    applicationInFlight: () -> Int,
     pump: () -> Unit,
 ) {
     val deadline = TimeSource.Monotonic.markNow() + CallbackStressPhaseTimeout
@@ -464,7 +577,10 @@ private fun awaitAtomicCount(
         pump()
         if (deadline.hasPassedNow()) {
             val pending = (counter.load() until expected).toList()
-            error("callback-stress timeout mode=$modeName phase=$phase pending=$pending")
+            error(
+                "callback-stress timeout mode=$modeName phase=$phase pending=$pending " +
+                    "inFlight=${applicationInFlight()}",
+            )
         }
     }
 }

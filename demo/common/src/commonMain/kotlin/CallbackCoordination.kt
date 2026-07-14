@@ -13,6 +13,12 @@ private val CallbackWaitPhaseTimeout = CallbackWaitPhaseTimeoutSeconds.seconds
 
 internal data class CallbackRequestSnapshot<S : Any>(val status: S?, val message: String?)
 
+data class CallbackDiagnostic(val status: UInt, val message: String?)
+
+internal fun AtomicReference<CallbackDiagnostic?>.recordFirst(status: UInt, message: String?) {
+    compareAndSet(null, CallbackDiagnostic(status, message))
+}
+
 internal enum class ZeroFuturePolicy {
     REJECT,
     ALLOW_COMPLETED_SYNCHRONOUSLY,
@@ -156,6 +162,28 @@ internal fun awaitCallbackCondition(
         pump()
         if (deadline.hasPassedNow()) error("$phase timeout ${pendingDiagnostic()}")
     }
+}
+
+internal fun closeAndAwaitCallbackQuiescence(
+    phase: String,
+    timeout: Duration = CallbackWaitPhaseTimeout,
+    close: () -> Unit,
+    isClosed: () -> Boolean,
+    isQuiescent: () -> Boolean,
+    applicationInFlight: () -> Int,
+    pump: () -> Unit,
+) {
+    close()
+    check(isClosed()) { "$phase registration did not close" }
+    awaitCallbackCondition(
+        phase = phase,
+        timeout = timeout,
+        isComplete = { isQuiescent() && applicationInFlight() == 0 },
+        pendingDiagnostic = {
+            "registrationQuiescent=${isQuiescent()} inFlight=${applicationInFlight()}"
+        },
+        pump = pump,
+    )
 }
 
 internal fun waitAnyOnce(instance: WGPUInstance, futureId: ULong): WGPUWaitStatus =
