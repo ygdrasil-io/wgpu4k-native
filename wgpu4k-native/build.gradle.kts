@@ -1,12 +1,4 @@
 import com.android.build.gradle.tasks.MergeSourceSetFolders
-import org.gradle.api.internal.TaskInputsInternal
-import org.gradle.internal.fingerprint.DirectorySensitivity
-import org.gradle.internal.fingerprint.FileNormalizer
-import org.gradle.internal.fingerprint.LineEndingSensitivity
-import org.gradle.internal.properties.InputBehavior
-import org.gradle.internal.properties.InputFilePropertyType
-import org.gradle.internal.properties.PropertyValue
-import org.gradle.internal.properties.PropertyVisitor
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -294,14 +286,15 @@ tasks.register<Task>("generateDocs") {
     dependsOn("copyDocsToRoot")
 }
 
+val actualBindingGenerationHost = when (Platform.os) {
+    Os.MacOs -> "macos"
+    Os.Linux -> "linux"
+    Os.Windows -> "windows"
+}
 val bindingGenerationHost = providers.gradleProperty("wgpu4k.bindingGeneration.hostForTest")
     .orNull
     ?.lowercase()
-    ?: when (Platform.os) {
-        Os.MacOs -> "macos"
-        Os.Linux -> "linux"
-        Os.Windows -> "windows"
-    }
+    ?: actualBindingGenerationHost
 require(bindingGenerationHost in setOf("macos", "linux", "windows"))
 
 val kextractDistribution = project(":kextract").layout.buildDirectory.dir("kextract")
@@ -322,6 +315,12 @@ tasks.register<Exec>("generateBindingsFromHeader") {
     inputs.dir(kextractDistribution)
         .withPropertyName("kextractDistribution")
         .withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.property(
+        "kextractDistributionPath",
+        kextractDistribution.map { distribution ->
+            distribution.asFile.toPath().toAbsolutePath().normalize().toString()
+        },
+    )
     inputs.file(kextractLauncher)
         .withPropertyName("kextractLauncher")
         .withPathSensitivity(PathSensitivity.RELATIVE)
@@ -336,6 +335,14 @@ tasks.register<Exec>("generateBindingsFromHeader") {
     )
 
     executable = kextractLauncher.get().asFile.absolutePath
+
+    doFirst {
+        require(bindingGenerationHost == actualBindingGenerationHost) {
+            "wgpu4k.bindingGeneration.hostForTest is configuration-only; " +
+                "cannot execute generateBindingsFromHeader for configured host '$bindingGenerationHost' " +
+                "on actual host '$actualBindingGenerationHost'."
+        }
+    }
 
     val isMac = System.getProperty("os.name").contains("Mac", ignoreCase = true)
     val clangArgs = mutableListOf<String>()
@@ -399,32 +406,30 @@ tasks.register("verifyBindingGenerationConfiguration") {
         val nativeHeader = project.file("build/native/wgpu.h").absoluteFile
         val webGpuHeader = project.file("build/native/webgpu.h").absoluteFile
         val declaredInputs = generationTask.inputs.files.files.map { it.absoluteFile }.toSet()
-        val declaredInputTypes = mutableMapOf<String, InputFilePropertyType>()
-        (generationTask.inputs as TaskInputsInternal).visitRegisteredProperties(object : PropertyVisitor {
-            override fun visitInputFileProperty(
-                propertyName: String,
-                optional: Boolean,
-                behavior: InputBehavior,
-                directorySensitivity: DirectorySensitivity,
-                lineEndingSensitivity: LineEndingSensitivity,
-                normalizer: FileNormalizer?,
-                value: PropertyValue,
-                filePropertyType: InputFilePropertyType,
-            ) {
-                declaredInputTypes[propertyName] = filePropertyType
-            }
-        })
+        val expectedDistributionPath = kextractDistribution.get().asFile
+            .toPath()
+            .toAbsolutePath()
+            .normalize()
+            .toString()
+        val configuredDistributionPath = generationTask.inputs
+            .properties["kextractDistributionPath"]
+            ?.toString()
+        require(configuredDistributionPath == expectedDistributionPath) {
+            "Expected kextractDistributionPath $expectedDistributionPath; found $configuredDistributionPath"
+        }
+        val expectedDistributionFiles = kextractDistribution.get().asFile
+            .walkTopDown()
+            .filter { it.isFile }
+            .map { it.absoluteFile }
+            .toSet()
+        require(expectedDistributionFiles.all { it in declaredInputs }) {
+            "Kextract distribution files are not all declared inputs"
+        }
         require(callbackBindings in declaredInputs) { "callback-bindings.yml is not a declared input" }
         require(nativeHeader in declaredInputs) { "wgpu.h is not a declared input" }
         require(webGpuHeader in declaredInputs) { "webgpu.h is not a declared input" }
         require(kextractLauncher.get().asFile.absoluteFile in declaredInputs) {
             "Kextract launcher is not a declared input"
-        }
-        require(declaredInputTypes["kextractLauncher"] == InputFilePropertyType.FILE) {
-            "Kextract launcher is not declared as a file input; found $declaredInputTypes"
-        }
-        require(declaredInputTypes["kextractDistribution"] == InputFilePropertyType.DIRECTORY) {
-            "Kextract distribution is not declared as a directory input; found $declaredInputTypes"
         }
     }
 }
