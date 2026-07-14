@@ -350,11 +350,15 @@ least `Callback`, `CallbackType`, `CallbackPolicy`, `CallbackRegistration`,
 `ArrayHolder`. The set must not stop at the KFFI imports: audit the platform callback emitters and
 reserve every unqualified external identifier they render, including JVM `FunctionDescriptor`,
 `MethodHandle`, `MethodHandles`, `Linker`, `Arena`, `MemorySegment`, `ValueLayout`, and `JvmStatic`,
-plus Native `CValue`, `COpaquePointer`, `COpaquePointerVar`, and `staticCFunction`. Rename the set to
-describe generated callback identifiers rather than only runtime types. Keep it centralized and
-test every member through the collision integration fixture; at minimum, the compiled fixture must
-prove the previously missed `FunctionDescriptor` and `COpaquePointerVar` cases on their relevant
-platform source. Do not rewrite canonical IDs, native symbol strings, or raw C argument mapping.
+plus Native `CValue`, `COpaquePointer`, `COpaquePointerVar`, and `staticCFunction`. Include external
+annotation/exception classifiers rendered by the emitters: `OptIn`, `Suppress`, and
+`UnsupportedOperationException`. Rename the set to describe generated callback identifiers rather
+than only runtime types. Keep it centralized and test every member through the collision integration
+fixture; at minimum, the compiled fixture must prove the previously missed `FunctionDescriptor`,
+`COpaquePointerVar`, `OptIn`, and direct-binding `Suppress` cases on their relevant platform source.
+The `OptIn`, `Suppress`, and `UnsupportedOperationException` regression assertions must be explicit
+and independent of iterating the production set, so deleting one production reservation still makes
+the test fail. Do not rewrite canonical IDs, native symbol strings, or raw C argument mapping.
 
 Run the allocator, mangler, and callback integration tests with `--rerun-tasks`; capture the initial
 compiler/assertion failures and the final GREEN result. Then rerun the full Kextract suite.
