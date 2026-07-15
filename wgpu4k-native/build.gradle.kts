@@ -12,7 +12,6 @@ plugins {
     com.android.library
     alias(libs.plugins.kotest)
     alias(libs.plugins.ksp)
-    id("generator")
 }
 
 val buildNativeResourcesDirectory = project.file("build").resolve("native")
@@ -78,6 +77,12 @@ kotlin {
     }
 
     sourceSets {
+        commonMain {
+            dependencies {
+                api(project(":kffi"))
+            }
+        }
+
         androidMain {
             dependencies {
                 val jna = libs.jna.get()
@@ -279,4 +284,203 @@ tasks.register<Task>("generateDocs") {
     group = "documentation"
     description = "Generates the documentation in HTML and Markdown formats, then copies the files into the 'doc' folder."
     dependsOn("copyDocsToRoot")
+}
+
+val actualBindingGenerationHost = when (Platform.os) {
+    Os.MacOs -> "macos"
+    Os.Linux -> "linux"
+    Os.Windows -> "windows"
+}
+val bindingGenerationHost = providers.gradleProperty("wgpu4k.bindingGeneration.hostForTest")
+    .orNull
+    ?.lowercase()
+    ?: actualBindingGenerationHost
+require(bindingGenerationHost in setOf("macos", "linux", "windows"))
+
+val kextractDistribution = project(":kextract").layout.buildDirectory.dir("kextract")
+val kextractLauncher = kextractDistribution.map { distribution ->
+    distribution.file(if (bindingGenerationHost == "windows") "bin/kextract.bat" else "bin/kextract")
+}
+
+tasks.register<Exec>("generateBindingsFromHeader") {
+    group = "generation"
+    description = "Generates unified KMP bindings from webgpu.h using kextract CLI"
+    dependsOn(":kextract:createKextractImage", "fetch-native-dependencies")
+
+    val callbackBindings = project(":wgpu4k-native-specs")
+        .file("src/jvmMain/resources/callback-bindings.yml")
+    val nativeHeader = project.file("build/native/wgpu.h")
+    val webGpuHeader = project.file("build/native/webgpu.h")
+
+    inputs.dir(kextractDistribution)
+        .withPropertyName("kextractDistribution")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.property(
+        "kextractDistributionPath",
+        kextractDistribution.map { distribution ->
+            distribution.asFile.toPath().toAbsolutePath().normalize().toString()
+        },
+    )
+    inputs.file(kextractLauncher)
+        .withPropertyName("kextractLauncher")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.file(callbackBindings).withPropertyName("callbackBindings")
+    inputs.file(nativeHeader).withPropertyName("nativeHeader")
+    inputs.file(webGpuHeader).withPropertyName("webGpuHeader")
+    outputs.dirs(
+        project.file("src/commonMain/kotlin"),
+        project.file("src/jvmMain/kotlin"),
+        project.file("src/nativeMain/kotlin"),
+        project.file("src/androidMain/kotlin"),
+    )
+
+    executable = kextractLauncher.get().asFile.absolutePath
+
+    doFirst {
+        require(bindingGenerationHost == actualBindingGenerationHost) {
+            "wgpu4k.bindingGeneration.hostForTest is configuration-only; " +
+                "cannot execute generateBindingsFromHeader for configured host '$bindingGenerationHost' " +
+                "on actual host '$actualBindingGenerationHost'."
+        }
+    }
+
+    val isMac = System.getProperty("os.name").contains("Mac", ignoreCase = true)
+    val clangArgs = mutableListOf<String>()
+    if (isMac) {
+        val sdkPath = providers.exec {
+            commandLine("xcrun", "--show-sdk-path")
+        }.standardOutput.asText.get().trim()
+        clangArgs.addAll(
+            listOf("-D", "__MATH_H__", "-A", "-ffreestanding", "-A", "-isysroot", "-A", sdkPath),
+        )
+    }
+
+    args = listOf(
+        "--multiplatform",
+        "--target-package", "io.ygdrasil.wgpu",
+        "--output", project.file("src").absolutePath,
+        "--library", "wgpu_native",
+        "--callback-bindings",
+        callbackBindings.absolutePath,
+        "-D", "WGPU_SKIP_PROCS",
+        nativeHeader.absolutePath,
+    ) + clangArgs
+}
+
+tasks.register("verifyBindingGenerationConfiguration") {
+    group = "verification"
+    description = "Verifies that binding generation has portable dependencies, inputs, and launcher configuration."
+
+    doLast {
+        val generationTask = tasks.named<Exec>("generateBindingsFromHeader").get()
+        val directDependencies = generationTask.dependsOn
+            .map { dependency ->
+                when (dependency) {
+                    is Task -> dependency.path
+                    else -> dependency.toString().let { path ->
+                        if (path.startsWith(":")) path else "${generationTask.project.path}:$path"
+                    }
+                }
+            }
+            .toSet()
+        require(":kextract:createKextractImage" in directDependencies) {
+            "generateBindingsFromHeader must depend directly on :kextract:createKextractImage; found $directDependencies"
+        }
+        require(":wgpu4k-native:fetch-native-dependencies" in directDependencies) {
+            "generateBindingsFromHeader must depend directly on :wgpu4k-native:fetch-native-dependencies; found $directDependencies"
+        }
+
+        val expectedLauncherSuffix = if (bindingGenerationHost == "windows") {
+            "bin/kextract.bat"
+        } else {
+            "bin/kextract"
+        }
+        val configuredExecutable = generationTask.executable.orEmpty().replace('\\', '/')
+        require(configuredExecutable.endsWith(expectedLauncherSuffix)) {
+            "Expected launcher suffix $expectedLauncherSuffix for $bindingGenerationHost; found $configuredExecutable"
+        }
+
+        val callbackBindings = project(":wgpu4k-native-specs")
+            .file("src/jvmMain/resources/callback-bindings.yml")
+            .absoluteFile
+        val nativeHeader = project.file("build/native/wgpu.h").absoluteFile
+        val webGpuHeader = project.file("build/native/webgpu.h").absoluteFile
+        val declaredInputs = generationTask.inputs.files.files.map { it.absoluteFile }.toSet()
+        val expectedDistributionPath = kextractDistribution.get().asFile
+            .toPath()
+            .toAbsolutePath()
+            .normalize()
+            .toString()
+        val configuredDistributionPath = generationTask.inputs
+            .properties["kextractDistributionPath"]
+            ?.toString()
+        require(configuredDistributionPath == expectedDistributionPath) {
+            "Expected kextractDistributionPath $expectedDistributionPath; found $configuredDistributionPath"
+        }
+        val expectedDistributionFiles = kextractDistribution.get().asFile
+            .walkTopDown()
+            .filter { it.isFile }
+            .map { it.absoluteFile }
+            .toSet()
+        require(expectedDistributionFiles.all { it in declaredInputs }) {
+            "Kextract distribution files are not all declared inputs"
+        }
+        require(callbackBindings in declaredInputs) { "callback-bindings.yml is not a declared input" }
+        require(nativeHeader in declaredInputs) { "wgpu.h is not a declared input" }
+        require(webGpuHeader in declaredInputs) { "webgpu.h is not a declared input" }
+        require(kextractLauncher.get().asFile.absoluteFile in declaredInputs) {
+            "Kextract launcher is not a declared input"
+        }
+    }
+}
+
+tasks.register("verifyGeneratedBindingsClean") {
+    group = "verification"
+    description = "Verifies that generated WebGPU sources have no tracked or untracked changes."
+
+    doLast {
+        fun runGit(vararg arguments: String): Pair<Int, String> {
+            val process = ProcessBuilder(listOf("git") + arguments)
+                .directory(rootDir)
+                .redirectErrorStream(true)
+                .start()
+            val output = process.inputStream.bufferedReader().use { it.readText() }
+            return process.waitFor() to output
+        }
+
+        val (stagedDiffExitCode, stagedDiffOutput) = runGit(
+            "diff",
+            "--cached",
+            "--exit-code",
+            "--",
+            "wgpu4k-native/src",
+        )
+        if (stagedDiffExitCode != 0) {
+            throw GradleException("Staged generated WebGPU sources differ from HEAD:\n$stagedDiffOutput")
+        }
+
+        val (worktreeDiffExitCode, worktreeDiffOutput) = runGit(
+            "diff",
+            "--exit-code",
+            "--",
+            "wgpu4k-native/src",
+        )
+        if (worktreeDiffExitCode != 0) {
+            throw GradleException("Generated WebGPU sources differ from the index:\n$worktreeDiffOutput")
+        }
+
+        val (untrackedExitCode, untrackedOutput) = runGit(
+            "ls-files",
+            "--others",
+            "--exclude-standard",
+            "--",
+            "wgpu4k-native/src",
+        )
+        if (untrackedExitCode != 0) {
+            throw GradleException("Could not inspect untracked generated WebGPU sources:\n$untrackedOutput")
+        }
+        if (untrackedOutput.isNotBlank()) {
+            throw GradleException("Untracked generated WebGPU sources:\n$untrackedOutput")
+        }
+    }
 }

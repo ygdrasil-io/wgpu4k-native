@@ -13,6 +13,10 @@ If you are looking for an experience that also covers the web, you can use the [
 
 This library uses the Firefox backend written in Rust, [available here](https://github.com/gfx-rs/wgpu-native).
 
+## Documentation
+
+- [How to regenerate kextract bindings (C/ObjC headers)](doc/how_to_regenerate_kextract_bindings.md)
+
 ## How to Run the demo
 
 1. On JVM: `./gradlew demo:desktop-and-ios:runJvm`
@@ -21,6 +25,35 @@ This library uses the Firefox backend written in Rust, [available here](https://
 5. On Android Native, run `./gradlew build`, then run the subproject `android-native` with android studio or IntelliJ IDEA!
 6. On iOS `./gradlew demo:desktop-and-ios:assembleWgpuAppXCFramework` to build the XC Framework, then you can run the subproject `iosApp` (on demo/desktop-and-ios folder) with XCode on a iOS simulator or real device.
 
+## How to Run the headless render tests
+
+The desktop demo also has headless render paths that do not create a GLFW window or a WebGPU surface. They render the triangle into an offscreen texture, copy it back to CPU memory, and write an image file.
+
+On JVM:
+
+```bash
+./gradlew :demo:desktop-and-ios:runJvmHeadless
+```
+
+This writes:
+
+```text
+demo/desktop-and-ios/build/headless/triangle.png
+```
+
+On Kotlin/Native desktop, first link the executable for the host target, then run it with `--headless`. For example, on macOS arm64:
+
+```bash
+./gradlew :demo:desktop-and-ios:linkDebugExecutableMacosArm64
+cd demo/desktop-and-ios
+./build/bin/macosArm64/debugExecutable/desktop-and-ios.kexe --headless
+```
+
+This writes:
+
+```text
+demo/desktop-and-ios/build/headless/triangle.ppm
+```
 
 ## How to use
 

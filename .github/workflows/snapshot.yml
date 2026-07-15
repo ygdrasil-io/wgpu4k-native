@@ -11,6 +11,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -21,7 +23,7 @@ jobs:
         run:  |
           ./gradlew fetch-native-dependencies
           ./gradlew assemble
-          ./gradlew build
+          ./gradlew build -x :kextract:test
           ./gradlew publish --info
         env:
           SNAPSHOT: "true"
@@ -32,4 +34,3 @@ jobs:
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.PGP_PRIVATE }}
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-

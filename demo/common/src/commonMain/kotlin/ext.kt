@@ -1,28 +1,45 @@
+@file:OptIn(kotlin.concurrent.atomics.ExperimentalAtomicApi::class)
+
 package io.ygdrasil.wgpu
 
-import ffi.ArrayHolder
-import ffi.MemoryAllocator
-import ffi.NativeAddress
-import ffi.memoryScope
+import io.ygdrasil.kffi.ArrayHolder
+import io.ygdrasil.kffi.CallbackPolicy
+import io.ygdrasil.kffi.CallbackRegistration
+import io.ygdrasil.kffi.MemoryAllocator
+import io.ygdrasil.kffi.NativeAddress
+import io.ygdrasil.kffi.memoryScope
+import kotlin.concurrent.atomics.AtomicInt
 
 val allocator = MemoryAllocator()
+private val logCallbackConfigurationLock = AtomicInt(0)
+private var logCallback: CallbackRegistration<WGPULogCallback>? = null
 
-fun configureLogs(logLevel: WGPULogLevel = WGPULogLevel_Trace) {
-    val callback = WGPULogCallback.allocate(allocator, object : WGPULogCallback {
-        override fun invoke(level: WGPULogLevel, message: WGPUStringView?, userdata: NativeAddress?) {
-            val kMessage = message?.data?.toKString(message.length)
-            when (level) {
-                WGPULogLevel_Error -> println("ERROR : $kMessage}")
-                WGPULogLevel_Warn -> println("WARN : $kMessage")
-                WGPULogLevel_Info -> println("INFO : $kMessage")
-                WGPULogLevel_Debug -> println("DEBUG : $kMessage")
-                WGPULogLevel_Trace -> println("TRACE : $kMessage")
-            }
-        }
-
-    })
+fun configureLogs(logLevel: WGPULogLevel = WGPULogLevel_Trace) = withLogCallbackConfigurationLock {
+    val previous = logCallback
+    previous?.close()
     wgpuSetLogLevel(logLevel)
-    wgpuSetLogCallback(callback, allocator.bufferOfAddress(callback.handler).handler)
+    val replacement = wgpuSetLogCallback(policy = CallbackPolicy.REPEATING) { level, message ->
+        val kMessage = message.data?.toKString(message.length)
+        when (level) {
+            WGPULogLevel_Error -> println("ERROR : $kMessage}")
+            WGPULogLevel_Warn -> println("WARN : $kMessage")
+            WGPULogLevel_Info -> println("INFO : $kMessage")
+            WGPULogLevel_Debug -> println("DEBUG : $kMessage")
+            WGPULogLevel_Trace -> println("TRACE : $kMessage")
+        }
+    }
+    logCallback = replacement
+}
+
+private fun <T> withLogCallbackConfigurationLock(block: () -> T): T {
+    while (!logCallbackConfigurationLock.compareAndSet(0, 1)) {
+        // Logger reconfiguration is rare and must remain multiplatform without a scheduler dependency.
+    }
+    try {
+        return block()
+    } finally {
+        logCallbackConfigurationLock.store(0)
+    }
 }
 
 
@@ -47,51 +64,140 @@ fun configureSurface(
                 it.viewFormatCount = viewFormats.size.toULong()
                 it.viewFormats = scope.allocateBuffer(viewFormats.size.toULong() * UInt.SIZE_BYTES.toULong())
                     .also { buffer -> buffer.writeUInts(viewFormats.toUIntArray())}
-                    .let { ArrayHolder(it.handler) }
+                    .handler
             }
         }
         wgpuSurfaceConfigure(surface, configuration)
     }
 }
 
-fun getDevice(adapter: WGPUAdapter): WGPUDevice = memoryScope { scope ->
-    var fetchedDevice: WGPUDevice? = null
-
-    val callback = WGPURequestDeviceCallback.allocate(scope) { status, device, _, _, _ ->
-        if (status != WGPURequestDeviceStatus_Success && device == null) error("fail to get device")
-        fetchedDevice = device
+fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
+    val state = CallbackRequestState<WGPURequestDeviceStatus, WGPUDevice>(::wgpuDeviceRelease)
+    val registration = WGPURequestDeviceCallback.register(CallbackPolicy.ONCE) { status, device, message, _ ->
+        state.publishCopied(status, device) {
+            message.data?.toKString(message.length)
+        }
     }
-
-    val callbackInfo = WGPURequestDeviceCallbackInfo.allocate(scope).apply {
-        this.callback = callback
-        this.userdata2 = scope.bufferOfAddress(callback.handler).handler
-    }
-
-    wgpuAdapterRequestDevice(adapter, null, callbackInfo)
-
-    fetchedDevice ?: error("fail to get device")
+    var futureId = 0uL
+    val snapshot = awaitCallbackRequestResult(
+        state = state,
+        phase = "request-device",
+        await = {
+            futureId = memoryScope { scope ->
+                val info = WGPURequestDeviceCallbackInfo.allocate(
+                    scope,
+                    WGPUCallbackMode_WaitAnyOnly,
+                    registration,
+                )
+                wgpuAdapterRequestDevice(adapter, null, info).id
+            }
+            awaitCallbackFuture(
+                futureId = futureId,
+                phase = "request-device",
+                zeroFuturePolicy = ZeroFuturePolicy.ALLOW_COMPLETED_SYNCHRONOUSLY,
+                isComplete = { state.isComplete },
+                isQuiescent = { registration.isQuiescent },
+                waitOnce = { waitAnyOnce(instance, it) },
+            )
+        },
+        close = registration::close,
+        isClosed = { registration.isClosed },
+        isQuiescent = { registration.isQuiescent },
+        pump = { pumpRequestCleanup(instance, futureId, "request-device") },
+    )
+    return resolveDeviceRequestResult(
+        snapshot.status,
+        state.takeHandle(),
+        snapshot.message,
+        ::wgpuDeviceRelease,
+    )
 }
 
-fun getAdapter(surface: WGPUSurface, instance: WGPUInstance, backendType: UInt = WGPUBackendType_Undefined) = memoryScope { scope ->
-    val callbackInfo = WGPURequestAdapterCallbackInfo.allocate(scope)
-    val options = WGPURequestAdapterOptions.allocate(scope).apply {
-        compatibleSurface = surface
-        this.backendType = backendType
+internal fun <D : Any> resolveDeviceRequestResult(
+    status: WGPURequestDeviceStatus?,
+    device: D?,
+    message: String?,
+    release: (D) -> Unit,
+): D {
+    if (status != WGPURequestDeviceStatus_Success) {
+        device?.let(release)
+        error("fail to get device with status $status${callbackMessageSuffix(message)}")
     }
+    return device ?: error("fail to get device: success status returned no device")
+}
 
-    var fetchedAdapter: WGPUAdapter? = null
+private fun callbackMessageSuffix(message: String?): String =
+    message?.takeIf { it.isNotEmpty() }?.let { ": $it" }.orEmpty()
 
-    val callback = WGPURequestAdapterCallback.allocate(scope) { status, adapter, _, _, _ ->
-        if (status != WGPURequestAdapterStatus_Success || adapter == null) error("fail to get adapter")
-        fetchedAdapter = adapter
+internal fun <A : Any> resolveAdapterRequestResult(
+    status: WGPURequestAdapterStatus?,
+    adapter: A?,
+    message: String?,
+    release: (A) -> Unit,
+): A {
+    if (status != WGPURequestAdapterStatus_Success) {
+        adapter?.let(release)
+        error("fail to get adapter with status $status${callbackMessageSuffix(message)}")
     }
+    return adapter ?: error("fail to get adapter: success status returned no adapter")
+}
 
-    callbackInfo.callback = callback
-    callbackInfo.userdata2 = scope.bufferOfAddress(callback.handler).handler
+fun getAdapter(
+    surface: WGPUSurface?,
+    instance: WGPUInstance,
+    backendType: UInt = WGPUBackendType_Undefined,
+): WGPUAdapter {
+    val state = CallbackRequestState<WGPURequestAdapterStatus, WGPUAdapter>(::wgpuAdapterRelease)
+    val registration = WGPURequestAdapterCallback.register(CallbackPolicy.ONCE) { status, adapter, message, _ ->
+        state.publishCopied(status, adapter) {
+            message.data?.toKString(message.length)
+        }
+    }
+    var futureId = 0uL
+    val snapshot = awaitCallbackRequestResult(
+        state = state,
+        phase = "request-adapter",
+        await = {
+            futureId = memoryScope { scope ->
+                val options = WGPURequestAdapterOptions.allocate(scope).apply {
+                    if (surface != null) compatibleSurface = surface
+                    this.backendType = backendType
+                }
+                val info = WGPURequestAdapterCallbackInfo.allocate(
+                    scope,
+                    WGPUCallbackMode_WaitAnyOnly,
+                    registration,
+                )
+                wgpuInstanceRequestAdapter(instance, options, info).id
+            }
+            awaitCallbackFuture(
+                futureId = futureId,
+                phase = "request-adapter",
+                zeroFuturePolicy = ZeroFuturePolicy.ALLOW_COMPLETED_SYNCHRONOUSLY,
+                isComplete = { state.isComplete },
+                isQuiescent = { registration.isQuiescent },
+                waitOnce = { waitAnyOnce(instance, it) },
+            )
+        },
+        close = registration::close,
+        isClosed = { registration.isClosed },
+        isQuiescent = { registration.isQuiescent },
+        pump = { pumpRequestCleanup(instance, futureId, "request-adapter") },
+    )
+    return resolveAdapterRequestResult(
+        snapshot.status,
+        state.takeHandle(),
+        snapshot.message,
+        ::wgpuAdapterRelease,
+    )
+}
 
-    wgpuInstanceRequestAdapter(instance, options, callbackInfo)
-
-    fetchedAdapter ?: error("fail to get adapter")
+private fun pumpRequestCleanup(instance: WGPUInstance, futureId: ULong, phase: String) {
+    if (futureId == 0uL) return
+    val status = waitAnyOnce(instance, futureId)
+    check(status == WGPUWaitStatus_Success || status == WGPUWaitStatus_TimedOut) {
+        "$phase-close waitAny status=$status future-id=$futureId"
+    }
 }
 
 fun getSurfaceFromMetalLayer(instance: WGPUInstance, metalLayer: NativeAddress): WGPUSurface? = memoryScope { scope ->
@@ -100,7 +206,7 @@ fun getSurfaceFromMetalLayer(instance: WGPUInstance, metalLayer: NativeAddress):
         nextInChain = WGPUSurfaceSourceMetalLayer.allocate(scope).apply {
             chain.sType = WGPUSType_SurfaceSourceMetalLayer
             layer = metalLayer
-        }.handler
+        }.chain
     }
 
     return wgpuInstanceCreateSurface(instance, surfaceDescriptor)
@@ -115,7 +221,7 @@ fun getSurfaceAndroidView(
         nextInChain = WGPUSurfaceSourceAndroidNativeWindow.allocate(scope).apply {
             chain.sType = WGPUSType_SurfaceSourceAndroidNativeWindow
             window = surfaceHolder
-        }.handler
+        }.chain
     }
 
     wgpuInstanceCreateSurface(instance, surfaceDescriptor) ?: error("fail to create surface")
@@ -128,7 +234,7 @@ fun getSurfaceFromX11Window(instance: WGPUInstance, display: NativeAddress, wind
             chain.sType = WGPUSType_SurfaceSourceXlibWindow
             this.display = display
             this.window = window
-        }.handler
+        }.chain
     }
 
     return wgpuInstanceCreateSurface(instance, surfaceDescriptor)
@@ -141,7 +247,7 @@ fun getSurfaceFromWindows(instance: WGPUInstance, hinstance: NativeAddress, hwnd
             chain.sType = WGPUSType_SurfaceSourceWindowsHWND
             this.hwnd = hwnd
             this.hinstance = hinstance
-        }.handler
+        }.chain
     }
 
     return wgpuInstanceCreateSurface(instance, surfaceDescriptor)
@@ -154,7 +260,7 @@ fun getSurfaceFromWaylandWindow(instance: WGPUInstance, display: NativeAddress, 
             chain.sType = WGPUSType_SurfaceSourceWaylandSurface
             this.display = display
             this.surface = surface
-        }.handler
+        }.chain
     }
 
     return wgpuInstanceCreateSurface(instance, surfaceDescriptor)

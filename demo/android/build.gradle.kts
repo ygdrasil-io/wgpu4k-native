@@ -41,6 +41,9 @@ kotlin {
             }
 
             packaging {
+                jniLibs {
+                    useLegacyPackaging = true
+                }
                 resources {
                     excludes += "/META-INF/{AL2.0,LGPL2.1}"
                     excludes += "META-INF/INDEX.LIST"
@@ -48,7 +51,7 @@ kotlin {
                 }
 
             }
-            namespace = "io.ygdrasil.wgpu"
+            namespace = "io.ygdrasil.wgpu.demo.android"
         }
 
     }
@@ -56,8 +59,9 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.android.native.helper)
-            implementation(projects.demo.common)
+            implementation(project(":demo:common"))
             implementation(libs.activity.compose)
+            implementation("org.graphiks.kadre:kadre:1.0.0")
         }
     }
 }

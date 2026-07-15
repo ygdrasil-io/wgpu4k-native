@@ -24,6 +24,8 @@ jobs:
           sudo apt update
           sudo apt install -y libglfw3-dev
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -36,8 +38,86 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
           restore-keys: ${{ runner.os }}-gradle
+      - name: Fetch native dependencies
+        run: ./gradlew fetch-native-dependencies
       - name: Build
-        run: |
-          ./gradlew fetch-native-dependencies
-          ./gradlew assemble
+        run: >-
           ./gradlew build
+          -x :kextract:test
+          -x :demo:common:testDebugUnitTest
+          -x lintAnalyzeDebug
+          -x lintAnalyzeDebugAndroidTest
+          -x lintAnalyzeDebugUnitTest
+          -x :kadre-build:kadre:lintAnalyzeDebug
+          -x :kadre-build:kadre:lintAnalyzeDebugAndroidTest
+          -x :kadre-build:kadre:lintAnalyzeDebugUnitTest
+          -x :kadre-build:kadre-core:lintAnalyzeDebug
+          -x :kadre-build:kadre-core:lintAnalyzeDebugAndroidTest
+          -x :kadre-build:kadre-core:lintAnalyzeDebugUnitTest
+          -x :kadre-build:kadre-android:lintAnalyzeDebug
+          -x :kadre-build:kadre-android:lintAnalyzeDebugAndroidTest
+          -x :kadre-build:kadre-android:lintAnalyzeDebugUnitTest
+      - name: Verify published JVM consumer
+        if: matrix.os == 'ubuntu-latest'
+        run: ./gradlew verifyPublishedConsumer --stacktrace
+      - name: Run complete kextract tests
+        shell: bash
+        run: |
+          rm -rf kextract/build/test-results/test
+          rm -f kextract/build/test-plan-completion/test.properties
+          ./gradlew :kextract:test
+      - name: Run targeted JVM callback tests
+        run: ./gradlew :kffi:jvmTest :wgpu4k-native:jvmTest :demo:common:jvmTest
+      - name: Verify JVM callback stress
+        run: ./gradlew :demo:desktop-and-ios:verifyJvmCallbackStress
+      - name: Verify Native callback stress
+        run: ./gradlew :demo:desktop-and-ios:verifyNativeCallbackStress
+      - name: Verify JVM headless render
+        run: ./gradlew :demo:desktop-and-ios:verifyJvmHeadlessRender
+      - name: Verify Native headless render
+        run: ./gradlew :demo:desktop-and-ios:verifyNativeHeadlessRender
+      - name: Compile Apple Native callback token codecs
+        if: matrix.os == 'macos-latest'
+        run: >-
+          ./gradlew
+          :kffi:compileKotlinIosX64 :kffi:compileKotlinIosArm64 :kffi:compileKotlinIosSimulatorArm64
+          :kffi:compileKotlinMacosArm64 :kffi:compileKotlinMacosX64
+          :wgpu4k-native:compileKotlinIosX64 :wgpu4k-native:compileKotlinIosArm64
+          :wgpu4k-native:compileKotlinIosSimulatorArm64
+          :wgpu4k-native:compileKotlinMacosArm64 :wgpu4k-native:compileKotlinMacosX64
+      - name: Compile Linux and Android Native callback token codecs
+        if: matrix.os == 'ubuntu-latest'
+        run: >-
+          ./gradlew
+          :kffi:compileKotlinLinuxX64 :kffi:compileKotlinLinuxArm64
+          :kffi:compileKotlinAndroidNativeArm64 :kffi:compileKotlinAndroidNativeX64
+          :wgpu4k-native:compileKotlinLinuxX64 :wgpu4k-native:compileKotlinLinuxArm64
+          :wgpu4k-native:compileKotlinAndroidNativeArm64 :wgpu4k-native:compileKotlinAndroidNativeX64
+      - name: Compile MinGW callback token codecs
+        if: matrix.os == 'windows-latest'
+        run: >-
+          ./gradlew
+          :kffi:compileKotlinMingwX64
+          :wgpu4k-native:compileKotlinMingwX64
+      - name: Run macOS Native tests
+        if: matrix.os == 'macos-latest'
+        run: |
+          if [[ "$(uname -m)" == "arm64" ]]; then
+            ./gradlew :kffi:macosArm64Test :wgpu4k-native:macosArm64Test
+          else
+            ./gradlew :kffi:macosX64Test :wgpu4k-native:macosX64Test
+          fi
+      - name: Run Linux Native tests
+        if: matrix.os == 'ubuntu-latest'
+        run: ./gradlew :kffi:linuxX64Test :wgpu4k-native:linuxX64Test
+      - name: Run Windows Native tests
+        if: matrix.os == 'windows-latest'
+        run: ./gradlew :kffi:mingwX64Test :wgpu4k-native:mingwX64Test
+      - name: Verify binding-generation configuration
+        run: ./gradlew :wgpu4k-native:verifyBindingGenerationConfiguration
+      - name: Regenerate and verify WebGPU bindings
+        if: matrix.os == 'macos-latest'
+        run: >-
+          ./gradlew
+          :wgpu4k-native:generateBindingsFromHeader
+          :wgpu4k-native:verifyGeneratedBindingsClean

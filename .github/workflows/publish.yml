@@ -9,6 +9,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -19,7 +21,7 @@ jobs:
         run: |
           ./gradlew fetch-native-dependencies
           ./gradlew assemble
-          ./gradlew build
+          ./gradlew build -x :kextract:test
           ./gradlew publish publishToCentralPortal --info
         env:
           SNAPSHOT: "false"

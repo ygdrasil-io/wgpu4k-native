@@ -2,7 +2,7 @@
 
 package io.ygdrasil.wgpu
 
-import ffi.NativeAddress
+import io.ygdrasil.kffi.NativeAddress
 import kotlinx.cinterop.COpaque
 import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.CValue
@@ -58,7 +58,7 @@ class AppDelegate {
             val instance = wgpuCreateInstance(null) ?: error("Can't create WGPU instance")
             val surface = getSurfaceFromMetalLayer(instance, layerPointer.let(::NativeAddress)) ?: error("Can't create Surface")
             val adapter = getAdapter(surface, instance)
-            val device = getDevice(adapter)
+            val device = getDevice(adapter, instance)
             val compatibleFormat = compatibleFormat(surface, adapter)
             val alphaMode = compatibleAlphaMode(surface, adapter)
             configureSurface(device, width, height, surface, compatibleFormat, alphaMode)
@@ -89,4 +89,3 @@ class ViewDelegate(
     }
 
 }
-

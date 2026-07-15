@@ -1,12 +1,17 @@
 rootProject.name = "wgpu4k-native-root"
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
-	includeBuild("generator")
 	repositories {
 		gradlePluginPortal()
 		google()
 		mavenCentral()
+	}
+}
+
+includeBuild("Kadre") {
+	name = "kadre-build"
+	dependencySubstitution {
+		substitute(module("org.graphiks.kadre:kadre")).using(project(":kadre"))
 	}
 }
 
@@ -19,7 +24,9 @@ dependencyResolutionManagement {
 
 include("wgpu4k-native")
 include("wgpu4k-native-specs")
+include("kffi")
 include("demo:common")
 include("demo:desktop-and-ios")
 include("demo:android")
 include("demo:android-native")
+include("kextract")
