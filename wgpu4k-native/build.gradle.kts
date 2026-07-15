@@ -255,6 +255,7 @@ tasks.withType<Test> {
 }
 
 tasks.named<Test>("jvmTest") {
+    dependsOn("verifyJvmBootstrapBinding")
     useJUnitPlatform()
     testLogging {
         showExceptions = true
@@ -301,6 +302,11 @@ val kextractDistribution = project(":kextract").layout.buildDirectory.dir("kextr
 val kextractLauncher = kextractDistribution.map { distribution ->
     distribution.file(if (bindingGenerationHost == "windows") "bin/kextract.bat" else "bin/kextract")
 }
+val generatedJvmBinding = project.file(
+    "src/jvmMain/kotlin/io/ygdrasil/wgpu/wgpu_hJvm.kt",
+)
+val genericJvmLookupImport = "import io.ygdrasil.kffi.findOrThrow"
+val wgpuJvmLookupImport = "import io.ygdrasil.wgpu.findWgpuSymbol as findOrThrow"
 
 tasks.register<Exec>("generateBindingsFromHeader") {
     group = "generation"
@@ -365,6 +371,30 @@ tasks.register<Exec>("generateBindingsFromHeader") {
         "-D", "WGPU_SKIP_PROCS",
         nativeHeader.absolutePath,
     ) + clangArgs
+
+    doLast {
+        val source = generatedJvmBinding.readText()
+        require(source.lineSequence().count { it == genericJvmLookupImport } == 1) {
+            "Expected exactly one generic JVM lookup import in $generatedJvmBinding"
+        }
+        generatedJvmBinding.writeText(
+            source.replace(genericJvmLookupImport, wgpuJvmLookupImport),
+        )
+    }
+}
+
+tasks.register("verifyJvmBootstrapBinding") {
+    group = "verification"
+    inputs.file(generatedJvmBinding)
+    doLast {
+        val source = generatedJvmBinding.readText()
+        require(wgpuJvmLookupImport in source) {
+            "$generatedJvmBinding must route symbol lookup through findWgpuSymbol"
+        }
+        require(genericJvmLookupImport !in source) {
+            "$generatedJvmBinding must not bypass the wgpu-native bootstrap"
+        }
+    }
 }
 
 tasks.register("verifyBindingGenerationConfiguration") {

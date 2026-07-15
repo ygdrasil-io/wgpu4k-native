@@ -12,7 +12,7 @@ import io.ygdrasil.kffi.CString
 import io.ygdrasil.kffi.ArrayHolder
 import io.ygdrasil.kffi.MemoryAllocator
 import io.ygdrasil.kffi.CStructure
-import io.ygdrasil.kffi.findOrThrow
+import io.ygdrasil.wgpu.findWgpuSymbol as findOrThrow
 import java.lang.foreign.Arena
 import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.GroupLayout
@@ -8707,4 +8707,3 @@ internal actual fun wgpuSetLogCallbackCallbackBindingPreflight(): (NativeAddress
         )
     }
 }
-
