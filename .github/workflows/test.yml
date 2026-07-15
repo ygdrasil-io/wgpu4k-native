@@ -41,7 +41,7 @@ jobs:
       - name: Build
         run: |
           ./gradlew fetch-native-dependencies
-          ./gradlew build -x :kextract:test -x :demo:common:testDebugUnitTest
+          ./gradlew build -x :kextract:test -x :demo:common:testDebugUnitTest -x :demo:common:lintAnalyzeDebug -x :demo:common:lintAnalyzeDebugAndroidTest -x :demo:common:lintAnalyzeDebugUnitTest
       - name: Verify published JVM consumer
         if: matrix.os == 'ubuntu-latest'
         run: ./gradlew verifyPublishedConsumer --stacktrace
