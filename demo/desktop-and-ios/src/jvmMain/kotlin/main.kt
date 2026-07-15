@@ -119,16 +119,21 @@ private class HelloTriangleKadreApp : ApplicationHandler {
     }
 
     private fun releaseResources() {
+        val cleanup = GpuCleanupStack()
+        instance?.let { ownedInstance -> cleanup.defer { wgpuInstanceRelease(ownedInstance) } }
+        surface?.let { ownedSurface -> cleanup.defer { wgpuSurfaceRelease(ownedSurface) } }
+        adapter?.let { ownedAdapter -> cleanup.defer { wgpuAdapterRelease(ownedAdapter) } }
+        device?.let { ownedDevice -> cleanup.defer { wgpuDeviceRelease(ownedDevice) } }
+        scene?.let { ownedScene -> cleanup.defer { ownedScene.close() } }
+
         scene = null
-        device?.let(::wgpuDeviceRelease)
-        adapter?.let(::wgpuAdapterRelease)
-        surface?.let(::wgpuSurfaceRelease)
-        instance?.let(::wgpuInstanceRelease)
         device = null
         adapter = null
         surface = null
         instance = null
         window = null
+
+        cleanup.close()
     }
 }
 
