@@ -123,10 +123,7 @@ jobs:
         run: ./gradlew :wgpu4k-native:verifyBindingGenerationConfiguration
       - name: Regenerate and verify WebGPU bindings
         if: matrix.os == 'macos-latest'
-        run: >-
-          ./gradlew
-          :wgpu4k-native:generateBindingsFromHeader
-          :wgpu4k-native:verifyGeneratedBindingsClean
+        run: ./gradlew :wgpu4k-native:verifyGeneratedBindingsClean
 
   android-smoke:
     runs-on: ubuntu-latest

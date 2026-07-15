@@ -301,6 +301,9 @@ val kextractDistribution = project(":kextract").layout.buildDirectory.dir("kextr
 val kextractLauncher = kextractDistribution.map { distribution ->
     distribution.file(if (bindingGenerationHost == "windows") "bin/kextract.bat" else "bin/kextract")
 }
+val generatedAndroidBindings = project.file(
+    "src/androidMain/kotlin/io/ygdrasil/wgpu/wgpu_hAndroid.kt",
+)
 
 tasks.register<Exec>("generateBindingsFromHeader") {
     group = "generation"
@@ -365,6 +368,67 @@ tasks.register<Exec>("generateBindingsFromHeader") {
         "-D", "WGPU_SKIP_PROCS",
         nativeHeader.absolutePath,
     ) + clangArgs
+
+    doLast {
+        // kextract currently exposes struct pointer parameters as raw JNA pointers, so JNA cannot
+        // auto-read output structures after the native call. Keep this downstream correction
+        // deterministic until the generator emits the readbacks itself.
+        fun replaceGeneratedFunction(
+            source: String,
+            generatedFunction: String,
+            patchedFunction: String,
+            functionName: String,
+        ): String {
+            val firstMatch = source.indexOf(generatedFunction)
+            require(firstMatch >= 0) {
+                "Could not apply the Android JNA output readback for $functionName: generated function changed."
+            }
+            require(firstMatch == source.lastIndexOf(generatedFunction)) {
+                "Could not apply the Android JNA output readback for $functionName: generated function is ambiguous."
+            }
+            return source.replaceRange(
+                firstMatch,
+                firstMatch + generatedFunction.length,
+                patchedFunction,
+            )
+        }
+
+        val generatedSource = generatedAndroidBindings.readText()
+        val withCapabilitiesReadback = replaceGeneratedFunction(
+            generatedSource,
+            """actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCapabilities(surface?.handler, adapter?.handler, capabilities?.handler)).toUInt()
+}""",
+            """actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus {
+    val status = io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCapabilities(surface?.handler, adapter?.handler, capabilities?.handler)
+    when (capabilities) {
+        is WGPUSurfaceCapabilities.ByReference -> capabilities.handle.read()
+        is WGPUSurfaceCapabilities.ByValue -> capabilities.handle.read()
+        null -> Unit
+    }
+    return status.toUInt()
+}""",
+            "wgpuSurfaceGetCapabilities",
+        )
+        val withSurfaceTextureReadback = replaceGeneratedFunction(
+            withCapabilitiesReadback,
+            """actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCurrentTexture(surface?.handler, surfaceTexture?.handler)
+    return
+}""",
+            """actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCurrentTexture(surface?.handler, surfaceTexture?.handler)
+    when (surfaceTexture) {
+        is WGPUSurfaceTexture.ByReference -> surfaceTexture.handle.read()
+        is WGPUSurfaceTexture.ByValue -> surfaceTexture.handle.read()
+        null -> Unit
+    }
+    return
+}""",
+            "wgpuSurfaceGetCurrentTexture",
+        )
+        generatedAndroidBindings.writeText(withSurfaceTextureReadback.trimEnd() + "\n")
+    }
 }
 
 tasks.register("verifyBindingGenerationConfiguration") {
@@ -388,6 +452,15 @@ tasks.register("verifyBindingGenerationConfiguration") {
         }
         require(":wgpu4k-native:fetch-native-dependencies" in directDependencies) {
             "generateBindingsFromHeader must depend directly on :wgpu4k-native:fetch-native-dependencies; found $directDependencies"
+        }
+
+        val verificationTask = tasks.named("verifyGeneratedBindingsClean").get()
+        val verificationDependencies = verificationTask.taskDependencies
+            .getDependencies(verificationTask)
+            .map { it.path }
+            .toSet()
+        require(generationTask.path in verificationDependencies) {
+            "verifyGeneratedBindingsClean must depend on ${generationTask.path}; found $verificationDependencies"
         }
 
         val expectedLauncherSuffix = if (bindingGenerationHost == "windows") {
@@ -437,6 +510,7 @@ tasks.register("verifyBindingGenerationConfiguration") {
 tasks.register("verifyGeneratedBindingsClean") {
     group = "verification"
     description = "Verifies that generated WebGPU sources have no tracked or untracked changes."
+    dependsOn("generateBindingsFromHeader")
 
     doLast {
         fun runGit(vararg arguments: String): Pair<Int, String> {
