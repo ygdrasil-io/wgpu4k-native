@@ -44,7 +44,11 @@ kotlin {
             linkTaskProvider.configure {
                 doLast {
                     val sourceFile = outputFile.get()
-                    val destDir = project.layout.buildDirectory.dir("androidJniLibs/$androidArch").get().asFile
+                    val variant = buildType.name.lowercase()
+                    val destDir = project.layout.buildDirectory
+                        .dir("androidJniLibs/$variant/$androidArch")
+                        .get()
+                        .asFile
                     destDir.mkdirs()
                     val destFile = File(destDir, sourceFile.name)
                     sourceFile.copyTo(destFile, overwrite = true)

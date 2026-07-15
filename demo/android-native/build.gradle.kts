@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.zip.ZipFile
 
 plugins {
     `kotlin-multiplatform`
@@ -51,8 +52,11 @@ kotlin {
             namespace = "io.ygdrasil.wgpu"
 
             sourceSets {
-                getByName("main") {
-                    jniLibs.srcDirs(file("../common/build/androidJniLibs"))
+                getByName("debug") {
+                    jniLibs.srcDirs(file("../common/build/androidJniLibs/debug"))
+                }
+                getByName("release") {
+                    jniLibs.srcDirs(file("../common/build/androidJniLibs/release"))
                 }
             }
         }
@@ -63,4 +67,52 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(25)
     }
+}
+
+tasks.matching { it.name == "mergeDebugJniLibFolders" }.configureEach {
+    dependsOn(
+        ":demo:common:linkDebugSharedAndroidNativeArm64",
+        ":demo:common:linkDebugSharedAndroidNativeX64",
+    )
+}
+
+tasks.matching { it.name == "mergeReleaseJniLibFolders" }.configureEach {
+    dependsOn(
+        ":demo:common:linkReleaseSharedAndroidNativeArm64",
+        ":demo:common:linkReleaseSharedAndroidNativeX64",
+    )
+}
+
+fun verifyNativeLibraries(apk: File) {
+    require(apk.isFile) { "Missing APK: $apk" }
+    ZipFile(apk).use { zip ->
+        listOf(
+            "lib/arm64-v8a/libwgpu4k_demo.so",
+            "lib/x86_64/libwgpu4k_demo.so",
+        ).forEach { entry ->
+            require(zip.getEntry(entry) != null) { "$apk is missing $entry" }
+        }
+    }
+}
+
+tasks.register("verifyAndroidNativeDebugApk") {
+    dependsOn("assembleDebug")
+    doLast {
+        verifyNativeLibraries(
+            layout.buildDirectory.file("outputs/apk/debug/android-native-debug.apk").get().asFile,
+        )
+    }
+}
+
+tasks.register("verifyAndroidNativeReleaseApk") {
+    dependsOn("assembleRelease")
+    doLast {
+        verifyNativeLibraries(
+            layout.buildDirectory.file("outputs/apk/release/android-native-release-unsigned.apk").get().asFile,
+        )
+    }
+}
+
+tasks.register("verifyAndroidNativeApks") {
+    dependsOn("verifyAndroidNativeDebugApk", "verifyAndroidNativeReleaseApk")
 }
