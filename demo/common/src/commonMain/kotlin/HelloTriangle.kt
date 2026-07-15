@@ -1,5 +1,6 @@
 package io.ygdrasil.wgpu
 
+import io.ygdrasil.kffi.MemoryAllocator
 import io.ygdrasil.kffi.memoryScope
 
 
@@ -40,45 +41,42 @@ class HelloTriangleScene internal constructor(
                 val shaderCleanup = GpuCleanupStack()
                 var primaryFailure: Throwable? = null
                 try {
-                    val vertexModule = WGPUShaderModuleDescriptor.allocate(scope).apply {
-                        nextInChain = WGPUShaderSourceWGSL.allocate(scope).apply {
-                            code.length = triangleVertexShader.length.toULong()
-                            code.data = scope.allocateFrom(triangleVertexShader)
-                            chain.sType = WGPUSType_ShaderSourceWGSL
-                        }.chain
-                    }.let { wgpuDeviceCreateShaderModule(device, it) }
-                        ?: error("fail to create vertex shader module")
+                    val vertexModule = createWgslShaderModule(device, scope, triangleVertexShader)
                     shaderCleanup.defer { wgpuShaderModuleRelease(vertexModule) }
 
-                    val fragmentModule = WGPUShaderModuleDescriptor.allocate(scope).apply {
-                        nextInChain = WGPUShaderSourceWGSL.allocate(scope).apply {
-                            code.length = redFragmentShader.length.toULong()
-                            code.data = scope.allocateFrom(redFragmentShader)
-                            chain.sType = WGPUSType_ShaderSourceWGSL
-                        }.chain
-                    }.let { wgpuDeviceCreateShaderModule(device, it) }
-                        ?: error("fail to create fragment shader module")
+                    val fragmentModule = createWgslShaderModule(device, scope, redFragmentShader)
                     shaderCleanup.defer { wgpuShaderModuleRelease(fragmentModule) }
 
-                    val pipeline = WGPURenderPipelineDescriptor.allocate(scope).apply {
-                        vertex.module = vertexModule
-                        vertex.entryPoint.data = scope.allocateFrom("main")
-                        vertex.entryPoint.length = "main".length.toULong()
-
-                        fragment = WGPUFragmentState.allocate(scope).apply {
-                            entryPoint.data = scope.allocateFrom("main")
-                            entryPoint.length = "main".length.toULong()
-                            module = fragmentModule
-                            targetCount = 1u
-                            targets = WGPUColorTargetState.allocateArray(scope, 1u) { _, structure ->
-                                structure.format = renderingContextFormat
-                                structure.writeMask = WGPUColorWriteMask_All
-                            }.let { WGPUColorTargetState(it.handler) }
+                    // JNA caches by-value fields, so complete child structures before copying them into the descriptor.
+                    val vertex = WGPUVertexState.allocate(scope).apply {
+                        module = vertexModule
+                        entryPoint = stringView(scope, "main")
+                    }
+                    val fragment = WGPUFragmentState.allocate(scope).apply {
+                        entryPoint = stringView(scope, "main")
+                        module = fragmentModule
+                        targetCount = 1u
+                        var target: WGPUColorTargetState? = null
+                        // Keep the initialized array element: wrapping its pointer would write a fresh zeroed JNA structure.
+                        WGPUColorTargetState.allocateArray(scope, 1u) { _, structure ->
+                            structure.format = renderingContextFormat
+                            structure.writeMask = WGPUColorWriteMask_All
+                            target = structure
                         }
-
-                        primitive.topology = WGPUPrimitiveTopology_TriangleList
-                        multisample.count = 1u
-                        multisample.mask = 0xFFFFFFFFu
+                        targets = checkNotNull(target)
+                    }
+                    val primitive = WGPUPrimitiveState.allocate(scope).apply {
+                        topology = WGPUPrimitiveTopology_TriangleList
+                    }
+                    val multisample = WGPUMultisampleState.allocate(scope).apply {
+                        count = 1u
+                        mask = 0xFFFFFFFFu
+                    }
+                    val pipeline = WGPURenderPipelineDescriptor.allocate(scope).apply {
+                        this.vertex = vertex
+                        this.fragment = fragment
+                        this.primitive = primitive
+                        this.multisample = multisample
                     }.let { wgpuDeviceCreateRenderPipeline(device, it) }
                         ?: error("fail to create render pipeline")
                     ownRenderPipeline(pipeline)
@@ -141,18 +139,25 @@ class HelloTriangleScene internal constructor(
         val commandEncoder = wgpuDeviceCreateCommandEncoder(device, null) ?: error("fail to create command encoder")
 
 
+        val clearValue = WGPUColor.allocate(scope).apply {
+            r = .0
+            g = 1.0
+            b = .0
+            a = 1.0
+        }
+        var colorAttachment: WGPURenderPassColorAttachment? = null
+        // Keep the initialized array element for the same JNA pointer-caching reason as the pipeline target.
+        WGPURenderPassColorAttachment.allocateArray(scope, 1u) { _, structure ->
+            structure.view = frame
+            structure.loadOp = WGPULoadOp_Clear
+            structure.storeOp = WGPUStoreOp_Store
+            structure.depthSlice = UInt.MAX_VALUE
+            structure.clearValue = clearValue
+            colorAttachment = structure
+        }
         val renderPassEncoder = WGPURenderPassDescriptor.allocate(scope).apply {
             colorAttachmentCount = 1u
-            colorAttachments = WGPURenderPassColorAttachment.allocateArray(scope, 1u) { index, structure ->
-                structure.view = frame
-                structure.loadOp = WGPULoadOp_Clear
-                structure.storeOp = WGPUStoreOp_Store
-                structure.depthSlice = UInt.MAX_VALUE
-                structure.clearValue.r = .0
-                structure.clearValue.g = 1.0
-                structure.clearValue.b = .0
-                structure.clearValue.a = 1.0
-            }.let { WGPURenderPassColorAttachment(it.handler) }
+            colorAttachments = checkNotNull(colorAttachment)
         }.let { wgpuCommandEncoderBeginRenderPass(commandEncoder, it) }
 
         wgpuRenderPassEncoderSetPipeline(renderPassEncoder, renderPipeline)
@@ -173,6 +178,31 @@ class HelloTriangleScene internal constructor(
 
     }
 }
+
+private fun createWgslShaderModule(
+    device: WGPUDevice,
+    scope: MemoryAllocator,
+    shader: String,
+): WGPUShaderModule {
+    val source = WGPUShaderSourceWGSL.allocate(scope).apply {
+        code = stringView(scope, shader)
+        chain.sType = WGPUSType_ShaderSourceWGSL
+    }
+    // Commit both the WGSL string view and the embedded chain before exposing the chain pointer.
+    source.handler
+
+    val descriptor = WGPUShaderModuleDescriptor.allocate(scope).apply {
+        nextInChain = source.chain
+    }
+    return wgpuDeviceCreateShaderModule(device, descriptor)
+        ?: error("fail to create shader module")
+}
+
+private fun stringView(scope: MemoryAllocator, value: String): WGPUStringView =
+    WGPUStringView.allocate(scope).apply {
+        data = scope.allocateFrom(value)
+        length = value.length.toULong()
+    }
 
 // language=wgsl
 const val triangleVertexShader = """

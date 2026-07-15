@@ -8777,11 +8777,22 @@ actual fun wgpuSurfaceConfigure(surface: WGPUSurface?, config: WGPUSurfaceConfig
 }
 
 actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus {
-    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCapabilities(surface?.handler, adapter?.handler, capabilities?.handler)).toUInt()
+    val status = io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCapabilities(surface?.handler, adapter?.handler, capabilities?.handler)
+    when (capabilities) {
+        is WGPUSurfaceCapabilities.ByReference -> capabilities.handle.read()
+        is WGPUSurfaceCapabilities.ByValue -> capabilities.handle.read()
+        null -> Unit
+    }
+    return status.toUInt()
 }
 
 actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit {
     io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCurrentTexture(surface?.handler, surfaceTexture?.handler)
+    when (surfaceTexture) {
+        is WGPUSurfaceTexture.ByReference -> surfaceTexture.handle.read()
+        is WGPUSurfaceTexture.ByValue -> surfaceTexture.handle.read()
+        null -> Unit
+    }
     return
 }
 
@@ -11837,4 +11848,3 @@ internal actual fun wgpuSetLogCallbackCallbackBindingPreflight(): (NativeAddress
         )
     }
 }
-

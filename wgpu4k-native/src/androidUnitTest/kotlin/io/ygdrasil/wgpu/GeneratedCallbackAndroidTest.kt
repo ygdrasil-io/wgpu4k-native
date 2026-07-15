@@ -2,15 +2,19 @@ package io.ygdrasil.wgpu
 
 import io.ygdrasil.kffi.CallbackPolicy
 import io.kotest.core.spec.style.FreeSpec
-import kotlin.test.assertContains
-import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class GeneratedCallbackAndroidTest : FreeSpec({
-    "Android JNA rejects safe callback registration before allocation" {
-        val failure = assertFailsWith<UnsupportedOperationException> {
-            WGPUBufferMapCallback.register(CallbackPolicy.REPEATING) { _, _, _ -> }
+    "Android JNA creates a routable safe callback registration" {
+        val registration = WGPUBufferMapCallback.register(CallbackPolicy.REPEATING) { _, _, _ -> }
+        try {
+            assertNotNull(registration.userdata)
+            assertFalse(registration.isClosed)
+        } finally {
+            registration.close()
         }
-
-        assertContains(failure.message.orEmpty(), "Android/JNA callback registration is not supported")
+        assertTrue(registration.isClosed)
     }
 })
