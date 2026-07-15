@@ -38,10 +38,25 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
           restore-keys: ${{ runner.os }}-gradle
+      - name: Fetch native dependencies
+        run: ./gradlew fetch-native-dependencies
       - name: Build
-        run: |
-          ./gradlew fetch-native-dependencies
-          ./gradlew build -x :kextract:test -x :demo:common:testDebugUnitTest -x lintAnalyzeDebug -x lintAnalyzeDebugAndroidTest -x lintAnalyzeDebugUnitTest
+        run: >-
+          ./gradlew build
+          -x :kextract:test
+          -x :demo:common:testDebugUnitTest
+          -x lintAnalyzeDebug
+          -x lintAnalyzeDebugAndroidTest
+          -x lintAnalyzeDebugUnitTest
+          -x :kadre-build:kadre:lintAnalyzeDebug
+          -x :kadre-build:kadre:lintAnalyzeDebugAndroidTest
+          -x :kadre-build:kadre:lintAnalyzeDebugUnitTest
+          -x :kadre-build:kadre-core:lintAnalyzeDebug
+          -x :kadre-build:kadre-core:lintAnalyzeDebugAndroidTest
+          -x :kadre-build:kadre-core:lintAnalyzeDebugUnitTest
+          -x :kadre-build:kadre-android:lintAnalyzeDebug
+          -x :kadre-build:kadre-android:lintAnalyzeDebugAndroidTest
+          -x :kadre-build:kadre-android:lintAnalyzeDebugUnitTest
       - name: Verify published JVM consumer
         if: matrix.os == 'ubuntu-latest'
         run: ./gradlew verifyPublishedConsumer --stacktrace
