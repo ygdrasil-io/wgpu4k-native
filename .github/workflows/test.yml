@@ -50,45 +50,7 @@ jobs:
         run: |
           rm -rf kextract/build/test-results/test
           rm -f kextract/build/test-plan-completion/test.properties
-          set +e
           ./gradlew :kextract:test
-          GRADLE_EXIT=$?
-          if [ "$GRADLE_EXIT" -eq 0 ]; then
-            exit 0
-          fi
-          if [ "$RUNNER_OS" != "Linux" ] || { [ "$GRADLE_EXIT" -ne 134 ] && [ "$GRADLE_EXIT" -ne 139 ]; }; then
-            exit "$GRADLE_EXIT"
-          fi
-          MARKER=kextract/build/test-plan-completion/test.properties
-          if [ ! -f "$MARKER" ]; then
-            exit "$GRADLE_EXIT"
-          fi
-          ruby <<'RUBY'
-          require "rexml/document"
-
-          directory = "kextract/build/test-results/test"
-          marker = File.read("kextract/build/test-plan-completion/test.properties")
-          marker_match = marker.match(/^tests=(\d+)$/)
-          abort "Invalid kextract completion marker" unless marker_match
-          expected_tests = Integer(marker_match[1])
-          reports = Dir[File.join(directory, "TEST-*.xml")]
-          abort "No kextract XML test reports found" if reports.empty?
-
-          actual_tests = reports.sum do |path|
-            suite = REXML::Document.new(File.read(path)).root
-            abort "Invalid test report: #{path}" unless suite&.name == "testsuite"
-            failures = Integer(suite.attributes["failures"])
-            errors = Integer(suite.attributes["errors"])
-            abort "Failed kextract test report: #{path}" unless failures.zero? && errors.zero?
-            Integer(suite.attributes["tests"])
-          end
-          abort "Incomplete kextract reports: expected #{expected_tests} tests, found #{actual_tests}" unless actual_tests == expected_tests
-          RUBY
-          XML_EXIT=$?
-          if [ "$XML_EXIT" -ne 0 ]; then
-            exit "$GRADLE_EXIT"
-          fi
-          echo "::warning::Gradle exited $GRADLE_EXIT after the complete clean kextract test plan — accepting the known libclang/JDK 25 shutdown SIGSEGV."
       - name: Run targeted JVM callback tests
         run: ./gradlew :kffi:jvmTest :wgpu4k-native:jvmTest :demo:common:jvmTest
       - name: Verify JVM callback stress
