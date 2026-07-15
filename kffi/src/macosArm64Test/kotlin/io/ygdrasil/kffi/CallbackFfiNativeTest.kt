@@ -216,7 +216,7 @@ class CallbackFfiNativeTest : FreeSpec({
                     fixture_store(
                         nativeFfiRoutedStub,
                         null,
-                        PlatformTokenCodec.encode(Long.MAX_VALUE.toULong()).pointer,
+                        PlatformCallbackTokenAddressCodec.encode(Long.MAX_VALUE.toULong()).pointer,
                     )
                     fixture_fire_now(15u)
                     fixture_store(
@@ -384,7 +384,7 @@ class CallbackFfiNativeTest : FreeSpec({
             val registration = registerNativeFfiRouted(CallbackPolicy.REPEATING) {}
             try {
                 val userdata = requireNotNull(registration.userdata)
-                fixture_roundtrip_userdata(userdata.pointer) shouldBe PlatformTokenCodec.decode(userdata)
+                fixture_roundtrip_userdata(userdata.pointer) shouldBe PlatformCallbackTokenAddressCodec.decode(userdata)
             } finally {
                 registration.close()
             }

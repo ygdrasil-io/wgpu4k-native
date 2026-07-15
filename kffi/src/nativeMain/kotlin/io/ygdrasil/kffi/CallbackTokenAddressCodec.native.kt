@@ -7,7 +7,7 @@ import callbackTokenCodec.kffi_callback_token_encode
 import kotlinx.cinterop.COpaquePointerVar
 import kotlinx.cinterop.sizeOf
 
-internal actual object PlatformTokenCodec : TokenCodec {
+internal actual object PlatformCallbackTokenAddressCodec : CallbackTokenAddressCodec {
     init {
         require(sizeOf<COpaquePointerVar>() * Byte.SIZE_BITS == 64L) {
             "Callback tokens require a 64-bit pointer ABI"

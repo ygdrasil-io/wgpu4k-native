@@ -162,7 +162,7 @@ class CallbackRuntimeNativeTest : FreeSpec({
     }
 })
 
-private val nativeTrampoline: NativeAddress = PlatformTokenCodec.encode(1uL)
+private val nativeTrampoline: NativeAddress = PlatformCallbackTokenAddressCodec.encode(1uL)
 
 private fun nativeRegister(
     type: CallbackType<NativeTestCallback>,

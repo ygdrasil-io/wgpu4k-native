@@ -48,7 +48,11 @@ class CallbackRuntimeJvmTest : FreeSpec({
                         repeat(registrationCount) {
                             val registration = register(type, CallbackPolicy.REPEATING) {}
                             try {
-                                tokens.add(requireNotNull(PlatformTokenCodec.decode(registration.userdata)))
+                                tokens.add(
+                                    requireNotNull(
+                                        PlatformCallbackTokenAddressCodec.decode(registration.userdata)
+                                    )
+                                )
                             } finally {
                                 registration.close()
                             }
@@ -232,7 +236,10 @@ class CallbackRuntimeJvmTest : FreeSpec({
             CallbackFallbackReporter.installForTest { reported += it }.use {
                 val registration = register(type, CallbackPolicy.REPEATING) { calls.fetchAndAdd(1) }
                 try {
-                    CallbackRuntime.dispatchSafely(type, PlatformTokenCodec.encode(Long.MAX_VALUE.toULong())) { it.invoke() }
+                    CallbackRuntime.dispatchSafely(
+                        type,
+                        PlatformCallbackTokenAddressCodec.encode(Long.MAX_VALUE.toULong()),
+                    ) { it.invoke() }
                     CallbackRuntime.dispatchSafely(type, null) { it.invoke() }
                     CallbackRuntime.dispatchSafely(
                         type,

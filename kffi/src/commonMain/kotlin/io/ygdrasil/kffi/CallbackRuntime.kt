@@ -261,7 +261,7 @@ object CallbackRuntime {
         )
         val registration = RuntimeCallbackRegistration(
             callback = trampoline,
-            userdata = token?.let(PlatformTokenCodec::encode),
+            userdata = token?.let(PlatformCallbackTokenAddressCodec::encode),
             entry = entry,
         )
         publish(entry, allowNoUserdataRearm = false)
@@ -278,7 +278,7 @@ object CallbackRuntime {
         val token = if (type.hasRoutingUserdata) allocateToken() else null
         return PreparedCallbackRegistration(
             callback = trampoline,
-            userdata = token?.let(PlatformTokenCodec::encode),
+            userdata = token?.let(PlatformCallbackTokenAddressCodec::encode),
             entry = RegistryEntry(
                 type = type,
                 callback = callback,
@@ -472,7 +472,7 @@ object CallbackRuntime {
             return type.noUserdataSlot.activeValue
         }
 
-        val token = requireNotNull(PlatformTokenCodec.decode(userdata)) {
+        val token = requireNotNull(PlatformCallbackTokenAddressCodec.decode(userdata)) {
             "Callback type '${type.canonicalId}' requires routing userdata"
         }
         val entry = bucket(token).load()[token] ?: return null

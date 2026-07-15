@@ -8,10 +8,10 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 
-class TokenCodecNativeTest : FreeSpec({
+class CallbackTokenAddressCodecNativeTest : FreeSpec({
     "valid callback tokens round-trip through Native pointers" {
         listOf(1uL, 2uL, Int.MAX_VALUE.toULong(), Long.MAX_VALUE.toULong()).forEach { token ->
-            PlatformTokenCodec.decode(PlatformTokenCodec.encode(token)) shouldBe token
+            PlatformCallbackTokenAddressCodec.decode(PlatformCallbackTokenAddressCodec.encode(token)) shouldBe token
         }
     }
 
@@ -20,7 +20,7 @@ class TokenCodecNativeTest : FreeSpec({
     }
 
     "a null Native pointer decodes to null" {
-        PlatformTokenCodec.decode(null) shouldBe null
+        PlatformCallbackTokenAddressCodec.decode(null) shouldBe null
     }
 
     "a high-bit Native pointer is not a callback token" {
@@ -29,24 +29,24 @@ class TokenCodecNativeTest : FreeSpec({
         )
 
         shouldThrow<IllegalArgumentException> {
-            PlatformTokenCodec.decode(Pointer(highBitPointer))
+            PlatformCallbackTokenAddressCodec.decode(Pointer(highBitPointer))
         }
     }
 
     "zero is not a callback token" {
         shouldThrow<IllegalArgumentException> {
-            PlatformTokenCodec.encode(0uL)
+            PlatformCallbackTokenAddressCodec.encode(0uL)
         }
     }
 
     "tokens above Long MAX_VALUE are rejected" {
         shouldThrow<IllegalArgumentException> {
-            PlatformTokenCodec.encode(Long.MAX_VALUE.toULong() + 1uL)
+            PlatformCallbackTokenAddressCodec.encode(Long.MAX_VALUE.toULong() + 1uL)
         }
     }
 
     "the Native callback token ABI is a signed-positive 64-bit address range" {
-        PlatformTokenCodec.pointerBits shouldBe 64
-        PlatformTokenCodec.maxToken shouldBe Long.MAX_VALUE.toULong()
+        PlatformCallbackTokenAddressCodec.pointerBits shouldBe 64
+        PlatformCallbackTokenAddressCodec.maxToken shouldBe Long.MAX_VALUE.toULong()
     }
 })

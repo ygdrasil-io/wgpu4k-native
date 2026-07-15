@@ -1,6 +1,6 @@
 package io.ygdrasil.kffi
 
-internal interface TokenCodec {
+internal interface CallbackTokenAddressCodec {
     val pointerBits: Int
     val maxToken: ULong
 
@@ -8,7 +8,7 @@ internal interface TokenCodec {
     fun decode(address: NativeAddress?): ULong?
 }
 
-internal expect object PlatformTokenCodec : TokenCodec {
+internal expect object PlatformCallbackTokenAddressCodec : CallbackTokenAddressCodec {
     override val pointerBits: Int
     override val maxToken: ULong
     override fun encode(token: ULong): NativeAddress

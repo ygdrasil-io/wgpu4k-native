@@ -5,7 +5,7 @@ import com.sun.jna.Native
 private const val UNSUPPORTED_CALLBACK_REGISTRATION =
     "Android/JNA callback registration is not supported"
 
-internal actual object PlatformTokenCodec : TokenCodec {
+internal actual object PlatformCallbackTokenAddressCodec : CallbackTokenAddressCodec {
     actual override val pointerBits: Int = Native.POINTER_SIZE * Byte.SIZE_BITS
     actual override val maxToken: ULong = 0uL
 

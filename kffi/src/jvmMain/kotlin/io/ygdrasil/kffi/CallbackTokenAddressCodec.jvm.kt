@@ -11,7 +11,7 @@ internal fun validatedJvmCallbackPointerBits(addressByteSize: Long): Int {
     return Long.SIZE_BITS
 }
 
-internal actual object PlatformTokenCodec : TokenCodec {
+internal actual object PlatformCallbackTokenAddressCodec : CallbackTokenAddressCodec {
     actual override val pointerBits: Int =
         validatedJvmCallbackPointerBits(ValueLayout.ADDRESS.byteSize())
     actual override val maxToken: ULong = Long.MAX_VALUE.toULong()

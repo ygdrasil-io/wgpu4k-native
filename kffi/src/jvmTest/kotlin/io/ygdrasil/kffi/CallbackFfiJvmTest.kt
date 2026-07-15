@@ -347,7 +347,7 @@ class CallbackFfiJvmTest : FreeSpec({
                     JvmCallbackFixture.store(
                         JvmFfiTrampolines.routedStub,
                         MemorySegment.NULL,
-                        PlatformTokenCodec.encode(Long.MAX_VALUE.toULong()).handler,
+                        PlatformCallbackTokenAddressCodec.encode(Long.MAX_VALUE.toULong()).handler,
                     )
                     JvmCallbackFixture.fireNow(15)
                     JvmCallbackFixture.store(
@@ -516,7 +516,7 @@ class CallbackFfiJvmTest : FreeSpec({
             try {
                 val userdata = requireNotNull(registration.userdata)
                 JvmCallbackFixture.roundtripUserdata(userdata.handler).toULong() shouldBe
-                    PlatformTokenCodec.decode(userdata)
+                    PlatformCallbackTokenAddressCodec.decode(userdata)
             } finally {
                 registration.close()
             }
