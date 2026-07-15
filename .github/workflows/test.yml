@@ -155,6 +155,6 @@ jobs:
           target: google_apis
           arch: x86_64
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-audio -no-boot-anim
+          emulator-options: -no-window -gpu software -no-snapshot -no-audio -no-boot-anim
           disable-animations: true
           script: ./gradlew :demo:android:connectedDebugAndroidTest --no-daemon --stacktrace
