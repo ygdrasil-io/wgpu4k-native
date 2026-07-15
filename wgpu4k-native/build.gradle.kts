@@ -359,7 +359,7 @@ tasks.register<Exec>("generateBindingsFromHeader") {
         "--multiplatform",
         "--target-package", "io.ygdrasil.wgpu",
         "--output", project.file("src").absolutePath,
-        "--library", "wgpu_native",
+        "--library", "wgpu4k",
         "--callback-bindings",
         callbackBindings.absolutePath,
         "-D", "WGPU_SKIP_PROCS",
