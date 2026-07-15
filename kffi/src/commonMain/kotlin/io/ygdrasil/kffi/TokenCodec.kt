@@ -8,7 +8,12 @@ internal interface TokenCodec {
     fun decode(address: NativeAddress?): ULong?
 }
 
-internal expect object PlatformTokenCodec : TokenCodec
+internal expect object PlatformTokenCodec : TokenCodec {
+    override val pointerBits: Int
+    override val maxToken: ULong
+    override fun encode(token: ULong): NativeAddress
+    override fun decode(address: NativeAddress?): ULong?
+}
 
 internal fun requireValidCallbackToken(token: ULong) {
     require(token in 1uL..Long.MAX_VALUE.toULong()) {

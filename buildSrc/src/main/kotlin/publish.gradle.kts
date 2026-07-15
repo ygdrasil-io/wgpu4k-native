@@ -1,5 +1,6 @@
 import publish.centralPortalPublish
 import publish.PublishingType
+import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 
 plugins {
     `maven-publish`
@@ -26,9 +27,12 @@ project.centralPortalPublish {
     url = layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
 }
 
+val dokkaHtml = tasks.named("dokkaGeneratePublicationHtml")
+
 val javadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
-    from(tasks.findByName("dokkaHtml"))
+    dependsOn(dokkaHtml)
+    from(dokkaHtml.map { it.outputs.files })
 }
 
 publishing {
@@ -82,6 +86,21 @@ publishing {
                 logger.info("publishing path is ${url.path}")
             }
         }
+    }
+}
+
+val publicationVerificationRepository = publishing.repositories.maven {
+    name = "PublicationVerification"
+    url = rootProject.layout.buildDirectory
+        .dir("publication-verification/repository")
+        .get()
+        .asFile
+        .toURI()
+}
+
+tasks.withType<PublishToMavenRepository>().configureEach {
+    if (repository == publicationVerificationRepository) {
+        dependsOn(rootProject.tasks.named("cleanPublicationVerificationRepository"))
     }
 }
 

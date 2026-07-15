@@ -14,10 +14,10 @@ internal actual object PlatformTokenCodec : TokenCodec {
         }
     }
 
-    override val pointerBits: Int = 64
-    override val maxToken: ULong = Long.MAX_VALUE.toULong()
+    actual override val pointerBits: Int = 64
+    actual override val maxToken: ULong = Long.MAX_VALUE.toULong()
 
-    override fun encode(token: ULong): NativeAddress {
+    actual override fun encode(token: ULong): NativeAddress {
         requireValidCallbackToken(token)
         val pointer = requireNotNull(kffi_callback_token_encode(token)) {
             "A valid callback token must not encode to null"
@@ -25,7 +25,7 @@ internal actual object PlatformTokenCodec : TokenCodec {
         return Pointer(pointer)
     }
 
-    override fun decode(address: NativeAddress?): ULong? {
+    actual override fun decode(address: NativeAddress?): ULong? {
         val token = address?.let { kffi_callback_token_decode(it.pointer) } ?: return null
         requireValidCallbackToken(token)
         return token

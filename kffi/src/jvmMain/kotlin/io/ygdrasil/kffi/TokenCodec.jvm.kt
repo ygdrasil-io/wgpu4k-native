@@ -12,16 +12,16 @@ internal fun validatedJvmCallbackPointerBits(addressByteSize: Long): Int {
 }
 
 internal actual object PlatformTokenCodec : TokenCodec {
-    override val pointerBits: Int =
+    actual override val pointerBits: Int =
         validatedJvmCallbackPointerBits(ValueLayout.ADDRESS.byteSize())
-    override val maxToken: ULong = Long.MAX_VALUE.toULong()
+    actual override val maxToken: ULong = Long.MAX_VALUE.toULong()
 
-    override fun encode(token: ULong): NativeAddress {
+    actual override fun encode(token: ULong): NativeAddress {
         requireValidCallbackToken(token)
         return JvmNativeAddress(MemorySegment.ofAddress(token.toLong()))
     }
 
-    override fun decode(address: NativeAddress?): ULong? {
+    actual override fun decode(address: NativeAddress?): ULong? {
         val token = address?.handler?.address()?.toULong() ?: return null
         requireValidCallbackToken(token)
         return token

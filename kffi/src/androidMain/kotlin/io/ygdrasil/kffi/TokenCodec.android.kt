@@ -6,14 +6,14 @@ private const val UNSUPPORTED_CALLBACK_REGISTRATION =
     "Android/JNA callback registration is not supported"
 
 internal actual object PlatformTokenCodec : TokenCodec {
-    override val pointerBits: Int = Native.POINTER_SIZE * Byte.SIZE_BITS
-    override val maxToken: ULong = 0uL
+    actual override val pointerBits: Int = Native.POINTER_SIZE * Byte.SIZE_BITS
+    actual override val maxToken: ULong = 0uL
 
-    override fun encode(token: ULong): NativeAddress {
+    actual override fun encode(token: ULong): NativeAddress {
         throw UnsupportedOperationException(UNSUPPORTED_CALLBACK_REGISTRATION)
     }
 
-    override fun decode(address: NativeAddress?): ULong? {
+    actual override fun decode(address: NativeAddress?): ULong? {
         if (address == null) return null
         throw UnsupportedOperationException(UNSUPPORTED_CALLBACK_REGISTRATION)
     }

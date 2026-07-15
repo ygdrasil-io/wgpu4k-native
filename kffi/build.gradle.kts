@@ -127,6 +127,7 @@ val archiveCallbackFixture = compileCallbackFixtureObject?.let { compileObject -
 
 plugins {
     `kotlin-multiplatform`
+    publish
     com.android.library
     alias(libs.plugins.kotest)
     alias(libs.plugins.ksp)
@@ -162,6 +163,8 @@ kotlin {
                 minSdk = 28
             }
         }
+
+        publishLibraryVariants("release", "debug")
     }
 
     jvm {
