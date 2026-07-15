@@ -11,10 +11,32 @@ import io.ygdrasil.kffi.CallbackRuntimeApi
 import io.ygdrasil.kffi.PreparedCallbackRegistration
 import io.ygdrasil.kffi.UnsafeCallbackRearmApi
 import io.ygdrasil.kffi.CString
-import io.ygdrasil.kffi.toCString
 import io.ygdrasil.kffi.ArrayHolder
 import io.ygdrasil.kffi.MemoryAllocator
-import kotlinx.cinterop.*
+import io.ygdrasil.kffi.toCString
+import kotlinx.cinterop.ByteVar
+import kotlinx.cinterop.COpaquePointer
+import kotlinx.cinterop.COpaquePointerVar
+import kotlinx.cinterop.CValue
+import kotlinx.cinterop.DoubleVar
+import kotlinx.cinterop.FloatVar
+import kotlinx.cinterop.IntVar
+import kotlinx.cinterop.LongVar
+import kotlinx.cinterop.ShortVar
+import kotlinx.cinterop.UByteVar
+import kotlinx.cinterop.UIntVar
+import kotlinx.cinterop.ULongVar
+import kotlinx.cinterop.UShortVar
+import kotlinx.cinterop.cValue
+import kotlinx.cinterop.get
+import kotlinx.cinterop.pointed
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.reinterpret
+import kotlinx.cinterop.set
+import kotlinx.cinterop.sizeOf
+import kotlinx.cinterop.staticCFunction
+import kotlinx.cinterop.useContents
+import kotlin.OptIn
 
 actual interface WGPUStringView {
     actual var data: CString?

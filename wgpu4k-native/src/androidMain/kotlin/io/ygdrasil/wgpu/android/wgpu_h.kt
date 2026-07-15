@@ -3,6 +3,7 @@ package io.ygdrasil.wgpu.android
 import com.sun.jna.Pointer
 import com.sun.jna.Structure
 import com.sun.jna.Union
+import kotlin.jvm.JvmField
 
 open class WGPUStringView(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var data: Pointer? = null

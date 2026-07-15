@@ -13,6 +13,7 @@ import io.ygdrasil.kffi.UnsafeCallbackRearmApi
 import io.ygdrasil.kffi.CString
 import io.ygdrasil.kffi.ArrayHolder
 import io.ygdrasil.kffi.MemoryAllocator
+import kotlin.OptIn
 
 /**
  * For reserved non-standard bitflag values, see @ref BitflagRegistry.

@@ -13,21 +13,32 @@ import io.ygdrasil.kffi.ArrayHolder
 import io.ygdrasil.kffi.MemoryAllocator
 import io.ygdrasil.kffi.CStructure
 import io.ygdrasil.kffi.findOrThrow
-import java.lang.foreign.*
+import java.lang.foreign.Arena
+import java.lang.foreign.FunctionDescriptor
+import java.lang.foreign.GroupLayout
+import java.lang.foreign.Linker
+import java.lang.foreign.MemoryLayout
+import java.lang.foreign.MemorySegment
+import java.lang.foreign.SegmentAllocator
+import java.lang.foreign.ValueLayout
 import java.lang.invoke.MethodHandle
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.VarHandle
 import java.lang.foreign.MemoryLayout.PathElement.groupElement
+import kotlin.OptIn
+import kotlin.Suppress
+import kotlin.jvm.JvmInline
+import kotlin.jvm.JvmStatic
 
 actual interface WGPUStringView : CStructure {
     actual var data: CString?
     actual var length: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("data"),
-            ValueLayout.JAVA_LONG.withName("length")
-        ).withName("WGPUStringView")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("data"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")
+        ).withByteAlignment(8).withName("WGPUStringView")
         
         val data_VH: VarHandle = layout.varHandle(groupElement("data"))
         val length_VH: VarHandle = layout.varHandle(groupElement("length"))
@@ -130,11 +141,11 @@ actual interface WGPUChainedStruct : CStructure {
     actual var sType: WGPUSType
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("next"),
-            ValueLayout.JAVA_INT.withName("sType"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUChainedStruct")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("next"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUChainedStruct")
         
         val next_VH: VarHandle = layout.varHandle(groupElement("next"))
         val sType_VH: VarHandle = layout.varHandle(groupElement("sType"))
@@ -171,14 +182,14 @@ actual interface WGPUBufferMapCallbackInfo : CStructure {
     actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("mode"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("callback"),
-            ValueLayout.ADDRESS.withName("userdata1"),
-            ValueLayout.ADDRESS.withName("userdata2")
-        ).withName("WGPUBufferMapCallbackInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mode"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("callback"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata1"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata2")
+        ).withByteAlignment(8).withName("WGPUBufferMapCallbackInfo")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val mode_VH: VarHandle = layout.varHandle(groupElement("mode"))
@@ -227,14 +238,14 @@ actual interface WGPUCompilationInfoCallbackInfo : CStructure {
     actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("mode"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("callback"),
-            ValueLayout.ADDRESS.withName("userdata1"),
-            ValueLayout.ADDRESS.withName("userdata2")
-        ).withName("WGPUCompilationInfoCallbackInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mode"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("callback"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata1"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata2")
+        ).withByteAlignment(8).withName("WGPUCompilationInfoCallbackInfo")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val mode_VH: VarHandle = layout.varHandle(groupElement("mode"))
@@ -283,14 +294,14 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo : CStructure {
     actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("mode"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("callback"),
-            ValueLayout.ADDRESS.withName("userdata1"),
-            ValueLayout.ADDRESS.withName("userdata2")
-        ).withName("WGPUCreateComputePipelineAsyncCallbackInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mode"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("callback"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata1"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata2")
+        ).withByteAlignment(8).withName("WGPUCreateComputePipelineAsyncCallbackInfo")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val mode_VH: VarHandle = layout.varHandle(groupElement("mode"))
@@ -339,14 +350,14 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo : CStructure {
     actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("mode"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("callback"),
-            ValueLayout.ADDRESS.withName("userdata1"),
-            ValueLayout.ADDRESS.withName("userdata2")
-        ).withName("WGPUCreateRenderPipelineAsyncCallbackInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mode"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("callback"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata1"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata2")
+        ).withByteAlignment(8).withName("WGPUCreateRenderPipelineAsyncCallbackInfo")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val mode_VH: VarHandle = layout.varHandle(groupElement("mode"))
@@ -395,14 +406,14 @@ actual interface WGPUDeviceLostCallbackInfo : CStructure {
     actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("mode"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("callback"),
-            ValueLayout.ADDRESS.withName("userdata1"),
-            ValueLayout.ADDRESS.withName("userdata2")
-        ).withName("WGPUDeviceLostCallbackInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mode"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("callback"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata1"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata2")
+        ).withByteAlignment(8).withName("WGPUDeviceLostCallbackInfo")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val mode_VH: VarHandle = layout.varHandle(groupElement("mode"))
@@ -451,14 +462,14 @@ actual interface WGPUPopErrorScopeCallbackInfo : CStructure {
     actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("mode"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("callback"),
-            ValueLayout.ADDRESS.withName("userdata1"),
-            ValueLayout.ADDRESS.withName("userdata2")
-        ).withName("WGPUPopErrorScopeCallbackInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mode"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("callback"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata1"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata2")
+        ).withByteAlignment(8).withName("WGPUPopErrorScopeCallbackInfo")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val mode_VH: VarHandle = layout.varHandle(groupElement("mode"))
@@ -507,14 +518,14 @@ actual interface WGPUQueueWorkDoneCallbackInfo : CStructure {
     actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("mode"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("callback"),
-            ValueLayout.ADDRESS.withName("userdata1"),
-            ValueLayout.ADDRESS.withName("userdata2")
-        ).withName("WGPUQueueWorkDoneCallbackInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mode"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("callback"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata1"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata2")
+        ).withByteAlignment(8).withName("WGPUQueueWorkDoneCallbackInfo")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val mode_VH: VarHandle = layout.varHandle(groupElement("mode"))
@@ -563,14 +574,14 @@ actual interface WGPURequestAdapterCallbackInfo : CStructure {
     actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("mode"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("callback"),
-            ValueLayout.ADDRESS.withName("userdata1"),
-            ValueLayout.ADDRESS.withName("userdata2")
-        ).withName("WGPURequestAdapterCallbackInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mode"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("callback"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata1"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata2")
+        ).withByteAlignment(8).withName("WGPURequestAdapterCallbackInfo")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val mode_VH: VarHandle = layout.varHandle(groupElement("mode"))
@@ -619,14 +630,14 @@ actual interface WGPURequestDeviceCallbackInfo : CStructure {
     actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("mode"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("callback"),
-            ValueLayout.ADDRESS.withName("userdata1"),
-            ValueLayout.ADDRESS.withName("userdata2")
-        ).withName("WGPURequestDeviceCallbackInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mode"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("callback"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata1"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata2")
+        ).withByteAlignment(8).withName("WGPURequestDeviceCallbackInfo")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val mode_VH: VarHandle = layout.varHandle(groupElement("mode"))
@@ -674,12 +685,12 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
     actual var userdata2: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.ADDRESS.withName("callback"),
-            ValueLayout.ADDRESS.withName("userdata1"),
-            ValueLayout.ADDRESS.withName("userdata2")
-        ).withName("WGPUUncapturedErrorCallbackInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("callback"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata1"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata2")
+        ).withByteAlignment(8).withName("WGPUUncapturedErrorCallbackInfo")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val callback_VH: VarHandle = layout.varHandle(groupElement("callback"))
@@ -730,19 +741,19 @@ actual interface WGPUAdapterInfo : CStructure {
     actual var subgroupMaxSize: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("vendor"),
-            WGPUStringView.layout.withName("architecture"),
-            WGPUStringView.layout.withName("device"),
-            WGPUStringView.layout.withName("description"),
-            ValueLayout.JAVA_INT.withName("backendType"),
-            ValueLayout.JAVA_INT.withName("adapterType"),
-            ValueLayout.JAVA_INT.withName("vendorID"),
-            ValueLayout.JAVA_INT.withName("deviceID"),
-            ValueLayout.JAVA_INT.withName("subgroupMinSize"),
-            ValueLayout.JAVA_INT.withName("subgroupMaxSize")
-        ).withName("WGPUAdapterInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("vendor"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("architecture"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("device"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("description"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("backendType"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("adapterType"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("vendorID"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("deviceID"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("subgroupMinSize"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("subgroupMaxSize")
+        ).withByteAlignment(8).withName("WGPUAdapterInfo")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val backendType_VH: VarHandle = layout.varHandle(groupElement("backendType"))
@@ -817,11 +828,11 @@ actual interface WGPUBlendComponent : CStructure {
     actual var dstFactor: WGPUBlendFactor
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.JAVA_INT.withName("operation"),
-            ValueLayout.JAVA_INT.withName("srcFactor"),
-            ValueLayout.JAVA_INT.withName("dstFactor")
-        ).withName("WGPUBlendComponent")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("operation"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("srcFactor"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("dstFactor")
+        ).withByteAlignment(4).withName("WGPUBlendComponent")
         
         val operation_VH: VarHandle = layout.varHandle(groupElement("operation"))
         val srcFactor_VH: VarHandle = layout.varHandle(groupElement("srcFactor"))
@@ -861,12 +872,12 @@ actual interface WGPUBufferBindingLayout : CStructure {
     actual var minBindingSize: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("type"),
-            ValueLayout.JAVA_INT.withName("hasDynamicOffset"),
-            ValueLayout.JAVA_LONG.withName("minBindingSize")
-        ).withName("WGPUBufferBindingLayout")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("type"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("hasDynamicOffset"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("minBindingSize")
+        ).withByteAlignment(8).withName("WGPUBufferBindingLayout")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val type_VH: VarHandle = layout.varHandle(groupElement("type"))
@@ -911,14 +922,14 @@ actual interface WGPUBufferDescriptor : CStructure {
     actual var mappedAtCreation: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.JAVA_LONG.withName("usage"),
-            ValueLayout.JAVA_LONG.withName("size"),
-            ValueLayout.JAVA_INT.withName("mappedAtCreation"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUBufferDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("usage"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("size"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mappedAtCreation"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUBufferDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val usage_VH: VarHandle = layout.varHandle(groupElement("usage"))
@@ -967,12 +978,12 @@ actual interface WGPUColor : CStructure {
     actual var a: Double
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.JAVA_DOUBLE.withName("r"),
-            ValueLayout.JAVA_DOUBLE.withName("g"),
-            ValueLayout.JAVA_DOUBLE.withName("b"),
-            ValueLayout.JAVA_DOUBLE.withName("a")
-        ).withName("WGPUColor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_DOUBLE.withByteAlignment(8).withName("r"),
+            ValueLayout.JAVA_DOUBLE.withByteAlignment(8).withName("g"),
+            ValueLayout.JAVA_DOUBLE.withByteAlignment(8).withName("b"),
+            ValueLayout.JAVA_DOUBLE.withByteAlignment(8).withName("a")
+        ).withByteAlignment(8).withName("WGPUColor")
         
         val r_VH: VarHandle = layout.varHandle(groupElement("r"))
         val g_VH: VarHandle = layout.varHandle(groupElement("g"))
@@ -1014,10 +1025,10 @@ actual interface WGPUCommandBufferDescriptor : CStructure {
     actual var label: WGPUStringView
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label")
-        ).withName("WGPUCommandBufferDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label")
+        ).withByteAlignment(8).withName("WGPUCommandBufferDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         
@@ -1052,10 +1063,10 @@ actual interface WGPUCommandEncoderDescriptor : CStructure {
     actual var label: WGPUStringView
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label")
-        ).withName("WGPUCommandEncoderDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label")
+        ).withByteAlignment(8).withName("WGPUCommandEncoderDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         
@@ -1093,13 +1104,13 @@ actual interface WGPUCompatibilityModeLimits : CStructure {
     actual var maxStorageTexturesInFragmentStage: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_INT.withName("maxStorageBuffersInVertexStage"),
-            ValueLayout.JAVA_INT.withName("maxStorageTexturesInVertexStage"),
-            ValueLayout.JAVA_INT.withName("maxStorageBuffersInFragmentStage"),
-            ValueLayout.JAVA_INT.withName("maxStorageTexturesInFragmentStage")
-        ).withName("WGPUCompatibilityModeLimits")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxStorageBuffersInVertexStage"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxStorageTexturesInVertexStage"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxStorageBuffersInFragmentStage"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxStorageTexturesInFragmentStage")
+        ).withByteAlignment(8).withName("WGPUCompatibilityModeLimits")
         
         val maxStorageBuffersInVertexStage_VH: VarHandle = layout.varHandle(groupElement("maxStorageBuffersInVertexStage"))
         val maxStorageTexturesInVertexStage_VH: VarHandle = layout.varHandle(groupElement("maxStorageTexturesInVertexStage"))
@@ -1151,16 +1162,16 @@ actual interface WGPUCompilationMessage : CStructure {
     actual var length: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("message"),
-            ValueLayout.JAVA_INT.withName("type"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.JAVA_LONG.withName("lineNum"),
-            ValueLayout.JAVA_LONG.withName("linePos"),
-            ValueLayout.JAVA_LONG.withName("offset"),
-            ValueLayout.JAVA_LONG.withName("length")
-        ).withName("WGPUCompilationMessage")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("message"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("type"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("lineNum"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("linePos"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("offset"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")
+        ).withByteAlignment(8).withName("WGPUCompilationMessage")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val type_VH: VarHandle = layout.varHandle(groupElement("type"))
@@ -1216,11 +1227,11 @@ actual interface WGPUConstantEntry : CStructure {
     actual var value: Double
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("key"),
-            ValueLayout.JAVA_DOUBLE.withName("value")
-        ).withName("WGPUConstantEntry")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("key"),
+            ValueLayout.JAVA_DOUBLE.withByteAlignment(8).withName("value")
+        ).withByteAlignment(8).withName("WGPUConstantEntry")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val value_VH: VarHandle = layout.varHandle(groupElement("value"))
@@ -1260,11 +1271,11 @@ actual interface WGPUExtent3D : CStructure {
     actual var depthOrArrayLayers: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.JAVA_INT.withName("width"),
-            ValueLayout.JAVA_INT.withName("height"),
-            ValueLayout.JAVA_INT.withName("depthOrArrayLayers")
-        ).withName("WGPUExtent3D")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("width"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("height"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthOrArrayLayers")
+        ).withByteAlignment(4).withName("WGPUExtent3D")
         
         val width_VH: VarHandle = layout.varHandle(groupElement("width"))
         val height_VH: VarHandle = layout.varHandle(groupElement("height"))
@@ -1302,10 +1313,10 @@ actual interface WGPUExternalTextureBindingEntry : CStructure {
     actual var externalTexture: WGPUExternalTexture?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.ADDRESS.withName("externalTexture")
-        ).withName("WGPUExternalTextureBindingEntry")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("externalTexture")
+        ).withByteAlignment(8).withName("WGPUExternalTextureBindingEntry")
         
         val externalTexture_VH: VarHandle = layout.varHandle(groupElement("externalTexture"))
         
@@ -1339,9 +1350,9 @@ actual interface WGPUExternalTextureBindingLayout : CStructure {
     actual var chain: WGPUChainedStruct
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain")
-        ).withName("WGPUExternalTextureBindingLayout")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain")
+        ).withByteAlignment(8).withName("WGPUExternalTextureBindingLayout")
         
         
         actual operator fun invoke(address: NativeAddress): WGPUExternalTextureBindingLayout = ByReference(address)
@@ -1371,9 +1382,9 @@ actual interface WGPUFuture : CStructure {
     actual var id: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.JAVA_LONG.withName("id")
-        ).withName("WGPUFuture")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("id")
+        ).withByteAlignment(8).withName("WGPUFuture")
         
         val id_VH: VarHandle = layout.varHandle(groupElement("id"))
         
@@ -1403,10 +1414,10 @@ actual interface WGPUInstanceLimits : CStructure {
     actual var timedWaitAnyMaxCount: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_LONG.withName("timedWaitAnyMaxCount")
-        ).withName("WGPUInstanceLimits")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("timedWaitAnyMaxCount")
+        ).withByteAlignment(8).withName("WGPUInstanceLimits")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val timedWaitAnyMaxCount_VH: VarHandle = layout.varHandle(groupElement("timedWaitAnyMaxCount"))
@@ -1442,13 +1453,13 @@ actual interface WGPUMultisampleState : CStructure {
     actual var alphaToCoverageEnabled: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("count"),
-            ValueLayout.JAVA_INT.withName("mask"),
-            ValueLayout.JAVA_INT.withName("alphaToCoverageEnabled"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUMultisampleState")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("count"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mask"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("alphaToCoverageEnabled"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUMultisampleState")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val count_VH: VarHandle = layout.varHandle(groupElement("count"))
@@ -1491,11 +1502,11 @@ actual interface WGPUOrigin3D : CStructure {
     actual var z: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.JAVA_INT.withName("x"),
-            ValueLayout.JAVA_INT.withName("y"),
-            ValueLayout.JAVA_INT.withName("z")
-        ).withName("WGPUOrigin3D")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("x"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("y"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("z")
+        ).withByteAlignment(4).withName("WGPUOrigin3D")
         
         val x_VH: VarHandle = layout.varHandle(groupElement("x"))
         val y_VH: VarHandle = layout.varHandle(groupElement("y"))
@@ -1535,12 +1546,12 @@ actual interface WGPUPassTimestampWrites : CStructure {
     actual var endOfPassWriteIndex: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.ADDRESS.withName("querySet"),
-            ValueLayout.JAVA_INT.withName("beginningOfPassWriteIndex"),
-            ValueLayout.JAVA_INT.withName("endOfPassWriteIndex")
-        ).withName("WGPUPassTimestampWrites")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("querySet"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("beginningOfPassWriteIndex"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("endOfPassWriteIndex")
+        ).withByteAlignment(8).withName("WGPUPassTimestampWrites")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val querySet_VH: VarHandle = layout.varHandle(groupElement("querySet"))
@@ -1585,14 +1596,14 @@ actual interface WGPUPipelineLayoutDescriptor : CStructure {
     actual var immediateSize: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.JAVA_LONG.withName("bindGroupLayoutCount"),
-            ValueLayout.ADDRESS.withName("bindGroupLayouts"),
-            ValueLayout.JAVA_INT.withName("immediateSize"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUPipelineLayoutDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("bindGroupLayoutCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("bindGroupLayouts"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("immediateSize"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUPipelineLayoutDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val bindGroupLayoutCount_VH: VarHandle = layout.varHandle(groupElement("bindGroupLayoutCount"))
@@ -1643,15 +1654,15 @@ actual interface WGPUPrimitiveState : CStructure {
     actual var unclippedDepth: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("topology"),
-            ValueLayout.JAVA_INT.withName("stripIndexFormat"),
-            ValueLayout.JAVA_INT.withName("frontFace"),
-            ValueLayout.JAVA_INT.withName("cullMode"),
-            ValueLayout.JAVA_INT.withName("unclippedDepth"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUPrimitiveState")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("topology"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("stripIndexFormat"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("frontFace"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("cullMode"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("unclippedDepth"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUPrimitiveState")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val topology_VH: VarHandle = layout.varHandle(groupElement("topology"))
@@ -1703,12 +1714,12 @@ actual interface WGPUQuerySetDescriptor : CStructure {
     actual var count: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.JAVA_INT.withName("type"),
-            ValueLayout.JAVA_INT.withName("count")
-        ).withName("WGPUQuerySetDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("type"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("count")
+        ).withByteAlignment(8).withName("WGPUQuerySetDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val type_VH: VarHandle = layout.varHandle(groupElement("type"))
@@ -1751,10 +1762,10 @@ actual interface WGPUQueueDescriptor : CStructure {
     actual var label: WGPUStringView
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label")
-        ).withName("WGPUQueueDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label")
+        ).withByteAlignment(8).withName("WGPUQueueDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         
@@ -1789,10 +1800,10 @@ actual interface WGPURenderBundleDescriptor : CStructure {
     actual var label: WGPUStringView
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label")
-        ).withName("WGPURenderBundleDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label")
+        ).withByteAlignment(8).withName("WGPURenderBundleDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         
@@ -1833,16 +1844,16 @@ actual interface WGPURenderBundleEncoderDescriptor : CStructure {
     actual var stencilReadOnly: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.JAVA_LONG.withName("colorFormatCount"),
-            ValueLayout.ADDRESS.withName("colorFormats"),
-            ValueLayout.JAVA_INT.withName("depthStencilFormat"),
-            ValueLayout.JAVA_INT.withName("sampleCount"),
-            ValueLayout.JAVA_INT.withName("depthReadOnly"),
-            ValueLayout.JAVA_INT.withName("stencilReadOnly")
-        ).withName("WGPURenderBundleEncoderDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("colorFormatCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("colorFormats"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthStencilFormat"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("sampleCount"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthReadOnly"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("stencilReadOnly")
+        ).withByteAlignment(8).withName("WGPURenderBundleEncoderDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val colorFormatCount_VH: VarHandle = layout.varHandle(groupElement("colorFormatCount"))
@@ -1909,18 +1920,18 @@ actual interface WGPURenderPassDepthStencilAttachment : CStructure {
     actual var stencilReadOnly: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.ADDRESS.withName("view"),
-            ValueLayout.JAVA_INT.withName("depthLoadOp"),
-            ValueLayout.JAVA_INT.withName("depthStoreOp"),
-            ValueLayout.JAVA_FLOAT.withName("depthClearValue"),
-            ValueLayout.JAVA_INT.withName("depthReadOnly"),
-            ValueLayout.JAVA_INT.withName("stencilLoadOp"),
-            ValueLayout.JAVA_INT.withName("stencilStoreOp"),
-            ValueLayout.JAVA_INT.withName("stencilClearValue"),
-            ValueLayout.JAVA_INT.withName("stencilReadOnly")
-        ).withName("WGPURenderPassDepthStencilAttachment")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("view"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthLoadOp"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthStoreOp"),
+            ValueLayout.JAVA_FLOAT.withByteAlignment(4).withName("depthClearValue"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthReadOnly"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("stencilLoadOp"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("stencilStoreOp"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("stencilClearValue"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("stencilReadOnly")
+        ).withByteAlignment(8).withName("WGPURenderPassDepthStencilAttachment")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val view_VH: VarHandle = layout.varHandle(groupElement("view"))
@@ -1986,10 +1997,10 @@ actual interface WGPURenderPassMaxDrawCount : CStructure {
     actual var maxDrawCount: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_LONG.withName("maxDrawCount")
-        ).withName("WGPURenderPassMaxDrawCount")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("maxDrawCount")
+        ).withByteAlignment(8).withName("WGPURenderPassMaxDrawCount")
         
         val maxDrawCount_VH: VarHandle = layout.varHandle(groupElement("maxDrawCount"))
         
@@ -2024,11 +2035,11 @@ actual interface WGPURequestAdapterWebXROptions : CStructure {
     actual var xrCompatible: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_INT.withName("xrCompatible"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPURequestAdapterWebXROptions")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("xrCompatible"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPURequestAdapterWebXROptions")
         
         val xrCompatible_VH: VarHandle = layout.varHandle(groupElement("xrCompatible"))
         
@@ -2063,11 +2074,11 @@ actual interface WGPUSamplerBindingLayout : CStructure {
     actual var type: WGPUSamplerBindingType
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("type"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUSamplerBindingLayout")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("type"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUSamplerBindingLayout")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val type_VH: VarHandle = layout.varHandle(groupElement("type"))
@@ -2111,21 +2122,21 @@ actual interface WGPUSamplerDescriptor : CStructure {
     actual var maxAnisotropy: UShort
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.JAVA_INT.withName("addressModeU"),
-            ValueLayout.JAVA_INT.withName("addressModeV"),
-            ValueLayout.JAVA_INT.withName("addressModeW"),
-            ValueLayout.JAVA_INT.withName("magFilter"),
-            ValueLayout.JAVA_INT.withName("minFilter"),
-            ValueLayout.JAVA_INT.withName("mipmapFilter"),
-            ValueLayout.JAVA_FLOAT.withName("lodMinClamp"),
-            ValueLayout.JAVA_FLOAT.withName("lodMaxClamp"),
-            ValueLayout.JAVA_INT.withName("compare"),
-            ValueLayout.JAVA_SHORT.withName("maxAnisotropy"),
-            MemoryLayout.paddingLayout(2)
-        ).withName("WGPUSamplerDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("addressModeU"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("addressModeV"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("addressModeW"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("magFilter"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("minFilter"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mipmapFilter"),
+            ValueLayout.JAVA_FLOAT.withByteAlignment(4).withName("lodMinClamp"),
+            ValueLayout.JAVA_FLOAT.withByteAlignment(4).withName("lodMaxClamp"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("compare"),
+            ValueLayout.JAVA_SHORT.withByteAlignment(2).withName("maxAnisotropy"),
+            java.lang.foreign.MemoryLayout.paddingLayout(2)
+        ).withByteAlignment(8).withName("WGPUSamplerDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val addressModeU_VH: VarHandle = layout.varHandle(groupElement("addressModeU"))
@@ -2201,12 +2212,12 @@ actual interface WGPUShaderSourceSPIRV : CStructure {
     actual var code: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_INT.withName("codeSize"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("code")
-        ).withName("WGPUShaderSourceSPIRV")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("codeSize"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("code")
+        ).withByteAlignment(8).withName("WGPUShaderSourceSPIRV")
         
         val codeSize_VH: VarHandle = layout.varHandle(groupElement("codeSize"))
         val code_VH: VarHandle = layout.varHandle(groupElement("code"))
@@ -2245,10 +2256,10 @@ actual interface WGPUShaderSourceWGSL : CStructure {
     actual var code: WGPUStringView
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            WGPUStringView.layout.withName("code")
-        ).withName("WGPUShaderSourceWGSL")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("code")
+        ).withByteAlignment(8).withName("WGPUShaderSourceWGSL")
         
         
         actual operator fun invoke(address: NativeAddress): WGPUShaderSourceWGSL = ByReference(address)
@@ -2286,12 +2297,12 @@ actual interface WGPUStencilFaceState : CStructure {
     actual var passOp: WGPUStencilOperation
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.JAVA_INT.withName("compare"),
-            ValueLayout.JAVA_INT.withName("failOp"),
-            ValueLayout.JAVA_INT.withName("depthFailOp"),
-            ValueLayout.JAVA_INT.withName("passOp")
-        ).withName("WGPUStencilFaceState")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("compare"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("failOp"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthFailOp"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("passOp")
+        ).withByteAlignment(4).withName("WGPUStencilFaceState")
         
         val compare_VH: VarHandle = layout.varHandle(groupElement("compare"))
         val failOp_VH: VarHandle = layout.varHandle(groupElement("failOp"))
@@ -2335,13 +2346,13 @@ actual interface WGPUStorageTextureBindingLayout : CStructure {
     actual var viewDimension: WGPUTextureViewDimension
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("access"),
-            ValueLayout.JAVA_INT.withName("format"),
-            ValueLayout.JAVA_INT.withName("viewDimension"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUStorageTextureBindingLayout")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("access"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("format"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("viewDimension"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUStorageTextureBindingLayout")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val access_VH: VarHandle = layout.varHandle(groupElement("access"))
@@ -2383,10 +2394,10 @@ actual interface WGPUSupportedFeatures : CStructure {
     actual var features: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.JAVA_LONG.withName("featureCount"),
-            ValueLayout.ADDRESS.withName("features")
-        ).withName("WGPUSupportedFeatures")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("featureCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("features")
+        ).withByteAlignment(8).withName("WGPUSupportedFeatures")
         
         val featureCount_VH: VarHandle = layout.varHandle(groupElement("featureCount"))
         val features_VH: VarHandle = layout.varHandle(groupElement("features"))
@@ -2420,10 +2431,10 @@ actual interface WGPUSupportedInstanceFeatures : CStructure {
     actual var features: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.JAVA_LONG.withName("featureCount"),
-            ValueLayout.ADDRESS.withName("features")
-        ).withName("WGPUSupportedInstanceFeatures")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("featureCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("features")
+        ).withByteAlignment(8).withName("WGPUSupportedInstanceFeatures")
         
         val featureCount_VH: VarHandle = layout.varHandle(groupElement("featureCount"))
         val features_VH: VarHandle = layout.varHandle(groupElement("features"))
@@ -2457,10 +2468,10 @@ actual interface WGPUSupportedWGSLLanguageFeatures : CStructure {
     actual var features: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.JAVA_LONG.withName("featureCount"),
-            ValueLayout.ADDRESS.withName("features")
-        ).withName("WGPUSupportedWGSLLanguageFeatures")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("featureCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("features")
+        ).withByteAlignment(8).withName("WGPUSupportedWGSLLanguageFeatures")
         
         val featureCount_VH: VarHandle = layout.varHandle(groupElement("featureCount"))
         val features_VH: VarHandle = layout.varHandle(groupElement("features"))
@@ -2500,16 +2511,16 @@ actual interface WGPUSurfaceCapabilities : CStructure {
     actual var alphaModes: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_LONG.withName("usages"),
-            ValueLayout.JAVA_LONG.withName("formatCount"),
-            ValueLayout.ADDRESS.withName("formats"),
-            ValueLayout.JAVA_LONG.withName("presentModeCount"),
-            ValueLayout.ADDRESS.withName("presentModes"),
-            ValueLayout.JAVA_LONG.withName("alphaModeCount"),
-            ValueLayout.ADDRESS.withName("alphaModes")
-        ).withName("WGPUSurfaceCapabilities")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("usages"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("formatCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("formats"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("presentModeCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("presentModes"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("alphaModeCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("alphaModes")
+        ).withByteAlignment(8).withName("WGPUSurfaceCapabilities")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val usages_VH: VarHandle = layout.varHandle(groupElement("usages"))
@@ -2568,11 +2579,11 @@ actual interface WGPUSurfaceColorManagement : CStructure {
     actual var toneMappingMode: WGPUToneMappingMode
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_INT.withName("colorSpace"),
-            ValueLayout.JAVA_INT.withName("toneMappingMode")
-        ).withName("WGPUSurfaceColorManagement")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("colorSpace"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("toneMappingMode")
+        ).withByteAlignment(8).withName("WGPUSurfaceColorManagement")
         
         val colorSpace_VH: VarHandle = layout.varHandle(groupElement("colorSpace"))
         val toneMappingMode_VH: VarHandle = layout.varHandle(groupElement("toneMappingMode"))
@@ -2619,19 +2630,19 @@ actual interface WGPUSurfaceConfiguration : CStructure {
     actual var presentMode: WGPUPresentMode
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.ADDRESS.withName("device"),
-            ValueLayout.JAVA_INT.withName("format"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.JAVA_LONG.withName("usage"),
-            ValueLayout.JAVA_INT.withName("width"),
-            ValueLayout.JAVA_INT.withName("height"),
-            ValueLayout.JAVA_LONG.withName("viewFormatCount"),
-            ValueLayout.ADDRESS.withName("viewFormats"),
-            ValueLayout.JAVA_INT.withName("alphaMode"),
-            ValueLayout.JAVA_INT.withName("presentMode")
-        ).withName("WGPUSurfaceConfiguration")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("device"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("format"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("usage"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("width"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("height"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("viewFormatCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("viewFormats"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("alphaMode"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("presentMode")
+        ).withByteAlignment(8).withName("WGPUSurfaceConfiguration")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val device_VH: VarHandle = layout.varHandle(groupElement("device"))
@@ -2697,10 +2708,10 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow : CStructure {
     actual var window: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.ADDRESS.withName("window")
-        ).withName("WGPUSurfaceSourceAndroidNativeWindow")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("window")
+        ).withByteAlignment(8).withName("WGPUSurfaceSourceAndroidNativeWindow")
         
         val window_VH: VarHandle = layout.varHandle(groupElement("window"))
         
@@ -2735,10 +2746,10 @@ actual interface WGPUSurfaceSourceMetalLayer : CStructure {
     actual var layer: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.ADDRESS.withName("layer")
-        ).withName("WGPUSurfaceSourceMetalLayer")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("layer")
+        ).withByteAlignment(8).withName("WGPUSurfaceSourceMetalLayer")
         
         val layer_VH: VarHandle = layout.varHandle(groupElement("layer"))
         
@@ -2774,11 +2785,11 @@ actual interface WGPUSurfaceSourceWaylandSurface : CStructure {
     actual var surface: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.ADDRESS.withName("display"),
-            ValueLayout.ADDRESS.withName("surface")
-        ).withName("WGPUSurfaceSourceWaylandSurface")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("display"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("surface")
+        ).withByteAlignment(8).withName("WGPUSurfaceSourceWaylandSurface")
         
         val display_VH: VarHandle = layout.varHandle(groupElement("display"))
         val surface_VH: VarHandle = layout.varHandle(groupElement("surface"))
@@ -2818,11 +2829,11 @@ actual interface WGPUSurfaceSourceWindowsHWND : CStructure {
     actual var hwnd: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.ADDRESS.withName("hinstance"),
-            ValueLayout.ADDRESS.withName("hwnd")
-        ).withName("WGPUSurfaceSourceWindowsHWND")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("hinstance"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("hwnd")
+        ).withByteAlignment(8).withName("WGPUSurfaceSourceWindowsHWND")
         
         val hinstance_VH: VarHandle = layout.varHandle(groupElement("hinstance"))
         val hwnd_VH: VarHandle = layout.varHandle(groupElement("hwnd"))
@@ -2862,12 +2873,12 @@ actual interface WGPUSurfaceSourceXCBWindow : CStructure {
     actual var window: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.ADDRESS.withName("connection"),
-            ValueLayout.JAVA_INT.withName("window"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUSurfaceSourceXCBWindow")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("connection"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("window"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUSurfaceSourceXCBWindow")
         
         val connection_VH: VarHandle = layout.varHandle(groupElement("connection"))
         val window_VH: VarHandle = layout.varHandle(groupElement("window"))
@@ -2907,11 +2918,11 @@ actual interface WGPUSurfaceSourceXlibWindow : CStructure {
     actual var window: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.ADDRESS.withName("display"),
-            ValueLayout.JAVA_LONG.withName("window")
-        ).withName("WGPUSurfaceSourceXlibWindow")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("display"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("window")
+        ).withByteAlignment(8).withName("WGPUSurfaceSourceXlibWindow")
         
         val display_VH: VarHandle = layout.varHandle(groupElement("display"))
         val window_VH: VarHandle = layout.varHandle(groupElement("window"))
@@ -2951,12 +2962,12 @@ actual interface WGPUSurfaceTexture : CStructure {
     actual var status: WGPUSurfaceGetCurrentTextureStatus
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.ADDRESS.withName("texture"),
-            ValueLayout.JAVA_INT.withName("status"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUSurfaceTexture")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("texture"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("status"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUSurfaceTexture")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val texture_VH: VarHandle = layout.varHandle(groupElement("texture"))
@@ -2995,11 +3006,11 @@ actual interface WGPUTexelCopyBufferLayout : CStructure {
     actual var rowsPerImage: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.JAVA_LONG.withName("offset"),
-            ValueLayout.JAVA_INT.withName("bytesPerRow"),
-            ValueLayout.JAVA_INT.withName("rowsPerImage")
-        ).withName("WGPUTexelCopyBufferLayout")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("offset"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("bytesPerRow"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("rowsPerImage")
+        ).withByteAlignment(8).withName("WGPUTexelCopyBufferLayout")
         
         val offset_VH: VarHandle = layout.varHandle(groupElement("offset"))
         val bytesPerRow_VH: VarHandle = layout.varHandle(groupElement("bytesPerRow"))
@@ -3039,13 +3050,13 @@ actual interface WGPUTextureBindingLayout : CStructure {
     actual var multisampled: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("sampleType"),
-            ValueLayout.JAVA_INT.withName("viewDimension"),
-            ValueLayout.JAVA_INT.withName("multisampled"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUTextureBindingLayout")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("sampleType"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("viewDimension"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("multisampled"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUTextureBindingLayout")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val sampleType_VH: VarHandle = layout.varHandle(groupElement("sampleType"))
@@ -3087,11 +3098,11 @@ actual interface WGPUTextureBindingViewDimension : CStructure {
     actual var textureBindingViewDimension: WGPUTextureViewDimension
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_INT.withName("textureBindingViewDimension"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUTextureBindingViewDimension")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("textureBindingViewDimension"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUTextureBindingViewDimension")
         
         val textureBindingViewDimension_VH: VarHandle = layout.varHandle(groupElement("textureBindingViewDimension"))
         
@@ -3128,12 +3139,12 @@ actual interface WGPUTextureComponentSwizzle : CStructure {
     actual var a: WGPUComponentSwizzle
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.JAVA_INT.withName("r"),
-            ValueLayout.JAVA_INT.withName("g"),
-            ValueLayout.JAVA_INT.withName("b"),
-            ValueLayout.JAVA_INT.withName("a")
-        ).withName("WGPUTextureComponentSwizzle")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("r"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("g"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("b"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("a")
+        ).withByteAlignment(4).withName("WGPUTextureComponentSwizzle")
         
         val r_VH: VarHandle = layout.varHandle(groupElement("r"))
         val g_VH: VarHandle = layout.varHandle(groupElement("g"))
@@ -3177,14 +3188,14 @@ actual interface WGPUVertexAttribute : CStructure {
     actual var shaderLocation: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("format"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.JAVA_LONG.withName("offset"),
-            ValueLayout.JAVA_INT.withName("shaderLocation"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUVertexAttribute")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("format"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("offset"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("shaderLocation"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUVertexAttribute")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val format_VH: VarHandle = layout.varHandle(groupElement("format"))
@@ -3231,16 +3242,16 @@ actual interface WGPUBindGroupEntry : CStructure {
     actual var textureView: WGPUTextureView?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("binding"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("buffer"),
-            ValueLayout.JAVA_LONG.withName("offset"),
-            ValueLayout.JAVA_LONG.withName("size"),
-            ValueLayout.ADDRESS.withName("sampler"),
-            ValueLayout.ADDRESS.withName("textureView")
-        ).withName("WGPUBindGroupEntry")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("binding"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("buffer"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("offset"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("size"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("sampler"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("textureView")
+        ).withByteAlignment(8).withName("WGPUBindGroupEntry")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val binding_VH: VarHandle = layout.varHandle(groupElement("binding"))
@@ -3300,18 +3311,18 @@ actual interface WGPUBindGroupLayoutEntry : CStructure {
     actual var storageTexture: WGPUStorageTextureBindingLayout
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("binding"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.JAVA_LONG.withName("visibility"),
-            ValueLayout.JAVA_INT.withName("bindingArraySize"),
-            MemoryLayout.paddingLayout(4),
-            WGPUBufferBindingLayout.layout.withName("buffer"),
-            WGPUSamplerBindingLayout.layout.withName("sampler"),
-            WGPUTextureBindingLayout.layout.withName("texture"),
-            WGPUStorageTextureBindingLayout.layout.withName("storageTexture")
-        ).withName("WGPUBindGroupLayoutEntry")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("binding"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("visibility"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("bindingArraySize"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("type"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("hasDynamicOffset"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("minBindingSize")).withByteAlignment(8).withName("WGPUBufferBindingLayout").withName("buffer"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("type"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUSamplerBindingLayout").withName("sampler"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sampleType"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("viewDimension"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("multisampled"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUTextureBindingLayout").withName("texture"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("access"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("format"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("viewDimension"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUStorageTextureBindingLayout").withName("storageTexture")
+        ).withByteAlignment(8).withName("WGPUBindGroupLayoutEntry")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val binding_VH: VarHandle = layout.varHandle(groupElement("binding"))
@@ -3373,10 +3384,10 @@ actual interface WGPUBlendState : CStructure {
     actual var alpha: WGPUBlendComponent
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUBlendComponent.layout.withName("color"),
-            WGPUBlendComponent.layout.withName("alpha")
-        ).withName("WGPUBlendState")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_INT.withByteAlignment(4).withName("operation"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("srcFactor"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("dstFactor")).withByteAlignment(4).withName("WGPUBlendComponent").withName("color"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_INT.withByteAlignment(4).withName("operation"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("srcFactor"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("dstFactor")).withByteAlignment(4).withName("WGPUBlendComponent").withName("alpha")
+        ).withByteAlignment(4).withName("WGPUBlendState")
         
         
         actual operator fun invoke(address: NativeAddress): WGPUBlendState = ByReference(address)
@@ -3413,11 +3424,11 @@ actual interface WGPUCompilationInfo : CStructure {
     actual var messages: WGPUCompilationMessage?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_LONG.withName("messageCount"),
-            ValueLayout.ADDRESS.withName("messages")
-        ).withName("WGPUCompilationInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("messageCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("messages")
+        ).withByteAlignment(8).withName("WGPUCompilationInfo")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val messageCount_VH: VarHandle = layout.varHandle(groupElement("messageCount"))
@@ -3456,11 +3467,11 @@ actual interface WGPUComputePassDescriptor : CStructure {
     actual var timestampWrites: WGPUPassTimestampWrites?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.ADDRESS.withName("timestampWrites")
-        ).withName("WGPUComputePassDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("timestampWrites")
+        ).withByteAlignment(8).withName("WGPUComputePassDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val timestampWrites_VH: VarHandle = layout.varHandle(groupElement("timestampWrites"))
@@ -3502,13 +3513,13 @@ actual interface WGPUComputeState : CStructure {
     actual var constants: WGPUConstantEntry?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.ADDRESS.withName("module"),
-            WGPUStringView.layout.withName("entryPoint"),
-            ValueLayout.JAVA_LONG.withName("constantCount"),
-            ValueLayout.ADDRESS.withName("constants")
-        ).withName("WGPUComputeState")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("module"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("entryPoint"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("constantCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("constants")
+        ).withByteAlignment(8).withName("WGPUComputeState")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val module_VH: VarHandle = layout.varHandle(groupElement("module"))
@@ -3564,19 +3575,19 @@ actual interface WGPUDepthStencilState : CStructure {
     actual var depthBiasClamp: Float
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("format"),
-            ValueLayout.JAVA_INT.withName("depthWriteEnabled"),
-            ValueLayout.JAVA_INT.withName("depthCompare"),
-            WGPUStencilFaceState.layout.withName("stencilFront"),
-            WGPUStencilFaceState.layout.withName("stencilBack"),
-            ValueLayout.JAVA_INT.withName("stencilReadMask"),
-            ValueLayout.JAVA_INT.withName("stencilWriteMask"),
-            ValueLayout.JAVA_INT.withName("depthBias"),
-            ValueLayout.JAVA_FLOAT.withName("depthBiasSlopeScale"),
-            ValueLayout.JAVA_FLOAT.withName("depthBiasClamp")
-        ).withName("WGPUDepthStencilState")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("format"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthWriteEnabled"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthCompare"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_INT.withByteAlignment(4).withName("compare"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("failOp"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthFailOp"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("passOp")).withByteAlignment(4).withName("WGPUStencilFaceState").withName("stencilFront"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_INT.withByteAlignment(4).withName("compare"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("failOp"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthFailOp"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("passOp")).withByteAlignment(4).withName("WGPUStencilFaceState").withName("stencilBack"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("stencilReadMask"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("stencilWriteMask"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthBias"),
+            ValueLayout.JAVA_FLOAT.withByteAlignment(4).withName("depthBiasSlopeScale"),
+            ValueLayout.JAVA_FLOAT.withByteAlignment(4).withName("depthBiasClamp")
+        ).withByteAlignment(8).withName("WGPUDepthStencilState")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val format_VH: VarHandle = layout.varHandle(groupElement("format"))
@@ -3648,11 +3659,11 @@ actual interface WGPUFutureWaitInfo : CStructure {
     actual var completed: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUFuture.layout.withName("future"),
-            ValueLayout.JAVA_INT.withName("completed"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUFutureWaitInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("id")).withByteAlignment(8).withName("WGPUFuture").withName("future"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("completed"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUFutureWaitInfo")
         
         val completed_VH: VarHandle = layout.varHandle(groupElement("completed"))
         
@@ -3689,12 +3700,12 @@ actual interface WGPUInstanceDescriptor : CStructure {
     actual var requiredLimits: WGPUInstanceLimits?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_LONG.withName("requiredFeatureCount"),
-            ValueLayout.ADDRESS.withName("requiredFeatures"),
-            ValueLayout.ADDRESS.withName("requiredLimits")
-        ).withName("WGPUInstanceDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("requiredFeatureCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("requiredFeatures"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("requiredLimits")
+        ).withByteAlignment(8).withName("WGPUInstanceDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val requiredFeatureCount_VH: VarHandle = layout.varHandle(groupElement("requiredFeatureCount"))
@@ -3767,42 +3778,42 @@ actual interface WGPULimits : CStructure {
     actual var maxImmediateSize: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("maxTextureDimension1D"),
-            ValueLayout.JAVA_INT.withName("maxTextureDimension2D"),
-            ValueLayout.JAVA_INT.withName("maxTextureDimension3D"),
-            ValueLayout.JAVA_INT.withName("maxTextureArrayLayers"),
-            ValueLayout.JAVA_INT.withName("maxBindGroups"),
-            ValueLayout.JAVA_INT.withName("maxBindGroupsPlusVertexBuffers"),
-            ValueLayout.JAVA_INT.withName("maxBindingsPerBindGroup"),
-            ValueLayout.JAVA_INT.withName("maxDynamicUniformBuffersPerPipelineLayout"),
-            ValueLayout.JAVA_INT.withName("maxDynamicStorageBuffersPerPipelineLayout"),
-            ValueLayout.JAVA_INT.withName("maxSampledTexturesPerShaderStage"),
-            ValueLayout.JAVA_INT.withName("maxSamplersPerShaderStage"),
-            ValueLayout.JAVA_INT.withName("maxStorageBuffersPerShaderStage"),
-            ValueLayout.JAVA_INT.withName("maxStorageTexturesPerShaderStage"),
-            ValueLayout.JAVA_INT.withName("maxUniformBuffersPerShaderStage"),
-            ValueLayout.JAVA_LONG.withName("maxUniformBufferBindingSize"),
-            ValueLayout.JAVA_LONG.withName("maxStorageBufferBindingSize"),
-            ValueLayout.JAVA_INT.withName("minUniformBufferOffsetAlignment"),
-            ValueLayout.JAVA_INT.withName("minStorageBufferOffsetAlignment"),
-            ValueLayout.JAVA_INT.withName("maxVertexBuffers"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.JAVA_LONG.withName("maxBufferSize"),
-            ValueLayout.JAVA_INT.withName("maxVertexAttributes"),
-            ValueLayout.JAVA_INT.withName("maxVertexBufferArrayStride"),
-            ValueLayout.JAVA_INT.withName("maxInterStageShaderVariables"),
-            ValueLayout.JAVA_INT.withName("maxColorAttachments"),
-            ValueLayout.JAVA_INT.withName("maxColorAttachmentBytesPerSample"),
-            ValueLayout.JAVA_INT.withName("maxComputeWorkgroupStorageSize"),
-            ValueLayout.JAVA_INT.withName("maxComputeInvocationsPerWorkgroup"),
-            ValueLayout.JAVA_INT.withName("maxComputeWorkgroupSizeX"),
-            ValueLayout.JAVA_INT.withName("maxComputeWorkgroupSizeY"),
-            ValueLayout.JAVA_INT.withName("maxComputeWorkgroupSizeZ"),
-            ValueLayout.JAVA_INT.withName("maxComputeWorkgroupsPerDimension"),
-            ValueLayout.JAVA_INT.withName("maxImmediateSize")
-        ).withName("WGPULimits")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxTextureDimension1D"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxTextureDimension2D"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxTextureDimension3D"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxTextureArrayLayers"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxBindGroups"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxBindGroupsPlusVertexBuffers"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxBindingsPerBindGroup"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxDynamicUniformBuffersPerPipelineLayout"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxDynamicStorageBuffersPerPipelineLayout"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxSampledTexturesPerShaderStage"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxSamplersPerShaderStage"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxStorageBuffersPerShaderStage"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxStorageTexturesPerShaderStage"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxUniformBuffersPerShaderStage"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("maxUniformBufferBindingSize"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("maxStorageBufferBindingSize"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("minUniformBufferOffsetAlignment"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("minStorageBufferOffsetAlignment"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxVertexBuffers"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("maxBufferSize"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxVertexAttributes"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxVertexBufferArrayStride"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxInterStageShaderVariables"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxColorAttachments"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxColorAttachmentBytesPerSample"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxComputeWorkgroupStorageSize"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxComputeInvocationsPerWorkgroup"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxComputeWorkgroupSizeX"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxComputeWorkgroupSizeY"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxComputeWorkgroupSizeZ"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxComputeWorkgroupsPerDimension"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxImmediateSize")
+        ).withByteAlignment(8).withName("WGPULimits")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val maxTextureDimension1D_VH: VarHandle = layout.varHandle(groupElement("maxTextureDimension1D"))
@@ -3965,16 +3976,16 @@ actual interface WGPURenderPassColorAttachment : CStructure {
     actual var clearValue: WGPUColor
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.ADDRESS.withName("view"),
-            ValueLayout.JAVA_INT.withName("depthSlice"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("resolveTarget"),
-            ValueLayout.JAVA_INT.withName("loadOp"),
-            ValueLayout.JAVA_INT.withName("storeOp"),
-            WGPUColor.layout.withName("clearValue")
-        ).withName("WGPURenderPassColorAttachment")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("view"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthSlice"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("resolveTarget"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("loadOp"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("storeOp"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_DOUBLE.withByteAlignment(8).withName("r"), ValueLayout.JAVA_DOUBLE.withByteAlignment(8).withName("g"), ValueLayout.JAVA_DOUBLE.withByteAlignment(8).withName("b"), ValueLayout.JAVA_DOUBLE.withByteAlignment(8).withName("a")).withByteAlignment(8).withName("WGPUColor").withName("clearValue")
+        ).withByteAlignment(8).withName("WGPURenderPassColorAttachment")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val view_VH: VarHandle = layout.varHandle(groupElement("view"))
@@ -4033,14 +4044,14 @@ actual interface WGPURequestAdapterOptions : CStructure {
     actual var compatibleSurface: WGPUSurface?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("featureLevel"),
-            ValueLayout.JAVA_INT.withName("powerPreference"),
-            ValueLayout.JAVA_INT.withName("forceFallbackAdapter"),
-            ValueLayout.JAVA_INT.withName("backendType"),
-            ValueLayout.ADDRESS.withName("compatibleSurface")
-        ).withName("WGPURequestAdapterOptions")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("featureLevel"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("powerPreference"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("forceFallbackAdapter"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("backendType"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("compatibleSurface")
+        ).withByteAlignment(8).withName("WGPURequestAdapterOptions")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val featureLevel_VH: VarHandle = layout.varHandle(groupElement("featureLevel"))
@@ -4090,10 +4101,10 @@ actual interface WGPUShaderModuleDescriptor : CStructure {
     actual var label: WGPUStringView
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label")
-        ).withName("WGPUShaderModuleDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label")
+        ).withByteAlignment(8).withName("WGPUShaderModuleDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         
@@ -4128,10 +4139,10 @@ actual interface WGPUSurfaceDescriptor : CStructure {
     actual var label: WGPUStringView
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label")
-        ).withName("WGPUSurfaceDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label")
+        ).withByteAlignment(8).withName("WGPUSurfaceDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         
@@ -4166,10 +4177,10 @@ actual interface WGPUTexelCopyBufferInfo : CStructure {
     actual var buffer: WGPUBuffer?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUTexelCopyBufferLayout.layout.withName("layout"),
-            ValueLayout.ADDRESS.withName("buffer")
-        ).withName("WGPUTexelCopyBufferInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("offset"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("bytesPerRow"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("rowsPerImage")).withByteAlignment(8).withName("WGPUTexelCopyBufferLayout").withName("layout"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("buffer")
+        ).withByteAlignment(8).withName("WGPUTexelCopyBufferInfo")
         
         val buffer_VH: VarHandle = layout.varHandle(groupElement("buffer"))
         
@@ -4206,13 +4217,13 @@ actual interface WGPUTexelCopyTextureInfo : CStructure {
     actual var aspect: WGPUTextureAspect
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("texture"),
-            ValueLayout.JAVA_INT.withName("mipLevel"),
-            WGPUOrigin3D.layout.withName("origin"),
-            ValueLayout.JAVA_INT.withName("aspect"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUTexelCopyTextureInfo")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("texture"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mipLevel"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_INT.withByteAlignment(4).withName("x"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("y"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("z")).withByteAlignment(4).withName("WGPUOrigin3D").withName("origin"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("aspect"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUTexelCopyTextureInfo")
         
         val texture_VH: VarHandle = layout.varHandle(groupElement("texture"))
         val mipLevel_VH: VarHandle = layout.varHandle(groupElement("mipLevel"))
@@ -4255,10 +4266,10 @@ actual interface WGPUTextureComponentSwizzleDescriptor : CStructure {
     actual var swizzle: WGPUTextureComponentSwizzle
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            WGPUTextureComponentSwizzle.layout.withName("swizzle")
-        ).withName("WGPUTextureComponentSwizzleDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_INT.withByteAlignment(4).withName("r"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("g"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("b"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("a")).withByteAlignment(4).withName("WGPUTextureComponentSwizzle").withName("swizzle")
+        ).withByteAlignment(8).withName("WGPUTextureComponentSwizzleDescriptor")
         
         
         actual operator fun invoke(address: NativeAddress): WGPUTextureComponentSwizzleDescriptor = ByReference(address)
@@ -4302,19 +4313,19 @@ actual interface WGPUTextureDescriptor : CStructure {
     actual var viewFormats: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.JAVA_LONG.withName("usage"),
-            ValueLayout.JAVA_INT.withName("dimension"),
-            WGPUExtent3D.layout.withName("size"),
-            ValueLayout.JAVA_INT.withName("format"),
-            ValueLayout.JAVA_INT.withName("mipLevelCount"),
-            ValueLayout.JAVA_INT.withName("sampleCount"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.JAVA_LONG.withName("viewFormatCount"),
-            ValueLayout.ADDRESS.withName("viewFormats")
-        ).withName("WGPUTextureDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("usage"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("dimension"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_INT.withByteAlignment(4).withName("width"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("height"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("depthOrArrayLayers")).withByteAlignment(4).withName("WGPUExtent3D").withName("size"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("format"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mipLevelCount"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("sampleCount"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("viewFormatCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("viewFormats")
+        ).withByteAlignment(8).withName("WGPUTextureDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val usage_VH: VarHandle = layout.varHandle(groupElement("usage"))
@@ -4385,14 +4396,14 @@ actual interface WGPUVertexBufferLayout : CStructure {
     actual var attributes: WGPUVertexAttribute?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("stepMode"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.JAVA_LONG.withName("arrayStride"),
-            ValueLayout.JAVA_LONG.withName("attributeCount"),
-            ValueLayout.ADDRESS.withName("attributes")
-        ).withName("WGPUVertexBufferLayout")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("stepMode"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("arrayStride"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("attributeCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("attributes")
+        ).withByteAlignment(8).withName("WGPUVertexBufferLayout")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val stepMode_VH: VarHandle = layout.varHandle(groupElement("stepMode"))
@@ -4441,13 +4452,13 @@ actual interface WGPUBindGroupDescriptor : CStructure {
     actual var entries: WGPUBindGroupEntry?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.ADDRESS.withName("layout"),
-            ValueLayout.JAVA_LONG.withName("entryCount"),
-            ValueLayout.ADDRESS.withName("entries")
-        ).withName("WGPUBindGroupDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("layout"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("entryCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("entries")
+        ).withByteAlignment(8).withName("WGPUBindGroupDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val layout_VH: VarHandle = layout.varHandle(groupElement("layout"))
@@ -4496,12 +4507,12 @@ actual interface WGPUBindGroupLayoutDescriptor : CStructure {
     actual var entries: WGPUBindGroupLayoutEntry?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.JAVA_LONG.withName("entryCount"),
-            ValueLayout.ADDRESS.withName("entries")
-        ).withName("WGPUBindGroupLayoutDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("entryCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("entries")
+        ).withByteAlignment(8).withName("WGPUBindGroupLayoutDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val entryCount_VH: VarHandle = layout.varHandle(groupElement("entryCount"))
@@ -4546,13 +4557,13 @@ actual interface WGPUColorTargetState : CStructure {
     actual var writeMask: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_INT.withName("format"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("blend"),
-            ValueLayout.JAVA_LONG.withName("writeMask")
-        ).withName("WGPUColorTargetState")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("format"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("blend"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("writeMask")
+        ).withByteAlignment(8).withName("WGPUColorTargetState")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val format_VH: VarHandle = layout.varHandle(groupElement("format"))
@@ -4596,12 +4607,12 @@ actual interface WGPUComputePipelineDescriptor : CStructure {
     actual var compute: WGPUComputeState
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.ADDRESS.withName("layout"),
-            WGPUComputeState.layout.withName("compute")
-        ).withName("WGPUComputePipelineDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("layout"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"), ValueLayout.ADDRESS.withByteAlignment(8).withName("module"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("entryPoint"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("constantCount"), ValueLayout.ADDRESS.withByteAlignment(8).withName("constants")).withByteAlignment(8).withName("WGPUComputeState").withName("compute")
+        ).withByteAlignment(8).withName("WGPUComputePipelineDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val layout_VH: VarHandle = layout.varHandle(groupElement("layout"))
@@ -4651,16 +4662,16 @@ actual interface WGPUDeviceDescriptor : CStructure {
     actual var uncapturedErrorCallbackInfo: WGPUUncapturedErrorCallbackInfo
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.JAVA_LONG.withName("requiredFeatureCount"),
-            ValueLayout.ADDRESS.withName("requiredFeatures"),
-            ValueLayout.ADDRESS.withName("requiredLimits"),
-            WGPUQueueDescriptor.layout.withName("defaultQueue"),
-            WGPUDeviceLostCallbackInfo.layout.withName("deviceLostCallbackInfo"),
-            WGPUUncapturedErrorCallbackInfo.layout.withName("uncapturedErrorCallbackInfo")
-        ).withName("WGPUDeviceDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("requiredFeatureCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("requiredFeatures"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("requiredLimits"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label")).withByteAlignment(8).withName("WGPUQueueDescriptor").withName("defaultQueue"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("mode"), java.lang.foreign.MemoryLayout.paddingLayout(4), ValueLayout.ADDRESS.withByteAlignment(8).withName("callback"), ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata1"), ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata2")).withByteAlignment(8).withName("WGPUDeviceLostCallbackInfo").withName("deviceLostCallbackInfo"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"), ValueLayout.ADDRESS.withByteAlignment(8).withName("callback"), ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata1"), ValueLayout.ADDRESS.withByteAlignment(8).withName("userdata2")).withByteAlignment(8).withName("WGPUUncapturedErrorCallbackInfo").withName("uncapturedErrorCallbackInfo")
+        ).withByteAlignment(8).withName("WGPUDeviceDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val requiredFeatureCount_VH: VarHandle = layout.varHandle(groupElement("requiredFeatureCount"))
@@ -4727,15 +4738,15 @@ actual interface WGPURenderPassDescriptor : CStructure {
     actual var timestampWrites: WGPUPassTimestampWrites?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.JAVA_LONG.withName("colorAttachmentCount"),
-            ValueLayout.ADDRESS.withName("colorAttachments"),
-            ValueLayout.ADDRESS.withName("depthStencilAttachment"),
-            ValueLayout.ADDRESS.withName("occlusionQuerySet"),
-            ValueLayout.ADDRESS.withName("timestampWrites")
-        ).withName("WGPURenderPassDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("colorAttachmentCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("colorAttachments"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("depthStencilAttachment"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("occlusionQuerySet"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("timestampWrites")
+        ).withByteAlignment(8).withName("WGPURenderPassDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val colorAttachmentCount_VH: VarHandle = layout.varHandle(groupElement("colorAttachmentCount"))
@@ -4798,19 +4809,19 @@ actual interface WGPUTextureViewDescriptor : CStructure {
     actual var usage: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.JAVA_INT.withName("format"),
-            ValueLayout.JAVA_INT.withName("dimension"),
-            ValueLayout.JAVA_INT.withName("baseMipLevel"),
-            ValueLayout.JAVA_INT.withName("mipLevelCount"),
-            ValueLayout.JAVA_INT.withName("baseArrayLayer"),
-            ValueLayout.JAVA_INT.withName("arrayLayerCount"),
-            ValueLayout.JAVA_INT.withName("aspect"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.JAVA_LONG.withName("usage")
-        ).withName("WGPUTextureViewDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("format"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("dimension"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("baseMipLevel"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mipLevelCount"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("baseArrayLayer"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("arrayLayerCount"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("aspect"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("usage")
+        ).withByteAlignment(8).withName("WGPUTextureViewDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val format_VH: VarHandle = layout.varHandle(groupElement("format"))
@@ -4882,15 +4893,15 @@ actual interface WGPUVertexState : CStructure {
     actual var buffers: WGPUVertexBufferLayout?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.ADDRESS.withName("module"),
-            WGPUStringView.layout.withName("entryPoint"),
-            ValueLayout.JAVA_LONG.withName("constantCount"),
-            ValueLayout.ADDRESS.withName("constants"),
-            ValueLayout.JAVA_LONG.withName("bufferCount"),
-            ValueLayout.ADDRESS.withName("buffers")
-        ).withName("WGPUVertexState")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("module"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("entryPoint"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("constantCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("constants"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("bufferCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("buffers")
+        ).withByteAlignment(8).withName("WGPUVertexState")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val module_VH: VarHandle = layout.varHandle(groupElement("module"))
@@ -4950,15 +4961,15 @@ actual interface WGPUFragmentState : CStructure {
     actual var targets: WGPUColorTargetState?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.ADDRESS.withName("module"),
-            WGPUStringView.layout.withName("entryPoint"),
-            ValueLayout.JAVA_LONG.withName("constantCount"),
-            ValueLayout.ADDRESS.withName("constants"),
-            ValueLayout.JAVA_LONG.withName("targetCount"),
-            ValueLayout.ADDRESS.withName("targets")
-        ).withName("WGPUFragmentState")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("module"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("entryPoint"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("constantCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("constants"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("targetCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("targets")
+        ).withByteAlignment(8).withName("WGPUFragmentState")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val module_VH: VarHandle = layout.varHandle(groupElement("module"))
@@ -5019,16 +5030,16 @@ actual interface WGPURenderPipelineDescriptor : CStructure {
     actual var fragment: WGPUFragmentState?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.ADDRESS.withName("layout"),
-            WGPUVertexState.layout.withName("vertex"),
-            WGPUPrimitiveState.layout.withName("primitive"),
-            ValueLayout.ADDRESS.withName("depthStencil"),
-            WGPUMultisampleState.layout.withName("multisample"),
-            ValueLayout.ADDRESS.withName("fragment")
-        ).withName("WGPURenderPipelineDescriptor")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("layout"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"), ValueLayout.ADDRESS.withByteAlignment(8).withName("module"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("entryPoint"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("constantCount"), ValueLayout.ADDRESS.withByteAlignment(8).withName("constants"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("bufferCount"), ValueLayout.ADDRESS.withByteAlignment(8).withName("buffers")).withByteAlignment(8).withName("WGPUVertexState").withName("vertex"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("topology"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("stripIndexFormat"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("frontFace"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("cullMode"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("unclippedDepth"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUPrimitiveState").withName("primitive"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("depthStencil"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("count"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("mask"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("alphaToCoverageEnabled"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUMultisampleState").withName("multisample"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("fragment")
+        ).withByteAlignment(8).withName("WGPURenderPipelineDescriptor")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val layout_VH: VarHandle = layout.varHandle(groupElement("layout"))
@@ -5104,7 +5115,7 @@ private val wgpuGetInstanceLimits_DESC: FunctionDescriptor = FunctionDescriptor.
 private val wgpuGetInstanceLimits_ADDR: MemorySegment by lazy { findOrThrow("wgpuGetInstanceLimits") }
 private val wgpuGetInstanceLimits_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuGetInstanceLimits_ADDR, wgpuGetInstanceLimits_DESC) }
 actual fun wgpuGetInstanceLimits(limits: WGPUInstanceLimits?): WGPUStatus {
-    return (wgpuGetInstanceLimits_HANDLE.invokeExact(limits?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt() as WGPUStatus
+    return (wgpuGetInstanceLimits_HANDLE.invokeExact(limits?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuHasInstanceFeature_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT)
@@ -5133,14 +5144,14 @@ private val wgpuAdapterGetInfo_DESC: FunctionDescriptor = FunctionDescriptor.of(
 private val wgpuAdapterGetInfo_ADDR: MemorySegment by lazy { findOrThrow("wgpuAdapterGetInfo") }
 private val wgpuAdapterGetInfo_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuAdapterGetInfo_ADDR, wgpuAdapterGetInfo_DESC) }
 actual fun wgpuAdapterGetInfo(adapter: WGPUAdapter?, info: WGPUAdapterInfo?): WGPUStatus {
-    return (wgpuAdapterGetInfo_HANDLE.invokeExact(adapter?.handler?.handler ?: MemorySegment.NULL, info?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt() as WGPUStatus
+    return (wgpuAdapterGetInfo_HANDLE.invokeExact(adapter?.handler?.handler ?: MemorySegment.NULL, info?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuAdapterGetLimits_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
 private val wgpuAdapterGetLimits_ADDR: MemorySegment by lazy { findOrThrow("wgpuAdapterGetLimits") }
 private val wgpuAdapterGetLimits_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuAdapterGetLimits_ADDR, wgpuAdapterGetLimits_DESC) }
 actual fun wgpuAdapterGetLimits(adapter: WGPUAdapter?, limits: WGPULimits?): WGPUStatus {
-    return (wgpuAdapterGetLimits_HANDLE.invokeExact(adapter?.handler?.handler ?: MemorySegment.NULL, limits?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt() as WGPUStatus
+    return (wgpuAdapterGetLimits_HANDLE.invokeExact(adapter?.handler?.handler ?: MemorySegment.NULL, limits?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuAdapterHasFeature_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
@@ -5255,7 +5266,7 @@ private val wgpuBufferGetMapState_DESC: FunctionDescriptor = FunctionDescriptor.
 private val wgpuBufferGetMapState_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferGetMapState") }
 private val wgpuBufferGetMapState_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferGetMapState_ADDR, wgpuBufferGetMapState_DESC) }
 actual fun wgpuBufferGetMapState(buffer: WGPUBuffer?): WGPUBufferMapState {
-    return (wgpuBufferGetMapState_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt() as WGPUBufferMapState
+    return (wgpuBufferGetMapState_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuBufferGetSize_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
@@ -5283,7 +5294,7 @@ private val wgpuBufferReadMappedRange_DESC: FunctionDescriptor = FunctionDescrip
 private val wgpuBufferReadMappedRange_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferReadMappedRange") }
 private val wgpuBufferReadMappedRange_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferReadMappedRange_ADDR, wgpuBufferReadMappedRange_DESC) }
 actual fun wgpuBufferReadMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus {
-    return (wgpuBufferReadMappedRange_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), data?.handler ?: MemorySegment.NULL, size.toLong()) as Int).toUInt() as WGPUStatus
+    return (wgpuBufferReadMappedRange_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), data?.handler ?: MemorySegment.NULL, size.toLong()) as Int).toUInt()
 }
 
 private val wgpuBufferSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
@@ -5306,7 +5317,7 @@ private val wgpuBufferWriteMappedRange_DESC: FunctionDescriptor = FunctionDescri
 private val wgpuBufferWriteMappedRange_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferWriteMappedRange") }
 private val wgpuBufferWriteMappedRange_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferWriteMappedRange_ADDR, wgpuBufferWriteMappedRange_DESC) }
 actual fun wgpuBufferWriteMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus {
-    return (wgpuBufferWriteMappedRange_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), data?.handler ?: MemorySegment.NULL, size.toLong()) as Int).toUInt() as WGPUStatus
+    return (wgpuBufferWriteMappedRange_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), data?.handler ?: MemorySegment.NULL, size.toLong()) as Int).toUInt()
 }
 
 private val wgpuBufferAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
@@ -5703,7 +5714,7 @@ private val wgpuDeviceGetAdapterInfo_DESC: FunctionDescriptor = FunctionDescript
 private val wgpuDeviceGetAdapterInfo_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceGetAdapterInfo") }
 private val wgpuDeviceGetAdapterInfo_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceGetAdapterInfo_ADDR, wgpuDeviceGetAdapterInfo_DESC) }
 actual fun wgpuDeviceGetAdapterInfo(device: WGPUDevice?, adapterInfo: WGPUAdapterInfo?): WGPUStatus {
-    return (wgpuDeviceGetAdapterInfo_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, adapterInfo?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt() as WGPUStatus
+    return (wgpuDeviceGetAdapterInfo_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, adapterInfo?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuDeviceGetFeatures_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
@@ -5718,7 +5729,7 @@ private val wgpuDeviceGetLimits_DESC: FunctionDescriptor = FunctionDescriptor.of
 private val wgpuDeviceGetLimits_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceGetLimits") }
 private val wgpuDeviceGetLimits_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceGetLimits_ADDR, wgpuDeviceGetLimits_DESC) }
 actual fun wgpuDeviceGetLimits(device: WGPUDevice?, limits: WGPULimits?): WGPUStatus {
-    return (wgpuDeviceGetLimits_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, limits?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt() as WGPUStatus
+    return (wgpuDeviceGetLimits_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, limits?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuDeviceGetLostFuture_DESC: FunctionDescriptor = FunctionDescriptor.of(WGPUFuture.layout, ValueLayout.ADDRESS)
@@ -5846,7 +5857,7 @@ private val wgpuInstanceWaitAny_DESC: FunctionDescriptor = FunctionDescriptor.of
 private val wgpuInstanceWaitAny_ADDR: MemorySegment by lazy { findOrThrow("wgpuInstanceWaitAny") }
 private val wgpuInstanceWaitAny_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuInstanceWaitAny_ADDR, wgpuInstanceWaitAny_DESC) }
 actual fun wgpuInstanceWaitAny(instance: WGPUInstance?, futureCount: ULong, futures: WGPUFutureWaitInfo?, timeoutNS: ULong): WGPUWaitStatus {
-    return (wgpuInstanceWaitAny_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL, futureCount.toLong(), futures?.handler?.handler ?: MemorySegment.NULL, timeoutNS.toLong()) as Int).toUInt() as WGPUWaitStatus
+    return (wgpuInstanceWaitAny_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL, futureCount.toLong(), futures?.handler?.handler ?: MemorySegment.NULL, timeoutNS.toLong()) as Int).toUInt()
 }
 
 private val wgpuInstanceAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
@@ -5908,7 +5919,7 @@ private val wgpuQuerySetGetType_DESC: FunctionDescriptor = FunctionDescriptor.of
 private val wgpuQuerySetGetType_ADDR: MemorySegment by lazy { findOrThrow("wgpuQuerySetGetType") }
 private val wgpuQuerySetGetType_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQuerySetGetType_ADDR, wgpuQuerySetGetType_DESC) }
 actual fun wgpuQuerySetGetType(querySet: WGPUQuerySet?): WGPUQueryType {
-    return (wgpuQuerySetGetType_HANDLE.invokeExact(querySet?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt() as WGPUQueryType
+    return (wgpuQuerySetGetType_HANDLE.invokeExact(querySet?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuQuerySetSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
@@ -6431,7 +6442,7 @@ private val wgpuSurfaceGetCapabilities_DESC: FunctionDescriptor = FunctionDescri
 private val wgpuSurfaceGetCapabilities_ADDR: MemorySegment by lazy { findOrThrow("wgpuSurfaceGetCapabilities") }
 private val wgpuSurfaceGetCapabilities_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSurfaceGetCapabilities_ADDR, wgpuSurfaceGetCapabilities_DESC) }
 actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus {
-    return (wgpuSurfaceGetCapabilities_HANDLE.invokeExact(surface?.handler?.handler ?: MemorySegment.NULL, adapter?.handler?.handler ?: MemorySegment.NULL, capabilities?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt() as WGPUStatus
+    return (wgpuSurfaceGetCapabilities_HANDLE.invokeExact(surface?.handler?.handler ?: MemorySegment.NULL, adapter?.handler?.handler ?: MemorySegment.NULL, capabilities?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuSurfaceGetCurrentTexture_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
@@ -6446,7 +6457,7 @@ private val wgpuSurfacePresent_DESC: FunctionDescriptor = FunctionDescriptor.of(
 private val wgpuSurfacePresent_ADDR: MemorySegment by lazy { findOrThrow("wgpuSurfacePresent") }
 private val wgpuSurfacePresent_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSurfacePresent_ADDR, wgpuSurfacePresent_DESC) }
 actual fun wgpuSurfacePresent(surface: WGPUSurface?): WGPUStatus {
-    return (wgpuSurfacePresent_HANDLE.invokeExact(surface?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt() as WGPUStatus
+    return (wgpuSurfacePresent_HANDLE.invokeExact(surface?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuSurfaceSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
@@ -6515,14 +6526,14 @@ private val wgpuTextureGetDimension_DESC: FunctionDescriptor = FunctionDescripto
 private val wgpuTextureGetDimension_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetDimension") }
 private val wgpuTextureGetDimension_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetDimension_ADDR, wgpuTextureGetDimension_DESC) }
 actual fun wgpuTextureGetDimension(texture: WGPUTexture?): WGPUTextureDimension {
-    return (wgpuTextureGetDimension_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt() as WGPUTextureDimension
+    return (wgpuTextureGetDimension_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuTextureGetFormat_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
 private val wgpuTextureGetFormat_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetFormat") }
 private val wgpuTextureGetFormat_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetFormat_ADDR, wgpuTextureGetFormat_DESC) }
 actual fun wgpuTextureGetFormat(texture: WGPUTexture?): WGPUTextureFormat {
-    return (wgpuTextureGetFormat_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt() as WGPUTextureFormat
+    return (wgpuTextureGetFormat_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuTextureGetHeight_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
@@ -6550,7 +6561,7 @@ private val wgpuTextureGetTextureBindingViewDimension_DESC: FunctionDescriptor =
 private val wgpuTextureGetTextureBindingViewDimension_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetTextureBindingViewDimension") }
 private val wgpuTextureGetTextureBindingViewDimension_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetTextureBindingViewDimension_ADDR, wgpuTextureGetTextureBindingViewDimension_DESC) }
 actual fun wgpuTextureGetTextureBindingViewDimension(texture: WGPUTexture?): WGPUTextureViewDimension {
-    return (wgpuTextureGetTextureBindingViewDimension_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt() as WGPUTextureViewDimension
+    return (wgpuTextureGetTextureBindingViewDimension_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuTextureGetUsage_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
@@ -6620,11 +6631,11 @@ actual interface WGPUXlibDisplayHandle : CStructure {
     actual var screen: Int
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("display"),
-            ValueLayout.JAVA_INT.withName("screen"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUXlibDisplayHandle")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("display"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("screen"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUXlibDisplayHandle")
         
         val display_VH: VarHandle = layout.varHandle(groupElement("display"))
         val screen_VH: VarHandle = layout.varHandle(groupElement("screen"))
@@ -6658,11 +6669,11 @@ actual interface WGPUXcbDisplayHandle : CStructure {
     actual var screen: Int
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("connection"),
-            ValueLayout.JAVA_INT.withName("screen"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUXcbDisplayHandle")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("connection"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("screen"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUXcbDisplayHandle")
         
         val connection_VH: VarHandle = layout.varHandle(groupElement("connection"))
         val screen_VH: VarHandle = layout.varHandle(groupElement("screen"))
@@ -6695,9 +6706,9 @@ actual interface WGPUWaylandDisplayHandle : CStructure {
     actual var display: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("display")
-        ).withName("WGPUWaylandDisplayHandle")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("display")
+        ).withByteAlignment(8).withName("WGPUWaylandDisplayHandle")
         
         val display_VH: VarHandle = layout.varHandle(groupElement("display"))
         
@@ -6795,21 +6806,21 @@ actual interface WGPUInstanceExtras : CStructure {
     actual var displayHandle: WGPUNativeDisplayHandle
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_LONG.withName("backends"),
-            ValueLayout.JAVA_LONG.withName("flags"),
-            ValueLayout.JAVA_INT.withName("dx12ShaderCompiler"),
-            ValueLayout.JAVA_INT.withName("gles3MinorVersion"),
-            ValueLayout.JAVA_INT.withName("glFenceBehaviour"),
-            MemoryLayout.paddingLayout(4),
-            WGPUStringView.layout.withName("dxcPath"),
-            ValueLayout.JAVA_INT.withName("dxcMaxShaderModel"),
-            ValueLayout.JAVA_INT.withName("dx12PresentationSystem"),
-            ValueLayout.ADDRESS.withName("budgetForDeviceCreation"),
-            ValueLayout.ADDRESS.withName("budgetForDeviceLoss"),
-            WGPUNativeDisplayHandle.layout.withName("displayHandle")
-        ).withName("WGPUInstanceExtras")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("backends"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("flags"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("dx12ShaderCompiler"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("gles3MinorVersion"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("glFenceBehaviour"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("dxcPath"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("dxcMaxShaderModel"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("dx12PresentationSystem"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("budgetForDeviceCreation"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("budgetForDeviceLoss"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_INT.withByteAlignment(4).withName("type"), java.lang.foreign.MemoryLayout.paddingLayout(4), java.lang.foreign.MemoryLayout.unionLayout(java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("display"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("screen"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUXlibDisplayHandle").withName("xlib"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("connection"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("screen"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUXcbDisplayHandle").withName("xcb"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("display")).withByteAlignment(8).withName("WGPUWaylandDisplayHandle").withName("wayland")).withByteAlignment(8).withName("union (unnamed at /Users/chaos/.codex/worktrees/8a9c/wgpu4k-native/wgpu4k-native/build/native/wgpu.h:917:5)").withName("data")).withByteAlignment(8).withName("WGPUNativeDisplayHandle").withName("displayHandle")
+        ).withByteAlignment(8).withName("WGPUInstanceExtras")
         
         val backends_VH: VarHandle = layout.varHandle(groupElement("backends"))
         val flags_VH: VarHandle = layout.varHandle(groupElement("flags"))
@@ -6886,10 +6897,10 @@ actual interface WGPUDeviceExtras : CStructure {
     actual var tracePath: WGPUStringView
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            WGPUStringView.layout.withName("tracePath")
-        ).withName("WGPUDeviceExtras")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("tracePath")
+        ).withByteAlignment(8).withName("WGPUDeviceExtras")
         
         
         actual operator fun invoke(address: NativeAddress): WGPUDeviceExtras = ByReference(address)
@@ -6927,13 +6938,13 @@ actual interface WGPUNativeLimits : CStructure {
     actual var maxBindingArrayElementsPerShaderStage: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_INT.withName("maxImmediateSize"),
-            ValueLayout.JAVA_INT.withName("maxNonSamplerBindings"),
-            ValueLayout.JAVA_INT.withName("maxBindingArrayElementsPerShaderStage"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUNativeLimits")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxImmediateSize"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxNonSamplerBindings"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxBindingArrayElementsPerShaderStage"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUNativeLimits")
         
         val maxImmediateSize_VH: VarHandle = layout.varHandle(groupElement("maxImmediateSize"))
         val maxNonSamplerBindings_VH: VarHandle = layout.varHandle(groupElement("maxNonSamplerBindings"))
@@ -6976,11 +6987,11 @@ actual interface WGPUPipelineLayoutExtras : CStructure {
     actual var immediateDataSize: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_INT.withName("immediateDataSize"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUPipelineLayoutExtras")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("immediateDataSize"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUPipelineLayoutExtras")
         
         val immediateDataSize_VH: VarHandle = layout.varHandle(groupElement("immediateDataSize"))
         
@@ -7015,10 +7026,10 @@ actual interface WGPUShaderDefine : CStructure {
     actual var value: WGPUStringView
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUStringView.layout.withName("name"),
-            WGPUStringView.layout.withName("value")
-        ).withName("WGPUShaderDefine")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("name"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("value")
+        ).withByteAlignment(8).withName("WGPUShaderDefine")
         
         
         actual operator fun invoke(address: NativeAddress): WGPUShaderDefine = ByReference(address)
@@ -7057,14 +7068,14 @@ actual interface WGPUShaderSourceGLSL : CStructure {
     actual var defines: WGPUShaderDefine?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_LONG.withName("stage"),
-            WGPUStringView.layout.withName("code"),
-            ValueLayout.JAVA_INT.withName("defineCount"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("defines")
-        ).withName("WGPUShaderSourceGLSL")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("stage"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("code"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("defineCount"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("defines")
+        ).withByteAlignment(8).withName("WGPUShaderSourceGLSL")
         
         val stage_VH: VarHandle = layout.varHandle(groupElement("stage"))
         val defineCount_VH: VarHandle = layout.varHandle(groupElement("defineCount"))
@@ -7113,12 +7124,12 @@ actual interface WGPUShaderModuleDescriptorSpirV : CStructure {
     actual var source: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUStringView.layout.withName("label"),
-            ValueLayout.JAVA_INT.withName("sourceSize"),
-            MemoryLayout.paddingLayout(4),
-            ValueLayout.ADDRESS.withName("source")
-        ).withName("WGPUShaderModuleDescriptorSpirV")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("data"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("length")).withByteAlignment(8).withName("WGPUStringView").withName("label"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("sourceSize"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("source")
+        ).withByteAlignment(8).withName("WGPUShaderModuleDescriptorSpirV")
         
         val sourceSize_VH: VarHandle = layout.varHandle(groupElement("sourceSize"))
         val source_VH: VarHandle = layout.varHandle(groupElement("source"))
@@ -7159,12 +7170,12 @@ actual interface WGPURegistryReport : CStructure {
     actual var elementSize: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.JAVA_LONG.withName("numAllocated"),
-            ValueLayout.JAVA_LONG.withName("numKeptFromUser"),
-            ValueLayout.JAVA_LONG.withName("numReleasedFromUser"),
-            ValueLayout.JAVA_LONG.withName("elementSize")
-        ).withName("WGPURegistryReport")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")
+        ).withByteAlignment(8).withName("WGPURegistryReport")
         
         val numAllocated_VH: VarHandle = layout.varHandle(groupElement("numAllocated"))
         val numKeptFromUser_VH: VarHandle = layout.varHandle(groupElement("numKeptFromUser"))
@@ -7221,25 +7232,25 @@ actual interface WGPUHubReport : CStructure {
     actual var samplers: WGPURegistryReport
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPURegistryReport.layout.withName("adapters"),
-            WGPURegistryReport.layout.withName("devices"),
-            WGPURegistryReport.layout.withName("queues"),
-            WGPURegistryReport.layout.withName("pipelineLayouts"),
-            WGPURegistryReport.layout.withName("shaderModules"),
-            WGPURegistryReport.layout.withName("bindGroupLayouts"),
-            WGPURegistryReport.layout.withName("bindGroups"),
-            WGPURegistryReport.layout.withName("commandBuffers"),
-            WGPURegistryReport.layout.withName("renderBundles"),
-            WGPURegistryReport.layout.withName("renderPipelines"),
-            WGPURegistryReport.layout.withName("computePipelines"),
-            WGPURegistryReport.layout.withName("pipelineCaches"),
-            WGPURegistryReport.layout.withName("querySets"),
-            WGPURegistryReport.layout.withName("buffers"),
-            WGPURegistryReport.layout.withName("textures"),
-            WGPURegistryReport.layout.withName("textureViews"),
-            WGPURegistryReport.layout.withName("samplers")
-        ).withName("WGPUHubReport")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("adapters"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("devices"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("queues"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("pipelineLayouts"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("shaderModules"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("bindGroupLayouts"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("bindGroups"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("commandBuffers"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("renderBundles"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("renderPipelines"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("computePipelines"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("pipelineCaches"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("querySets"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("buffers"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("textures"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("textureViews"),
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("samplers")
+        ).withByteAlignment(8).withName("WGPUHubReport")
         
         
         actual operator fun invoke(address: NativeAddress): WGPUHubReport = ByReference(address)
@@ -7350,10 +7361,10 @@ actual interface WGPUGlobalReport : CStructure {
     actual var hub: WGPUHubReport
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPURegistryReport.layout.withName("surfaces"),
-            WGPUHubReport.layout.withName("hub")
-        ).withName("WGPUGlobalReport")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("surfaces"),
+            java.lang.foreign.MemoryLayout.structLayout(java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("adapters"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("devices"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("queues"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("pipelineLayouts"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("shaderModules"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("bindGroupLayouts"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("bindGroups"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("commandBuffers"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("renderBundles"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("renderPipelines"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("computePipelines"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("pipelineCaches"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("querySets"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("buffers"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("textures"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("textureViews"), java.lang.foreign.MemoryLayout.structLayout(ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numAllocated"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numKeptFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("numReleasedFromUser"), ValueLayout.JAVA_LONG.withByteAlignment(8).withName("elementSize")).withByteAlignment(8).withName("WGPURegistryReport").withName("samplers")).withByteAlignment(8).withName("WGPUHubReport").withName("hub")
+        ).withByteAlignment(8).withName("WGPUGlobalReport")
         
         
         actual operator fun invoke(address: NativeAddress): WGPUGlobalReport = ByReference(address)
@@ -7389,10 +7400,10 @@ actual interface WGPUInstanceEnumerateAdapterOptions : CStructure {
     actual var backends: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            ValueLayout.ADDRESS.withName("nextInChain"),
-            ValueLayout.JAVA_LONG.withName("backends")
-        ).withName("WGPUInstanceEnumerateAdapterOptions")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("nextInChain"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("backends")
+        ).withByteAlignment(8).withName("WGPUInstanceEnumerateAdapterOptions")
         
         val nextInChain_VH: VarHandle = layout.varHandle(groupElement("nextInChain"))
         val backends_VH: VarHandle = layout.varHandle(groupElement("backends"))
@@ -7431,15 +7442,15 @@ actual interface WGPUBindGroupEntryExtras : CStructure {
     actual var textureViewCount: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.ADDRESS.withName("buffers"),
-            ValueLayout.JAVA_LONG.withName("bufferCount"),
-            ValueLayout.ADDRESS.withName("samplers"),
-            ValueLayout.JAVA_LONG.withName("samplerCount"),
-            ValueLayout.ADDRESS.withName("textureViews"),
-            ValueLayout.JAVA_LONG.withName("textureViewCount")
-        ).withName("WGPUBindGroupEntryExtras")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("buffers"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("bufferCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("samplers"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("samplerCount"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("textureViews"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("textureViewCount")
+        ).withByteAlignment(8).withName("WGPUBindGroupEntryExtras")
         
         val buffers_VH: VarHandle = layout.varHandle(groupElement("buffers"))
         val bufferCount_VH: VarHandle = layout.varHandle(groupElement("bufferCount"))
@@ -7494,11 +7505,11 @@ actual interface WGPUBindGroupLayoutEntryExtras : CStructure {
     actual var count: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_INT.withName("count"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUBindGroupLayoutEntryExtras")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("count"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUBindGroupLayoutEntryExtras")
         
         val count_VH: VarHandle = layout.varHandle(groupElement("count"))
         
@@ -7534,11 +7545,11 @@ actual interface WGPUQuerySetDescriptorExtras : CStructure {
     actual var pipelineStatisticCount: ULong
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.ADDRESS.withName("pipelineStatistics"),
-            ValueLayout.JAVA_LONG.withName("pipelineStatisticCount")
-        ).withName("WGPUQuerySetDescriptorExtras")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("pipelineStatistics"),
+            ValueLayout.JAVA_LONG.withByteAlignment(8).withName("pipelineStatisticCount")
+        ).withByteAlignment(8).withName("WGPUQuerySetDescriptorExtras")
         
         val pipelineStatistics_VH: VarHandle = layout.varHandle(groupElement("pipelineStatistics"))
         val pipelineStatisticCount_VH: VarHandle = layout.varHandle(groupElement("pipelineStatisticCount"))
@@ -7577,11 +7588,11 @@ actual interface WGPUSurfaceConfigurationExtras : CStructure {
     actual var desiredMaximumFrameLatency: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_INT.withName("desiredMaximumFrameLatency"),
-            MemoryLayout.paddingLayout(4)
-        ).withName("WGPUSurfaceConfigurationExtras")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("desiredMaximumFrameLatency"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUSurfaceConfigurationExtras")
         
         val desiredMaximumFrameLatency_VH: VarHandle = layout.varHandle(groupElement("desiredMaximumFrameLatency"))
         
@@ -7616,10 +7627,10 @@ actual interface WGPUSurfaceSourceSwapChainPanel : CStructure {
     actual var panelNative: NativeAddress?
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.ADDRESS.withName("panelNative")
-        ).withName("WGPUSurfaceSourceSwapChainPanel")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.ADDRESS.withByteAlignment(8).withName("panelNative")
+        ).withByteAlignment(8).withName("WGPUSurfaceSourceSwapChainPanel")
         
         val panelNative_VH: VarHandle = layout.varHandle(groupElement("panelNative"))
         
@@ -7655,11 +7666,11 @@ actual interface WGPUPrimitiveStateExtras : CStructure {
     actual var conservative: UInt
     actual override val handler: NativeAddress
     actual companion object {
-        val layout: GroupLayout = MemoryLayout.structLayout(
-            WGPUChainedStruct.layout.withName("chain"),
-            ValueLayout.JAVA_INT.withName("polygonMode"),
-            ValueLayout.JAVA_INT.withName("conservative")
-        ).withName("WGPUPrimitiveStateExtras")
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("polygonMode"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("conservative")
+        ).withByteAlignment(8).withName("WGPUPrimitiveStateExtras")
         
         val polygonMode_VH: VarHandle = layout.varHandle(groupElement("polygonMode"))
         val conservative_VH: VarHandle = layout.varHandle(groupElement("conservative"))

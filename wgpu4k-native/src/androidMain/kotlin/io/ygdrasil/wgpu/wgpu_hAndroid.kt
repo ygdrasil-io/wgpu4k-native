@@ -11,6 +11,9 @@ import io.ygdrasil.kffi.CString
 import io.ygdrasil.kffi.ArrayHolder
 import io.ygdrasil.kffi.MemoryAllocator
 import io.ygdrasil.kffi.toAddress
+import kotlin.OptIn
+import kotlin.UnsupportedOperationException
+import kotlin.jvm.JvmInline
 
 actual interface WGPUStringView {
     actual var data: CString?
