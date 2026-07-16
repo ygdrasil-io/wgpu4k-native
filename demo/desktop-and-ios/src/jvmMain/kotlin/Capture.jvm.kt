@@ -2,7 +2,6 @@ package io.ygdrasil.wgpu
 
 import io.ygdrasil.kffi.CallbackPolicy
 import io.ygdrasil.kffi.MemoryBuffer
-import ffi.LibraryLoader
 import io.ygdrasil.kffi.memoryScope
 import java.awt.image.BufferedImage
 import java.io.File
@@ -14,7 +13,6 @@ private const val BytesPerPixel = 4
 private const val BytesPerRowAlignment = 256
 
 fun captureFrame(path: String) = memoryScope { scope ->
-    LibraryLoader.load()
     configureLogs(WGPULogLevel_Warn)
 
     val alignedBytesPerRow = align(CaptureWidth * BytesPerPixel, BytesPerRowAlignment)

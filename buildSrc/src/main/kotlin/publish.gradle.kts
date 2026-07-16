@@ -9,6 +9,9 @@ plugins {
 }
 
 val libraryDescription = "wgpu4k kotlin native binding."
+val jvmVerificationPublication = providers.gradleProperty("wgpu4k.jvmVerificationPublication")
+    .map(String::toBoolean)
+    .orElse(false)
 val dokkaHtml = tasks.named("dokkaGeneratePublicationHtml")
 
 mavenPublishing {
@@ -17,7 +20,11 @@ mavenPublishing {
 
     configure(
         KotlinMultiplatform(
-            javadocJar = JavadocJar.Dokka(dokkaHtml),
+            javadocJar = if (jvmVerificationPublication.get()) {
+                JavadocJar.Empty()
+            } else {
+                JavadocJar.Dokka(dokkaHtml)
+            },
             sourcesJar = SourcesJar.Sources(),
             androidVariantsToPublish = listOf("debug", "release"),
         ),

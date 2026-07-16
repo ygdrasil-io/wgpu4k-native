@@ -2,7 +2,6 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.tasks.Copy
 import org.gradle.kotlin.dsl.withType
-import org.gradle.language.jvm.tasks.ProcessResources
 import org.jetbrains.kotlin.gradle.tasks.CInteropProcess
 import java.io.File
 
@@ -36,10 +35,6 @@ class DSL internal constructor(val project: Project) {
 
         fun extract(fileName: String, target: File): Copy {
             val unzipTask = project.unzipTask(zipFile, target, fileName, downloadTask)
-
-            project.tasks.withType<ProcessResources> {
-                dependsOn(unzipTask)
-            }
 
             // On IntelliJ we need to execute the download when the gradle project is loaded to compile cInterop without error
             if (System.getProperty("idea.active") == "true") {

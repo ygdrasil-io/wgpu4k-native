@@ -146,22 +146,22 @@ configureDownloadTasks {
             buildNativeResourcesDirectory.resolve("include").deleteRecursively()
         }
         extract("lib/libwgpu_native.a", buildNativeResourcesDirectory.resolve("darwin-aarch64").resolve("libWGPU.a"))
-        extract("lib/libwgpu_native.dylib", jvmLibResourcesDirectory.resolve("darwin-aarch64").resolve("libWGPU.dylib")).doLast {
+        extract("lib/libwgpu_native.dylib", jvmLibResourcesDirectory.resolve("darwin-aarch64").resolve("libwgpu_native.dylib")).doLast {
             val basePath = jvmLibResourcesDirectory.resolve("darwin-aarch64")
             Files.move(
-                basePath.resolve("lib").resolve("libWGPU.dylib").toPath(),
-                basePath.resolve("libWGPU.dylib").toPath()
+                basePath.resolve("lib").resolve("libwgpu_native.dylib").toPath(),
+                basePath.resolve("libwgpu_native.dylib").toPath()
             )
             basePath.resolve("lib").deleteRecursively()
         }
     }
     download("wgpu-macos-x86_64-release.zip") {
         extract("lib/libwgpu_native.a", buildNativeResourcesDirectory.resolve("darwin-x64").resolve("libWGPU.a"))
-        extract("lib/libwgpu_native.dylib", jvmLibResourcesDirectory.resolve("darwin-x86-64").resolve("libWGPU.dylib")).doLast {
+        extract("lib/libwgpu_native.dylib", jvmLibResourcesDirectory.resolve("darwin-x86-64").resolve("libwgpu_native.dylib")).doLast {
             val basePath = jvmLibResourcesDirectory.resolve("darwin-x86-64")
             Files.move(
-                basePath.resolve("lib").resolve("libWGPU.dylib").toPath(),
-                basePath.resolve("libWGPU.dylib").toPath()
+                basePath.resolve("lib").resolve("libwgpu_native.dylib").toPath(),
+                basePath.resolve("libwgpu_native.dylib").toPath()
             )
             basePath.resolve("lib").deleteRecursively()
         }
@@ -173,11 +173,11 @@ configureDownloadTasks {
     }
     download("wgpu-windows-x86_64-msvc-release.zip") {
         extract("lib/wgpu_native.lib", buildNativeResourcesDirectory.resolve("windows-x64").resolve("wgpu.lib"))
-        extract("lib/wgpu_native.dll", jvmLibResourcesDirectory.resolve("win32-x86-64").resolve("WGPU.dll")).doLast {
+        extract("lib/wgpu_native.dll", jvmLibResourcesDirectory.resolve("win32-x86-64").resolve("wgpu_native.dll")).doLast {
             val basePath = jvmLibResourcesDirectory.resolve("win32-x86-64")
             Files.move(
-                basePath.resolve("lib").resolve("WGPU.dll").toPath(),
-                basePath.resolve("WGPU.dll").toPath()
+                basePath.resolve("lib").resolve("wgpu_native.dll").toPath(),
+                basePath.resolve("wgpu_native.dll").toPath()
             )
             basePath.resolve("lib").deleteRecursively()
         }
@@ -186,22 +186,22 @@ configureDownloadTasks {
     /*** Linux ***/
     download("wgpu-linux-x86_64-release.zip") {
         extract("lib/libwgpu_native.a", buildNativeResourcesDirectory.resolve("linux-x64").resolve("libWGPU.a"))
-        extract("lib/libwgpu_native.so", jvmLibResourcesDirectory.resolve("linux-x86-64").resolve("libWGPU.so")).doLast {
+        extract("lib/libwgpu_native.so", jvmLibResourcesDirectory.resolve("linux-x86-64").resolve("libwgpu_native.so")).doLast {
             val basePath = jvmLibResourcesDirectory.resolve("linux-x86-64")
             Files.move(
-                basePath.resolve("lib").resolve("libWGPU.so").toPath(),
-                basePath.resolve("libWGPU.so").toPath()
+                basePath.resolve("lib").resolve("libwgpu_native.so").toPath(),
+                basePath.resolve("libwgpu_native.so").toPath()
             )
             basePath.resolve("lib").deleteRecursively()
         }
     }
     download("wgpu-linux-aarch64-release.zip") {
         extract("lib/libwgpu_native.a", buildNativeResourcesDirectory.resolve("linux-aarch64").resolve("libWGPU.a"))
-        extract("lib/libwgpu_native.so", jvmLibResourcesDirectory.resolve("linux-aarch64").resolve("libWGPU.so")).doLast {
+        extract("lib/libwgpu_native.so", jvmLibResourcesDirectory.resolve("linux-aarch64").resolve("libwgpu_native.so")).doLast {
             val basePath = jvmLibResourcesDirectory.resolve("linux-aarch64")
             Files.move(
-                basePath.resolve("lib").resolve("libWGPU.so").toPath(),
-                basePath.resolve("libWGPU.so").toPath()
+                basePath.resolve("lib").resolve("libwgpu_native.so").toPath(),
+                basePath.resolve("libwgpu_native.so").toPath()
             )
             basePath.resolve("lib").deleteRecursively()
         }
@@ -255,6 +255,7 @@ tasks.withType<Test> {
 }
 
 tasks.named<Test>("jvmTest") {
+    dependsOn("verifyJvmBootstrapBinding")
     useJUnitPlatform()
     testLogging {
         showExceptions = true
@@ -301,6 +302,26 @@ val kextractDistribution = project(":kextract").layout.buildDirectory.dir("kextr
 val kextractLauncher = kextractDistribution.map { distribution ->
     distribution.file(if (bindingGenerationHost == "windows") "bin/kextract.bat" else "bin/kextract")
 }
+val generatedJvmBinding = project.file(
+    "src/jvmMain/kotlin/io/ygdrasil/wgpu/wgpu_hJvm.kt",
+)
+val genericJvmLookupImport = "import io.ygdrasil.kffi.findOrThrow"
+val generatedJvmBootstrapResolver = "KextractNativeBootstrap.resolve("
+val jvmNativeResourceTasks = listOf(
+    "unzip-libwgpu_native.dylib-from-wgpu-macos-aarch64-release.zip",
+    "unzip-libwgpu_native.dylib-from-wgpu-macos-x86_64-release.zip",
+    "unzip-wgpu_native.dll-from-wgpu-windows-x86_64-msvc-release.zip",
+    "unzip-libwgpu_native.so-from-wgpu-linux-x86_64-release.zip",
+    "unzip-libwgpu_native.so-from-wgpu-linux-aarch64-release.zip",
+)
+val jvmBindingNativeDependencyTasks = listOf(
+    "unzip-webgpu.h-from-wgpu-macos-aarch64-release.zip",
+    "unzip-wgpu.h-from-wgpu-macos-aarch64-release.zip",
+) + jvmNativeResourceTasks
+
+tasks.named("jvmProcessResources") {
+    dependsOn(*jvmNativeResourceTasks.toTypedArray())
+}
 val generatedAndroidBindings = project.file(
     "src/androidMain/kotlin/io/ygdrasil/wgpu/wgpu_hAndroid.kt",
 )
@@ -308,7 +329,8 @@ val generatedAndroidBindings = project.file(
 tasks.register<Exec>("generateBindingsFromHeader") {
     group = "generation"
     description = "Generates unified KMP bindings from webgpu.h using kextract CLI"
-    dependsOn(":kextract:createKextractImage", "fetch-native-dependencies")
+    dependsOn(":kextract:createKextractImage")
+    dependsOn(*jvmBindingNativeDependencyTasks.toTypedArray())
 
     val callbackBindings = project(":wgpu4k-native-specs")
         .file("src/jvmMain/resources/callback-bindings.yml")
@@ -330,6 +352,9 @@ tasks.register<Exec>("generateBindingsFromHeader") {
     inputs.file(callbackBindings).withPropertyName("callbackBindings")
     inputs.file(nativeHeader).withPropertyName("nativeHeader")
     inputs.file(webGpuHeader).withPropertyName("webGpuHeader")
+    inputs.dir(jvmLibResourcesDirectory)
+        .withPropertyName("jvmNativeResources")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
     outputs.dirs(
         project.file("src/commonMain/kotlin"),
         project.file("src/jvmMain/kotlin"),
@@ -363,6 +388,8 @@ tasks.register<Exec>("generateBindingsFromHeader") {
         "--target-package", "io.ygdrasil.wgpu",
         "--output", project.file("src").absolutePath,
         "--library", "wgpu4k",
+        "--jvm-native-library", "wgpu_native",
+        "--jvm-native-resources", jvmLibResourcesDirectory.absolutePath,
         "--callback-bindings",
         callbackBindings.absolutePath,
         "-D", "WGPU_SKIP_PROCS",
@@ -431,6 +458,20 @@ tasks.register<Exec>("generateBindingsFromHeader") {
     }
 }
 
+tasks.register("verifyJvmBootstrapBinding") {
+    group = "verification"
+    inputs.file(generatedJvmBinding)
+    doLast {
+        val source = generatedJvmBinding.readText()
+        require(source.lineSequence().count { it == genericJvmLookupImport } == 1) {
+            "Expected exactly one kffi lookup import in $generatedJvmBinding"
+        }
+        require(generatedJvmBootstrapResolver in source) {
+            "$generatedJvmBinding must route symbol lookup through the generated native bootstrap"
+        }
+    }
+}
+
 tasks.register("verifyBindingGenerationConfiguration") {
     group = "verification"
     description = "Verifies that binding generation has portable dependencies, inputs, and launcher configuration."
@@ -450,8 +491,24 @@ tasks.register("verifyBindingGenerationConfiguration") {
         require(":kextract:createKextractImage" in directDependencies) {
             "generateBindingsFromHeader must depend directly on :kextract:createKextractImage; found $directDependencies"
         }
-        require(":wgpu4k-native:fetch-native-dependencies" in directDependencies) {
-            "generateBindingsFromHeader must depend directly on :wgpu4k-native:fetch-native-dependencies; found $directDependencies"
+        val expectedNativeDependencies = jvmBindingNativeDependencyTasks
+            .map { taskName -> ":wgpu4k-native:$taskName" }
+            .toSet()
+        require(expectedNativeDependencies.all { it in directDependencies }) {
+            "generateBindingsFromHeader must depend on JVM/header native inputs; found $directDependencies"
+        }
+        require(":wgpu4k-native:fetch-native-dependencies" !in directDependencies) {
+            "generateBindingsFromHeader must not download out-of-scope native targets"
+        }
+        val configuredArgs = generationTask.args.map(Any::toString)
+        require(configuredArgs.windowed(2).any { it == listOf("--library", "wgpu4k") }) {
+            "Android/platform generation must keep the wgpu4k library name; found $configuredArgs"
+        }
+        require(configuredArgs.windowed(2).any { it == listOf("--jvm-native-library", "wgpu_native") }) {
+            "JVM generation must load wgpu_native; found $configuredArgs"
+        }
+        require(configuredArgs.windowed(2).any { it.firstOrNull() == "--jvm-native-resources" }) {
+            "JVM generation must declare its native resource root; found $configuredArgs"
         }
 
         val verificationTask = tasks.named("verifyGeneratedBindingsClean").get()

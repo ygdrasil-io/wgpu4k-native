@@ -30,6 +30,182 @@ import kotlin.Suppress
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 
+private object KextractNativeBootstrap {
+    @kotlin.jvm.Volatile private var loaded: kotlin.Boolean = false
+
+    fun resolve(name: kotlin.String): MemorySegment {
+        load()
+        return findOrThrow(name)
+    }
+
+    private fun load() {
+        if (loaded) return
+        kotlin.synchronized(this) {
+            if (loaded) return
+            val platform = currentPlatform()
+            val bundle = bundles[platform]
+            val bundleDirectory = bundle?.let { extractBundle(platform, it) }
+            val libraryPath0 = bundle?.libraryPaths?.get("wgpu_native")
+            if (bundleDirectory != null && libraryPath0 != null) {
+                java.lang.System.load(bundleDirectory.resolve(libraryPath0).toAbsolutePath().normalize().toString())
+            } else {
+                java.lang.System.loadLibrary("wgpu_native")
+            }
+            loaded = true
+        }
+    }
+
+    private data class Resource(val path: kotlin.String, val sha256: kotlin.String)
+    private data class Bundle(val key: kotlin.String, val resources: kotlin.collections.List<Resource>, val libraryPaths: kotlin.collections.Map<kotlin.String, kotlin.String>)
+
+    private val bundles: kotlin.collections.Map<kotlin.String, Bundle> = kotlin.collections.mapOf(
+        "darwin-aarch64" to Bundle(
+            key = "942bb3749d5028a006bd509074ab5e583a7ef1e3d2b1801ebb756e6e6631e6db",
+            resources = kotlin.collections.listOf(
+                Resource("libwgpu_native.dylib", "db82d285ec0317cb44d23981c1a42c038fcafd9b0b56c8a1e502e28fb0bf9f71"),
+            ),
+            libraryPaths = kotlin.collections.mapOf(
+                "wgpu_native" to "libwgpu_native.dylib",
+            ),
+        ),
+        "darwin-x86-64" to Bundle(
+            key = "2f59d2604f9e22a065d68db862e61e92c1a7a8467a53c101f86f39f9f1ad5baa",
+            resources = kotlin.collections.listOf(
+                Resource("libwgpu_native.dylib", "a324d2406c3aaf0ad67bc962d796a911ae770b17aa4c07540795e86f41d6a9a5"),
+            ),
+            libraryPaths = kotlin.collections.mapOf(
+                "wgpu_native" to "libwgpu_native.dylib",
+            ),
+        ),
+        "linux-aarch64" to Bundle(
+            key = "a1d761e1f99942359c3d74c6622324b91a95ee2994e4b3037d19c0e201131d25",
+            resources = kotlin.collections.listOf(
+                Resource("libwgpu_native.so", "fd70bee7ab7fc422cae358d984abece2364206f6bd6868a7486597a92098386d"),
+            ),
+            libraryPaths = kotlin.collections.mapOf(
+                "wgpu_native" to "libwgpu_native.so",
+            ),
+        ),
+        "linux-x86-64" to Bundle(
+            key = "129bd63a2be26785822a07bbc1686b46148ce852c4dc1dafb1666dc4225c0542",
+            resources = kotlin.collections.listOf(
+                Resource("libwgpu_native.so", "9637b9dca87f44e7df5fae922c8173a4c9456d508caaebc0b8e2c7fe327918e8"),
+            ),
+            libraryPaths = kotlin.collections.mapOf(
+                "wgpu_native" to "libwgpu_native.so",
+            ),
+        ),
+        "win32-x86-64" to Bundle(
+            key = "8c58caea2c5f9d3855b3c39ae20e2d7d435cef67845979c53a67ef81deb4e27c",
+            resources = kotlin.collections.listOf(
+                Resource("wgpu_native.dll", "681c1f28050eebe67e31fc40be1361abfebf4429c181c150f0f4a5044c144fc9"),
+            ),
+            libraryPaths = kotlin.collections.mapOf(
+                "wgpu_native" to "wgpu_native.dll",
+            ),
+        ),
+    )
+
+    private fun currentPlatform(): kotlin.String {
+        val os = java.lang.System.getProperty("os.name").lowercase(java.util.Locale.ROOT)
+        val architecture = java.lang.System.getProperty("os.arch").lowercase(java.util.Locale.ROOT)
+        val osId = when {
+            os.contains("mac") || os.contains("darwin") -> "darwin"
+            os.contains("linux") -> "linux"
+            os.contains("windows") -> "win32"
+            else -> os.replace(kotlin.text.Regex("[^a-z0-9]+"), "-").trim('-')
+        }
+        val architectureId = when (architecture) {
+            "aarch64", "arm64" -> "aarch64"
+            "amd64", "x86_64", "x64" -> "x86-64"
+            else -> architecture.replace(kotlin.text.Regex("[^a-z0-9]+"), "-").trim('-')
+        }
+        return "$osId-$architectureId"
+    }
+
+    private fun extractBundle(platform: kotlin.String, bundle: Bundle): java.nio.file.Path {
+        val configuredCache = java.lang.System.getProperty("kextract.native.cache.dir")
+        val cacheRoot = if (configuredCache.isNullOrBlank()) {
+            java.nio.file.Path.of(java.lang.System.getProperty("java.io.tmpdir"), "kextract-native")
+        } else {
+            java.nio.file.Path.of(configuredCache)
+        }
+        java.nio.file.Files.createDirectories(cacheRoot)
+        val bundleDirectory = cacheRoot.resolve(bundle.key).toAbsolutePath().normalize()
+        val lockPath = cacheRoot.resolve("${bundle.key}.lock")
+        val processLock = lockPath.toAbsolutePath().normalize().toString().intern()
+        kotlin.synchronized(processLock) {
+            java.nio.channels.FileChannel.open(lockPath, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE).use { channel ->
+                channel.lock().use {
+                    java.nio.file.Files.createDirectories(bundleDirectory)
+                    bundle.resources.forEach { resource ->
+                        val destination = bundleDirectory.resolve(resource.path).normalize()
+                        if (!destination.startsWith(bundleDirectory)) {
+                            throw java.io.IOException("Native resource escapes cache directory: ${resource.path}")
+                        }
+                        if (!java.nio.file.Files.isRegularFile(destination) || sha256(destination) != resource.sha256) {
+                            copyResource(platform, resource, destination)
+                        }
+                    }
+                }
+            }
+        }
+        return bundleDirectory
+    }
+
+    private fun copyResource(platform: kotlin.String, resource: Resource, destination: java.nio.file.Path) {
+        java.nio.file.Files.createDirectories(destination.parent)
+        val temporary = java.nio.file.Files.createTempFile(destination.parent, ".${destination.fileName}.", ".tmp")
+        try {
+            val resourceName = "$platform/${resource.path}"
+            val classLoader = KextractNativeBootstrap::class.java.classLoader
+            val candidates = if (classLoader == null) {
+                java.lang.ClassLoader.getSystemResources(resourceName)
+            } else {
+                classLoader.getResources(resourceName)
+            }
+            var candidateCount = 0
+            var matched = false
+            while (candidates.hasMoreElements()) {
+                candidateCount += 1
+                candidates.nextElement().openStream().use { input ->
+                    java.nio.file.Files.copy(input, temporary, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+                }
+                if (sha256(temporary) == resource.sha256) {
+                    matched = true
+                    break
+                }
+            }
+            if (!matched) {
+                if (candidateCount == 0) {
+                    throw java.io.FileNotFoundException("Native resource not found: /$resourceName")
+                }
+                throw java.io.IOException("No native resource candidate matched SHA-256 ${resource.sha256}: /$resourceName")
+            }
+            try {
+                java.nio.file.Files.move(temporary, destination, java.nio.file.StandardCopyOption.ATOMIC_MOVE, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+            } catch (_: java.nio.file.AtomicMoveNotSupportedException) {
+                java.nio.file.Files.move(temporary, destination, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+            }
+        } finally {
+            java.nio.file.Files.deleteIfExists(temporary)
+        }
+    }
+
+    private fun sha256(path: java.nio.file.Path): kotlin.String {
+        val digest = java.security.MessageDigest.getInstance("SHA-256")
+        java.nio.file.Files.newInputStream(path).use { input ->
+            val buffer = kotlin.ByteArray(8192)
+            while (true) {
+                val read = input.read(buffer)
+                if (read < 0) break
+                digest.update(buffer, 0, read)
+            }
+        }
+        return java.util.HexFormat.of().formatHex(digest.digest())
+    }
+}
+
 actual interface WGPUStringView : CStructure {
     actual var data: CString?
     actual var length: ULong
@@ -5097,14 +5273,14 @@ actual interface WGPURenderPipelineDescriptor : CStructure {
 }
 
 private val wgpuCreateInstance_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuCreateInstance_ADDR: MemorySegment by lazy { findOrThrow("wgpuCreateInstance") }
+private val wgpuCreateInstance_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCreateInstance") }
 private val wgpuCreateInstance_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCreateInstance_ADDR, wgpuCreateInstance_DESC) }
 actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance? {
     return (wgpuCreateInstance_HANDLE.invokeExact(descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUInstance(it) }
 }
 
 private val wgpuGetInstanceFeatures_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuGetInstanceFeatures_ADDR: MemorySegment by lazy { findOrThrow("wgpuGetInstanceFeatures") }
+private val wgpuGetInstanceFeatures_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuGetInstanceFeatures") }
 private val wgpuGetInstanceFeatures_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuGetInstanceFeatures_ADDR, wgpuGetInstanceFeatures_DESC) }
 actual fun wgpuGetInstanceFeatures(features: WGPUSupportedInstanceFeatures?): Unit {
     wgpuGetInstanceFeatures_HANDLE.invokeExact(features?.handler?.handler ?: MemorySegment.NULL)
@@ -5112,28 +5288,28 @@ actual fun wgpuGetInstanceFeatures(features: WGPUSupportedInstanceFeatures?): Un
 }
 
 private val wgpuGetInstanceLimits_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuGetInstanceLimits_ADDR: MemorySegment by lazy { findOrThrow("wgpuGetInstanceLimits") }
+private val wgpuGetInstanceLimits_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuGetInstanceLimits") }
 private val wgpuGetInstanceLimits_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuGetInstanceLimits_ADDR, wgpuGetInstanceLimits_DESC) }
 actual fun wgpuGetInstanceLimits(limits: WGPUInstanceLimits?): WGPUStatus {
     return (wgpuGetInstanceLimits_HANDLE.invokeExact(limits?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuHasInstanceFeature_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT)
-private val wgpuHasInstanceFeature_ADDR: MemorySegment by lazy { findOrThrow("wgpuHasInstanceFeature") }
+private val wgpuHasInstanceFeature_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuHasInstanceFeature") }
 private val wgpuHasInstanceFeature_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuHasInstanceFeature_ADDR, wgpuHasInstanceFeature_DESC) }
 actual fun wgpuHasInstanceFeature(feature: WGPUInstanceFeatureName): UInt {
     return (wgpuHasInstanceFeature_HANDLE.invokeExact(feature.toInt()) as Int).toUInt()
 }
 
 private val wgpuGetProcAddress_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuGetProcAddress_ADDR: MemorySegment by lazy { findOrThrow("wgpuGetProcAddress") }
+private val wgpuGetProcAddress_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuGetProcAddress") }
 private val wgpuGetProcAddress_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuGetProcAddress_ADDR, wgpuGetProcAddress_DESC) }
 actual fun wgpuGetProcAddress(procName: WGPUStringView): NativeAddress? {
     return (wgpuGetProcAddress_HANDLE.invokeExact(procName.handler.handler) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
 }
 
 private val wgpuAdapterGetFeatures_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuAdapterGetFeatures_ADDR: MemorySegment by lazy { findOrThrow("wgpuAdapterGetFeatures") }
+private val wgpuAdapterGetFeatures_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuAdapterGetFeatures") }
 private val wgpuAdapterGetFeatures_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuAdapterGetFeatures_ADDR, wgpuAdapterGetFeatures_DESC) }
 actual fun wgpuAdapterGetFeatures(adapter: WGPUAdapter?, features: WGPUSupportedFeatures?): Unit {
     wgpuAdapterGetFeatures_HANDLE.invokeExact(adapter?.handler?.handler ?: MemorySegment.NULL, features?.handler?.handler ?: MemorySegment.NULL)
@@ -5141,35 +5317,35 @@ actual fun wgpuAdapterGetFeatures(adapter: WGPUAdapter?, features: WGPUSupported
 }
 
 private val wgpuAdapterGetInfo_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuAdapterGetInfo_ADDR: MemorySegment by lazy { findOrThrow("wgpuAdapterGetInfo") }
+private val wgpuAdapterGetInfo_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuAdapterGetInfo") }
 private val wgpuAdapterGetInfo_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuAdapterGetInfo_ADDR, wgpuAdapterGetInfo_DESC) }
 actual fun wgpuAdapterGetInfo(adapter: WGPUAdapter?, info: WGPUAdapterInfo?): WGPUStatus {
     return (wgpuAdapterGetInfo_HANDLE.invokeExact(adapter?.handler?.handler ?: MemorySegment.NULL, info?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuAdapterGetLimits_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuAdapterGetLimits_ADDR: MemorySegment by lazy { findOrThrow("wgpuAdapterGetLimits") }
+private val wgpuAdapterGetLimits_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuAdapterGetLimits") }
 private val wgpuAdapterGetLimits_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuAdapterGetLimits_ADDR, wgpuAdapterGetLimits_DESC) }
 actual fun wgpuAdapterGetLimits(adapter: WGPUAdapter?, limits: WGPULimits?): WGPUStatus {
     return (wgpuAdapterGetLimits_HANDLE.invokeExact(adapter?.handler?.handler ?: MemorySegment.NULL, limits?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuAdapterHasFeature_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuAdapterHasFeature_ADDR: MemorySegment by lazy { findOrThrow("wgpuAdapterHasFeature") }
+private val wgpuAdapterHasFeature_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuAdapterHasFeature") }
 private val wgpuAdapterHasFeature_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuAdapterHasFeature_ADDR, wgpuAdapterHasFeature_DESC) }
 actual fun wgpuAdapterHasFeature(adapter: WGPUAdapter?, feature: WGPUFeatureName): UInt {
     return (wgpuAdapterHasFeature_HANDLE.invokeExact(adapter?.handler?.handler ?: MemorySegment.NULL, feature.toInt()) as Int).toUInt()
 }
 
 private val wgpuAdapterRequestDevice_DESC: FunctionDescriptor = FunctionDescriptor.of(WGPUFuture.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS, WGPURequestDeviceCallbackInfo.layout)
-private val wgpuAdapterRequestDevice_ADDR: MemorySegment by lazy { findOrThrow("wgpuAdapterRequestDevice") }
+private val wgpuAdapterRequestDevice_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuAdapterRequestDevice") }
 private val wgpuAdapterRequestDevice_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuAdapterRequestDevice_ADDR, wgpuAdapterRequestDevice_DESC) }
 actual fun wgpuAdapterRequestDevice(adapter: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): WGPUFuture {
     return WGPUFuture(NativeAddress(wgpuAdapterRequestDevice_HANDLE.invokeExact((Arena.ofAuto() as SegmentAllocator), adapter?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL, callbackInfo.handler.handler) as MemorySegment))
 }
 
 private val wgpuAdapterAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuAdapterAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuAdapterAddRef") }
+private val wgpuAdapterAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuAdapterAddRef") }
 private val wgpuAdapterAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuAdapterAddRef_ADDR, wgpuAdapterAddRef_DESC) }
 actual fun wgpuAdapterAddRef(adapter: WGPUAdapter?): Unit {
     wgpuAdapterAddRef_HANDLE.invokeExact(adapter?.handler?.handler ?: MemorySegment.NULL)
@@ -5177,7 +5353,7 @@ actual fun wgpuAdapterAddRef(adapter: WGPUAdapter?): Unit {
 }
 
 private val wgpuAdapterRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuAdapterRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuAdapterRelease") }
+private val wgpuAdapterRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuAdapterRelease") }
 private val wgpuAdapterRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuAdapterRelease_ADDR, wgpuAdapterRelease_DESC) }
 actual fun wgpuAdapterRelease(adapter: WGPUAdapter?): Unit {
     wgpuAdapterRelease_HANDLE.invokeExact(adapter?.handler?.handler ?: MemorySegment.NULL)
@@ -5185,7 +5361,7 @@ actual fun wgpuAdapterRelease(adapter: WGPUAdapter?): Unit {
 }
 
 private val wgpuAdapterInfoFreeMembers_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(WGPUAdapterInfo.layout)
-private val wgpuAdapterInfoFreeMembers_ADDR: MemorySegment by lazy { findOrThrow("wgpuAdapterInfoFreeMembers") }
+private val wgpuAdapterInfoFreeMembers_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuAdapterInfoFreeMembers") }
 private val wgpuAdapterInfoFreeMembers_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuAdapterInfoFreeMembers_ADDR, wgpuAdapterInfoFreeMembers_DESC) }
 actual fun wgpuAdapterInfoFreeMembers(adapterInfo: WGPUAdapterInfo): Unit {
     wgpuAdapterInfoFreeMembers_HANDLE.invokeExact(adapterInfo.handler.handler)
@@ -5193,7 +5369,7 @@ actual fun wgpuAdapterInfoFreeMembers(adapterInfo: WGPUAdapterInfo): Unit {
 }
 
 private val wgpuBindGroupSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuBindGroupSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuBindGroupSetLabel") }
+private val wgpuBindGroupSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBindGroupSetLabel") }
 private val wgpuBindGroupSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBindGroupSetLabel_ADDR, wgpuBindGroupSetLabel_DESC) }
 actual fun wgpuBindGroupSetLabel(bindGroup: WGPUBindGroup?, label: WGPUStringView): Unit {
     wgpuBindGroupSetLabel_HANDLE.invokeExact(bindGroup?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -5201,7 +5377,7 @@ actual fun wgpuBindGroupSetLabel(bindGroup: WGPUBindGroup?, label: WGPUStringVie
 }
 
 private val wgpuBindGroupAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuBindGroupAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuBindGroupAddRef") }
+private val wgpuBindGroupAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBindGroupAddRef") }
 private val wgpuBindGroupAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBindGroupAddRef_ADDR, wgpuBindGroupAddRef_DESC) }
 actual fun wgpuBindGroupAddRef(bindGroup: WGPUBindGroup?): Unit {
     wgpuBindGroupAddRef_HANDLE.invokeExact(bindGroup?.handler?.handler ?: MemorySegment.NULL)
@@ -5209,7 +5385,7 @@ actual fun wgpuBindGroupAddRef(bindGroup: WGPUBindGroup?): Unit {
 }
 
 private val wgpuBindGroupRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuBindGroupRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuBindGroupRelease") }
+private val wgpuBindGroupRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBindGroupRelease") }
 private val wgpuBindGroupRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBindGroupRelease_ADDR, wgpuBindGroupRelease_DESC) }
 actual fun wgpuBindGroupRelease(bindGroup: WGPUBindGroup?): Unit {
     wgpuBindGroupRelease_HANDLE.invokeExact(bindGroup?.handler?.handler ?: MemorySegment.NULL)
@@ -5217,7 +5393,7 @@ actual fun wgpuBindGroupRelease(bindGroup: WGPUBindGroup?): Unit {
 }
 
 private val wgpuBindGroupLayoutSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuBindGroupLayoutSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuBindGroupLayoutSetLabel") }
+private val wgpuBindGroupLayoutSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBindGroupLayoutSetLabel") }
 private val wgpuBindGroupLayoutSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBindGroupLayoutSetLabel_ADDR, wgpuBindGroupLayoutSetLabel_DESC) }
 actual fun wgpuBindGroupLayoutSetLabel(bindGroupLayout: WGPUBindGroupLayout?, label: WGPUStringView): Unit {
     wgpuBindGroupLayoutSetLabel_HANDLE.invokeExact(bindGroupLayout?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -5225,7 +5401,7 @@ actual fun wgpuBindGroupLayoutSetLabel(bindGroupLayout: WGPUBindGroupLayout?, la
 }
 
 private val wgpuBindGroupLayoutAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuBindGroupLayoutAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuBindGroupLayoutAddRef") }
+private val wgpuBindGroupLayoutAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBindGroupLayoutAddRef") }
 private val wgpuBindGroupLayoutAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBindGroupLayoutAddRef_ADDR, wgpuBindGroupLayoutAddRef_DESC) }
 actual fun wgpuBindGroupLayoutAddRef(bindGroupLayout: WGPUBindGroupLayout?): Unit {
     wgpuBindGroupLayoutAddRef_HANDLE.invokeExact(bindGroupLayout?.handler?.handler ?: MemorySegment.NULL)
@@ -5233,7 +5409,7 @@ actual fun wgpuBindGroupLayoutAddRef(bindGroupLayout: WGPUBindGroupLayout?): Uni
 }
 
 private val wgpuBindGroupLayoutRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuBindGroupLayoutRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuBindGroupLayoutRelease") }
+private val wgpuBindGroupLayoutRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBindGroupLayoutRelease") }
 private val wgpuBindGroupLayoutRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBindGroupLayoutRelease_ADDR, wgpuBindGroupLayoutRelease_DESC) }
 actual fun wgpuBindGroupLayoutRelease(bindGroupLayout: WGPUBindGroupLayout?): Unit {
     wgpuBindGroupLayoutRelease_HANDLE.invokeExact(bindGroupLayout?.handler?.handler ?: MemorySegment.NULL)
@@ -5241,7 +5417,7 @@ actual fun wgpuBindGroupLayoutRelease(bindGroupLayout: WGPUBindGroupLayout?): Un
 }
 
 private val wgpuBufferDestroy_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuBufferDestroy_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferDestroy") }
+private val wgpuBufferDestroy_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferDestroy") }
 private val wgpuBufferDestroy_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferDestroy_ADDR, wgpuBufferDestroy_DESC) }
 actual fun wgpuBufferDestroy(buffer: WGPUBuffer?): Unit {
     wgpuBufferDestroy_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL)
@@ -5249,56 +5425,56 @@ actual fun wgpuBufferDestroy(buffer: WGPUBuffer?): Unit {
 }
 
 private val wgpuBufferGetConstMappedRange_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG)
-private val wgpuBufferGetConstMappedRange_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferGetConstMappedRange") }
+private val wgpuBufferGetConstMappedRange_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferGetConstMappedRange") }
 private val wgpuBufferGetConstMappedRange_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferGetConstMappedRange_ADDR, wgpuBufferGetConstMappedRange_DESC) }
 actual fun wgpuBufferGetConstMappedRange(buffer: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress? {
     return (wgpuBufferGetConstMappedRange_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), size.toLong()) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
 }
 
 private val wgpuBufferGetMappedRange_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG)
-private val wgpuBufferGetMappedRange_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferGetMappedRange") }
+private val wgpuBufferGetMappedRange_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferGetMappedRange") }
 private val wgpuBufferGetMappedRange_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferGetMappedRange_ADDR, wgpuBufferGetMappedRange_DESC) }
 actual fun wgpuBufferGetMappedRange(buffer: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress? {
     return (wgpuBufferGetMappedRange_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), size.toLong()) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
 }
 
 private val wgpuBufferGetMapState_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuBufferGetMapState_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferGetMapState") }
+private val wgpuBufferGetMapState_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferGetMapState") }
 private val wgpuBufferGetMapState_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferGetMapState_ADDR, wgpuBufferGetMapState_DESC) }
 actual fun wgpuBufferGetMapState(buffer: WGPUBuffer?): WGPUBufferMapState {
     return (wgpuBufferGetMapState_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuBufferGetSize_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
-private val wgpuBufferGetSize_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferGetSize") }
+private val wgpuBufferGetSize_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferGetSize") }
 private val wgpuBufferGetSize_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferGetSize_ADDR, wgpuBufferGetSize_DESC) }
 actual fun wgpuBufferGetSize(buffer: WGPUBuffer?): ULong {
     return (wgpuBufferGetSize_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL) as Long).toULong()
 }
 
 private val wgpuBufferGetUsage_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
-private val wgpuBufferGetUsage_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferGetUsage") }
+private val wgpuBufferGetUsage_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferGetUsage") }
 private val wgpuBufferGetUsage_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferGetUsage_ADDR, wgpuBufferGetUsage_DESC) }
 actual fun wgpuBufferGetUsage(buffer: WGPUBuffer?): ULong {
     return (wgpuBufferGetUsage_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL) as Long).toULong()
 }
 
 private val wgpuBufferMapAsync_DESC: FunctionDescriptor = FunctionDescriptor.of(WGPUFuture.layout, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG, WGPUBufferMapCallbackInfo.layout)
-private val wgpuBufferMapAsync_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferMapAsync") }
+private val wgpuBufferMapAsync_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferMapAsync") }
 private val wgpuBufferMapAsync_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferMapAsync_ADDR, wgpuBufferMapAsync_DESC) }
 actual fun wgpuBufferMapAsync(buffer: WGPUBuffer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo): WGPUFuture {
     return WGPUFuture(NativeAddress(wgpuBufferMapAsync_HANDLE.invokeExact((Arena.ofAuto() as SegmentAllocator), buffer?.handler?.handler ?: MemorySegment.NULL, mode.toLong(), offset.toLong(), size.toLong(), callbackInfo.handler.handler) as MemorySegment))
 }
 
 private val wgpuBufferReadMappedRange_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
-private val wgpuBufferReadMappedRange_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferReadMappedRange") }
+private val wgpuBufferReadMappedRange_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferReadMappedRange") }
 private val wgpuBufferReadMappedRange_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferReadMappedRange_ADDR, wgpuBufferReadMappedRange_DESC) }
 actual fun wgpuBufferReadMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus {
     return (wgpuBufferReadMappedRange_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), data?.handler ?: MemorySegment.NULL, size.toLong()) as Int).toUInt()
 }
 
 private val wgpuBufferSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuBufferSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferSetLabel") }
+private val wgpuBufferSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferSetLabel") }
 private val wgpuBufferSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferSetLabel_ADDR, wgpuBufferSetLabel_DESC) }
 actual fun wgpuBufferSetLabel(buffer: WGPUBuffer?, label: WGPUStringView): Unit {
     wgpuBufferSetLabel_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -5306,7 +5482,7 @@ actual fun wgpuBufferSetLabel(buffer: WGPUBuffer?, label: WGPUStringView): Unit 
 }
 
 private val wgpuBufferUnmap_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuBufferUnmap_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferUnmap") }
+private val wgpuBufferUnmap_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferUnmap") }
 private val wgpuBufferUnmap_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferUnmap_ADDR, wgpuBufferUnmap_DESC) }
 actual fun wgpuBufferUnmap(buffer: WGPUBuffer?): Unit {
     wgpuBufferUnmap_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL)
@@ -5314,14 +5490,14 @@ actual fun wgpuBufferUnmap(buffer: WGPUBuffer?): Unit {
 }
 
 private val wgpuBufferWriteMappedRange_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
-private val wgpuBufferWriteMappedRange_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferWriteMappedRange") }
+private val wgpuBufferWriteMappedRange_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferWriteMappedRange") }
 private val wgpuBufferWriteMappedRange_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferWriteMappedRange_ADDR, wgpuBufferWriteMappedRange_DESC) }
 actual fun wgpuBufferWriteMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus {
     return (wgpuBufferWriteMappedRange_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), data?.handler ?: MemorySegment.NULL, size.toLong()) as Int).toUInt()
 }
 
 private val wgpuBufferAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuBufferAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferAddRef") }
+private val wgpuBufferAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferAddRef") }
 private val wgpuBufferAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferAddRef_ADDR, wgpuBufferAddRef_DESC) }
 actual fun wgpuBufferAddRef(buffer: WGPUBuffer?): Unit {
     wgpuBufferAddRef_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL)
@@ -5329,7 +5505,7 @@ actual fun wgpuBufferAddRef(buffer: WGPUBuffer?): Unit {
 }
 
 private val wgpuBufferRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuBufferRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuBufferRelease") }
+private val wgpuBufferRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuBufferRelease") }
 private val wgpuBufferRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuBufferRelease_ADDR, wgpuBufferRelease_DESC) }
 actual fun wgpuBufferRelease(buffer: WGPUBuffer?): Unit {
     wgpuBufferRelease_HANDLE.invokeExact(buffer?.handler?.handler ?: MemorySegment.NULL)
@@ -5337,7 +5513,7 @@ actual fun wgpuBufferRelease(buffer: WGPUBuffer?): Unit {
 }
 
 private val wgpuCommandBufferSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuCommandBufferSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandBufferSetLabel") }
+private val wgpuCommandBufferSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandBufferSetLabel") }
 private val wgpuCommandBufferSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandBufferSetLabel_ADDR, wgpuCommandBufferSetLabel_DESC) }
 actual fun wgpuCommandBufferSetLabel(commandBuffer: WGPUCommandBuffer?, label: WGPUStringView): Unit {
     wgpuCommandBufferSetLabel_HANDLE.invokeExact(commandBuffer?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -5345,7 +5521,7 @@ actual fun wgpuCommandBufferSetLabel(commandBuffer: WGPUCommandBuffer?, label: W
 }
 
 private val wgpuCommandBufferAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuCommandBufferAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandBufferAddRef") }
+private val wgpuCommandBufferAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandBufferAddRef") }
 private val wgpuCommandBufferAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandBufferAddRef_ADDR, wgpuCommandBufferAddRef_DESC) }
 actual fun wgpuCommandBufferAddRef(commandBuffer: WGPUCommandBuffer?): Unit {
     wgpuCommandBufferAddRef_HANDLE.invokeExact(commandBuffer?.handler?.handler ?: MemorySegment.NULL)
@@ -5353,7 +5529,7 @@ actual fun wgpuCommandBufferAddRef(commandBuffer: WGPUCommandBuffer?): Unit {
 }
 
 private val wgpuCommandBufferRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuCommandBufferRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandBufferRelease") }
+private val wgpuCommandBufferRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandBufferRelease") }
 private val wgpuCommandBufferRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandBufferRelease_ADDR, wgpuCommandBufferRelease_DESC) }
 actual fun wgpuCommandBufferRelease(commandBuffer: WGPUCommandBuffer?): Unit {
     wgpuCommandBufferRelease_HANDLE.invokeExact(commandBuffer?.handler?.handler ?: MemorySegment.NULL)
@@ -5361,21 +5537,21 @@ actual fun wgpuCommandBufferRelease(commandBuffer: WGPUCommandBuffer?): Unit {
 }
 
 private val wgpuCommandEncoderBeginComputePass_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuCommandEncoderBeginComputePass_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderBeginComputePass") }
+private val wgpuCommandEncoderBeginComputePass_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderBeginComputePass") }
 private val wgpuCommandEncoderBeginComputePass_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderBeginComputePass_ADDR, wgpuCommandEncoderBeginComputePass_DESC) }
 actual fun wgpuCommandEncoderBeginComputePass(commandEncoder: WGPUCommandEncoder?, descriptor: WGPUComputePassDescriptor?): WGPUComputePassEncoder? {
     return (wgpuCommandEncoderBeginComputePass_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUComputePassEncoder(it) }
 }
 
 private val wgpuCommandEncoderBeginRenderPass_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuCommandEncoderBeginRenderPass_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderBeginRenderPass") }
+private val wgpuCommandEncoderBeginRenderPass_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderBeginRenderPass") }
 private val wgpuCommandEncoderBeginRenderPass_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderBeginRenderPass_ADDR, wgpuCommandEncoderBeginRenderPass_DESC) }
 actual fun wgpuCommandEncoderBeginRenderPass(commandEncoder: WGPUCommandEncoder?, descriptor: WGPURenderPassDescriptor?): WGPURenderPassEncoder? {
     return (wgpuCommandEncoderBeginRenderPass_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPURenderPassEncoder(it) }
 }
 
 private val wgpuCommandEncoderClearBuffer_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG)
-private val wgpuCommandEncoderClearBuffer_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderClearBuffer") }
+private val wgpuCommandEncoderClearBuffer_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderClearBuffer") }
 private val wgpuCommandEncoderClearBuffer_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderClearBuffer_ADDR, wgpuCommandEncoderClearBuffer_DESC) }
 actual fun wgpuCommandEncoderClearBuffer(commandEncoder: WGPUCommandEncoder?, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit {
     wgpuCommandEncoderClearBuffer_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), size.toLong())
@@ -5383,7 +5559,7 @@ actual fun wgpuCommandEncoderClearBuffer(commandEncoder: WGPUCommandEncoder?, bu
 }
 
 private val wgpuCommandEncoderCopyBufferToBuffer_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG)
-private val wgpuCommandEncoderCopyBufferToBuffer_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderCopyBufferToBuffer") }
+private val wgpuCommandEncoderCopyBufferToBuffer_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderCopyBufferToBuffer") }
 private val wgpuCommandEncoderCopyBufferToBuffer_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderCopyBufferToBuffer_ADDR, wgpuCommandEncoderCopyBufferToBuffer_DESC) }
 actual fun wgpuCommandEncoderCopyBufferToBuffer(commandEncoder: WGPUCommandEncoder?, source: WGPUBuffer?, sourceOffset: ULong, destination: WGPUBuffer?, destinationOffset: ULong, size: ULong): Unit {
     wgpuCommandEncoderCopyBufferToBuffer_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, source?.handler?.handler ?: MemorySegment.NULL, sourceOffset.toLong(), destination?.handler?.handler ?: MemorySegment.NULL, destinationOffset.toLong(), size.toLong())
@@ -5391,7 +5567,7 @@ actual fun wgpuCommandEncoderCopyBufferToBuffer(commandEncoder: WGPUCommandEncod
 }
 
 private val wgpuCommandEncoderCopyBufferToTexture_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuCommandEncoderCopyBufferToTexture_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderCopyBufferToTexture") }
+private val wgpuCommandEncoderCopyBufferToTexture_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderCopyBufferToTexture") }
 private val wgpuCommandEncoderCopyBufferToTexture_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderCopyBufferToTexture_ADDR, wgpuCommandEncoderCopyBufferToTexture_DESC) }
 actual fun wgpuCommandEncoderCopyBufferToTexture(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyBufferInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit {
     wgpuCommandEncoderCopyBufferToTexture_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, source?.handler?.handler ?: MemorySegment.NULL, destination?.handler?.handler ?: MemorySegment.NULL, copySize?.handler?.handler ?: MemorySegment.NULL)
@@ -5399,7 +5575,7 @@ actual fun wgpuCommandEncoderCopyBufferToTexture(commandEncoder: WGPUCommandEnco
 }
 
 private val wgpuCommandEncoderCopyTextureToBuffer_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuCommandEncoderCopyTextureToBuffer_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderCopyTextureToBuffer") }
+private val wgpuCommandEncoderCopyTextureToBuffer_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderCopyTextureToBuffer") }
 private val wgpuCommandEncoderCopyTextureToBuffer_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderCopyTextureToBuffer_ADDR, wgpuCommandEncoderCopyTextureToBuffer_DESC) }
 actual fun wgpuCommandEncoderCopyTextureToBuffer(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyBufferInfo?, copySize: WGPUExtent3D?): Unit {
     wgpuCommandEncoderCopyTextureToBuffer_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, source?.handler?.handler ?: MemorySegment.NULL, destination?.handler?.handler ?: MemorySegment.NULL, copySize?.handler?.handler ?: MemorySegment.NULL)
@@ -5407,7 +5583,7 @@ actual fun wgpuCommandEncoderCopyTextureToBuffer(commandEncoder: WGPUCommandEnco
 }
 
 private val wgpuCommandEncoderCopyTextureToTexture_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuCommandEncoderCopyTextureToTexture_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderCopyTextureToTexture") }
+private val wgpuCommandEncoderCopyTextureToTexture_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderCopyTextureToTexture") }
 private val wgpuCommandEncoderCopyTextureToTexture_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderCopyTextureToTexture_ADDR, wgpuCommandEncoderCopyTextureToTexture_DESC) }
 actual fun wgpuCommandEncoderCopyTextureToTexture(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit {
     wgpuCommandEncoderCopyTextureToTexture_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, source?.handler?.handler ?: MemorySegment.NULL, destination?.handler?.handler ?: MemorySegment.NULL, copySize?.handler?.handler ?: MemorySegment.NULL)
@@ -5415,14 +5591,14 @@ actual fun wgpuCommandEncoderCopyTextureToTexture(commandEncoder: WGPUCommandEnc
 }
 
 private val wgpuCommandEncoderFinish_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuCommandEncoderFinish_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderFinish") }
+private val wgpuCommandEncoderFinish_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderFinish") }
 private val wgpuCommandEncoderFinish_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderFinish_ADDR, wgpuCommandEncoderFinish_DESC) }
 actual fun wgpuCommandEncoderFinish(commandEncoder: WGPUCommandEncoder?, descriptor: WGPUCommandBufferDescriptor?): WGPUCommandBuffer? {
     return (wgpuCommandEncoderFinish_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUCommandBuffer(it) }
 }
 
 private val wgpuCommandEncoderInsertDebugMarker_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuCommandEncoderInsertDebugMarker_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderInsertDebugMarker") }
+private val wgpuCommandEncoderInsertDebugMarker_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderInsertDebugMarker") }
 private val wgpuCommandEncoderInsertDebugMarker_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderInsertDebugMarker_ADDR, wgpuCommandEncoderInsertDebugMarker_DESC) }
 actual fun wgpuCommandEncoderInsertDebugMarker(commandEncoder: WGPUCommandEncoder?, markerLabel: WGPUStringView): Unit {
     wgpuCommandEncoderInsertDebugMarker_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, markerLabel.handler.handler)
@@ -5430,7 +5606,7 @@ actual fun wgpuCommandEncoderInsertDebugMarker(commandEncoder: WGPUCommandEncode
 }
 
 private val wgpuCommandEncoderPopDebugGroup_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuCommandEncoderPopDebugGroup_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderPopDebugGroup") }
+private val wgpuCommandEncoderPopDebugGroup_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderPopDebugGroup") }
 private val wgpuCommandEncoderPopDebugGroup_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderPopDebugGroup_ADDR, wgpuCommandEncoderPopDebugGroup_DESC) }
 actual fun wgpuCommandEncoderPopDebugGroup(commandEncoder: WGPUCommandEncoder?): Unit {
     wgpuCommandEncoderPopDebugGroup_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -5438,7 +5614,7 @@ actual fun wgpuCommandEncoderPopDebugGroup(commandEncoder: WGPUCommandEncoder?):
 }
 
 private val wgpuCommandEncoderPushDebugGroup_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuCommandEncoderPushDebugGroup_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderPushDebugGroup") }
+private val wgpuCommandEncoderPushDebugGroup_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderPushDebugGroup") }
 private val wgpuCommandEncoderPushDebugGroup_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderPushDebugGroup_ADDR, wgpuCommandEncoderPushDebugGroup_DESC) }
 actual fun wgpuCommandEncoderPushDebugGroup(commandEncoder: WGPUCommandEncoder?, groupLabel: WGPUStringView): Unit {
     wgpuCommandEncoderPushDebugGroup_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, groupLabel.handler.handler)
@@ -5446,7 +5622,7 @@ actual fun wgpuCommandEncoderPushDebugGroup(commandEncoder: WGPUCommandEncoder?,
 }
 
 private val wgpuCommandEncoderResolveQuerySet_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
-private val wgpuCommandEncoderResolveQuerySet_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderResolveQuerySet") }
+private val wgpuCommandEncoderResolveQuerySet_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderResolveQuerySet") }
 private val wgpuCommandEncoderResolveQuerySet_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderResolveQuerySet_ADDR, wgpuCommandEncoderResolveQuerySet_DESC) }
 actual fun wgpuCommandEncoderResolveQuerySet(commandEncoder: WGPUCommandEncoder?, querySet: WGPUQuerySet?, firstQuery: UInt, queryCount: UInt, destination: WGPUBuffer?, destinationOffset: ULong): Unit {
     wgpuCommandEncoderResolveQuerySet_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, querySet?.handler?.handler ?: MemorySegment.NULL, firstQuery.toInt(), queryCount.toInt(), destination?.handler?.handler ?: MemorySegment.NULL, destinationOffset.toLong())
@@ -5454,7 +5630,7 @@ actual fun wgpuCommandEncoderResolveQuerySet(commandEncoder: WGPUCommandEncoder?
 }
 
 private val wgpuCommandEncoderSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuCommandEncoderSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderSetLabel") }
+private val wgpuCommandEncoderSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderSetLabel") }
 private val wgpuCommandEncoderSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderSetLabel_ADDR, wgpuCommandEncoderSetLabel_DESC) }
 actual fun wgpuCommandEncoderSetLabel(commandEncoder: WGPUCommandEncoder?, label: WGPUStringView): Unit {
     wgpuCommandEncoderSetLabel_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -5462,7 +5638,7 @@ actual fun wgpuCommandEncoderSetLabel(commandEncoder: WGPUCommandEncoder?, label
 }
 
 private val wgpuCommandEncoderWriteTimestamp_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuCommandEncoderWriteTimestamp_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderWriteTimestamp") }
+private val wgpuCommandEncoderWriteTimestamp_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderWriteTimestamp") }
 private val wgpuCommandEncoderWriteTimestamp_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderWriteTimestamp_ADDR, wgpuCommandEncoderWriteTimestamp_DESC) }
 actual fun wgpuCommandEncoderWriteTimestamp(commandEncoder: WGPUCommandEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
     wgpuCommandEncoderWriteTimestamp_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, querySet?.handler?.handler ?: MemorySegment.NULL, queryIndex.toInt())
@@ -5470,7 +5646,7 @@ actual fun wgpuCommandEncoderWriteTimestamp(commandEncoder: WGPUCommandEncoder?,
 }
 
 private val wgpuCommandEncoderAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuCommandEncoderAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderAddRef") }
+private val wgpuCommandEncoderAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderAddRef") }
 private val wgpuCommandEncoderAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderAddRef_ADDR, wgpuCommandEncoderAddRef_DESC) }
 actual fun wgpuCommandEncoderAddRef(commandEncoder: WGPUCommandEncoder?): Unit {
     wgpuCommandEncoderAddRef_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -5478,7 +5654,7 @@ actual fun wgpuCommandEncoderAddRef(commandEncoder: WGPUCommandEncoder?): Unit {
 }
 
 private val wgpuCommandEncoderRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuCommandEncoderRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuCommandEncoderRelease") }
+private val wgpuCommandEncoderRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderRelease") }
 private val wgpuCommandEncoderRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderRelease_ADDR, wgpuCommandEncoderRelease_DESC) }
 actual fun wgpuCommandEncoderRelease(commandEncoder: WGPUCommandEncoder?): Unit {
     wgpuCommandEncoderRelease_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -5486,7 +5662,7 @@ actual fun wgpuCommandEncoderRelease(commandEncoder: WGPUCommandEncoder?): Unit 
 }
 
 private val wgpuComputePassEncoderDispatchWorkgroups_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT)
-private val wgpuComputePassEncoderDispatchWorkgroups_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderDispatchWorkgroups") }
+private val wgpuComputePassEncoderDispatchWorkgroups_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderDispatchWorkgroups") }
 private val wgpuComputePassEncoderDispatchWorkgroups_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderDispatchWorkgroups_ADDR, wgpuComputePassEncoderDispatchWorkgroups_DESC) }
 actual fun wgpuComputePassEncoderDispatchWorkgroups(computePassEncoder: WGPUComputePassEncoder?, workgroupCountX: UInt, workgroupCountY: UInt, workgroupCountZ: UInt): Unit {
     wgpuComputePassEncoderDispatchWorkgroups_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL, workgroupCountX.toInt(), workgroupCountY.toInt(), workgroupCountZ.toInt())
@@ -5494,7 +5670,7 @@ actual fun wgpuComputePassEncoderDispatchWorkgroups(computePassEncoder: WGPUComp
 }
 
 private val wgpuComputePassEncoderDispatchWorkgroupsIndirect_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
-private val wgpuComputePassEncoderDispatchWorkgroupsIndirect_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderDispatchWorkgroupsIndirect") }
+private val wgpuComputePassEncoderDispatchWorkgroupsIndirect_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderDispatchWorkgroupsIndirect") }
 private val wgpuComputePassEncoderDispatchWorkgroupsIndirect_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderDispatchWorkgroupsIndirect_ADDR, wgpuComputePassEncoderDispatchWorkgroupsIndirect_DESC) }
 actual fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(computePassEncoder: WGPUComputePassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
     wgpuComputePassEncoderDispatchWorkgroupsIndirect_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL, indirectBuffer?.handler?.handler ?: MemorySegment.NULL, indirectOffset.toLong())
@@ -5502,7 +5678,7 @@ actual fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(computePassEncoder: 
 }
 
 private val wgpuComputePassEncoderEnd_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuComputePassEncoderEnd_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderEnd") }
+private val wgpuComputePassEncoderEnd_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderEnd") }
 private val wgpuComputePassEncoderEnd_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderEnd_ADDR, wgpuComputePassEncoderEnd_DESC) }
 actual fun wgpuComputePassEncoderEnd(computePassEncoder: WGPUComputePassEncoder?): Unit {
     wgpuComputePassEncoderEnd_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -5510,7 +5686,7 @@ actual fun wgpuComputePassEncoderEnd(computePassEncoder: WGPUComputePassEncoder?
 }
 
 private val wgpuComputePassEncoderInsertDebugMarker_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuComputePassEncoderInsertDebugMarker_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderInsertDebugMarker") }
+private val wgpuComputePassEncoderInsertDebugMarker_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderInsertDebugMarker") }
 private val wgpuComputePassEncoderInsertDebugMarker_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderInsertDebugMarker_ADDR, wgpuComputePassEncoderInsertDebugMarker_DESC) }
 actual fun wgpuComputePassEncoderInsertDebugMarker(computePassEncoder: WGPUComputePassEncoder?, markerLabel: WGPUStringView): Unit {
     wgpuComputePassEncoderInsertDebugMarker_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL, markerLabel.handler.handler)
@@ -5518,7 +5694,7 @@ actual fun wgpuComputePassEncoderInsertDebugMarker(computePassEncoder: WGPUCompu
 }
 
 private val wgpuComputePassEncoderPopDebugGroup_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuComputePassEncoderPopDebugGroup_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderPopDebugGroup") }
+private val wgpuComputePassEncoderPopDebugGroup_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderPopDebugGroup") }
 private val wgpuComputePassEncoderPopDebugGroup_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderPopDebugGroup_ADDR, wgpuComputePassEncoderPopDebugGroup_DESC) }
 actual fun wgpuComputePassEncoderPopDebugGroup(computePassEncoder: WGPUComputePassEncoder?): Unit {
     wgpuComputePassEncoderPopDebugGroup_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -5526,7 +5702,7 @@ actual fun wgpuComputePassEncoderPopDebugGroup(computePassEncoder: WGPUComputePa
 }
 
 private val wgpuComputePassEncoderPushDebugGroup_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuComputePassEncoderPushDebugGroup_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderPushDebugGroup") }
+private val wgpuComputePassEncoderPushDebugGroup_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderPushDebugGroup") }
 private val wgpuComputePassEncoderPushDebugGroup_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderPushDebugGroup_ADDR, wgpuComputePassEncoderPushDebugGroup_DESC) }
 actual fun wgpuComputePassEncoderPushDebugGroup(computePassEncoder: WGPUComputePassEncoder?, groupLabel: WGPUStringView): Unit {
     wgpuComputePassEncoderPushDebugGroup_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL, groupLabel.handler.handler)
@@ -5534,7 +5710,7 @@ actual fun wgpuComputePassEncoderPushDebugGroup(computePassEncoder: WGPUComputeP
 }
 
 private val wgpuComputePassEncoderSetBindGroup_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
-private val wgpuComputePassEncoderSetBindGroup_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderSetBindGroup") }
+private val wgpuComputePassEncoderSetBindGroup_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderSetBindGroup") }
 private val wgpuComputePassEncoderSetBindGroup_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderSetBindGroup_ADDR, wgpuComputePassEncoderSetBindGroup_DESC) }
 actual fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit {
     wgpuComputePassEncoderSetBindGroup_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL, groupIndex.toInt(), group?.handler?.handler ?: MemorySegment.NULL, dynamicOffsetCount.toLong(), dynamicOffsets?.handler ?: MemorySegment.NULL)
@@ -5542,7 +5718,7 @@ actual fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePas
 }
 
 private val wgpuComputePassEncoderSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuComputePassEncoderSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderSetLabel") }
+private val wgpuComputePassEncoderSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderSetLabel") }
 private val wgpuComputePassEncoderSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderSetLabel_ADDR, wgpuComputePassEncoderSetLabel_DESC) }
 actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEncoder?, label: WGPUStringView): Unit {
     wgpuComputePassEncoderSetLabel_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -5550,7 +5726,7 @@ actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEnc
 }
 
 private val wgpuComputePassEncoderSetPipeline_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuComputePassEncoderSetPipeline_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderSetPipeline") }
+private val wgpuComputePassEncoderSetPipeline_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderSetPipeline") }
 private val wgpuComputePassEncoderSetPipeline_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderSetPipeline_ADDR, wgpuComputePassEncoderSetPipeline_DESC) }
 actual fun wgpuComputePassEncoderSetPipeline(computePassEncoder: WGPUComputePassEncoder?, pipeline: WGPUComputePipeline?): Unit {
     wgpuComputePassEncoderSetPipeline_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL, pipeline?.handler?.handler ?: MemorySegment.NULL)
@@ -5558,7 +5734,7 @@ actual fun wgpuComputePassEncoderSetPipeline(computePassEncoder: WGPUComputePass
 }
 
 private val wgpuComputePassEncoderAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuComputePassEncoderAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderAddRef") }
+private val wgpuComputePassEncoderAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderAddRef") }
 private val wgpuComputePassEncoderAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderAddRef_ADDR, wgpuComputePassEncoderAddRef_DESC) }
 actual fun wgpuComputePassEncoderAddRef(computePassEncoder: WGPUComputePassEncoder?): Unit {
     wgpuComputePassEncoderAddRef_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -5566,7 +5742,7 @@ actual fun wgpuComputePassEncoderAddRef(computePassEncoder: WGPUComputePassEncod
 }
 
 private val wgpuComputePassEncoderRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuComputePassEncoderRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderRelease") }
+private val wgpuComputePassEncoderRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderRelease") }
 private val wgpuComputePassEncoderRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderRelease_ADDR, wgpuComputePassEncoderRelease_DESC) }
 actual fun wgpuComputePassEncoderRelease(computePassEncoder: WGPUComputePassEncoder?): Unit {
     wgpuComputePassEncoderRelease_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -5574,14 +5750,14 @@ actual fun wgpuComputePassEncoderRelease(computePassEncoder: WGPUComputePassEnco
 }
 
 private val wgpuComputePipelineGetBindGroupLayout_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuComputePipelineGetBindGroupLayout_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePipelineGetBindGroupLayout") }
+private val wgpuComputePipelineGetBindGroupLayout_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePipelineGetBindGroupLayout") }
 private val wgpuComputePipelineGetBindGroupLayout_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePipelineGetBindGroupLayout_ADDR, wgpuComputePipelineGetBindGroupLayout_DESC) }
 actual fun wgpuComputePipelineGetBindGroupLayout(computePipeline: WGPUComputePipeline?, groupIndex: UInt): WGPUBindGroupLayout? {
     return (wgpuComputePipelineGetBindGroupLayout_HANDLE.invokeExact(computePipeline?.handler?.handler ?: MemorySegment.NULL, groupIndex.toInt()) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
 }
 
 private val wgpuComputePipelineSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuComputePipelineSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePipelineSetLabel") }
+private val wgpuComputePipelineSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePipelineSetLabel") }
 private val wgpuComputePipelineSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePipelineSetLabel_ADDR, wgpuComputePipelineSetLabel_DESC) }
 actual fun wgpuComputePipelineSetLabel(computePipeline: WGPUComputePipeline?, label: WGPUStringView): Unit {
     wgpuComputePipelineSetLabel_HANDLE.invokeExact(computePipeline?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -5589,7 +5765,7 @@ actual fun wgpuComputePipelineSetLabel(computePipeline: WGPUComputePipeline?, la
 }
 
 private val wgpuComputePipelineAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuComputePipelineAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePipelineAddRef") }
+private val wgpuComputePipelineAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePipelineAddRef") }
 private val wgpuComputePipelineAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePipelineAddRef_ADDR, wgpuComputePipelineAddRef_DESC) }
 actual fun wgpuComputePipelineAddRef(computePipeline: WGPUComputePipeline?): Unit {
     wgpuComputePipelineAddRef_HANDLE.invokeExact(computePipeline?.handler?.handler ?: MemorySegment.NULL)
@@ -5597,7 +5773,7 @@ actual fun wgpuComputePipelineAddRef(computePipeline: WGPUComputePipeline?): Uni
 }
 
 private val wgpuComputePipelineRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuComputePipelineRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePipelineRelease") }
+private val wgpuComputePipelineRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePipelineRelease") }
 private val wgpuComputePipelineRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePipelineRelease_ADDR, wgpuComputePipelineRelease_DESC) }
 actual fun wgpuComputePipelineRelease(computePipeline: WGPUComputePipeline?): Unit {
     wgpuComputePipelineRelease_HANDLE.invokeExact(computePipeline?.handler?.handler ?: MemorySegment.NULL)
@@ -5605,105 +5781,105 @@ actual fun wgpuComputePipelineRelease(computePipeline: WGPUComputePipeline?): Un
 }
 
 private val wgpuDeviceCreateBindGroup_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreateBindGroup_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateBindGroup") }
+private val wgpuDeviceCreateBindGroup_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateBindGroup") }
 private val wgpuDeviceCreateBindGroup_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateBindGroup_ADDR, wgpuDeviceCreateBindGroup_DESC) }
 actual fun wgpuDeviceCreateBindGroup(device: WGPUDevice?, descriptor: WGPUBindGroupDescriptor?): WGPUBindGroup? {
     return (wgpuDeviceCreateBindGroup_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUBindGroup(it) }
 }
 
 private val wgpuDeviceCreateBindGroupLayout_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreateBindGroupLayout_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateBindGroupLayout") }
+private val wgpuDeviceCreateBindGroupLayout_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateBindGroupLayout") }
 private val wgpuDeviceCreateBindGroupLayout_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateBindGroupLayout_ADDR, wgpuDeviceCreateBindGroupLayout_DESC) }
 actual fun wgpuDeviceCreateBindGroupLayout(device: WGPUDevice?, descriptor: WGPUBindGroupLayoutDescriptor?): WGPUBindGroupLayout? {
     return (wgpuDeviceCreateBindGroupLayout_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
 }
 
 private val wgpuDeviceCreateBuffer_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreateBuffer_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateBuffer") }
+private val wgpuDeviceCreateBuffer_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateBuffer") }
 private val wgpuDeviceCreateBuffer_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateBuffer_ADDR, wgpuDeviceCreateBuffer_DESC) }
 actual fun wgpuDeviceCreateBuffer(device: WGPUDevice?, descriptor: WGPUBufferDescriptor?): WGPUBuffer? {
     return (wgpuDeviceCreateBuffer_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUBuffer(it) }
 }
 
 private val wgpuDeviceCreateCommandEncoder_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreateCommandEncoder_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateCommandEncoder") }
+private val wgpuDeviceCreateCommandEncoder_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateCommandEncoder") }
 private val wgpuDeviceCreateCommandEncoder_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateCommandEncoder_ADDR, wgpuDeviceCreateCommandEncoder_DESC) }
 actual fun wgpuDeviceCreateCommandEncoder(device: WGPUDevice?, descriptor: WGPUCommandEncoderDescriptor?): WGPUCommandEncoder? {
     return (wgpuDeviceCreateCommandEncoder_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUCommandEncoder(it) }
 }
 
 private val wgpuDeviceCreateComputePipeline_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreateComputePipeline_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateComputePipeline") }
+private val wgpuDeviceCreateComputePipeline_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateComputePipeline") }
 private val wgpuDeviceCreateComputePipeline_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateComputePipeline_ADDR, wgpuDeviceCreateComputePipeline_DESC) }
 actual fun wgpuDeviceCreateComputePipeline(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?): WGPUComputePipeline? {
     return (wgpuDeviceCreateComputePipeline_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUComputePipeline(it) }
 }
 
 private val wgpuDeviceCreateComputePipelineAsync_DESC: FunctionDescriptor = FunctionDescriptor.of(WGPUFuture.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS, WGPUCreateComputePipelineAsyncCallbackInfo.layout)
-private val wgpuDeviceCreateComputePipelineAsync_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateComputePipelineAsync") }
+private val wgpuDeviceCreateComputePipelineAsync_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateComputePipelineAsync") }
 private val wgpuDeviceCreateComputePipelineAsync_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateComputePipelineAsync_ADDR, wgpuDeviceCreateComputePipelineAsync_DESC) }
 actual fun wgpuDeviceCreateComputePipelineAsync(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): WGPUFuture {
     return WGPUFuture(NativeAddress(wgpuDeviceCreateComputePipelineAsync_HANDLE.invokeExact((Arena.ofAuto() as SegmentAllocator), device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL, callbackInfo.handler.handler) as MemorySegment))
 }
 
 private val wgpuDeviceCreatePipelineLayout_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreatePipelineLayout_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreatePipelineLayout") }
+private val wgpuDeviceCreatePipelineLayout_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreatePipelineLayout") }
 private val wgpuDeviceCreatePipelineLayout_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreatePipelineLayout_ADDR, wgpuDeviceCreatePipelineLayout_DESC) }
 actual fun wgpuDeviceCreatePipelineLayout(device: WGPUDevice?, descriptor: WGPUPipelineLayoutDescriptor?): WGPUPipelineLayout? {
     return (wgpuDeviceCreatePipelineLayout_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUPipelineLayout(it) }
 }
 
 private val wgpuDeviceCreateQuerySet_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreateQuerySet_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateQuerySet") }
+private val wgpuDeviceCreateQuerySet_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateQuerySet") }
 private val wgpuDeviceCreateQuerySet_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateQuerySet_ADDR, wgpuDeviceCreateQuerySet_DESC) }
 actual fun wgpuDeviceCreateQuerySet(device: WGPUDevice?, descriptor: WGPUQuerySetDescriptor?): WGPUQuerySet? {
     return (wgpuDeviceCreateQuerySet_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUQuerySet(it) }
 }
 
 private val wgpuDeviceCreateRenderBundleEncoder_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreateRenderBundleEncoder_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateRenderBundleEncoder") }
+private val wgpuDeviceCreateRenderBundleEncoder_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateRenderBundleEncoder") }
 private val wgpuDeviceCreateRenderBundleEncoder_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateRenderBundleEncoder_ADDR, wgpuDeviceCreateRenderBundleEncoder_DESC) }
 actual fun wgpuDeviceCreateRenderBundleEncoder(device: WGPUDevice?, descriptor: WGPURenderBundleEncoderDescriptor?): WGPURenderBundleEncoder? {
     return (wgpuDeviceCreateRenderBundleEncoder_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPURenderBundleEncoder(it) }
 }
 
 private val wgpuDeviceCreateRenderPipeline_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreateRenderPipeline_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateRenderPipeline") }
+private val wgpuDeviceCreateRenderPipeline_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateRenderPipeline") }
 private val wgpuDeviceCreateRenderPipeline_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateRenderPipeline_ADDR, wgpuDeviceCreateRenderPipeline_DESC) }
 actual fun wgpuDeviceCreateRenderPipeline(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?): WGPURenderPipeline? {
     return (wgpuDeviceCreateRenderPipeline_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPURenderPipeline(it) }
 }
 
 private val wgpuDeviceCreateRenderPipelineAsync_DESC: FunctionDescriptor = FunctionDescriptor.of(WGPUFuture.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS, WGPUCreateRenderPipelineAsyncCallbackInfo.layout)
-private val wgpuDeviceCreateRenderPipelineAsync_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateRenderPipelineAsync") }
+private val wgpuDeviceCreateRenderPipelineAsync_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateRenderPipelineAsync") }
 private val wgpuDeviceCreateRenderPipelineAsync_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateRenderPipelineAsync_ADDR, wgpuDeviceCreateRenderPipelineAsync_DESC) }
 actual fun wgpuDeviceCreateRenderPipelineAsync(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): WGPUFuture {
     return WGPUFuture(NativeAddress(wgpuDeviceCreateRenderPipelineAsync_HANDLE.invokeExact((Arena.ofAuto() as SegmentAllocator), device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL, callbackInfo.handler.handler) as MemorySegment))
 }
 
 private val wgpuDeviceCreateSampler_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreateSampler_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateSampler") }
+private val wgpuDeviceCreateSampler_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateSampler") }
 private val wgpuDeviceCreateSampler_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateSampler_ADDR, wgpuDeviceCreateSampler_DESC) }
 actual fun wgpuDeviceCreateSampler(device: WGPUDevice?, descriptor: WGPUSamplerDescriptor?): WGPUSampler? {
     return (wgpuDeviceCreateSampler_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUSampler(it) }
 }
 
 private val wgpuDeviceCreateShaderModule_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreateShaderModule_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateShaderModule") }
+private val wgpuDeviceCreateShaderModule_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateShaderModule") }
 private val wgpuDeviceCreateShaderModule_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateShaderModule_ADDR, wgpuDeviceCreateShaderModule_DESC) }
 actual fun wgpuDeviceCreateShaderModule(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?): WGPUShaderModule? {
     return (wgpuDeviceCreateShaderModule_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
 }
 
 private val wgpuDeviceCreateTexture_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreateTexture_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateTexture") }
+private val wgpuDeviceCreateTexture_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateTexture") }
 private val wgpuDeviceCreateTexture_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateTexture_ADDR, wgpuDeviceCreateTexture_DESC) }
 actual fun wgpuDeviceCreateTexture(device: WGPUDevice?, descriptor: WGPUTextureDescriptor?): WGPUTexture? {
     return (wgpuDeviceCreateTexture_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUTexture(it) }
 }
 
 private val wgpuDeviceDestroy_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuDeviceDestroy_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceDestroy") }
+private val wgpuDeviceDestroy_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceDestroy") }
 private val wgpuDeviceDestroy_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceDestroy_ADDR, wgpuDeviceDestroy_DESC) }
 actual fun wgpuDeviceDestroy(device: WGPUDevice?): Unit {
     wgpuDeviceDestroy_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL)
@@ -5711,14 +5887,14 @@ actual fun wgpuDeviceDestroy(device: WGPUDevice?): Unit {
 }
 
 private val wgpuDeviceGetAdapterInfo_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceGetAdapterInfo_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceGetAdapterInfo") }
+private val wgpuDeviceGetAdapterInfo_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceGetAdapterInfo") }
 private val wgpuDeviceGetAdapterInfo_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceGetAdapterInfo_ADDR, wgpuDeviceGetAdapterInfo_DESC) }
 actual fun wgpuDeviceGetAdapterInfo(device: WGPUDevice?, adapterInfo: WGPUAdapterInfo?): WGPUStatus {
     return (wgpuDeviceGetAdapterInfo_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, adapterInfo?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuDeviceGetFeatures_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceGetFeatures_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceGetFeatures") }
+private val wgpuDeviceGetFeatures_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceGetFeatures") }
 private val wgpuDeviceGetFeatures_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceGetFeatures_ADDR, wgpuDeviceGetFeatures_DESC) }
 actual fun wgpuDeviceGetFeatures(device: WGPUDevice?, features: WGPUSupportedFeatures?): Unit {
     wgpuDeviceGetFeatures_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, features?.handler?.handler ?: MemorySegment.NULL)
@@ -5726,42 +5902,42 @@ actual fun wgpuDeviceGetFeatures(device: WGPUDevice?, features: WGPUSupportedFea
 }
 
 private val wgpuDeviceGetLimits_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceGetLimits_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceGetLimits") }
+private val wgpuDeviceGetLimits_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceGetLimits") }
 private val wgpuDeviceGetLimits_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceGetLimits_ADDR, wgpuDeviceGetLimits_DESC) }
 actual fun wgpuDeviceGetLimits(device: WGPUDevice?, limits: WGPULimits?): WGPUStatus {
     return (wgpuDeviceGetLimits_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, limits?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuDeviceGetLostFuture_DESC: FunctionDescriptor = FunctionDescriptor.of(WGPUFuture.layout, ValueLayout.ADDRESS)
-private val wgpuDeviceGetLostFuture_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceGetLostFuture") }
+private val wgpuDeviceGetLostFuture_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceGetLostFuture") }
 private val wgpuDeviceGetLostFuture_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceGetLostFuture_ADDR, wgpuDeviceGetLostFuture_DESC) }
 actual fun wgpuDeviceGetLostFuture(device: WGPUDevice?): WGPUFuture {
     return WGPUFuture(NativeAddress(wgpuDeviceGetLostFuture_HANDLE.invokeExact((Arena.ofAuto() as SegmentAllocator), device?.handler?.handler ?: MemorySegment.NULL) as MemorySegment))
 }
 
 private val wgpuDeviceGetQueue_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceGetQueue_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceGetQueue") }
+private val wgpuDeviceGetQueue_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceGetQueue") }
 private val wgpuDeviceGetQueue_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceGetQueue_ADDR, wgpuDeviceGetQueue_DESC) }
 actual fun wgpuDeviceGetQueue(device: WGPUDevice?): WGPUQueue? {
     return (wgpuDeviceGetQueue_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUQueue(it) }
 }
 
 private val wgpuDeviceHasFeature_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuDeviceHasFeature_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceHasFeature") }
+private val wgpuDeviceHasFeature_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceHasFeature") }
 private val wgpuDeviceHasFeature_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceHasFeature_ADDR, wgpuDeviceHasFeature_DESC) }
 actual fun wgpuDeviceHasFeature(device: WGPUDevice?, feature: WGPUFeatureName): UInt {
     return (wgpuDeviceHasFeature_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, feature.toInt()) as Int).toUInt()
 }
 
 private val wgpuDevicePopErrorScope_DESC: FunctionDescriptor = FunctionDescriptor.of(WGPUFuture.layout, ValueLayout.ADDRESS, WGPUPopErrorScopeCallbackInfo.layout)
-private val wgpuDevicePopErrorScope_ADDR: MemorySegment by lazy { findOrThrow("wgpuDevicePopErrorScope") }
+private val wgpuDevicePopErrorScope_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDevicePopErrorScope") }
 private val wgpuDevicePopErrorScope_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDevicePopErrorScope_ADDR, wgpuDevicePopErrorScope_DESC) }
 actual fun wgpuDevicePopErrorScope(device: WGPUDevice?, callbackInfo: WGPUPopErrorScopeCallbackInfo): WGPUFuture {
     return WGPUFuture(NativeAddress(wgpuDevicePopErrorScope_HANDLE.invokeExact((Arena.ofAuto() as SegmentAllocator), device?.handler?.handler ?: MemorySegment.NULL, callbackInfo.handler.handler) as MemorySegment))
 }
 
 private val wgpuDevicePushErrorScope_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuDevicePushErrorScope_ADDR: MemorySegment by lazy { findOrThrow("wgpuDevicePushErrorScope") }
+private val wgpuDevicePushErrorScope_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDevicePushErrorScope") }
 private val wgpuDevicePushErrorScope_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDevicePushErrorScope_ADDR, wgpuDevicePushErrorScope_DESC) }
 actual fun wgpuDevicePushErrorScope(device: WGPUDevice?, filter: WGPUErrorFilter): Unit {
     wgpuDevicePushErrorScope_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, filter.toInt())
@@ -5769,7 +5945,7 @@ actual fun wgpuDevicePushErrorScope(device: WGPUDevice?, filter: WGPUErrorFilter
 }
 
 private val wgpuDeviceSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuDeviceSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceSetLabel") }
+private val wgpuDeviceSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceSetLabel") }
 private val wgpuDeviceSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceSetLabel_ADDR, wgpuDeviceSetLabel_DESC) }
 actual fun wgpuDeviceSetLabel(device: WGPUDevice?, label: WGPUStringView): Unit {
     wgpuDeviceSetLabel_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -5777,7 +5953,7 @@ actual fun wgpuDeviceSetLabel(device: WGPUDevice?, label: WGPUStringView): Unit 
 }
 
 private val wgpuDeviceAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuDeviceAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceAddRef") }
+private val wgpuDeviceAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceAddRef") }
 private val wgpuDeviceAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceAddRef_ADDR, wgpuDeviceAddRef_DESC) }
 actual fun wgpuDeviceAddRef(device: WGPUDevice?): Unit {
     wgpuDeviceAddRef_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL)
@@ -5785,7 +5961,7 @@ actual fun wgpuDeviceAddRef(device: WGPUDevice?): Unit {
 }
 
 private val wgpuDeviceRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuDeviceRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceRelease") }
+private val wgpuDeviceRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceRelease") }
 private val wgpuDeviceRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceRelease_ADDR, wgpuDeviceRelease_DESC) }
 actual fun wgpuDeviceRelease(device: WGPUDevice?): Unit {
     wgpuDeviceRelease_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL)
@@ -5793,7 +5969,7 @@ actual fun wgpuDeviceRelease(device: WGPUDevice?): Unit {
 }
 
 private val wgpuExternalTextureSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuExternalTextureSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuExternalTextureSetLabel") }
+private val wgpuExternalTextureSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuExternalTextureSetLabel") }
 private val wgpuExternalTextureSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuExternalTextureSetLabel_ADDR, wgpuExternalTextureSetLabel_DESC) }
 actual fun wgpuExternalTextureSetLabel(externalTexture: WGPUExternalTexture?, label: WGPUStringView): Unit {
     wgpuExternalTextureSetLabel_HANDLE.invokeExact(externalTexture?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -5801,7 +5977,7 @@ actual fun wgpuExternalTextureSetLabel(externalTexture: WGPUExternalTexture?, la
 }
 
 private val wgpuExternalTextureAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuExternalTextureAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuExternalTextureAddRef") }
+private val wgpuExternalTextureAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuExternalTextureAddRef") }
 private val wgpuExternalTextureAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuExternalTextureAddRef_ADDR, wgpuExternalTextureAddRef_DESC) }
 actual fun wgpuExternalTextureAddRef(externalTexture: WGPUExternalTexture?): Unit {
     wgpuExternalTextureAddRef_HANDLE.invokeExact(externalTexture?.handler?.handler ?: MemorySegment.NULL)
@@ -5809,7 +5985,7 @@ actual fun wgpuExternalTextureAddRef(externalTexture: WGPUExternalTexture?): Uni
 }
 
 private val wgpuExternalTextureRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuExternalTextureRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuExternalTextureRelease") }
+private val wgpuExternalTextureRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuExternalTextureRelease") }
 private val wgpuExternalTextureRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuExternalTextureRelease_ADDR, wgpuExternalTextureRelease_DESC) }
 actual fun wgpuExternalTextureRelease(externalTexture: WGPUExternalTexture?): Unit {
     wgpuExternalTextureRelease_HANDLE.invokeExact(externalTexture?.handler?.handler ?: MemorySegment.NULL)
@@ -5817,14 +5993,14 @@ actual fun wgpuExternalTextureRelease(externalTexture: WGPUExternalTexture?): Un
 }
 
 private val wgpuInstanceCreateSurface_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuInstanceCreateSurface_ADDR: MemorySegment by lazy { findOrThrow("wgpuInstanceCreateSurface") }
+private val wgpuInstanceCreateSurface_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuInstanceCreateSurface") }
 private val wgpuInstanceCreateSurface_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuInstanceCreateSurface_ADDR, wgpuInstanceCreateSurface_DESC) }
 actual fun wgpuInstanceCreateSurface(instance: WGPUInstance?, descriptor: WGPUSurfaceDescriptor?): WGPUSurface? {
     return (wgpuInstanceCreateSurface_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUSurface(it) }
 }
 
 private val wgpuInstanceGetWGSLLanguageFeatures_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuInstanceGetWGSLLanguageFeatures_ADDR: MemorySegment by lazy { findOrThrow("wgpuInstanceGetWGSLLanguageFeatures") }
+private val wgpuInstanceGetWGSLLanguageFeatures_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuInstanceGetWGSLLanguageFeatures") }
 private val wgpuInstanceGetWGSLLanguageFeatures_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuInstanceGetWGSLLanguageFeatures_ADDR, wgpuInstanceGetWGSLLanguageFeatures_DESC) }
 actual fun wgpuInstanceGetWGSLLanguageFeatures(instance: WGPUInstance?, features: WGPUSupportedWGSLLanguageFeatures?): Unit {
     wgpuInstanceGetWGSLLanguageFeatures_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL, features?.handler?.handler ?: MemorySegment.NULL)
@@ -5832,14 +6008,14 @@ actual fun wgpuInstanceGetWGSLLanguageFeatures(instance: WGPUInstance?, features
 }
 
 private val wgpuInstanceHasWGSLLanguageFeature_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuInstanceHasWGSLLanguageFeature_ADDR: MemorySegment by lazy { findOrThrow("wgpuInstanceHasWGSLLanguageFeature") }
+private val wgpuInstanceHasWGSLLanguageFeature_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuInstanceHasWGSLLanguageFeature") }
 private val wgpuInstanceHasWGSLLanguageFeature_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuInstanceHasWGSLLanguageFeature_ADDR, wgpuInstanceHasWGSLLanguageFeature_DESC) }
 actual fun wgpuInstanceHasWGSLLanguageFeature(instance: WGPUInstance?, feature: WGPUWGSLLanguageFeatureName): UInt {
     return (wgpuInstanceHasWGSLLanguageFeature_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL, feature.toInt()) as Int).toUInt()
 }
 
 private val wgpuInstanceProcessEvents_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuInstanceProcessEvents_ADDR: MemorySegment by lazy { findOrThrow("wgpuInstanceProcessEvents") }
+private val wgpuInstanceProcessEvents_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuInstanceProcessEvents") }
 private val wgpuInstanceProcessEvents_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuInstanceProcessEvents_ADDR, wgpuInstanceProcessEvents_DESC) }
 actual fun wgpuInstanceProcessEvents(instance: WGPUInstance?): Unit {
     wgpuInstanceProcessEvents_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL)
@@ -5847,21 +6023,21 @@ actual fun wgpuInstanceProcessEvents(instance: WGPUInstance?): Unit {
 }
 
 private val wgpuInstanceRequestAdapter_DESC: FunctionDescriptor = FunctionDescriptor.of(WGPUFuture.layout, ValueLayout.ADDRESS, ValueLayout.ADDRESS, WGPURequestAdapterCallbackInfo.layout)
-private val wgpuInstanceRequestAdapter_ADDR: MemorySegment by lazy { findOrThrow("wgpuInstanceRequestAdapter") }
+private val wgpuInstanceRequestAdapter_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuInstanceRequestAdapter") }
 private val wgpuInstanceRequestAdapter_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuInstanceRequestAdapter_ADDR, wgpuInstanceRequestAdapter_DESC) }
 actual fun wgpuInstanceRequestAdapter(instance: WGPUInstance?, options: WGPURequestAdapterOptions?, callbackInfo: WGPURequestAdapterCallbackInfo): WGPUFuture {
     return WGPUFuture(NativeAddress(wgpuInstanceRequestAdapter_HANDLE.invokeExact((Arena.ofAuto() as SegmentAllocator), instance?.handler?.handler ?: MemorySegment.NULL, options?.handler?.handler ?: MemorySegment.NULL, callbackInfo.handler.handler) as MemorySegment))
 }
 
 private val wgpuInstanceWaitAny_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
-private val wgpuInstanceWaitAny_ADDR: MemorySegment by lazy { findOrThrow("wgpuInstanceWaitAny") }
+private val wgpuInstanceWaitAny_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuInstanceWaitAny") }
 private val wgpuInstanceWaitAny_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuInstanceWaitAny_ADDR, wgpuInstanceWaitAny_DESC) }
 actual fun wgpuInstanceWaitAny(instance: WGPUInstance?, futureCount: ULong, futures: WGPUFutureWaitInfo?, timeoutNS: ULong): WGPUWaitStatus {
     return (wgpuInstanceWaitAny_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL, futureCount.toLong(), futures?.handler?.handler ?: MemorySegment.NULL, timeoutNS.toLong()) as Int).toUInt()
 }
 
 private val wgpuInstanceAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuInstanceAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuInstanceAddRef") }
+private val wgpuInstanceAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuInstanceAddRef") }
 private val wgpuInstanceAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuInstanceAddRef_ADDR, wgpuInstanceAddRef_DESC) }
 actual fun wgpuInstanceAddRef(instance: WGPUInstance?): Unit {
     wgpuInstanceAddRef_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL)
@@ -5869,7 +6045,7 @@ actual fun wgpuInstanceAddRef(instance: WGPUInstance?): Unit {
 }
 
 private val wgpuInstanceRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuInstanceRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuInstanceRelease") }
+private val wgpuInstanceRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuInstanceRelease") }
 private val wgpuInstanceRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuInstanceRelease_ADDR, wgpuInstanceRelease_DESC) }
 actual fun wgpuInstanceRelease(instance: WGPUInstance?): Unit {
     wgpuInstanceRelease_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL)
@@ -5877,7 +6053,7 @@ actual fun wgpuInstanceRelease(instance: WGPUInstance?): Unit {
 }
 
 private val wgpuPipelineLayoutSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuPipelineLayoutSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuPipelineLayoutSetLabel") }
+private val wgpuPipelineLayoutSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuPipelineLayoutSetLabel") }
 private val wgpuPipelineLayoutSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuPipelineLayoutSetLabel_ADDR, wgpuPipelineLayoutSetLabel_DESC) }
 actual fun wgpuPipelineLayoutSetLabel(pipelineLayout: WGPUPipelineLayout?, label: WGPUStringView): Unit {
     wgpuPipelineLayoutSetLabel_HANDLE.invokeExact(pipelineLayout?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -5885,7 +6061,7 @@ actual fun wgpuPipelineLayoutSetLabel(pipelineLayout: WGPUPipelineLayout?, label
 }
 
 private val wgpuPipelineLayoutAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuPipelineLayoutAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuPipelineLayoutAddRef") }
+private val wgpuPipelineLayoutAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuPipelineLayoutAddRef") }
 private val wgpuPipelineLayoutAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuPipelineLayoutAddRef_ADDR, wgpuPipelineLayoutAddRef_DESC) }
 actual fun wgpuPipelineLayoutAddRef(pipelineLayout: WGPUPipelineLayout?): Unit {
     wgpuPipelineLayoutAddRef_HANDLE.invokeExact(pipelineLayout?.handler?.handler ?: MemorySegment.NULL)
@@ -5893,7 +6069,7 @@ actual fun wgpuPipelineLayoutAddRef(pipelineLayout: WGPUPipelineLayout?): Unit {
 }
 
 private val wgpuPipelineLayoutRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuPipelineLayoutRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuPipelineLayoutRelease") }
+private val wgpuPipelineLayoutRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuPipelineLayoutRelease") }
 private val wgpuPipelineLayoutRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuPipelineLayoutRelease_ADDR, wgpuPipelineLayoutRelease_DESC) }
 actual fun wgpuPipelineLayoutRelease(pipelineLayout: WGPUPipelineLayout?): Unit {
     wgpuPipelineLayoutRelease_HANDLE.invokeExact(pipelineLayout?.handler?.handler ?: MemorySegment.NULL)
@@ -5901,7 +6077,7 @@ actual fun wgpuPipelineLayoutRelease(pipelineLayout: WGPUPipelineLayout?): Unit 
 }
 
 private val wgpuQuerySetDestroy_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuQuerySetDestroy_ADDR: MemorySegment by lazy { findOrThrow("wgpuQuerySetDestroy") }
+private val wgpuQuerySetDestroy_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQuerySetDestroy") }
 private val wgpuQuerySetDestroy_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQuerySetDestroy_ADDR, wgpuQuerySetDestroy_DESC) }
 actual fun wgpuQuerySetDestroy(querySet: WGPUQuerySet?): Unit {
     wgpuQuerySetDestroy_HANDLE.invokeExact(querySet?.handler?.handler ?: MemorySegment.NULL)
@@ -5909,21 +6085,21 @@ actual fun wgpuQuerySetDestroy(querySet: WGPUQuerySet?): Unit {
 }
 
 private val wgpuQuerySetGetCount_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuQuerySetGetCount_ADDR: MemorySegment by lazy { findOrThrow("wgpuQuerySetGetCount") }
+private val wgpuQuerySetGetCount_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQuerySetGetCount") }
 private val wgpuQuerySetGetCount_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQuerySetGetCount_ADDR, wgpuQuerySetGetCount_DESC) }
 actual fun wgpuQuerySetGetCount(querySet: WGPUQuerySet?): UInt {
     return (wgpuQuerySetGetCount_HANDLE.invokeExact(querySet?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuQuerySetGetType_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuQuerySetGetType_ADDR: MemorySegment by lazy { findOrThrow("wgpuQuerySetGetType") }
+private val wgpuQuerySetGetType_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQuerySetGetType") }
 private val wgpuQuerySetGetType_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQuerySetGetType_ADDR, wgpuQuerySetGetType_DESC) }
 actual fun wgpuQuerySetGetType(querySet: WGPUQuerySet?): WGPUQueryType {
     return (wgpuQuerySetGetType_HANDLE.invokeExact(querySet?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuQuerySetSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuQuerySetSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuQuerySetSetLabel") }
+private val wgpuQuerySetSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQuerySetSetLabel") }
 private val wgpuQuerySetSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQuerySetSetLabel_ADDR, wgpuQuerySetSetLabel_DESC) }
 actual fun wgpuQuerySetSetLabel(querySet: WGPUQuerySet?, label: WGPUStringView): Unit {
     wgpuQuerySetSetLabel_HANDLE.invokeExact(querySet?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -5931,7 +6107,7 @@ actual fun wgpuQuerySetSetLabel(querySet: WGPUQuerySet?, label: WGPUStringView):
 }
 
 private val wgpuQuerySetAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuQuerySetAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuQuerySetAddRef") }
+private val wgpuQuerySetAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQuerySetAddRef") }
 private val wgpuQuerySetAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQuerySetAddRef_ADDR, wgpuQuerySetAddRef_DESC) }
 actual fun wgpuQuerySetAddRef(querySet: WGPUQuerySet?): Unit {
     wgpuQuerySetAddRef_HANDLE.invokeExact(querySet?.handler?.handler ?: MemorySegment.NULL)
@@ -5939,7 +6115,7 @@ actual fun wgpuQuerySetAddRef(querySet: WGPUQuerySet?): Unit {
 }
 
 private val wgpuQuerySetRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuQuerySetRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuQuerySetRelease") }
+private val wgpuQuerySetRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQuerySetRelease") }
 private val wgpuQuerySetRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQuerySetRelease_ADDR, wgpuQuerySetRelease_DESC) }
 actual fun wgpuQuerySetRelease(querySet: WGPUQuerySet?): Unit {
     wgpuQuerySetRelease_HANDLE.invokeExact(querySet?.handler?.handler ?: MemorySegment.NULL)
@@ -5947,14 +6123,14 @@ actual fun wgpuQuerySetRelease(querySet: WGPUQuerySet?): Unit {
 }
 
 private val wgpuQueueOnSubmittedWorkDone_DESC: FunctionDescriptor = FunctionDescriptor.of(WGPUFuture.layout, ValueLayout.ADDRESS, WGPUQueueWorkDoneCallbackInfo.layout)
-private val wgpuQueueOnSubmittedWorkDone_ADDR: MemorySegment by lazy { findOrThrow("wgpuQueueOnSubmittedWorkDone") }
+private val wgpuQueueOnSubmittedWorkDone_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQueueOnSubmittedWorkDone") }
 private val wgpuQueueOnSubmittedWorkDone_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQueueOnSubmittedWorkDone_ADDR, wgpuQueueOnSubmittedWorkDone_DESC) }
 actual fun wgpuQueueOnSubmittedWorkDone(queue: WGPUQueue?, callbackInfo: WGPUQueueWorkDoneCallbackInfo): WGPUFuture {
     return WGPUFuture(NativeAddress(wgpuQueueOnSubmittedWorkDone_HANDLE.invokeExact((Arena.ofAuto() as SegmentAllocator), queue?.handler?.handler ?: MemorySegment.NULL, callbackInfo.handler.handler) as MemorySegment))
 }
 
 private val wgpuQueueSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuQueueSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuQueueSetLabel") }
+private val wgpuQueueSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQueueSetLabel") }
 private val wgpuQueueSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQueueSetLabel_ADDR, wgpuQueueSetLabel_DESC) }
 actual fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit {
     wgpuQueueSetLabel_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -5962,7 +6138,7 @@ actual fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit {
 }
 
 private val wgpuQueueSubmit_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
-private val wgpuQueueSubmit_ADDR: MemorySegment by lazy { findOrThrow("wgpuQueueSubmit") }
+private val wgpuQueueSubmit_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQueueSubmit") }
 private val wgpuQueueSubmit_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQueueSubmit_ADDR, wgpuQueueSubmit_DESC) }
 actual fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): Unit {
     wgpuQueueSubmit_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL, commandCount.toLong(), commands?.handler ?: MemorySegment.NULL)
@@ -5970,7 +6146,7 @@ actual fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: Nat
 }
 
 private val wgpuQueueWriteBuffer_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
-private val wgpuQueueWriteBuffer_ADDR: MemorySegment by lazy { findOrThrow("wgpuQueueWriteBuffer") }
+private val wgpuQueueWriteBuffer_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQueueWriteBuffer") }
 private val wgpuQueueWriteBuffer_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQueueWriteBuffer_ADDR, wgpuQueueWriteBuffer_DESC) }
 actual fun wgpuQueueWriteBuffer(queue: WGPUQueue?, buffer: WGPUBuffer?, bufferOffset: ULong, data: NativeAddress?, size: ULong): Unit {
     wgpuQueueWriteBuffer_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL, buffer?.handler?.handler ?: MemorySegment.NULL, bufferOffset.toLong(), data?.handler ?: MemorySegment.NULL, size.toLong())
@@ -5978,7 +6154,7 @@ actual fun wgpuQueueWriteBuffer(queue: WGPUQueue?, buffer: WGPUBuffer?, bufferOf
 }
 
 private val wgpuQueueWriteTexture_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuQueueWriteTexture_ADDR: MemorySegment by lazy { findOrThrow("wgpuQueueWriteTexture") }
+private val wgpuQueueWriteTexture_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQueueWriteTexture") }
 private val wgpuQueueWriteTexture_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQueueWriteTexture_ADDR, wgpuQueueWriteTexture_DESC) }
 actual fun wgpuQueueWriteTexture(queue: WGPUQueue?, destination: WGPUTexelCopyTextureInfo?, data: NativeAddress?, dataSize: ULong, dataLayout: WGPUTexelCopyBufferLayout?, writeSize: WGPUExtent3D?): Unit {
     wgpuQueueWriteTexture_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL, destination?.handler?.handler ?: MemorySegment.NULL, data?.handler ?: MemorySegment.NULL, dataSize.toLong(), dataLayout?.handler?.handler ?: MemorySegment.NULL, writeSize?.handler?.handler ?: MemorySegment.NULL)
@@ -5986,7 +6162,7 @@ actual fun wgpuQueueWriteTexture(queue: WGPUQueue?, destination: WGPUTexelCopyTe
 }
 
 private val wgpuQueueAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuQueueAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuQueueAddRef") }
+private val wgpuQueueAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQueueAddRef") }
 private val wgpuQueueAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQueueAddRef_ADDR, wgpuQueueAddRef_DESC) }
 actual fun wgpuQueueAddRef(queue: WGPUQueue?): Unit {
     wgpuQueueAddRef_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL)
@@ -5994,7 +6170,7 @@ actual fun wgpuQueueAddRef(queue: WGPUQueue?): Unit {
 }
 
 private val wgpuQueueRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuQueueRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuQueueRelease") }
+private val wgpuQueueRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQueueRelease") }
 private val wgpuQueueRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQueueRelease_ADDR, wgpuQueueRelease_DESC) }
 actual fun wgpuQueueRelease(queue: WGPUQueue?): Unit {
     wgpuQueueRelease_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL)
@@ -6002,7 +6178,7 @@ actual fun wgpuQueueRelease(queue: WGPUQueue?): Unit {
 }
 
 private val wgpuRenderBundleSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuRenderBundleSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleSetLabel") }
+private val wgpuRenderBundleSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleSetLabel") }
 private val wgpuRenderBundleSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleSetLabel_ADDR, wgpuRenderBundleSetLabel_DESC) }
 actual fun wgpuRenderBundleSetLabel(renderBundle: WGPURenderBundle?, label: WGPUStringView): Unit {
     wgpuRenderBundleSetLabel_HANDLE.invokeExact(renderBundle?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -6010,7 +6186,7 @@ actual fun wgpuRenderBundleSetLabel(renderBundle: WGPURenderBundle?, label: WGPU
 }
 
 private val wgpuRenderBundleAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderBundleAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleAddRef") }
+private val wgpuRenderBundleAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleAddRef") }
 private val wgpuRenderBundleAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleAddRef_ADDR, wgpuRenderBundleAddRef_DESC) }
 actual fun wgpuRenderBundleAddRef(renderBundle: WGPURenderBundle?): Unit {
     wgpuRenderBundleAddRef_HANDLE.invokeExact(renderBundle?.handler?.handler ?: MemorySegment.NULL)
@@ -6018,7 +6194,7 @@ actual fun wgpuRenderBundleAddRef(renderBundle: WGPURenderBundle?): Unit {
 }
 
 private val wgpuRenderBundleRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderBundleRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleRelease") }
+private val wgpuRenderBundleRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleRelease") }
 private val wgpuRenderBundleRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleRelease_ADDR, wgpuRenderBundleRelease_DESC) }
 actual fun wgpuRenderBundleRelease(renderBundle: WGPURenderBundle?): Unit {
     wgpuRenderBundleRelease_HANDLE.invokeExact(renderBundle?.handler?.handler ?: MemorySegment.NULL)
@@ -6026,7 +6202,7 @@ actual fun wgpuRenderBundleRelease(renderBundle: WGPURenderBundle?): Unit {
 }
 
 private val wgpuRenderBundleEncoderDraw_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT)
-private val wgpuRenderBundleEncoderDraw_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderDraw") }
+private val wgpuRenderBundleEncoderDraw_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderDraw") }
 private val wgpuRenderBundleEncoderDraw_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderDraw_ADDR, wgpuRenderBundleEncoderDraw_DESC) }
 actual fun wgpuRenderBundleEncoderDraw(renderBundleEncoder: WGPURenderBundleEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit {
     wgpuRenderBundleEncoderDraw_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, vertexCount.toInt(), instanceCount.toInt(), firstVertex.toInt(), firstInstance.toInt())
@@ -6034,7 +6210,7 @@ actual fun wgpuRenderBundleEncoderDraw(renderBundleEncoder: WGPURenderBundleEnco
 }
 
 private val wgpuRenderBundleEncoderDrawIndexed_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT)
-private val wgpuRenderBundleEncoderDrawIndexed_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderDrawIndexed") }
+private val wgpuRenderBundleEncoderDrawIndexed_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderDrawIndexed") }
 private val wgpuRenderBundleEncoderDrawIndexed_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderDrawIndexed_ADDR, wgpuRenderBundleEncoderDrawIndexed_DESC) }
 actual fun wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder: WGPURenderBundleEncoder?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit {
     wgpuRenderBundleEncoderDrawIndexed_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, indexCount.toInt(), instanceCount.toInt(), firstIndex.toInt(), baseVertex, firstInstance.toInt())
@@ -6042,7 +6218,7 @@ actual fun wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder: WGPURenderBun
 }
 
 private val wgpuRenderBundleEncoderDrawIndexedIndirect_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
-private val wgpuRenderBundleEncoderDrawIndexedIndirect_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderDrawIndexedIndirect") }
+private val wgpuRenderBundleEncoderDrawIndexedIndirect_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderDrawIndexedIndirect") }
 private val wgpuRenderBundleEncoderDrawIndexedIndirect_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderDrawIndexedIndirect_ADDR, wgpuRenderBundleEncoderDrawIndexedIndirect_DESC) }
 actual fun wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
     wgpuRenderBundleEncoderDrawIndexedIndirect_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, indirectBuffer?.handler?.handler ?: MemorySegment.NULL, indirectOffset.toLong())
@@ -6050,7 +6226,7 @@ actual fun wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder: WGPUR
 }
 
 private val wgpuRenderBundleEncoderDrawIndirect_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
-private val wgpuRenderBundleEncoderDrawIndirect_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderDrawIndirect") }
+private val wgpuRenderBundleEncoderDrawIndirect_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderDrawIndirect") }
 private val wgpuRenderBundleEncoderDrawIndirect_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderDrawIndirect_ADDR, wgpuRenderBundleEncoderDrawIndirect_DESC) }
 actual fun wgpuRenderBundleEncoderDrawIndirect(renderBundleEncoder: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
     wgpuRenderBundleEncoderDrawIndirect_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, indirectBuffer?.handler?.handler ?: MemorySegment.NULL, indirectOffset.toLong())
@@ -6058,14 +6234,14 @@ actual fun wgpuRenderBundleEncoderDrawIndirect(renderBundleEncoder: WGPURenderBu
 }
 
 private val wgpuRenderBundleEncoderFinish_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuRenderBundleEncoderFinish_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderFinish") }
+private val wgpuRenderBundleEncoderFinish_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderFinish") }
 private val wgpuRenderBundleEncoderFinish_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderFinish_ADDR, wgpuRenderBundleEncoderFinish_DESC) }
 actual fun wgpuRenderBundleEncoderFinish(renderBundleEncoder: WGPURenderBundleEncoder?, descriptor: WGPURenderBundleDescriptor?): WGPURenderBundle? {
     return (wgpuRenderBundleEncoderFinish_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPURenderBundle(it) }
 }
 
 private val wgpuRenderBundleEncoderInsertDebugMarker_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuRenderBundleEncoderInsertDebugMarker_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderInsertDebugMarker") }
+private val wgpuRenderBundleEncoderInsertDebugMarker_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderInsertDebugMarker") }
 private val wgpuRenderBundleEncoderInsertDebugMarker_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderInsertDebugMarker_ADDR, wgpuRenderBundleEncoderInsertDebugMarker_DESC) }
 actual fun wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder: WGPURenderBundleEncoder?, markerLabel: WGPUStringView): Unit {
     wgpuRenderBundleEncoderInsertDebugMarker_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, markerLabel.handler.handler)
@@ -6073,7 +6249,7 @@ actual fun wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder: WGPURen
 }
 
 private val wgpuRenderBundleEncoderPopDebugGroup_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderBundleEncoderPopDebugGroup_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderPopDebugGroup") }
+private val wgpuRenderBundleEncoderPopDebugGroup_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderPopDebugGroup") }
 private val wgpuRenderBundleEncoderPopDebugGroup_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderPopDebugGroup_ADDR, wgpuRenderBundleEncoderPopDebugGroup_DESC) }
 actual fun wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder?): Unit {
     wgpuRenderBundleEncoderPopDebugGroup_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -6081,7 +6257,7 @@ actual fun wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder: WGPURenderB
 }
 
 private val wgpuRenderBundleEncoderPushDebugGroup_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuRenderBundleEncoderPushDebugGroup_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderPushDebugGroup") }
+private val wgpuRenderBundleEncoderPushDebugGroup_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderPushDebugGroup") }
 private val wgpuRenderBundleEncoderPushDebugGroup_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderPushDebugGroup_ADDR, wgpuRenderBundleEncoderPushDebugGroup_DESC) }
 actual fun wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupLabel: WGPUStringView): Unit {
     wgpuRenderBundleEncoderPushDebugGroup_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, groupLabel.handler.handler)
@@ -6089,7 +6265,7 @@ actual fun wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: WGPURender
 }
 
 private val wgpuRenderBundleEncoderSetBindGroup_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
-private val wgpuRenderBundleEncoderSetBindGroup_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderSetBindGroup") }
+private val wgpuRenderBundleEncoderSetBindGroup_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderSetBindGroup") }
 private val wgpuRenderBundleEncoderSetBindGroup_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderSetBindGroup_ADDR, wgpuRenderBundleEncoderSetBindGroup_DESC) }
 actual fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit {
     wgpuRenderBundleEncoderSetBindGroup_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, groupIndex.toInt(), group?.handler?.handler ?: MemorySegment.NULL, dynamicOffsetCount.toLong(), dynamicOffsets?.handler ?: MemorySegment.NULL)
@@ -6097,7 +6273,7 @@ actual fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBu
 }
 
 private val wgpuRenderBundleEncoderSetIndexBuffer_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG)
-private val wgpuRenderBundleEncoderSetIndexBuffer_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderSetIndexBuffer") }
+private val wgpuRenderBundleEncoderSetIndexBuffer_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderSetIndexBuffer") }
 private val wgpuRenderBundleEncoderSetIndexBuffer_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderSetIndexBuffer_ADDR, wgpuRenderBundleEncoderSetIndexBuffer_DESC) }
 actual fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit {
     wgpuRenderBundleEncoderSetIndexBuffer_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, buffer?.handler?.handler ?: MemorySegment.NULL, format.toInt(), offset.toLong(), size.toLong())
@@ -6105,7 +6281,7 @@ actual fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURender
 }
 
 private val wgpuRenderBundleEncoderSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuRenderBundleEncoderSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderSetLabel") }
+private val wgpuRenderBundleEncoderSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderSetLabel") }
 private val wgpuRenderBundleEncoderSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderSetLabel_ADDR, wgpuRenderBundleEncoderSetLabel_DESC) }
 actual fun wgpuRenderBundleEncoderSetLabel(renderBundleEncoder: WGPURenderBundleEncoder?, label: WGPUStringView): Unit {
     wgpuRenderBundleEncoderSetLabel_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -6113,7 +6289,7 @@ actual fun wgpuRenderBundleEncoderSetLabel(renderBundleEncoder: WGPURenderBundle
 }
 
 private val wgpuRenderBundleEncoderSetPipeline_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuRenderBundleEncoderSetPipeline_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderSetPipeline") }
+private val wgpuRenderBundleEncoderSetPipeline_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderSetPipeline") }
 private val wgpuRenderBundleEncoderSetPipeline_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderSetPipeline_ADDR, wgpuRenderBundleEncoderSetPipeline_DESC) }
 actual fun wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder: WGPURenderBundleEncoder?, pipeline: WGPURenderPipeline?): Unit {
     wgpuRenderBundleEncoderSetPipeline_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, pipeline?.handler?.handler ?: MemorySegment.NULL)
@@ -6121,7 +6297,7 @@ actual fun wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder: WGPURenderBun
 }
 
 private val wgpuRenderBundleEncoderSetVertexBuffer_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG)
-private val wgpuRenderBundleEncoderSetVertexBuffer_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderSetVertexBuffer") }
+private val wgpuRenderBundleEncoderSetVertexBuffer_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderSetVertexBuffer") }
 private val wgpuRenderBundleEncoderSetVertexBuffer_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderSetVertexBuffer_ADDR, wgpuRenderBundleEncoderSetVertexBuffer_DESC) }
 actual fun wgpuRenderBundleEncoderSetVertexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit {
     wgpuRenderBundleEncoderSetVertexBuffer_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, slot.toInt(), buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), size.toLong())
@@ -6129,7 +6305,7 @@ actual fun wgpuRenderBundleEncoderSetVertexBuffer(renderBundleEncoder: WGPURende
 }
 
 private val wgpuRenderBundleEncoderAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderBundleEncoderAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderAddRef") }
+private val wgpuRenderBundleEncoderAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderAddRef") }
 private val wgpuRenderBundleEncoderAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderAddRef_ADDR, wgpuRenderBundleEncoderAddRef_DESC) }
 actual fun wgpuRenderBundleEncoderAddRef(renderBundleEncoder: WGPURenderBundleEncoder?): Unit {
     wgpuRenderBundleEncoderAddRef_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -6137,7 +6313,7 @@ actual fun wgpuRenderBundleEncoderAddRef(renderBundleEncoder: WGPURenderBundleEn
 }
 
 private val wgpuRenderBundleEncoderRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderBundleEncoderRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderRelease") }
+private val wgpuRenderBundleEncoderRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderRelease") }
 private val wgpuRenderBundleEncoderRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderRelease_ADDR, wgpuRenderBundleEncoderRelease_DESC) }
 actual fun wgpuRenderBundleEncoderRelease(renderBundleEncoder: WGPURenderBundleEncoder?): Unit {
     wgpuRenderBundleEncoderRelease_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -6145,7 +6321,7 @@ actual fun wgpuRenderBundleEncoderRelease(renderBundleEncoder: WGPURenderBundleE
 }
 
 private val wgpuRenderPassEncoderBeginOcclusionQuery_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuRenderPassEncoderBeginOcclusionQuery_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderBeginOcclusionQuery") }
+private val wgpuRenderPassEncoderBeginOcclusionQuery_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderBeginOcclusionQuery") }
 private val wgpuRenderPassEncoderBeginOcclusionQuery_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderBeginOcclusionQuery_ADDR, wgpuRenderPassEncoderBeginOcclusionQuery_DESC) }
 actual fun wgpuRenderPassEncoderBeginOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?, queryIndex: UInt): Unit {
     wgpuRenderPassEncoderBeginOcclusionQuery_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, queryIndex.toInt())
@@ -6153,7 +6329,7 @@ actual fun wgpuRenderPassEncoderBeginOcclusionQuery(renderPassEncoder: WGPURende
 }
 
 private val wgpuRenderPassEncoderDraw_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT)
-private val wgpuRenderPassEncoderDraw_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderDraw") }
+private val wgpuRenderPassEncoderDraw_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderDraw") }
 private val wgpuRenderPassEncoderDraw_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderDraw_ADDR, wgpuRenderPassEncoderDraw_DESC) }
 actual fun wgpuRenderPassEncoderDraw(renderPassEncoder: WGPURenderPassEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit {
     wgpuRenderPassEncoderDraw_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, vertexCount.toInt(), instanceCount.toInt(), firstVertex.toInt(), firstInstance.toInt())
@@ -6161,7 +6337,7 @@ actual fun wgpuRenderPassEncoderDraw(renderPassEncoder: WGPURenderPassEncoder?, 
 }
 
 private val wgpuRenderPassEncoderDrawIndexed_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT)
-private val wgpuRenderPassEncoderDrawIndexed_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderDrawIndexed") }
+private val wgpuRenderPassEncoderDrawIndexed_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderDrawIndexed") }
 private val wgpuRenderPassEncoderDrawIndexed_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderDrawIndexed_ADDR, wgpuRenderPassEncoderDrawIndexed_DESC) }
 actual fun wgpuRenderPassEncoderDrawIndexed(renderPassEncoder: WGPURenderPassEncoder?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit {
     wgpuRenderPassEncoderDrawIndexed_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, indexCount.toInt(), instanceCount.toInt(), firstIndex.toInt(), baseVertex, firstInstance.toInt())
@@ -6169,7 +6345,7 @@ actual fun wgpuRenderPassEncoderDrawIndexed(renderPassEncoder: WGPURenderPassEnc
 }
 
 private val wgpuRenderPassEncoderDrawIndexedIndirect_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
-private val wgpuRenderPassEncoderDrawIndexedIndirect_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderDrawIndexedIndirect") }
+private val wgpuRenderPassEncoderDrawIndexedIndirect_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderDrawIndexedIndirect") }
 private val wgpuRenderPassEncoderDrawIndexedIndirect_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderDrawIndexedIndirect_ADDR, wgpuRenderPassEncoderDrawIndexedIndirect_DESC) }
 actual fun wgpuRenderPassEncoderDrawIndexedIndirect(renderPassEncoder: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
     wgpuRenderPassEncoderDrawIndexedIndirect_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, indirectBuffer?.handler?.handler ?: MemorySegment.NULL, indirectOffset.toLong())
@@ -6177,7 +6353,7 @@ actual fun wgpuRenderPassEncoderDrawIndexedIndirect(renderPassEncoder: WGPURende
 }
 
 private val wgpuRenderPassEncoderDrawIndirect_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
-private val wgpuRenderPassEncoderDrawIndirect_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderDrawIndirect") }
+private val wgpuRenderPassEncoderDrawIndirect_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderDrawIndirect") }
 private val wgpuRenderPassEncoderDrawIndirect_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderDrawIndirect_ADDR, wgpuRenderPassEncoderDrawIndirect_DESC) }
 actual fun wgpuRenderPassEncoderDrawIndirect(renderPassEncoder: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
     wgpuRenderPassEncoderDrawIndirect_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, indirectBuffer?.handler?.handler ?: MemorySegment.NULL, indirectOffset.toLong())
@@ -6185,7 +6361,7 @@ actual fun wgpuRenderPassEncoderDrawIndirect(renderPassEncoder: WGPURenderPassEn
 }
 
 private val wgpuRenderPassEncoderEnd_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderPassEncoderEnd_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderEnd") }
+private val wgpuRenderPassEncoderEnd_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderEnd") }
 private val wgpuRenderPassEncoderEnd_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderEnd_ADDR, wgpuRenderPassEncoderEnd_DESC) }
 actual fun wgpuRenderPassEncoderEnd(renderPassEncoder: WGPURenderPassEncoder?): Unit {
     wgpuRenderPassEncoderEnd_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -6193,7 +6369,7 @@ actual fun wgpuRenderPassEncoderEnd(renderPassEncoder: WGPURenderPassEncoder?): 
 }
 
 private val wgpuRenderPassEncoderEndOcclusionQuery_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderPassEncoderEndOcclusionQuery_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderEndOcclusionQuery") }
+private val wgpuRenderPassEncoderEndOcclusionQuery_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderEndOcclusionQuery") }
 private val wgpuRenderPassEncoderEndOcclusionQuery_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderEndOcclusionQuery_ADDR, wgpuRenderPassEncoderEndOcclusionQuery_DESC) }
 actual fun wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit {
     wgpuRenderPassEncoderEndOcclusionQuery_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -6201,7 +6377,7 @@ actual fun wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: WGPURenderP
 }
 
 private val wgpuRenderPassEncoderExecuteBundles_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
-private val wgpuRenderPassEncoderExecuteBundles_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderExecuteBundles") }
+private val wgpuRenderPassEncoderExecuteBundles_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderExecuteBundles") }
 private val wgpuRenderPassEncoderExecuteBundles_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderExecuteBundles_ADDR, wgpuRenderPassEncoderExecuteBundles_DESC) }
 actual fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder?, bundleCount: ULong, bundles: NativeAddress?): Unit {
     wgpuRenderPassEncoderExecuteBundles_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, bundleCount.toLong(), bundles?.handler ?: MemorySegment.NULL)
@@ -6209,7 +6385,7 @@ actual fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPass
 }
 
 private val wgpuRenderPassEncoderInsertDebugMarker_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuRenderPassEncoderInsertDebugMarker_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderInsertDebugMarker") }
+private val wgpuRenderPassEncoderInsertDebugMarker_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderInsertDebugMarker") }
 private val wgpuRenderPassEncoderInsertDebugMarker_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderInsertDebugMarker_ADDR, wgpuRenderPassEncoderInsertDebugMarker_DESC) }
 actual fun wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: WGPURenderPassEncoder?, markerLabel: WGPUStringView): Unit {
     wgpuRenderPassEncoderInsertDebugMarker_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, markerLabel.handler.handler)
@@ -6217,7 +6393,7 @@ actual fun wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: WGPURenderP
 }
 
 private val wgpuRenderPassEncoderPopDebugGroup_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderPassEncoderPopDebugGroup_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderPopDebugGroup") }
+private val wgpuRenderPassEncoderPopDebugGroup_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderPopDebugGroup") }
 private val wgpuRenderPassEncoderPopDebugGroup_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderPopDebugGroup_ADDR, wgpuRenderPassEncoderPopDebugGroup_DESC) }
 actual fun wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder: WGPURenderPassEncoder?): Unit {
     wgpuRenderPassEncoderPopDebugGroup_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -6225,7 +6401,7 @@ actual fun wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder: WGPURenderPassE
 }
 
 private val wgpuRenderPassEncoderPushDebugGroup_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuRenderPassEncoderPushDebugGroup_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderPushDebugGroup") }
+private val wgpuRenderPassEncoderPushDebugGroup_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderPushDebugGroup") }
 private val wgpuRenderPassEncoderPushDebugGroup_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderPushDebugGroup_ADDR, wgpuRenderPassEncoderPushDebugGroup_DESC) }
 actual fun wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: WGPURenderPassEncoder?, groupLabel: WGPUStringView): Unit {
     wgpuRenderPassEncoderPushDebugGroup_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, groupLabel.handler.handler)
@@ -6233,7 +6409,7 @@ actual fun wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: WGPURenderPass
 }
 
 private val wgpuRenderPassEncoderSetBindGroup_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
-private val wgpuRenderPassEncoderSetBindGroup_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderSetBindGroup") }
+private val wgpuRenderPassEncoderSetBindGroup_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetBindGroup") }
 private val wgpuRenderPassEncoderSetBindGroup_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetBindGroup_ADDR, wgpuRenderPassEncoderSetBindGroup_DESC) }
 actual fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit {
     wgpuRenderPassEncoderSetBindGroup_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, groupIndex.toInt(), group?.handler?.handler ?: MemorySegment.NULL, dynamicOffsetCount.toLong(), dynamicOffsets?.handler ?: MemorySegment.NULL)
@@ -6241,7 +6417,7 @@ actual fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEn
 }
 
 private val wgpuRenderPassEncoderSetBlendConstant_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuRenderPassEncoderSetBlendConstant_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderSetBlendConstant") }
+private val wgpuRenderPassEncoderSetBlendConstant_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetBlendConstant") }
 private val wgpuRenderPassEncoderSetBlendConstant_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetBlendConstant_ADDR, wgpuRenderPassEncoderSetBlendConstant_DESC) }
 actual fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder?, color: WGPUColor?): Unit {
     wgpuRenderPassEncoderSetBlendConstant_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, color?.handler?.handler ?: MemorySegment.NULL)
@@ -6249,7 +6425,7 @@ actual fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPa
 }
 
 private val wgpuRenderPassEncoderSetIndexBuffer_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG)
-private val wgpuRenderPassEncoderSetIndexBuffer_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderSetIndexBuffer") }
+private val wgpuRenderPassEncoderSetIndexBuffer_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetIndexBuffer") }
 private val wgpuRenderPassEncoderSetIndexBuffer_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetIndexBuffer_ADDR, wgpuRenderPassEncoderSetIndexBuffer_DESC) }
 actual fun wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit {
     wgpuRenderPassEncoderSetIndexBuffer_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, buffer?.handler?.handler ?: MemorySegment.NULL, format.toInt(), offset.toLong(), size.toLong())
@@ -6257,7 +6433,7 @@ actual fun wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: WGPURenderPass
 }
 
 private val wgpuRenderPassEncoderSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuRenderPassEncoderSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderSetLabel") }
+private val wgpuRenderPassEncoderSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetLabel") }
 private val wgpuRenderPassEncoderSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetLabel_ADDR, wgpuRenderPassEncoderSetLabel_DESC) }
 actual fun wgpuRenderPassEncoderSetLabel(renderPassEncoder: WGPURenderPassEncoder?, label: WGPUStringView): Unit {
     wgpuRenderPassEncoderSetLabel_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -6265,7 +6441,7 @@ actual fun wgpuRenderPassEncoderSetLabel(renderPassEncoder: WGPURenderPassEncode
 }
 
 private val wgpuRenderPassEncoderSetPipeline_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuRenderPassEncoderSetPipeline_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderSetPipeline") }
+private val wgpuRenderPassEncoderSetPipeline_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetPipeline") }
 private val wgpuRenderPassEncoderSetPipeline_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetPipeline_ADDR, wgpuRenderPassEncoderSetPipeline_DESC) }
 actual fun wgpuRenderPassEncoderSetPipeline(renderPassEncoder: WGPURenderPassEncoder?, pipeline: WGPURenderPipeline?): Unit {
     wgpuRenderPassEncoderSetPipeline_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, pipeline?.handler?.handler ?: MemorySegment.NULL)
@@ -6273,7 +6449,7 @@ actual fun wgpuRenderPassEncoderSetPipeline(renderPassEncoder: WGPURenderPassEnc
 }
 
 private val wgpuRenderPassEncoderSetScissorRect_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT)
-private val wgpuRenderPassEncoderSetScissorRect_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderSetScissorRect") }
+private val wgpuRenderPassEncoderSetScissorRect_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetScissorRect") }
 private val wgpuRenderPassEncoderSetScissorRect_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetScissorRect_ADDR, wgpuRenderPassEncoderSetScissorRect_DESC) }
 actual fun wgpuRenderPassEncoderSetScissorRect(renderPassEncoder: WGPURenderPassEncoder?, x: UInt, y: UInt, width: UInt, height: UInt): Unit {
     wgpuRenderPassEncoderSetScissorRect_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, x.toInt(), y.toInt(), width.toInt(), height.toInt())
@@ -6281,7 +6457,7 @@ actual fun wgpuRenderPassEncoderSetScissorRect(renderPassEncoder: WGPURenderPass
 }
 
 private val wgpuRenderPassEncoderSetStencilReference_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuRenderPassEncoderSetStencilReference_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderSetStencilReference") }
+private val wgpuRenderPassEncoderSetStencilReference_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetStencilReference") }
 private val wgpuRenderPassEncoderSetStencilReference_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetStencilReference_ADDR, wgpuRenderPassEncoderSetStencilReference_DESC) }
 actual fun wgpuRenderPassEncoderSetStencilReference(renderPassEncoder: WGPURenderPassEncoder?, reference: UInt): Unit {
     wgpuRenderPassEncoderSetStencilReference_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, reference.toInt())
@@ -6289,7 +6465,7 @@ actual fun wgpuRenderPassEncoderSetStencilReference(renderPassEncoder: WGPURende
 }
 
 private val wgpuRenderPassEncoderSetVertexBuffer_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG)
-private val wgpuRenderPassEncoderSetVertexBuffer_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderSetVertexBuffer") }
+private val wgpuRenderPassEncoderSetVertexBuffer_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetVertexBuffer") }
 private val wgpuRenderPassEncoderSetVertexBuffer_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetVertexBuffer_ADDR, wgpuRenderPassEncoderSetVertexBuffer_DESC) }
 actual fun wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder: WGPURenderPassEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit {
     wgpuRenderPassEncoderSetVertexBuffer_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, slot.toInt(), buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), size.toLong())
@@ -6297,7 +6473,7 @@ actual fun wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder: WGPURenderPas
 }
 
 private val wgpuRenderPassEncoderSetViewport_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_FLOAT, ValueLayout.JAVA_FLOAT, ValueLayout.JAVA_FLOAT, ValueLayout.JAVA_FLOAT, ValueLayout.JAVA_FLOAT, ValueLayout.JAVA_FLOAT)
-private val wgpuRenderPassEncoderSetViewport_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderSetViewport") }
+private val wgpuRenderPassEncoderSetViewport_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetViewport") }
 private val wgpuRenderPassEncoderSetViewport_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetViewport_ADDR, wgpuRenderPassEncoderSetViewport_DESC) }
 actual fun wgpuRenderPassEncoderSetViewport(renderPassEncoder: WGPURenderPassEncoder?, x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float): Unit {
     wgpuRenderPassEncoderSetViewport_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, x, y, width, height, minDepth, maxDepth)
@@ -6305,7 +6481,7 @@ actual fun wgpuRenderPassEncoderSetViewport(renderPassEncoder: WGPURenderPassEnc
 }
 
 private val wgpuRenderPassEncoderAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderPassEncoderAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderAddRef") }
+private val wgpuRenderPassEncoderAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderAddRef") }
 private val wgpuRenderPassEncoderAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderAddRef_ADDR, wgpuRenderPassEncoderAddRef_DESC) }
 actual fun wgpuRenderPassEncoderAddRef(renderPassEncoder: WGPURenderPassEncoder?): Unit {
     wgpuRenderPassEncoderAddRef_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -6313,7 +6489,7 @@ actual fun wgpuRenderPassEncoderAddRef(renderPassEncoder: WGPURenderPassEncoder?
 }
 
 private val wgpuRenderPassEncoderRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderPassEncoderRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderRelease") }
+private val wgpuRenderPassEncoderRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderRelease") }
 private val wgpuRenderPassEncoderRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderRelease_ADDR, wgpuRenderPassEncoderRelease_DESC) }
 actual fun wgpuRenderPassEncoderRelease(renderPassEncoder: WGPURenderPassEncoder?): Unit {
     wgpuRenderPassEncoderRelease_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -6321,14 +6497,14 @@ actual fun wgpuRenderPassEncoderRelease(renderPassEncoder: WGPURenderPassEncoder
 }
 
 private val wgpuRenderPipelineGetBindGroupLayout_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuRenderPipelineGetBindGroupLayout_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPipelineGetBindGroupLayout") }
+private val wgpuRenderPipelineGetBindGroupLayout_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPipelineGetBindGroupLayout") }
 private val wgpuRenderPipelineGetBindGroupLayout_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPipelineGetBindGroupLayout_ADDR, wgpuRenderPipelineGetBindGroupLayout_DESC) }
 actual fun wgpuRenderPipelineGetBindGroupLayout(renderPipeline: WGPURenderPipeline?, groupIndex: UInt): WGPUBindGroupLayout? {
     return (wgpuRenderPipelineGetBindGroupLayout_HANDLE.invokeExact(renderPipeline?.handler?.handler ?: MemorySegment.NULL, groupIndex.toInt()) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
 }
 
 private val wgpuRenderPipelineSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuRenderPipelineSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPipelineSetLabel") }
+private val wgpuRenderPipelineSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPipelineSetLabel") }
 private val wgpuRenderPipelineSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPipelineSetLabel_ADDR, wgpuRenderPipelineSetLabel_DESC) }
 actual fun wgpuRenderPipelineSetLabel(renderPipeline: WGPURenderPipeline?, label: WGPUStringView): Unit {
     wgpuRenderPipelineSetLabel_HANDLE.invokeExact(renderPipeline?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -6336,7 +6512,7 @@ actual fun wgpuRenderPipelineSetLabel(renderPipeline: WGPURenderPipeline?, label
 }
 
 private val wgpuRenderPipelineAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderPipelineAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPipelineAddRef") }
+private val wgpuRenderPipelineAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPipelineAddRef") }
 private val wgpuRenderPipelineAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPipelineAddRef_ADDR, wgpuRenderPipelineAddRef_DESC) }
 actual fun wgpuRenderPipelineAddRef(renderPipeline: WGPURenderPipeline?): Unit {
     wgpuRenderPipelineAddRef_HANDLE.invokeExact(renderPipeline?.handler?.handler ?: MemorySegment.NULL)
@@ -6344,7 +6520,7 @@ actual fun wgpuRenderPipelineAddRef(renderPipeline: WGPURenderPipeline?): Unit {
 }
 
 private val wgpuRenderPipelineRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderPipelineRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPipelineRelease") }
+private val wgpuRenderPipelineRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPipelineRelease") }
 private val wgpuRenderPipelineRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPipelineRelease_ADDR, wgpuRenderPipelineRelease_DESC) }
 actual fun wgpuRenderPipelineRelease(renderPipeline: WGPURenderPipeline?): Unit {
     wgpuRenderPipelineRelease_HANDLE.invokeExact(renderPipeline?.handler?.handler ?: MemorySegment.NULL)
@@ -6352,7 +6528,7 @@ actual fun wgpuRenderPipelineRelease(renderPipeline: WGPURenderPipeline?): Unit 
 }
 
 private val wgpuSamplerSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuSamplerSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuSamplerSetLabel") }
+private val wgpuSamplerSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSamplerSetLabel") }
 private val wgpuSamplerSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSamplerSetLabel_ADDR, wgpuSamplerSetLabel_DESC) }
 actual fun wgpuSamplerSetLabel(sampler: WGPUSampler?, label: WGPUStringView): Unit {
     wgpuSamplerSetLabel_HANDLE.invokeExact(sampler?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -6360,7 +6536,7 @@ actual fun wgpuSamplerSetLabel(sampler: WGPUSampler?, label: WGPUStringView): Un
 }
 
 private val wgpuSamplerAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuSamplerAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuSamplerAddRef") }
+private val wgpuSamplerAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSamplerAddRef") }
 private val wgpuSamplerAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSamplerAddRef_ADDR, wgpuSamplerAddRef_DESC) }
 actual fun wgpuSamplerAddRef(sampler: WGPUSampler?): Unit {
     wgpuSamplerAddRef_HANDLE.invokeExact(sampler?.handler?.handler ?: MemorySegment.NULL)
@@ -6368,7 +6544,7 @@ actual fun wgpuSamplerAddRef(sampler: WGPUSampler?): Unit {
 }
 
 private val wgpuSamplerRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuSamplerRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuSamplerRelease") }
+private val wgpuSamplerRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSamplerRelease") }
 private val wgpuSamplerRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSamplerRelease_ADDR, wgpuSamplerRelease_DESC) }
 actual fun wgpuSamplerRelease(sampler: WGPUSampler?): Unit {
     wgpuSamplerRelease_HANDLE.invokeExact(sampler?.handler?.handler ?: MemorySegment.NULL)
@@ -6376,14 +6552,14 @@ actual fun wgpuSamplerRelease(sampler: WGPUSampler?): Unit {
 }
 
 private val wgpuShaderModuleGetCompilationInfo_DESC: FunctionDescriptor = FunctionDescriptor.of(WGPUFuture.layout, ValueLayout.ADDRESS, WGPUCompilationInfoCallbackInfo.layout)
-private val wgpuShaderModuleGetCompilationInfo_ADDR: MemorySegment by lazy { findOrThrow("wgpuShaderModuleGetCompilationInfo") }
+private val wgpuShaderModuleGetCompilationInfo_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuShaderModuleGetCompilationInfo") }
 private val wgpuShaderModuleGetCompilationInfo_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuShaderModuleGetCompilationInfo_ADDR, wgpuShaderModuleGetCompilationInfo_DESC) }
 actual fun wgpuShaderModuleGetCompilationInfo(shaderModule: WGPUShaderModule?, callbackInfo: WGPUCompilationInfoCallbackInfo): WGPUFuture {
     return WGPUFuture(NativeAddress(wgpuShaderModuleGetCompilationInfo_HANDLE.invokeExact((Arena.ofAuto() as SegmentAllocator), shaderModule?.handler?.handler ?: MemorySegment.NULL, callbackInfo.handler.handler) as MemorySegment))
 }
 
 private val wgpuShaderModuleSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuShaderModuleSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuShaderModuleSetLabel") }
+private val wgpuShaderModuleSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuShaderModuleSetLabel") }
 private val wgpuShaderModuleSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuShaderModuleSetLabel_ADDR, wgpuShaderModuleSetLabel_DESC) }
 actual fun wgpuShaderModuleSetLabel(shaderModule: WGPUShaderModule?, label: WGPUStringView): Unit {
     wgpuShaderModuleSetLabel_HANDLE.invokeExact(shaderModule?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -6391,7 +6567,7 @@ actual fun wgpuShaderModuleSetLabel(shaderModule: WGPUShaderModule?, label: WGPU
 }
 
 private val wgpuShaderModuleAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuShaderModuleAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuShaderModuleAddRef") }
+private val wgpuShaderModuleAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuShaderModuleAddRef") }
 private val wgpuShaderModuleAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuShaderModuleAddRef_ADDR, wgpuShaderModuleAddRef_DESC) }
 actual fun wgpuShaderModuleAddRef(shaderModule: WGPUShaderModule?): Unit {
     wgpuShaderModuleAddRef_HANDLE.invokeExact(shaderModule?.handler?.handler ?: MemorySegment.NULL)
@@ -6399,7 +6575,7 @@ actual fun wgpuShaderModuleAddRef(shaderModule: WGPUShaderModule?): Unit {
 }
 
 private val wgpuShaderModuleRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuShaderModuleRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuShaderModuleRelease") }
+private val wgpuShaderModuleRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuShaderModuleRelease") }
 private val wgpuShaderModuleRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuShaderModuleRelease_ADDR, wgpuShaderModuleRelease_DESC) }
 actual fun wgpuShaderModuleRelease(shaderModule: WGPUShaderModule?): Unit {
     wgpuShaderModuleRelease_HANDLE.invokeExact(shaderModule?.handler?.handler ?: MemorySegment.NULL)
@@ -6407,7 +6583,7 @@ actual fun wgpuShaderModuleRelease(shaderModule: WGPUShaderModule?): Unit {
 }
 
 private val wgpuSupportedFeaturesFreeMembers_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(WGPUSupportedFeatures.layout)
-private val wgpuSupportedFeaturesFreeMembers_ADDR: MemorySegment by lazy { findOrThrow("wgpuSupportedFeaturesFreeMembers") }
+private val wgpuSupportedFeaturesFreeMembers_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSupportedFeaturesFreeMembers") }
 private val wgpuSupportedFeaturesFreeMembers_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSupportedFeaturesFreeMembers_ADDR, wgpuSupportedFeaturesFreeMembers_DESC) }
 actual fun wgpuSupportedFeaturesFreeMembers(supportedFeatures: WGPUSupportedFeatures): Unit {
     wgpuSupportedFeaturesFreeMembers_HANDLE.invokeExact(supportedFeatures.handler.handler)
@@ -6415,7 +6591,7 @@ actual fun wgpuSupportedFeaturesFreeMembers(supportedFeatures: WGPUSupportedFeat
 }
 
 private val wgpuSupportedInstanceFeaturesFreeMembers_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(WGPUSupportedInstanceFeatures.layout)
-private val wgpuSupportedInstanceFeaturesFreeMembers_ADDR: MemorySegment by lazy { findOrThrow("wgpuSupportedInstanceFeaturesFreeMembers") }
+private val wgpuSupportedInstanceFeaturesFreeMembers_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSupportedInstanceFeaturesFreeMembers") }
 private val wgpuSupportedInstanceFeaturesFreeMembers_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSupportedInstanceFeaturesFreeMembers_ADDR, wgpuSupportedInstanceFeaturesFreeMembers_DESC) }
 actual fun wgpuSupportedInstanceFeaturesFreeMembers(supportedInstanceFeatures: WGPUSupportedInstanceFeatures): Unit {
     wgpuSupportedInstanceFeaturesFreeMembers_HANDLE.invokeExact(supportedInstanceFeatures.handler.handler)
@@ -6423,7 +6599,7 @@ actual fun wgpuSupportedInstanceFeaturesFreeMembers(supportedInstanceFeatures: W
 }
 
 private val wgpuSupportedWGSLLanguageFeaturesFreeMembers_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(WGPUSupportedWGSLLanguageFeatures.layout)
-private val wgpuSupportedWGSLLanguageFeaturesFreeMembers_ADDR: MemorySegment by lazy { findOrThrow("wgpuSupportedWGSLLanguageFeaturesFreeMembers") }
+private val wgpuSupportedWGSLLanguageFeaturesFreeMembers_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSupportedWGSLLanguageFeaturesFreeMembers") }
 private val wgpuSupportedWGSLLanguageFeaturesFreeMembers_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSupportedWGSLLanguageFeaturesFreeMembers_ADDR, wgpuSupportedWGSLLanguageFeaturesFreeMembers_DESC) }
 actual fun wgpuSupportedWGSLLanguageFeaturesFreeMembers(supportedWGSLLanguageFeatures: WGPUSupportedWGSLLanguageFeatures): Unit {
     wgpuSupportedWGSLLanguageFeaturesFreeMembers_HANDLE.invokeExact(supportedWGSLLanguageFeatures.handler.handler)
@@ -6431,7 +6607,7 @@ actual fun wgpuSupportedWGSLLanguageFeaturesFreeMembers(supportedWGSLLanguageFea
 }
 
 private val wgpuSurfaceConfigure_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuSurfaceConfigure_ADDR: MemorySegment by lazy { findOrThrow("wgpuSurfaceConfigure") }
+private val wgpuSurfaceConfigure_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSurfaceConfigure") }
 private val wgpuSurfaceConfigure_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSurfaceConfigure_ADDR, wgpuSurfaceConfigure_DESC) }
 actual fun wgpuSurfaceConfigure(surface: WGPUSurface?, config: WGPUSurfaceConfiguration?): Unit {
     wgpuSurfaceConfigure_HANDLE.invokeExact(surface?.handler?.handler ?: MemorySegment.NULL, config?.handler?.handler ?: MemorySegment.NULL)
@@ -6439,14 +6615,14 @@ actual fun wgpuSurfaceConfigure(surface: WGPUSurface?, config: WGPUSurfaceConfig
 }
 
 private val wgpuSurfaceGetCapabilities_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuSurfaceGetCapabilities_ADDR: MemorySegment by lazy { findOrThrow("wgpuSurfaceGetCapabilities") }
+private val wgpuSurfaceGetCapabilities_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSurfaceGetCapabilities") }
 private val wgpuSurfaceGetCapabilities_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSurfaceGetCapabilities_ADDR, wgpuSurfaceGetCapabilities_DESC) }
 actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus {
     return (wgpuSurfaceGetCapabilities_HANDLE.invokeExact(surface?.handler?.handler ?: MemorySegment.NULL, adapter?.handler?.handler ?: MemorySegment.NULL, capabilities?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuSurfaceGetCurrentTexture_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuSurfaceGetCurrentTexture_ADDR: MemorySegment by lazy { findOrThrow("wgpuSurfaceGetCurrentTexture") }
+private val wgpuSurfaceGetCurrentTexture_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSurfaceGetCurrentTexture") }
 private val wgpuSurfaceGetCurrentTexture_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSurfaceGetCurrentTexture_ADDR, wgpuSurfaceGetCurrentTexture_DESC) }
 actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit {
     wgpuSurfaceGetCurrentTexture_HANDLE.invokeExact(surface?.handler?.handler ?: MemorySegment.NULL, surfaceTexture?.handler?.handler ?: MemorySegment.NULL)
@@ -6454,14 +6630,14 @@ actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: W
 }
 
 private val wgpuSurfacePresent_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuSurfacePresent_ADDR: MemorySegment by lazy { findOrThrow("wgpuSurfacePresent") }
+private val wgpuSurfacePresent_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSurfacePresent") }
 private val wgpuSurfacePresent_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSurfacePresent_ADDR, wgpuSurfacePresent_DESC) }
 actual fun wgpuSurfacePresent(surface: WGPUSurface?): WGPUStatus {
     return (wgpuSurfacePresent_HANDLE.invokeExact(surface?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuSurfaceSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuSurfaceSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuSurfaceSetLabel") }
+private val wgpuSurfaceSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSurfaceSetLabel") }
 private val wgpuSurfaceSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSurfaceSetLabel_ADDR, wgpuSurfaceSetLabel_DESC) }
 actual fun wgpuSurfaceSetLabel(surface: WGPUSurface?, label: WGPUStringView): Unit {
     wgpuSurfaceSetLabel_HANDLE.invokeExact(surface?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -6469,7 +6645,7 @@ actual fun wgpuSurfaceSetLabel(surface: WGPUSurface?, label: WGPUStringView): Un
 }
 
 private val wgpuSurfaceUnconfigure_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuSurfaceUnconfigure_ADDR: MemorySegment by lazy { findOrThrow("wgpuSurfaceUnconfigure") }
+private val wgpuSurfaceUnconfigure_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSurfaceUnconfigure") }
 private val wgpuSurfaceUnconfigure_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSurfaceUnconfigure_ADDR, wgpuSurfaceUnconfigure_DESC) }
 actual fun wgpuSurfaceUnconfigure(surface: WGPUSurface?): Unit {
     wgpuSurfaceUnconfigure_HANDLE.invokeExact(surface?.handler?.handler ?: MemorySegment.NULL)
@@ -6477,7 +6653,7 @@ actual fun wgpuSurfaceUnconfigure(surface: WGPUSurface?): Unit {
 }
 
 private val wgpuSurfaceAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuSurfaceAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuSurfaceAddRef") }
+private val wgpuSurfaceAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSurfaceAddRef") }
 private val wgpuSurfaceAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSurfaceAddRef_ADDR, wgpuSurfaceAddRef_DESC) }
 actual fun wgpuSurfaceAddRef(surface: WGPUSurface?): Unit {
     wgpuSurfaceAddRef_HANDLE.invokeExact(surface?.handler?.handler ?: MemorySegment.NULL)
@@ -6485,7 +6661,7 @@ actual fun wgpuSurfaceAddRef(surface: WGPUSurface?): Unit {
 }
 
 private val wgpuSurfaceRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuSurfaceRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuSurfaceRelease") }
+private val wgpuSurfaceRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSurfaceRelease") }
 private val wgpuSurfaceRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSurfaceRelease_ADDR, wgpuSurfaceRelease_DESC) }
 actual fun wgpuSurfaceRelease(surface: WGPUSurface?): Unit {
     wgpuSurfaceRelease_HANDLE.invokeExact(surface?.handler?.handler ?: MemorySegment.NULL)
@@ -6493,7 +6669,7 @@ actual fun wgpuSurfaceRelease(surface: WGPUSurface?): Unit {
 }
 
 private val wgpuSurfaceCapabilitiesFreeMembers_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(WGPUSurfaceCapabilities.layout)
-private val wgpuSurfaceCapabilitiesFreeMembers_ADDR: MemorySegment by lazy { findOrThrow("wgpuSurfaceCapabilitiesFreeMembers") }
+private val wgpuSurfaceCapabilitiesFreeMembers_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSurfaceCapabilitiesFreeMembers") }
 private val wgpuSurfaceCapabilitiesFreeMembers_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSurfaceCapabilitiesFreeMembers_ADDR, wgpuSurfaceCapabilitiesFreeMembers_DESC) }
 actual fun wgpuSurfaceCapabilitiesFreeMembers(surfaceCapabilities: WGPUSurfaceCapabilities): Unit {
     wgpuSurfaceCapabilitiesFreeMembers_HANDLE.invokeExact(surfaceCapabilities.handler.handler)
@@ -6501,14 +6677,14 @@ actual fun wgpuSurfaceCapabilitiesFreeMembers(surfaceCapabilities: WGPUSurfaceCa
 }
 
 private val wgpuTextureCreateView_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuTextureCreateView_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureCreateView") }
+private val wgpuTextureCreateView_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureCreateView") }
 private val wgpuTextureCreateView_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureCreateView_ADDR, wgpuTextureCreateView_DESC) }
 actual fun wgpuTextureCreateView(texture: WGPUTexture?, descriptor: WGPUTextureViewDescriptor?): WGPUTextureView? {
     return (wgpuTextureCreateView_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUTextureView(it) }
 }
 
 private val wgpuTextureDestroy_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuTextureDestroy_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureDestroy") }
+private val wgpuTextureDestroy_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureDestroy") }
 private val wgpuTextureDestroy_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureDestroy_ADDR, wgpuTextureDestroy_DESC) }
 actual fun wgpuTextureDestroy(texture: WGPUTexture?): Unit {
     wgpuTextureDestroy_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL)
@@ -6516,70 +6692,70 @@ actual fun wgpuTextureDestroy(texture: WGPUTexture?): Unit {
 }
 
 private val wgpuTextureGetDepthOrArrayLayers_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuTextureGetDepthOrArrayLayers_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetDepthOrArrayLayers") }
+private val wgpuTextureGetDepthOrArrayLayers_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureGetDepthOrArrayLayers") }
 private val wgpuTextureGetDepthOrArrayLayers_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetDepthOrArrayLayers_ADDR, wgpuTextureGetDepthOrArrayLayers_DESC) }
 actual fun wgpuTextureGetDepthOrArrayLayers(texture: WGPUTexture?): UInt {
     return (wgpuTextureGetDepthOrArrayLayers_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuTextureGetDimension_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuTextureGetDimension_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetDimension") }
+private val wgpuTextureGetDimension_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureGetDimension") }
 private val wgpuTextureGetDimension_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetDimension_ADDR, wgpuTextureGetDimension_DESC) }
 actual fun wgpuTextureGetDimension(texture: WGPUTexture?): WGPUTextureDimension {
     return (wgpuTextureGetDimension_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuTextureGetFormat_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuTextureGetFormat_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetFormat") }
+private val wgpuTextureGetFormat_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureGetFormat") }
 private val wgpuTextureGetFormat_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetFormat_ADDR, wgpuTextureGetFormat_DESC) }
 actual fun wgpuTextureGetFormat(texture: WGPUTexture?): WGPUTextureFormat {
     return (wgpuTextureGetFormat_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuTextureGetHeight_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuTextureGetHeight_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetHeight") }
+private val wgpuTextureGetHeight_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureGetHeight") }
 private val wgpuTextureGetHeight_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetHeight_ADDR, wgpuTextureGetHeight_DESC) }
 actual fun wgpuTextureGetHeight(texture: WGPUTexture?): UInt {
     return (wgpuTextureGetHeight_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuTextureGetMipLevelCount_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuTextureGetMipLevelCount_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetMipLevelCount") }
+private val wgpuTextureGetMipLevelCount_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureGetMipLevelCount") }
 private val wgpuTextureGetMipLevelCount_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetMipLevelCount_ADDR, wgpuTextureGetMipLevelCount_DESC) }
 actual fun wgpuTextureGetMipLevelCount(texture: WGPUTexture?): UInt {
     return (wgpuTextureGetMipLevelCount_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuTextureGetSampleCount_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuTextureGetSampleCount_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetSampleCount") }
+private val wgpuTextureGetSampleCount_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureGetSampleCount") }
 private val wgpuTextureGetSampleCount_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetSampleCount_ADDR, wgpuTextureGetSampleCount_DESC) }
 actual fun wgpuTextureGetSampleCount(texture: WGPUTexture?): UInt {
     return (wgpuTextureGetSampleCount_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuTextureGetTextureBindingViewDimension_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuTextureGetTextureBindingViewDimension_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetTextureBindingViewDimension") }
+private val wgpuTextureGetTextureBindingViewDimension_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureGetTextureBindingViewDimension") }
 private val wgpuTextureGetTextureBindingViewDimension_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetTextureBindingViewDimension_ADDR, wgpuTextureGetTextureBindingViewDimension_DESC) }
 actual fun wgpuTextureGetTextureBindingViewDimension(texture: WGPUTexture?): WGPUTextureViewDimension {
     return (wgpuTextureGetTextureBindingViewDimension_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuTextureGetUsage_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
-private val wgpuTextureGetUsage_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetUsage") }
+private val wgpuTextureGetUsage_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureGetUsage") }
 private val wgpuTextureGetUsage_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetUsage_ADDR, wgpuTextureGetUsage_DESC) }
 actual fun wgpuTextureGetUsage(texture: WGPUTexture?): ULong {
     return (wgpuTextureGetUsage_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Long).toULong()
 }
 
 private val wgpuTextureGetWidth_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuTextureGetWidth_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetWidth") }
+private val wgpuTextureGetWidth_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureGetWidth") }
 private val wgpuTextureGetWidth_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetWidth_ADDR, wgpuTextureGetWidth_DESC) }
 actual fun wgpuTextureGetWidth(texture: WGPUTexture?): UInt {
     return (wgpuTextureGetWidth_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuTextureSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuTextureSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureSetLabel") }
+private val wgpuTextureSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureSetLabel") }
 private val wgpuTextureSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureSetLabel_ADDR, wgpuTextureSetLabel_DESC) }
 actual fun wgpuTextureSetLabel(texture: WGPUTexture?, label: WGPUStringView): Unit {
     wgpuTextureSetLabel_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -6587,7 +6763,7 @@ actual fun wgpuTextureSetLabel(texture: WGPUTexture?, label: WGPUStringView): Un
 }
 
 private val wgpuTextureAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuTextureAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureAddRef") }
+private val wgpuTextureAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureAddRef") }
 private val wgpuTextureAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureAddRef_ADDR, wgpuTextureAddRef_DESC) }
 actual fun wgpuTextureAddRef(texture: WGPUTexture?): Unit {
     wgpuTextureAddRef_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL)
@@ -6595,7 +6771,7 @@ actual fun wgpuTextureAddRef(texture: WGPUTexture?): Unit {
 }
 
 private val wgpuTextureRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuTextureRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureRelease") }
+private val wgpuTextureRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureRelease") }
 private val wgpuTextureRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureRelease_ADDR, wgpuTextureRelease_DESC) }
 actual fun wgpuTextureRelease(texture: WGPUTexture?): Unit {
     wgpuTextureRelease_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL)
@@ -6603,7 +6779,7 @@ actual fun wgpuTextureRelease(texture: WGPUTexture?): Unit {
 }
 
 private val wgpuTextureViewSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
-private val wgpuTextureViewSetLabel_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureViewSetLabel") }
+private val wgpuTextureViewSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureViewSetLabel") }
 private val wgpuTextureViewSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureViewSetLabel_ADDR, wgpuTextureViewSetLabel_DESC) }
 actual fun wgpuTextureViewSetLabel(textureView: WGPUTextureView?, label: WGPUStringView): Unit {
     wgpuTextureViewSetLabel_HANDLE.invokeExact(textureView?.handler?.handler ?: MemorySegment.NULL, label.handler.handler)
@@ -6611,7 +6787,7 @@ actual fun wgpuTextureViewSetLabel(textureView: WGPUTextureView?, label: WGPUStr
 }
 
 private val wgpuTextureViewAddRef_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuTextureViewAddRef_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureViewAddRef") }
+private val wgpuTextureViewAddRef_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureViewAddRef") }
 private val wgpuTextureViewAddRef_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureViewAddRef_ADDR, wgpuTextureViewAddRef_DESC) }
 actual fun wgpuTextureViewAddRef(textureView: WGPUTextureView?): Unit {
     wgpuTextureViewAddRef_HANDLE.invokeExact(textureView?.handler?.handler ?: MemorySegment.NULL)
@@ -6619,7 +6795,7 @@ actual fun wgpuTextureViewAddRef(textureView: WGPUTextureView?): Unit {
 }
 
 private val wgpuTextureViewRelease_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuTextureViewRelease_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureViewRelease") }
+private val wgpuTextureViewRelease_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureViewRelease") }
 private val wgpuTextureViewRelease_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureViewRelease_ADDR, wgpuTextureViewRelease_DESC) }
 actual fun wgpuTextureViewRelease(textureView: WGPUTextureView?): Unit {
     wgpuTextureViewRelease_HANDLE.invokeExact(textureView?.handler?.handler ?: MemorySegment.NULL)
@@ -7705,7 +7881,7 @@ actual interface WGPUPrimitiveStateExtras : CStructure {
 }
 
 private val wgpuGenerateReport_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuGenerateReport_ADDR: MemorySegment by lazy { findOrThrow("wgpuGenerateReport") }
+private val wgpuGenerateReport_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuGenerateReport") }
 private val wgpuGenerateReport_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuGenerateReport_ADDR, wgpuGenerateReport_DESC) }
 actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit {
     wgpuGenerateReport_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL, report?.handler?.handler ?: MemorySegment.NULL)
@@ -7713,42 +7889,42 @@ actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?
 }
 
 private val wgpuInstanceEnumerateAdapters_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuInstanceEnumerateAdapters_ADDR: MemorySegment by lazy { findOrThrow("wgpuInstanceEnumerateAdapters") }
+private val wgpuInstanceEnumerateAdapters_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuInstanceEnumerateAdapters") }
 private val wgpuInstanceEnumerateAdapters_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuInstanceEnumerateAdapters_ADDR, wgpuInstanceEnumerateAdapters_DESC) }
 actual fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: NativeAddress?): ULong {
     return (wgpuInstanceEnumerateAdapters_HANDLE.invokeExact(instance?.handler?.handler ?: MemorySegment.NULL, options?.handler?.handler ?: MemorySegment.NULL, adapters?.handler ?: MemorySegment.NULL) as Long).toULong()
 }
 
 private val wgpuQueueSubmitForIndex_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS)
-private val wgpuQueueSubmitForIndex_ADDR: MemorySegment by lazy { findOrThrow("wgpuQueueSubmitForIndex") }
+private val wgpuQueueSubmitForIndex_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQueueSubmitForIndex") }
 private val wgpuQueueSubmitForIndex_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQueueSubmitForIndex_ADDR, wgpuQueueSubmitForIndex_DESC) }
 actual fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): ULong {
     return (wgpuQueueSubmitForIndex_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL, commandCount.toLong(), commands?.handler ?: MemorySegment.NULL) as Long).toULong()
 }
 
 private val wgpuQueueGetTimestampPeriod_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_FLOAT, ValueLayout.ADDRESS)
-private val wgpuQueueGetTimestampPeriod_ADDR: MemorySegment by lazy { findOrThrow("wgpuQueueGetTimestampPeriod") }
+private val wgpuQueueGetTimestampPeriod_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQueueGetTimestampPeriod") }
 private val wgpuQueueGetTimestampPeriod_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQueueGetTimestampPeriod_ADDR, wgpuQueueGetTimestampPeriod_DESC) }
 actual fun wgpuQueueGetTimestampPeriod(queue: WGPUQueue?): Float {
     return wgpuQueueGetTimestampPeriod_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL) as Float
 }
 
 private val wgpuDevicePoll_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuDevicePoll_ADDR: MemorySegment by lazy { findOrThrow("wgpuDevicePoll") }
+private val wgpuDevicePoll_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDevicePoll") }
 private val wgpuDevicePoll_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDevicePoll_ADDR, wgpuDevicePoll_DESC) }
 actual fun wgpuDevicePoll(device: WGPUDevice?, wait: UInt, submissionIndex: NativeAddress?): UInt {
     return (wgpuDevicePoll_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, wait.toInt(), submissionIndex?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuDeviceCreateShaderModuleSpirV_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceCreateShaderModuleSpirV_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceCreateShaderModuleSpirV") }
+private val wgpuDeviceCreateShaderModuleSpirV_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateShaderModuleSpirV") }
 private val wgpuDeviceCreateShaderModuleSpirV_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateShaderModuleSpirV_ADDR, wgpuDeviceCreateShaderModuleSpirV_DESC) }
 actual fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptorSpirV?): WGPUShaderModule? {
     return (wgpuDeviceCreateShaderModuleSpirV_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
 }
 
 private val wgpuSetLogCallback_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuSetLogCallback_ADDR: MemorySegment by lazy { findOrThrow("wgpuSetLogCallback") }
+private val wgpuSetLogCallback_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSetLogCallback") }
 private val wgpuSetLogCallback_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSetLogCallback_ADDR, wgpuSetLogCallback_DESC) }
 actual fun wgpuSetLogCallback(callback: NativeAddress?, userdata: NativeAddress?): Unit {
     wgpuSetLogCallback_HANDLE.invokeExact(callback?.handler ?: MemorySegment.NULL, userdata?.handler ?: MemorySegment.NULL)
@@ -7756,7 +7932,7 @@ actual fun wgpuSetLogCallback(callback: NativeAddress?, userdata: NativeAddress?
 }
 
 private val wgpuSetLogLevel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT)
-private val wgpuSetLogLevel_ADDR: MemorySegment by lazy { findOrThrow("wgpuSetLogLevel") }
+private val wgpuSetLogLevel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuSetLogLevel") }
 private val wgpuSetLogLevel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuSetLogLevel_ADDR, wgpuSetLogLevel_DESC) }
 actual fun wgpuSetLogLevel(level: WGPULogLevel): Unit {
     wgpuSetLogLevel_HANDLE.invokeExact(level.toInt())
@@ -7764,35 +7940,35 @@ actual fun wgpuSetLogLevel(level: WGPULogLevel): Unit {
 }
 
 private val wgpuGetVersion_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT)
-private val wgpuGetVersion_ADDR: MemorySegment by lazy { findOrThrow("wgpuGetVersion") }
+private val wgpuGetVersion_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuGetVersion") }
 private val wgpuGetVersion_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuGetVersion_ADDR, wgpuGetVersion_DESC) }
 actual fun wgpuGetVersion(): UInt {
     return (wgpuGetVersion_HANDLE.invokeExact() as Int).toUInt()
 }
 
 private val wgpuDeviceGetNativeMetalDevice_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuDeviceGetNativeMetalDevice_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceGetNativeMetalDevice") }
+private val wgpuDeviceGetNativeMetalDevice_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceGetNativeMetalDevice") }
 private val wgpuDeviceGetNativeMetalDevice_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceGetNativeMetalDevice_ADDR, wgpuDeviceGetNativeMetalDevice_DESC) }
 actual fun wgpuDeviceGetNativeMetalDevice(device: WGPUDevice?): NativeAddress? {
     return (wgpuDeviceGetNativeMetalDevice_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
 }
 
 private val wgpuQueueGetNativeMetalCommandQueue_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuQueueGetNativeMetalCommandQueue_ADDR: MemorySegment by lazy { findOrThrow("wgpuQueueGetNativeMetalCommandQueue") }
+private val wgpuQueueGetNativeMetalCommandQueue_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuQueueGetNativeMetalCommandQueue") }
 private val wgpuQueueGetNativeMetalCommandQueue_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuQueueGetNativeMetalCommandQueue_ADDR, wgpuQueueGetNativeMetalCommandQueue_DESC) }
 actual fun wgpuQueueGetNativeMetalCommandQueue(queue: WGPUQueue?): NativeAddress? {
     return (wgpuQueueGetNativeMetalCommandQueue_HANDLE.invokeExact(queue?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
 }
 
 private val wgpuTextureGetNativeMetalTexture_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
-private val wgpuTextureGetNativeMetalTexture_ADDR: MemorySegment by lazy { findOrThrow("wgpuTextureGetNativeMetalTexture") }
+private val wgpuTextureGetNativeMetalTexture_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuTextureGetNativeMetalTexture") }
 private val wgpuTextureGetNativeMetalTexture_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetNativeMetalTexture_ADDR, wgpuTextureGetNativeMetalTexture_DESC) }
 actual fun wgpuTextureGetNativeMetalTexture(texture: WGPUTexture?): NativeAddress? {
     return (wgpuTextureGetNativeMetalTexture_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
 }
 
 private val wgpuRenderPassEncoderSetImmediates_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuRenderPassEncoderSetImmediates_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderSetImmediates") }
+private val wgpuRenderPassEncoderSetImmediates_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetImmediates") }
 private val wgpuRenderPassEncoderSetImmediates_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetImmediates_ADDR, wgpuRenderPassEncoderSetImmediates_DESC) }
 actual fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
     wgpuRenderPassEncoderSetImmediates_HANDLE.invokeExact(encoder?.handler?.handler ?: MemorySegment.NULL, offset.toInt(), sizeBytes.toInt(), data?.handler ?: MemorySegment.NULL)
@@ -7800,7 +7976,7 @@ actual fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, o
 }
 
 private val wgpuComputePassEncoderSetImmediates_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuComputePassEncoderSetImmediates_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderSetImmediates") }
+private val wgpuComputePassEncoderSetImmediates_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderSetImmediates") }
 private val wgpuComputePassEncoderSetImmediates_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderSetImmediates_ADDR, wgpuComputePassEncoderSetImmediates_DESC) }
 actual fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
     wgpuComputePassEncoderSetImmediates_HANDLE.invokeExact(encoder?.handler?.handler ?: MemorySegment.NULL, offset.toInt(), sizeBytes.toInt(), data?.handler ?: MemorySegment.NULL)
@@ -7808,7 +7984,7 @@ actual fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?,
 }
 
 private val wgpuRenderBundleEncoderSetImmediates_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuRenderBundleEncoderSetImmediates_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderBundleEncoderSetImmediates") }
+private val wgpuRenderBundleEncoderSetImmediates_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderSetImmediates") }
 private val wgpuRenderBundleEncoderSetImmediates_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderSetImmediates_ADDR, wgpuRenderBundleEncoderSetImmediates_DESC) }
 actual fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
     wgpuRenderBundleEncoderSetImmediates_HANDLE.invokeExact(encoder?.handler?.handler ?: MemorySegment.NULL, offset.toInt(), sizeBytes.toInt(), data?.handler ?: MemorySegment.NULL)
@@ -7816,7 +7992,7 @@ actual fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder
 }
 
 private val wgpuRenderPassEncoderMultiDrawIndirect_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.JAVA_INT)
-private val wgpuRenderPassEncoderMultiDrawIndirect_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderMultiDrawIndirect") }
+private val wgpuRenderPassEncoderMultiDrawIndirect_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderMultiDrawIndirect") }
 private val wgpuRenderPassEncoderMultiDrawIndirect_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderMultiDrawIndirect_ADDR, wgpuRenderPassEncoderMultiDrawIndirect_DESC) }
 actual fun wgpuRenderPassEncoderMultiDrawIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit {
     wgpuRenderPassEncoderMultiDrawIndirect_HANDLE.invokeExact(encoder?.handler?.handler ?: MemorySegment.NULL, buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), count.toInt())
@@ -7824,7 +8000,7 @@ actual fun wgpuRenderPassEncoderMultiDrawIndirect(encoder: WGPURenderPassEncoder
 }
 
 private val wgpuRenderPassEncoderMultiDrawIndexedIndirect_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.JAVA_INT)
-private val wgpuRenderPassEncoderMultiDrawIndexedIndirect_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderMultiDrawIndexedIndirect") }
+private val wgpuRenderPassEncoderMultiDrawIndexedIndirect_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderMultiDrawIndexedIndirect") }
 private val wgpuRenderPassEncoderMultiDrawIndexedIndirect_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderMultiDrawIndexedIndirect_ADDR, wgpuRenderPassEncoderMultiDrawIndexedIndirect_DESC) }
 actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit {
     wgpuRenderPassEncoderMultiDrawIndexedIndirect_HANDLE.invokeExact(encoder?.handler?.handler ?: MemorySegment.NULL, buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), count.toInt())
@@ -7832,7 +8008,7 @@ actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirect(encoder: WGPURenderPass
 }
 
 private val wgpuRenderPassEncoderMultiDrawIndirectCount_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.JAVA_INT)
-private val wgpuRenderPassEncoderMultiDrawIndirectCount_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderMultiDrawIndirectCount") }
+private val wgpuRenderPassEncoderMultiDrawIndirectCount_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderMultiDrawIndirectCount") }
 private val wgpuRenderPassEncoderMultiDrawIndirectCount_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderMultiDrawIndirectCount_ADDR, wgpuRenderPassEncoderMultiDrawIndirectCount_DESC) }
 actual fun wgpuRenderPassEncoderMultiDrawIndirectCount(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count_buffer: WGPUBuffer?, count_buffer_offset: ULong, max_count: UInt): Unit {
     wgpuRenderPassEncoderMultiDrawIndirectCount_HANDLE.invokeExact(encoder?.handler?.handler ?: MemorySegment.NULL, buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), count_buffer?.handler?.handler ?: MemorySegment.NULL, count_buffer_offset.toLong(), max_count.toInt())
@@ -7840,7 +8016,7 @@ actual fun wgpuRenderPassEncoderMultiDrawIndirectCount(encoder: WGPURenderPassEn
 }
 
 private val wgpuRenderPassEncoderMultiDrawIndexedIndirectCount_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.JAVA_INT)
-private val wgpuRenderPassEncoderMultiDrawIndexedIndirectCount_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderMultiDrawIndexedIndirectCount") }
+private val wgpuRenderPassEncoderMultiDrawIndexedIndirectCount_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderMultiDrawIndexedIndirectCount") }
 private val wgpuRenderPassEncoderMultiDrawIndexedIndirectCount_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderMultiDrawIndexedIndirectCount_ADDR, wgpuRenderPassEncoderMultiDrawIndexedIndirectCount_DESC) }
 actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count_buffer: WGPUBuffer?, count_buffer_offset: ULong, max_count: UInt): Unit {
     wgpuRenderPassEncoderMultiDrawIndexedIndirectCount_HANDLE.invokeExact(encoder?.handler?.handler ?: MemorySegment.NULL, buffer?.handler?.handler ?: MemorySegment.NULL, offset.toLong(), count_buffer?.handler?.handler ?: MemorySegment.NULL, count_buffer_offset.toLong(), max_count.toInt())
@@ -7848,7 +8024,7 @@ actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(encoder: WGPURende
 }
 
 private val wgpuComputePassEncoderBeginPipelineStatisticsQuery_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuComputePassEncoderBeginPipelineStatisticsQuery_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderBeginPipelineStatisticsQuery") }
+private val wgpuComputePassEncoderBeginPipelineStatisticsQuery_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderBeginPipelineStatisticsQuery") }
 private val wgpuComputePassEncoderBeginPipelineStatisticsQuery_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderBeginPipelineStatisticsQuery_ADDR, wgpuComputePassEncoderBeginPipelineStatisticsQuery_DESC) }
 actual fun wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
     wgpuComputePassEncoderBeginPipelineStatisticsQuery_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL, querySet?.handler?.handler ?: MemorySegment.NULL, queryIndex.toInt())
@@ -7856,7 +8032,7 @@ actual fun wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder
 }
 
 private val wgpuComputePassEncoderEndPipelineStatisticsQuery_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuComputePassEncoderEndPipelineStatisticsQuery_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderEndPipelineStatisticsQuery") }
+private val wgpuComputePassEncoderEndPipelineStatisticsQuery_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderEndPipelineStatisticsQuery") }
 private val wgpuComputePassEncoderEndPipelineStatisticsQuery_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderEndPipelineStatisticsQuery_ADDR, wgpuComputePassEncoderEndPipelineStatisticsQuery_DESC) }
 actual fun wgpuComputePassEncoderEndPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder?): Unit {
     wgpuComputePassEncoderEndPipelineStatisticsQuery_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -7864,7 +8040,7 @@ actual fun wgpuComputePassEncoderEndPipelineStatisticsQuery(computePassEncoder: 
 }
 
 private val wgpuRenderPassEncoderBeginPipelineStatisticsQuery_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuRenderPassEncoderBeginPipelineStatisticsQuery_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderBeginPipelineStatisticsQuery") }
+private val wgpuRenderPassEncoderBeginPipelineStatisticsQuery_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderBeginPipelineStatisticsQuery") }
 private val wgpuRenderPassEncoderBeginPipelineStatisticsQuery_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderBeginPipelineStatisticsQuery_ADDR, wgpuRenderPassEncoderBeginPipelineStatisticsQuery_DESC) }
 actual fun wgpuRenderPassEncoderBeginPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
     wgpuRenderPassEncoderBeginPipelineStatisticsQuery_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, querySet?.handler?.handler ?: MemorySegment.NULL, queryIndex.toInt())
@@ -7872,7 +8048,7 @@ actual fun wgpuRenderPassEncoderBeginPipelineStatisticsQuery(renderPassEncoder: 
 }
 
 private val wgpuRenderPassEncoderEndPipelineStatisticsQuery_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuRenderPassEncoderEndPipelineStatisticsQuery_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderEndPipelineStatisticsQuery") }
+private val wgpuRenderPassEncoderEndPipelineStatisticsQuery_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderEndPipelineStatisticsQuery") }
 private val wgpuRenderPassEncoderEndPipelineStatisticsQuery_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderEndPipelineStatisticsQuery_ADDR, wgpuRenderPassEncoderEndPipelineStatisticsQuery_DESC) }
 actual fun wgpuRenderPassEncoderEndPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit {
     wgpuRenderPassEncoderEndPipelineStatisticsQuery_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL)
@@ -7880,7 +8056,7 @@ actual fun wgpuRenderPassEncoderEndPipelineStatisticsQuery(renderPassEncoder: WG
 }
 
 private val wgpuComputePassEncoderWriteTimestamp_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuComputePassEncoderWriteTimestamp_ADDR: MemorySegment by lazy { findOrThrow("wgpuComputePassEncoderWriteTimestamp") }
+private val wgpuComputePassEncoderWriteTimestamp_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderWriteTimestamp") }
 private val wgpuComputePassEncoderWriteTimestamp_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderWriteTimestamp_ADDR, wgpuComputePassEncoderWriteTimestamp_DESC) }
 actual fun wgpuComputePassEncoderWriteTimestamp(computePassEncoder: WGPUComputePassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
     wgpuComputePassEncoderWriteTimestamp_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL, querySet?.handler?.handler ?: MemorySegment.NULL, queryIndex.toInt())
@@ -7888,7 +8064,7 @@ actual fun wgpuComputePassEncoderWriteTimestamp(computePassEncoder: WGPUComputeP
 }
 
 private val wgpuRenderPassEncoderWriteTimestamp_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT)
-private val wgpuRenderPassEncoderWriteTimestamp_ADDR: MemorySegment by lazy { findOrThrow("wgpuRenderPassEncoderWriteTimestamp") }
+private val wgpuRenderPassEncoderWriteTimestamp_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderWriteTimestamp") }
 private val wgpuRenderPassEncoderWriteTimestamp_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderWriteTimestamp_ADDR, wgpuRenderPassEncoderWriteTimestamp_DESC) }
 actual fun wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: WGPURenderPassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
     wgpuRenderPassEncoderWriteTimestamp_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, querySet?.handler?.handler ?: MemorySegment.NULL, queryIndex.toInt())
@@ -7896,14 +8072,14 @@ actual fun wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: WGPURenderPass
 }
 
 private val wgpuDeviceStartGraphicsDebuggerCapture_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuDeviceStartGraphicsDebuggerCapture_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceStartGraphicsDebuggerCapture") }
+private val wgpuDeviceStartGraphicsDebuggerCapture_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceStartGraphicsDebuggerCapture") }
 private val wgpuDeviceStartGraphicsDebuggerCapture_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceStartGraphicsDebuggerCapture_ADDR, wgpuDeviceStartGraphicsDebuggerCapture_DESC) }
 actual fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): UInt {
     return (wgpuDeviceStartGraphicsDebuggerCapture_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL) as Int).toUInt()
 }
 
 private val wgpuDeviceStopGraphicsDebuggerCapture_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS)
-private val wgpuDeviceStopGraphicsDebuggerCapture_ADDR: MemorySegment by lazy { findOrThrow("wgpuDeviceStopGraphicsDebuggerCapture") }
+private val wgpuDeviceStopGraphicsDebuggerCapture_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceStopGraphicsDebuggerCapture") }
 private val wgpuDeviceStopGraphicsDebuggerCapture_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceStopGraphicsDebuggerCapture_ADDR, wgpuDeviceStopGraphicsDebuggerCapture_DESC) }
 actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit {
     wgpuDeviceStopGraphicsDebuggerCapture_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL)
@@ -8707,4 +8883,3 @@ internal actual fun wgpuSetLogCallbackCallbackBindingPreflight(): (NativeAddress
         )
     }
 }
-
