@@ -119,16 +119,38 @@ private class HelloTriangleAndroidKadreApp : ApplicationHandler {
     }
 
     private fun releaseResources() {
+        releaseAndroidResources(
+            scene = scene,
+            device = device,
+            adapter = adapter,
+            surface = surface,
+            instance = instance,
+        )
         scene = null
-        device?.let(::wgpuDeviceRelease)
-        adapter?.let(::wgpuAdapterRelease)
-        surface?.let(::wgpuSurfaceRelease)
-        instance?.let(::wgpuInstanceRelease)
         device = null
         adapter = null
         surface = null
         instance = null
     }
+}
+
+internal fun releaseAndroidResources(
+    scene: HelloTriangleScene?,
+    device: WGPUDevice?,
+    adapter: WGPUAdapter?,
+    surface: WGPUSurface?,
+    instance: WGPUInstance?,
+    releaseScene: (HelloTriangleScene?) -> Unit = { it?.close() },
+    releaseDevice: (WGPUDevice) -> Unit = ::wgpuDeviceRelease,
+    releaseAdapter: (WGPUAdapter) -> Unit = ::wgpuAdapterRelease,
+    releaseSurface: (WGPUSurface) -> Unit = ::wgpuSurfaceRelease,
+    releaseInstance: (WGPUInstance) -> Unit = ::wgpuInstanceRelease,
+) {
+    releaseScene(scene)
+    device?.let(releaseDevice)
+    adapter?.let(releaseAdapter)
+    surface?.let(releaseSurface)
+    instance?.let(releaseInstance)
 }
 
 private fun getSurface(instance: WGPUInstance, rawWindowHandle: Any): WGPUSurface = memoryScope {

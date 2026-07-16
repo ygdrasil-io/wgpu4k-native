@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.zip.ZipFile
 
 plugins {
     `kotlin-multiplatform`
@@ -23,6 +24,9 @@ kotlin {
                 versionName = "1.0"
 
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+                ndk {
+                    abiFilters += setOf("arm64-v8a", "x86_64")
+                }
                 vectorDrawables {
                     useSupportLibrary = true
                 }
@@ -63,10 +67,38 @@ kotlin {
             implementation(libs.activity.compose)
             implementation("org.graphiks.kadre:kadre:1.0.0")
         }
+
+        androidUnitTest.dependencies {
+            implementation(kotlin("test"))
+        }
+
+        androidInstrumentedTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.androidx.test.ext.junit)
+            implementation(libs.androidx.test.runner)
+        }
     }
 }
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.register("verifyAndroidJvmApk") {
+    dependsOn("assembleDebug")
+    doLast {
+        val apk = layout.buildDirectory.file("outputs/apk/debug/android-debug.apk").get().asFile
+        require(apk.isFile) { "Missing APK: $apk" }
+        ZipFile(apk).use { zip ->
+            val actualAbis = zip.entries().asSequence()
+                .map { it.name }
+                .filter { it.startsWith("lib/") && it.endsWith(".so") }
+                .map { it.substringAfter("lib/").substringBefore('/') }
+                .toSet()
+            require(actualAbis == setOf("arm64-v8a", "x86_64")) {
+                "Unexpected Android/JVM APK ABIs: $actualAbis"
+            }
+        }
     }
 }

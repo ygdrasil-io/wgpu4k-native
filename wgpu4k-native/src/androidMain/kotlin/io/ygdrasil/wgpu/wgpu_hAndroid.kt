@@ -4,6 +4,7 @@ import io.ygdrasil.kffi.NativeAddress
 import io.ygdrasil.kffi.CallbackExceptionHandler
 import io.ygdrasil.kffi.CallbackPolicy
 import io.ygdrasil.kffi.CallbackRegistration
+import io.ygdrasil.kffi.CallbackRuntime
 import io.ygdrasil.kffi.CallbackRuntimeApi
 import io.ygdrasil.kffi.PreparedCallbackRegistration
 import io.ygdrasil.kffi.UnsafeCallbackRearmApi
@@ -11,6 +12,9 @@ import io.ygdrasil.kffi.CString
 import io.ygdrasil.kffi.ArrayHolder
 import io.ygdrasil.kffi.MemoryAllocator
 import io.ygdrasil.kffi.toAddress
+import com.sun.jna.Pointer
+import com.sun.jna.CallbackReference
+import com.sun.jna.Native
 import kotlin.OptIn
 import kotlin.UnsupportedOperationException
 import kotlin.jvm.JvmInline
@@ -7952,602 +7956,949 @@ actual interface WGPURenderPipelineDescriptor {
     }
 }
 
-actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance? =
-    error("wgpuCreateInstance is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuGetInstanceFeatures(features: WGPUSupportedInstanceFeatures?): Unit =
-    error("wgpuGetInstanceFeatures is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuGetInstanceLimits(limits: WGPUInstanceLimits?): WGPUStatus =
-    error("wgpuGetInstanceLimits is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuHasInstanceFeature(feature: WGPUInstanceFeatureName): UInt =
-    error("wgpuHasInstanceFeature is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuGetProcAddress(procName: WGPUStringView): NativeAddress? =
-    error("wgpuGetProcAddress is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuAdapterGetFeatures(adapter: WGPUAdapter?, features: WGPUSupportedFeatures?): Unit =
-    error("wgpuAdapterGetFeatures is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuAdapterGetInfo(adapter: WGPUAdapter?, info: WGPUAdapterInfo?): WGPUStatus =
-    error("wgpuAdapterGetInfo is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuAdapterGetLimits(adapter: WGPUAdapter?, limits: WGPULimits?): WGPUStatus =
-    error("wgpuAdapterGetLimits is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuAdapterHasFeature(adapter: WGPUAdapter?, feature: WGPUFeatureName): UInt =
-    error("wgpuAdapterHasFeature is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuAdapterRequestDevice(adapter: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): WGPUFuture =
-    error("wgpuAdapterRequestDevice is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuAdapterAddRef(adapter: WGPUAdapter?): Unit =
-    error("wgpuAdapterAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuAdapterRelease(adapter: WGPUAdapter?): Unit =
-    error("wgpuAdapterRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuAdapterInfoFreeMembers(adapterInfo: WGPUAdapterInfo): Unit =
-    error("wgpuAdapterInfoFreeMembers is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBindGroupSetLabel(bindGroup: WGPUBindGroup?, label: WGPUStringView): Unit =
-    error("wgpuBindGroupSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBindGroupAddRef(bindGroup: WGPUBindGroup?): Unit =
-    error("wgpuBindGroupAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBindGroupRelease(bindGroup: WGPUBindGroup?): Unit =
-    error("wgpuBindGroupRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBindGroupLayoutSetLabel(bindGroupLayout: WGPUBindGroupLayout?, label: WGPUStringView): Unit =
-    error("wgpuBindGroupLayoutSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBindGroupLayoutAddRef(bindGroupLayout: WGPUBindGroupLayout?): Unit =
-    error("wgpuBindGroupLayoutAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBindGroupLayoutRelease(bindGroupLayout: WGPUBindGroupLayout?): Unit =
-    error("wgpuBindGroupLayoutRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferDestroy(buffer: WGPUBuffer?): Unit =
-    error("wgpuBufferDestroy is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferGetConstMappedRange(buffer: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress? =
-    error("wgpuBufferGetConstMappedRange is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferGetMappedRange(buffer: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress? =
-    error("wgpuBufferGetMappedRange is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferGetMapState(buffer: WGPUBuffer?): WGPUBufferMapState =
-    error("wgpuBufferGetMapState is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferGetSize(buffer: WGPUBuffer?): ULong =
-    error("wgpuBufferGetSize is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferGetUsage(buffer: WGPUBuffer?): ULong =
-    error("wgpuBufferGetUsage is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferMapAsync(buffer: WGPUBuffer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo): WGPUFuture =
-    error("wgpuBufferMapAsync is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferReadMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus =
-    error("wgpuBufferReadMappedRange is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferSetLabel(buffer: WGPUBuffer?, label: WGPUStringView): Unit =
-    error("wgpuBufferSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferUnmap(buffer: WGPUBuffer?): Unit =
-    error("wgpuBufferUnmap is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferWriteMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus =
-    error("wgpuBufferWriteMappedRange is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferAddRef(buffer: WGPUBuffer?): Unit =
-    error("wgpuBufferAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuBufferRelease(buffer: WGPUBuffer?): Unit =
-    error("wgpuBufferRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandBufferSetLabel(commandBuffer: WGPUCommandBuffer?, label: WGPUStringView): Unit =
-    error("wgpuCommandBufferSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandBufferAddRef(commandBuffer: WGPUCommandBuffer?): Unit =
-    error("wgpuCommandBufferAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandBufferRelease(commandBuffer: WGPUCommandBuffer?): Unit =
-    error("wgpuCommandBufferRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderBeginComputePass(commandEncoder: WGPUCommandEncoder?, descriptor: WGPUComputePassDescriptor?): WGPUComputePassEncoder? =
-    error("wgpuCommandEncoderBeginComputePass is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderBeginRenderPass(commandEncoder: WGPUCommandEncoder?, descriptor: WGPURenderPassDescriptor?): WGPURenderPassEncoder? =
-    error("wgpuCommandEncoderBeginRenderPass is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderClearBuffer(commandEncoder: WGPUCommandEncoder?, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit =
-    error("wgpuCommandEncoderClearBuffer is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderCopyBufferToBuffer(commandEncoder: WGPUCommandEncoder?, source: WGPUBuffer?, sourceOffset: ULong, destination: WGPUBuffer?, destinationOffset: ULong, size: ULong): Unit =
-    error("wgpuCommandEncoderCopyBufferToBuffer is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderCopyBufferToTexture(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyBufferInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit =
-    error("wgpuCommandEncoderCopyBufferToTexture is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderCopyTextureToBuffer(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyBufferInfo?, copySize: WGPUExtent3D?): Unit =
-    error("wgpuCommandEncoderCopyTextureToBuffer is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderCopyTextureToTexture(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit =
-    error("wgpuCommandEncoderCopyTextureToTexture is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderFinish(commandEncoder: WGPUCommandEncoder?, descriptor: WGPUCommandBufferDescriptor?): WGPUCommandBuffer? =
-    error("wgpuCommandEncoderFinish is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderInsertDebugMarker(commandEncoder: WGPUCommandEncoder?, markerLabel: WGPUStringView): Unit =
-    error("wgpuCommandEncoderInsertDebugMarker is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderPopDebugGroup(commandEncoder: WGPUCommandEncoder?): Unit =
-    error("wgpuCommandEncoderPopDebugGroup is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderPushDebugGroup(commandEncoder: WGPUCommandEncoder?, groupLabel: WGPUStringView): Unit =
-    error("wgpuCommandEncoderPushDebugGroup is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderResolveQuerySet(commandEncoder: WGPUCommandEncoder?, querySet: WGPUQuerySet?, firstQuery: UInt, queryCount: UInt, destination: WGPUBuffer?, destinationOffset: ULong): Unit =
-    error("wgpuCommandEncoderResolveQuerySet is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderSetLabel(commandEncoder: WGPUCommandEncoder?, label: WGPUStringView): Unit =
-    error("wgpuCommandEncoderSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderWriteTimestamp(commandEncoder: WGPUCommandEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit =
-    error("wgpuCommandEncoderWriteTimestamp is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderAddRef(commandEncoder: WGPUCommandEncoder?): Unit =
-    error("wgpuCommandEncoderAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuCommandEncoderRelease(commandEncoder: WGPUCommandEncoder?): Unit =
-    error("wgpuCommandEncoderRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePassEncoderDispatchWorkgroups(computePassEncoder: WGPUComputePassEncoder?, workgroupCountX: UInt, workgroupCountY: UInt, workgroupCountZ: UInt): Unit =
-    error("wgpuComputePassEncoderDispatchWorkgroups is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(computePassEncoder: WGPUComputePassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit =
-    error("wgpuComputePassEncoderDispatchWorkgroupsIndirect is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePassEncoderEnd(computePassEncoder: WGPUComputePassEncoder?): Unit =
-    error("wgpuComputePassEncoderEnd is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePassEncoderInsertDebugMarker(computePassEncoder: WGPUComputePassEncoder?, markerLabel: WGPUStringView): Unit =
-    error("wgpuComputePassEncoderInsertDebugMarker is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePassEncoderPopDebugGroup(computePassEncoder: WGPUComputePassEncoder?): Unit =
-    error("wgpuComputePassEncoderPopDebugGroup is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePassEncoderPushDebugGroup(computePassEncoder: WGPUComputePassEncoder?, groupLabel: WGPUStringView): Unit =
-    error("wgpuComputePassEncoderPushDebugGroup is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit =
-    error("wgpuComputePassEncoderSetBindGroup is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEncoder?, label: WGPUStringView): Unit =
-    error("wgpuComputePassEncoderSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePassEncoderSetPipeline(computePassEncoder: WGPUComputePassEncoder?, pipeline: WGPUComputePipeline?): Unit =
-    error("wgpuComputePassEncoderSetPipeline is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePassEncoderAddRef(computePassEncoder: WGPUComputePassEncoder?): Unit =
-    error("wgpuComputePassEncoderAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePassEncoderRelease(computePassEncoder: WGPUComputePassEncoder?): Unit =
-    error("wgpuComputePassEncoderRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePipelineGetBindGroupLayout(computePipeline: WGPUComputePipeline?, groupIndex: UInt): WGPUBindGroupLayout? =
-    error("wgpuComputePipelineGetBindGroupLayout is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePipelineSetLabel(computePipeline: WGPUComputePipeline?, label: WGPUStringView): Unit =
-    error("wgpuComputePipelineSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePipelineAddRef(computePipeline: WGPUComputePipeline?): Unit =
-    error("wgpuComputePipelineAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuComputePipelineRelease(computePipeline: WGPUComputePipeline?): Unit =
-    error("wgpuComputePipelineRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateBindGroup(device: WGPUDevice?, descriptor: WGPUBindGroupDescriptor?): WGPUBindGroup? =
-    error("wgpuDeviceCreateBindGroup is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateBindGroupLayout(device: WGPUDevice?, descriptor: WGPUBindGroupLayoutDescriptor?): WGPUBindGroupLayout? =
-    error("wgpuDeviceCreateBindGroupLayout is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateBuffer(device: WGPUDevice?, descriptor: WGPUBufferDescriptor?): WGPUBuffer? =
-    error("wgpuDeviceCreateBuffer is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateCommandEncoder(device: WGPUDevice?, descriptor: WGPUCommandEncoderDescriptor?): WGPUCommandEncoder? =
-    error("wgpuDeviceCreateCommandEncoder is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateComputePipeline(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?): WGPUComputePipeline? =
-    error("wgpuDeviceCreateComputePipeline is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateComputePipelineAsync(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): WGPUFuture =
-    error("wgpuDeviceCreateComputePipelineAsync is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreatePipelineLayout(device: WGPUDevice?, descriptor: WGPUPipelineLayoutDescriptor?): WGPUPipelineLayout? =
-    error("wgpuDeviceCreatePipelineLayout is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateQuerySet(device: WGPUDevice?, descriptor: WGPUQuerySetDescriptor?): WGPUQuerySet? =
-    error("wgpuDeviceCreateQuerySet is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateRenderBundleEncoder(device: WGPUDevice?, descriptor: WGPURenderBundleEncoderDescriptor?): WGPURenderBundleEncoder? =
-    error("wgpuDeviceCreateRenderBundleEncoder is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateRenderPipeline(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?): WGPURenderPipeline? =
-    error("wgpuDeviceCreateRenderPipeline is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateRenderPipelineAsync(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): WGPUFuture =
-    error("wgpuDeviceCreateRenderPipelineAsync is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateSampler(device: WGPUDevice?, descriptor: WGPUSamplerDescriptor?): WGPUSampler? =
-    error("wgpuDeviceCreateSampler is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateShaderModule(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?): WGPUShaderModule? =
-    error("wgpuDeviceCreateShaderModule is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceCreateTexture(device: WGPUDevice?, descriptor: WGPUTextureDescriptor?): WGPUTexture? =
-    error("wgpuDeviceCreateTexture is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceDestroy(device: WGPUDevice?): Unit =
-    error("wgpuDeviceDestroy is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceGetAdapterInfo(device: WGPUDevice?, adapterInfo: WGPUAdapterInfo?): WGPUStatus =
-    error("wgpuDeviceGetAdapterInfo is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceGetFeatures(device: WGPUDevice?, features: WGPUSupportedFeatures?): Unit =
-    error("wgpuDeviceGetFeatures is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceGetLimits(device: WGPUDevice?, limits: WGPULimits?): WGPUStatus =
-    error("wgpuDeviceGetLimits is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceGetLostFuture(device: WGPUDevice?): WGPUFuture =
-    error("wgpuDeviceGetLostFuture is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceGetQueue(device: WGPUDevice?): WGPUQueue? =
-    error("wgpuDeviceGetQueue is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceHasFeature(device: WGPUDevice?, feature: WGPUFeatureName): UInt =
-    error("wgpuDeviceHasFeature is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDevicePopErrorScope(device: WGPUDevice?, callbackInfo: WGPUPopErrorScopeCallbackInfo): WGPUFuture =
-    error("wgpuDevicePopErrorScope is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDevicePushErrorScope(device: WGPUDevice?, filter: WGPUErrorFilter): Unit =
-    error("wgpuDevicePushErrorScope is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceSetLabel(device: WGPUDevice?, label: WGPUStringView): Unit =
-    error("wgpuDeviceSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceAddRef(device: WGPUDevice?): Unit =
-    error("wgpuDeviceAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuDeviceRelease(device: WGPUDevice?): Unit =
-    error("wgpuDeviceRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuExternalTextureSetLabel(externalTexture: WGPUExternalTexture?, label: WGPUStringView): Unit =
-    error("wgpuExternalTextureSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuExternalTextureAddRef(externalTexture: WGPUExternalTexture?): Unit =
-    error("wgpuExternalTextureAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuExternalTextureRelease(externalTexture: WGPUExternalTexture?): Unit =
-    error("wgpuExternalTextureRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuInstanceCreateSurface(instance: WGPUInstance?, descriptor: WGPUSurfaceDescriptor?): WGPUSurface? =
-    error("wgpuInstanceCreateSurface is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuInstanceGetWGSLLanguageFeatures(instance: WGPUInstance?, features: WGPUSupportedWGSLLanguageFeatures?): Unit =
-    error("wgpuInstanceGetWGSLLanguageFeatures is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuInstanceHasWGSLLanguageFeature(instance: WGPUInstance?, feature: WGPUWGSLLanguageFeatureName): UInt =
-    error("wgpuInstanceHasWGSLLanguageFeature is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuInstanceProcessEvents(instance: WGPUInstance?): Unit =
-    error("wgpuInstanceProcessEvents is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuInstanceRequestAdapter(instance: WGPUInstance?, options: WGPURequestAdapterOptions?, callbackInfo: WGPURequestAdapterCallbackInfo): WGPUFuture =
-    error("wgpuInstanceRequestAdapter is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuInstanceWaitAny(instance: WGPUInstance?, futureCount: ULong, futures: WGPUFutureWaitInfo?, timeoutNS: ULong): WGPUWaitStatus =
-    error("wgpuInstanceWaitAny is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuInstanceAddRef(instance: WGPUInstance?): Unit =
-    error("wgpuInstanceAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuInstanceRelease(instance: WGPUInstance?): Unit =
-    error("wgpuInstanceRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuPipelineLayoutSetLabel(pipelineLayout: WGPUPipelineLayout?, label: WGPUStringView): Unit =
-    error("wgpuPipelineLayoutSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuPipelineLayoutAddRef(pipelineLayout: WGPUPipelineLayout?): Unit =
-    error("wgpuPipelineLayoutAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuPipelineLayoutRelease(pipelineLayout: WGPUPipelineLayout?): Unit =
-    error("wgpuPipelineLayoutRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQuerySetDestroy(querySet: WGPUQuerySet?): Unit =
-    error("wgpuQuerySetDestroy is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQuerySetGetCount(querySet: WGPUQuerySet?): UInt =
-    error("wgpuQuerySetGetCount is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQuerySetGetType(querySet: WGPUQuerySet?): WGPUQueryType =
-    error("wgpuQuerySetGetType is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQuerySetSetLabel(querySet: WGPUQuerySet?, label: WGPUStringView): Unit =
-    error("wgpuQuerySetSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQuerySetAddRef(querySet: WGPUQuerySet?): Unit =
-    error("wgpuQuerySetAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQuerySetRelease(querySet: WGPUQuerySet?): Unit =
-    error("wgpuQuerySetRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQueueOnSubmittedWorkDone(queue: WGPUQueue?, callbackInfo: WGPUQueueWorkDoneCallbackInfo): WGPUFuture =
-    error("wgpuQueueOnSubmittedWorkDone is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit =
-    error("wgpuQueueSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): Unit =
-    error("wgpuQueueSubmit is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQueueWriteBuffer(queue: WGPUQueue?, buffer: WGPUBuffer?, bufferOffset: ULong, data: NativeAddress?, size: ULong): Unit =
-    error("wgpuQueueWriteBuffer is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQueueWriteTexture(queue: WGPUQueue?, destination: WGPUTexelCopyTextureInfo?, data: NativeAddress?, dataSize: ULong, dataLayout: WGPUTexelCopyBufferLayout?, writeSize: WGPUExtent3D?): Unit =
-    error("wgpuQueueWriteTexture is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQueueAddRef(queue: WGPUQueue?): Unit =
-    error("wgpuQueueAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuQueueRelease(queue: WGPUQueue?): Unit =
-    error("wgpuQueueRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleSetLabel(renderBundle: WGPURenderBundle?, label: WGPUStringView): Unit =
-    error("wgpuRenderBundleSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleAddRef(renderBundle: WGPURenderBundle?): Unit =
-    error("wgpuRenderBundleAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleRelease(renderBundle: WGPURenderBundle?): Unit =
-    error("wgpuRenderBundleRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderDraw(renderBundleEncoder: WGPURenderBundleEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit =
-    error("wgpuRenderBundleEncoderDraw is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder: WGPURenderBundleEncoder?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit =
-    error("wgpuRenderBundleEncoderDrawIndexed is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit =
-    error("wgpuRenderBundleEncoderDrawIndexedIndirect is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderDrawIndirect(renderBundleEncoder: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit =
-    error("wgpuRenderBundleEncoderDrawIndirect is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderFinish(renderBundleEncoder: WGPURenderBundleEncoder?, descriptor: WGPURenderBundleDescriptor?): WGPURenderBundle? =
-    error("wgpuRenderBundleEncoderFinish is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder: WGPURenderBundleEncoder?, markerLabel: WGPUStringView): Unit =
-    error("wgpuRenderBundleEncoderInsertDebugMarker is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder?): Unit =
-    error("wgpuRenderBundleEncoderPopDebugGroup is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupLabel: WGPUStringView): Unit =
-    error("wgpuRenderBundleEncoderPushDebugGroup is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit =
-    error("wgpuRenderBundleEncoderSetBindGroup is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit =
-    error("wgpuRenderBundleEncoderSetIndexBuffer is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderSetLabel(renderBundleEncoder: WGPURenderBundleEncoder?, label: WGPUStringView): Unit =
-    error("wgpuRenderBundleEncoderSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder: WGPURenderBundleEncoder?, pipeline: WGPURenderPipeline?): Unit =
-    error("wgpuRenderBundleEncoderSetPipeline is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderSetVertexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit =
-    error("wgpuRenderBundleEncoderSetVertexBuffer is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderAddRef(renderBundleEncoder: WGPURenderBundleEncoder?): Unit =
-    error("wgpuRenderBundleEncoderAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderBundleEncoderRelease(renderBundleEncoder: WGPURenderBundleEncoder?): Unit =
-    error("wgpuRenderBundleEncoderRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderBeginOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?, queryIndex: UInt): Unit =
-    error("wgpuRenderPassEncoderBeginOcclusionQuery is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderDraw(renderPassEncoder: WGPURenderPassEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit =
-    error("wgpuRenderPassEncoderDraw is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderDrawIndexed(renderPassEncoder: WGPURenderPassEncoder?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit =
-    error("wgpuRenderPassEncoderDrawIndexed is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderDrawIndexedIndirect(renderPassEncoder: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit =
-    error("wgpuRenderPassEncoderDrawIndexedIndirect is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderDrawIndirect(renderPassEncoder: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit =
-    error("wgpuRenderPassEncoderDrawIndirect is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderEnd(renderPassEncoder: WGPURenderPassEncoder?): Unit =
-    error("wgpuRenderPassEncoderEnd is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit =
-    error("wgpuRenderPassEncoderEndOcclusionQuery is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder?, bundleCount: ULong, bundles: NativeAddress?): Unit =
-    error("wgpuRenderPassEncoderExecuteBundles is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: WGPURenderPassEncoder?, markerLabel: WGPUStringView): Unit =
-    error("wgpuRenderPassEncoderInsertDebugMarker is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder: WGPURenderPassEncoder?): Unit =
-    error("wgpuRenderPassEncoderPopDebugGroup is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: WGPURenderPassEncoder?, groupLabel: WGPUStringView): Unit =
-    error("wgpuRenderPassEncoderPushDebugGroup is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit =
-    error("wgpuRenderPassEncoderSetBindGroup is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder?, color: WGPUColor?): Unit =
-    error("wgpuRenderPassEncoderSetBlendConstant is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit =
-    error("wgpuRenderPassEncoderSetIndexBuffer is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderSetLabel(renderPassEncoder: WGPURenderPassEncoder?, label: WGPUStringView): Unit =
-    error("wgpuRenderPassEncoderSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderSetPipeline(renderPassEncoder: WGPURenderPassEncoder?, pipeline: WGPURenderPipeline?): Unit =
-    error("wgpuRenderPassEncoderSetPipeline is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderSetScissorRect(renderPassEncoder: WGPURenderPassEncoder?, x: UInt, y: UInt, width: UInt, height: UInt): Unit =
-    error("wgpuRenderPassEncoderSetScissorRect is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderSetStencilReference(renderPassEncoder: WGPURenderPassEncoder?, reference: UInt): Unit =
-    error("wgpuRenderPassEncoderSetStencilReference is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder: WGPURenderPassEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit =
-    error("wgpuRenderPassEncoderSetVertexBuffer is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderSetViewport(renderPassEncoder: WGPURenderPassEncoder?, x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float): Unit =
-    error("wgpuRenderPassEncoderSetViewport is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderAddRef(renderPassEncoder: WGPURenderPassEncoder?): Unit =
-    error("wgpuRenderPassEncoderAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPassEncoderRelease(renderPassEncoder: WGPURenderPassEncoder?): Unit =
-    error("wgpuRenderPassEncoderRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPipelineGetBindGroupLayout(renderPipeline: WGPURenderPipeline?, groupIndex: UInt): WGPUBindGroupLayout? =
-    error("wgpuRenderPipelineGetBindGroupLayout is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPipelineSetLabel(renderPipeline: WGPURenderPipeline?, label: WGPUStringView): Unit =
-    error("wgpuRenderPipelineSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPipelineAddRef(renderPipeline: WGPURenderPipeline?): Unit =
-    error("wgpuRenderPipelineAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuRenderPipelineRelease(renderPipeline: WGPURenderPipeline?): Unit =
-    error("wgpuRenderPipelineRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSamplerSetLabel(sampler: WGPUSampler?, label: WGPUStringView): Unit =
-    error("wgpuSamplerSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSamplerAddRef(sampler: WGPUSampler?): Unit =
-    error("wgpuSamplerAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSamplerRelease(sampler: WGPUSampler?): Unit =
-    error("wgpuSamplerRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuShaderModuleGetCompilationInfo(shaderModule: WGPUShaderModule?, callbackInfo: WGPUCompilationInfoCallbackInfo): WGPUFuture =
-    error("wgpuShaderModuleGetCompilationInfo is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuShaderModuleSetLabel(shaderModule: WGPUShaderModule?, label: WGPUStringView): Unit =
-    error("wgpuShaderModuleSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuShaderModuleAddRef(shaderModule: WGPUShaderModule?): Unit =
-    error("wgpuShaderModuleAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuShaderModuleRelease(shaderModule: WGPUShaderModule?): Unit =
-    error("wgpuShaderModuleRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSupportedFeaturesFreeMembers(supportedFeatures: WGPUSupportedFeatures): Unit =
-    error("wgpuSupportedFeaturesFreeMembers is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSupportedInstanceFeaturesFreeMembers(supportedInstanceFeatures: WGPUSupportedInstanceFeatures): Unit =
-    error("wgpuSupportedInstanceFeaturesFreeMembers is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSupportedWGSLLanguageFeaturesFreeMembers(supportedWGSLLanguageFeatures: WGPUSupportedWGSLLanguageFeatures): Unit =
-    error("wgpuSupportedWGSLLanguageFeaturesFreeMembers is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSurfaceConfigure(surface: WGPUSurface?, config: WGPUSurfaceConfiguration?): Unit =
-    error("wgpuSurfaceConfigure is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus =
-    error("wgpuSurfaceGetCapabilities is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit =
-    error("wgpuSurfaceGetCurrentTexture is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSurfacePresent(surface: WGPUSurface?): WGPUStatus =
-    error("wgpuSurfacePresent is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSurfaceSetLabel(surface: WGPUSurface?, label: WGPUStringView): Unit =
-    error("wgpuSurfaceSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSurfaceUnconfigure(surface: WGPUSurface?): Unit =
-    error("wgpuSurfaceUnconfigure is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSurfaceAddRef(surface: WGPUSurface?): Unit =
-    error("wgpuSurfaceAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSurfaceRelease(surface: WGPUSurface?): Unit =
-    error("wgpuSurfaceRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuSurfaceCapabilitiesFreeMembers(surfaceCapabilities: WGPUSurfaceCapabilities): Unit =
-    error("wgpuSurfaceCapabilitiesFreeMembers is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureCreateView(texture: WGPUTexture?, descriptor: WGPUTextureViewDescriptor?): WGPUTextureView? =
-    error("wgpuTextureCreateView is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureDestroy(texture: WGPUTexture?): Unit =
-    error("wgpuTextureDestroy is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureGetDepthOrArrayLayers(texture: WGPUTexture?): UInt =
-    error("wgpuTextureGetDepthOrArrayLayers is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureGetDimension(texture: WGPUTexture?): WGPUTextureDimension =
-    error("wgpuTextureGetDimension is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureGetFormat(texture: WGPUTexture?): WGPUTextureFormat =
-    error("wgpuTextureGetFormat is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureGetHeight(texture: WGPUTexture?): UInt =
-    error("wgpuTextureGetHeight is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureGetMipLevelCount(texture: WGPUTexture?): UInt =
-    error("wgpuTextureGetMipLevelCount is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureGetSampleCount(texture: WGPUTexture?): UInt =
-    error("wgpuTextureGetSampleCount is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureGetTextureBindingViewDimension(texture: WGPUTexture?): WGPUTextureViewDimension =
-    error("wgpuTextureGetTextureBindingViewDimension is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureGetUsage(texture: WGPUTexture?): ULong =
-    error("wgpuTextureGetUsage is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureGetWidth(texture: WGPUTexture?): UInt =
-    error("wgpuTextureGetWidth is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureSetLabel(texture: WGPUTexture?, label: WGPUStringView): Unit =
-    error("wgpuTextureSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureAddRef(texture: WGPUTexture?): Unit =
-    error("wgpuTextureAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureRelease(texture: WGPUTexture?): Unit =
-    error("wgpuTextureRelease is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureViewSetLabel(textureView: WGPUTextureView?, label: WGPUStringView): Unit =
-    error("wgpuTextureViewSetLabel is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureViewAddRef(textureView: WGPUTextureView?): Unit =
-    error("wgpuTextureViewAddRef is not implemented for Android/JNA generated bindings")
-
-actual fun wgpuTextureViewRelease(textureView: WGPUTextureView?): Unit =
-    error("wgpuTextureViewRelease is not implemented for Android/JNA generated bindings")
+actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCreateInstance(descriptor?.handler)?.let { WGPUInstance(it) }
+}
+
+actual fun wgpuGetInstanceFeatures(features: WGPUSupportedInstanceFeatures?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuGetInstanceFeatures(features?.handler)
+    return
+}
+
+actual fun wgpuGetInstanceLimits(limits: WGPUInstanceLimits?): WGPUStatus {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuGetInstanceLimits(limits?.handler)).toUInt()
+}
+
+actual fun wgpuHasInstanceFeature(feature: WGPUInstanceFeatureName): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuHasInstanceFeature(feature.toInt()).toUInt()
+}
+
+actual fun wgpuGetProcAddress(procName: WGPUStringView): NativeAddress? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuGetProcAddress(io.ygdrasil.wgpu.android.WGPUStringView.ByValue(procName.handler).apply { read() })
+}
+
+actual fun wgpuAdapterGetFeatures(adapter: WGPUAdapter?, features: WGPUSupportedFeatures?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuAdapterGetFeatures(adapter?.handler, features?.handler)
+    return
+}
+
+actual fun wgpuAdapterGetInfo(adapter: WGPUAdapter?, info: WGPUAdapterInfo?): WGPUStatus {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuAdapterGetInfo(adapter?.handler, info?.handler)).toUInt()
+}
+
+actual fun wgpuAdapterGetLimits(adapter: WGPUAdapter?, limits: WGPULimits?): WGPUStatus {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuAdapterGetLimits(adapter?.handler, limits?.handler)).toUInt()
+}
+
+actual fun wgpuAdapterHasFeature(adapter: WGPUAdapter?, feature: WGPUFeatureName): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuAdapterHasFeature(adapter?.handler, feature.toInt()).toUInt()
+}
+
+actual fun wgpuAdapterRequestDevice(adapter: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuAdapterRequestDevice(adapter?.handler, descriptor?.handler, io.ygdrasil.wgpu.android.WGPURequestDeviceCallbackInfo.ByValue(callbackInfo.handler).apply { read() }))
+}
+
+actual fun wgpuAdapterAddRef(adapter: WGPUAdapter?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuAdapterAddRef(adapter?.handler)
+    return
+}
+
+actual fun wgpuAdapterRelease(adapter: WGPUAdapter?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuAdapterRelease(adapter?.handler)
+    return
+}
+
+actual fun wgpuAdapterInfoFreeMembers(adapterInfo: WGPUAdapterInfo): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuAdapterInfoFreeMembers(io.ygdrasil.wgpu.android.WGPUAdapterInfo.ByValue(adapterInfo.handler).apply { read() })
+    return
+}
+
+actual fun wgpuBindGroupSetLabel(bindGroup: WGPUBindGroup?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBindGroupSetLabel(bindGroup?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuBindGroupAddRef(bindGroup: WGPUBindGroup?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBindGroupAddRef(bindGroup?.handler)
+    return
+}
+
+actual fun wgpuBindGroupRelease(bindGroup: WGPUBindGroup?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBindGroupRelease(bindGroup?.handler)
+    return
+}
+
+actual fun wgpuBindGroupLayoutSetLabel(bindGroupLayout: WGPUBindGroupLayout?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBindGroupLayoutSetLabel(bindGroupLayout?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuBindGroupLayoutAddRef(bindGroupLayout: WGPUBindGroupLayout?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBindGroupLayoutAddRef(bindGroupLayout?.handler)
+    return
+}
+
+actual fun wgpuBindGroupLayoutRelease(bindGroupLayout: WGPUBindGroupLayout?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBindGroupLayoutRelease(bindGroupLayout?.handler)
+    return
+}
+
+actual fun wgpuBufferDestroy(buffer: WGPUBuffer?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferDestroy(buffer?.handler)
+    return
+}
+
+actual fun wgpuBufferGetConstMappedRange(buffer: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferGetConstMappedRange(buffer?.handler, offset.toLong(), size.toLong())
+}
+
+actual fun wgpuBufferGetMappedRange(buffer: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferGetMappedRange(buffer?.handler, offset.toLong(), size.toLong())
+}
+
+actual fun wgpuBufferGetMapState(buffer: WGPUBuffer?): WGPUBufferMapState {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferGetMapState(buffer?.handler)).toUInt()
+}
+
+actual fun wgpuBufferGetSize(buffer: WGPUBuffer?): ULong {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferGetSize(buffer?.handler).toULong()
+}
+
+actual fun wgpuBufferGetUsage(buffer: WGPUBuffer?): ULong {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferGetUsage(buffer?.handler).toULong()
+}
+
+actual fun wgpuBufferMapAsync(buffer: WGPUBuffer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferMapAsync(buffer?.handler, mode.toLong(), offset.toLong(), size.toLong(), io.ygdrasil.wgpu.android.WGPUBufferMapCallbackInfo.ByValue(callbackInfo.handler).apply { read() }))
+}
+
+actual fun wgpuBufferReadMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferReadMappedRange(buffer?.handler, offset.toLong(), data, size.toLong())).toUInt()
+}
+
+actual fun wgpuBufferSetLabel(buffer: WGPUBuffer?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferSetLabel(buffer?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuBufferUnmap(buffer: WGPUBuffer?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferUnmap(buffer?.handler)
+    return
+}
+
+actual fun wgpuBufferWriteMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferWriteMappedRange(buffer?.handler, offset.toLong(), data, size.toLong())).toUInt()
+}
+
+actual fun wgpuBufferAddRef(buffer: WGPUBuffer?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferAddRef(buffer?.handler)
+    return
+}
+
+actual fun wgpuBufferRelease(buffer: WGPUBuffer?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuBufferRelease(buffer?.handler)
+    return
+}
+
+actual fun wgpuCommandBufferSetLabel(commandBuffer: WGPUCommandBuffer?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandBufferSetLabel(commandBuffer?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuCommandBufferAddRef(commandBuffer: WGPUCommandBuffer?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandBufferAddRef(commandBuffer?.handler)
+    return
+}
+
+actual fun wgpuCommandBufferRelease(commandBuffer: WGPUCommandBuffer?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandBufferRelease(commandBuffer?.handler)
+    return
+}
+
+actual fun wgpuCommandEncoderBeginComputePass(commandEncoder: WGPUCommandEncoder?, descriptor: WGPUComputePassDescriptor?): WGPUComputePassEncoder? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderBeginComputePass(commandEncoder?.handler, descriptor?.handler)?.let { WGPUComputePassEncoder(it) }
+}
+
+actual fun wgpuCommandEncoderBeginRenderPass(commandEncoder: WGPUCommandEncoder?, descriptor: WGPURenderPassDescriptor?): WGPURenderPassEncoder? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderBeginRenderPass(commandEncoder?.handler, descriptor?.handler)?.let { WGPURenderPassEncoder(it) }
+}
+
+actual fun wgpuCommandEncoderClearBuffer(commandEncoder: WGPUCommandEncoder?, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderClearBuffer(commandEncoder?.handler, buffer?.handler, offset.toLong(), size.toLong())
+    return
+}
+
+actual fun wgpuCommandEncoderCopyBufferToBuffer(commandEncoder: WGPUCommandEncoder?, source: WGPUBuffer?, sourceOffset: ULong, destination: WGPUBuffer?, destinationOffset: ULong, size: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderCopyBufferToBuffer(commandEncoder?.handler, source?.handler, sourceOffset.toLong(), destination?.handler, destinationOffset.toLong(), size.toLong())
+    return
+}
+
+actual fun wgpuCommandEncoderCopyBufferToTexture(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyBufferInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderCopyBufferToTexture(commandEncoder?.handler, source?.handler, destination?.handler, copySize?.handler)
+    return
+}
+
+actual fun wgpuCommandEncoderCopyTextureToBuffer(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyBufferInfo?, copySize: WGPUExtent3D?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderCopyTextureToBuffer(commandEncoder?.handler, source?.handler, destination?.handler, copySize?.handler)
+    return
+}
+
+actual fun wgpuCommandEncoderCopyTextureToTexture(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderCopyTextureToTexture(commandEncoder?.handler, source?.handler, destination?.handler, copySize?.handler)
+    return
+}
+
+actual fun wgpuCommandEncoderFinish(commandEncoder: WGPUCommandEncoder?, descriptor: WGPUCommandBufferDescriptor?): WGPUCommandBuffer? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderFinish(commandEncoder?.handler, descriptor?.handler)?.let { WGPUCommandBuffer(it) }
+}
+
+actual fun wgpuCommandEncoderInsertDebugMarker(commandEncoder: WGPUCommandEncoder?, markerLabel: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderInsertDebugMarker(commandEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(markerLabel.handler).apply { read() })
+    return
+}
+
+actual fun wgpuCommandEncoderPopDebugGroup(commandEncoder: WGPUCommandEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderPopDebugGroup(commandEncoder?.handler)
+    return
+}
+
+actual fun wgpuCommandEncoderPushDebugGroup(commandEncoder: WGPUCommandEncoder?, groupLabel: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderPushDebugGroup(commandEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(groupLabel.handler).apply { read() })
+    return
+}
+
+actual fun wgpuCommandEncoderResolveQuerySet(commandEncoder: WGPUCommandEncoder?, querySet: WGPUQuerySet?, firstQuery: UInt, queryCount: UInt, destination: WGPUBuffer?, destinationOffset: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderResolveQuerySet(commandEncoder?.handler, querySet?.handler, firstQuery.toInt(), queryCount.toInt(), destination?.handler, destinationOffset.toLong())
+    return
+}
+
+actual fun wgpuCommandEncoderSetLabel(commandEncoder: WGPUCommandEncoder?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderSetLabel(commandEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuCommandEncoderWriteTimestamp(commandEncoder: WGPUCommandEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderWriteTimestamp(commandEncoder?.handler, querySet?.handler, queryIndex.toInt())
+    return
+}
+
+actual fun wgpuCommandEncoderAddRef(commandEncoder: WGPUCommandEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderAddRef(commandEncoder?.handler)
+    return
+}
+
+actual fun wgpuCommandEncoderRelease(commandEncoder: WGPUCommandEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderRelease(commandEncoder?.handler)
+    return
+}
+
+actual fun wgpuComputePassEncoderDispatchWorkgroups(computePassEncoder: WGPUComputePassEncoder?, workgroupCountX: UInt, workgroupCountY: UInt, workgroupCountZ: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderDispatchWorkgroups(computePassEncoder?.handler, workgroupCountX.toInt(), workgroupCountY.toInt(), workgroupCountZ.toInt())
+    return
+}
+
+actual fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(computePassEncoder: WGPUComputePassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderDispatchWorkgroupsIndirect(computePassEncoder?.handler, indirectBuffer?.handler, indirectOffset.toLong())
+    return
+}
+
+actual fun wgpuComputePassEncoderEnd(computePassEncoder: WGPUComputePassEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderEnd(computePassEncoder?.handler)
+    return
+}
+
+actual fun wgpuComputePassEncoderInsertDebugMarker(computePassEncoder: WGPUComputePassEncoder?, markerLabel: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderInsertDebugMarker(computePassEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(markerLabel.handler).apply { read() })
+    return
+}
+
+actual fun wgpuComputePassEncoderPopDebugGroup(computePassEncoder: WGPUComputePassEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderPopDebugGroup(computePassEncoder?.handler)
+    return
+}
+
+actual fun wgpuComputePassEncoderPushDebugGroup(computePassEncoder: WGPUComputePassEncoder?, groupLabel: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderPushDebugGroup(computePassEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(groupLabel.handler).apply { read() })
+    return
+}
+
+actual fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderSetBindGroup(computePassEncoder?.handler, groupIndex.toInt(), group?.handler, dynamicOffsetCount.toLong(), dynamicOffsets)
+    return
+}
+
+actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEncoder?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderSetLabel(computePassEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuComputePassEncoderSetPipeline(computePassEncoder: WGPUComputePassEncoder?, pipeline: WGPUComputePipeline?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderSetPipeline(computePassEncoder?.handler, pipeline?.handler)
+    return
+}
+
+actual fun wgpuComputePassEncoderAddRef(computePassEncoder: WGPUComputePassEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderAddRef(computePassEncoder?.handler)
+    return
+}
+
+actual fun wgpuComputePassEncoderRelease(computePassEncoder: WGPUComputePassEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderRelease(computePassEncoder?.handler)
+    return
+}
+
+actual fun wgpuComputePipelineGetBindGroupLayout(computePipeline: WGPUComputePipeline?, groupIndex: UInt): WGPUBindGroupLayout? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePipelineGetBindGroupLayout(computePipeline?.handler, groupIndex.toInt())?.let { WGPUBindGroupLayout(it) }
+}
+
+actual fun wgpuComputePipelineSetLabel(computePipeline: WGPUComputePipeline?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePipelineSetLabel(computePipeline?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuComputePipelineAddRef(computePipeline: WGPUComputePipeline?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePipelineAddRef(computePipeline?.handler)
+    return
+}
+
+actual fun wgpuComputePipelineRelease(computePipeline: WGPUComputePipeline?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePipelineRelease(computePipeline?.handler)
+    return
+}
+
+actual fun wgpuDeviceCreateBindGroup(device: WGPUDevice?, descriptor: WGPUBindGroupDescriptor?): WGPUBindGroup? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateBindGroup(device?.handler, descriptor?.handler)?.let { WGPUBindGroup(it) }
+}
+
+actual fun wgpuDeviceCreateBindGroupLayout(device: WGPUDevice?, descriptor: WGPUBindGroupLayoutDescriptor?): WGPUBindGroupLayout? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateBindGroupLayout(device?.handler, descriptor?.handler)?.let { WGPUBindGroupLayout(it) }
+}
+
+actual fun wgpuDeviceCreateBuffer(device: WGPUDevice?, descriptor: WGPUBufferDescriptor?): WGPUBuffer? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateBuffer(device?.handler, descriptor?.handler)?.let { WGPUBuffer(it) }
+}
+
+actual fun wgpuDeviceCreateCommandEncoder(device: WGPUDevice?, descriptor: WGPUCommandEncoderDescriptor?): WGPUCommandEncoder? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateCommandEncoder(device?.handler, descriptor?.handler)?.let { WGPUCommandEncoder(it) }
+}
+
+actual fun wgpuDeviceCreateComputePipeline(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?): WGPUComputePipeline? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateComputePipeline(device?.handler, descriptor?.handler)?.let { WGPUComputePipeline(it) }
+}
+
+actual fun wgpuDeviceCreateComputePipelineAsync(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateComputePipelineAsync(device?.handler, descriptor?.handler, io.ygdrasil.wgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByValue(callbackInfo.handler).apply { read() }))
+}
+
+actual fun wgpuDeviceCreatePipelineLayout(device: WGPUDevice?, descriptor: WGPUPipelineLayoutDescriptor?): WGPUPipelineLayout? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreatePipelineLayout(device?.handler, descriptor?.handler)?.let { WGPUPipelineLayout(it) }
+}
+
+actual fun wgpuDeviceCreateQuerySet(device: WGPUDevice?, descriptor: WGPUQuerySetDescriptor?): WGPUQuerySet? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateQuerySet(device?.handler, descriptor?.handler)?.let { WGPUQuerySet(it) }
+}
+
+actual fun wgpuDeviceCreateRenderBundleEncoder(device: WGPUDevice?, descriptor: WGPURenderBundleEncoderDescriptor?): WGPURenderBundleEncoder? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateRenderBundleEncoder(device?.handler, descriptor?.handler)?.let { WGPURenderBundleEncoder(it) }
+}
+
+actual fun wgpuDeviceCreateRenderPipeline(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?): WGPURenderPipeline? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateRenderPipeline(device?.handler, descriptor?.handler)?.let { WGPURenderPipeline(it) }
+}
+
+actual fun wgpuDeviceCreateRenderPipelineAsync(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateRenderPipelineAsync(device?.handler, descriptor?.handler, io.ygdrasil.wgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue(callbackInfo.handler).apply { read() }))
+}
+
+actual fun wgpuDeviceCreateSampler(device: WGPUDevice?, descriptor: WGPUSamplerDescriptor?): WGPUSampler? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateSampler(device?.handler, descriptor?.handler)?.let { WGPUSampler(it) }
+}
+
+actual fun wgpuDeviceCreateShaderModule(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?): WGPUShaderModule? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateShaderModule(device?.handler, descriptor?.handler)?.let { WGPUShaderModule(it) }
+}
+
+actual fun wgpuDeviceCreateTexture(device: WGPUDevice?, descriptor: WGPUTextureDescriptor?): WGPUTexture? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateTexture(device?.handler, descriptor?.handler)?.let { WGPUTexture(it) }
+}
+
+actual fun wgpuDeviceDestroy(device: WGPUDevice?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceDestroy(device?.handler)
+    return
+}
+
+actual fun wgpuDeviceGetAdapterInfo(device: WGPUDevice?, adapterInfo: WGPUAdapterInfo?): WGPUStatus {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceGetAdapterInfo(device?.handler, adapterInfo?.handler)).toUInt()
+}
+
+actual fun wgpuDeviceGetFeatures(device: WGPUDevice?, features: WGPUSupportedFeatures?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceGetFeatures(device?.handler, features?.handler)
+    return
+}
+
+actual fun wgpuDeviceGetLimits(device: WGPUDevice?, limits: WGPULimits?): WGPUStatus {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceGetLimits(device?.handler, limits?.handler)).toUInt()
+}
+
+actual fun wgpuDeviceGetLostFuture(device: WGPUDevice?): WGPUFuture {
+    return WGPUFuture.ByValue(io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceGetLostFuture(device?.handler))
+}
+
+actual fun wgpuDeviceGetQueue(device: WGPUDevice?): WGPUQueue? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceGetQueue(device?.handler)?.let { WGPUQueue(it) }
+}
+
+actual fun wgpuDeviceHasFeature(device: WGPUDevice?, feature: WGPUFeatureName): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceHasFeature(device?.handler, feature.toInt()).toUInt()
+}
+
+actual fun wgpuDevicePopErrorScope(device: WGPUDevice?, callbackInfo: WGPUPopErrorScopeCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDevicePopErrorScope(device?.handler, io.ygdrasil.wgpu.android.WGPUPopErrorScopeCallbackInfo.ByValue(callbackInfo.handler).apply { read() }))
+}
+
+actual fun wgpuDevicePushErrorScope(device: WGPUDevice?, filter: WGPUErrorFilter): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDevicePushErrorScope(device?.handler, filter.toInt())
+    return
+}
+
+actual fun wgpuDeviceSetLabel(device: WGPUDevice?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceSetLabel(device?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuDeviceAddRef(device: WGPUDevice?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceAddRef(device?.handler)
+    return
+}
+
+actual fun wgpuDeviceRelease(device: WGPUDevice?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceRelease(device?.handler)
+    return
+}
+
+actual fun wgpuExternalTextureSetLabel(externalTexture: WGPUExternalTexture?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuExternalTextureSetLabel(externalTexture?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuExternalTextureAddRef(externalTexture: WGPUExternalTexture?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuExternalTextureAddRef(externalTexture?.handler)
+    return
+}
+
+actual fun wgpuExternalTextureRelease(externalTexture: WGPUExternalTexture?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuExternalTextureRelease(externalTexture?.handler)
+    return
+}
+
+actual fun wgpuInstanceCreateSurface(instance: WGPUInstance?, descriptor: WGPUSurfaceDescriptor?): WGPUSurface? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuInstanceCreateSurface(instance?.handler, descriptor?.handler)?.let { WGPUSurface(it) }
+}
+
+actual fun wgpuInstanceGetWGSLLanguageFeatures(instance: WGPUInstance?, features: WGPUSupportedWGSLLanguageFeatures?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuInstanceGetWGSLLanguageFeatures(instance?.handler, features?.handler)
+    return
+}
+
+actual fun wgpuInstanceHasWGSLLanguageFeature(instance: WGPUInstance?, feature: WGPUWGSLLanguageFeatureName): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuInstanceHasWGSLLanguageFeature(instance?.handler, feature.toInt()).toUInt()
+}
+
+actual fun wgpuInstanceProcessEvents(instance: WGPUInstance?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuInstanceProcessEvents(instance?.handler)
+    return
+}
+
+actual fun wgpuInstanceRequestAdapter(instance: WGPUInstance?, options: WGPURequestAdapterOptions?, callbackInfo: WGPURequestAdapterCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuInstanceRequestAdapter(instance?.handler, options?.handler, io.ygdrasil.wgpu.android.WGPURequestAdapterCallbackInfo.ByValue(callbackInfo.handler).apply { read() }))
+}
+
+actual fun wgpuInstanceWaitAny(instance: WGPUInstance?, futureCount: ULong, futures: WGPUFutureWaitInfo?, timeoutNS: ULong): WGPUWaitStatus {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuInstanceWaitAny(instance?.handler, futureCount.toLong(), futures?.handler, timeoutNS.toLong())).toUInt()
+}
+
+actual fun wgpuInstanceAddRef(instance: WGPUInstance?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuInstanceAddRef(instance?.handler)
+    return
+}
+
+actual fun wgpuInstanceRelease(instance: WGPUInstance?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuInstanceRelease(instance?.handler)
+    return
+}
+
+actual fun wgpuPipelineLayoutSetLabel(pipelineLayout: WGPUPipelineLayout?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuPipelineLayoutSetLabel(pipelineLayout?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuPipelineLayoutAddRef(pipelineLayout: WGPUPipelineLayout?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuPipelineLayoutAddRef(pipelineLayout?.handler)
+    return
+}
+
+actual fun wgpuPipelineLayoutRelease(pipelineLayout: WGPUPipelineLayout?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuPipelineLayoutRelease(pipelineLayout?.handler)
+    return
+}
+
+actual fun wgpuQuerySetDestroy(querySet: WGPUQuerySet?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQuerySetDestroy(querySet?.handler)
+    return
+}
+
+actual fun wgpuQuerySetGetCount(querySet: WGPUQuerySet?): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQuerySetGetCount(querySet?.handler).toUInt()
+}
+
+actual fun wgpuQuerySetGetType(querySet: WGPUQuerySet?): WGPUQueryType {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQuerySetGetType(querySet?.handler)).toUInt()
+}
+
+actual fun wgpuQuerySetSetLabel(querySet: WGPUQuerySet?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQuerySetSetLabel(querySet?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuQuerySetAddRef(querySet: WGPUQuerySet?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQuerySetAddRef(querySet?.handler)
+    return
+}
+
+actual fun wgpuQuerySetRelease(querySet: WGPUQuerySet?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQuerySetRelease(querySet?.handler)
+    return
+}
+
+actual fun wgpuQueueOnSubmittedWorkDone(queue: WGPUQueue?, callbackInfo: WGPUQueueWorkDoneCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQueueOnSubmittedWorkDone(queue?.handler, io.ygdrasil.wgpu.android.WGPUQueueWorkDoneCallbackInfo.ByValue(callbackInfo.handler).apply { read() }))
+}
+
+actual fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQueueSetLabel(queue?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQueueSubmit(queue?.handler, commandCount.toLong(), commands)
+    return
+}
+
+actual fun wgpuQueueWriteBuffer(queue: WGPUQueue?, buffer: WGPUBuffer?, bufferOffset: ULong, data: NativeAddress?, size: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQueueWriteBuffer(queue?.handler, buffer?.handler, bufferOffset.toLong(), data, size.toLong())
+    return
+}
+
+actual fun wgpuQueueWriteTexture(queue: WGPUQueue?, destination: WGPUTexelCopyTextureInfo?, data: NativeAddress?, dataSize: ULong, dataLayout: WGPUTexelCopyBufferLayout?, writeSize: WGPUExtent3D?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQueueWriteTexture(queue?.handler, destination?.handler, data, dataSize.toLong(), dataLayout?.handler, writeSize?.handler)
+    return
+}
+
+actual fun wgpuQueueAddRef(queue: WGPUQueue?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQueueAddRef(queue?.handler)
+    return
+}
+
+actual fun wgpuQueueRelease(queue: WGPUQueue?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQueueRelease(queue?.handler)
+    return
+}
+
+actual fun wgpuRenderBundleSetLabel(renderBundle: WGPURenderBundle?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleSetLabel(renderBundle?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuRenderBundleAddRef(renderBundle: WGPURenderBundle?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleAddRef(renderBundle?.handler)
+    return
+}
+
+actual fun wgpuRenderBundleRelease(renderBundle: WGPURenderBundle?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleRelease(renderBundle?.handler)
+    return
+}
+
+actual fun wgpuRenderBundleEncoderDraw(renderBundleEncoder: WGPURenderBundleEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderDraw(renderBundleEncoder?.handler, vertexCount.toInt(), instanceCount.toInt(), firstVertex.toInt(), firstInstance.toInt())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder: WGPURenderBundleEncoder?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder?.handler, indexCount.toInt(), instanceCount.toInt(), firstIndex.toInt(), baseVertex, firstInstance.toInt())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder?.handler, indirectBuffer?.handler, indirectOffset.toLong())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderDrawIndirect(renderBundleEncoder: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderDrawIndirect(renderBundleEncoder?.handler, indirectBuffer?.handler, indirectOffset.toLong())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderFinish(renderBundleEncoder: WGPURenderBundleEncoder?, descriptor: WGPURenderBundleDescriptor?): WGPURenderBundle? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderFinish(renderBundleEncoder?.handler, descriptor?.handler)?.let { WGPURenderBundle(it) }
+}
+
+actual fun wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder: WGPURenderBundleEncoder?, markerLabel: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(markerLabel.handler).apply { read() })
+    return
+}
+
+actual fun wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder?.handler)
+    return
+}
+
+actual fun wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupLabel: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(groupLabel.handler).apply { read() })
+    return
+}
+
+actual fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder?.handler, groupIndex.toInt(), group?.handler, dynamicOffsetCount.toLong(), dynamicOffsets)
+    return
+}
+
+actual fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder?.handler, buffer?.handler, format.toInt(), offset.toLong(), size.toLong())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderSetLabel(renderBundleEncoder: WGPURenderBundleEncoder?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderSetLabel(renderBundleEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder: WGPURenderBundleEncoder?, pipeline: WGPURenderPipeline?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder?.handler, pipeline?.handler)
+    return
+}
+
+actual fun wgpuRenderBundleEncoderSetVertexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderSetVertexBuffer(renderBundleEncoder?.handler, slot.toInt(), buffer?.handler, offset.toLong(), size.toLong())
+    return
+}
+
+actual fun wgpuRenderBundleEncoderAddRef(renderBundleEncoder: WGPURenderBundleEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderAddRef(renderBundleEncoder?.handler)
+    return
+}
+
+actual fun wgpuRenderBundleEncoderRelease(renderBundleEncoder: WGPURenderBundleEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderRelease(renderBundleEncoder?.handler)
+    return
+}
+
+actual fun wgpuRenderPassEncoderBeginOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?, queryIndex: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderBeginOcclusionQuery(renderPassEncoder?.handler, queryIndex.toInt())
+    return
+}
+
+actual fun wgpuRenderPassEncoderDraw(renderPassEncoder: WGPURenderPassEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderDraw(renderPassEncoder?.handler, vertexCount.toInt(), instanceCount.toInt(), firstVertex.toInt(), firstInstance.toInt())
+    return
+}
+
+actual fun wgpuRenderPassEncoderDrawIndexed(renderPassEncoder: WGPURenderPassEncoder?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderDrawIndexed(renderPassEncoder?.handler, indexCount.toInt(), instanceCount.toInt(), firstIndex.toInt(), baseVertex, firstInstance.toInt())
+    return
+}
+
+actual fun wgpuRenderPassEncoderDrawIndexedIndirect(renderPassEncoder: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderDrawIndexedIndirect(renderPassEncoder?.handler, indirectBuffer?.handler, indirectOffset.toLong())
+    return
+}
+
+actual fun wgpuRenderPassEncoderDrawIndirect(renderPassEncoder: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderDrawIndirect(renderPassEncoder?.handler, indirectBuffer?.handler, indirectOffset.toLong())
+    return
+}
+
+actual fun wgpuRenderPassEncoderEnd(renderPassEncoder: WGPURenderPassEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderEnd(renderPassEncoder?.handler)
+    return
+}
+
+actual fun wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder?.handler)
+    return
+}
+
+actual fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder?, bundleCount: ULong, bundles: NativeAddress?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderExecuteBundles(renderPassEncoder?.handler, bundleCount.toLong(), bundles)
+    return
+}
+
+actual fun wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: WGPURenderPassEncoder?, markerLabel: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(markerLabel.handler).apply { read() })
+    return
+}
+
+actual fun wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder: WGPURenderPassEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder?.handler)
+    return
+}
+
+actual fun wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: WGPURenderPassEncoder?, groupLabel: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(groupLabel.handler).apply { read() })
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetBindGroup(renderPassEncoder?.handler, groupIndex.toInt(), group?.handler, dynamicOffsetCount.toLong(), dynamicOffsets)
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder?, color: WGPUColor?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder?.handler, color?.handler)
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder?.handler, buffer?.handler, format.toInt(), offset.toLong(), size.toLong())
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetLabel(renderPassEncoder: WGPURenderPassEncoder?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetLabel(renderPassEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetPipeline(renderPassEncoder: WGPURenderPassEncoder?, pipeline: WGPURenderPipeline?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetPipeline(renderPassEncoder?.handler, pipeline?.handler)
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetScissorRect(renderPassEncoder: WGPURenderPassEncoder?, x: UInt, y: UInt, width: UInt, height: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetScissorRect(renderPassEncoder?.handler, x.toInt(), y.toInt(), width.toInt(), height.toInt())
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetStencilReference(renderPassEncoder: WGPURenderPassEncoder?, reference: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetStencilReference(renderPassEncoder?.handler, reference.toInt())
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder: WGPURenderPassEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder?.handler, slot.toInt(), buffer?.handler, offset.toLong(), size.toLong())
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetViewport(renderPassEncoder: WGPURenderPassEncoder?, x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetViewport(renderPassEncoder?.handler, x, y, width, height, minDepth, maxDepth)
+    return
+}
+
+actual fun wgpuRenderPassEncoderAddRef(renderPassEncoder: WGPURenderPassEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderAddRef(renderPassEncoder?.handler)
+    return
+}
+
+actual fun wgpuRenderPassEncoderRelease(renderPassEncoder: WGPURenderPassEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderRelease(renderPassEncoder?.handler)
+    return
+}
+
+actual fun wgpuRenderPipelineGetBindGroupLayout(renderPipeline: WGPURenderPipeline?, groupIndex: UInt): WGPUBindGroupLayout? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPipelineGetBindGroupLayout(renderPipeline?.handler, groupIndex.toInt())?.let { WGPUBindGroupLayout(it) }
+}
+
+actual fun wgpuRenderPipelineSetLabel(renderPipeline: WGPURenderPipeline?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPipelineSetLabel(renderPipeline?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuRenderPipelineAddRef(renderPipeline: WGPURenderPipeline?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPipelineAddRef(renderPipeline?.handler)
+    return
+}
+
+actual fun wgpuRenderPipelineRelease(renderPipeline: WGPURenderPipeline?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPipelineRelease(renderPipeline?.handler)
+    return
+}
+
+actual fun wgpuSamplerSetLabel(sampler: WGPUSampler?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSamplerSetLabel(sampler?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuSamplerAddRef(sampler: WGPUSampler?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSamplerAddRef(sampler?.handler)
+    return
+}
+
+actual fun wgpuSamplerRelease(sampler: WGPUSampler?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSamplerRelease(sampler?.handler)
+    return
+}
+
+actual fun wgpuShaderModuleGetCompilationInfo(shaderModule: WGPUShaderModule?, callbackInfo: WGPUCompilationInfoCallbackInfo): WGPUFuture {
+    return WGPUFuture.ByValue(io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuShaderModuleGetCompilationInfo(shaderModule?.handler, io.ygdrasil.wgpu.android.WGPUCompilationInfoCallbackInfo.ByValue(callbackInfo.handler).apply { read() }))
+}
+
+actual fun wgpuShaderModuleSetLabel(shaderModule: WGPUShaderModule?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuShaderModuleSetLabel(shaderModule?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuShaderModuleAddRef(shaderModule: WGPUShaderModule?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuShaderModuleAddRef(shaderModule?.handler)
+    return
+}
+
+actual fun wgpuShaderModuleRelease(shaderModule: WGPUShaderModule?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuShaderModuleRelease(shaderModule?.handler)
+    return
+}
+
+actual fun wgpuSupportedFeaturesFreeMembers(supportedFeatures: WGPUSupportedFeatures): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSupportedFeaturesFreeMembers(io.ygdrasil.wgpu.android.WGPUSupportedFeatures.ByValue(supportedFeatures.handler).apply { read() })
+    return
+}
+
+actual fun wgpuSupportedInstanceFeaturesFreeMembers(supportedInstanceFeatures: WGPUSupportedInstanceFeatures): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSupportedInstanceFeaturesFreeMembers(io.ygdrasil.wgpu.android.WGPUSupportedInstanceFeatures.ByValue(supportedInstanceFeatures.handler).apply { read() })
+    return
+}
+
+actual fun wgpuSupportedWGSLLanguageFeaturesFreeMembers(supportedWGSLLanguageFeatures: WGPUSupportedWGSLLanguageFeatures): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSupportedWGSLLanguageFeaturesFreeMembers(io.ygdrasil.wgpu.android.WGPUSupportedWGSLLanguageFeatures.ByValue(supportedWGSLLanguageFeatures.handler).apply { read() })
+    return
+}
+
+actual fun wgpuSurfaceConfigure(surface: WGPUSurface?, config: WGPUSurfaceConfiguration?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceConfigure(surface?.handler, config?.handler)
+    return
+}
+
+actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus {
+    val status = io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCapabilities(surface?.handler, adapter?.handler, capabilities?.handler)
+    when (capabilities) {
+        is WGPUSurfaceCapabilities.ByReference -> capabilities.handle.read()
+        is WGPUSurfaceCapabilities.ByValue -> capabilities.handle.read()
+        null -> Unit
+    }
+    return status.toUInt()
+}
+
+actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCurrentTexture(surface?.handler, surfaceTexture?.handler)
+    when (surfaceTexture) {
+        is WGPUSurfaceTexture.ByReference -> surfaceTexture.handle.read()
+        is WGPUSurfaceTexture.ByValue -> surfaceTexture.handle.read()
+        null -> Unit
+    }
+    return
+}
+
+actual fun wgpuSurfacePresent(surface: WGPUSurface?): WGPUStatus {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfacePresent(surface?.handler)).toUInt()
+}
+
+actual fun wgpuSurfaceSetLabel(surface: WGPUSurface?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceSetLabel(surface?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuSurfaceUnconfigure(surface: WGPUSurface?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceUnconfigure(surface?.handler)
+    return
+}
+
+actual fun wgpuSurfaceAddRef(surface: WGPUSurface?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceAddRef(surface?.handler)
+    return
+}
+
+actual fun wgpuSurfaceRelease(surface: WGPUSurface?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceRelease(surface?.handler)
+    return
+}
+
+actual fun wgpuSurfaceCapabilitiesFreeMembers(surfaceCapabilities: WGPUSurfaceCapabilities): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceCapabilitiesFreeMembers(io.ygdrasil.wgpu.android.WGPUSurfaceCapabilities.ByValue(surfaceCapabilities.handler).apply { read() })
+    return
+}
+
+actual fun wgpuTextureCreateView(texture: WGPUTexture?, descriptor: WGPUTextureViewDescriptor?): WGPUTextureView? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureCreateView(texture?.handler, descriptor?.handler)?.let { WGPUTextureView(it) }
+}
+
+actual fun wgpuTextureDestroy(texture: WGPUTexture?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureDestroy(texture?.handler)
+    return
+}
+
+actual fun wgpuTextureGetDepthOrArrayLayers(texture: WGPUTexture?): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureGetDepthOrArrayLayers(texture?.handler).toUInt()
+}
+
+actual fun wgpuTextureGetDimension(texture: WGPUTexture?): WGPUTextureDimension {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureGetDimension(texture?.handler)).toUInt()
+}
+
+actual fun wgpuTextureGetFormat(texture: WGPUTexture?): WGPUTextureFormat {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureGetFormat(texture?.handler)).toUInt()
+}
+
+actual fun wgpuTextureGetHeight(texture: WGPUTexture?): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureGetHeight(texture?.handler).toUInt()
+}
+
+actual fun wgpuTextureGetMipLevelCount(texture: WGPUTexture?): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureGetMipLevelCount(texture?.handler).toUInt()
+}
+
+actual fun wgpuTextureGetSampleCount(texture: WGPUTexture?): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureGetSampleCount(texture?.handler).toUInt()
+}
+
+actual fun wgpuTextureGetTextureBindingViewDimension(texture: WGPUTexture?): WGPUTextureViewDimension {
+    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureGetTextureBindingViewDimension(texture?.handler)).toUInt()
+}
+
+actual fun wgpuTextureGetUsage(texture: WGPUTexture?): ULong {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureGetUsage(texture?.handler).toULong()
+}
+
+actual fun wgpuTextureGetWidth(texture: WGPUTexture?): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureGetWidth(texture?.handler).toUInt()
+}
+
+actual fun wgpuTextureSetLabel(texture: WGPUTexture?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureSetLabel(texture?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuTextureAddRef(texture: WGPUTexture?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureAddRef(texture?.handler)
+    return
+}
+
+actual fun wgpuTextureRelease(texture: WGPUTexture?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureRelease(texture?.handler)
+    return
+}
+
+actual fun wgpuTextureViewSetLabel(textureView: WGPUTextureView?, label: WGPUStringView): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureViewSetLabel(textureView?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
+    return
+}
+
+actual fun wgpuTextureViewAddRef(textureView: WGPUTextureView?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureViewAddRef(textureView?.handler)
+    return
+}
+
+actual fun wgpuTextureViewRelease(textureView: WGPUTextureView?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureViewRelease(textureView?.handler)
+    return
+}
 
 actual interface WGPUXlibDisplayHandle {
     actual var display: NativeAddress?
@@ -10650,108 +11001,180 @@ actual interface WGPUPrimitiveStateExtras {
     }
 }
 
-actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit =
-    error("wgpuGenerateReport is not implemented for Android/JNA generated bindings")
+actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuGenerateReport(instance?.handler, report?.handler)
+    return
+}
 
-actual fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: NativeAddress?): ULong =
-    error("wgpuInstanceEnumerateAdapters is not implemented for Android/JNA generated bindings")
+actual fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: NativeAddress?): ULong {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuInstanceEnumerateAdapters(instance?.handler, options?.handler, adapters).toULong()
+}
 
-actual fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): ULong =
-    error("wgpuQueueSubmitForIndex is not implemented for Android/JNA generated bindings")
+actual fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): ULong {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQueueSubmitForIndex(queue?.handler, commandCount.toLong(), commands).toULong()
+}
 
-actual fun wgpuQueueGetTimestampPeriod(queue: WGPUQueue?): Float =
-    error("wgpuQueueGetTimestampPeriod is not implemented for Android/JNA generated bindings")
+actual fun wgpuQueueGetTimestampPeriod(queue: WGPUQueue?): Float {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQueueGetTimestampPeriod(queue?.handler)
+}
 
-actual fun wgpuDevicePoll(device: WGPUDevice?, wait: UInt, submissionIndex: NativeAddress?): UInt =
-    error("wgpuDevicePoll is not implemented for Android/JNA generated bindings")
+actual fun wgpuDevicePoll(device: WGPUDevice?, wait: UInt, submissionIndex: NativeAddress?): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDevicePoll(device?.handler, wait.toInt(), submissionIndex).toUInt()
+}
 
-actual fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptorSpirV?): WGPUShaderModule? =
-    error("wgpuDeviceCreateShaderModuleSpirV is not implemented for Android/JNA generated bindings")
+actual fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptorSpirV?): WGPUShaderModule? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateShaderModuleSpirV(device?.handler, descriptor?.handler)?.let { WGPUShaderModule(it) }
+}
 
-actual fun wgpuSetLogCallback(callback: NativeAddress?, userdata: NativeAddress?): Unit =
-    error("wgpuSetLogCallback is not implemented for Android/JNA generated bindings")
+actual fun wgpuSetLogCallback(callback: NativeAddress?, userdata: NativeAddress?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSetLogCallback(callback, userdata)
+    return
+}
 
-actual fun wgpuSetLogLevel(level: WGPULogLevel): Unit =
-    error("wgpuSetLogLevel is not implemented for Android/JNA generated bindings")
+actual fun wgpuSetLogLevel(level: WGPULogLevel): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSetLogLevel(level.toInt())
+    return
+}
 
-actual fun wgpuGetVersion(): UInt =
-    error("wgpuGetVersion is not implemented for Android/JNA generated bindings")
+actual fun wgpuGetVersion(): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuGetVersion().toUInt()
+}
 
-actual fun wgpuDeviceGetNativeMetalDevice(device: WGPUDevice?): NativeAddress? =
-    error("wgpuDeviceGetNativeMetalDevice is not implemented for Android/JNA generated bindings")
+actual fun wgpuDeviceGetNativeMetalDevice(device: WGPUDevice?): NativeAddress? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceGetNativeMetalDevice(device?.handler)
+}
 
-actual fun wgpuQueueGetNativeMetalCommandQueue(queue: WGPUQueue?): NativeAddress? =
-    error("wgpuQueueGetNativeMetalCommandQueue is not implemented for Android/JNA generated bindings")
+actual fun wgpuQueueGetNativeMetalCommandQueue(queue: WGPUQueue?): NativeAddress? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuQueueGetNativeMetalCommandQueue(queue?.handler)
+}
 
-actual fun wgpuTextureGetNativeMetalTexture(texture: WGPUTexture?): NativeAddress? =
-    error("wgpuTextureGetNativeMetalTexture is not implemented for Android/JNA generated bindings")
+actual fun wgpuTextureGetNativeMetalTexture(texture: WGPUTexture?): NativeAddress? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureGetNativeMetalTexture(texture?.handler)
+}
 
-actual fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit =
-    error("wgpuRenderPassEncoderSetImmediates is not implemented for Android/JNA generated bindings")
+actual fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetImmediates(encoder?.handler, offset.toInt(), sizeBytes.toInt(), data)
+    return
+}
 
-actual fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit =
-    error("wgpuComputePassEncoderSetImmediates is not implemented for Android/JNA generated bindings")
+actual fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderSetImmediates(encoder?.handler, offset.toInt(), sizeBytes.toInt(), data)
+    return
+}
 
-actual fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit =
-    error("wgpuRenderBundleEncoderSetImmediates is not implemented for Android/JNA generated bindings")
+actual fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderSetImmediates(encoder?.handler, offset.toInt(), sizeBytes.toInt(), data)
+    return
+}
 
-actual fun wgpuRenderPassEncoderMultiDrawIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit =
-    error("wgpuRenderPassEncoderMultiDrawIndirect is not implemented for Android/JNA generated bindings")
+actual fun wgpuRenderPassEncoderMultiDrawIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderMultiDrawIndirect(encoder?.handler, buffer?.handler, offset.toLong(), count.toInt())
+    return
+}
 
-actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit =
-    error("wgpuRenderPassEncoderMultiDrawIndexedIndirect is not implemented for Android/JNA generated bindings")
+actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderMultiDrawIndexedIndirect(encoder?.handler, buffer?.handler, offset.toLong(), count.toInt())
+    return
+}
 
-actual fun wgpuRenderPassEncoderMultiDrawIndirectCount(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count_buffer: WGPUBuffer?, count_buffer_offset: ULong, max_count: UInt): Unit =
-    error("wgpuRenderPassEncoderMultiDrawIndirectCount is not implemented for Android/JNA generated bindings")
+actual fun wgpuRenderPassEncoderMultiDrawIndirectCount(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count_buffer: WGPUBuffer?, count_buffer_offset: ULong, max_count: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderMultiDrawIndirectCount(encoder?.handler, buffer?.handler, offset.toLong(), count_buffer?.handler, count_buffer_offset.toLong(), max_count.toInt())
+    return
+}
 
-actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count_buffer: WGPUBuffer?, count_buffer_offset: ULong, max_count: UInt): Unit =
-    error("wgpuRenderPassEncoderMultiDrawIndexedIndirectCount is not implemented for Android/JNA generated bindings")
+actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count_buffer: WGPUBuffer?, count_buffer_offset: ULong, max_count: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(encoder?.handler, buffer?.handler, offset.toLong(), count_buffer?.handler, count_buffer_offset.toLong(), max_count.toInt())
+    return
+}
 
-actual fun wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit =
-    error("wgpuComputePassEncoderBeginPipelineStatisticsQuery is not implemented for Android/JNA generated bindings")
+actual fun wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder?.handler, querySet?.handler, queryIndex.toInt())
+    return
+}
 
-actual fun wgpuComputePassEncoderEndPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder?): Unit =
-    error("wgpuComputePassEncoderEndPipelineStatisticsQuery is not implemented for Android/JNA generated bindings")
+actual fun wgpuComputePassEncoderEndPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderEndPipelineStatisticsQuery(computePassEncoder?.handler)
+    return
+}
 
-actual fun wgpuRenderPassEncoderBeginPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit =
-    error("wgpuRenderPassEncoderBeginPipelineStatisticsQuery is not implemented for Android/JNA generated bindings")
+actual fun wgpuRenderPassEncoderBeginPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderBeginPipelineStatisticsQuery(renderPassEncoder?.handler, querySet?.handler, queryIndex.toInt())
+    return
+}
 
-actual fun wgpuRenderPassEncoderEndPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit =
-    error("wgpuRenderPassEncoderEndPipelineStatisticsQuery is not implemented for Android/JNA generated bindings")
+actual fun wgpuRenderPassEncoderEndPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderEndPipelineStatisticsQuery(renderPassEncoder?.handler)
+    return
+}
 
-actual fun wgpuComputePassEncoderWriteTimestamp(computePassEncoder: WGPUComputePassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit =
-    error("wgpuComputePassEncoderWriteTimestamp is not implemented for Android/JNA generated bindings")
+actual fun wgpuComputePassEncoderWriteTimestamp(computePassEncoder: WGPUComputePassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderWriteTimestamp(computePassEncoder?.handler, querySet?.handler, queryIndex.toInt())
+    return
+}
 
-actual fun wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: WGPURenderPassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit =
-    error("wgpuRenderPassEncoderWriteTimestamp is not implemented for Android/JNA generated bindings")
+actual fun wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: WGPURenderPassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder?.handler, querySet?.handler, queryIndex.toInt())
+    return
+}
 
-actual fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): UInt =
-    error("wgpuDeviceStartGraphicsDebuggerCapture is not implemented for Android/JNA generated bindings")
+actual fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): UInt {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceStartGraphicsDebuggerCapture(device?.handler).toUInt()
+}
 
-actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit =
-    error("wgpuDeviceStopGraphicsDebuggerCapture is not implemented for Android/JNA generated bindings")
+actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceStopGraphicsDebuggerCapture(device?.handler)
+    return
+}
+
+private fun interface WGPUProcJna : com.sun.jna.Callback {
+    fun invoke(
+    )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUProcTrampoline {
+    private val callback: WGPUProcJna = WGPUProcJna {
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUProcType,
+                userdata = null,
+            ) { callback ->
+                callback.invoke()
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+    val address: NativeAddress by lazy {
+        CallbackReference.getFunctionPointer(callback)
+    }
+}
 
 @OptIn(CallbackRuntimeApi::class)
 actual fun WGPUProc.Companion.register(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUProc,
-): CallbackRegistration<WGPUProc> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): CallbackRegistration<WGPUProc> = CallbackRuntime.register(
+    type = WGPUProcType,
+    trampoline = WGPUProcTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @OptIn(CallbackRuntimeApi::class)
 internal actual fun WGPUProc.Companion.prepare(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUProc,
-): PreparedCallbackRegistration<WGPUProc> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): PreparedCallbackRegistration<WGPUProc> = CallbackRuntime.prepare(
+    type = WGPUProcType,
+    trampoline = WGPUProcTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @UnsafeCallbackRearmApi
 @OptIn(CallbackRuntimeApi::class)
@@ -10759,10 +11182,44 @@ actual fun WGPUProc.Companion.rearmAfterNativeQuiescence(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUProc,
-): CallbackRegistration<WGPUProc> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+): CallbackRegistration<WGPUProc> = CallbackRuntime.rearmAfterNativeQuiescence(
+    type = WGPUProcType,
+    trampoline = WGPUProcTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+private fun interface WGPUBufferMapCallbackJna : com.sun.jna.Callback {
+    fun invoke(
+        status: Int,
+        message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue,
+        userdata1: Pointer?,
+        userdata2: Pointer?,
     )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUBufferMapCallbackTrampoline {
+    private val callback: WGPUBufferMapCallbackJna = WGPUBufferMapCallbackJna { status, message, userdata1, userdata2 ->
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUBufferMapCallbackType,
+                userdata = userdata2,
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPUMapAsyncStatus,
+                    WGPUStringView.ByValue(message),
+                    userdata1,
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+    val address: NativeAddress by lazy {
+        CallbackReference.getFunctionPointer(callback)
+    }
 }
 
 @OptIn(CallbackRuntimeApi::class)
@@ -10770,21 +11227,57 @@ actual fun WGPUBufferMapCallback.Companion.register(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUBufferMapCallback,
-): CallbackRegistration<WGPUBufferMapCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): CallbackRegistration<WGPUBufferMapCallback> = CallbackRuntime.register(
+    type = WGPUBufferMapCallbackType,
+    trampoline = WGPUBufferMapCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @OptIn(CallbackRuntimeApi::class)
 internal actual fun WGPUBufferMapCallback.Companion.prepare(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUBufferMapCallback,
-): PreparedCallbackRegistration<WGPUBufferMapCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+): PreparedCallbackRegistration<WGPUBufferMapCallback> = CallbackRuntime.prepare(
+    type = WGPUBufferMapCallbackType,
+    trampoline = WGPUBufferMapCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+private fun interface WGPUCompilationInfoCallbackJna : com.sun.jna.Callback {
+    fun invoke(
+        status: Int,
+        compilationInfo: Pointer?,
+        userdata1: Pointer?,
+        userdata2: Pointer?,
     )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUCompilationInfoCallbackTrampoline {
+    private val callback: WGPUCompilationInfoCallbackJna = WGPUCompilationInfoCallbackJna { status, compilationInfo, userdata1, userdata2 ->
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUCompilationInfoCallbackType,
+                userdata = userdata2,
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPUCompilationInfoRequestStatus,
+                    compilationInfo,
+                    userdata1,
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+    val address: NativeAddress by lazy {
+        CallbackReference.getFunctionPointer(callback)
+    }
 }
 
 @OptIn(CallbackRuntimeApi::class)
@@ -10792,21 +11285,59 @@ actual fun WGPUCompilationInfoCallback.Companion.register(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUCompilationInfoCallback,
-): CallbackRegistration<WGPUCompilationInfoCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): CallbackRegistration<WGPUCompilationInfoCallback> = CallbackRuntime.register(
+    type = WGPUCompilationInfoCallbackType,
+    trampoline = WGPUCompilationInfoCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @OptIn(CallbackRuntimeApi::class)
 internal actual fun WGPUCompilationInfoCallback.Companion.prepare(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUCompilationInfoCallback,
-): PreparedCallbackRegistration<WGPUCompilationInfoCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+): PreparedCallbackRegistration<WGPUCompilationInfoCallback> = CallbackRuntime.prepare(
+    type = WGPUCompilationInfoCallbackType,
+    trampoline = WGPUCompilationInfoCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+private fun interface WGPUCreateComputePipelineAsyncCallbackJna : com.sun.jna.Callback {
+    fun invoke(
+        status: Int,
+        pipeline: Pointer?,
+        message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue,
+        userdata1: Pointer?,
+        userdata2: Pointer?,
     )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUCreateComputePipelineAsyncCallbackTrampoline {
+    private val callback: WGPUCreateComputePipelineAsyncCallbackJna = WGPUCreateComputePipelineAsyncCallbackJna { status, pipeline, message, userdata1, userdata2 ->
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUCreateComputePipelineAsyncCallbackType,
+                userdata = userdata2,
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPUCreatePipelineAsyncStatus,
+                    pipeline?.let { WGPUComputePipeline(it) },
+                    WGPUStringView.ByValue(message),
+                    userdata1,
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+    val address: NativeAddress by lazy {
+        CallbackReference.getFunctionPointer(callback)
+    }
 }
 
 @OptIn(CallbackRuntimeApi::class)
@@ -10814,21 +11345,59 @@ actual fun WGPUCreateComputePipelineAsyncCallback.Companion.register(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUCreateComputePipelineAsyncCallback,
-): CallbackRegistration<WGPUCreateComputePipelineAsyncCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): CallbackRegistration<WGPUCreateComputePipelineAsyncCallback> = CallbackRuntime.register(
+    type = WGPUCreateComputePipelineAsyncCallbackType,
+    trampoline = WGPUCreateComputePipelineAsyncCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @OptIn(CallbackRuntimeApi::class)
 internal actual fun WGPUCreateComputePipelineAsyncCallback.Companion.prepare(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUCreateComputePipelineAsyncCallback,
-): PreparedCallbackRegistration<WGPUCreateComputePipelineAsyncCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+): PreparedCallbackRegistration<WGPUCreateComputePipelineAsyncCallback> = CallbackRuntime.prepare(
+    type = WGPUCreateComputePipelineAsyncCallbackType,
+    trampoline = WGPUCreateComputePipelineAsyncCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+private fun interface WGPUCreateRenderPipelineAsyncCallbackJna : com.sun.jna.Callback {
+    fun invoke(
+        status: Int,
+        pipeline: Pointer?,
+        message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue,
+        userdata1: Pointer?,
+        userdata2: Pointer?,
     )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUCreateRenderPipelineAsyncCallbackTrampoline {
+    private val callback: WGPUCreateRenderPipelineAsyncCallbackJna = WGPUCreateRenderPipelineAsyncCallbackJna { status, pipeline, message, userdata1, userdata2 ->
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUCreateRenderPipelineAsyncCallbackType,
+                userdata = userdata2,
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPUCreatePipelineAsyncStatus,
+                    pipeline?.let { WGPURenderPipeline(it) },
+                    WGPUStringView.ByValue(message),
+                    userdata1,
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+    val address: NativeAddress by lazy {
+        CallbackReference.getFunctionPointer(callback)
+    }
 }
 
 @OptIn(CallbackRuntimeApi::class)
@@ -10836,21 +11405,59 @@ actual fun WGPUCreateRenderPipelineAsyncCallback.Companion.register(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUCreateRenderPipelineAsyncCallback,
-): CallbackRegistration<WGPUCreateRenderPipelineAsyncCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): CallbackRegistration<WGPUCreateRenderPipelineAsyncCallback> = CallbackRuntime.register(
+    type = WGPUCreateRenderPipelineAsyncCallbackType,
+    trampoline = WGPUCreateRenderPipelineAsyncCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @OptIn(CallbackRuntimeApi::class)
 internal actual fun WGPUCreateRenderPipelineAsyncCallback.Companion.prepare(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUCreateRenderPipelineAsyncCallback,
-): PreparedCallbackRegistration<WGPUCreateRenderPipelineAsyncCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+): PreparedCallbackRegistration<WGPUCreateRenderPipelineAsyncCallback> = CallbackRuntime.prepare(
+    type = WGPUCreateRenderPipelineAsyncCallbackType,
+    trampoline = WGPUCreateRenderPipelineAsyncCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+private fun interface WGPUDeviceLostCallbackJna : com.sun.jna.Callback {
+    fun invoke(
+        device: Pointer?,
+        reason: Int,
+        message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue,
+        userdata1: Pointer?,
+        userdata2: Pointer?,
     )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUDeviceLostCallbackTrampoline {
+    private val callback: WGPUDeviceLostCallbackJna = WGPUDeviceLostCallbackJna { device, reason, message, userdata1, userdata2 ->
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUDeviceLostCallbackType,
+                userdata = userdata2,
+            ) { callback ->
+                callback.invoke(
+                    device,
+                    reason.toUInt() as WGPUDeviceLostReason,
+                    WGPUStringView.ByValue(message),
+                    userdata1,
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+    val address: NativeAddress by lazy {
+        CallbackReference.getFunctionPointer(callback)
+    }
 }
 
 @OptIn(CallbackRuntimeApi::class)
@@ -10858,21 +11465,59 @@ actual fun WGPUDeviceLostCallback.Companion.register(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUDeviceLostCallback,
-): CallbackRegistration<WGPUDeviceLostCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): CallbackRegistration<WGPUDeviceLostCallback> = CallbackRuntime.register(
+    type = WGPUDeviceLostCallbackType,
+    trampoline = WGPUDeviceLostCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @OptIn(CallbackRuntimeApi::class)
 internal actual fun WGPUDeviceLostCallback.Companion.prepare(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUDeviceLostCallback,
-): PreparedCallbackRegistration<WGPUDeviceLostCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+): PreparedCallbackRegistration<WGPUDeviceLostCallback> = CallbackRuntime.prepare(
+    type = WGPUDeviceLostCallbackType,
+    trampoline = WGPUDeviceLostCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+private fun interface WGPUPopErrorScopeCallbackJna : com.sun.jna.Callback {
+    fun invoke(
+        status: Int,
+        type: Int,
+        message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue,
+        userdata1: Pointer?,
+        userdata2: Pointer?,
     )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUPopErrorScopeCallbackTrampoline {
+    private val callback: WGPUPopErrorScopeCallbackJna = WGPUPopErrorScopeCallbackJna { status, type, message, userdata1, userdata2 ->
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUPopErrorScopeCallbackType,
+                userdata = userdata2,
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPUPopErrorScopeStatus,
+                    type.toUInt() as WGPUErrorType,
+                    WGPUStringView.ByValue(message),
+                    userdata1,
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+    val address: NativeAddress by lazy {
+        CallbackReference.getFunctionPointer(callback)
+    }
 }
 
 @OptIn(CallbackRuntimeApi::class)
@@ -10880,21 +11525,57 @@ actual fun WGPUPopErrorScopeCallback.Companion.register(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUPopErrorScopeCallback,
-): CallbackRegistration<WGPUPopErrorScopeCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): CallbackRegistration<WGPUPopErrorScopeCallback> = CallbackRuntime.register(
+    type = WGPUPopErrorScopeCallbackType,
+    trampoline = WGPUPopErrorScopeCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @OptIn(CallbackRuntimeApi::class)
 internal actual fun WGPUPopErrorScopeCallback.Companion.prepare(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUPopErrorScopeCallback,
-): PreparedCallbackRegistration<WGPUPopErrorScopeCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+): PreparedCallbackRegistration<WGPUPopErrorScopeCallback> = CallbackRuntime.prepare(
+    type = WGPUPopErrorScopeCallbackType,
+    trampoline = WGPUPopErrorScopeCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+private fun interface WGPUQueueWorkDoneCallbackJna : com.sun.jna.Callback {
+    fun invoke(
+        status: Int,
+        message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue,
+        userdata1: Pointer?,
+        userdata2: Pointer?,
     )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUQueueWorkDoneCallbackTrampoline {
+    private val callback: WGPUQueueWorkDoneCallbackJna = WGPUQueueWorkDoneCallbackJna { status, message, userdata1, userdata2 ->
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUQueueWorkDoneCallbackType,
+                userdata = userdata2,
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPUQueueWorkDoneStatus,
+                    WGPUStringView.ByValue(message),
+                    userdata1,
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+    val address: NativeAddress by lazy {
+        CallbackReference.getFunctionPointer(callback)
+    }
 }
 
 @OptIn(CallbackRuntimeApi::class)
@@ -10902,21 +11583,59 @@ actual fun WGPUQueueWorkDoneCallback.Companion.register(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUQueueWorkDoneCallback,
-): CallbackRegistration<WGPUQueueWorkDoneCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): CallbackRegistration<WGPUQueueWorkDoneCallback> = CallbackRuntime.register(
+    type = WGPUQueueWorkDoneCallbackType,
+    trampoline = WGPUQueueWorkDoneCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @OptIn(CallbackRuntimeApi::class)
 internal actual fun WGPUQueueWorkDoneCallback.Companion.prepare(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUQueueWorkDoneCallback,
-): PreparedCallbackRegistration<WGPUQueueWorkDoneCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+): PreparedCallbackRegistration<WGPUQueueWorkDoneCallback> = CallbackRuntime.prepare(
+    type = WGPUQueueWorkDoneCallbackType,
+    trampoline = WGPUQueueWorkDoneCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+private fun interface WGPURequestAdapterCallbackJna : com.sun.jna.Callback {
+    fun invoke(
+        status: Int,
+        adapter: Pointer?,
+        message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue,
+        userdata1: Pointer?,
+        userdata2: Pointer?,
     )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPURequestAdapterCallbackTrampoline {
+    private val callback: WGPURequestAdapterCallbackJna = WGPURequestAdapterCallbackJna { status, adapter, message, userdata1, userdata2 ->
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPURequestAdapterCallbackType,
+                userdata = userdata2,
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPURequestAdapterStatus,
+                    adapter?.let { WGPUAdapter(it) },
+                    WGPUStringView.ByValue(message),
+                    userdata1,
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+    val address: NativeAddress by lazy {
+        CallbackReference.getFunctionPointer(callback)
+    }
 }
 
 @OptIn(CallbackRuntimeApi::class)
@@ -10924,21 +11643,59 @@ actual fun WGPURequestAdapterCallback.Companion.register(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPURequestAdapterCallback,
-): CallbackRegistration<WGPURequestAdapterCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): CallbackRegistration<WGPURequestAdapterCallback> = CallbackRuntime.register(
+    type = WGPURequestAdapterCallbackType,
+    trampoline = WGPURequestAdapterCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @OptIn(CallbackRuntimeApi::class)
 internal actual fun WGPURequestAdapterCallback.Companion.prepare(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPURequestAdapterCallback,
-): PreparedCallbackRegistration<WGPURequestAdapterCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+): PreparedCallbackRegistration<WGPURequestAdapterCallback> = CallbackRuntime.prepare(
+    type = WGPURequestAdapterCallbackType,
+    trampoline = WGPURequestAdapterCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+private fun interface WGPURequestDeviceCallbackJna : com.sun.jna.Callback {
+    fun invoke(
+        status: Int,
+        device: Pointer?,
+        message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue,
+        userdata1: Pointer?,
+        userdata2: Pointer?,
     )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPURequestDeviceCallbackTrampoline {
+    private val callback: WGPURequestDeviceCallbackJna = WGPURequestDeviceCallbackJna { status, device, message, userdata1, userdata2 ->
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPURequestDeviceCallbackType,
+                userdata = userdata2,
+            ) { callback ->
+                callback.invoke(
+                    status.toUInt() as WGPURequestDeviceStatus,
+                    device?.let { WGPUDevice(it) },
+                    WGPUStringView.ByValue(message),
+                    userdata1,
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+    val address: NativeAddress by lazy {
+        CallbackReference.getFunctionPointer(callback)
+    }
 }
 
 @OptIn(CallbackRuntimeApi::class)
@@ -10946,21 +11703,59 @@ actual fun WGPURequestDeviceCallback.Companion.register(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPURequestDeviceCallback,
-): CallbackRegistration<WGPURequestDeviceCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): CallbackRegistration<WGPURequestDeviceCallback> = CallbackRuntime.register(
+    type = WGPURequestDeviceCallbackType,
+    trampoline = WGPURequestDeviceCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @OptIn(CallbackRuntimeApi::class)
 internal actual fun WGPURequestDeviceCallback.Companion.prepare(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPURequestDeviceCallback,
-): PreparedCallbackRegistration<WGPURequestDeviceCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+): PreparedCallbackRegistration<WGPURequestDeviceCallback> = CallbackRuntime.prepare(
+    type = WGPURequestDeviceCallbackType,
+    trampoline = WGPURequestDeviceCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+private fun interface WGPUUncapturedErrorCallbackJna : com.sun.jna.Callback {
+    fun invoke(
+        device: Pointer?,
+        type: Int,
+        message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue,
+        userdata1: Pointer?,
+        userdata2: Pointer?,
     )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPUUncapturedErrorCallbackTrampoline {
+    private val callback: WGPUUncapturedErrorCallbackJna = WGPUUncapturedErrorCallbackJna { device, type, message, userdata1, userdata2 ->
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPUUncapturedErrorCallbackType,
+                userdata = userdata2,
+            ) { callback ->
+                callback.invoke(
+                    device,
+                    type.toUInt() as WGPUErrorType,
+                    WGPUStringView.ByValue(message),
+                    userdata1,
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+    val address: NativeAddress by lazy {
+        CallbackReference.getFunctionPointer(callback)
+    }
 }
 
 @OptIn(CallbackRuntimeApi::class)
@@ -10968,21 +11763,55 @@ actual fun WGPUUncapturedErrorCallback.Companion.register(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUUncapturedErrorCallback,
-): CallbackRegistration<WGPUUncapturedErrorCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): CallbackRegistration<WGPUUncapturedErrorCallback> = CallbackRuntime.register(
+    type = WGPUUncapturedErrorCallbackType,
+    trampoline = WGPUUncapturedErrorCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @OptIn(CallbackRuntimeApi::class)
 internal actual fun WGPUUncapturedErrorCallback.Companion.prepare(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPUUncapturedErrorCallback,
-): PreparedCallbackRegistration<WGPUUncapturedErrorCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
+): PreparedCallbackRegistration<WGPUUncapturedErrorCallback> = CallbackRuntime.prepare(
+    type = WGPUUncapturedErrorCallbackType,
+    trampoline = WGPUUncapturedErrorCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
+
+private fun interface WGPULogCallbackJna : com.sun.jna.Callback {
+    fun invoke(
+        level: Int,
+        message: io.ygdrasil.wgpu.android.WGPUStringView.ByValue,
+        userdata: Pointer?,
     )
+}
+
+@OptIn(CallbackRuntimeApi::class)
+private object WGPULogCallbackTrampoline {
+    private val callback: WGPULogCallbackJna = WGPULogCallbackJna { level, message, userdata ->
+        try {
+            CallbackRuntime.dispatchSafely(
+                type = WGPULogCallbackType,
+                userdata = userdata,
+            ) { callback ->
+                callback.invoke(
+                    level.toUInt() as WGPULogLevel,
+                    WGPUStringView.ByValue(message),
+                )
+            }
+        } catch (failure: Throwable) {
+            CallbackRuntime.reportUnroutedFailure(failure)
+        }
+    }
+    val address: NativeAddress by lazy {
+        CallbackReference.getFunctionPointer(callback)
+    }
 }
 
 @OptIn(CallbackRuntimeApi::class)
@@ -10990,26 +11819,32 @@ actual fun WGPULogCallback.Companion.register(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPULogCallback,
-): CallbackRegistration<WGPULogCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): CallbackRegistration<WGPULogCallback> = CallbackRuntime.register(
+    type = WGPULogCallbackType,
+    trampoline = WGPULogCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 @OptIn(CallbackRuntimeApi::class)
 internal actual fun WGPULogCallback.Companion.prepare(
     policy: CallbackPolicy,
     onError: CallbackExceptionHandler,
     callback: WGPULogCallback,
-): PreparedCallbackRegistration<WGPULogCallback> {
-    throw UnsupportedOperationException(
-        "Android/JNA callback registration is not supported; use raw bindings or an Android Native target",
-    )
-}
+): PreparedCallbackRegistration<WGPULogCallback> = CallbackRuntime.prepare(
+    type = WGPULogCallbackType,
+    trampoline = WGPULogCallbackTrampoline.address,
+    policy = policy,
+    onError = onError,
+    callback = callback,
+)
 
 internal actual fun wgpuSetLogCallbackCallbackBindingPreflight(): (NativeAddress?, NativeAddress?) -> Unit {
-    throw UnsupportedOperationException(
-        "Android/JNA safe callback bindings are not supported; use raw bindings or an Android Native target",
-    )
+    return { callback, userdata ->
+        io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSetLogCallback(
+            callback,
+            userdata,
+        )
+    }
 }
-
