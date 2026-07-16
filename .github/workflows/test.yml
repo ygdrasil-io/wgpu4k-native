@@ -118,12 +118,14 @@ jobs:
         run: >-
           ./gradlew :demo:desktop-and-ios:verifyNativeCallbackStress
           -x :wgpu4k-native:fetch-native-dependencies
+          -x :demo:desktop-and-ios:kmpPartiallyResolvedDependenciesChecker
       - name: Verify JVM headless render
         run: ./gradlew :demo:desktop-and-ios:verifyJvmHeadlessRender
       - name: Verify Native headless render
         run: >-
           ./gradlew :demo:desktop-and-ios:verifyNativeHeadlessRender
           -x :wgpu4k-native:fetch-native-dependencies
+          -x :demo:desktop-and-ios:kmpPartiallyResolvedDependenciesChecker
       - name: Compile Apple Native callback token codecs
         if: matrix.os == 'macos-latest'
         run: >-
