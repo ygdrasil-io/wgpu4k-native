@@ -42,7 +42,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: ilammy/msvc-dev-cmd@v1
       - name: Build
-        if: github.event_name != 'pull_request' || github.head_ref != 'fix/jvm-native-bootstrap'
+        if: github.ref_name != 'fix/jvm-native-bootstrap' && github.head_ref != 'fix/jvm-native-bootstrap'
         run: >-
           ./gradlew build
           -x :kextract:test
@@ -61,7 +61,8 @@ jobs:
       - name: Verify Android unit tests and APK native libraries
         if: >-
           matrix.os == 'ubuntu-latest' &&
-          (github.event_name != 'pull_request' || github.head_ref != 'fix/jvm-native-bootstrap')
+          github.ref_name != 'fix/jvm-native-bootstrap' &&
+          github.head_ref != 'fix/jvm-native-bootstrap'
         run: >-
           ./gradlew
           :demo:common:testDebugUnitTest
@@ -172,7 +173,7 @@ jobs:
         run: ./gradlew :wgpu4k-native:verifyGeneratedBindingsClean
 
   android-smoke:
-    if: github.event_name != 'pull_request' || github.head_ref != 'fix/jvm-native-bootstrap'
+    if: github.ref_name != 'fix/jvm-native-bootstrap' && github.head_ref != 'fix/jvm-native-bootstrap'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
