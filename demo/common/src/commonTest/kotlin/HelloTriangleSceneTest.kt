@@ -1,14 +1,13 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.memoryScope
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 class HelloTriangleSceneTest {
     @Test
-    fun closeReleasesPipelineBeforeQueueExactlyOnce() = memoryScope { scope ->
-        val handle = scope.allocate(8)
+    fun closeReleasesPipelineBeforeQueueExactlyOnce() {
+        val handle = testNativeAddress()
         val releases = mutableListOf<String>()
         val scene = HelloTriangleScene(
             device = WGPUDevice(handle),

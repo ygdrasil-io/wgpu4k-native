@@ -1,5 +1,7 @@
 package io.ygdrasil.wgpu.android
 
+import com.sun.jna.Library
+import com.sun.jna.Native
 import com.sun.jna.Pointer
 import com.sun.jna.Structure
 import com.sun.jna.Union
@@ -1199,5 +1201,238 @@ open class WGPUPrimitiveStateExtras(pointer: Pointer? = null) : Structure(pointe
     override fun getFieldOrder() = listOf<String>("chain", "polygonMode", "conservative")
     class ByReference(pointer: Pointer? = null) : WGPUPrimitiveStateExtras(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUPrimitiveStateExtras(pointer), Structure.ByValue
+}
+
+internal interface wgpu_hLibrary : Library {
+    fun wgpuCreateInstance(descriptor: Pointer?): Pointer?
+    fun wgpuGetInstanceFeatures(features: Pointer?): Unit
+    fun wgpuGetInstanceLimits(limits: Pointer?): Int
+    fun wgpuHasInstanceFeature(feature: Int): Int
+    fun wgpuGetProcAddress(procName: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Pointer?
+    fun wgpuAdapterGetFeatures(adapter: Pointer?, features: Pointer?): Unit
+    fun wgpuAdapterGetInfo(adapter: Pointer?, info: Pointer?): Int
+    fun wgpuAdapterGetLimits(adapter: Pointer?, limits: Pointer?): Int
+    fun wgpuAdapterHasFeature(adapter: Pointer?, feature: Int): Int
+    fun wgpuAdapterRequestDevice(adapter: Pointer?, descriptor: Pointer?, callbackInfo: io.ygdrasil.wgpu.android.WGPURequestDeviceCallbackInfo.ByValue): io.ygdrasil.wgpu.android.WGPUFuture.ByValue
+    fun wgpuAdapterAddRef(adapter: Pointer?): Unit
+    fun wgpuAdapterRelease(adapter: Pointer?): Unit
+    fun wgpuAdapterInfoFreeMembers(adapterInfo: io.ygdrasil.wgpu.android.WGPUAdapterInfo.ByValue): Unit
+    fun wgpuBindGroupSetLabel(bindGroup: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuBindGroupAddRef(bindGroup: Pointer?): Unit
+    fun wgpuBindGroupRelease(bindGroup: Pointer?): Unit
+    fun wgpuBindGroupLayoutSetLabel(bindGroupLayout: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuBindGroupLayoutAddRef(bindGroupLayout: Pointer?): Unit
+    fun wgpuBindGroupLayoutRelease(bindGroupLayout: Pointer?): Unit
+    fun wgpuBufferDestroy(buffer: Pointer?): Unit
+    fun wgpuBufferGetConstMappedRange(buffer: Pointer?, offset: Long, size: Long): Pointer?
+    fun wgpuBufferGetMappedRange(buffer: Pointer?, offset: Long, size: Long): Pointer?
+    fun wgpuBufferGetMapState(buffer: Pointer?): Int
+    fun wgpuBufferGetSize(buffer: Pointer?): Long
+    fun wgpuBufferGetUsage(buffer: Pointer?): Long
+    fun wgpuBufferMapAsync(buffer: Pointer?, mode: Long, offset: Long, size: Long, callbackInfo: io.ygdrasil.wgpu.android.WGPUBufferMapCallbackInfo.ByValue): io.ygdrasil.wgpu.android.WGPUFuture.ByValue
+    fun wgpuBufferReadMappedRange(buffer: Pointer?, offset: Long, data: Pointer?, size: Long): Int
+    fun wgpuBufferSetLabel(buffer: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuBufferUnmap(buffer: Pointer?): Unit
+    fun wgpuBufferWriteMappedRange(buffer: Pointer?, offset: Long, data: Pointer?, size: Long): Int
+    fun wgpuBufferAddRef(buffer: Pointer?): Unit
+    fun wgpuBufferRelease(buffer: Pointer?): Unit
+    fun wgpuCommandBufferSetLabel(commandBuffer: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuCommandBufferAddRef(commandBuffer: Pointer?): Unit
+    fun wgpuCommandBufferRelease(commandBuffer: Pointer?): Unit
+    fun wgpuCommandEncoderBeginComputePass(commandEncoder: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuCommandEncoderBeginRenderPass(commandEncoder: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuCommandEncoderClearBuffer(commandEncoder: Pointer?, buffer: Pointer?, offset: Long, size: Long): Unit
+    fun wgpuCommandEncoderCopyBufferToBuffer(commandEncoder: Pointer?, source: Pointer?, sourceOffset: Long, destination: Pointer?, destinationOffset: Long, size: Long): Unit
+    fun wgpuCommandEncoderCopyBufferToTexture(commandEncoder: Pointer?, source: Pointer?, destination: Pointer?, copySize: Pointer?): Unit
+    fun wgpuCommandEncoderCopyTextureToBuffer(commandEncoder: Pointer?, source: Pointer?, destination: Pointer?, copySize: Pointer?): Unit
+    fun wgpuCommandEncoderCopyTextureToTexture(commandEncoder: Pointer?, source: Pointer?, destination: Pointer?, copySize: Pointer?): Unit
+    fun wgpuCommandEncoderFinish(commandEncoder: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuCommandEncoderInsertDebugMarker(commandEncoder: Pointer?, markerLabel: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuCommandEncoderPopDebugGroup(commandEncoder: Pointer?): Unit
+    fun wgpuCommandEncoderPushDebugGroup(commandEncoder: Pointer?, groupLabel: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuCommandEncoderResolveQuerySet(commandEncoder: Pointer?, querySet: Pointer?, firstQuery: Int, queryCount: Int, destination: Pointer?, destinationOffset: Long): Unit
+    fun wgpuCommandEncoderSetLabel(commandEncoder: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuCommandEncoderWriteTimestamp(commandEncoder: Pointer?, querySet: Pointer?, queryIndex: Int): Unit
+    fun wgpuCommandEncoderAddRef(commandEncoder: Pointer?): Unit
+    fun wgpuCommandEncoderRelease(commandEncoder: Pointer?): Unit
+    fun wgpuComputePassEncoderDispatchWorkgroups(computePassEncoder: Pointer?, workgroupCountX: Int, workgroupCountY: Int, workgroupCountZ: Int): Unit
+    fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(computePassEncoder: Pointer?, indirectBuffer: Pointer?, indirectOffset: Long): Unit
+    fun wgpuComputePassEncoderEnd(computePassEncoder: Pointer?): Unit
+    fun wgpuComputePassEncoderInsertDebugMarker(computePassEncoder: Pointer?, markerLabel: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuComputePassEncoderPopDebugGroup(computePassEncoder: Pointer?): Unit
+    fun wgpuComputePassEncoderPushDebugGroup(computePassEncoder: Pointer?, groupLabel: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: Pointer?, groupIndex: Int, group: Pointer?, dynamicOffsetCount: Long, dynamicOffsets: Pointer?): Unit
+    fun wgpuComputePassEncoderSetLabel(computePassEncoder: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuComputePassEncoderSetPipeline(computePassEncoder: Pointer?, pipeline: Pointer?): Unit
+    fun wgpuComputePassEncoderAddRef(computePassEncoder: Pointer?): Unit
+    fun wgpuComputePassEncoderRelease(computePassEncoder: Pointer?): Unit
+    fun wgpuComputePipelineGetBindGroupLayout(computePipeline: Pointer?, groupIndex: Int): Pointer?
+    fun wgpuComputePipelineSetLabel(computePipeline: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuComputePipelineAddRef(computePipeline: Pointer?): Unit
+    fun wgpuComputePipelineRelease(computePipeline: Pointer?): Unit
+    fun wgpuDeviceCreateBindGroup(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuDeviceCreateBindGroupLayout(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuDeviceCreateBuffer(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuDeviceCreateCommandEncoder(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuDeviceCreateComputePipeline(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuDeviceCreateComputePipelineAsync(device: Pointer?, descriptor: Pointer?, callbackInfo: io.ygdrasil.wgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByValue): io.ygdrasil.wgpu.android.WGPUFuture.ByValue
+    fun wgpuDeviceCreatePipelineLayout(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuDeviceCreateQuerySet(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuDeviceCreateRenderBundleEncoder(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuDeviceCreateRenderPipeline(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuDeviceCreateRenderPipelineAsync(device: Pointer?, descriptor: Pointer?, callbackInfo: io.ygdrasil.wgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue): io.ygdrasil.wgpu.android.WGPUFuture.ByValue
+    fun wgpuDeviceCreateSampler(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuDeviceCreateShaderModule(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuDeviceCreateTexture(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuDeviceDestroy(device: Pointer?): Unit
+    fun wgpuDeviceGetAdapterInfo(device: Pointer?, adapterInfo: Pointer?): Int
+    fun wgpuDeviceGetFeatures(device: Pointer?, features: Pointer?): Unit
+    fun wgpuDeviceGetLimits(device: Pointer?, limits: Pointer?): Int
+    fun wgpuDeviceGetLostFuture(device: Pointer?): io.ygdrasil.wgpu.android.WGPUFuture.ByValue
+    fun wgpuDeviceGetQueue(device: Pointer?): Pointer?
+    fun wgpuDeviceHasFeature(device: Pointer?, feature: Int): Int
+    fun wgpuDevicePopErrorScope(device: Pointer?, callbackInfo: io.ygdrasil.wgpu.android.WGPUPopErrorScopeCallbackInfo.ByValue): io.ygdrasil.wgpu.android.WGPUFuture.ByValue
+    fun wgpuDevicePushErrorScope(device: Pointer?, filter: Int): Unit
+    fun wgpuDeviceSetLabel(device: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuDeviceAddRef(device: Pointer?): Unit
+    fun wgpuDeviceRelease(device: Pointer?): Unit
+    fun wgpuExternalTextureSetLabel(externalTexture: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuExternalTextureAddRef(externalTexture: Pointer?): Unit
+    fun wgpuExternalTextureRelease(externalTexture: Pointer?): Unit
+    fun wgpuInstanceCreateSurface(instance: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuInstanceGetWGSLLanguageFeatures(instance: Pointer?, features: Pointer?): Unit
+    fun wgpuInstanceHasWGSLLanguageFeature(instance: Pointer?, feature: Int): Int
+    fun wgpuInstanceProcessEvents(instance: Pointer?): Unit
+    fun wgpuInstanceRequestAdapter(instance: Pointer?, options: Pointer?, callbackInfo: io.ygdrasil.wgpu.android.WGPURequestAdapterCallbackInfo.ByValue): io.ygdrasil.wgpu.android.WGPUFuture.ByValue
+    fun wgpuInstanceWaitAny(instance: Pointer?, futureCount: Long, futures: Pointer?, timeoutNS: Long): Int
+    fun wgpuInstanceAddRef(instance: Pointer?): Unit
+    fun wgpuInstanceRelease(instance: Pointer?): Unit
+    fun wgpuPipelineLayoutSetLabel(pipelineLayout: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuPipelineLayoutAddRef(pipelineLayout: Pointer?): Unit
+    fun wgpuPipelineLayoutRelease(pipelineLayout: Pointer?): Unit
+    fun wgpuQuerySetDestroy(querySet: Pointer?): Unit
+    fun wgpuQuerySetGetCount(querySet: Pointer?): Int
+    fun wgpuQuerySetGetType(querySet: Pointer?): Int
+    fun wgpuQuerySetSetLabel(querySet: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuQuerySetAddRef(querySet: Pointer?): Unit
+    fun wgpuQuerySetRelease(querySet: Pointer?): Unit
+    fun wgpuQueueOnSubmittedWorkDone(queue: Pointer?, callbackInfo: io.ygdrasil.wgpu.android.WGPUQueueWorkDoneCallbackInfo.ByValue): io.ygdrasil.wgpu.android.WGPUFuture.ByValue
+    fun wgpuQueueSetLabel(queue: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuQueueSubmit(queue: Pointer?, commandCount: Long, commands: Pointer?): Unit
+    fun wgpuQueueWriteBuffer(queue: Pointer?, buffer: Pointer?, bufferOffset: Long, data: Pointer?, size: Long): Unit
+    fun wgpuQueueWriteTexture(queue: Pointer?, destination: Pointer?, data: Pointer?, dataSize: Long, dataLayout: Pointer?, writeSize: Pointer?): Unit
+    fun wgpuQueueAddRef(queue: Pointer?): Unit
+    fun wgpuQueueRelease(queue: Pointer?): Unit
+    fun wgpuRenderBundleSetLabel(renderBundle: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuRenderBundleAddRef(renderBundle: Pointer?): Unit
+    fun wgpuRenderBundleRelease(renderBundle: Pointer?): Unit
+    fun wgpuRenderBundleEncoderDraw(renderBundleEncoder: Pointer?, vertexCount: Int, instanceCount: Int, firstVertex: Int, firstInstance: Int): Unit
+    fun wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder: Pointer?, indexCount: Int, instanceCount: Int, firstIndex: Int, baseVertex: Int, firstInstance: Int): Unit
+    fun wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder: Pointer?, indirectBuffer: Pointer?, indirectOffset: Long): Unit
+    fun wgpuRenderBundleEncoderDrawIndirect(renderBundleEncoder: Pointer?, indirectBuffer: Pointer?, indirectOffset: Long): Unit
+    fun wgpuRenderBundleEncoderFinish(renderBundleEncoder: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder: Pointer?, markerLabel: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder: Pointer?): Unit
+    fun wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: Pointer?, groupLabel: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: Pointer?, groupIndex: Int, group: Pointer?, dynamicOffsetCount: Long, dynamicOffsets: Pointer?): Unit
+    fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: Pointer?, buffer: Pointer?, format: Int, offset: Long, size: Long): Unit
+    fun wgpuRenderBundleEncoderSetLabel(renderBundleEncoder: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder: Pointer?, pipeline: Pointer?): Unit
+    fun wgpuRenderBundleEncoderSetVertexBuffer(renderBundleEncoder: Pointer?, slot: Int, buffer: Pointer?, offset: Long, size: Long): Unit
+    fun wgpuRenderBundleEncoderAddRef(renderBundleEncoder: Pointer?): Unit
+    fun wgpuRenderBundleEncoderRelease(renderBundleEncoder: Pointer?): Unit
+    fun wgpuRenderPassEncoderBeginOcclusionQuery(renderPassEncoder: Pointer?, queryIndex: Int): Unit
+    fun wgpuRenderPassEncoderDraw(renderPassEncoder: Pointer?, vertexCount: Int, instanceCount: Int, firstVertex: Int, firstInstance: Int): Unit
+    fun wgpuRenderPassEncoderDrawIndexed(renderPassEncoder: Pointer?, indexCount: Int, instanceCount: Int, firstIndex: Int, baseVertex: Int, firstInstance: Int): Unit
+    fun wgpuRenderPassEncoderDrawIndexedIndirect(renderPassEncoder: Pointer?, indirectBuffer: Pointer?, indirectOffset: Long): Unit
+    fun wgpuRenderPassEncoderDrawIndirect(renderPassEncoder: Pointer?, indirectBuffer: Pointer?, indirectOffset: Long): Unit
+    fun wgpuRenderPassEncoderEnd(renderPassEncoder: Pointer?): Unit
+    fun wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: Pointer?): Unit
+    fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: Pointer?, bundleCount: Long, bundles: Pointer?): Unit
+    fun wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: Pointer?, markerLabel: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder: Pointer?): Unit
+    fun wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: Pointer?, groupLabel: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: Pointer?, groupIndex: Int, group: Pointer?, dynamicOffsetCount: Long, dynamicOffsets: Pointer?): Unit
+    fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: Pointer?, color: Pointer?): Unit
+    fun wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: Pointer?, buffer: Pointer?, format: Int, offset: Long, size: Long): Unit
+    fun wgpuRenderPassEncoderSetLabel(renderPassEncoder: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuRenderPassEncoderSetPipeline(renderPassEncoder: Pointer?, pipeline: Pointer?): Unit
+    fun wgpuRenderPassEncoderSetScissorRect(renderPassEncoder: Pointer?, x: Int, y: Int, width: Int, height: Int): Unit
+    fun wgpuRenderPassEncoderSetStencilReference(renderPassEncoder: Pointer?, reference: Int): Unit
+    fun wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder: Pointer?, slot: Int, buffer: Pointer?, offset: Long, size: Long): Unit
+    fun wgpuRenderPassEncoderSetViewport(renderPassEncoder: Pointer?, x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float): Unit
+    fun wgpuRenderPassEncoderAddRef(renderPassEncoder: Pointer?): Unit
+    fun wgpuRenderPassEncoderRelease(renderPassEncoder: Pointer?): Unit
+    fun wgpuRenderPipelineGetBindGroupLayout(renderPipeline: Pointer?, groupIndex: Int): Pointer?
+    fun wgpuRenderPipelineSetLabel(renderPipeline: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuRenderPipelineAddRef(renderPipeline: Pointer?): Unit
+    fun wgpuRenderPipelineRelease(renderPipeline: Pointer?): Unit
+    fun wgpuSamplerSetLabel(sampler: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuSamplerAddRef(sampler: Pointer?): Unit
+    fun wgpuSamplerRelease(sampler: Pointer?): Unit
+    fun wgpuShaderModuleGetCompilationInfo(shaderModule: Pointer?, callbackInfo: io.ygdrasil.wgpu.android.WGPUCompilationInfoCallbackInfo.ByValue): io.ygdrasil.wgpu.android.WGPUFuture.ByValue
+    fun wgpuShaderModuleSetLabel(shaderModule: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuShaderModuleAddRef(shaderModule: Pointer?): Unit
+    fun wgpuShaderModuleRelease(shaderModule: Pointer?): Unit
+    fun wgpuSupportedFeaturesFreeMembers(supportedFeatures: io.ygdrasil.wgpu.android.WGPUSupportedFeatures.ByValue): Unit
+    fun wgpuSupportedInstanceFeaturesFreeMembers(supportedInstanceFeatures: io.ygdrasil.wgpu.android.WGPUSupportedInstanceFeatures.ByValue): Unit
+    fun wgpuSupportedWGSLLanguageFeaturesFreeMembers(supportedWGSLLanguageFeatures: io.ygdrasil.wgpu.android.WGPUSupportedWGSLLanguageFeatures.ByValue): Unit
+    fun wgpuSurfaceConfigure(surface: Pointer?, config: Pointer?): Unit
+    fun wgpuSurfaceGetCapabilities(surface: Pointer?, adapter: Pointer?, capabilities: Pointer?): Int
+    fun wgpuSurfaceGetCurrentTexture(surface: Pointer?, surfaceTexture: Pointer?): Unit
+    fun wgpuSurfacePresent(surface: Pointer?): Int
+    fun wgpuSurfaceSetLabel(surface: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuSurfaceUnconfigure(surface: Pointer?): Unit
+    fun wgpuSurfaceAddRef(surface: Pointer?): Unit
+    fun wgpuSurfaceRelease(surface: Pointer?): Unit
+    fun wgpuSurfaceCapabilitiesFreeMembers(surfaceCapabilities: io.ygdrasil.wgpu.android.WGPUSurfaceCapabilities.ByValue): Unit
+    fun wgpuTextureCreateView(texture: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuTextureDestroy(texture: Pointer?): Unit
+    fun wgpuTextureGetDepthOrArrayLayers(texture: Pointer?): Int
+    fun wgpuTextureGetDimension(texture: Pointer?): Int
+    fun wgpuTextureGetFormat(texture: Pointer?): Int
+    fun wgpuTextureGetHeight(texture: Pointer?): Int
+    fun wgpuTextureGetMipLevelCount(texture: Pointer?): Int
+    fun wgpuTextureGetSampleCount(texture: Pointer?): Int
+    fun wgpuTextureGetTextureBindingViewDimension(texture: Pointer?): Int
+    fun wgpuTextureGetUsage(texture: Pointer?): Long
+    fun wgpuTextureGetWidth(texture: Pointer?): Int
+    fun wgpuTextureSetLabel(texture: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuTextureAddRef(texture: Pointer?): Unit
+    fun wgpuTextureRelease(texture: Pointer?): Unit
+    fun wgpuTextureViewSetLabel(textureView: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
+    fun wgpuTextureViewAddRef(textureView: Pointer?): Unit
+    fun wgpuTextureViewRelease(textureView: Pointer?): Unit
+    fun wgpuGenerateReport(instance: Pointer?, report: Pointer?): Unit
+    fun wgpuInstanceEnumerateAdapters(instance: Pointer?, options: Pointer?, adapters: Pointer?): Long
+    fun wgpuQueueSubmitForIndex(queue: Pointer?, commandCount: Long, commands: Pointer?): Long
+    fun wgpuQueueGetTimestampPeriod(queue: Pointer?): Float
+    fun wgpuDevicePoll(device: Pointer?, wait: Int, submissionIndex: Pointer?): Int
+    fun wgpuDeviceCreateShaderModuleSpirV(device: Pointer?, descriptor: Pointer?): Pointer?
+    fun wgpuSetLogCallback(callback: Pointer?, userdata: Pointer?): Unit
+    fun wgpuSetLogLevel(level: Int): Unit
+    fun wgpuGetVersion(): Int
+    fun wgpuDeviceGetNativeMetalDevice(device: Pointer?): Pointer?
+    fun wgpuQueueGetNativeMetalCommandQueue(queue: Pointer?): Pointer?
+    fun wgpuTextureGetNativeMetalTexture(texture: Pointer?): Pointer?
+    fun wgpuRenderPassEncoderSetImmediates(encoder: Pointer?, offset: Int, sizeBytes: Int, data: Pointer?): Unit
+    fun wgpuComputePassEncoderSetImmediates(encoder: Pointer?, offset: Int, sizeBytes: Int, data: Pointer?): Unit
+    fun wgpuRenderBundleEncoderSetImmediates(encoder: Pointer?, offset: Int, sizeBytes: Int, data: Pointer?): Unit
+    fun wgpuRenderPassEncoderMultiDrawIndirect(encoder: Pointer?, buffer: Pointer?, offset: Long, count: Int): Unit
+    fun wgpuRenderPassEncoderMultiDrawIndexedIndirect(encoder: Pointer?, buffer: Pointer?, offset: Long, count: Int): Unit
+    fun wgpuRenderPassEncoderMultiDrawIndirectCount(encoder: Pointer?, buffer: Pointer?, offset: Long, count_buffer: Pointer?, count_buffer_offset: Long, max_count: Int): Unit
+    fun wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(encoder: Pointer?, buffer: Pointer?, offset: Long, count_buffer: Pointer?, count_buffer_offset: Long, max_count: Int): Unit
+    fun wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder: Pointer?, querySet: Pointer?, queryIndex: Int): Unit
+    fun wgpuComputePassEncoderEndPipelineStatisticsQuery(computePassEncoder: Pointer?): Unit
+    fun wgpuRenderPassEncoderBeginPipelineStatisticsQuery(renderPassEncoder: Pointer?, querySet: Pointer?, queryIndex: Int): Unit
+    fun wgpuRenderPassEncoderEndPipelineStatisticsQuery(renderPassEncoder: Pointer?): Unit
+    fun wgpuComputePassEncoderWriteTimestamp(computePassEncoder: Pointer?, querySet: Pointer?, queryIndex: Int): Unit
+    fun wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: Pointer?, querySet: Pointer?, queryIndex: Int): Unit
+    fun wgpuDeviceStartGraphicsDebuggerCapture(device: Pointer?): Int
+    fun wgpuDeviceStopGraphicsDebuggerCapture(device: Pointer?): Unit
+}
+
+internal val wgpu_hLibraryInstance: wgpu_hLibrary by lazy {
+    Native.load("wgpu4k", wgpu_hLibrary::class.java)
 }
 

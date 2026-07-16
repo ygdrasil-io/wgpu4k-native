@@ -41,13 +41,17 @@ kotlin {
         target.binaries.all {
             // Configure for 16KB page size support
             linkerOpts("-Wl,-z,max-page-size=16384", "-Wl,-z,common-page-size=16384")
+            val variant = buildType.name.lowercase()
+            val binaryOutputFile = outputFile
+            val copiedOutputFile = project.layout.buildDirectory
+                .file("androidJniLibs/$variant/$androidArch/${binaryOutputFile.name}")
+                .get()
+                .asFile
             linkTaskProvider.configure {
+                outputs.file(copiedOutputFile)
                 doLast {
-                    val sourceFile = outputFile.get()
-                    val destDir = project.layout.buildDirectory.dir("androidJniLibs/$androidArch").get().asFile
-                    destDir.mkdirs()
-                    val destFile = File(destDir, sourceFile.name)
-                    sourceFile.copyTo(destFile, overwrite = true)
+                    copiedOutputFile.parentFile.mkdirs()
+                    binaryOutputFile.copyTo(copiedOutputFile, overwrite = true)
                 }
             }
         }

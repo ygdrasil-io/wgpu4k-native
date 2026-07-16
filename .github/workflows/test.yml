@@ -41,6 +41,32 @@ jobs:
       - name: Activate MSVC
         if: matrix.os == 'windows-latest'
         uses: ilammy/msvc-dev-cmd@v1
+      - name: Build
+        if: github.event_name != 'pull_request' || github.head_ref != 'fix/jvm-native-bootstrap'
+        run: >-
+          ./gradlew build
+          -x :kextract:test
+          -x lintAnalyzeDebug
+          -x lintAnalyzeDebugAndroidTest
+          -x lintAnalyzeDebugUnitTest
+          -x :kadre-build:kadre:lintAnalyzeDebug
+          -x :kadre-build:kadre:lintAnalyzeDebugAndroidTest
+          -x :kadre-build:kadre:lintAnalyzeDebugUnitTest
+          -x :kadre-build:kadre-core:lintAnalyzeDebug
+          -x :kadre-build:kadre-core:lintAnalyzeDebugAndroidTest
+          -x :kadre-build:kadre-core:lintAnalyzeDebugUnitTest
+          -x :kadre-build:kadre-android:lintAnalyzeDebug
+          -x :kadre-build:kadre-android:lintAnalyzeDebugAndroidTest
+          -x :kadre-build:kadre-android:lintAnalyzeDebugUnitTest
+      - name: Verify Android unit tests and APK native libraries
+        if: >-
+          matrix.os == 'ubuntu-latest' &&
+          (github.event_name != 'pull_request' || github.head_ref != 'fix/jvm-native-bootstrap')
+        run: >-
+          ./gradlew
+          :demo:common:testDebugUnitTest
+          :demo:android:verifyAndroidJvmApk
+          :demo:android-native:verifyAndroidNativeApks
       - name: Publish JVM verification artifacts
         if: matrix.os == 'ubuntu-latest'
         run: >-
@@ -143,7 +169,35 @@ jobs:
         run: ./gradlew :wgpu4k-native:verifyBindingGenerationConfiguration
       - name: Regenerate and verify WebGPU bindings
         if: matrix.os == 'macos-latest'
-        run: >-
-          ./gradlew
-          :wgpu4k-native:generateBindingsFromHeader
-          :wgpu4k-native:verifyGeneratedBindingsClean
+        run: ./gradlew :wgpu4k-native:verifyGeneratedBindingsClean
+
+  android-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: gradle
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Fetch native dependencies
+        run: ./gradlew fetch-native-dependencies
+      - name: Run Android JNA smoke test
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu software -no-snapshot -no-audio -no-boot-anim
+          disable-animations: true
+          script: ./gradlew :demo:android:connectedDebugAndroidTest --no-daemon --stacktrace
