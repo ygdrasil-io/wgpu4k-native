@@ -12,6 +12,9 @@ val libraryDescription = "wgpu4k kotlin native binding."
 
 val signingKey = System.getenv("JRELEASER_GPG_SECRET_KEY")
 val signingPassword = System.getenv("JRELEASER_GPG_PASSPHRASE")
+val jvmVerificationPublication = providers.gradleProperty("wgpu4k.jvmVerificationPublication")
+    .map(String::toBoolean)
+    .orElse(false)
 
 if (!isSnapshot()) {
     signing {
@@ -38,7 +41,9 @@ val javadocJar by tasks.registering(Jar::class) {
 publishing {
     publications {
         withType<MavenPublication> {
-            artifact(javadocJar)
+            if (!jvmVerificationPublication.get()) {
+                artifact(javadocJar)
+            }
             pom {
                 name.set(project.name)
                 description.set(libraryDescription)

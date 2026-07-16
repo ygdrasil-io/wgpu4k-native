@@ -1,6 +1,5 @@
 package io.ygdrasil.wgpu
 
-import ffi.LibraryLoader
 import io.ygdrasil.kffi.NativeAddress
 import org.graphiks.kadre.ActiveEventLoop
 import org.graphiks.kadre.ApplicationHandler
@@ -31,7 +30,6 @@ fun main(args: Array<String>) {
         return
     }
 
-    LibraryLoader.load()
     configureLogs()
     EventLoop().runApp(HelloTriangleKadreApp())
 }

@@ -18,10 +18,5 @@ application {
 }
 
 tasks.named<JavaExec>("run") {
-    val nativeLibraryDirectory = layout.buildDirectory.dir("native-library")
-    doFirst {
-        nativeLibraryDirectory.get().asFile.mkdirs()
-    }
     jvmArgs("--enable-native-access=ALL-UNNAMED")
-    jvmArgs("-Djava.library.path=${nativeLibraryDirectory.get().asFile.absolutePath}")
 }

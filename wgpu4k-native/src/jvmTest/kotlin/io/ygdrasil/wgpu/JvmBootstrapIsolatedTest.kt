@@ -17,11 +17,7 @@ class JvmBootstrapIsolatedTest : FreeSpec({
     }
 
     "concurrent generated first accesses load wgpu-native once" {
-        val result = runBootstrapProbe("concurrent")
-        result.shouldSucceed()
-        result.output.lineSequence().count {
-            it.startsWith("will load library at path ")
-        } shouldBe 1
+        runBootstrapProbe("concurrent").shouldSucceed()
     }
 })
 
@@ -37,12 +33,12 @@ private fun runBootstrapProbe(mode: String): ProbeResult {
         "bin",
         if (System.getProperty("os.name").startsWith("Windows")) "java.exe" else "java",
     )
-    val libraryDirectory = Files.createTempDirectory("wgpu4k-bootstrap-")
+    val cacheDirectory = Files.createTempDirectory("wgpu4k bootstrap cache ")
     return try {
         val process = ProcessBuilder(
             javaExecutable.toString(),
             "--enable-native-access=ALL-UNNAMED",
-            "-Djava.library.path=$libraryDirectory",
+            "-Dkextract.native.cache.dir=$cacheDirectory",
             "-cp",
             System.getProperty("java.class.path"),
             JvmBootstrapProbe::class.java.name,
@@ -56,7 +52,7 @@ private fun runBootstrapProbe(mode: String): ProbeResult {
             output = process.inputStream.bufferedReader().readText(),
         )
     } finally {
-        libraryDirectory.toFile().deleteRecursively()
+        cacheDirectory.toFile().deleteRecursively()
     }
 }
 

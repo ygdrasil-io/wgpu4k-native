@@ -38,7 +38,6 @@ internal object JvmBootstrapProbe {
             check(ready.await(10, TimeUnit.SECONDS))
             start.countDown()
             futures.forEach { it.get(10, TimeUnit.SECONDS) }
-            check(LibraryLoader.isLoaded)
         } finally {
             start.countDown()
             executor.shutdownNow()

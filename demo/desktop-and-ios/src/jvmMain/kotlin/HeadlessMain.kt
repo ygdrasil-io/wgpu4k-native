@@ -1,13 +1,10 @@
 package io.ygdrasil.wgpu
 
-import ffi.LibraryLoader
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
 fun main(args: Array<String>) {
-    LibraryLoader.load()
-
     if ("--callback-stress" in args) {
         runCallbackStress()
         return
