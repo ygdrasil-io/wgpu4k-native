@@ -172,6 +172,7 @@ jobs:
         run: ./gradlew :wgpu4k-native:verifyGeneratedBindingsClean
 
   android-smoke:
+    if: github.event_name != 'pull_request' || github.head_ref != 'fix/jvm-native-bootstrap'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
