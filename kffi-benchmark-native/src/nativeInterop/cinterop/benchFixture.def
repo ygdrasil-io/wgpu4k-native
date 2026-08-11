@@ -1,0 +1,3 @@
+headers = bench_fixture.h
+package = benchFixture
+staticLibraries = libbench_fixture.a
