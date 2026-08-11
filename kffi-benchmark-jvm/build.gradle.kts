@@ -73,6 +73,7 @@ dependencies {
     jmh(project(":kffi"))
     jmh(project(":kffi-benchmark-spi"))
     jmh("org.jetbrains.kotlin:kotlin-stdlib")
+    jmh("com.google.code.gson:gson:2.13.1")
 }
 
 jmh {
