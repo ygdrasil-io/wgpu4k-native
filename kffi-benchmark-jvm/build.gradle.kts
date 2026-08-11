@@ -65,6 +65,10 @@ kotlin {
     }
 }
 
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(24)
+}
+
 dependencies {
     jmh(project(":kffi"))
     jmh(project(":kffi-benchmark-spi"))
