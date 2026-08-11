@@ -98,6 +98,8 @@ Créer `Graphiks-org/kffi` **tôt** (privé si besoin) plutôt qu'en fin de chan
 - Réduit le risque de la migration finale (histoire git propre via `git filter-repo`/subtree, cadence de release découplée).
 - La « migration finale » de P5 reste le moment où wgpu4k-native bascule sur la **version release** ; la décision utilisateur « migrer à la fin » est conservée, mais l'infrastructure est en place dès P0.
 
+- **P0 bis réalisé** : repo `Graphiks-org/kffi` vérifié existant (template KMP), workflows CI + snapshots ajoutés dans le worktree (staged pour subtree split en P5). Le développement continue dans wgpu4k-native ; la migration finale reste en P5.
+
 ### P1 — Migration namespace + backend Android
 
 **Migration namespace** (en une passe, en début de phase) :

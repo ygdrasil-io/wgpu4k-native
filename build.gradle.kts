@@ -30,9 +30,12 @@ val verifyPublicationMetadata by tasks.registering {
 	)
 	doLast {
 		val repository = publicationVerificationRepository.get().asFile
-		val coordinatePath = project.group.toString().replace('.', '/')
+		val kffiGroup = "org.graphiks"
+		val wgpuGroup = "io.ygdrasil"
+		val kffiCoordinatePath = kffiGroup.replace('.', '/')
+		val wgpuCoordinatePath = wgpuGroup.replace('.', '/')
 		val publishedVersion = project.version.toString()
-		fun uniquePublishedFile(artifact: String, extension: String): File {
+		fun uniquePublishedFile(coordinatePath: String, artifact: String, extension: String): File {
 			val versionDirectory = repository.resolve("$coordinatePath/$artifact/$publishedVersion")
 			val candidates = versionDirectory.listFiles { file ->
 				file.isFile &&
@@ -46,19 +49,19 @@ val verifyPublicationMetadata by tasks.registering {
 			return candidates.single()
 		}
 
-		uniquePublishedFile("kffi-jvm", "module")
-		val metadataFile = uniquePublishedFile("wgpu4k-native-jvm", "module")
+		uniquePublishedFile(kffiCoordinatePath, "kffi-jvm", "module")
+		val metadataFile = uniquePublishedFile(wgpuCoordinatePath, "wgpu4k-native-jvm", "module")
 		val root = JsonParser.parseString(metadataFile.readText()).asJsonObject
 		val dependencies = root.getAsJsonArray("variants")
 			.flatMap { variant ->
 				variant.asJsonObject.getAsJsonArray("dependencies")?.map { it.asJsonObject }.orEmpty()
 			}
 		val kffiDependencies = dependencies.filter { candidate ->
-			candidate["group"].asString == project.group.toString() &&
+			candidate["group"].asString == kffiGroup &&
 				candidate["module"].asString == "kffi"
 		}
 		require(kffiDependencies.isNotEmpty()) {
-			"Expected wgpu4k-native-jvm metadata to depend on ${project.group}:kffi"
+			"Expected wgpu4k-native-jvm metadata to depend on $kffiGroup:kffi"
 		}
 		val publishedDependencyVersions = kffiDependencies.map { dependency ->
 			dependency.getAsJsonObject("version").let { version ->
@@ -66,21 +69,21 @@ val verifyPublicationMetadata by tasks.registering {
 			}
 		}
 		require(publishedDependencyVersions.all { it == publishedVersion }) {
-			"Expected every wgpu4k-native-jvm metadata edge to ${project.group}:kffi " +
+			"Expected every wgpu4k-native-jvm metadata edge to $kffiGroup:kffi " +
 				"to use $publishedVersion, but found $publishedDependencyVersions"
 		}
 
-		val pomFile = uniquePublishedFile("wgpu4k-native-jvm", "pom")
+		val pomFile = uniquePublishedFile(wgpuCoordinatePath, "wgpu4k-native-jvm", "pom")
 		val pom = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(pomFile)
 		val pomDependencies = pom.getElementsByTagName("dependency")
 		val kffiJvmDependencies = (0 until pomDependencies.length)
 			.map { pomDependencies.item(it) as Element }
 			.filter { dependency ->
-				dependency.getElementsByTagName("groupId").item(0).textContent == project.group.toString() &&
+				dependency.getElementsByTagName("groupId").item(0).textContent == kffiGroup &&
 					dependency.getElementsByTagName("artifactId").item(0).textContent == "kffi-jvm"
 			}
 		require(kffiJvmDependencies.size == 1) {
-			"Expected exactly one ${project.group}:kffi-jvm dependency in $pomFile, " +
+			"Expected exactly one $kffiGroup:kffi-jvm dependency in $pomFile, " +
 				"but found ${kffiJvmDependencies.size}"
 		}
 		val pomDependencyVersion = kffiJvmDependencies.single()

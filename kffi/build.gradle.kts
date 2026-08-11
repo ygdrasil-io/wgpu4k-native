@@ -133,6 +133,16 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+group = "org.graphiks"
+
+afterEvaluate {
+	publishing {
+		publications.withType<MavenPublication>().all {
+			groupId = "org.graphiks"
+		}
+	}
+}
+
 kotlin {
 
     val macosArm64Target = macosArm64()
