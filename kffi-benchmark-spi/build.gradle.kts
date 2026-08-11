@@ -1,11 +1,18 @@
 plugins {
     `kotlin-multiplatform`
+    com.android.library
 }
 
 group = "org.graphiks"
 
 kotlin {
     jvm()
+    androidTarget {
+        android {
+            namespace = "org.graphiks.kffi.benchmark"
+            compileSdk = 36
+        }
+    }
     iosArm64()
     iosSimulatorArm64()
     macosArm64()
