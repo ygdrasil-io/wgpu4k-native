@@ -32,5 +32,8 @@ gradle-app.setting
 /.kotlin/
 /local.properties
 
+# Git worktrees
+/.worktrees/
+
 /demo/desktop-and-ios/iosApp.xcodeproj/xcuserdata/
 /demo/desktop-and-ios/iosApp.xcodeproj/project.xcworkspace/xcuserdata/
