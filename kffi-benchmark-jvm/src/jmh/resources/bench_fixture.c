@@ -43,3 +43,17 @@ void bench_fire_one(uint32_t value) {
         g_callback(value, g_callback_userdata);
     }
 }
+
+static bench_callback_no_userdata g_callback_no_userdata = NULL;
+
+void bench_set_callback_no_userdata(bench_callback_no_userdata cb) {
+    g_callback_no_userdata = cb;
+}
+
+void bench_fire_no_userdata(uint32_t count) {
+    for (uint32_t i = 0; i < count; ++i) {
+        if (g_callback_no_userdata != NULL) {
+            g_callback_no_userdata(i);
+        }
+    }
+}

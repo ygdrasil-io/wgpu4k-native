@@ -27,6 +27,11 @@ void bench_set_callback(bench_callback cb, void *routing_userdata);
 void bench_fire(uint32_t count);
 void bench_fire_one(uint32_t value);
 
+typedef void (*bench_callback_no_userdata)(uint32_t value);
+
+void bench_set_callback_no_userdata(bench_callback_no_userdata cb);
+void bench_fire_no_userdata(uint32_t count);
+
 #ifdef __cplusplus
 }
 #endif
