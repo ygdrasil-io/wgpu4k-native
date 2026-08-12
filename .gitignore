@@ -1,6 +1,7 @@
 .gradle
 **/build/
 !src/**/build/
+**/.cxx/
 .DS_Store
 
 # Ignore Gradle GUI config
