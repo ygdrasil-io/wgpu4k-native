@@ -4,9 +4,9 @@ package org.graphiks.kffi.benchmark.android
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.ygdrasil.kffi.memoryScope
-import org.graphiks.kffi.benchmark.BenchmarkAxis
 import org.graphiks.kffi.benchmark.BenchmarkReport
 import org.graphiks.kffi.benchmark.BenchmarkResult
+import org.graphiks.kffi.benchmark.BenchmarkScenario
 import org.junit.Test
 import org.junit.runner.RunWith
 import kotlin.system.measureNanoTime
@@ -34,8 +34,8 @@ class AndroidHarness {
             }
         }
         results += BenchmarkResult(
-            BenchmarkAxis.MARSHALING,
-            "writeInts16 x1000",
+            BenchmarkScenario.MARSHAL_ARRAY_I32_16.axis,
+            BenchmarkScenario.MARSHAL_ARRAY_I32_16.id,
             "android-device",
             ns / 1000.0,
         )

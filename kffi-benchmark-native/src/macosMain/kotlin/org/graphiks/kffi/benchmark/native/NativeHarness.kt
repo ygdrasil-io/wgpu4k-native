@@ -3,9 +3,9 @@
 package org.graphiks.kffi.benchmark.native
 
 import benchFixture.bench_empty
-import org.graphiks.kffi.benchmark.BenchmarkAxis
 import org.graphiks.kffi.benchmark.BenchmarkReport
 import org.graphiks.kffi.benchmark.BenchmarkResult
+import org.graphiks.kffi.benchmark.BenchmarkScenario
 import kotlin.native.CpuArchitecture
 import kotlin.native.Platform
 import kotlin.time.measureTime
@@ -41,8 +41,8 @@ private fun measureMarshaling(): Double {
 
 fun main() {
     val results = listOf(
-        BenchmarkResult(BenchmarkAxis.DOWNCALL, "empty", backendLabel, measureDowncallEmpty()),
-        BenchmarkResult(BenchmarkAxis.MARSHALING, "memoryScope_writeInts16", backendLabel, measureMarshaling()),
+        BenchmarkResult(BenchmarkScenario.DOWN_EMPTY.axis, BenchmarkScenario.DOWN_EMPTY.id, backendLabel, measureDowncallEmpty()),
+        BenchmarkResult(BenchmarkScenario.MARSHAL_ARRAY_I32_16.axis, BenchmarkScenario.MARSHAL_ARRAY_I32_16.id, backendLabel, measureMarshaling()),
     )
     println(BenchmarkReport.toMarkdown(backendLabel, results))
 }
