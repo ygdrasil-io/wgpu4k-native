@@ -56,4 +56,15 @@ class MemoryBufferAndroidTest : FreeSpec({
             shouldThrow<IllegalArgumentException> { buffer.writeInt(1, ULong.MAX_VALUE) }
         }
     }
+    "huge bufferOffset cannot bypass the array bounds check" {
+        memoryScope { allocator ->
+            val buffer = allocator.allocateBuffer(16uL)
+            shouldThrow<IllegalArgumentException> {
+                buffer.writeInts(IntArray(4), bufferOffset = ULong.MAX_VALUE)
+            }
+            shouldThrow<IllegalArgumentException> {
+                buffer.readInts(IntArray(4), arrayIndex = ULong.MAX_VALUE)
+            }
+        }
+    }
 })

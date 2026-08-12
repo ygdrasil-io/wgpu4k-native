@@ -52,8 +52,11 @@ actual class MemoryBuffer actual constructor(
         arrayIndex: ULong, bufferOffset: ULong, size: ULong,
     ) {
         val bytes = size * elementSize.toULong()
-        require(bufferOffset + bytes <= this.size) { "Out of destination bounds" }
-        require(arrayIndex * elementSize.toULong() + bytes <= arrayBytes.toULong()) { "Out of source bounds" }
+        require(bytes <= this.size && bufferOffset <= this.size - bytes) { "Out of destination bounds" }
+        require(
+            bytes <= arrayBytes.toULong() &&
+                arrayIndex * elementSize.toULong() <= arrayBytes.toULong() - bytes,
+        ) { "Out of source bounds" }
         unsafe.copyMemory(
             array, 16L + (arrayIndex * elementSize.toULong()).toLong(),
             null, base + bufferOffset.toLong(), bytes.toLong(),
@@ -65,8 +68,11 @@ actual class MemoryBuffer actual constructor(
         arrayIndex: ULong, bufferOffset: ULong, size: ULong,
     ) {
         val bytes = size * elementSize.toULong()
-        require(bufferOffset + bytes <= this.size) { "Out of source bounds" }
-        require(arrayIndex * elementSize.toULong() + bytes <= arrayBytes.toULong()) { "Out of destination bounds" }
+        require(bytes <= this.size && bufferOffset <= this.size - bytes) { "Out of source bounds" }
+        require(
+            bytes <= arrayBytes.toULong() &&
+                arrayIndex * elementSize.toULong() <= arrayBytes.toULong() - bytes,
+        ) { "Out of destination bounds" }
         unsafe.copyMemory(
             null, base + bufferOffset.toLong(),
             array, 16L + (arrayIndex * elementSize.toULong()).toLong(), bytes.toLong(),
