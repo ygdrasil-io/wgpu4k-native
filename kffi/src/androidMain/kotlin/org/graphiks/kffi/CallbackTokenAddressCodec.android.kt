@@ -1,27 +1,22 @@
 package org.graphiks.kffi
 
-import com.sun.jna.Native
-import com.sun.jna.Pointer
-
 internal actual object PlatformCallbackTokenAddressCodec : CallbackTokenAddressCodec {
-    init {
-        require(Native.POINTER_SIZE == Long.SIZE_BYTES) {
-            "KFFI callback tokens require a 64-bit Android/JNA pointer ABI, " +
-                "found ${Native.POINTER_SIZE * Byte.SIZE_BITS} bits"
-        }
-    }
+    private val pointerBytes: Int = AndroidUnsafe.get().addressSize()
 
-    actual override val pointerBits: Int = Native.POINTER_SIZE * Byte.SIZE_BITS
-    actual override val maxToken: ULong = Long.MAX_VALUE.toULong()
+    actual override val pointerBits: Int = pointerBytes * 8
+    actual override val maxToken: ULong =
+        if (pointerBytes == 8) Long.MAX_VALUE.toULong() else UInt.MAX_VALUE.toULong()
 
     actual override fun encode(token: ULong): NativeAddress {
         requireValidCallbackToken(token)
-        return Pointer(token.toLong())
+        require(token <= maxToken) {
+            "Callback token $token exceeds the ${pointerBits}-bit pointer ABI"
+        }
+        return NativeAddress(token.toLong())
     }
 
     actual override fun decode(address: NativeAddress?): ULong? {
-        if (address == null) return null
-        val token = Pointer.nativeValue(address).toULong()
+        val token = address?.rawValue?.toULong() ?: return null
         requireValidCallbackToken(token)
         return token
     }
