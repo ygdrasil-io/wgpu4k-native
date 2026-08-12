@@ -210,13 +210,6 @@ kotlin {
     }
 
     sourceSets {
-        androidMain {
-            dependencies {
-                val jna = libs.jna.get()
-                api("${jna.module.group}:${jna.module.name}:${jna.versionConstraint}:@aar")
-            }
-        }
-
         commonTest {
             dependencies {
                 implementation(libs.bundles.kotest)

@@ -31,11 +31,7 @@ kotlin {
         }
         val androidInstrumentedTest by getting {
             dependencies {
-                // kotest -> kotlinx-coroutines-debug -> jna-platform -> plain jna JAR collides
-                // with :kffi's api(jna @aar); exclude to keep the single aar variant.
-                implementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}") {
-                    exclude(group = "net.java.dev.jna")
-                }
+                implementation("io.kotest:kotest-runner-junit5:${libs.versions.kotest.get()}")
                 implementation(libs.androidx.test.ext.junit)
                 implementation(libs.androidx.test.runner)
             }
