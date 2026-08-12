@@ -64,6 +64,36 @@ private object BenchCallbackTrampoline {
     }
 }
 
+private fun interface BenchCallbackNoUserdata : Callback {
+    fun invoke(value: UInt)
+}
+
+private val BenchCallbackNoUserdataType: CallbackType<BenchCallbackNoUserdata> = CallbackType(
+    canonicalId = "bench:BenchCallbackNoUserdata",
+    hasRoutingUserdata = false,
+)
+
+private object BenchCallbackNoUserdataTrampoline {
+    private val descriptor: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT)
+    private val methodHandle: MethodHandle by lazy {
+        MethodHandles.lookup().findStatic(
+            BenchCallbackNoUserdataTrampoline::class.java,
+            "invoke",
+            descriptor.toMethodType(),
+        )
+    }
+    val address: NativeAddress by lazy {
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+    }
+
+    @JvmStatic
+    private fun invoke(value: Int) {
+        CallbackRuntime.dispatchSafely(BenchCallbackNoUserdataType, null) { callback ->
+            callback.invoke(value.toUInt())
+        }
+    }
+}
+
 @State(Scope.Thread)
 // Mandatory: bench_fixture.c stores the callback in a shared non-atomic global; JMH must not run multiple workers.
 @Threads(1)
@@ -78,6 +108,9 @@ open class UpcallBenchmarks {
     private lateinit var fireHandle: MethodHandle
     private lateinit var fireOneHandle: MethodHandle
     private lateinit var registration: CallbackRegistration<BenchCallback>
+    private lateinit var setCallbackNoUserdataHandle: MethodHandle
+    private lateinit var fireNoUserdataHandle: MethodHandle
+    private lateinit var noUserdataRegistration: CallbackRegistration<BenchCallbackNoUserdata>
 
     @Setup
     fun setup() {
@@ -104,6 +137,21 @@ open class UpcallBenchmarks {
         fireOneHandle.invokeExact(1)
         check(counter.load() == 1L) { "upcall did not dispatch" }
         counter.store(0)
+        setCallbackNoUserdataHandle = linker.downcallHandle(
+            l.find("bench_set_callback_no_userdata").orElseThrow(),
+            FunctionDescriptor.ofVoid(ValueLayout.ADDRESS),
+        )
+        fireNoUserdataHandle = linker.downcallHandle(
+            l.find("bench_fire_no_userdata").orElseThrow(),
+            FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT),
+        )
+        noUserdataRegistration = CallbackRuntime.register(
+            type = BenchCallbackNoUserdataType,
+            trampoline = BenchCallbackNoUserdataTrampoline.address,
+            policy = CallbackPolicy.REPEATING,
+            callback = BenchCallbackNoUserdata { _ -> counter.fetchAndAdd(1) },
+        )
+        setCallbackNoUserdataHandle.invokeExact(noUserdataRegistration.callback.handler)
     }
 
     @Benchmark
@@ -118,8 +166,21 @@ open class UpcallBenchmarks {
         bh.consume(counter.load())
     }
 
+    @Benchmark
+    fun upcallFireOneNoRouting(bh: Blackhole) {
+        fireNoUserdataHandle.invokeExact(1)
+        bh.consume(counter.load())
+    }
+
+    @Benchmark
+    fun upcallFire1000NoRouting(bh: Blackhole) {
+        fireNoUserdataHandle.invokeExact(1000)
+        bh.consume(counter.load())
+    }
+
     @TearDown
     fun teardown() {
         registration.close()
+        noUserdataRegistration.close()
     }
 }
