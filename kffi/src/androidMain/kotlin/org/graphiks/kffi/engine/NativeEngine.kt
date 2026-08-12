@@ -7,6 +7,8 @@ object NativeEngine {
         System.loadLibrary("kffi")
     }
 
+    external fun loadNativeLibrary(path: String): Long
+    external fun resolveSymbolIn(handle: Long, name: String): Long
     external fun resolveSymbol(name: String): Long
     external fun callV0(fn: Long)
     external fun callI0(fn: Long): Long

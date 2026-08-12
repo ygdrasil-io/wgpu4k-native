@@ -149,7 +149,10 @@ android {
     }
     packaging {
         jniLibs {
-            excludes += setOf("libkffi_bench_fixture.so", "**/libkffi_bench_fixture.so")
+            // Ship the bench fixture only in the androidTest APK; never in the AAR.
+            testOnly += setOf("libkffi_bench_fixture.so", "**/libkffi_bench_fixture.so")
+            // Extract .so to nativeLibraryDir so the test can dlopen the fixture by path.
+            useLegacyPackaging = true
         }
     }
 }

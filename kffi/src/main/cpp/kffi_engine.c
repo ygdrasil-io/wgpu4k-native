@@ -12,6 +12,32 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     return JNI_VERSION_1_6;
 }
 
+JNIEXPORT jlong JNICALL Java_org_graphiks_kffi_engine_NativeEngine_loadNativeLibrary(
+    JNIEnv *env, jclass cls, jstring path) {
+    (void)cls;
+    const char *cpath = (*env)->GetStringUTFChars(env, path, NULL);
+    if ((*env)->ExceptionCheck(env)) return 0L;
+    void *handle = dlopen(cpath, RTLD_NOW | RTLD_GLOBAL);
+    if (handle == NULL) {
+        (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/UnsatisfiedLinkError"),
+                         dlerror());
+        (*env)->ReleaseStringUTFChars(env, path, cpath);
+        return 0L;
+    }
+    (*env)->ReleaseStringUTFChars(env, path, cpath);
+    return (jlong)(uintptr_t)handle;
+}
+
+JNIEXPORT jlong JNICALL Java_org_graphiks_kffi_engine_NativeEngine_resolveSymbolIn(
+    JNIEnv *env, jclass cls, jlong handle, jstring name) {
+    (void)cls;
+    const char *cname = (*env)->GetStringUTFChars(env, name, NULL);
+    if ((*env)->ExceptionCheck(env)) return 0L;
+    void *sym = dlsym((void *)(uintptr_t)handle, cname);
+    (*env)->ReleaseStringUTFChars(env, name, cname);
+    return (jlong)(uintptr_t)sym;
+}
+
 JNIEXPORT jlong JNICALL Java_org_graphiks_kffi_engine_NativeEngine_resolveSymbol(
     JNIEnv *env, jclass cls, jstring name) {
     (void)cls;
