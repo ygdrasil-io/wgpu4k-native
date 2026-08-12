@@ -1,8 +1,8 @@
 package java.lang.foreign
 
 import com.sun.jna.Pointer
-import io.ygdrasil.kffi.JnaArena
-import io.ygdrasil.kffi.NativeAddress
+import org.graphiks.kffi.JnaArena
+import org.graphiks.kffi.NativeAddress
 
 /**
  * @suppress

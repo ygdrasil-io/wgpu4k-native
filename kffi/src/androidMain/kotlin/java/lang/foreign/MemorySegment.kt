@@ -1,7 +1,7 @@
 package java.lang.foreign
 
 import com.sun.jna.Pointer
-import io.ygdrasil.kffi.toAddress
+import org.graphiks.kffi.toAddress
 import java.util.function.Consumer
 
 /**

@@ -166,7 +166,7 @@ kotlin {
         }
 
         android {
-            namespace = "io.ygdrasil.kffi"
+            namespace = "org.graphiks.kffi"
             compileSdk = 36
 
             defaultConfig {
@@ -252,7 +252,7 @@ tasks.withType<Test>().configureEach {
         "testDebugUnitTest" -> {
             useJUnitPlatform()
             filter {
-                excludeTestsMatching("io.ygdrasil.kffi.MemoryBufferArrayTest")
+                excludeTestsMatching("org.graphiks.kffi.MemoryBufferArrayTest")
             }
         }
     }
@@ -282,8 +282,8 @@ tasks.named<Test>("jvmTest") {
 
         "windows" -> filter {
             // callback_fixture.c requires pthreads; keep every other JVM test in Windows CI.
-            excludeTestsMatching("io.ygdrasil.kffi.CallbackFfiJvmTest")
-            excludeTestsMatching("io.ygdrasil.kffi.CallbackFixtureWatchdogJvmTest")
+            excludeTestsMatching("org.graphiks.kffi.CallbackFfiJvmTest")
+            excludeTestsMatching("org.graphiks.kffi.CallbackFixtureWatchdogJvmTest")
         }
     }
 }
