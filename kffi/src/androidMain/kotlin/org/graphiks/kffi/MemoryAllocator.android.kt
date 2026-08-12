@@ -1,55 +1,84 @@
+@file:OptIn(ExperimentalUnsignedTypes::class)
+
 package org.graphiks.kffi
 
-import java.lang.foreign.SegmentAllocator
-import java.lang.foreign.ValueLayout
+import java.nio.charset.StandardCharsets
+
+internal class AndroidArena : AutoCloseable {
+    private data class Block(val base: Long, val capacity: Long) {
+        var offset: Long = 0
+    }
+
+    private val blocks = mutableListOf<Block>()
+    private var current: Block? = null
+    private val freeBySize = HashMap<Long, MutableList<Long>>()
+    private val unsafe = AndroidUnsafe.get()
+    private val defaultBlock = 1L shl 16
+
+    fun allocate(size: Long): Long {
+        val aligned = alignUp(size, 8L)
+        val freed = freeBySize[aligned]?.takeIf { it.isNotEmpty() }?.removeLast()
+        if (freed != null) return freed
+        var block = current
+        if (block == null || block.offset + aligned > block.capacity) {
+            val capacity = maxOf(defaultBlock, alignUp(aligned, defaultBlock))
+            val base = unsafe.allocateMemory(capacity)
+            unsafe.setMemory(base, capacity, 0)
+            block = Block(base, capacity)
+            blocks.add(block)
+            current = block
+        }
+        val addr = block.base + block.offset
+        block.offset += aligned
+        return addr
+    }
+
+    fun free(addr: Long, size: Long) {
+        freeBySize.getOrPut(alignUp(size, 8L)) { mutableListOf() }.add(addr)
+    }
+
+    override fun close() {
+        blocks.forEach { unsafe.freeMemory(it.base) }
+        blocks.clear()
+        current = null
+        freeBySize.clear()
+    }
+
+    private fun alignUp(value: Long, alignment: Long): Long =
+        (value + alignment - 1) and -alignment
+}
 
 actual class MemoryAllocator : AutoCloseable {
+    private val arena = AndroidArena()
 
-    private val arena = JnaArena()
-    private val callbacks = mutableListOf<com.sun.jna.Callback>()
-    private val references = mutableListOf<Any>()
+    actual fun allocate(sizeInByte: Long): NativeAddress = NativeAddress(arena.allocate(sizeInByte))
 
-    val allocator: SegmentAllocator = SegmentAllocator(arena)
+    actual override fun close() { arena.close() }
 
-    actual fun allocate(sizeInByte: Long): NativeAddress {
-        return allocator.allocate(sizeInByte)
+    actual fun bufferOf(value: Long): MemoryBuffer {
+        val addr = arena.allocate(Long.SIZE_BYTES.toLong())
+        AndroidUnsafe.get().putLong(addr, value)
+        return MemoryBuffer(NativeAddress(addr), Long.SIZE_BYTES.toULong())
     }
 
-    actual override fun close() {
-        arena.close()
-        callbacks.clear()
-        references.clear()
+    actual fun allocateFrom(value: String): CString {
+        val bytes = value.toByteArray(StandardCharsets.UTF_8)
+        val addr = arena.allocate(bytes.size + 1L)
+        AndroidUnsafe.get().copyMemory(bytes, 16, null, addr, bytes.size.toLong())
+        AndroidUnsafe.get().putByte(addr + bytes.size, 0)
+        return CString(NativeAddress(addr))
     }
 
-    actual fun bufferOf(value: Long): MemoryBuffer = allocator.allocate(ValueLayout.JAVA_LONG)
-        .also { it.set(ValueLayout.JAVA_LONG, 0, value) }
-        .let { MemoryBuffer(it.pointer, it.size.toULong()) }
+    actual fun bufferOfAddress(value: NativeAddress): MemoryBuffer = bufferOf(value.rawValue)
 
-
-    actual fun allocateFrom(value: String): CString = allocator
-        .allocateFrom(value)
-        .let(::CString)
-
-    actual fun bufferOfAddress(value: NativeAddress): MemoryBuffer = bufferOf(value.toAddress())
-
-    fun registerCallback(function: com.sun.jna.Callback) {
-        callbacks.add(function)
-    }
-
-    fun register(it: Any) {
-        references.add(it)
-    }
-
-    actual fun allocateBuffer(size: ULong): MemoryBuffer {
-        return allocate(size.toLong())
-            .let { MemoryBuffer(it, size) }
-    }
+    actual fun allocateBuffer(size: ULong): MemoryBuffer =
+        MemoryBuffer(NativeAddress(arena.allocate(size.toLong())), size)
 
     actual fun bufferOfAddresses(value: List<NativeAddress>): MemoryBuffer {
-        val size = (Long.SIZE_BYTES * value.size).toULong()
-        return allocateBuffer(size)
-            .also { buffer -> value.forEachIndexed { index, pointer ->
-                buffer.writePointer(pointer, (Long.SIZE_BYTES * index).toULong())
-            }}
+        val buffer = allocateBuffer((value.size * 8).toULong())
+        value.forEachIndexed { index, address ->
+            buffer.writePointer(address, (index * 8).toULong())
+        }
+        return buffer
     }
 }
