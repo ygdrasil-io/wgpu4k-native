@@ -133,6 +133,21 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+android {
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+        }
+    }
+    defaultConfig {
+        externalNativeBuild {
+            cmake {
+                cFlags += listOf("-std=c11")
+            }
+        }
+    }
+}
+
 group = "org.graphiks"
 
 afterEvaluate {
@@ -168,6 +183,7 @@ kotlin {
         android {
             namespace = "org.graphiks.kffi"
             compileSdk = 36
+            ndkVersion = "30.0.15729638"
 
             defaultConfig {
                 minSdk = 28
