@@ -1,9 +1,5 @@
 package org.graphiks.kffi
 
-import com.sun.jna.Pointer
+actual class NativeAddress(val rawValue: Long)
 
-actual typealias NativeAddress = Pointer
-
-fun NativeAddress?.adapt(): Long {
-    return if (this == null) 0 else this.toAddress()
-}
+fun NativeAddress?.adapt(): Long = if (this == null) 0 else this.rawValue
