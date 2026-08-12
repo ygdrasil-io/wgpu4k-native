@@ -147,6 +147,11 @@ android {
         }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    packaging {
+        jniLibs {
+            excludes += setOf("libkffi_bench_fixture.so", "**/libkffi_bench_fixture.so")
+        }
+    }
 }
 
 group = "org.graphiks"

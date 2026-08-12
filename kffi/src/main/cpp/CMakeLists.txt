@@ -5,4 +5,4 @@ add_library(kffi_bench_fixture SHARED bench_engine_fixture.c)
 target_link_libraries(kffi_bench_fixture PRIVATE log)
 
 add_library(kffi SHARED kffi_engine.c)
-target_link_libraries(kffi PRIVATE kffi_bench_fixture log)
+target_link_libraries(kffi PRIVATE log)

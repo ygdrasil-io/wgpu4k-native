@@ -1,9 +1,15 @@
 package org.graphiks.kffi.engine
 
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 class DowncallEngineTest {
+
+    @Before
+    fun setUp() {
+        System.loadLibrary("kffi_bench_fixture")
+    }
 
     @Test
     fun resolvesSymbolsAndCallsVoid0AndInt0() {
