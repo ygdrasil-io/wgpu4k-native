@@ -1,5 +1,7 @@
 package org.graphiks.kffi.engine
 
+import java.nio.ByteBuffer
+
 object NativeEngine {
     init {
         System.loadLibrary("kffi")
@@ -9,4 +11,7 @@ object NativeEngine {
     external fun callV0(fn: Long)
     external fun callI0(fn: Long): Long
     external fun callI4IIII(fn: Long, a: Int, b: Int, c: Int, d: Int): Long
+    external fun directBufferAddress(buffer: ByteBuffer): Long
+    external fun callStructArgL(fn: Long, structSize: Int, structPtr: Long, arg2: Long): Long
+    external fun callStructReturn(fn: Long, a: Long, b: Long, structSize: Int, outPtr: Long)
 }
