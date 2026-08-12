@@ -1,8 +1,8 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.CallbackPolicy
-import io.ygdrasil.kffi.MemoryBuffer
-import io.ygdrasil.kffi.memoryScope
+import org.graphiks.kffi.CallbackPolicy
+import org.graphiks.kffi.MemoryBuffer
+import org.graphiks.kffi.memoryScope
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO

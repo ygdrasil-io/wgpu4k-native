@@ -23,13 +23,13 @@ private fun measureDowncallEmpty(): Double {
 
 private fun measureMarshaling(): Double {
     repeat(100) {
-        io.ygdrasil.kffi.memoryScope { allocator ->
+        org.graphiks.kffi.memoryScope { allocator ->
             allocator.allocateBuffer(4096uL)
         }
     } // warmup
     val elapsed = measureTime {
         repeat(10_000) {
-            io.ygdrasil.kffi.memoryScope { allocator ->
+            org.graphiks.kffi.memoryScope { allocator ->
                 val buffer = allocator.allocateBuffer(4096uL)
                 val values = IntArray(16) { it }
                 buffer.writeInts(values)

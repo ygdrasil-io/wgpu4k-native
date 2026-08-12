@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sun.jna.Pointer
-import io.ygdrasil.kffi.memoryScope
+import org.graphiks.kffi.memoryScope
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals

@@ -2,8 +2,8 @@
 
 package org.graphiks.kffi.benchmark.jvm
 
-import io.ygdrasil.kffi.MemoryBuffer
-import io.ygdrasil.kffi.memoryScope
+import org.graphiks.kffi.MemoryBuffer
+import org.graphiks.kffi.memoryScope
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.annotations.BenchmarkMode
 import org.openjdk.jmh.annotations.Mode

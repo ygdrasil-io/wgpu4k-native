@@ -2,18 +2,18 @@
 
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.NativeAddress
-import io.ygdrasil.kffi.CallbackExceptionHandler
-import io.ygdrasil.kffi.CallbackPolicy
-import io.ygdrasil.kffi.CallbackRegistration
-import io.ygdrasil.kffi.CallbackRuntime
-import io.ygdrasil.kffi.CallbackRuntimeApi
-import io.ygdrasil.kffi.PreparedCallbackRegistration
-import io.ygdrasil.kffi.UnsafeCallbackRearmApi
-import io.ygdrasil.kffi.CString
-import io.ygdrasil.kffi.ArrayHolder
-import io.ygdrasil.kffi.MemoryAllocator
-import io.ygdrasil.kffi.toCString
+import org.graphiks.kffi.NativeAddress
+import org.graphiks.kffi.CallbackExceptionHandler
+import org.graphiks.kffi.CallbackPolicy
+import org.graphiks.kffi.CallbackRegistration
+import org.graphiks.kffi.CallbackRuntime
+import org.graphiks.kffi.CallbackRuntimeApi
+import org.graphiks.kffi.PreparedCallbackRegistration
+import org.graphiks.kffi.UnsafeCallbackRearmApi
+import org.graphiks.kffi.CString
+import org.graphiks.kffi.ArrayHolder
+import org.graphiks.kffi.MemoryAllocator
+import org.graphiks.kffi.toCString
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.COpaquePointerVar

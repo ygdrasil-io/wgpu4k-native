@@ -3,8 +3,8 @@
 package io.ygdrasil.wgpu
 
 import cnames.structs.GLFWwindow
-import io.ygdrasil.kffi.memoryScope
-import io.ygdrasil.kffi.NativeAddress
+import org.graphiks.kffi.memoryScope
+import org.graphiks.kffi.NativeAddress
 import glfw.glfwGetX11Display
 import glfw.glfwGetX11Window
 import kotlinx.cinterop.COpaquePointer

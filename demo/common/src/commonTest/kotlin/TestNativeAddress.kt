@@ -1,5 +1,5 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.NativeAddress
+import org.graphiks.kffi.NativeAddress
 
 expect fun testNativeAddress(): NativeAddress

@@ -1,6 +1,6 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.CallbackPolicy
+import org.graphiks.kffi.CallbackPolicy
 import io.kotest.core.spec.style.FreeSpec
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull

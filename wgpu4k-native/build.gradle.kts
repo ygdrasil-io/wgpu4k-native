@@ -305,7 +305,7 @@ val kextractLauncher = kextractDistribution.map { distribution ->
 val generatedJvmBinding = project.file(
     "src/jvmMain/kotlin/io/ygdrasil/wgpu/wgpu_hJvm.kt",
 )
-val genericJvmLookupImport = "import io.ygdrasil.kffi.findOrThrow"
+val genericJvmLookupImport = "import org.graphiks.kffi.findOrThrow"
 val generatedJvmBootstrapResolver = "KextractNativeBootstrap.resolve("
 val jvmNativeResourceTasks = listOf(
     "unzip-libwgpu_native.dylib-from-wgpu-macos-aarch64-release.zip",

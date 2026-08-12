@@ -2,9 +2,9 @@ package io.ygdrasil.wgpu
 
 import android.view.Surface
 import android.os.Bundle
-import io.ygdrasil.kffi.NativeAddress
+import org.graphiks.kffi.NativeAddress
 import io.ygdrasil.nativeHelper.Helper
-import io.ygdrasil.kffi.memoryScope
+import org.graphiks.kffi.memoryScope
 import org.graphiks.kadre.ActiveEventLoop
 import org.graphiks.kadre.ApplicationHandler
 import org.graphiks.kadre.PhysicalSize

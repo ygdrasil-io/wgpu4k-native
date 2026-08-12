@@ -1,6 +1,6 @@
 package publication.smoke;
 
-import io.ygdrasil.kffi.Callback;
+import org.graphiks.kffi.Callback;
 import io.ygdrasil.wgpu.WGPULogCallback;
 
 public final class PublicationSmoke {

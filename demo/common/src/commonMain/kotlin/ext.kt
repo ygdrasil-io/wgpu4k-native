@@ -2,11 +2,11 @@
 
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.ArrayHolder
-import io.ygdrasil.kffi.CallbackPolicy
-import io.ygdrasil.kffi.CallbackRegistration
-import io.ygdrasil.kffi.NativeAddress
-import io.ygdrasil.kffi.memoryScope
+import org.graphiks.kffi.ArrayHolder
+import org.graphiks.kffi.CallbackPolicy
+import org.graphiks.kffi.CallbackRegistration
+import org.graphiks.kffi.NativeAddress
+import org.graphiks.kffi.memoryScope
 import kotlin.concurrent.atomics.AtomicInt
 
 private val logCallbackConfigurationLock = AtomicInt(0)

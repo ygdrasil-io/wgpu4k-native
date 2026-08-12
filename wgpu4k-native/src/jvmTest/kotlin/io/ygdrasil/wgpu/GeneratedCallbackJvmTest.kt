@@ -1,8 +1,8 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.CallbackPolicy
-import io.ygdrasil.kffi.CallbackRegistration
-import io.ygdrasil.kffi.MemoryAllocator
+import org.graphiks.kffi.CallbackPolicy
+import org.graphiks.kffi.CallbackRegistration
+import org.graphiks.kffi.MemoryAllocator
 import io.kotest.core.spec.style.FreeSpec
 import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.Linker

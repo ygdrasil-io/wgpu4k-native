@@ -3,7 +3,7 @@
 package org.graphiks.kffi.benchmark.android
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.ygdrasil.kffi.memoryScope
+import org.graphiks.kffi.memoryScope
 import org.graphiks.kffi.benchmark.BenchmarkReport
 import org.graphiks.kffi.benchmark.BenchmarkResult
 import org.graphiks.kffi.benchmark.BenchmarkScenario

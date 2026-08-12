@@ -1,7 +1,7 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.MemoryAllocator
-import io.ygdrasil.kffi.memoryScope
+import org.graphiks.kffi.MemoryAllocator
+import org.graphiks.kffi.memoryScope
 
 
 class HelloTriangleScene internal constructor(

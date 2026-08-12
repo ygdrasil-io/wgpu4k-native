@@ -5,14 +5,14 @@
 
 package org.graphiks.kffi.benchmark.jvm
 
-import io.ygdrasil.kffi.Callback
-import io.ygdrasil.kffi.CallbackPolicy
-import io.ygdrasil.kffi.CallbackRegistration
-import io.ygdrasil.kffi.CallbackRuntime
-import io.ygdrasil.kffi.CallbackRuntimeApi
-import io.ygdrasil.kffi.CallbackType
-import io.ygdrasil.kffi.NativeAddress
-import io.ygdrasil.kffi.adapt
+import org.graphiks.kffi.Callback
+import org.graphiks.kffi.CallbackPolicy
+import org.graphiks.kffi.CallbackRegistration
+import org.graphiks.kffi.CallbackRuntime
+import org.graphiks.kffi.CallbackRuntimeApi
+import org.graphiks.kffi.CallbackType
+import org.graphiks.kffi.NativeAddress
+import org.graphiks.kffi.adapt
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.annotations.BenchmarkMode
 import org.openjdk.jmh.annotations.Mode
