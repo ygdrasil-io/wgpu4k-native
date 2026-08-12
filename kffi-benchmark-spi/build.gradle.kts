@@ -28,6 +28,17 @@ kotlin {
 
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(libs.bundles.kotest)
         }
+
+        jvmTest.dependencies {
+            implementation(libs.kotest.runner.junit5)
+        }
+    }
+}
+
+tasks.withType<Test>().configureEach {
+    if (name == "jvmTest") {
+        useJUnitPlatform()
     }
 }
