@@ -29,12 +29,23 @@ class MemoryAllocatorAndroidTest : FreeSpec({
             buffer.readInt(0uL) shouldBe 7
         }
     }
-    "repeated same-size allocations reuse the free-list" {
+    "repeated same-size allocations come from the bump block" {
         memoryScope { allocator ->
             val first = allocator.allocate(64L)
             first.rawValue shouldNotBe 0L
             val second = allocator.allocate(64L)
             second.rawValue shouldNotBe first.rawValue
+        }
+    }
+    "AndroidArena free-list reuses a freed block of the same size" {
+        val arena = AndroidArena()
+        try {
+            val a = arena.allocate(64L)
+            arena.free(a, 64L)
+            val b = arena.allocate(64L)
+            b shouldBe a
+        } finally {
+            arena.close()
         }
     }
     "close is idempotent and frees the arena" {

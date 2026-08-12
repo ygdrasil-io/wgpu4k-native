@@ -36,4 +36,24 @@ class MemoryBufferAndroidTest : FreeSpec({
             shouldThrow<IllegalArgumentException> { buffer.writeInts(IntArray(8), arrayIndex = 4u) }
         }
     }
+    "bulk ints round-trip through the array helpers" {
+        memoryScope { allocator ->
+            val buffer = allocator.allocateBuffer(64uL)
+            val source = IntArray(8) { it * 3 }
+            buffer.writeInts(source, arrayIndex = 1u, bufferOffset = 8uL, size = 4u)
+            val out = IntArray(8)
+            buffer.readInts(out, arrayIndex = 2u, bufferOffset = 8uL, size = 4u)
+            out[2] shouldBe 3
+            out[3] shouldBe 6
+            out[4] shouldBe 9
+            out[5] shouldBe 12
+        }
+    }
+    "huge offsets cannot bypass the bounds check" {
+        memoryScope { allocator ->
+            val buffer = allocator.allocateBuffer(8uL)
+            shouldThrow<IllegalArgumentException> { buffer.readLong(ULong.MAX_VALUE) }
+            shouldThrow<IllegalArgumentException> { buffer.writeInt(1, ULong.MAX_VALUE) }
+        }
+    }
 })

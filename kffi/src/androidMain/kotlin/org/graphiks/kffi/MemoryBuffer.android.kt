@@ -10,8 +10,8 @@ actual class MemoryBuffer actual constructor(
     private val base = handler.rawValue
 
     private fun boundsCheck(offset: ULong, width: Long) {
-        require(offset.toLong() + width <= size.toLong()) {
-            "Out of destination bounds: offset=$offset width=$width size=$size"
+        require(offset < size && offset + width.toULong() <= size) {
+            "Out of bounds: offset=$offset width=$width size=$size"
         }
     }
 
@@ -51,24 +51,26 @@ actual class MemoryBuffer actual constructor(
         arrayBytes: Int, elementSize: Int, array: Any,
         arrayIndex: ULong, bufferOffset: ULong, size: ULong,
     ) {
-        val bytes = size.toLong() * elementSize
-        val dest = bufferOffset.toLong()
-        val src = arrayIndex.toLong() * elementSize
-        require(dest + bytes <= this.size.toLong()) { "Out of destination bounds" }
-        require(src + bytes <= arrayBytes.toLong()) { "Out of source bounds" }
-        unsafe.copyMemory(array, 16L + src, null, base + dest, bytes)
+        val bytes = size * elementSize.toULong()
+        require(bufferOffset + bytes <= this.size) { "Out of destination bounds" }
+        require(arrayIndex * elementSize.toULong() + bytes <= arrayBytes.toULong()) { "Out of source bounds" }
+        unsafe.copyMemory(
+            array, 16L + (arrayIndex * elementSize.toULong()).toLong(),
+            null, base + bufferOffset.toLong(), bytes.toLong(),
+        )
     }
 
     private fun readArray(
         arrayBytes: Int, elementSize: Int, array: Any,
         arrayIndex: ULong, bufferOffset: ULong, size: ULong,
     ) {
-        val bytes = size.toLong() * elementSize
-        val src = bufferOffset.toLong()
-        val dest = arrayIndex.toLong() * elementSize
-        require(src + bytes <= this.size.toLong()) { "Out of source bounds" }
-        require(dest + bytes <= arrayBytes.toLong()) { "Out of destination bounds" }
-        unsafe.copyMemory(null, base + src, array, 16L + dest, bytes)
+        val bytes = size * elementSize.toULong()
+        require(bufferOffset + bytes <= this.size) { "Out of source bounds" }
+        require(arrayIndex * elementSize.toULong() + bytes <= arrayBytes.toULong()) { "Out of destination bounds" }
+        unsafe.copyMemory(
+            null, base + bufferOffset.toLong(),
+            array, 16L + (arrayIndex * elementSize.toULong()).toLong(), bytes.toLong(),
+        )
     }
 
     actual fun writeBytes(array: ByteArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
