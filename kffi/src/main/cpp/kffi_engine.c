@@ -96,33 +96,45 @@ JNIEXPORT jlong JNICALL Java_org_graphiks_kffi_engine_NativeEngine_directBufferA
     return addr;
 }
 
+/*
+ * FIXTURE-SPECIFIC struct-by-value wrappers (P1 only).
+ * These are hand-written for the bench fixture's `bench_pair`. The
+ * buffer-in/buffer-out contract (structPtr/structSize in, outPtr out) is
+ * exactly what M5's kextract generator replicates per-struct from header
+ * layouts; these bodies will be REPLACED by generated wrappers.
+ */
 typedef struct bench_pair { uint64_t a; uint64_t b; } bench_pair;
+typedef uint64_t (*fn_struct_pair_sum)(bench_pair);
 
 JNIEXPORT jlong JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callStructArgL(
     JNIEnv *env, jclass cls, jlong fn, jint structSize, jlong structPtr, jlong arg2) {
-    (void)env; (void)cls;
+    (void)arg2; (void)cls;
     if (fn == 0 || structPtr == 0) {
         (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/UnsatisfiedLinkError"),
                          "kffi: null native function pointer or struct pointer");
         return 0L;
     }
-    uint8_t local[64];
-    if ((size_t)structSize > sizeof(local)) {
+    if ((size_t)structSize != sizeof(bench_pair)) {
         (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/IllegalArgumentException"),
-                         "kffi: struct larger than the fixed local buffer");
+                         "kffi: struct size mismatch for bench_pair wrapper");
         return 0L;
     }
-    memcpy(local, (void *)(uintptr_t)structPtr, (size_t)structSize);
-    bench_pair *p = (bench_pair *)local;
-    return (jlong)((uint64_t (*)(bench_pair, uint64_t))(uintptr_t)fn)(*p, (uint64_t)arg2);
+    bench_pair local;
+    memcpy(&local, (void *)(uintptr_t)structPtr, (size_t)structSize);
+    return (jlong)((fn_struct_pair_sum)(uintptr_t)fn)(local);
 }
 
 JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callStructReturn(
     JNIEnv *env, jclass cls, jlong fn, jlong a, jlong b, jint structSize, jlong outPtr) {
-    (void)env; (void)cls;
+    (void)cls;
     if (fn == 0 || outPtr == 0) {
         (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/UnsatisfiedLinkError"),
                          "kffi: null native function pointer or out pointer");
+        return;
+    }
+    if ((size_t)structSize != sizeof(bench_pair)) {
+        (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/IllegalArgumentException"),
+                         "kffi: struct size mismatch for bench_pair wrapper");
         return;
     }
     bench_pair r = ((bench_pair (*)(uint64_t, uint64_t))(uintptr_t)fn)((uint64_t)a, (uint64_t)b);
