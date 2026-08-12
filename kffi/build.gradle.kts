@@ -145,6 +145,7 @@ android {
                 cFlags += listOf("-std=c11")
             }
         }
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
@@ -244,6 +245,13 @@ kotlin {
         androidUnitTest {
             dependencies {
                 implementation(libs.kotest.runner.junit5)
+            }
+        }
+
+        val androidInstrumentedTest by getting {
+            dependencies {
+                implementation(libs.androidx.test.ext.junit)
+                implementation(libs.androidx.test.runner)
             }
         }
     }
