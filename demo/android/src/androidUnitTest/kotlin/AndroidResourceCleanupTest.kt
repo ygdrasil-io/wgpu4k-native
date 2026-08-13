@@ -1,13 +1,13 @@
 package io.ygdrasil.wgpu
 
-import com.sun.jna.Pointer
+import org.graphiks.kffi.NativeAddress
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class AndroidResourceCleanupTest {
     @Test
     fun sceneClosesBeforeParentGpuHandles() {
-        val handle = Pointer(1L)
+        val handle = NativeAddress(1L)
         val releases = mutableListOf<String>()
 
         releaseAndroidResources(

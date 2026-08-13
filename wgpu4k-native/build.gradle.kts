@@ -85,8 +85,10 @@ kotlin {
 
         androidMain {
             dependencies {
-                val jna = libs.jna.get()
-                api("${jna.module.group}:${jna.module.name}:${jna.versionConstraint}:@aar")
+                // JNA is kept (as the plain jar, not the @aar packaging) only for the
+                // callback trampolines the kffi upcall engine cannot express (TODO(M5.5)).
+                // Downcalls and memory-backed structs ride the kffi NativeEngine instead.
+                api(libs.jna)
             }
         }
 
@@ -326,16 +328,46 @@ val generatedAndroidBindings = project.file(
     "src/androidMain/kotlin/io/ygdrasil/wgpu/wgpu_hAndroid.kt",
 )
 
+// kextract rejects the variable-width C `size_t` scalar (LP64/LLP64) in the multiplatform
+// direct ABI path used by the Android engine wrapper table. The wgpu headers only ever use
+// size_t as a 64-bit width on every supported target, so the sanitizer rewrites it to the
+// fixed-width `unsigned long long` (I64) before generation. This keeps the emitted
+// common/jvm/native bindings byte-identical while unblocking the Android backend.
+val sanitizedNativeHeadersDirectory = project.file("build/native/sanitized")
+val sanitizedNativeHeader = sanitizedNativeHeadersDirectory.resolve("wgpu.h")
+val sanitizedWebGpuHeader = sanitizedNativeHeadersDirectory.resolve("webgpu.h")
+
+tasks.register("sanitizeNativeHeaders") {
+    group = "generation"
+    description = "Rewrites variable-width C types (size_t) in the wgpu headers to fixed-width equivalents"
+    dependsOn(*jvmBindingNativeDependencyTasks.toTypedArray())
+    inputs.file(project.file("build/native/wgpu.h"))
+    inputs.file(project.file("build/native/webgpu.h"))
+    outputs.file(sanitizedNativeHeader)
+    outputs.file(sanitizedWebGpuHeader)
+    doLast {
+        fun sanitize(source: File, target: File) {
+            target.parentFile.mkdirs()
+            target.writeText(
+                source.readText().replace(Regex("\\bsize_t\\b"), "unsigned long long"),
+            )
+        }
+        sanitize(project.file("build/native/wgpu.h"), sanitizedNativeHeader)
+        sanitize(project.file("build/native/webgpu.h"), sanitizedWebGpuHeader)
+    }
+}
+
 tasks.register<Exec>("generateBindingsFromHeader") {
     group = "generation"
     description = "Generates unified KMP bindings from webgpu.h using kextract CLI"
     dependsOn(":kextract:createKextractImage")
     dependsOn(*jvmBindingNativeDependencyTasks.toTypedArray())
+    dependsOn("sanitizeNativeHeaders")
 
     val callbackBindings = project(":wgpu4k-native-specs")
         .file("src/jvmMain/resources/callback-bindings.yml")
-    val nativeHeader = project.file("build/native/wgpu.h")
-    val webGpuHeader = project.file("build/native/webgpu.h")
+    val nativeHeader = sanitizedNativeHeader
+    val webGpuHeader = sanitizedWebGpuHeader
 
     inputs.dir(kextractDistribution)
         .withPropertyName("kextractDistribution")
@@ -397,64 +429,29 @@ tasks.register<Exec>("generateBindingsFromHeader") {
     ) + clangArgs
 
     doLast {
-        // kextract currently exposes struct pointer parameters as raw JNA pointers, so JNA cannot
-        // auto-read output structures after the native call. Keep this downstream correction
-        // deterministic until the generator emits the readbacks itself.
-        fun replaceGeneratedFunction(
-            source: String,
-            generatedFunction: String,
-            patchedFunction: String,
-            functionName: String,
-        ): String {
-            val firstMatch = source.indexOf(generatedFunction)
-            require(firstMatch >= 0) {
-                "Could not apply the Android JNA output readback for $functionName: generated function changed."
-            }
-            require(firstMatch == source.lastIndexOf(generatedFunction)) {
-                "Could not apply the Android JNA output readback for $functionName: generated function is ambiguous."
-            }
-            return source.replaceRange(
-                firstMatch,
-                firstMatch + generatedFunction.length,
-                patchedFunction,
-            )
-        }
-
-        val generatedSource = generatedAndroidBindings.readText()
-        val withCapabilitiesReadback = replaceGeneratedFunction(
-            generatedSource,
-            """actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus {
-    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCapabilities(surface?.handler, adapter?.handler, capabilities?.handler)).toUInt()
-}""",
-            """actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus {
-    val status = io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCapabilities(surface?.handler, adapter?.handler, capabilities?.handler)
-    when (capabilities) {
-        is WGPUSurfaceCapabilities.ByReference -> capabilities.handle.read()
-        is WGPUSurfaceCapabilities.ByValue -> capabilities.handle.read()
-        null -> Unit
-    }
-    return status.toUInt()
-}""",
-            "wgpuSurfaceGetCapabilities",
+        // kextract (pinned revision) emits two Android shapes that do not compile for
+        // wgpu.h; keep the downstream repair deterministic until the generator covers them:
+        //  1. Struct impls name the backing MemoryBuffer `buffer`, colliding with C struct
+        //     fields also named `buffer` (WGPUBindGroupEntry, WGPUBindGroupLayoutEntry,
+        //     WGPUTexelCopyBufferInfo). Rename the backing field to `mem`.
+        //  2. The JNA callback fallback passes raw JNA Pointer values where the application
+        //     callback expects NativeAddress-valued parameters (handle typedefs such as
+        //     WGPUAdapter/WGPUDevice/WGPUComputePipeline and struct-by-value WGPUStringView).
+        val androidBindings = generatedAndroidBindings.readText()
+        val withBackingRename = androidBindings
+            .replace("private val buffer: MemoryBuffer", "private val mem: MemoryBuffer")
+            .replace(Regex("\\bbuffer\\.(read|write)"), "mem.$1")
+        val withHandleBridging = withBackingRename.replace(
+            Regex("(\\w+)\\?\\.let \\{ WGPU(\\w+)\\(it\\) \\}"),
+            "$1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }" +
+                "?.let { WGPU$2(NativeAddress(com.sun.jna.Pointer.nativeValue(it))) }",
         )
-        val withSurfaceTextureReadback = replaceGeneratedFunction(
-            withCapabilitiesReadback,
-            """actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit {
-    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCurrentTexture(surface?.handler, surfaceTexture?.handler)
-    return
-}""",
-            """actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit {
-    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCurrentTexture(surface?.handler, surfaceTexture?.handler)
-    when (surfaceTexture) {
-        is WGPUSurfaceTexture.ByReference -> surfaceTexture.handle.read()
-        is WGPUSurfaceTexture.ByValue -> surfaceTexture.handle.read()
-        null -> Unit
-    }
-    return
-}""",
-            "wgpuSurfaceGetCurrentTexture",
+        val withStructValueBridging = withHandleBridging.replace(
+            "WGPUStringView.ByValue(message)",
+            "WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }" +
+                "?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L))",
         )
-        generatedAndroidBindings.writeText(withSurfaceTextureReadback.trimEnd() + "\n")
+        generatedAndroidBindings.writeText(withStructValueBridging.trimEnd() + "\n")
     }
 }
 
@@ -533,8 +530,8 @@ tasks.register("verifyBindingGenerationConfiguration") {
         val callbackBindings = project(":wgpu4k-native-specs")
             .file("src/jvmMain/resources/callback-bindings.yml")
             .absoluteFile
-        val nativeHeader = project.file("build/native/wgpu.h").absoluteFile
-        val webGpuHeader = project.file("build/native/webgpu.h").absoluteFile
+        val nativeHeader = sanitizedNativeHeader.absoluteFile
+        val webGpuHeader = sanitizedWebGpuHeader.absoluteFile
         val declaredInputs = generationTask.inputs.files.files.map { it.absoluteFile }.toSet()
         val expectedDistributionPath = kextractDistribution.get().asFile
             .toPath()
