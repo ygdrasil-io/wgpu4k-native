@@ -130,6 +130,8 @@ JNIEXPORT jlong JNICALL Java_org_graphiks_kffi_engine_UpcallEngine_allocateTramp
     slot->method = (*env)->GetStaticMethodID(env, dispatcherClass, mname, msig);
     if (slot->method == NULL) {
         (*env)->ExceptionClear(env);
+        (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/IllegalArgumentException"),
+                         "kffi: upcall dispatch method not found");
         goto fail_slot;
     }
 
