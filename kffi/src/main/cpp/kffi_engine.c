@@ -585,7 +585,7 @@ JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callStructRetu
 JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callGeneric(
     JNIEnv *env, jclass cls, jlong fn, jint argc, jstring typeSpec, jlong argsPtr, jlong outPtr) {
     (void)cls;
-    (void)typeSpec; /* typeSpec reserved for M5 kextract emission; per-arg ffi_type selection lands there */
+    (void)typeSpec; /* typeSpec is currently unused by the generic reader (all args ride 8-byte carriers); struct-by-value args packed by kextract at natural alignment are truncated to 8 bytes at runtime (43 of 44 generic sites). TODO(M6/P2): implement per-arg ffi_type selection to honor typeSpec exactly. */
     if (fn == 0 || argsPtr == 0 || outPtr == 0) {
         (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/UnsatisfiedLinkError"),
                          "kffi: null generic-call argument");

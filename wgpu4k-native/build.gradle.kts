@@ -438,14 +438,23 @@ tasks.register<Exec>("generateBindingsFromHeader") {
         //     callback expects NativeAddress-valued parameters (handle typedefs such as
         //     WGPUAdapter/WGPUDevice/WGPUComputePipeline and struct-by-value WGPUStringView).
         val androidBindings = generatedAndroidBindings.readText()
+        require("private val buffer: MemoryBuffer" in androidBindings) {
+            "Android bindings repair 'backing-rename': expected pattern missing — kextract emission changed?"
+        }
         val withBackingRename = androidBindings
             .replace("private val buffer: MemoryBuffer", "private val mem: MemoryBuffer")
             .replace(Regex("\\bbuffer\\.(read|write)"), "mem.$1")
+        require(Regex("(\\w+)\\?\\.let \\{ WGPU(\\w+)\\(it\\) \\}").containsMatchIn(withBackingRename)) {
+            "Android bindings repair 'handle-bridging': expected pattern missing — kextract emission changed?"
+        }
         val withHandleBridging = withBackingRename.replace(
             Regex("(\\w+)\\?\\.let \\{ WGPU(\\w+)\\(it\\) \\}"),
             "$1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }" +
                 "?.let { WGPU$2(NativeAddress(com.sun.jna.Pointer.nativeValue(it))) }",
         )
+        require("WGPUStringView.ByValue(message)" in withHandleBridging) {
+            "Android bindings repair 'struct-value-bridging': expected pattern missing — kextract emission changed?"
+        }
         val withStructValueBridging = withHandleBridging.replace(
             "WGPUStringView.ByValue(message)",
             "WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }" +
