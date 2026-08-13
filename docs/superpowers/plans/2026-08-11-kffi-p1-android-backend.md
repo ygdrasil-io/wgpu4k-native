@@ -1206,10 +1206,10 @@ git commit -m "feat(kffi): UTF-8 Android CString; delete java/lang/foreign shim 
 
 - [ ] **Step 1: Configure the build**
 
-In `kffi/build.gradle.kts` `androidTarget.android` block add:
+In `kffi/build.gradle.kts` `androidTarget.android` block add (NDK 30.0.15729638 is installed at `~/Library/Android/sdk/ndk/`, CMake 4.1.2 at `~/Library/Android/sdk/cmake/`):
 
 ```kotlin
-ndkVersion = "27.2.12479018"
+ndkVersion = "30.0.15729638"
 ```
 
 Add `android {}` top-level block:
