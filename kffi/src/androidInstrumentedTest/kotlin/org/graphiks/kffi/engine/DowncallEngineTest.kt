@@ -55,4 +55,15 @@ class DowncallEngineTest {
         assertEquals(7L, out.getLong(0))
         assertEquals(9L, out.getLong(8))
     }
+
+    @Test
+    fun genericFallbackCallsAdd4ThroughLibffi() {
+        val fn = resolve("bench_add4")
+        val args = ByteBuffer.allocateDirect(4 * 8).order(ByteOrder.nativeOrder())
+        args.putLong(0, 1); args.putLong(8, 2); args.putLong(16, 3); args.putLong(24, 4)
+        val out = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder())
+        NativeEngine.callGeneric(fn, 4, "IIII",
+            NativeEngine.directBufferAddress(args), NativeEngine.directBufferAddress(out))
+        assertEquals(10L, out.getLong(0))
+    }
 }

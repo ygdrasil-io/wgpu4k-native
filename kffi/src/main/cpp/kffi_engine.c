@@ -1,7 +1,9 @@
 #include <jni.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include <dlfcn.h>
+#include <ffi.h>
 
 typedef uint64_t (*fn_i0)(void);      /* int-like return, 0 args */
 typedef void (*fn_void_v0)(void);     /* void return, 0 args */
@@ -139,4 +141,47 @@ JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callStructRetu
     }
     bench_pair r = ((bench_pair (*)(uint64_t, uint64_t))(uintptr_t)fn)((uint64_t)a, (uint64_t)b);
     memcpy((void *)(uintptr_t)outPtr, &r, (size_t)structSize);
+}
+
+/*
+ * GENERIC downcall path (libffi fallback). Handles signatures outside the
+ * typed wrapper table by packing every argument into a uint64 carrier and
+ * letting libffi marshal them. The buffer-in/buffer-out contract matches the
+ * fixture wrappers above.
+ */
+JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callGeneric(
+    JNIEnv *env, jclass cls, jlong fn, jint argc, jstring typeSpec, jlong argsPtr, jlong outPtr) {
+    (void)cls;
+    if (fn == 0 || argsPtr == 0 || outPtr == 0) {
+        (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/UnsatisfiedLinkError"),
+                         "kffi: null generic-call argument");
+        return;
+    }
+    const char *spec = (*env)->GetStringUTFChars(env, typeSpec, NULL);
+    if ((*env)->ExceptionCheck(env)) return;
+    ffi_type **types = calloc((size_t)argc, sizeof(ffi_type *));
+    ffi_cif cif;
+    for (int i = 0; i < argc; i++) {
+        types[i] = &ffi_type_uint64; /* generic path: every scalar/pointer arg rides a uint64 carrier */
+    }
+    ffi_status status = ffi_prep_cif(&cif, FFI_DEFAULT_ABI, (unsigned)argc, &ffi_type_uint64, types);
+    if (status != FFI_OK) {
+        free(types);
+        (*env)->ReleaseStringUTFChars(env, typeSpec, spec);
+        (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/IllegalArgumentException"),
+                         "kffi: ffi_prep_cif failed");
+        return;
+    }
+    /* ffi_call expects avalue to be an array of pointers to each argument's
+       value. The caller packs the values contiguously (one uint64 carrier per
+       arg), so build the pointer array into that buffer. */
+    void **avalue = calloc((size_t)argc, sizeof(void *));
+    uintptr_t base = (uintptr_t)argsPtr;
+    for (int i = 0; i < argc; i++) {
+        avalue[i] = (void *)(base + (uintptr_t)i * sizeof(uint64_t));
+    }
+    ffi_call(&cif, FFI_FN(fn), (void *)(uintptr_t)outPtr, avalue);
+    free(avalue);
+    free(types);
+    (*env)->ReleaseStringUTFChars(env, typeSpec, spec);
 }

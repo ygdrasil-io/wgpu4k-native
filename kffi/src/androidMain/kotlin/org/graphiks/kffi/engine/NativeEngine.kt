@@ -16,4 +16,5 @@ object NativeEngine {
     external fun directBufferAddress(buffer: ByteBuffer): Long
     external fun callStructArgL(fn: Long, structSize: Int, structPtr: Long, arg2: Long): Long
     external fun callStructReturn(fn: Long, a: Long, b: Long, structSize: Int, outPtr: Long)
+    external fun callGeneric(fn: Long, argc: Int, typeSpec: String, argsPtr: Long, outPtr: Long)
 }
