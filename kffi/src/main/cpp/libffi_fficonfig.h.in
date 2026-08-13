@@ -23,8 +23,25 @@
 
 @EH_FRAME_FLAGS_DEFINE@
 
-/* FFI_EXEC_TRAMPOLINE_TABLE deliberately undefined: Android (non-Mach) has
-   no trampoline-table implementation and ffitarget.h errors if it is set. */
+/*
+ * Closures on Android. FFI_EXEC_TRAMPOLINE_TABLE must stay undefined (it is
+ * Mach-only; ffitarget.h errors if it is set on a non-Mach target). Instead,
+ * mirror what libffi's autotools configure produces for *-linux-android*
+ * targets:
+ *   - FFI_MMAP_EXEC_WRIT  routes ffi_closure_alloc through dlmalloc-backed
+ *     executable segments instead of the plain-malloc path (the Android heap
+ *     is not executable, so plain-malloc closures would crash).
+ *   - FFI_EXEC_STATIC_TRAMP allocates closure trampolines from a static
+ *     trampoline table mapped RX from the libffi text segment (via /proc
+ *     self-maps), never executing heap memory.
+ *
+ * HAVE_MEMFD_CREATE is intentionally NOT defined: the NDK only declares
+ * memfd_create for _GNU_SOURCE builds at API >= 30, and kffi's minSdk is 28.
+ * The static-trampoline path never needs the memfd fallback on a file-backed
+ * libkffi.so.
+ */
+#define FFI_MMAP_EXEC_WRIT 1
+#define FFI_EXEC_STATIC_TRAMP 1
 
 #ifdef HAVE_HIDDEN_VISIBILITY_ATTRIBUTE
 #ifdef LIBFFI_ASM

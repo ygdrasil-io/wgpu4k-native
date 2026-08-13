@@ -5,12 +5,17 @@
 #include <dlfcn.h>
 #include <ffi.h>
 
+#include "kffi_upcall.h"
+
 typedef uint64_t (*fn_i0)(void);      /* int-like return, 0 args */
 typedef void (*fn_void_v0)(void);     /* void return, 0 args */
 typedef uint64_t (*fn_i4_i4i4i4i4)(int, int, int, int);
+typedef void (*fn_void_v2_pp)(void *, void *);
+typedef void (*fn_void_v1_i)(int);
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
-    (void)vm; (void)reserved;
+    (void)reserved;
+    kffi_upcall_init(vm);
     return JNI_VERSION_1_6;
 }
 
@@ -78,6 +83,26 @@ JNIEXPORT jlong JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callI4IIII(JN
         return 0L;
     }
     return (jlong)((fn_i4_i4i4i4i4)(uintptr_t)fn)(a, b, c, d);
+}
+
+JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callV2PP(JNIEnv *env, jclass cls, jlong fn, jlong p1, jlong p2) {
+    (void)cls;
+    if (fn == 0) {
+        (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/UnsatisfiedLinkError"),
+                         "kffi: null native function pointer");
+        return;
+    }
+    ((fn_void_v2_pp)(uintptr_t)fn)((void *)(uintptr_t)p1, (void *)(uintptr_t)p2);
+}
+
+JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callV1I(JNIEnv *env, jclass cls, jlong fn, jint i) {
+    (void)cls;
+    if (fn == 0) {
+        (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/UnsatisfiedLinkError"),
+                         "kffi: null native function pointer");
+        return;
+    }
+    ((fn_void_v1_i)(uintptr_t)fn)(i);
 }
 
 JNIEXPORT jlong JNICALL Java_org_graphiks_kffi_engine_NativeEngine_directBufferAddress(

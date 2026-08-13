@@ -29,5 +29,5 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/libffi_glue.cmake")
 add_library(kffi_bench_fixture SHARED bench_engine_fixture.c)
 target_link_libraries(kffi_bench_fixture PRIVATE log)
 
-add_library(kffi SHARED kffi_engine.c)
+add_library(kffi SHARED kffi_engine.c kffi_upcall.c)
 target_link_libraries(kffi PRIVATE log ffi)

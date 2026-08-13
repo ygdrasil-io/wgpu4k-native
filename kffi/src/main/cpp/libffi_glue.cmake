@@ -34,6 +34,7 @@ set(ffi_common_sources
   "${ffi_src_dir}/raw_api.c"
   "${ffi_src_dir}/java_raw_api.c"
   "${ffi_src_dir}/closures.c"
+  "${ffi_src_dir}/tramp.c"
 )
 
 if(ffi_machine STREQUAL "aarch64")
@@ -79,7 +80,9 @@ endif()
 set(FFI_VERSION "3.4.6")
 set(TARGET "${ffi_target_macro}")
 set(HAVE_LONG_DOUBLE "${ffi_have_long_double}")
-# Android (non-Mach) cannot use trampoline tables; must stay 0.
+# Android (non-Mach) cannot use trampoline tables; must stay 0. Closures are
+# enabled instead via FFI_MMAP_EXEC_WRIT + FFI_EXEC_STATIC_TRAMP in the
+# hand-crafted fficonfig.h.in (matching libffi's *-linux-android* configure).
 set(FFI_EXEC_TRAMPOLINE_TABLE 0)
 configure_file(
   "${libffi_SOURCE_DIR}/include/ffi.h.in"
