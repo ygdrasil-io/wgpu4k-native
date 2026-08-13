@@ -16,7 +16,6 @@
 
 #define SIZEOF_DOUBLE 8
 #define SIZEOF_LONG_DOUBLE 16
-#define SIZEOF_SIZE_T 8
 
 #if @HAVE_AS_X86_PCREL@
 #define HAVE_AS_X86_PCREL 1

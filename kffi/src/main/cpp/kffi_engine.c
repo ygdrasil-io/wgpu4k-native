@@ -152,14 +152,23 @@ JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callStructRetu
 JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callGeneric(
     JNIEnv *env, jclass cls, jlong fn, jint argc, jstring typeSpec, jlong argsPtr, jlong outPtr) {
     (void)cls;
+    (void)typeSpec; /* typeSpec reserved for M5 kextract emission; per-arg ffi_type selection lands there */
     if (fn == 0 || argsPtr == 0 || outPtr == 0) {
         (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/UnsatisfiedLinkError"),
                          "kffi: null generic-call argument");
         return;
     }
-    const char *spec = (*env)->GetStringUTFChars(env, typeSpec, NULL);
-    if ((*env)->ExceptionCheck(env)) return;
+    if (argc < 0) {
+        (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/IllegalArgumentException"),
+                         "kffi: negative generic-call argc");
+        return;
+    }
     ffi_type **types = calloc((size_t)argc, sizeof(ffi_type *));
+    if (types == NULL) {
+        (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/OutOfMemoryError"),
+                         "kffi: calloc types failed");
+        return;
+    }
     ffi_cif cif;
     for (int i = 0; i < argc; i++) {
         types[i] = &ffi_type_uint64; /* generic path: every scalar/pointer arg rides a uint64 carrier */
@@ -167,7 +176,6 @@ JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callGeneric(
     ffi_status status = ffi_prep_cif(&cif, FFI_DEFAULT_ABI, (unsigned)argc, &ffi_type_uint64, types);
     if (status != FFI_OK) {
         free(types);
-        (*env)->ReleaseStringUTFChars(env, typeSpec, spec);
         (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/IllegalArgumentException"),
                          "kffi: ffi_prep_cif failed");
         return;
@@ -176,6 +184,12 @@ JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callGeneric(
        value. The caller packs the values contiguously (one uint64 carrier per
        arg), so build the pointer array into that buffer. */
     void **avalue = calloc((size_t)argc, sizeof(void *));
+    if (avalue == NULL) {
+        free(types);
+        (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/OutOfMemoryError"),
+                         "kffi: calloc avalue failed");
+        return;
+    }
     uintptr_t base = (uintptr_t)argsPtr;
     for (int i = 0; i < argc; i++) {
         avalue[i] = (void *)(base + (uintptr_t)i * sizeof(uint64_t));
@@ -183,5 +197,4 @@ JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callGeneric(
     ffi_call(&cif, FFI_FN(fn), (void *)(uintptr_t)outPtr, avalue);
     free(avalue);
     free(types);
-    (*env)->ReleaseStringUTFChars(env, typeSpec, spec);
 }
