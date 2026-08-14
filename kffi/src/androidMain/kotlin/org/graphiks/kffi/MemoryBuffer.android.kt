@@ -51,6 +51,10 @@ actual class MemoryBuffer actual constructor(
         arrayBytes: Int, elementSize: Int, array: Any,
         arrayIndex: ULong, bufferOffset: ULong, size: ULong,
     ) {
+        // Element-wise via Object-relative Unsafe access: ART has no bulk
+        // copyMemory(Object,...) or primitive-array copy methods (only
+        // copyMemory(long,long,long) on pure addresses), so a memcpy would
+        // NoSuchMethodError on device. P4 re-optimizes this hot path.
         val bytes = size * elementSize.toULong()
         require(bytes <= this.size && bufferOffset <= this.size - bytes) { "Out of destination bounds" }
         require(
@@ -134,33 +138,33 @@ actual class MemoryBuffer actual constructor(
     actual fun readBytes(array: ByteArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
         readArray(array.size, 1, array, arrayIndex, bufferOffset, size)
     actual fun writeUBytes(array: UByteArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
-        writeArray(array.size, 1, array, arrayIndex, bufferOffset, size)
+        writeArray(array.size, 1, array.asByteArray(), arrayIndex, bufferOffset, size)
     actual fun readUBytes(array: UByteArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
-        readArray(array.size, 1, array, arrayIndex, bufferOffset, size)
+        readArray(array.size, 1, array.asByteArray(), arrayIndex, bufferOffset, size)
     actual fun writeShorts(array: ShortArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
         writeArray(array.size * 2, 2, array, arrayIndex, bufferOffset, size)
     actual fun readShorts(array: ShortArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
         readArray(array.size * 2, 2, array, arrayIndex, bufferOffset, size)
     actual fun writeUShorts(array: UShortArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
-        writeArray(array.size * 2, 2, array, arrayIndex, bufferOffset, size)
+        writeArray(array.size * 2, 2, array.asShortArray(), arrayIndex, bufferOffset, size)
     actual fun readUShorts(array: UShortArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
-        readArray(array.size * 2, 2, array, arrayIndex, bufferOffset, size)
+        readArray(array.size * 2, 2, array.asShortArray(), arrayIndex, bufferOffset, size)
     actual fun writeInts(array: IntArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
         writeArray(array.size * 4, 4, array, arrayIndex, bufferOffset, size)
     actual fun readInts(array: IntArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
         readArray(array.size * 4, 4, array, arrayIndex, bufferOffset, size)
     actual fun writeUInts(array: UIntArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
-        writeArray(array.size * 4, 4, array, arrayIndex, bufferOffset, size)
+        writeArray(array.size * 4, 4, array.asIntArray(), arrayIndex, bufferOffset, size)
     actual fun readUInts(array: UIntArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
-        readArray(array.size * 4, 4, array, arrayIndex, bufferOffset, size)
+        readArray(array.size * 4, 4, array.asIntArray(), arrayIndex, bufferOffset, size)
     actual fun writeLongs(array: LongArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
         writeArray(array.size * 8, 8, array, arrayIndex, bufferOffset, size)
     actual fun readLongs(array: LongArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
         readArray(array.size * 8, 8, array, arrayIndex, bufferOffset, size)
     actual fun writeULongs(array: ULongArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
-        writeArray(array.size * 8, 8, array, arrayIndex, bufferOffset, size)
+        writeArray(array.size * 8, 8, array.asLongArray(), arrayIndex, bufferOffset, size)
     actual fun readULongs(array: ULongArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
-        readArray(array.size * 8, 8, array, arrayIndex, bufferOffset, size)
+        readArray(array.size * 8, 8, array.asLongArray(), arrayIndex, bufferOffset, size)
     actual fun writeFloats(array: FloatArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
         writeArray(array.size * 4, 4, array, arrayIndex, bufferOffset, size)
     actual fun readFloats(array: FloatArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
