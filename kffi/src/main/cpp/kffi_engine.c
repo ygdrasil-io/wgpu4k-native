@@ -635,6 +635,10 @@ JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callGeneric(
  * references their addresses directly, so the JNIEXPORT symbols remain the
  * single source of truth for the engine surface. Signatures below mirror the
  * Kotlin externals in NativeEngine.kt / UpcallEngine.kt exactly.
+ *
+ * TODO(P2): add an androidUnitTest guarding the RegisterNatives table against
+ * NativeEngine.kt drift (a wrong entry fails loudly at load; a missing entry
+ * silently falls back to Java_... symbol lookup).
  */
 static JNINativeMethod kffi_native_engine_methods[] = {
     { "loadNativeLibrary", "(Ljava/lang/String;)J",

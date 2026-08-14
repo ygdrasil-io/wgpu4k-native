@@ -44,7 +44,9 @@ static JavaVM *g_vm;
  * any upcall threads exist. The callback fast path (kffi_upcall_closure) does
  * not take this lock: an in-flight callback reads a slot the allocator already
  * handed out, and freeing below a live callback is the caller's quiescence
- * responsibility (see freeTrampoline's contract note), not the mutex's. */
+ * responsibility (see freeTrampoline's contract note), not the mutex's. Those
+ * reads are non-atomic by design: the resulting C11 data races are only
+ * reachable through an API contract violation the caller already owns. */
 static pthread_mutex_t g_slots_mutex;
 
 void kffi_upcall_init(JavaVM *vm) {
@@ -199,13 +201,17 @@ fail_slot:
    and code mappings are unmapped together.
  *
  * QUIESCENCE CONTRACT (M6.1 / M5-M6 seam): this must only be called once the
- * caller has established quiescence — i.e. CallbackRuntime.isQuiescent()
+ * caller has established quiescence — i.e. CallbackRegistration.isQuiescent
  * guarantees no in-flight callback can still be executing this closure. The
  * mutex here protects the slot table against concurrent allocate/free; it does
  * NOT (and cannot) protect against freeing a closure while its callback is
  * executing, which is a use-after-free and is the caller's responsibility to
  * prevent before invoking this. Deliberately not over-engineered into a
- * refcount for the P1 milestone. */
+ * refcount for the P1 milestone.
+ *
+ * LEAK POLICY: freed slots are reusable; a registration that leaks a
+ * trampoline (never freed) retains the global ref — mirroring JNA
+ * CallbackReference behavior, now explicit. */
 JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_UpcallEngine_freeTrampoline(
     JNIEnv *env, jclass cls, jlong address) {
     (void)cls;
