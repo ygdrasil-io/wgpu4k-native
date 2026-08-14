@@ -16,6 +16,7 @@
  */
 
 #include <jni.h>
+#include <pthread.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <ffi.h>
@@ -37,8 +38,18 @@ typedef struct {
 static upcall_slot g_slots[KFFI_UPCALL_SLOTS];
 static JavaVM *g_vm;
 
+/* Guards the g_slots linear scan + state mutation in allocateTrampoline /
+ * freeTrampoline (M6.1: the M4.1 review's thread-safety fix for slot
+ * allocation). Initialized in kffi_upcall_init, which JNI_OnLoad runs before
+ * any upcall threads exist. The callback fast path (kffi_upcall_closure) does
+ * not take this lock: an in-flight callback reads a slot the allocator already
+ * handed out, and freeing below a live callback is the caller's quiescence
+ * responsibility (see freeTrampoline's contract note), not the mutex's. */
+static pthread_mutex_t g_slots_mutex;
+
 void kffi_upcall_init(JavaVM *vm) {
     g_vm = vm;
+    pthread_mutex_init(&g_slots_mutex, NULL);
 }
 
 static JNIEnv *acquire_env(int *attached) {
@@ -101,6 +112,7 @@ JNIEXPORT jlong JNICALL Java_org_graphiks_kffi_engine_UpcallEngine_allocateTramp
     }
 
     upcall_slot *slot = NULL;
+    pthread_mutex_lock(&g_slots_mutex);
     for (int i = 0; i < KFFI_UPCALL_SLOTS; i++) {
         if (!g_slots[i].in_use) {
             slot = &g_slots[i];
@@ -112,6 +124,7 @@ JNIEXPORT jlong JNICALL Java_org_graphiks_kffi_engine_UpcallEngine_allocateTramp
             break;
         }
     }
+    pthread_mutex_unlock(&g_slots_mutex);
     if (slot == NULL) {
         (*env)->ReleaseStringUTFChars(env, dispatchMethod, mname);
         (*env)->ReleaseStringUTFChars(env, dispatchSig, msig);
@@ -169,11 +182,13 @@ JNIEXPORT jlong JNICALL Java_org_graphiks_kffi_engine_UpcallEngine_allocateTramp
     return result;
 
 fail_slot:
+    pthread_mutex_lock(&g_slots_mutex);
     if (slot->cls != NULL) {
         (*env)->DeleteGlobalRef(env, slot->cls);
         slot->cls = NULL;
     }
     slot->in_use = 0;
+    pthread_mutex_unlock(&g_slots_mutex);
     (*env)->ReleaseStringUTFChars(env, dispatchMethod, mname);
     (*env)->ReleaseStringUTFChars(env, dispatchSig, msig);
     return result;
@@ -181,11 +196,21 @@ fail_slot:
 
 /* Release the closure identified by the executable trampoline address that
    Kotlin holds. ffi_closure_free takes the writable allocation; both the data
-   and code mappings are unmapped together. */
+   and code mappings are unmapped together.
+ *
+ * QUIESCENCE CONTRACT (M6.1 / M5-M6 seam): this must only be called once the
+ * caller has established quiescence — i.e. CallbackRuntime.isQuiescent()
+ * guarantees no in-flight callback can still be executing this closure. The
+ * mutex here protects the slot table against concurrent allocate/free; it does
+ * NOT (and cannot) protect against freeing a closure while its callback is
+ * executing, which is a use-after-free and is the caller's responsibility to
+ * prevent before invoking this. Deliberately not over-engineered into a
+ * refcount for the P1 milestone. */
 JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_UpcallEngine_freeTrampoline(
     JNIEnv *env, jclass cls, jlong address) {
     (void)cls;
     if (address == 0L) return;
+    pthread_mutex_lock(&g_slots_mutex);
     for (int i = 0; i < KFFI_UPCALL_SLOTS; i++) {
         if (g_slots[i].in_use && g_slots[i].fnptr != NULL &&
             (uintptr_t)address == (uintptr_t)g_slots[i].fnptr) {
@@ -196,7 +221,8 @@ JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_UpcallEngine_freeTrampoline
             g_slots[i].cls = NULL;
             g_slots[i].method = NULL;
             g_slots[i].in_use = 0;
-            return;
+            break;
         }
     }
+    pthread_mutex_unlock(&g_slots_mutex);
 }

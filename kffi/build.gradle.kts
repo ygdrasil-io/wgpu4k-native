@@ -145,6 +145,13 @@ android {
                 cFlags += listOf("-std=c11")
             }
         }
+        ndk {
+            // M6.1: ship exactly the 3 supported ABIs; x86 was building too.
+            abiFilters += setOf("arm64-v8a", "x86_64", "armeabi-v7a")
+        }
+        // M6.1: R8 runs on the consumer, so these rules ship in the AAR and are
+        // applied when the consuming app minifies.
+        consumerProguardFiles("src/main/resources/consumer-rules.pro")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {

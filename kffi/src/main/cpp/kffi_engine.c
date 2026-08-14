@@ -1,5 +1,6 @@
 #include <jni.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dlfcn.h>
@@ -56,12 +57,6 @@ typedef void (*fn_v_6_pplpli)(void *, void *, int64_t, void *, int64_t, int);
 typedef void (*fn_v_6_pplpll)(void *, void *, int64_t, void *, int64_t, int64_t);
 typedef void (*fn_v_6_ppplpp)(void *, void *, void *, int64_t, void *, void *);
 typedef void (*fn_v_7_pffffff)(void *, float, float, float, float, float, float);
-
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
-    (void)reserved;
-    kffi_upcall_init(vm);
-    return JNI_VERSION_1_6;
-}
 
 JNIEXPORT jlong JNICALL Java_org_graphiks_kffi_engine_NativeEngine_loadNativeLibrary(
     JNIEnv *env, jclass cls, jstring path) {
@@ -630,4 +625,120 @@ JNIEXPORT void JNICALL Java_org_graphiks_kffi_engine_NativeEngine_callGeneric(
     ffi_call(&cif, FFI_FN(fn), (void *)(uintptr_t)outPtr, avalue);
     free(avalue);
     free(types);
+}
+
+/*
+ * JNI registration (M6.1). All NativeEngine and UpcallEngine externals are
+ * bound explicitly via RegisterNatives from JNI_OnLoad (spec I6) instead of
+ * relying on Java_<class>_<name> symbol-name matching. The JNIEXPORT
+ * naming-convention functions above are kept unchanged: RegisterNatives
+ * references their addresses directly, so the JNIEXPORT symbols remain the
+ * single source of truth for the engine surface. Signatures below mirror the
+ * Kotlin externals in NativeEngine.kt / UpcallEngine.kt exactly.
+ */
+static JNINativeMethod kffi_native_engine_methods[] = {
+    { "loadNativeLibrary", "(Ljava/lang/String;)J",
+      (void *)Java_org_graphiks_kffi_engine_NativeEngine_loadNativeLibrary },
+    { "resolveSymbolIn", "(JLjava/lang/String;)J",
+      (void *)Java_org_graphiks_kffi_engine_NativeEngine_resolveSymbolIn },
+    { "resolveSymbol", "(Ljava/lang/String;)J",
+      (void *)Java_org_graphiks_kffi_engine_NativeEngine_resolveSymbol },
+    { "callV0", "(J)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV0 },
+    { "callI0", "(J)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callI0 },
+    { "callI4IIII", "(JIIII)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callI4IIII },
+    { "callV2PP", "(JJJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV2PP },
+    { "callV1I", "(JI)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV1I },
+    { "callF1P", "(JJ)F", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callF1P },
+    { "callI1I", "(JI)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callI1I },
+    { "callI1P", "(JJ)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callI1P },
+    { "callI2PI", "(JJI)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callI2PI },
+    { "callI2PP", "(JJJ)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callI2PP },
+    { "callI3PIP", "(JJIJ)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callI3PIP },
+    { "callI3PPP", "(JJJJ)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callI3PPP },
+    { "callI4PLPL", "(JJJJJ)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callI4PLPL },
+    { "callL1P", "(JJ)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callL1P },
+    { "callL3PLP", "(JJJJ)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callL3PLP },
+    { "callL3PPP", "(JJJJ)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callL3PPP },
+    { "callP1P", "(JJ)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callP1P },
+    { "callP2PI", "(JJI)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callP2PI },
+    { "callP2PP", "(JJJ)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callP2PP },
+    { "callP3PLL", "(JJJJ)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callP3PLL },
+    { "callV1P", "(JJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV1P },
+    { "callV2PI", "(JJI)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV2PI },
+    { "callV3PLP", "(JJJJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV3PLP },
+    { "callV3PPI", "(JJJI)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV3PPI },
+    { "callV3PPL", "(JJJJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV3PPL },
+    { "callV4PIII", "(JJIII)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV4PIII },
+    { "callV4PIIP", "(JJIIJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV4PIIP },
+    { "callV4PPLI", "(JJJJI)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV4PPLI },
+    { "callV4PPLL", "(JJJJJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV4PPLL },
+    { "callV4PPPP", "(JJJJJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV4PPPP },
+    { "callV5PIIII", "(JJIIII)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV5PIIII },
+    { "callV5PIPLL", "(JJIJJJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV5PIPLL },
+    { "callV5PIPLP", "(JJIJJJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV5PIPLP },
+    { "callV5PPILL", "(JJJIJJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV5PPILL },
+    { "callV5PPLPL", "(JJJJJJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV5PPLPL },
+    { "callV6PIIIII", "(JJIIIII)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV6PIIIII },
+    { "callV6PPIIPL", "(JJJIIJJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV6PPIIPL },
+    { "callV6PPLPLI", "(JJJJJJI)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV6PPLPLI },
+    { "callV6PPLPLL", "(JJJJJJJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV6PPLPLL },
+    { "callV6PPPLPP", "(JJJJJJJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV6PPPLPP },
+    { "callV7PFFFFFF", "(JJFFFFFF)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callV7PFFFFFF },
+    { "directBufferAddress", "(Ljava/nio/ByteBuffer;)J",
+      (void *)Java_org_graphiks_kffi_engine_NativeEngine_directBufferAddress },
+    { "callStructArgL", "(JIJJ)J", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callStructArgL },
+    { "callStructReturn", "(JJJIJ)V", (void *)Java_org_graphiks_kffi_engine_NativeEngine_callStructReturn },
+    { "callGeneric", "(JILjava/lang/String;JJ)V",
+      (void *)Java_org_graphiks_kffi_engine_NativeEngine_callGeneric },
+};
+
+static JNINativeMethod kffi_upcall_engine_methods[] = {
+    { "allocateTrampoline", "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;)J",
+      (void *)Java_org_graphiks_kffi_engine_UpcallEngine_allocateTrampoline },
+    { "freeTrampoline", "(J)V", (void *)Java_org_graphiks_kffi_engine_UpcallEngine_freeTrampoline },
+};
+
+static jint kffi_register_natives(JNIEnv *env, const char *class_name,
+                                  const JNINativeMethod *methods, jint method_count) {
+    jclass cls = (*env)->FindClass(env, class_name);
+    if (cls == NULL) {
+        (*env)->ExceptionClear(env);
+        char msg[256];
+        (void)snprintf(msg, sizeof(msg),
+                       "kffi: JNI_OnLoad: engine class not found: %s", class_name);
+        (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/UnsatisfiedLinkError"), msg);
+        return JNI_ERR;
+    }
+    if ((*env)->RegisterNatives(env, cls, methods, method_count) != JNI_OK) {
+        (*env)->ExceptionClear(env);
+        char msg[256];
+        (void)snprintf(msg, sizeof(msg),
+                       "kffi: JNI_OnLoad: RegisterNatives failed for %s (%d methods)",
+                       class_name, (int)method_count);
+        (*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/UnsatisfiedLinkError"), msg);
+        return JNI_ERR;
+    }
+    return JNI_OK;
+}
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
+    (void)reserved;
+    JNIEnv *env = NULL;
+    if ((*vm)->GetEnv(vm, (void **)&env, JNI_VERSION_1_6) != JNI_OK) {
+        return JNI_ERR;
+    }
+    if (kffi_register_natives(env, "org/graphiks/kffi/engine/NativeEngine",
+                              kffi_native_engine_methods,
+                              (jint)(sizeof(kffi_native_engine_methods) /
+                                     sizeof(kffi_native_engine_methods[0]))) != JNI_OK) {
+        return JNI_ERR;
+    }
+    if (kffi_register_natives(env, "org/graphiks/kffi/engine/UpcallEngine",
+                              kffi_upcall_engine_methods,
+                              (jint)(sizeof(kffi_upcall_engine_methods) /
+                                     sizeof(kffi_upcall_engine_methods[0]))) != JNI_OK) {
+        return JNI_ERR;
+    }
+    kffi_upcall_init(vm);
+    return JNI_VERSION_1_6;
 }
