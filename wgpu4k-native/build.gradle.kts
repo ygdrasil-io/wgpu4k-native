@@ -86,7 +86,8 @@ kotlin {
         androidMain {
             dependencies {
                 // JNA is kept (as the plain jar, not the @aar packaging) only for the
-                // callback trampolines the kffi upcall engine cannot express (TODO(M5.5)).
+                // callback trampolines the kffi upcall engine cannot express
+                // (TODO(M6/P2): per-typedef upcall CIFs retire this jar).
                 // Downcalls and memory-backed structs ride the kffi NativeEngine instead.
                 api(libs.jna)
             }
