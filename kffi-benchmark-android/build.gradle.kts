@@ -40,6 +40,39 @@ kotlin {
 }
 
 // JUnit5/kotest jars ship duplicate META-INF LICENSE/README files; exclude them from merge.
+// The kffi module ships the bench fixture only in its own androidTest APK (testOnly, excluded
+// from the AAR). Stage just libkffi_bench_fixture.so into this module's androidTest jniLibs so
+// the harness can dlopen it by path from nativeLibraryDir.
+abstract class StageKffiBenchFixture : DefaultTask() {
+    @get:InputFiles
+    abstract val fixtureSources: ConfigurableFileCollection
+
+    @get:OutputDirectory
+    abstract val outputDir: DirectoryProperty
+
+    @TaskAction
+    fun stage() {
+        val out = outputDir.get().asFile
+        out.deleteRecursively()
+        out.mkdirs()
+        fixtureSources.files.forEach { src ->
+            val abi = src.parentFile.name
+            val dest = File(out, "$abi/${src.name}")
+            dest.parentFile.mkdirs()
+            src.copyTo(dest, overwrite = true)
+        }
+    }
+}
+
+val stageKffiBenchFixture = tasks.register<StageKffiBenchFixture>("stageKffiBenchFixture") {
+    fixtureSources.from(
+        fileTree(project(":kffi").layout.buildDirectory.dir("intermediates/cmake/debug/obj")) {
+            include("**/libkffi_bench_fixture.so")
+        },
+    )
+    outputDir.set(layout.buildDirectory.dir("kffi-fixture-androidTest"))
+}
+
 android {
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -50,6 +83,15 @@ android {
             excludes += "/META-INF/LICENSE.md"
             excludes += "/META-INF/LICENSE-notice.md"
             excludes += "/META-INF/versions/9/previous-compilation-data.bin"
+        }
+        jniLibs {
+            // Extract .so to nativeLibraryDir so the test can dlopen the fixture by path.
+            useLegacyPackaging = true
+        }
+    }
+    sourceSets {
+        getByName("androidTest") {
+            jniLibs.srcDirs(files(layout.buildDirectory.dir("kffi-fixture-androidTest")).builtBy(stageKffiBenchFixture))
         }
     }
 }
