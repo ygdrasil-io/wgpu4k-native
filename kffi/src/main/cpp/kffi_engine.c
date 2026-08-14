@@ -8,6 +8,29 @@
 
 #include "kffi_upcall.h"
 
+/*
+ * ABI guard (I6/M6.2): the engine's uniform jlong JNI signatures carry
+ * pointers, C long values and size_t counts in 64-bit carriers, resolved by
+ * sizeof-aware casts at the C boundary. C `long` is 32-bit on armeabi-v7a but
+ * 64-bit on arm64-v8a/x86_64, so the width is pinned here at compile time:
+ * KFFI_C_LONG_IS_32BIT is derived from the compiler's architecture macros and
+ * the _Static_assert fails the build if it ever disagrees with sizeof(long),
+ * so a silent 32-bit truncation/extension regression cannot slip back in.
+ *
+ * All wrappers below must stay consistent with this guard: pointers pass
+ * through (uintptr_t) both directions, and C long/size_t args truncate from
+ * jlong at the call site (32-bit) with returns widening through (jlong).
+ */
+#if defined(__arm__) && !defined(__aarch64__)
+#define KFFI_C_LONG_IS_32BIT 1
+#else
+#define KFFI_C_LONG_IS_32BIT 0
+#endif
+
+_Static_assert(
+    (KFFI_C_LONG_IS_32BIT ? sizeof(long) == 4 : sizeof(long) == 8),
+    "C long width does not match the KFFI_C_LONG_IS_32BIT ABI guard");
+
 typedef uint64_t (*fn_i0)(void);      /* int-like return, 0 args */
 typedef void (*fn_void_v0)(void);     /* void return, 0 args */
 typedef uint64_t (*fn_i4_i4i4i4i4)(int, int, int, int);
