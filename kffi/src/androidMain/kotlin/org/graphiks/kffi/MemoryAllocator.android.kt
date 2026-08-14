@@ -64,8 +64,9 @@ actual class MemoryAllocator : AutoCloseable {
     actual fun allocateFrom(value: String): CString {
         val bytes = value.toByteArray(StandardCharsets.UTF_8)
         val addr = arena.allocate(bytes.size + 1L)
-        AndroidUnsafe.get().copyMemory(bytes, 16, null, addr, bytes.size.toLong())
-        AndroidUnsafe.get().putByte(addr + bytes.size, 0)
+        val unsafe = AndroidUnsafe.get()
+        for (i in bytes.indices) unsafe.putByte(addr + i, bytes[i])
+        unsafe.putByte(addr + bytes.size, 0)
         return CString(NativeAddress(addr))
     }
 

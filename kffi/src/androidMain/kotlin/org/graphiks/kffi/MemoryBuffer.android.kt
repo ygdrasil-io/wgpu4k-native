@@ -57,10 +57,9 @@ actual class MemoryBuffer actual constructor(
             bytes <= arrayBytes.toULong() &&
                 arrayIndex * elementSize.toULong() <= arrayBytes.toULong() - bytes,
         ) { "Out of source bounds" }
-        unsafe.copyMemory(
-            array, 16L + (arrayIndex * elementSize.toULong()).toLong(),
-            null, base + bufferOffset.toLong(), bytes.toLong(),
-        )
+        val arrayOffset = unsafe.arrayBaseOffset(array.javaClass).toLong() +
+            (arrayIndex * elementSize.toULong()).toLong()
+        copyElementsToNative(array, arrayOffset, base + bufferOffset.toLong(), size.toInt(), elementSize)
     }
 
     private fun readArray(
@@ -73,10 +72,61 @@ actual class MemoryBuffer actual constructor(
             bytes <= arrayBytes.toULong() &&
                 arrayIndex * elementSize.toULong() <= arrayBytes.toULong() - bytes,
         ) { "Out of destination bounds" }
-        unsafe.copyMemory(
-            null, base + bufferOffset.toLong(),
-            array, 16L + (arrayIndex * elementSize.toULong()).toLong(), bytes.toLong(),
-        )
+        val arrayOffset = unsafe.arrayBaseOffset(array.javaClass).toLong() +
+            (arrayIndex * elementSize.toULong()).toLong()
+        copyElementsFromNative(base + bufferOffset.toLong(), array, arrayOffset, size.toInt(), elementSize)
+    }
+
+    private fun copyElementsToNative(
+        array: Any, arrayOffset: Long, destination: Long, count: Int, elementSize: Int,
+    ) {
+        var arrayPos = arrayOffset
+        var nativePos = destination
+        when (elementSize) {
+            1 -> repeat(count) { unsafe.putByte(nativePos++, unsafe.getByte(array, arrayPos++)) }
+            2 -> repeat(count) {
+                unsafe.putShort(nativePos, unsafe.getShort(array, arrayPos))
+                nativePos += 2
+                arrayPos += 2
+            }
+            4 -> repeat(count) {
+                unsafe.putInt(nativePos, unsafe.getInt(array, arrayPos))
+                nativePos += 4
+                arrayPos += 4
+            }
+            8 -> repeat(count) {
+                unsafe.putLong(nativePos, unsafe.getLong(array, arrayPos))
+                nativePos += 8
+                arrayPos += 8
+            }
+            else -> error("Unsupported array element size: $elementSize")
+        }
+    }
+
+    private fun copyElementsFromNative(
+        source: Long, array: Any, arrayOffset: Long, count: Int, elementSize: Int,
+    ) {
+        var nativePos = source
+        var arrayPos = arrayOffset
+        when (elementSize) {
+            1 -> repeat(count) { unsafe.putByte(array, arrayPos++, unsafe.getByte(nativePos++)) }
+            2 -> repeat(count) {
+                unsafe.putShort(array, arrayPos, unsafe.getShort(nativePos))
+                nativePos += 2
+                arrayPos += 2
+            }
+            4 -> repeat(count) {
+                unsafe.putInt(array, arrayPos, unsafe.getInt(nativePos))
+                nativePos += 4
+                arrayPos += 4
+            }
+            8 -> repeat(count) {
+                unsafe.putLong(array, arrayPos, unsafe.getLong(nativePos))
+                nativePos += 8
+                arrayPos += 8
+            }
+            else -> error("Unsupported array element size: $elementSize")
+        }
     }
 
     actual fun writeBytes(array: ByteArray, arrayIndex: ULong, bufferOffset: ULong, size: ULong) =
