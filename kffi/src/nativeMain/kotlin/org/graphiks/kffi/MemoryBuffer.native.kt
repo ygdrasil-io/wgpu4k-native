@@ -26,7 +26,7 @@ import kotlinx.cinterop.value
 actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, actual val size: ULong) {
 
     private fun <T : CPointed> getPointerAtOffset(offset: ULong): CPointer<T> {
-        return (handler.pointer.rawValue.toLong() + offset.toLong()).toCPointer()
+        return (handler.rawValue + offset.toLong()).toCPointer()
             ?: error("fail to get pointer at offset $offset")
     }
 
@@ -111,11 +111,12 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
     }
 
     actual fun writePointer(value: NativeAddress, offset: ULong) {
-        getPointerAtOffset<LongVar>(offset).pointed.value = value.pointer.rawValue.toLong()
+        getPointerAtOffset<LongVar>(offset).pointed.value = value.rawValue
     }
 
     actual fun readPointer(offset: ULong): NativeAddress {
-        return getPointerAtOffset<LongVar>(offset).pointed.value.toCPointer<COpaque>()?.let(::NativeAddress)
+        return getPointerAtOffset<LongVar>(offset).pointed.value.toCPointer<COpaque>()
+            ?.let(NativeAddress::fromPointer)
             ?: error("fail to read pointer at offset $offset")
     }
 

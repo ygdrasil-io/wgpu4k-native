@@ -10,6 +10,13 @@ import kotlinx.cinterop.toLong
 
 actual value class NativeAddress actual constructor(actual val rawValue: Long) {
 
+    companion object {
+        fun fromPointer(pointer: CPointer<*>): NativeAddress = NativeAddress(pointer.toLong())
+
+        fun fromPointer(pointer: CPointer<*>?): NativeAddress =
+            NativeAddress(requireNotNull(pointer) { "Invalid pointer" }.toLong())
+    }
+
     val pointer: CPointer<*>?
         get() = rawValue.toCPointer<kotlinx.cinterop.COpaque>()
 

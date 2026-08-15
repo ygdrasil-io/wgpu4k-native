@@ -62,7 +62,7 @@ private fun nativeFfiRoute(
 ) {
     CallbackRuntime.dispatchSafely(
         nativeFfiRoutedType,
-        routingUserdata?.let(::Pointer),
+        routingUserdata?.let(NativeAddress::fromPointer),
     ) { it.invoke(value) }
 }
 
@@ -148,8 +148,8 @@ class CallbackFfiNativeTest : FreeSpec({
                 registrations.forEachIndexed { index, registration ->
                     fixture_store_many(
                         index.toUInt(),
-                        registration.callback.pointer.reinterpret(),
-                        requireNotNull(registration.userdata).pointer,
+                        registration.callback.reinterpret(),
+                        requireNotNull(registration.userdata).reinterpret<COpaque>(),
                     )
                 }
                 fixture_active_native_slots() shouldBe NATIVE_FFI_MANY_CALLBACK_COUNT.toUInt()
@@ -207,7 +207,7 @@ class CallbackFfiNativeTest : FreeSpec({
                 CallbackType<OtherNativeFfiCallback>("ffi-native-other", hasRoutingUserdata = true)
             val other = CallbackRuntime.register(
                 type = otherType,
-                trampoline = Pointer(nativeFfiRoutedStub),
+                trampoline = NativeAddress.fromPointer(nativeFfiRoutedStub),
                 policy = CallbackPolicy.REPEATING,
                 callback = OtherNativeFfiCallback { calls.fetchAndAdd(1) },
             )
@@ -216,13 +216,13 @@ class CallbackFfiNativeTest : FreeSpec({
                     fixture_store(
                         nativeFfiRoutedStub,
                         null,
-                        PlatformCallbackTokenAddressCodec.encode(Long.MAX_VALUE.toULong()).pointer,
+                        PlatformCallbackTokenAddressCodec.encode(Long.MAX_VALUE.toULong()).reinterpret<COpaque>(),
                     )
                     fixture_fire_now(15u)
                     fixture_store(
                         nativeFfiRoutedStub,
                         null,
-                        requireNotNull(other.userdata).pointer,
+                        requireNotNull(other.userdata).reinterpret<COpaque>(),
                     )
                     fixture_fire_now(16u)
                 }
@@ -241,7 +241,7 @@ class CallbackFfiNativeTest : FreeSpec({
             val reported = AtomicReference<Throwable?>(null)
             val registration = CallbackRuntime.register(
                 type = nativeFfiRoutedType,
-                trampoline = Pointer(nativeFfiRoutedStub),
+                trampoline = NativeAddress.fromPointer(nativeFfiRoutedStub),
                 policy = CallbackPolicy.ONCE,
                 onError = CallbackExceptionHandler { throw handlerFailure },
                 callback = NativeFfiCallback { throw callbackFailure },
@@ -267,16 +267,16 @@ class CallbackFfiNativeTest : FreeSpec({
             val calls = AtomicInt(0)
             val prepared = CallbackRuntime.prepare(
                 type = nativeFfiRoutedType,
-                trampoline = Pointer(nativeFfiRoutedStub),
+                trampoline = NativeAddress.fromPointer(nativeFfiRoutedStub),
                 policy = CallbackPolicy.REPEATING,
                 callback = NativeFfiCallback { calls.fetchAndAdd(1) },
             )
             shouldThrow<IllegalStateException> {
                 try {
                     fixture_store(
-                        prepared.callback.pointer.reinterpret(),
+                        prepared.callback.reinterpret(),
                         null,
-                        requireNotNull(prepared.userdata).pointer,
+                        requireNotNull(prepared.userdata).reinterpret<COpaque>(),
                     )
                     throw IllegalStateException("direct downcall failed")
                 } finally {
@@ -294,7 +294,7 @@ class CallbackFfiNativeTest : FreeSpec({
             val calls = AtomicInt(0)
             val prepared = CallbackRuntime.prepare(
                 type = nativeFfiRoutedType,
-                trampoline = Pointer(nativeFfiRoutedStub),
+                trampoline = NativeAddress.fromPointer(nativeFfiRoutedStub),
                 policy = CallbackPolicy.REPEATING,
                 callback = NativeFfiCallback { calls.fetchAndAdd(1) },
             )
@@ -318,7 +318,7 @@ class CallbackFfiNativeTest : FreeSpec({
             val calls = AtomicInt(0)
             val first = CallbackRuntime.register(
                 type = nativeFfiRetiredNoUserdataType,
-                trampoline = Pointer(nativeFfiRetiredNoUserdataStub),
+                trampoline = NativeAddress.fromPointer(nativeFfiRetiredNoUserdataStub),
                 policy = CallbackPolicy.ONCE,
                 callback = NativeFfiCallback { calls.fetchAndAdd(1) },
             )
@@ -332,7 +332,7 @@ class CallbackFfiNativeTest : FreeSpec({
             shouldThrow<IllegalStateException> {
                 CallbackRuntime.register(
                     type = nativeFfiRetiredNoUserdataType,
-                    trampoline = Pointer(nativeFfiRetiredNoUserdataStub),
+                    trampoline = NativeAddress.fromPointer(nativeFfiRetiredNoUserdataStub),
                     policy = CallbackPolicy.ONCE,
                     callback = NativeFfiCallback {},
                 )
@@ -347,7 +347,7 @@ class CallbackFfiNativeTest : FreeSpec({
             val newCalls = AtomicInt(0)
             val first = CallbackRuntime.register(
                 type = nativeFfiRearmedNoUserdataType,
-                trampoline = Pointer(nativeFfiRearmedNoUserdataStub),
+                trampoline = NativeAddress.fromPointer(nativeFfiRearmedNoUserdataStub),
                 policy = CallbackPolicy.REPEATING,
                 callback = NativeFfiCallback { oldCalls.fetchAndAdd(1) },
             )
@@ -362,7 +362,7 @@ class CallbackFfiNativeTest : FreeSpec({
 
             val second = CallbackRuntime.rearmAfterNativeQuiescence(
                 type = nativeFfiRearmedNoUserdataType,
-                trampoline = Pointer(nativeFfiRearmedNoUserdataStub),
+                trampoline = NativeAddress.fromPointer(nativeFfiRearmedNoUserdataStub),
                 policy = CallbackPolicy.ONCE,
                 callback = NativeFfiCallback { newCalls.fetchAndAdd(1) },
             )
@@ -384,7 +384,7 @@ class CallbackFfiNativeTest : FreeSpec({
             val registration = registerNativeFfiRouted(CallbackPolicy.REPEATING) {}
             try {
                 val userdata = requireNotNull(registration.userdata)
-                fixture_roundtrip_userdata(userdata.pointer) shouldBe PlatformCallbackTokenAddressCodec.decode(userdata)
+                fixture_roundtrip_userdata(userdata.reinterpret<COpaque>()) shouldBe PlatformCallbackTokenAddressCodec.decode(userdata)
             } finally {
                 registration.close()
             }
@@ -397,7 +397,7 @@ private fun registerNativeFfiRouted(
     callback: (UInt) -> Unit,
 ): CallbackRegistration<NativeFfiCallback> = CallbackRuntime.register(
     type = nativeFfiRoutedType,
-    trampoline = Pointer(nativeFfiRoutedStub),
+    trampoline = NativeAddress.fromPointer(nativeFfiRoutedStub),
     policy = policy,
     callback = NativeFfiCallback(callback),
 )
@@ -410,9 +410,9 @@ private fun scheduleNativeFfiAfterRegisteringFunctionReturns(
         memScoped {
             val applicationUserdata = alloc<ByteVar>().ptr.reinterpret<COpaque>()
             fixture_store(
-                registration.callback.pointer.reinterpret(),
+                registration.callback.reinterpret(),
                 applicationUserdata,
-                requireNotNull(registration.userdata).pointer,
+                requireNotNull(registration.userdata).reinterpret<COpaque>(),
             )
             fixture_fire_after_ms(11u, 10u)
         }
@@ -425,9 +425,9 @@ private fun scheduleNativeFfiAfterRegisteringFunctionReturns(
 
 private fun storeNativeFfiRouted(registration: CallbackRegistration<NativeFfiCallback>) {
     fixture_store(
-        registration.callback.pointer.reinterpret(),
+        registration.callback.reinterpret(),
         null,
-        requireNotNull(registration.userdata).pointer,
+        requireNotNull(registration.userdata).reinterpret<COpaque>(),
     )
 }
 

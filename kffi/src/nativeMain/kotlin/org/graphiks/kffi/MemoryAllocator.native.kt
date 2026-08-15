@@ -35,7 +35,7 @@ actual class MemoryAllocator : AutoCloseable {
     actual fun allocateFrom(value: String): CString {
         return value.cstr.getPointer(allocator)
             .reinterpret<COpaque>()
-            .let(::NativeAddress)
+            .let(NativeAddress::fromPointer)
             .let { CString(it) }
     }
 

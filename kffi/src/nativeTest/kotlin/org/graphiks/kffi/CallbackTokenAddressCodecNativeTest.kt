@@ -29,7 +29,7 @@ class CallbackTokenAddressCodecNativeTest : FreeSpec({
         )
 
         shouldThrow<IllegalArgumentException> {
-            PlatformCallbackTokenAddressCodec.decode(Pointer(highBitPointer))
+            PlatformCallbackTokenAddressCodec.decode(NativeAddress.fromPointer(highBitPointer))
         }
     }
 
