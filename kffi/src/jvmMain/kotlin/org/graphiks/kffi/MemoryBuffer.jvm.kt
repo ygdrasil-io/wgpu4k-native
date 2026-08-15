@@ -32,8 +32,11 @@ actual class MemoryBuffer actual constructor(
         this.scopedSegment = scopedSegment
     }
 
+    /** Segment dérivé de l'adresse brute pour les buffers non scopés (créé une seule fois). */
+    private val fallbackSegment: MemorySegment by lazy { handler.toJvmSegment(size.toLong()) }
+
     private fun segment(): MemorySegment =
-        scopedSegment ?: handler.toJvmSegment(size.toLong())
+        scopedSegment ?: fallbackSegment
 
     private fun writeArray(destinationOffset: ULong, source: MemorySegment, arrayIndex: ULong, size: ULong, elementSizeBytes: Int) {
         val sourceOffset = elementSizeBytes.toULong() * arrayIndex
