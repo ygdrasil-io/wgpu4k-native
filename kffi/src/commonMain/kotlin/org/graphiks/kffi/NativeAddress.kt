@@ -1,3 +1,3 @@
 package org.graphiks.kffi
 
-expect class NativeAddress
+expect value class NativeAddress(val rawValue: Long)

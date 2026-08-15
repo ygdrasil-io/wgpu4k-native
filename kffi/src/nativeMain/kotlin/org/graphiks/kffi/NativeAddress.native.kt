@@ -2,26 +2,18 @@
 
 package org.graphiks.kffi
 
-import kotlinx.cinterop.COpaque
-import kotlinx.cinterop.CPointed
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.toCPointer
 import kotlinx.cinterop.toLong
 
-class Pointer(val pointer: CPointer<COpaque>) {
+actual value class NativeAddress actual constructor(actual val rawValue: Long) {
 
-    constructor(pointer: CPointer<*>) : this(pointer.reinterpret())
-    constructor(pointer: Long) : this(pointer.toCPointer<COpaque>() ?: error("Invalid pointer"))
+    val pointer: CPointer<*>?
+        get() = rawValue.toCPointer<kotlinx.cinterop.COpaque>()
 
-    fun <T : CPointed> reinterpret(): CPointer<T> {
-        return pointer.reinterpret()
+    fun <T : kotlinx.cinterop.CPointed> reinterpret(): CPointer<T> {
+        return requireNotNull(pointer).reinterpret()
     }
-
-    val rawValue: Long
-        get() = pointer.toLong()
-
 }
-
-actual typealias NativeAddress = Pointer
