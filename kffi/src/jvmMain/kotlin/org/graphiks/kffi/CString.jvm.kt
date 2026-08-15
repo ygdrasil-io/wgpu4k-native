@@ -12,6 +12,6 @@ actual value class CString actual constructor(actual val handler: NativeAddress)
         if (handler.rawValue == 0L) return null
         val bytes = ByteArray(size.toInt())
         handler.toJvmSegment(size.toLong()).asByteBuffer().get(bytes)
-        return String(bytes)
+        return String(bytes, Charsets.UTF_8)
     }
 }
