@@ -754,7 +754,9 @@ NativeAddress(requireNotNull(routingUserdata).rawValue)
 ```
 et `registration.callback.handler` / `registration.userdata.handler` par `registration.callback.rawValue` / `registration.userdata?.rawValue ?: 0L`.
 
-Dans `CallbackTokenAddressCodecJvmTest.kt`, `encode(token).handler.address()` devient `encode(token).rawValue`.
+Dans `CallbackTokenAddressCodecJvmTest.kt`, `encode(token).handler.address()` devient `encode(token).rawValue`, et :
+- supprimer les références à `validatedJvmCallbackPointerBits` (helper supprimé en M1.4, lignes ~45/51) — remplacer par un test direct de `pointerBits == Long.SIZE_BITS` ;
+- adapter l'assertion `decode(zéro)` : `decode(NativeAddress(0L))` retourne désormais `null` (0 = sentinelle null, aligné raw-address) au lieu de lever — M1.4 a changé ce comportement délibérément.
 
 - [ ] **Step 2: Remplacer les références aux trampolines FFM par des addresses brutes**
 
