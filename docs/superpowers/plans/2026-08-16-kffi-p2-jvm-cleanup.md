@@ -230,12 +230,11 @@ Expected: FAIL — `toJvmSegment` n'existe pas.
 ```kotlin
 package org.graphiks.kffi
 
-import java.lang.foreign.Arena
 import java.lang.foreign.MemorySegment
 
 /** Segment FFM éphémère (non-scopé) pour une adresse brute ; zéro = segment nul. */
 internal fun NativeAddress.toJvmSegmentOrNull(): MemorySegment? =
-    if (rawValue == 0L) null else MemorySegment.ofAddress(rawValue, 0L, Arena.global())
+    if (rawValue == 0L) null else MemorySegment.ofAddress(rawValue)
 
 internal fun NativeAddress.toJvmSegment(): MemorySegment =
     requireNotNull(toJvmSegmentOrNull()) { "Cannot convert null NativeAddress to segment" }
@@ -244,12 +243,14 @@ internal fun NativeAddress.toJvmSegment(): MemorySegment =
 internal fun MemorySegment?.toNativeAddress(): NativeAddress =
     NativeAddress(this?.address() ?: 0L)
 
-/** Lit/écrit le scope : dérive un segment borné [size] depuis l'adresse brute. */
+/** Dérive un segment borné [size] depuis l'adresse brute. */
 internal fun NativeAddress.toJvmSegment(size: Long): MemorySegment =
-    MemorySegment.ofAddress(rawValue, size, Arena.global())
+    MemorySegment.ofAddress(rawValue).reinterpret(size)
 
 internal fun MemoryBuffer.toJvmSegment(): MemorySegment = handler.toJvmSegment(size.toLong())
 ```
+
+> **Note JDK 23+** : `MemorySegment.ofAddress(long)` est le seul ctor public (JDK 22 avait `ofAddress(addr, size, arena)`, supprimé en 23). Les segments retournés sont non-scopés (arena global implicite) ; la borne est posée par `reinterpret(size)` quand nécessaire. Toolchain : Temurin 25 (kffi/build.gradle.kts:277).
 
 - [ ] **Step 4: Vérifier**
 
@@ -877,7 +878,7 @@ object JvmDowncallEngine {
     fun resolveSymbol(name: String): Long = findOrThrow(name)
 
     private fun segment(address: Long): MemorySegment =
-        MemorySegment.ofAddress(address, 0L, Arena.global())
+        MemorySegment.ofAddress(address)
 
     private fun handle(fn: Long, descriptor: FunctionDescriptor): MethodHandle =
         linker.downcallHandle(segment(fn), descriptor)
@@ -1240,10 +1241,10 @@ class JvmUpcallEngineTest {
 private fun invokeV2PP(stub: Long, a1: Long, a2: Long) {
     val linker = Linker.nativeLinker()
     val handle = linker.downcallHandle(
-        MemorySegment.ofAddress(stub, 0L, Arena.global()),
+        MemorySegment.ofAddress(stub),
         FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS),
     )
-    handle.invokeExact(MemorySegment.ofAddress(a1, 0L, Arena.global()), MemorySegment.ofAddress(a2, 0L, Arena.global()))
+    handle.invokeExact(MemorySegment.ofAddress(a1), MemorySegment.ofAddress(a2))
 }
 ```
 
