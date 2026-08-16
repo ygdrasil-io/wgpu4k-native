@@ -1345,47 +1345,34 @@ JVM_UPCALL_ENGINE("org.graphiks.kffi.engine.JvmUpcallEngine", jvm()),
 
 - [ ] **Step 2: Réécrire l'émission des trampolines**
 
-Dans `KotlinCallbackJvmEmitter.emitTrampoline`, remplacer le bloc `Linker.upcallStub(...)` par un appel au moteur. La forme est dérivée des paramètres bruts du callback :
-
-```kotlin
-private fun trampolineForm(rawParameters: List<KotlinCallbackParameter>): String {
-    // V + lettres par paramètre (P = adresse, I = int, L = long, ...)
-    val letters = rawParameters.joinToString("") { param ->
-        when (param.cAbiType) {
-            is KotlinKmpCAbiType.Address -> "P"
-            is KotlinKmpCAbiType.Scalar -> when (param.cAbiType.kind) {
-                KotlinKmpCAbiType.Scalar.Kind.I32, KotlinKmpCAbiType.Scalar.Kind.BOOL -> "I"
-                KotlinKmpCAbiType.Scalar.Kind.I64 -> "L"
-                KotlinKmpCAbiType.Scalar.Kind.F32 -> "F"
-                KotlinKmpCAbiType.Scalar.Kind.F64 -> "D"
-                else -> error("Unsupported upcall carrier ${param.cAbiType.kind}")
-            }
-            is KotlinKmpCAbiType.StructValue -> error("Struct-by-value upcall arguments are not supported")
-        }
-    }
-    return "V$letters"
-}
-```
-
-L'objet trampoline généré devient :
+API moteur (M4.1) : `JvmUpcallEngine.allocateTrampoline(dispatcherClass, dispatchMethod, dispatchSig)` — fabrique de stubs, aucun routage. Le `dispatchSig` suit la convention Java (I=int, J=long/pointeur, F, D, Z, V=void) ; le userdata occupe sa position C réelle (dernier paramètre, ex. `"(IIJ)V"`). L'émetteur génère un dispatcher statique à carriers Long/Int (zéro référence java.lang.foreign) et appelle l'API au lieu de `Linker.upcallStub(...)` :
 
 ```kotlin
 builder.appendLine("private object ${callback.trampolineName} {")
 builder.indent()
 builder.appendLine("val address: ${namePlan.runtime(NATIVE_ADDRESS)} by lazy {")
 builder.indent()
-builder.appendLine("${namePlan.runtime(JVM_UPCALL_ENGINE)}.trampoline$form { args ->")
+builder.appendLine("${namePlan.runtime(JVM_UPCALL_ENGINE)}.allocateTrampoline(")
 builder.indent()
-// ... dispatchSafely avec token extrait du userdata (1er argument)
+builder.appendLine("dispatcherClass = ${callback.trampolineName}::class.java,")
+builder.appendLine("dispatchMethod = \"dispatch\",")
+builder.appendLine("dispatchSig = \"${sigDepuisRawParameters(callback)}\",")
+builder.unindent()
+builder.appendLine("))")
 builder.unindent()
 builder.appendLine("}")
+builder.appendLine()
+builder.appendLine("@${namePlan.runtime(JVM_STATIC)}")
+builder.appendLine("fun dispatch(...) {")
+builder.indent()
+// ... dispatchSafely(type, userdata = NativeAddress(<dernier paramètre>)) { callback -> callback.invoke(...) }
 builder.unindent()
 builder.appendLine("}")
 builder.unindent()
 builder.appendLine("}")
 ```
 
-Le dispatch reprend la structure actuelle (`dispatchSafely(type, userdata = ...) { callback -> callback.invoke(...) }`) ; le premier paramètre brut (routing userdata) est consommé par le routage, pas passé au callback Kotlin.
+Le dispatch reprend la structure actuelle (`dispatchSafely(type, userdata = ...) { callback -> callback.invoke(...) }`) ; le dernier paramètre brut (routing userdata, position C réelle) est consommé par le routage, pas passé au callback Kotlin. La résolution `findStatic` du moteur passe par `privateLookupIn` — les objets trampoline privés restent valides.
 
 - [ ] **Step 3: Vérifier la régénération sur la fixture callback**
 
