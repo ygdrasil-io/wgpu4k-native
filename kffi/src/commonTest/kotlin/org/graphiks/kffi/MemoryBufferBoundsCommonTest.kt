@@ -20,9 +20,11 @@ class MemoryBufferBoundsCommonTest : FreeSpec({
         memoryScope { scope ->
             // Valeurs distinctes par largeur : offset < size, les deux doivent apparaître
             val buffer = scope.allocateBuffer(16u)
-            // 1-octet : offset == size == 16 (dans le message : offset=16 et size=16)
-            shouldThrow<IndexOutOfBoundsException> { buffer.readByte(16u) }.message shouldContain "16"
-            shouldThrow<IndexOutOfBoundsException> { buffer.readUByte(16u) }.message shouldContain "16"
+            // 1-octet : offset 17 + 1 > 16, offset ≠ size (distinct)
+            shouldThrow<IndexOutOfBoundsException> { buffer.readByte(17u) }
+                .message.shouldContain("17").shouldContain("16")
+            shouldThrow<IndexOutOfBoundsException> { buffer.readUByte(17u) }
+                .message.shouldContain("17").shouldContain("16")
             // 2-octets : offset 15 + 2 > 16
             shouldThrow<IndexOutOfBoundsException> { buffer.readShort(15u) }
                 .message.shouldContain("15").shouldContain("16")
@@ -42,25 +44,43 @@ class MemoryBufferBoundsCommonTest : FreeSpec({
                 .message.shouldContain("10").shouldContain("16")
             shouldThrow<IndexOutOfBoundsException> { buffer.readDouble(10u) }
                 .message.shouldContain("10").shouldContain("16")
-            // Pointeur : offset == size == 16
-            shouldThrow<IndexOutOfBoundsException> { buffer.readPointer(16u) }.message shouldContain "16"
+            // Pointeur : offset 17 + 8 > 16, offset ≠ size (distinct)
+            shouldThrow<IndexOutOfBoundsException> { buffer.readPointer(17u) }
+                .message.shouldContain("17").shouldContain("16")
         }
     }
 
-    "write crossing end throws for each family" {
+    "write crossing end throws with offset AND size in message" {
         memoryScope { scope ->
-            val buffer = scope.allocateBuffer(8u)
-            shouldThrow<IndexOutOfBoundsException> { buffer.writeByte(1, 8u) } // 8 + 1 > 8
-            shouldThrow<IndexOutOfBoundsException> { buffer.writeUByte(1u, 8u) }
-            shouldThrow<IndexOutOfBoundsException> { buffer.writeShort(1, 7u) } // 7 + 2 > 8
-            shouldThrow<IndexOutOfBoundsException> { buffer.writeUShort(1u, 7u) }
-            shouldThrow<IndexOutOfBoundsException> { buffer.writeInt(1, 6u) } // 6 + 4 > 8
-            shouldThrow<IndexOutOfBoundsException> { buffer.writeUInt(1u, 6u) }
-            shouldThrow<IndexOutOfBoundsException> { buffer.writeFloat(1.0f, 6u) }
-            shouldThrow<IndexOutOfBoundsException> { buffer.writeLong(1L, 1u) } // 1 + 8 > 8
-            shouldThrow<IndexOutOfBoundsException> { buffer.writeULong(1uL, 1u) }
-            shouldThrow<IndexOutOfBoundsException> { buffer.writeDouble(1.0, 1u) }
-            shouldThrow<IndexOutOfBoundsException> { buffer.writePointer(NativeAddress(0xCAFEL), 1u) }
+            // Valeurs distinctes par largeur : offset < size, les deux doivent apparaître
+            val buffer = scope.allocateBuffer(16u)
+            // 1-octet : offset 17 + 1 > 16
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeByte(1, 17u) }
+                .message.shouldContain("17").shouldContain("16")
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeUByte(1u, 17u) }
+                .message.shouldContain("17").shouldContain("16")
+            // 2-octets : offset 15 + 2 > 16
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeShort(1, 15u) }
+                .message.shouldContain("15").shouldContain("16")
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeUShort(1u, 15u) }
+                .message.shouldContain("15").shouldContain("16")
+            // 4-octets : offset 14 + 4 > 16
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeInt(1, 14u) }
+                .message.shouldContain("14").shouldContain("16")
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeUInt(1u, 14u) }
+                .message.shouldContain("14").shouldContain("16")
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeFloat(1.0f, 13u) }
+                .message.shouldContain("13").shouldContain("16")
+            // 8-octets : offset 10 + 8 > 16
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeLong(1L, 10u) }
+                .message.shouldContain("10").shouldContain("16")
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeULong(1uL, 10u) }
+                .message.shouldContain("10").shouldContain("16")
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeDouble(1.0, 10u) }
+                .message.shouldContain("10").shouldContain("16")
+            // Pointeur : offset 10 + 8 > 16
+            shouldThrow<IndexOutOfBoundsException> { buffer.writePointer(NativeAddress(0xCAFEL), 10u) }
+                .message.shouldContain("10").shouldContain("16")
         }
     }
 
