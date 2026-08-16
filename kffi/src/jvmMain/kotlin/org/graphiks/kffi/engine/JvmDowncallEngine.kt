@@ -393,7 +393,7 @@ object JvmDowncallEngine {
 
     private val structDescriptors = java.util.concurrent.ConcurrentHashMap<String, MemoryLayout>()
 
-    internal fun structLayout(name: String): MemoryLayout =
+    fun structLayout(name: String): MemoryLayout =
         structDescriptors.computeIfAbsent(name) { structName ->
             val (size, fields) = structLayouts.getValue(structName)
             val elements = fields.map { field ->
