@@ -250,14 +250,6 @@ class PreparedCallbackRegistration<C : Callback> internal constructor(
     }
 }
 
-private class AcquiredDelivery<C : Callback>(
-    val entry: RegistryEntry<C>,
-) {
-    fun complete() {
-        entry.lifecycle.leave()
-    }
-}
-
 /**
  * Table d'index token → RegistryEntry. Le token est un compteur monotone
  * (jamais réutilisé) : l'index de slot est token - 1. Croissance par
@@ -509,18 +501,19 @@ object CallbackRuntime {
         userdata: NativeAddress?,
         invoke: (C) -> Unit,
     ) {
-        var delivery: AcquiredDelivery<C>? = null
         try {
-            delivery = acquire(type, userdata) ?: return
+            val entry = route(type, userdata) ?: return
+            if (!entry.lifecycle.tryEnter()) return
+            if (entry.policy == CallbackPolicy.ONCE) unpublish(entry)
             try {
-                invoke(delivery.entry.callback)
+                invoke(entry.callback)
             } catch (failure: Throwable) {
-                reportDeliveryFailure(delivery.entry.onError, failure)
+                reportDeliveryFailure(entry.onError, failure)
             } finally {
                 try {
-                    delivery.complete()
+                    entry.lifecycle.leave()
                 } catch (failure: Throwable) {
-                    reportDeliveryFailure(delivery.entry.onError, failure)
+                    reportDeliveryFailure(entry.onError, failure)
                 }
             }
         } catch (failure: Throwable) {
@@ -598,16 +591,6 @@ object CallbackRuntime {
         val retired = typedEntry.type.noUserdataSlot.retire(typedEntry)
         if (retired) activeNoUserdataRegistrations.fetchAndAdd(-1)
         return retired
-    }
-
-    private fun <C : Callback> acquire(
-        type: CallbackType<C>,
-        userdata: NativeAddress?,
-    ): AcquiredDelivery<C>? {
-        val entry = route(type, userdata) ?: return null
-        if (!entry.lifecycle.tryEnter()) return null
-        if (entry.policy == CallbackPolicy.ONCE) unpublish(entry)
-        return AcquiredDelivery(entry)
     }
 
     @Suppress("UNCHECKED_CAST")
