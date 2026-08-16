@@ -2,6 +2,7 @@
 
 package org.graphiks.kffi.benchmark.jvm
 
+import org.graphiks.kffi.MemoryAllocator
 import org.graphiks.kffi.MemoryBuffer
 import org.graphiks.kffi.memoryScope
 import org.openjdk.jmh.annotations.Benchmark
@@ -9,9 +10,22 @@ import org.openjdk.jmh.annotations.BenchmarkMode
 import org.openjdk.jmh.annotations.Mode
 import org.openjdk.jmh.annotations.OutputTimeUnit
 import org.openjdk.jmh.annotations.Scope
+import org.openjdk.jmh.annotations.Setup
 import org.openjdk.jmh.annotations.State
 import org.openjdk.jmh.infra.Blackhole
 import java.util.concurrent.TimeUnit
+
+@State(Scope.Thread)
+class MarshalingState {
+    lateinit var safeBuffer: MemoryBuffer
+    lateinit var unsafeBuffer: MemoryBuffer
+
+    @Setup
+    fun setup() {
+        safeBuffer = MemoryAllocator().allocateBuffer(4096uL)
+        unsafeBuffer = MemoryAllocator(unsafe = true).allocateBuffer(4096uL)
+    }
+}
 
 @State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
@@ -92,6 +106,42 @@ open class MarshalingBenchmarks {
         val src = ints1024
         val out = IntArray(1024)
         src.copyInto(out)
+        var checksum = 0
+        for (i in out.indices) {
+            checksum = checksum xor out[i]
+        }
+        bh.consume(checksum)
+    }
+
+    @Benchmark
+    fun scalarSafe(state: MarshalingState, bh: Blackhole) {
+        state.safeBuffer.writeLong(1L, 0uL)
+        bh.consume(state.safeBuffer.readLong(0uL))
+    }
+
+    @Benchmark
+    fun scalarUnsafe(state: MarshalingState, bh: Blackhole) {
+        state.unsafeBuffer.writeLong(1L, 0uL)
+        bh.consume(state.unsafeBuffer.readLong(0uL))
+    }
+
+    @Benchmark
+    fun arrayInts16Safe(state: MarshalingState, bh: Blackhole) {
+        state.safeBuffer.writeInts(ints16)
+        val out = IntArray(16)
+        state.safeBuffer.readInts(out)
+        var checksum = 0
+        for (i in out.indices) {
+            checksum = checksum xor out[i]
+        }
+        bh.consume(checksum)
+    }
+
+    @Benchmark
+    fun arrayInts16Unsafe(state: MarshalingState, bh: Blackhole) {
+        state.unsafeBuffer.writeInts(ints16)
+        val out = IntArray(16)
+        state.unsafeBuffer.readInts(out)
         var checksum = 0
         for (i in out.indices) {
             checksum = checksum xor out[i]
