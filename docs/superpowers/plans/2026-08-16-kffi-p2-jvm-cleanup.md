@@ -1028,6 +1028,8 @@ fun jvmEngineEmpty(state: EngineState, blackhole: Blackhole): Unit =
 Run: `./gradlew :kffi-benchmark-jvm:jmhJar` puis `java -jar kffi-benchmark-jvm/build/libs/kffi-benchmark-jvm-jmh.jar "DowncallEngineBakeoff" -f 1 -wi 3 -i 5`
 Expected: valeurs ~25-40 ns/op pour les wrappers moteur ; le rapport officiel est produit en M6.
 
+> **Résultat M2.2 (réalisé)** : sans cache, `jvmEngineAdd4` = 371.7 ns/op (cold path complet par appel) → **cache par (fn, shape) ajouté** (commit ca7b1e7b, clé Long zéro-alloc `(fn shl 8) or shapeId`, adresses page-aligned) → `jvmEngineAdd4` = **35.09 ± 0.40 ns/op**, `jvmEngineEmpty` = 29.05 ± 0.78 ns/op, `fmmExact` = 3.99. Critère P2 (≤ 1.5 × 26.54 ≈ 40 ns) respecté. Le cache est donc **mandatoire** (pas optionnel). Les symboles de la fixture sont `bench_empty`/`bench_add4` (pas `empty`/`add4` du sketch) ; `bench_empty` retourne 42 (pas void) → axe mesuré via `callI0`. Le fix `UpcallBenchmarks.kt` (adaptation API raw-address) était requis pour compiler le module.
+
 - [ ] **Step 3: Commit**
 
 ```bash
