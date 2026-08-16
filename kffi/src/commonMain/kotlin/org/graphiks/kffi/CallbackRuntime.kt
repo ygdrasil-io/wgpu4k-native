@@ -32,12 +32,17 @@ internal class DeliveryStateMachine(
         get() = unpackInFlight(packed.load())
 
     val isClosed: Boolean
-        get() = unpackState(packed.load()) !in setOf(DeliveryState.PREPARED, DeliveryState.ACTIVE)
+        get() {
+            val s = unpackState(packed.load())
+            return s != DeliveryState.PREPARED && s != DeliveryState.ACTIVE
+        }
 
     val isQuiescent: Boolean
-        get() = packed.load().let { raw ->
+        get() {
+            val raw = packed.load()
             val s = unpackState(raw)
-            s !in setOf(DeliveryState.PREPARED, DeliveryState.ACTIVE) && unpackInFlight(raw) == 0
+            return s != DeliveryState.PREPARED && s != DeliveryState.ACTIVE &&
+                unpackInFlight(raw) == 0
         }
 
     fun activate(): Boolean = transitionState(DeliveryState.PREPARED, DeliveryState.ACTIVE)
@@ -85,11 +90,12 @@ internal class DeliveryStateMachine(
     fun leave() {
         while (true) {
             val current = packed.load()
-            check(unpackInFlight(current) > 0) { "Callback delivery left without entering" }
+            val currentInFlight = unpackInFlight(current)
+            check(currentInFlight > 0) { "Callback delivery left without entering" }
             if (
                 packed.compareAndSet(
                     current,
-                    pack(unpackState(current), unpackInFlight(current) - 1),
+                    pack(unpackState(current), currentInFlight - 1),
                 )
             ) {
                 return
@@ -112,10 +118,18 @@ internal class DeliveryStateMachine(
         }
     }
 
+    // bits 0-3 = state, bits 4+ = inFlight
     private companion object {
         private const val STATE_BITS = 4
         private const val IN_FLIGHT_SHIFT = STATE_BITS
         private const val STATE_MASK = (1L shl STATE_BITS) - 1
+
+        init {
+            require(DeliveryState.entries.size <= (1 shl STATE_BITS)) {
+                "DeliveryState has ${DeliveryState.entries.size} values; " +
+                    "packed encoding supports ${1 shl STATE_BITS}"
+            }
+        }
 
         private fun pack(state: DeliveryState, inFlight: Int): Long =
             (state.ordinal.toLong() and STATE_MASK) or (inFlight.toLong() shl IN_FLIGHT_SHIFT)
