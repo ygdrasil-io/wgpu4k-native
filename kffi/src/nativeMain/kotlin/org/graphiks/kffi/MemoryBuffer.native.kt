@@ -458,7 +458,7 @@ actual class MemoryBuffer actual constructor(
         val bufferEnd = bufferOffset + size * elementSizeInByte.toULong()
         if (bufferEnd > this.size) {
             throw IndexOutOfBoundsException(
-                "Buffer overflow: trying to access $bufferEnd but buffer size is ${this.size}",
+                "MemoryBuffer array access out of bounds: bufferOffset=$bufferOffset bytes=${size * elementSizeInByte.toULong()} size=${this.size}",
             )
         }
         val arrayEnd = arrayIndex + size
