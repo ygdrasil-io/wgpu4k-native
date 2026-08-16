@@ -71,6 +71,11 @@ Targets natives publiées : `kffi-iosx64`, `kffi-iosarm64`,
 
 ### Déclaration de dépendance
 
+> **Note M2.4** : la coordonnée snapshot finale est `1.0.0-SNAPSHOT` — effective
+> après la migration M2.4 (versionnement indépendant du module kffi). Avant
+> cette migration, le module hérite de la version du dépôt hôte et les
+> snapshots publiés sont `v29.0.0-<timestamp>-SNAPSHOT` (dépôt Sonatype).
+
 ```kotlin
 // build.gradle.kts — projet KMP
 kotlin {
@@ -132,9 +137,11 @@ import org.graphiks.kffi.findOrThrow
 val symbol: Long = findOrThrow("mon_symbole") // UnsatisfiedLinkError si absent
 ```
 
-Les chemins FFM exigeant `--enable-native-access` (upcalls émis sur le chemin
-de secours FFM par kextract) requièrent `--enable-native-access=ALL-UNNAMED`
-au lancement de la JVM.
+Le runtime JVM kffi utilise lui-même les API restreintes de
+`java.lang.foreign` (Linker, MethodHandles) : lancez la JVM avec
+`--enable-native-access=ALL-UNNAMED`. Sans ce flag, la JVM émet un warning
+(et bloquera l'appel dans une future version du JDK). C'est aussi requis pour
+les upcalls émis par kextract sur le chemin de secours FFM direct.
 
 ### Android
 
@@ -165,8 +172,9 @@ link final. Aucun `dlopen` manuel.
   l'option `unsafe`.
 - `MemoryBuffer` — buffer borné sur une adresse native : `handler` (adresse) +
   `size` (taille en octets). Accès scalaires et tableaux pour toutes les
-  familles (Byte/Short/Int/Long/Float/Double, signés et non signés, pointeurs,
-  `CString`).
+  familles (Byte/Short/Int/Long/Float/Double, signés et non signés, pointeurs).
+- `CString` — chaîne C (UTF-8, terminée par `\0`) : allocation via
+  `MemoryAllocator.allocateFrom`, lecture via `toKString()`.
 - `MemoryAllocator` — arène confinée : allocation (`allocate`,
   `allocateBuffer`, `allocateFrom`, `bufferOf`, `bufferOfAddress`,
   `bufferOfAddresses`), fermeture (`close`), et `memoryScope { }` qui garantit
@@ -183,7 +191,7 @@ memoryScope { allocator ->
     val value = buffer.readInt(offset = 0uL) // 42
 
     buffer.readLong(offset = 12uL)
-    // IndexOutOfBoundsException : offset=12 width=8 size=16
+    // IndexOutOfBoundsException : MemoryBuffer access out of bounds: offset=12 width=8 size=16
 }
 ```
 
@@ -210,11 +218,23 @@ Décision I2-(a) : le scope d'arène/session vit dans le `MemoryBuffer` (pas dan
   qu'un buffer unsafe est encore utilisé reste un **use-after-free** : la garde
   détecte la fermeture, mais un buffer brut n'a aucune garde.
 
+### Confinement
+
+JVM : l'arène est `Arena.ofConfined()` — les buffers scopés et `close()` sont
+confinés au thread de création (accès depuis un autre thread →
+`WrongThreadException`). `memoryScope` est soumis à la même règle. En mode
+`unsafe`, l'accès passe par l'adresse brute (`sun.misc.Unsafe`) : aucune
+vérification de thread, seule la garde de close s'applique. Un buffer construit
+depuis une adresse brute ne porte **aucun** confinement (garde nulle, UB
+documenté) — c'est le chemin à privilégier pour un partage inter-threads
+assumé, à vos risques.
+
 ### Aliasing
 
 Deux buffers sur la même zone mémoire sont vus mutuellement : les écritures de
 l'un sont visibles par l'autre. **Pas de verrou** : la synchronisation relève
-du consommateur.
+du consommateur. Le partage inter-threads est en outre limité par le
+[confinement](#confinement) des arènes JVM.
 
 ## Option `unsafe`
 
@@ -286,8 +306,10 @@ majeur.
 - Les **releases** sont versionnées `x.y.z` (actuellement en préparation de
   `1.0.0`).
 - Les **snapshots** sont publiés à chaque push sur `main`, en `-SNAPSHOT`
-  (ex. `1.0.0-SNAPSHOT`).
-- La version courante du runtime est exposée : `Kffi.VERSION` (`1.0.0`).
+  (ex. `1.0.0-SNAPSHOT` — coordonnée finale après la migration M2.4 ; avant,
+  snapshots publiés `v29.0.0-<timestamp>-SNAPSHOT`).
+- La version courante du runtime est exposée : `Kffi.VERSION` (`1.0.0` — à
+  partir de la version module M2.4).
 
 ## Licence
 

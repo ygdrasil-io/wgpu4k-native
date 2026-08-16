@@ -20,6 +20,11 @@ dependencyResolutionManagement {
 }
 ```
 
+> **Note M2.4** : la coordonnée snapshot finale est `1.0.0-SNAPSHOT` —
+> effective après la migration M2.4 (versionnement indépendant du module kffi).
+> Avant cette migration, les snapshots publiés sont `v29.0.0-<timestamp>-SNAPSHOT`
+> (dépôt Sonatype).
+
 ```kotlin
 // build.gradle.kts — projet KMP : l'artifact racine résout la variante plateforme
 kotlin {
@@ -59,7 +64,7 @@ memoryScope { allocator ->
     // Bornes-check actifs par défaut : tout accès hors `size` lève
     // IndexOutOfBoundsException (offset/largeur/taille dans le message).
     buffer.readLong(offset = 12uL)
-    // IndexOutOfBoundsException : offset=12 width=8 size=16
+    // IndexOutOfBoundsException : MemoryBuffer access out of bounds: offset=12 width=8 size=16
 }
 // allocator.close() est garanti ici — tout buffer issu de ce scope est invalide.
 ```
@@ -110,6 +115,13 @@ val forever = globalMemory.allocateBuffer(16uL)
 
 Deux buffers sur la même zone se voient mutuellement ; aucune synchronisation
 n'est fournie.
+
+Confinement (JVM) : l'arène est confinée au thread de création
+(`Arena.ofConfined()`) — accès aux buffers scopés et `close()` depuis un autre
+thread lèvent `WrongThreadException` ; `memoryScope` idem. En mode `unsafe`,
+l'accès passe par l'adresse brute : aucune vérification de thread, seule la
+garde de close s'applique. Les buffers bruts (adresse) ne portent aucun
+confinement (garde nulle, UB documenté).
 
 ## 5. Option `unsafe`
 
@@ -231,8 +243,10 @@ System.loadLibrary("monlib") // doit être sur java.library.path / classpath
 val fn = findOrThrow("mon_symbole") // UnsatisfiedLinkError si introuvable
 ```
 
-Lancer la JVM avec `--enable-native-access=ALL-UNNAMED` si les bindings
-utilisent les chemins FFM directs (upcalls de secours émis par kextract).
+Lancer la JVM avec `--enable-native-access=ALL-UNNAMED` : le runtime JVM kffi
+utilise lui-même les API restreintes de `java.lang.foreign`, et les bindings
+kextract peuvent émettre des upcalls sur le chemin FFM direct. Sans le flag, la
+JVM émet un warning (appel bloqué dans une future version du JDK).
 
 **Android** — le moteur `libkffi.so` est chargé automatiquement ; la lib
 consommée est chargée par `dlopen` :
