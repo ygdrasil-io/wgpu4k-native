@@ -35,10 +35,13 @@ Commit: f6cdb8f0
   per-benchmark metadata embedded in `2026-08-12-012b50e9-jvm-baseline.json`: same JMH version,
   same warmup/measurement/forks/mode; only the JVM binary and the bench-module sources differ)
 - JDK: Temurin 25.0.1 (sdkman default); P0 ran on Temurin 25.0.3 — see the comparability note below
+- Host: macOS 26.5, Apple M2 Max (both the P0 and the P2 runs on this same machine)
 - Fixture: `kffi-benchmark-jvm/build/bench-fixture/libbench_fixture.dylib` (C, `-O2`)
 - 22 scenarios = the 20 P0 scenarios + 2 new engine bake-off axes (`jvmEngineAdd4`, `jvmEngineEmpty`)
-- No deviation from the P0 configuration; full suite ran in ~6 min + a reproducibility re-run
-  (focused: empty 4.03/add4 4.47/fmmExact 4.09/jvmEngineAdd4 44.10 ns — stable)
+- No deviation from the P0 configuration; full suite ran in ~6 min + two focused re-runs:
+  (a) reproducibility check on the default JVM (25.0.1: empty 4.03 / add4 4.47 / fmmExact 4.09 /
+  jvmEngineAdd4 44.10 ns) and (b) a P0-binary check on Temurin 25.0.3 (empty 4.08 / add4 4.43 /
+  fmmExact 4.11 / jvmEngineAdd4 42.63 ns) — stable on both.
 
 ## Δ vs P0 baseline (2026-08-12-012b50e9)
 
@@ -68,8 +71,9 @@ Commit: f6cdb8f0
 | upcall.fire_1000_no_routing | 70499.04 ± 755.76 | 99336.35 | -29.0% |
 
 Every scenario measured faster than its P0 absolute value. The scenario structure is preserved
-(upcall ≈ 70–110× downcall cost, struct-return ≈ 2× struct-arg, array marshaling scales with
-size, routing-free upcalls ≈ routing upcalls).
+(upcall ≈ 16–19× downcall cost per call in-run — e.g. 77.56/4.07 ≈ 19.1×, 72340.16/1000/4.07 ≈
+17.8× — vs ~4× on the P0-era absolutes; struct-return ≈ 2× struct-arg (13.05/6.76 ≈ 1.93×);
+array marshaling scales with size; routing-free upcalls ≈ routing upcalls).
 
 ## Engine bake-off (within-run: JvmDowncallEngine vs FFM floor)
 
@@ -78,21 +82,25 @@ size, routing-free upcalls ≈ routing upcalls).
 | noOpFloor (loop/Blackhole floor) | 0.32 ± 0.00 | — |
 | fmmExact (cached `MethodHandle.invokeExact`, kffi steady-state floor) | 4.17 ± 0.11 | — |
 | jvmEngineEmpty (`JvmDowncallEngine.callI0`) | 32.14 ± 1.65 | +28.0 ns (~7.7×) |
-| jvmEngineAdd4 (`JvmDowncallEngine.callI4IIII`) | 44.46 ± 3.09 | +40.3 ns (~9.7×) |
+| jvmEngineAdd4 (`JvmDowncallEngine.callI4IIII`) | 44.46 ± 3.09 | +40.3 ns (~10.7×) |
 | fmmExactDereferencedLookup (per-call lookup + handle construction) | 366.11 ± 9.44 | +362 ns (~88×) |
 
 Reading:
 
-- The two-level (addr × shape) cache is doing its job: the engine is ~8× closer to the FFM floor
-  than the no-cache worst case (`fmmExactDereferencedLookup`), i.e. ~8–11× headroom still gained
-  by caching.
+- The two-level (addr × shape) cache is doing its job: the engine sits ~8–11× closer to the FFM
+  floor than the no-cache worst case (`fmmExactDereferencedLookup`: 366.11/44.46 ≈ 8.2× for add4,
+  366.11/32.14 ≈ 11.4× for empty) — i.e. ~8–11× headroom still gained by caching.
 - The shape-specific dispatch cost is visible in the engine axes themselves:
-  `jvmEngineAdd4` − `jvmEngineEmpty` ≈ 12.3 ns — the M5.2bis two-level-cache cost observed in the
-  M5.3 smoke (`callI4IIII` ≈ 42.6 ns vs the P0-era direct-path baseline 26.54 ns, i.e. +67% for
-  the add4 shape and +17% for empty). That overhead is the documented P2 price of the generic
+  `jvmEngineAdd4` − `jvmEngineEmpty` ≈ 12.3 ns. Vs the P0-era *direct* FFM absolutes, the engine
+  reads +67.5% (44.46 vs downcall.add4 26.54) for the add4 shape and +17.5% (32.14 vs
+  downcall.empty 27.36) for empty on this run; the M5.3 smoke (42.6 vs 26.54 = +60.5%) is
+  consistent with 44.46 ± 3.09. Caveat: per the comparability note below, the P0 absolutes are
+  machine-inflated, so the honest engine comparison is the within-run table above (engine vs
+  fmmExact = 7.7× / 10.7×). The 12.3 ns shape gap is the documented P2 price of the generic
   engine and is the target of the wrap-once typed cache / native engine follow-ups.
-- Full-suite value reproduced the smoke exactly: `jvmEngineAdd4` 44.46 ± 3.09 ns here (42.63 on
-  Temurin 25.0.3), `fmmExact` 4.17 ns (4.11 on 25.0.3).
+- Full-suite value reproduced the M5.3 smoke within a few percent: `jvmEngineAdd4` 44.46 ± 3.09 ns
+  here vs 42.63 on the Temurin 25.0.3 re-run (+4.3%, different JVM patch), `fmmExact` 4.17 ns
+  (4.11 on 25.0.3).
 
 ## Verdicts vs plan expectations
 
@@ -106,20 +114,21 @@ Reading:
 
 All plan expectations are met or exceeded. The engine downcall axes (`jvmEngine*`) exceed the
 +50% bound only in the add4-shape case when compared against the P0-era *direct* FFM absolute
-value (+67%) — this is the known M5.2bis two-level-cache cost, consistent with the M5.3 smoke,
-and is explicitly tracked as P2 technical debt rather than a baseline regression (the engine
-axis did not exist in P0).
+value (+67.5%: 44.46 vs 26.54; empty is +17.5%) — this is the known M5.2bis two-level-cache
+cost, consistent with the M5.3 smoke (+60.5%), and is explicitly tracked as P2 technical debt
+rather than a baseline regression (the engine axis did not exist in P0).
 
 ## Comparability note (P0 vs P2 absolute values)
 
 The Δs above must be read with one caveat: the **byte-identical** floor benchmarks
-(`fmmExact`, `noOpFloor`, `DowncallBenchmarks.*`) all measured 4–6× faster than their P0
-absolute values. Re-running the identical benchmark binary and configuration on the exact P0
-JVM binary (Temurin 25.0.3) reproduces ~4 ns (empty 4.08 / add4 4.43 / fmmExact 4.11),
-**not** the P0 ~26–27 ns. The P0 run's absolute numbers were therefore inflated by machine
-state on 2026-08-12 (most plausibly concurrent Gradle/Kotlin-Native builds during the M1–M5
-window), not by code or JVM changes — the JMH metadata in both `result.json` files confirms
-identical configuration otherwise.
+(`fmmExact`, `noOpFloor`, `DowncallBenchmarks.*`) all measured 3.2×–7.0× faster than their P0
+absolute values (noOpFloor 1.03/0.32 ≈ 3.2×, fmmExact 25.96/4.17 ≈ 6.2×, downcall.add8
+36.45/5.19 ≈ 7.0×). Re-running the identical benchmark binary and configuration on the exact
+P0 JVM binary (Temurin 25.0.3 — a distinct re-run from the 25.0.1 reproducibility check above)
+reproduces ~4 ns (empty 4.08 / add4 4.43 / fmmExact 4.11), **not** the P0 ~26–27 ns. The P0 run's
+absolute numbers were therefore inflated by machine state on 2026-08-12 (most plausibly
+concurrent Gradle/Kotlin-Native builds during the M1–M5 window), not by code or JVM changes —
+the JMH metadata in both `result.json` files confirms identical configuration otherwise.
 
 Consequences:
 
