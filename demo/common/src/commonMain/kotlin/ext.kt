@@ -87,7 +87,7 @@ fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
                     WGPUCallbackMode_WaitAnyOnly,
                     registration,
                 )
-                wgpuAdapterRequestDevice(adapter, null, info).id
+                wgpuAdapterRequestDevice(scope, adapter, null, info).id
             }
             awaitCallbackFuture(
                 futureId = futureId,
@@ -166,7 +166,7 @@ fun getAdapter(
                     WGPUCallbackMode_WaitAnyOnly,
                     registration,
                 )
-                wgpuInstanceRequestAdapter(instance, options, info).id
+                wgpuInstanceRequestAdapter(scope, instance, options, info).id
             }
             awaitCallbackFuture(
                 futureId = futureId,

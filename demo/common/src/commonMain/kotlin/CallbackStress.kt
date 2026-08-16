@@ -167,7 +167,7 @@ private fun requestStressAdapter(instance: WGPUInstance): WGPUAdapter {
                     WGPUCallbackMode_AllowProcessEvents,
                     requestRegistration,
                 )
-                wgpuInstanceRequestAdapter(instance, options, requestInfo).id
+                wgpuInstanceRequestAdapter(scope, instance, options, requestInfo).id
             }
             awaitCallbackFutureOrPump(
                 futureId = futureId,
@@ -217,7 +217,7 @@ private fun requestStressDevice(
                     WGPUCallbackMode_AllowProcessEvents,
                     requestRegistration,
                 )
-                wgpuAdapterRequestDevice(adapter, descriptor, requestInfo).id
+                wgpuAdapterRequestDevice(scope, adapter, descriptor, requestInfo).id
             }
             awaitCallbackFutureOrPump(
                 futureId = futureId,
@@ -294,7 +294,7 @@ private fun runQueueCallbackPhase(
         registrations.forEach { registration ->
             futureIds += memoryScope { scope ->
                 val callbackInfo = WGPUQueueWorkDoneCallbackInfo.allocate(scope, mode, registration)
-                wgpuQueueOnSubmittedWorkDone(queue, callbackInfo).id
+                wgpuQueueOnSubmittedWorkDone(scope, queue, callbackInfo).id
             }
             if (deadline.hasPassedNow()) {
                 failQueuePhase(modeName, "create-futures", calls, suppressBeforeDelivery)

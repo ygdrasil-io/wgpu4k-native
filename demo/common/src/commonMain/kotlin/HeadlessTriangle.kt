@@ -190,7 +190,7 @@ fun renderHeadlessTriangle(width: Int = 64, height: Int = 64): HeadlessTriangleI
                 mapCallback,
             )
 
-            wgpuBufferMapAsync(ownedReadbackBuffer, WGPUMapMode_Read, 0uL, bufferSize, callbackInfo)
+            wgpuBufferMapAsync(scope, ownedReadbackBuffer, WGPUMapMode_Read, 0uL, bufferSize, callbackInfo)
 
             val result = awaitMapCallbackResult(
                 phase = "headless-buffer-map",

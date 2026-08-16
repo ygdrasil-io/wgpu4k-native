@@ -303,7 +303,7 @@ private fun mapBufferForRead(device: WGPUDevice, buffer: WGPUBuffer, size: ULong
             callback,
         )
 
-        wgpuBufferMapAsync(buffer, WGPUMapMode_Read, 0u, size, callbackInfo)
+        wgpuBufferMapAsync(scope, buffer, WGPUMapMode_Read, 0u, size, callbackInfo)
         val snapshot = awaitMapCallbackResult(
             phase = "capture-buffer-map",
             result = result::outcome,
