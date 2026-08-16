@@ -15,12 +15,14 @@ import java.lang.invoke.MethodHandle
 /**
  * Moteur de downcall JVM typé par forme — symétrique de NativeEngine (Android).
  *
- * Chaque wrapper consulte un cache par (forme, adresse de fonction) : le
- * MethodHandle FFM (invokeExact) est construit une seule fois par couple
- * adresse × forme, l'adresse cible étant liée à la construction. La clé est
- * encodée sur un Long ((fn shl 8) or shapeId) — zéro allocation sur le chemin
- * chaud — et le cache est borné en pratique par le nombre d'adresses exportées
- * distinctes résolues par les bindings. Les formes couvertes sont
+ * Chaque wrapper consulte un cache à deux niveaux : clé externe = adresse de
+ * fonction (Long exact, aucune collision possible entre deux adresses),
+ * clé interne = `(layoutVersion shl 8) or shapeId`. Le MethodHandle FFM
+ * (invokeExact) est construit une seule fois par couple (adresse × forme), et la
+ * version de layout dans la clé interne garantit qu'une re-registration
+ * (registerStructLayout) reconstruit le descripteur au lieu de réutiliser un
+ * MethodHandle périmé. Le cache est borné en pratique par le nombre d'adresses
+ * exportées distinctes résolues par les bindings. Les formes couvertes sont
  * celles réellement référencées par les bindings générés (union des signatures
  * wgpu) — la table grandit par ajout de wrapper, jamais par combinatoire.
  *

@@ -7,7 +7,7 @@ class JvmConversionsTest : FreeSpec({
     "a MemoryBuffer segment round-trips through its raw address" {
         memoryScope { scope ->
             val buffer = scope.allocateBuffer(64u)
-            val segment = buffer.toJvmSegment()
+            val segment = buffer.handler.toJvmSegment(buffer.size.toLong())
             segment.byteSize() shouldBe 64L
             val again = NativeAddress(segment.address()).let { MemoryBuffer(it, 64u) }
             again.writeLong(0xCAFE, 0u)

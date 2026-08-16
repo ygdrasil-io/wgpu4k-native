@@ -2042,8 +2042,8 @@ Run: `./gradlew :kffi:jvmTest` → 87+ tests, 0 failures. `:kffi-benchmark-nativ
 
 - [ ] **Step 2: Confirmer les critères P2**
 
-- `rg "Arena\.ofAuto|MemorySegment|MethodHandle|ValueLayout|FunctionDescriptor|java\.lang\.foreign|\.handler\.handler|VarHandle" wgpu4k-native/src/jvmMain` → zéro occurrence.
-- `rg "com\.sun\.jna" kffi wgpu4k-native demo` → zéro (Kadre exclu) — inchangé.
+- `rg "Arena\.ofAuto|\.handler\.handler|VarHandle" wgpu4k-native/src/jvmMain` → zéro occurrence ; `rg "MemorySegment|MethodHandle|ValueLayout|FunctionDescriptor|java\.lang\.foreign|Linker" wgpu4k-native/src/jvmMain` → zéro occurrence **hors fallback callback documenté** (les trampolines FFM émis par `KotlinCallbackJvmEmitter.emitFfmTrampoline` pour les formes que `JvmUpcallEngine` ne peut pas exprimer — upcalls struct-by-value, scalaires étroits — dette handover P3, exige `--enable-native-access=ALL-UNNAMED`).
+- `rg "com\.sun\.jna" kffi wgpu4k-native demo` → constat P2 : **non nul** — 100 occurrences dans `wgpu4k-native/src/androidMain/.../wgpu_hAndroid.kt` (readback JNA préexistant de P1, inchangé par P2 ; dette P1 hors périmètre de ce plan, voir la note du plan P1 sur le retrait du readback JNA) ; `kffi` et `demo` restent à zéro.
 - Rapport `kffi/benchmarks/results/<date>-<sha>-jvm-baseline.{md,json}` présent.
 
 - [ ] **Step 3: Report**

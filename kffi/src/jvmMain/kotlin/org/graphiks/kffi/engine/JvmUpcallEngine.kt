@@ -27,6 +27,15 @@ import java.lang.invoke.MethodHandles
  * d'accès Java. Précondition : classpath (modules non nommés, packages
  * ouverts) — si kffi ou le consommateur passe sur le module path (module
  * nommé), l'accès lèvera IllegalAccessException ; à revoir à ce moment.
+ *
+ * NOTE NATIVE ACCESS : les formes de callbacks que ce moteur ne peut pas
+ * exprimer (upcalls struct-by-value, scalaires I8/I16/CHAR16, indirections
+ * multiples) sont émises par kextract sur un chemin de secours FFM direct
+ * (`KotlinCallbackJvmEmitter.emitFfmTrampoline`) qui appelle
+ * `Linker.upcallStub`/`MethodHandles.lookup()` dans le code généré. Ce chemin
+ * est de la dette documentée (handover P3) et exige
+ * `--enable-native-access=ALL-UNNAMED` au lancement, faute de quoi la JVM
+ * émet un warning (et bloquera l'appel dans une future version du JDK).
  */
 object JvmUpcallEngine {
 
