@@ -12,7 +12,6 @@ import org.graphiks.kffi.CallbackRuntime
 import org.graphiks.kffi.CallbackRuntimeApi
 import org.graphiks.kffi.CallbackType
 import org.graphiks.kffi.NativeAddress
-import org.graphiks.kffi.adapt
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.annotations.BenchmarkMode
 import org.openjdk.jmh.annotations.Mode
@@ -53,12 +52,15 @@ private object BenchCallbackTrampoline {
         )
     }
     val address: NativeAddress by lazy {
-        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()).address())
     }
 
     @JvmStatic
     private fun invoke(value: Int, userdata: MemorySegment) {
-        CallbackRuntime.dispatchSafely(BenchCallbackType, NativeAddress(userdata)) { callback ->
+        CallbackRuntime.dispatchSafely(
+            BenchCallbackType,
+            if (userdata == MemorySegment.NULL) null else NativeAddress(userdata.address()),
+        ) { callback ->
             callback.invoke(value.toUInt())
         }
     }
@@ -83,7 +85,7 @@ private object BenchCallbackNoUserdataTrampoline {
         )
     }
     val address: NativeAddress by lazy {
-        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()))
+        NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()).address())
     }
 
     @JvmStatic
@@ -133,7 +135,10 @@ open class UpcallBenchmarks {
             policy = CallbackPolicy.REPEATING,
             callback = BenchCallback { _ -> counter.fetchAndAdd(1) },
         )
-        setCallbackHandle.invokeExact(registration.callback.handler, registration.userdata.adapt()!!)
+        setCallbackHandle.invokeExact(
+            MemorySegment.ofAddress(registration.callback.rawValue),
+            MemorySegment.ofAddress(requireNotNull(registration.userdata).rawValue),
+        )
         fireOneHandle.invokeExact(1)
         check(counter.load() == 1L) { "upcall did not dispatch" }
         counter.store(0)
@@ -151,7 +156,7 @@ open class UpcallBenchmarks {
             policy = CallbackPolicy.REPEATING,
             callback = BenchCallbackNoUserdata { _ -> counter.fetchAndAdd(1) },
         )
-        setCallbackNoUserdataHandle.invokeExact(noUserdataRegistration.callback.handler)
+        setCallbackNoUserdataHandle.invokeExact(MemorySegment.ofAddress(noUserdataRegistration.callback.rawValue))
     }
 
     @Benchmark
