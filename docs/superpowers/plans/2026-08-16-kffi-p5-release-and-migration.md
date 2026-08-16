@@ -505,6 +505,8 @@ git commit -m "docs(wgpu): point kffi usage to published Graphiks-org/kffi artif
 - **F3 (préexistant, non bloquant)** : `verifyPublicationMetadata` échoue sans `-x :wgpu4k-native:generateBindingsFromHeader` — Gradle 9.5 strict-validation : `sourcesJar`-family consomme la sortie de `generateBindingsFromHeader` sans `dependsOn` déclaré. Fix à ajouter dans `wgpu4k-native/build.gradle.kts` (follow-up CI, pas dans le scope P5).
 - **F4 (mineur)** : `inceptionYear.set("2024")` faux pour kffi (créé 2026) — conditionner ou retirer.
 - **F5 (mineur, optionnel)** : pas de `paths:` filter sur le workflow snapshots — les push docs déclenchent des publications inutiles (snapshots timestampés, inoffensifs).
+- **F6 (RÉSOLU — b780dc9c)** : `verifyPublicationMetadata` comparait l'edge wgpu→kffi et le lookup kffi à la version racine (v29.0.0-SNAPSHOT) — cassé par M2.4. Fix : lookup/edges kffi contre `project(":kffi").version`. Passe désormais modulo F3 (`-x :wgpu4k-native:generateBindingsFromHeader`).
+- **F7 (tracké, M4.2)** : `kffi-publish-snapshots.yml` exporte `VERSION` (mécanisme host) qui n'atteint plus kffi — les snapshots publiés seraient tous `1.0.0-SNAPSHOT` non timestampés. Passer à `KFFI_VERSION=$(date...)-SNAPSHOT` dans le workflow au moment de la publication cible.
 
 ---
 
