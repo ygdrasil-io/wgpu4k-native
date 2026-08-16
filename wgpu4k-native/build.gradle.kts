@@ -271,6 +271,13 @@ tasks.named<Test>("jvmTest") {
     }
 }
 
+// Android unit tests run on the host JVM through AGP's unit-test runner; the Kotest
+// specs in androidUnitTest need the JUnit Platform engine, mirroring jvmTest above.
+// AGP registers testDebugUnitTest lazily, so match by name with a live collection.
+tasks.withType<Test>().matching { it.name == "testDebugUnitTest" }.configureEach {
+    useJUnitPlatform()
+}
+
 tasks.withType(MergeSourceSetFolders::class.java).configureEach {
     dependsOn("fetch-native-dependencies")
 }
@@ -439,6 +446,16 @@ tasks.register("verifyJvmBootstrapBinding") {
             "$generatedJvmBinding must route symbol lookup through the generated native bootstrap"
         }
     }
+}
+
+// Binding generation writes into src/ (commonMain/jvmMain); declare the explicit
+// dependency chain so Gradle's strict implicit-dependency validation passes when
+// compile/test tasks and verifyGeneratedBindingsClean run in one invocation.
+tasks.named("compileKotlinJvm") {
+    dependsOn("generateBindingsFromHeader")
+}
+tasks.named("verifyJvmBootstrapBinding") {
+    dependsOn("generateBindingsFromHeader")
 }
 
 tasks.register("verifyBindingGenerationConfiguration") {
