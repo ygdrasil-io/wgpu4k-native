@@ -407,6 +407,8 @@ private fun boundsCheck(offset: ULong, width: Long) {
 }
 ```
 
+> **Note de review M1.1** : `MemoryBufferArrayTest` (commonTest) a 8 assertions `shouldThrow<IllegalArgumentException>` sur les bornes de tableaux — après la migration vers `IndexOutOfBoundsException` sur les 3 backends, ce fichier casse. **Ajouter une étape ici (M3.1) : migrer les 8 assertions de `MemoryBufferArrayTest` vers `IndexOutOfBoundsException`** (ou en M2.1 si la migration native des tableaux la déclenche en premier).
+
 - [ ] **Step 2: Remplacer les `require(...) { "Out of ... bounds" }` des tableaux**
 
 Les 4 sites (writeArray, readArray, write, read) passent de `require` à `IndexOutOfBoundsException` explicite, même message avec offset/taille :
@@ -719,16 +721,18 @@ git commit -m "feat(kffi): JVM MemoryBuffer unsafe mode via sun.misc.Unsafe with
 
 - [ ] **Step 1: Ajouter les scénarios manquants (chaque type scalaire + tableau + pointeur)**
 
-Couvrir : chaque type (Byte, UByte, Short, UShort, Int, UInt, Long, ULong, Float, Double, pointer) en read ET write hors bornes, avec vérification du message (contient offset et taille). Tableaux : chaque type d'array. Au minimum 2-3 représentants par famille (un scalaire 1-octet, un 4-octets, un 8-octets, le pointeur, un array) — le test commun doit rester lisible.
+Couvrir : chaque type (Byte, UByte, Short, UShort, Int, UInt, Long, ULong, Float, Double, pointer) en read ET write hors bornes, avec vérification du message (contient offset ET taille — utiliser des valeurs DISTINCTES pour que les deux soient forcés, ex. buffer 16u + readLong(8u) → message doit contenir "8" et "16"). Tableaux : chaque type d'array. Au minimum 2-3 représentants par famille (un scalaire 1-octet, un 4-octets, un 8-octets, le pointeur, un array) — le test commun doit rester lisible.
 
 ```kotlin
-"every scalar family throws with offset in message" {
+"every scalar family throws with offset AND size in message" {
     memoryScope { scope ->
-        val buffer = scope.allocateBuffer(8u)
-        shouldThrow<IndexOutOfBoundsException> { buffer.readByte(8u) }.message shouldContain "8"
-        shouldThrow<IndexOutOfBoundsException> { buffer.readInt(6u) }.message shouldContain "6"
-        shouldThrow<IndexOutOfBoundsException> { buffer.readDouble(2u) }.message shouldContain "2"
-        shouldThrow<IndexOutOfBoundsException> { buffer.readPointer(8u) }.message shouldContain "8"
+        // Valeurs distinctes : offset 8, size 16 — les deux doivent apparaître
+        val buffer = scope.allocateBuffer(16u)
+        shouldThrow<IndexOutOfBoundsException> { buffer.readByte(16u) }.message.shouldContainAll("16", "16")
+        shouldThrow<IndexOutOfBoundsException> { buffer.readInt(14u) }.message shouldContain "14"
+        shouldThrow<IndexOutOfBoundsException> { buffer.readLong(10u) }.message.shouldContainAll("10", "16")
+        shouldThrow<IndexOutOfBoundsException> { buffer.readDouble(10u) }.message.shouldContainAll("10", "16")
+        shouldThrow<IndexOutOfBoundsException> { buffer.readPointer(16u) }.message shouldContain "16"
     }
 }
 
@@ -738,9 +742,29 @@ Couvrir : chaque type (Byte, UByte, Short, UShort, Int, UInt, Long, ULong, Float
         shouldThrow<IndexOutOfBoundsException> { buffer.writeInt(1, 6u) }
         shouldThrow<IndexOutOfBoundsException> { buffer.writeShort(1, 7u) }
         shouldThrow<IndexOutOfBoundsException> { buffer.writeByte(1, 8u) }
+        shouldThrow<IndexOutOfBoundsException> { buffer.writeLong(1L, 1u) }
+    }
+}
+
+"array read crossing the end throws (read path, not just write)" {
+    memoryScope { scope ->
+        val buffer = scope.allocateBuffer(16u)
+        shouldThrow<IndexOutOfBoundsException> {
+            buffer.readInts(IntArray(4), bufferOffset = 12u)
+        }
+    }
+}
+
+"boundary access at exactly size is allowed (inclusive upper bound)" {
+    memoryScope { scope ->
+        val buffer = scope.allocateBuffer(8u)
+        buffer.writeLong(0xCAFE, 0u) // offset 0 + 8 = 8 ≤ 8 : autorisé
+        buffer.readLong(0u) shouldBe 0xCAFE
     }
 }
 ```
+
+Note : `shouldContainAll` est un matcher kotest (`io.kotest.matchers.string.shouldContainAll`) — vérifier la disponibilité dans le module ; sinon deux `shouldContain` successifs. Le cas frontière positif (`offset + width == size`) protège contre un off-by-one dans l'implémentation native (M2.1).
 
 - [ ] **Step 2: Vérifier sur les 3 backends**
 
