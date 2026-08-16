@@ -541,3 +541,12 @@ Résumer : milestones M1-M4, Δ perf upcall vs P3, allocations éliminées, sém
 - Décision annexe P3/P4 : proposition de valeur du mode `unsafe` JVM (parité scalaire mesurée) — à trancher en P5 avec la re-baseline native.
 - `NoUserdataSlotStateMachine` : snapshot object toujours alloué à l'activation/retrait — hors hot path dispatch, non optimisé en P4.
 - Optimisations `Unsafe.copyMemory` bulk (annexe P3) : dépend de la décision unsafe-JVM.
+
+---
+
+## Annexe — Follow-ups de la review finale P4
+
+- **Codec JVM** : `PlatformCallbackTokenAddressCodec.decode` boxe `ULong?` par dispatch pour token > 127 (cache Long) — hors audit P4, non régressif, mais à noter pour P5 (le natif ne boxe pas, donc la revendication zéro-allocation native est inconditionnelle).
+- **Stress test concurrent** : les chemins de croissance lock-free (`removedFromTable` accounting) n'ont que de la couverture mono-thread — traçables-corrects, mais un test de stress multi-thread durcirait (candidat P5).
+- **Limite token** : tokens au-delà de `Int.MAX_VALUE - 1` lèvent un `require` dédié à l'enregistrement (documenté, irréaliste — 2³¹ registrations).
+- **Attente native P5** (M4.1) : le win devrait être plus grand sur native — Kotlin/Native n'a pas d'escape analysis, l'allocation coûte plus cher, le floor trampoline est plus bas. Re-baseline native à faire en P5.
