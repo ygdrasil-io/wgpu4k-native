@@ -218,10 +218,15 @@ android {
 
 group = "org.graphiks"
 
+val kffiVersion = providers.gradleProperty("kffi.version")
+    .orElse(System.getenv("KFFI_VERSION") ?: "1.0.0-SNAPSHOT")
+version = kffiVersion
+
 afterEvaluate {
 	publishing {
 		publications.withType<MavenPublication>().all {
 			groupId = "org.graphiks"
+			version = kffiVersion.get()
 		}
 	}
 }
