@@ -923,3 +923,22 @@ git commit -m "bench(kffi): P3 re-baseline reports (bounds-check overhead, JVM +
 - **Centraliser la branche dual-path** des 20 accesseurs scalaires JVM (helper `access(offset, width, safeBlock, unsafeBlock)`) — réduit la surface de drift.
 - **Cas Float/Double des tableaux unsafe** : ajouter un round-trip de test dédié (le code est correct, la garantie est non testée).
 - Migrer `sun.misc.Unsafe` (dépréciation terminale JDK 23+) vers `jdk.internal.misc.Unsafe` (`--add-opens java.base/jdk.internal.misc`) ou FFM raw segments quand nécessaire.
+
+---
+
+## Annexe P3 — Résultats de re-baseline et décisions (M6.3)
+
+### Résultats mesurés (rapports `2026-08-16-3ca7130e-{jvm,native}-baseline.{md,json}`)
+
+- **JVM bornes-check quasi gratuit** : `scalarSafe` 1.83 ns vs `scalarUnsafe` 2.53 ns — le mode unsafe est **plus lent de 27.6%**. Le JIT réduit le check FFM à une comparaison ; l'accès `sun.misc.Unsafe` + garde de close coûtent plus. **Les deux axes du `unsafe` sont au plancher de mesure (~2 ns) — les intervalles ne se chevauchent pas (vérifié sur les rawData).**
+- **Attribution importante** : le chemin unsafe JVM n'est PAS check-free — il conserve la garde de close I2-a (`rawAddress()` : scope isAlive → IllegalStateException) par accès. L'axe mesure donc *bornes-check vs garde de close*, pas *checké vs non-checké*.
+- **Array JVM** : unsafe 137.5 vs safe 10.4 ns (13.2×) — conflation documentée (check + swap bulk copyFrom → boucle Unsafe), pas un coût de check.
+- **Native** : overhead au plancher de bruit (−8.3% sur array_i32_16 vs contrôle indépendant du flag −7.3% ; pas de scénario scalaire dans le harness).
+- **Scénarios existants** : tous stables vs P2 (±8%, FFM floor ±4%).
+- **Verdicts** : les attentes du plan (JVM 10-40%, native "significatif") sont marquées **FAIL** avec documentation honnête.
+
+### Décisions enregistrées (follow-ups)
+
+- **P4 : re-décider la proposition de valeur du mode `unsafe` JVM** — la parité scalaire mesurée (unsafe plus lent) questionne la raison d'être de I3 sur JVM. Options : (a) ré-scoper unsafe à la parité API/Android (accepté, documenté comme tel) ; (b) optimiser le chemin unsafe (garde de close allégée ou I2-b partiel) si le mode doit offrir un gain. L'optimisation `copyMemory` bulk (annexe P4) ne vaut que si (b) est retenu — à trancher en P4.
+- **La garde de close I2-a est désormais mesurable** : son coût (~0.7 ns/scalaire JVM) est visible dans l'écart scalarSafe/scalarUnsafe — utile pour toute re-discussion I2.
+- **Convention des Δ** : calculer depuis les scores bruts JSON (pas les affichages arrondis) — le noOpFloor P3 est +0.2% sur bruts (le +0.3% affiché vient d'une convention d'arrondi).
