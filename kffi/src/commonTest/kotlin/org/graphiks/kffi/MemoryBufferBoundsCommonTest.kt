@@ -7,15 +7,6 @@ import io.kotest.matchers.string.shouldContain
 
 class MemoryBufferBoundsCommonTest : FreeSpec({
 
-    "scalar read beyond size throws IndexOutOfBoundsException with offset" {
-        memoryScope { scope ->
-            val buffer = scope.allocateBuffer(8u)
-            shouldThrow<IndexOutOfBoundsException> {
-                buffer.readLong(8u)
-            }.message shouldContain "8"
-        }
-    }
-
     "every scalar family read throws with offset AND size in message" {
         memoryScope { scope ->
             // Valeurs distinctes par largeur : offset < size, les deux doivent apparaître
@@ -84,12 +75,18 @@ class MemoryBufferBoundsCommonTest : FreeSpec({
         }
     }
 
+    // NOTE : les préfixes des messages array divergent volontairement entre backends
+    // (native émet "array access" — helper read/write partagé ; JVM/Android émettent
+    // "array read"/"array write"). Le contrat pince les champs numériques
+    // (bufferOffset/bytes/size), pas le libellé exact.
     "array write crossing the end throws IndexOutOfBoundsException" {
         memoryScope { scope ->
             val buffer = scope.allocateBuffer(16u)
             shouldThrow<IndexOutOfBoundsException> {
                 buffer.writeInts(IntArray(4), bufferOffset = 12u) // 12 + 16 > 16
-            }.message.shouldContain("12").shouldContain("16")
+            }.message
+                .shouldContain("bufferOffset=").shouldContain("bytes=").shouldContain("size=")
+                .shouldContain("12").shouldContain("16")
         }
     }
 
@@ -98,20 +95,15 @@ class MemoryBufferBoundsCommonTest : FreeSpec({
             val buffer = scope.allocateBuffer(16u)
             shouldThrow<IndexOutOfBoundsException> {
                 buffer.readInts(IntArray(4), bufferOffset = 12u) // 12 + 16 > 16
-            }.message.shouldContain("12").shouldContain("16")
+            }.message
+                .shouldContain("bufferOffset=").shouldContain("bytes=").shouldContain("size=")
+                .shouldContain("12").shouldContain("16")
             // bytes (8) et size (16) distincts : les trois valeurs sont forcées
             shouldThrow<IndexOutOfBoundsException> {
                 buffer.readBytes(ByteArray(8), bufferOffset = 12u) // 12 + 8 > 16
-            }.message.shouldContain("12").shouldContain("8").shouldContain("16")
-        }
-    }
-
-    "pointer read beyond size throws IndexOutOfBoundsException" {
-        memoryScope { scope ->
-            val buffer = scope.allocateBuffer(8u)
-            shouldThrow<IndexOutOfBoundsException> {
-                buffer.readPointer(8u)
-            }
+            }.message
+                .shouldContain("bufferOffset=").shouldContain("bytes=").shouldContain("size=")
+                .shouldContain("12").shouldContain("8").shouldContain("16")
         }
     }
 
