@@ -1651,6 +1651,175 @@ git add kffi/src/jvmMain/kotlin/org/graphiks/kffi/engine/JvmDowncallEngine.kt \
 git commit -m "feat(kextract): JVM struct-by-value via engine layout registry"
 ```
 
+### Task M5.2bis: Registre de layouts struct + wrappers struct-by-value du moteur
+
+Le layout FFM des structs par valeur (arg/return) est construit **dans le moteur** depuis des métadonnées enregistrées par le code généré — jamais de `MemoryLayout` dans le code généré. Le squelette `registerStructLayout`/`structLayout` est déjà posé en M2.1 ; cette tâche le complète (alignement, champs imbriqués, padding exact) et ajoute les wrappers struct-by-value.
+
+**Files:**
+- Modify: `kffi/src/jvmMain/kotlin/org/graphiks/kffi/engine/JvmDowncallEngine.kt`
+- Modify: `kextract/src/main/kotlin/org/graphiks/kextract/kotlin/builders/KotlinKmpJvmBuilder.kt`
+- Test: `kextract/src/test/kotlin/org/graphiks/kextract/integration/KmpJvmStructByValueTest.kt` (créer)
+
+- [x] **Step 1: Écrire le test (golden compile+probe)**
+
+```kotlin
+package org.graphiks.kextract.integration
+
+import io.kotest.core.spec.style.FreeSpec
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
+import org.graphiks.kextract.pipeline.KextractTool
+import org.graphiks.kextract.pipeline.Logger
+import org.graphiks.kextract.pipeline.Options
+import java.nio.file.Files
+
+class KmpJvmStructByValueTest : FreeSpec({
+
+    fun generateJvm(header: String): String {
+        val input = Files.createTempFile("kextract-jvm-struct", ".h")
+        val output = Files.createTempDirectory("kextract-jvm-struct-out")
+        return try {
+            input.toFile().writeText(header)
+            KextractTool(Logger.DEFAULT).runGeneration(
+                listOf(input.toString()),
+                Options(targetPackage = "sample.bindings", outputDir = output.toString(), multiplatform = true),
+            ) shouldBe KextractTool.SUCCESS
+            Files.walk(output.resolve("jvmMain")).use { paths ->
+                paths.filter { it.fileName.toString().endsWith(".kt") }
+                    .map { it.toFile().readText() }
+                    .toList()
+                    .joinToString("\n")
+            }
+        } finally {
+            input.toFile().delete()
+            output.toFile().deleteRecursively()
+        }
+    }
+
+    "struct-by-value arg and return register layouts and call engine wrappers" {
+        val source = generateJvm(
+            """
+            typedef struct { int a; int b; } Box;
+            Box makeBox(int x);
+            void consumeBox(Box b);
+            """.trimIndent(),
+        )
+        source shouldContain "JvmDowncallEngine.registerStructLayout"
+        source shouldContain "JvmDowncallEngine.callStructReturnBox"
+        source shouldContain "JvmDowncallEngine.callStructArgBox"
+        source shouldNotContain "MemoryLayout"
+        source shouldNotContain "FunctionDescriptor"
+    }
+})
+```
+
+- [x] **Step 2: Vérifier qu'il échoue**
+
+Run: `./gradlew :kextract:test --tests "org.graphiks.kextract.integration.KmpJvmStructByValueTest"`
+Expected: FAIL — les wrappers n'existent pas.
+
+- [x] **Step 3: Compléter le registre dans JvmDowncallEngine**
+
+Le squelette `StructField`/`FieldKind`/`structLayouts` est déjà dans le plan M2.1. Compléter `structLayout` pour l'alignement réel, le padding, et les champs struct imbriqués :
+
+```kotlin
+// JvmDowncallEngine.kt — complément M5.2bis
+private val structAlignments = java.util.concurrent.ConcurrentHashMap<String, Long>()
+
+fun registerStructLayout(name: String, sizeBytes: Long, alignmentBytes: Long, fields: List<StructField>) {
+    structLayouts[name] = sizeBytes to fields
+    structAlignments[name] = alignmentBytes
+    structDescriptors.remove(name)
+}
+
+internal fun structLayout(name: String): MemoryLayout {
+    return structDescriptors.computeIfAbsent(name) { structName ->
+        val (size, fields) = structLayouts.getValue(structName)
+        val elements = fields.map { field ->
+            when (field.kind) {
+                FieldKind.PADDING -> java.lang.foreign.MemoryLayout.paddingLayout(field.offsetBytes)
+                FieldKind.STRUCT -> structLayout(resolveStructName(field.cName))
+                else -> primitiveLayout(field.kind).withName(field.cName)
+            }
+        }
+        java.lang.foreign.MemoryLayout.structLayout(*elements.toTypedArray())
+            .withByteAlignment(structAlignments.getValue(structName))
+    }
+}
+```
+
+> **Notes de review M2.1** : (1) `structLayout` retourne `MemoryLayout` (GroupLayout), pas `ValueLayout` — le squelette M2.1 a été corrigé en conséquence ; visibilité `internal` requise pour les wrappers struct-by-value. (2) Les métadonnées `StructField` portent un `offsetBytes` qui sert à dériver le padding — kextract émet un champ `PADDING` explicite par écart > 0 (comme `structLayoutElements` avec `paddingLayout`), et `paddingLayout(offsetBytes)` du squelette est à interpréter comme la TAILLE du padding (corriger la sémantique dans l'implémentation M5.2bis : émettre `paddingLayout(gap)` avec gap = écart entre champs). (3) La table des formes complètes (callStructArg<Name>/callStructReturn<Name> par struct, y compris `reinterpret(layout.byteSize())` sur le segment d'argument) est ajoutée ici.
+
+- [x] **Step 4: Ajouter les wrappers struct-by-value**
+
+```kotlin
+// JvmDowncallEngine.kt — wrappers générés par forme par struct
+
+fun callStructArgBox(fn: Long, structPtr: Long, a2: Long): Long {
+    val layout = structLayout("Box")
+    val handle = handle(fn, FunctionDescriptor.of(C_POINTER, layout, C_POINTER))
+    val structSegment = segment(structPtr).reinterpret(layout.byteSize())
+    return (handle.invokeExact(structSegment, segment(a2)) as MemorySegment).address()
+}
+
+fun callStructReturnBox(fn: Long, allocator: MemoryAllocator, a1: Long): NativeAddress {
+    val layout = structLayout("Box")
+    val handle = handle(fn, FunctionDescriptor.of(layout, C_POINTER))
+    val segmentAllocator = allocator.arena
+    val result = handle.invokeExact(segmentAllocator, segment(a1)) as MemorySegment
+    return NativeAddress(result.address())
+}
+```
+
+Note : `handle.invokeExact` avec un retour struct exige que le premier argument du MethodHandle soit un `SegmentAllocator` (convention FFM) ; `MemoryAllocator.arena` est un `Arena` qui implémente `SegmentAllocator`. Les wrappers par struct sont nommés `callStructArg<Name>`/`callStructReturn<Name>` — kextract émet le nom depuis le type de retour/d'argument du struct.
+
+- [x] **Step 5: kextract émet l'enregistrement des layouts**
+
+Dans `KotlinKmpJvmBuilder` (branch STRUCT/UNION), émettre à la place de `emitGroupLayout`/`Companion.layout` :
+
+```kotlin
+builder.appendLine("init {")
+builder.indent()
+builder.appendLine("$jvmDowncallEngine.registerStructLayout(")
+builder.indent()
+builder.appendLine("\"$structName\",")
+builder.appendLine("${layout.sizeBytes}L, ${layout.alignmentBytes}L,")
+builder.appendLine("listOf(")
+builder.indent()
+// un StructField par champ : (cName, kind, offsetBytes)
+layout.members.forEach { member ->
+    val kind = when (member.layoutExpression) {
+        else -> "JvmDowncallEngine.FieldKind.${fieldKindOf(member)}"
+    }
+    builder.appendLine("JvmDowncallEngine.StructField(\"${member.cName}\", $kind, ${member.offsetBytes}L),")
+}
+builder.unindent()
+builder.appendLine(")")
+builder.unindent()
+builder.appendLine(")")
+builder.unindent()
+builder.appendLine("}")
+```
+
+où `fieldKindOf(member)` mappe le type du champ vers `FieldKind` (INT32 pour `int`, POINTER pour pointeurs, STRUCT pour champs struct imbriqués, PADDING pour le padding explicite). Le padding entre champs est dérivé des offsets (`offsetBytes` cumulés) — émettre un `StructField("__pad", PADDING, gap)` pour chaque écart > 0, comme `structLayoutElements` le fait avec `paddingLayout`.
+
+- [x] **Step 6: Vérifier**
+
+Run: `./gradlew :kextract:test --tests "org.graphiks.kextract.integration.KmpJvmStructByValueTest"`
+Expected: PASS.
+
+- [x] **Step 7: Commit**
+
+```bash
+git add kffi/src/jvmMain/kotlin/org/graphiks/kffi/engine/JvmDowncallEngine.kt \
+        kextract/src/main/kotlin/org/graphiks/kextract/kotlin/builders/KotlinKmpJvmBuilder.kt \
+        kextract/src/test/kotlin/org/graphiks/kextract/integration/KmpJvmStructByValueTest.kt
+git commit -m "feat(kextract): JVM struct-by-value via engine layout registry"
+```
+
+
+
+> **Résultat M5.2bis (réalisé)** : registre complété (alignement via `structAlignments`, `structLayout` en `internal` retournant le GroupLayout `withByteAlignment`, padding = `paddingLayout(gap)` avec gap = TAILLE du padding, structs imbriqués résolus par `structLayout(cName)` — le cName du champ STRUCT porte le nom enregistré du type, vérification `byteSize == sizeBytes` enregistré) et wrappers `callStructArgBox`/`callStructReturnBox` (shapeId dédiés 18/19 ; segment d'argument `reinterpret(byteSize)`, retour struct via `SegmentAllocator` de `MemoryAllocator.arena` — vérifié contre la fixture C : `bench_make_box`/`bench_consume_box`). Écarts au sketch du plan : (1) placement de l'enregistrement au niveau FICHIER (`private val __kffiJvmStructLayouts: Unit = run { ... }` dans `getFiles`), pas dans le companion — les initialiseurs de fichier s'exécutent au chargement de la classe façade donc avant tout downcall, alors que `Box.ByValue(...)` (classe imbriquée) n'initialise pas le companion et l'ordre d'initialisation des companions de structs imbriqués n'est pas garanti ; (2) formes de wrappers calées sur les signatures C réelles du test (retour struct + `int` ; argument struct unique + retour void) — le `a2`/`a1: Long` du sketch ne correspondait pas à `Box makeBox(int x)`/`void consumeBox(Box b)` ; (3) la forme combinée (argument struct + retour struct, ex. `wgpuPointByValue`) reste sur le chemin FFM transitoire jusqu'à M5.2 (prédicat `supported` dans `emitStructByValueFunction`). `fieldKindOf` aplatit les tableaux en champs élémentaires, mappe les enums via `ClangEnumType`, traite les records anonymes (union/struct inline) comme un padding de la taille Clang du membre (nom planifié dépendant du chemin d'en-tête — garde l'émission indépendante du chemin, testé par KmpNamePlanIntegrationTest), et émet les unions comme un unique padding de `sizeBytes` (représentation par valeur d'un bloc qui se chevauche). La résolution d'adresse émet `JvmDowncallEngine.resolveSymbol` (Long) au lieu de `findOrThrow` typé MemorySegment. Tests : `KmpJvmStructByValueTest` (probe + compile contre le stub moteur), 5 tests moteur kffi (fixture C struct-by-value, padding/alignement/imbrication du registre, rejet taille incohérente), `KmpAllocatorConsistencyTest` mis à jour (marqueur JVM = `callStructReturn` ou `Arena.ofAuto() as SegmentAllocator`).
 ### Task M5.2: Réécrire l'émission des fonctions (downcalls JvmDowncallEngine)
 
 **Files:**

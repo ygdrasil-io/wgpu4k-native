@@ -1,11 +1,14 @@
 package org.graphiks.kffi.engine
 
 import org.graphiks.kffi.C_POINTER
+import org.graphiks.kffi.MemoryAllocator
+import org.graphiks.kffi.NativeAddress
 import org.graphiks.kffi.findOrThrow
 import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.Linker
 import java.lang.foreign.MemoryLayout
 import java.lang.foreign.MemorySegment
+import java.lang.foreign.SegmentAllocator
 import java.lang.foreign.ValueLayout
 import java.lang.invoke.MethodHandle
 
@@ -49,6 +52,12 @@ object JvmDowncallEngine {
         const val P3PLL = 15
         const val F1P = 16
         const val D1P = 17
+
+        /** Formes struct-by-value (M5.2bis) : shapeId dédiés par struct × forme —
+         *  le layout du struct fait partie de la forme, la clé de cache reste
+         *  unique par (adresse, forme). */
+        const val S_ARG_BOX = 18
+        const val S_RET_BOX = 19
     }
 
     /** MéthodeHandle par (adresse de fonction, forme) ; borné par les adresses résolues. */
@@ -165,23 +174,47 @@ object JvmDowncallEngine {
 
     private val structLayouts = java.util.concurrent.ConcurrentHashMap<String, Pair<Long, List<StructField>>>()
 
+    private val structAlignments = java.util.concurrent.ConcurrentHashMap<String, Long>()
+
+    /**
+     * Enregistre les métadonnées de layout d'un struct par valeur, émises par le
+     * code généré (kextract) au chargement du fichier de bindings. Les champs
+     * [StructField] portent le type ([FieldKind]) et, pour PADDING, la TAILLE du
+     * padding (gap entre champs consécutifs, y compris le padding final) ; pour les
+     * autres champs, [StructField.offsetBytes] est informatif — le GroupLayout FFM
+     * est reconstruit depuis les éléments et leurs tailles.
+     */
     fun registerStructLayout(name: String, sizeBytes: Long, alignmentBytes: Long, fields: List<StructField>) {
         structLayouts[name] = sizeBytes to fields
+        structAlignments[name] = alignmentBytes
         structDescriptors.remove(name)
     }
 
     private val structDescriptors = java.util.concurrent.ConcurrentHashMap<String, MemoryLayout>()
 
-    private fun structLayout(name: String): MemoryLayout =
+    internal fun structLayout(name: String): MemoryLayout =
         structDescriptors.computeIfAbsent(name) { structName ->
-            val (_, fields) = structLayouts.getValue(structName)
+            val (size, fields) = structLayouts.getValue(structName)
             val elements = fields.map { field ->
                 when (field.kind) {
+                    // L'offsetBytes d'un champ PADDING porte la TAILLE du padding :
+                    // FFM place chaque élément séquentiellement, sans padding implicite,
+                    // et withByteAlignment n'arrondit pas la taille — les gaps explicites
+                    // (y compris final) sont donc obligatoires pour reproduire l'offset
+                    // et la taille Clang.
                     FieldKind.PADDING -> MemoryLayout.paddingLayout(field.offsetBytes)
+                    // Le cName d'un champ STRUCT porte le nom enregistré du type imbriqué.
+                    FieldKind.STRUCT -> structLayout(field.cName).withName(field.cName)
                     else -> primitiveLayout(field.kind).withName(field.cName)
                 }
             }
-            MemoryLayout.structLayout(*elements.toTypedArray())
+            val layout = MemoryLayout.structLayout(*elements.toTypedArray())
+                .withByteAlignment(structAlignments.getValue(structName))
+            check(layout.byteSize() == size) {
+                "Registered size for $structName ($size bytes) disagrees with the layout built " +
+                    "from its fields (${layout.byteSize()} bytes)"
+            }
+            layout
         }
 
     private fun primitiveLayout(kind: FieldKind): ValueLayout = when (kind) {
@@ -192,7 +225,30 @@ object JvmDowncallEngine {
         FieldKind.FLOAT32 -> ValueLayout.JAVA_FLOAT
         FieldKind.FLOAT64 -> ValueLayout.JAVA_DOUBLE
         FieldKind.POINTER -> ValueLayout.ADDRESS
-        FieldKind.STRUCT -> error("nested struct layouts resolve in M5.2bis")
+        FieldKind.STRUCT -> error("nested struct layouts resolve through structLayout")
         FieldKind.PADDING -> error("padding handled separately")
+    }
+
+    // --- wrappers struct-by-value par struct (M5.2bis) ---
+    //
+    // Formes dédiées par struct : le layout est résolu depuis le registre à chaque
+    // appel (cached dans structDescriptors), le MethodHandle par (adresse, forme)
+    // reste dans handleCache. Le segment d'argument est borné à la taille du layout
+    // (reinterpret) ; le retour struct exige un SegmentAllocator en premier
+    // argument du MethodHandle (convention FFM) — l'arène du MemoryAllocator
+    // appelant, qui porte le scope de la structure retournée.
+
+    fun callStructArgBox(fn: Long, structPtr: Long) {
+        val layout = structLayout("Box")
+        val handle = handle(fn, ShapeId.S_ARG_BOX, FunctionDescriptor.ofVoid(layout))
+        handle.invokeExact(segment(structPtr).reinterpret(layout.byteSize()))
+    }
+
+    fun callStructReturnBox(fn: Long, allocator: MemoryAllocator, a1: Int): NativeAddress {
+        val layout = structLayout("Box")
+        val handle = handle(fn, ShapeId.S_RET_BOX, FunctionDescriptor.of(layout, ValueLayout.JAVA_INT))
+        val segmentAllocator: SegmentAllocator = allocator.arena
+        val result = handle.invokeExact(segmentAllocator, a1) as MemorySegment
+        return NativeAddress(result.address())
     }
 }

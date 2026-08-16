@@ -6,7 +6,7 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import org.graphiks.kffi.memoryScope
 
-private object JvmDowncallFixture {
+internal object JvmDowncallFixture {
     val libraryPath: String =
         requireNotNull(System.getProperty("kffi.downcall.fixture.library")) {
             "kffi.downcall.fixture.library must point at the compiled downcall fixture"
