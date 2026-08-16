@@ -11,7 +11,6 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import java.lang.foreign.MemorySegment
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.CyclicBarrier
@@ -243,7 +242,7 @@ class CallbackRuntimeJvmTest : FreeSpec({
                     CallbackRuntime.dispatchSafely(type, null) { it.invoke() }
                     CallbackRuntime.dispatchSafely(
                         type,
-                        JvmNativeAddress(MemorySegment.ofAddress(0)),
+                        NativeAddress(0L),
                     ) { it.invoke() }
                     CallbackRuntime.dispatchSafely(type, registration.userdata) { it.invoke() }
                 } finally {
@@ -512,7 +511,7 @@ class CallbackRuntimeJvmTest : FreeSpec({
     }
 })
 
-private val trampoline = JvmNativeAddress(MemorySegment.ofAddress(0xCAFE))
+private val trampoline = NativeAddress(0xCAFE)
 
 private fun register(
     type: CallbackType<JvmTestCallback>,

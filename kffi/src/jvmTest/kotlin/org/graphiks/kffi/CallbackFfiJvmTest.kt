@@ -52,39 +52,45 @@ private object JvmFfiTrampolines {
     )
     private val noUserdataDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT)
 
-    val routedStub: MemorySegment = linker.upcallStub(
-        lookup.findStatic(
-            JvmFfiTrampolines::class.java,
-            "route",
-            MethodType.methodType(
-                Void.TYPE,
-                Integer.TYPE,
-                MemorySegment::class.java,
-                MemorySegment::class.java,
+    val routedStub: NativeAddress = NativeAddress(
+        linker.upcallStub(
+            lookup.findStatic(
+                JvmFfiTrampolines::class.java,
+                "route",
+                MethodType.methodType(
+                    Void.TYPE,
+                    Integer.TYPE,
+                    MemorySegment::class.java,
+                    MemorySegment::class.java,
+                ),
             ),
-        ),
-        callbackDescriptor,
-        Arena.global(),
+            callbackDescriptor,
+            Arena.global(),
+        ).address(),
     )
 
-    val retiredNoUserdataStub: MemorySegment = linker.upcallStub(
-        lookup.findStatic(
-            JvmFfiTrampolines::class.java,
-            "routeRetiredNoUserdata",
-            MethodType.methodType(Void.TYPE, Integer.TYPE),
-        ),
-        noUserdataDescriptor,
-        Arena.global(),
+    val retiredNoUserdataStub: NativeAddress = NativeAddress(
+        linker.upcallStub(
+            lookup.findStatic(
+                JvmFfiTrampolines::class.java,
+                "routeRetiredNoUserdata",
+                MethodType.methodType(Void.TYPE, Integer.TYPE),
+            ),
+            noUserdataDescriptor,
+            Arena.global(),
+        ).address(),
     )
 
-    val rearmedNoUserdataStub: MemorySegment = linker.upcallStub(
-        lookup.findStatic(
-            JvmFfiTrampolines::class.java,
-            "routeRearmedNoUserdata",
-            MethodType.methodType(Void.TYPE, Integer.TYPE),
-        ),
-        noUserdataDescriptor,
-        Arena.global(),
+    val rearmedNoUserdataStub: NativeAddress = NativeAddress(
+        linker.upcallStub(
+            lookup.findStatic(
+                JvmFfiTrampolines::class.java,
+                "routeRearmedNoUserdata",
+                MethodType.methodType(Void.TYPE, Integer.TYPE),
+            ),
+            noUserdataDescriptor,
+            Arena.global(),
+        ).address(),
     )
 
     @JvmStatic
@@ -95,7 +101,7 @@ private object JvmFfiTrampolines {
     ) {
         CallbackRuntime.dispatchSafely(
             routedType,
-            JvmNativeAddress(routingUserdata),
+            routingUserdata.toNativeAddress(),
         ) { it.invoke(value) }
     }
 
@@ -171,8 +177,12 @@ private object JvmCallbackFixture {
         FunctionDescriptor.of(ValueLayout.JAVA_INT),
     )
 
-    fun store(callback: MemorySegment, applicationUserdata: MemorySegment, routingUserdata: MemorySegment) {
-        storeHandle.invokeExact(callback, applicationUserdata, routingUserdata)
+    fun store(callback: Long, applicationUserdata: Long, routingUserdata: Long) {
+        storeHandle.invokeExact(
+            MemorySegment.ofAddress(callback),
+            MemorySegment.ofAddress(applicationUserdata),
+            MemorySegment.ofAddress(routingUserdata),
+        )
     }
 
     fun fireNow(value: Int) {
@@ -187,16 +197,20 @@ private object JvmCallbackFixture {
         fireAfterMsHandle.invokeExact(value, delayMs)
     }
 
-    fun storeMany(index: Int, callback: MemorySegment, routingUserdata: MemorySegment) {
-        storeManyHandle.invokeExact(index, callback, routingUserdata)
+    fun storeMany(index: Int, callback: Long, routingUserdata: Long) {
+        storeManyHandle.invokeExact(
+            index,
+            MemorySegment.ofAddress(callback),
+            MemorySegment.ofAddress(routingUserdata),
+        )
     }
 
     fun fireManyShuffled(count: Int) {
         fireManyShuffledHandle.invokeExact(count)
     }
 
-    fun storeNoUserdata(callback: MemorySegment) {
-        storeNoUserdataHandle.invokeExact(callback)
+    fun storeNoUserdata(callback: Long) {
+        storeNoUserdataHandle.invokeExact(MemorySegment.ofAddress(callback))
     }
 
     fun fireNoUserdataAfterMs(value: Int, delayMs: Int) {
@@ -207,8 +221,8 @@ private object JvmCallbackFixture {
         unregisterAndJoinHandle.invokeExact()
     }
 
-    fun roundtripUserdata(userdata: MemorySegment): Long =
-        roundtripUserdataHandle.invokeExact(userdata) as Long
+    fun roundtripUserdata(userdata: Long): Long =
+        roundtripUserdataHandle.invokeExact(MemorySegment.ofAddress(userdata)) as Long
 
     fun activeNativeSlots(): Int = activeNativeSlotsHandle.invokeExact() as Int
 }
@@ -283,8 +297,8 @@ class CallbackFfiJvmTest : FreeSpec({
                 registrations.forEachIndexed { index, registration ->
                     JvmCallbackFixture.storeMany(
                         index,
-                        registration.callback.handler,
-                        requireNotNull(registration.userdata).handler,
+                        registration.callback.rawValue,
+                        requireNotNull(registration.userdata).rawValue,
                     )
                 }
                 JvmCallbackFixture.activeNativeSlots() shouldBe MANY_CALLBACK_COUNT
@@ -338,22 +352,22 @@ class CallbackFfiJvmTest : FreeSpec({
             val otherType = CallbackType<OtherJvmFfiCallback>("ffi-jvm-other", hasRoutingUserdata = true)
             val other = CallbackRuntime.register(
                 type = otherType,
-                trampoline = JvmNativeAddress(JvmFfiTrampolines.routedStub),
+                trampoline = JvmFfiTrampolines.routedStub,
                 policy = CallbackPolicy.REPEATING,
                 callback = OtherJvmFfiCallback { calls.incrementAndGet() },
             )
             try {
                 CallbackFallbackReporter.installForTest { reported += it }.use {
                     JvmCallbackFixture.store(
-                        JvmFfiTrampolines.routedStub,
-                        MemorySegment.NULL,
-                        PlatformCallbackTokenAddressCodec.encode(Long.MAX_VALUE.toULong()).handler,
+                        JvmFfiTrampolines.routedStub.rawValue,
+                        0L,
+                        PlatformCallbackTokenAddressCodec.encode(Long.MAX_VALUE.toULong()).rawValue,
                     )
                     JvmCallbackFixture.fireNow(15)
                     JvmCallbackFixture.store(
-                        JvmFfiTrampolines.routedStub,
-                        MemorySegment.NULL,
-                        requireNotNull(other.userdata).handler,
+                        JvmFfiTrampolines.routedStub.rawValue,
+                        0L,
+                        requireNotNull(other.userdata).rawValue,
                     )
                     JvmCallbackFixture.fireNow(16)
                 }
@@ -372,7 +386,7 @@ class CallbackFfiJvmTest : FreeSpec({
             val reported = AtomicReference<Throwable?>()
             val registration = CallbackRuntime.register(
                 type = JvmFfiTrampolines.routedType,
-                trampoline = JvmNativeAddress(JvmFfiTrampolines.routedStub),
+                trampoline = JvmFfiTrampolines.routedStub,
                 policy = CallbackPolicy.ONCE,
                 onError = CallbackExceptionHandler { throw handlerFailure },
                 callback = JvmFfiCallback { throw callbackFailure },
@@ -398,16 +412,16 @@ class CallbackFfiJvmTest : FreeSpec({
             val calls = AtomicInteger(0)
             val prepared = CallbackRuntime.prepare(
                 type = JvmFfiTrampolines.routedType,
-                trampoline = JvmNativeAddress(JvmFfiTrampolines.routedStub),
+                trampoline = JvmFfiTrampolines.routedStub,
                 policy = CallbackPolicy.REPEATING,
                 callback = JvmFfiCallback { calls.incrementAndGet() },
             )
             shouldThrow<IllegalStateException> {
                 try {
                     JvmCallbackFixture.store(
-                        prepared.callback.handler,
-                        MemorySegment.NULL,
-                        requireNotNull(prepared.userdata).handler,
+                        prepared.callback.rawValue,
+                        0L,
+                        requireNotNull(prepared.userdata).rawValue,
                     )
                     throw IllegalStateException("direct downcall failed")
                 } finally {
@@ -425,7 +439,7 @@ class CallbackFfiJvmTest : FreeSpec({
             val calls = AtomicInteger(0)
             val prepared = CallbackRuntime.prepare(
                 type = JvmFfiTrampolines.routedType,
-                trampoline = JvmNativeAddress(JvmFfiTrampolines.routedStub),
+                trampoline = JvmFfiTrampolines.routedStub,
                 policy = CallbackPolicy.REPEATING,
                 callback = JvmFfiCallback { calls.incrementAndGet() },
             )
@@ -449,12 +463,12 @@ class CallbackFfiJvmTest : FreeSpec({
             val calls = AtomicInteger(0)
             val first = CallbackRuntime.register(
                 type = JvmFfiTrampolines.retiredNoUserdataType,
-                trampoline = JvmNativeAddress(JvmFfiTrampolines.retiredNoUserdataStub),
+                trampoline = JvmFfiTrampolines.retiredNoUserdataStub,
                 policy = CallbackPolicy.ONCE,
                 callback = JvmFfiCallback { calls.incrementAndGet() },
             )
             try {
-                JvmCallbackFixture.storeNoUserdata(JvmFfiTrampolines.retiredNoUserdataStub)
+                JvmCallbackFixture.storeNoUserdata(JvmFfiTrampolines.retiredNoUserdataStub.rawValue)
                 JvmCallbackFixture.fireNoUserdataAfterMs(20, 0)
                 JvmCallbackFixture.unregisterAndJoin()
             } finally {
@@ -463,7 +477,7 @@ class CallbackFfiJvmTest : FreeSpec({
             shouldThrow<IllegalStateException> {
                 CallbackRuntime.register(
                     type = JvmFfiTrampolines.retiredNoUserdataType,
-                    trampoline = JvmNativeAddress(JvmFfiTrampolines.retiredNoUserdataStub),
+                    trampoline = JvmFfiTrampolines.retiredNoUserdataStub,
                     policy = CallbackPolicy.ONCE,
                     callback = JvmFfiCallback {},
                 )
@@ -478,12 +492,12 @@ class CallbackFfiJvmTest : FreeSpec({
             val newCalls = AtomicInteger(0)
             val first = CallbackRuntime.register(
                 type = JvmFfiTrampolines.rearmedNoUserdataType,
-                trampoline = JvmNativeAddress(JvmFfiTrampolines.rearmedNoUserdataStub),
+                trampoline = JvmFfiTrampolines.rearmedNoUserdataStub,
                 policy = CallbackPolicy.REPEATING,
                 callback = JvmFfiCallback { oldCalls.incrementAndGet() },
             )
             try {
-                JvmCallbackFixture.storeNoUserdata(JvmFfiTrampolines.rearmedNoUserdataStub)
+                JvmCallbackFixture.storeNoUserdata(JvmFfiTrampolines.rearmedNoUserdataStub.rawValue)
                 JvmCallbackFixture.fireNoUserdataAfterMs(21, 1)
                 JvmCallbackFixture.unregisterAndJoin()
             } finally {
@@ -493,12 +507,12 @@ class CallbackFfiJvmTest : FreeSpec({
 
             val second = CallbackRuntime.rearmAfterNativeQuiescence(
                 type = JvmFfiTrampolines.rearmedNoUserdataType,
-                trampoline = JvmNativeAddress(JvmFfiTrampolines.rearmedNoUserdataStub),
+                trampoline = JvmFfiTrampolines.rearmedNoUserdataStub,
                 policy = CallbackPolicy.ONCE,
                 callback = JvmFfiCallback { newCalls.incrementAndGet() },
             )
             try {
-                JvmCallbackFixture.storeNoUserdata(JvmFfiTrampolines.rearmedNoUserdataStub)
+                JvmCallbackFixture.storeNoUserdata(JvmFfiTrampolines.rearmedNoUserdataStub.rawValue)
                 JvmCallbackFixture.fireNoUserdataAfterMs(22, 0)
                 JvmCallbackFixture.unregisterAndJoin()
             } finally {
@@ -515,7 +529,7 @@ class CallbackFfiJvmTest : FreeSpec({
             val registration = registerRouted(CallbackPolicy.REPEATING) {}
             try {
                 val userdata = requireNotNull(registration.userdata)
-                JvmCallbackFixture.roundtripUserdata(userdata.handler).toULong() shouldBe
+                JvmCallbackFixture.roundtripUserdata(userdata.rawValue).toULong() shouldBe
                     PlatformCallbackTokenAddressCodec.decode(userdata)
             } finally {
                 registration.close()
@@ -529,7 +543,7 @@ private fun registerRouted(
     callback: (Int) -> Unit,
 ): CallbackRegistration<JvmFfiCallback> = CallbackRuntime.register(
     type = JvmFfiTrampolines.routedType,
-    trampoline = JvmNativeAddress(JvmFfiTrampolines.routedStub),
+    trampoline = JvmFfiTrampolines.routedStub,
     policy = policy,
     callback = JvmFfiCallback(callback),
 )
@@ -541,9 +555,9 @@ private fun scheduleJvmFfiAfterRegisteringFunctionReturns(
     try {
         Arena.ofConfined().use { scope ->
             JvmCallbackFixture.store(
-                registration.callback.handler,
-                scope.allocate(1),
-                requireNotNull(registration.userdata).handler,
+                registration.callback.rawValue,
+                scope.allocate(1).address(),
+                requireNotNull(registration.userdata).rawValue,
             )
             JvmCallbackFixture.fireAfterMs(11, 10)
         }
@@ -556,9 +570,9 @@ private fun scheduleJvmFfiAfterRegisteringFunctionReturns(
 
 private fun storeRouted(registration: CallbackRegistration<JvmFfiCallback>) {
     JvmCallbackFixture.store(
-        registration.callback.handler,
-        MemorySegment.NULL,
-        requireNotNull(registration.userdata).handler,
+        registration.callback.rawValue,
+        0L,
+        requireNotNull(registration.userdata).rawValue,
     )
 }
 

@@ -3,29 +3,25 @@ package org.graphiks.kffi
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
-import java.lang.foreign.MemorySegment
-import java.lang.foreign.ValueLayout
 
 class CallbackTokenAddressCodecJvmTest : FreeSpec({
-    "valid callback tokens round-trip through JVM FFM addresses" {
+    "valid callback tokens round-trip through raw addresses" {
         listOf(1uL, 2uL, Int.MAX_VALUE.toULong(), Long.MAX_VALUE.toULong()).forEach { token ->
             PlatformCallbackTokenAddressCodec.decode(PlatformCallbackTokenAddressCodec.encode(token)) shouldBe token
         }
     }
 
-    "a null JVM FFM address decodes to null" {
+    "a null raw address decodes to null" {
         PlatformCallbackTokenAddressCodec.decode(null) shouldBe null
     }
 
-    "a non-null zero JVM FFM address is not a callback token" {
-        shouldThrow<IllegalArgumentException> {
-            PlatformCallbackTokenAddressCodec.decode(JvmNativeAddress(MemorySegment.ofAddress(0)))
-        }
+    "a zero raw address decodes to null" {
+        PlatformCallbackTokenAddressCodec.decode(NativeAddress(0L)) shouldBe null
     }
 
-    "a high-bit JVM FFM address is not a callback token" {
+    "a high-bit raw address is not a callback token" {
         shouldThrow<IllegalArgumentException> {
-            PlatformCallbackTokenAddressCodec.decode(JvmNativeAddress(MemorySegment.ofAddress(Long.MIN_VALUE)))
+            PlatformCallbackTokenAddressCodec.decode(NativeAddress(Long.MIN_VALUE))
         }
     }
 
@@ -41,17 +37,8 @@ class CallbackTokenAddressCodecJvmTest : FreeSpec({
         }
     }
 
-    "the JVM token codec derives pointer width from the FFM address layout" {
-        validatedJvmCallbackPointerBits(ValueLayout.ADDRESS.byteSize()) shouldBe 64
-        PlatformCallbackTokenAddressCodec.pointerBits shouldBe 64
-    }
-
-    "non-64-bit JVM FFM address layouts are rejected" {
-        val failure = shouldThrow<IllegalArgumentException> {
-            validatedJvmCallbackPointerBits(4L)
-        }
-        failure.message shouldBe
-            "KFFI callback tokens require an 8-byte JVM FFM address layout, found 4 bytes"
+    "the JVM token codec pointer width is the raw-address width" {
+        PlatformCallbackTokenAddressCodec.pointerBits shouldBe Long.SIZE_BITS
     }
 
     "the JVM callback token ABI is a signed-positive 64-bit address range" {
