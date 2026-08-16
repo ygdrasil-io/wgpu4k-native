@@ -5,7 +5,7 @@ import kotlin.contracts.contract
 
 val globalMemory = MemoryAllocator()
 
-expect class MemoryAllocator() : AutoCloseable {
+expect class MemoryAllocator(unsafe: Boolean = false) : AutoCloseable {
 
     fun allocate(sizeInByte: Long): NativeAddress
 

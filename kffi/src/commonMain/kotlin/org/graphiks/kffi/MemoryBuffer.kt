@@ -1,7 +1,7 @@
 package org.graphiks.kffi
 
 @OptIn(ExperimentalUnsignedTypes::class)
-expect class MemoryBuffer(handler: NativeAddress, size: ULong) {
+expect class MemoryBuffer(handler: NativeAddress, size: ULong, unsafe: Boolean = false) {
     val size: ULong
     val handler: NativeAddress
 
