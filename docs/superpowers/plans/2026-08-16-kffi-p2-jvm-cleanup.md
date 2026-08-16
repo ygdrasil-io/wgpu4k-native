@@ -1213,6 +1213,8 @@ Les callbacks JVM générés n'utilisent plus `Linker.upcallStub`/`MethodHandles
 
 ### Task M4.1: JvmUpcallEngine — trampolines par forme
 
+> **Réalisé (redesign post-review)** : la spec initiale (registry token-keyed + `trampolineV2PP(handler)` + userdata-first) a été rejetée en review qualité : (a) le userdata C réel est le DERNIER paramètre (ordre C), pas le premier ; (b) le registry par token duplique/bypasse CallbackRuntime et grandirait sans borne (wgpu enregistre par requête) ; (c) le pattern généré est un trampoline par TYPE de callback, pas par registration. L'API livrée est **`JvmUpcallEngine.allocateTrampoline(dispatcherClass: Class<*>, dispatchMethod: String, dispatchSig: String): NativeAddress`** — fabrique de stubs symétrique d'UpcallEngine Android, sans routage (le dispatcher généré route via CallbackRuntime.dispatchSafely, userdata en position C réelle). `dispatchSig` = convention Java (I/J/F/D/Z, V→ofVoid) ; les pointeurs encodés J (carrier long 64-bit, ABI-identique, comme jlong côté Android). Résolution via `MethodHandles.privateLookupIn` (objets trampoline privés générés, précondition modules non nommés documentée). Commits : 928456d2 (redesign), 247e721f (pin cross-package).
+
 **Files:**
 - Create: `kffi/src/jvmMain/kotlin/org/graphiks/kffi/engine/JvmUpcallEngine.kt`
 - Test: `kffi/src/jvmTest/kotlin/org/graphiks/kffi/engine/JvmUpcallEngineTest.kt` (créer)
