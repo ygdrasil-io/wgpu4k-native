@@ -507,6 +507,7 @@ git commit -m "docs(wgpu): point kffi usage to published Graphiks-org/kffi artif
 - **F5 (mineur, optionnel)** : pas de `paths:` filter sur le workflow snapshots — les push docs déclenchent des publications inutiles (snapshots timestampés, inoffensifs).
 - **F6 (RÉSOLU — b780dc9c)** : `verifyPublicationMetadata` comparait l'edge wgpu→kffi et le lookup kffi à la version racine (v29.0.0-SNAPSHOT) — cassé par M2.4. Fix : lookup/edges kffi contre `project(":kffi").version`. Passe désormais modulo F3 (`-x :wgpu4k-native:generateBindingsFromHeader`).
 - **F7 (tracké, M4.2)** : `kffi-publish-snapshots.yml` exporte `VERSION` (mécanisme host) qui n'atteint plus kffi — les snapshots publiés seraient tous `1.0.0-SNAPSHOT` non timestampés. Passer à `KFFI_VERSION=$(date...)-SNAPSHOT` dans le workflow au moment de la publication cible.
+- **F8 (tracké, M4.2)** : le consumer test n'est pas câblé dans la CI hôte — `test.yml` vérifie l'ancien `gradle/jvm-bootstrap-consumer`. Ajouter un job CI qui publie vers mavenLocal (ou un repo local) et exécute `kffi-consumer-test` (JVM + native) en garde de régression de l'API publiée.
 
 ---
 
