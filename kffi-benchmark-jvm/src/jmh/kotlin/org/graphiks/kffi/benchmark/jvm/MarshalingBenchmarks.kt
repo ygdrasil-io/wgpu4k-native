@@ -7,23 +7,36 @@ import org.graphiks.kffi.MemoryBuffer
 import org.graphiks.kffi.memoryScope
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.annotations.BenchmarkMode
+import org.openjdk.jmh.annotations.Level
 import org.openjdk.jmh.annotations.Mode
 import org.openjdk.jmh.annotations.OutputTimeUnit
 import org.openjdk.jmh.annotations.Scope
 import org.openjdk.jmh.annotations.Setup
 import org.openjdk.jmh.annotations.State
+import org.openjdk.jmh.annotations.TearDown
 import org.openjdk.jmh.infra.Blackhole
 import java.util.concurrent.TimeUnit
 
 @State(Scope.Thread)
 class MarshalingState {
+    private lateinit var safeAllocator: MemoryAllocator
+    private lateinit var unsafeAllocator: MemoryAllocator
     lateinit var safeBuffer: MemoryBuffer
     lateinit var unsafeBuffer: MemoryBuffer
+    var counter = 0L
 
     @Setup
     fun setup() {
-        safeBuffer = MemoryAllocator().allocateBuffer(4096uL)
-        unsafeBuffer = MemoryAllocator(unsafe = true).allocateBuffer(4096uL)
+        safeAllocator = MemoryAllocator()
+        safeBuffer = safeAllocator.allocateBuffer(4096uL)
+        unsafeAllocator = MemoryAllocator(unsafe = true)
+        unsafeBuffer = unsafeAllocator.allocateBuffer(4096uL)
+    }
+
+    @TearDown(Level.Trial)
+    fun teardown() {
+        safeAllocator.close()
+        unsafeAllocator.close()
     }
 }
 
@@ -113,18 +126,29 @@ open class MarshalingBenchmarks {
         bh.consume(checksum)
     }
 
+    // scalarSafe vs writeReadLongScalar: same bounds-checked write+read under different
+    // names (state-reused buffer here vs per-iteration memoryScope allocation there).
     @Benchmark
     fun scalarSafe(state: MarshalingState, bh: Blackhole) {
-        state.safeBuffer.writeLong(1L, 0uL)
-        bh.consume(state.safeBuffer.readLong(0uL))
+        val offset = (state.counter and 0x3F).toULong()
+        state.counter++
+        bh.consume(state.counter)
+        state.safeBuffer.writeLong(1L, offset)
+        bh.consume(state.safeBuffer.readLong(offset))
     }
 
     @Benchmark
     fun scalarUnsafe(state: MarshalingState, bh: Blackhole) {
-        state.unsafeBuffer.writeLong(1L, 0uL)
-        bh.consume(state.unsafeBuffer.readLong(0uL))
+        val offset = (state.counter and 0x3F).toULong()
+        state.counter++
+        bh.consume(state.counter)
+        state.unsafeBuffer.writeLong(1L, offset)
+        bh.consume(state.unsafeBuffer.readLong(offset))
     }
 
+    // Attribution limit: the unsafe array path swaps FFM bulk copy for an element-wise
+    // sun.misc.Unsafe loop, so the safe/unsafe delta here mixes bounds-check removal with
+    // a copy-strategy change. The scalar pair above is the clean bounds-check isolate.
     @Benchmark
     fun arrayInts16Safe(state: MarshalingState, bh: Blackhole) {
         state.safeBuffer.writeInts(ints16)
