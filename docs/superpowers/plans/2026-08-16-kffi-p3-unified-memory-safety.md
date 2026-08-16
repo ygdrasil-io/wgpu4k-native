@@ -407,7 +407,7 @@ private fun boundsCheck(offset: ULong, width: Long) {
 }
 ```
 
-> **Note de review M1.1** : `MemoryBufferArrayTest` (commonTest) a 8 assertions `shouldThrow<IllegalArgumentException>` sur les bornes de tableaux — après la migration vers `IndexOutOfBoundsException` sur les 3 backends, ce fichier casse. **Ajouter une étape ici (M3.1) : migrer les 8 assertions de `MemoryBufferArrayTest` vers `IndexOutOfBoundsException`** (ou en M2.1 si la migration native des tableaux la déclenche en premier).
+> **Notes de review M1.1/M2.1 (résolues)** : `MemoryBufferArrayTest` (commonTest) avait 30 assertions `shouldThrow<IllegalArgumentException>` sur les bornes de tableaux — **déjà migrées vers `IndexOutOfBoundsException` en M2.1** (commit 1ae5df3c, déclenchée par la migration native des tableaux). **Découverte M2.1** : le chemin **JVM array** (`writeArray`/`readArray` → `write()`/`read()` dans `MemoryBuffer.jvm.kt`) utilise aussi `require` → IllegalArgumentException ; seule la voie scalaire JVM hérite de l'IndexOutOfBoundsException FFM. **M3.1 doit donc aussi migrer les `require` des tableaux JVM**, sinon `MemoryBufferArrayTest` reste rouge sur JVM.
 
 - [ ] **Step 2: Remplacer les `require(...) { "Out of ... bounds" }` des tableaux**
 
