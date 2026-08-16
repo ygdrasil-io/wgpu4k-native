@@ -1,10 +1,7 @@
 name: kffi-publish-snapshots
 on:
-  # Manual trigger only while staged in wgpu4k-native. At the P5 split to
-  # Graphiks-org/kffi, switch this back to:
-  #   push:
-  #     branches: [main]
-  workflow_dispatch:
+  push:
+    branches: [main]
 
 jobs:
   publish:

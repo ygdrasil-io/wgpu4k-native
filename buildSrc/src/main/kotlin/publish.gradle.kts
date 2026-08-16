@@ -8,7 +8,17 @@ plugins {
     id("org.jetbrains.dokka")
 }
 
-val libraryDescription = "wgpu4k kotlin native binding."
+val isKffiProject = project.name.startsWith("kffi")
+val libraryDescription = if (isKffiProject) {
+    "kffi: multiplatform FFI binding foundation"
+} else {
+    "wgpu4k kotlin native binding."
+}
+val projectHomepage = if (isKffiProject) {
+    "https://github.com/Graphiks-org/kffi"
+} else {
+    "https://github.com/wgpu4k/wgpu4k-native"
+}
 val jvmVerificationPublication = providers.gradleProperty("wgpu4k.jvmVerificationPublication")
     .map(String::toBoolean)
     .orElse(false)
@@ -35,7 +45,7 @@ mavenPublishing {
     pom {
         name.set(project.name)
         description.set(libraryDescription)
-        url.set("https://github.com/wgpu4k/wgpu4k-native")
+        url.set(projectHomepage)
         inceptionYear.set("2024")
         licenses {
             license {
@@ -50,9 +60,9 @@ mavenPublishing {
             }
         }
         scm {
-            connection.set("scm:git:https://github.com/wgpu4k/wgpu4k-native.git")
-            developerConnection.set("scm:git:https://github.com/wgpu4k/wgpu4k-native.git")
-            url.set("https://github.com/wgpu4k/wgpu4k-native")
+            connection.set("scm:git:${projectHomepage}.git")
+            developerConnection.set("scm:git:${projectHomepage}.git")
+            url.set(projectHomepage)
         }
     }
 }
