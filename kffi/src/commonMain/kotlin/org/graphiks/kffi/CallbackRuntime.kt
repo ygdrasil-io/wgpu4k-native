@@ -18,36 +18,33 @@ internal enum class DeliveryState {
     ABORTED,
 }
 
-private class DeliverySnapshot(
-    val state: DeliveryState,
-    val inFlight: Int,
-)
-
 internal class DeliveryStateMachine(
     private val policy: CallbackPolicy,
     initialState: DeliveryState = DeliveryState.ACTIVE,
     private val beforeTryEnterCompareAndSet: (() -> Unit)? = null,
 ) {
-    private val snapshotRef = AtomicReference(DeliverySnapshot(initialState, 0))
+    private val packed = AtomicLong(pack(initialState, 0))
 
     val state: DeliveryState
-        get() = snapshotRef.load().state
+        get() = unpackState(packed.load())
 
     val inFlight: Int
-        get() = snapshotRef.load().inFlight
+        get() = unpackInFlight(packed.load())
 
     val isClosed: Boolean
-        get() = snapshotRef.load().state !in setOf(DeliveryState.PREPARED, DeliveryState.ACTIVE)
+        get() = unpackState(packed.load()) !in setOf(DeliveryState.PREPARED, DeliveryState.ACTIVE)
 
     val isQuiescent: Boolean
-        get() = snapshotRef.load().let { current ->
-            current.state !in setOf(DeliveryState.PREPARED, DeliveryState.ACTIVE) &&
-                current.inFlight == 0
+        get() = packed.load().let { raw ->
+            val s = unpackState(raw)
+            s !in setOf(DeliveryState.PREPARED, DeliveryState.ACTIVE) && unpackInFlight(raw) == 0
         }
 
     fun activate(): Boolean = transitionState(DeliveryState.PREPARED, DeliveryState.ACTIVE)
 
     fun abort(): Boolean = transitionState(DeliveryState.PREPARED, DeliveryState.ABORTED)
+
+    fun close(): Boolean = transitionState(DeliveryState.ACTIVE, DeliveryState.CLOSED)
 
     fun tryEnter(): Boolean = when (policy) {
         CallbackPolicy.ONCE -> tryEnterOnce()
@@ -55,15 +52,15 @@ internal class DeliveryStateMachine(
     }
 
     private fun tryEnterOnce(): Boolean {
-        val current = snapshotRef.load()
-        if (current.state != DeliveryState.ACTIVE) return false
+        val current = packed.load()
+        if (unpackState(current) != DeliveryState.ACTIVE) return false
         beforeTryEnterCompareAndSet?.invoke()
-        val claiming = DeliverySnapshot(DeliveryState.CLAIMING, 1)
-        if (!snapshotRef.compareAndSet(current, claiming)) return false
+        val claiming = pack(DeliveryState.CLAIMING, 1)
+        if (!packed.compareAndSet(current, claiming)) return false
         check(
-            snapshotRef.compareAndSet(
+            packed.compareAndSet(
                 claiming,
-                DeliverySnapshot(DeliveryState.CLAIMED, claiming.inFlight),
+                pack(DeliveryState.CLAIMED, 1),
             ),
         ) { "ONCE callback claim was unexpectedly modified" }
         return true
@@ -71,13 +68,13 @@ internal class DeliveryStateMachine(
 
     private fun tryEnterRepeating(): Boolean {
         while (true) {
-            val current = snapshotRef.load()
-            if (current.state != DeliveryState.ACTIVE) return false
+            val current = packed.load()
+            if (unpackState(current) != DeliveryState.ACTIVE) return false
             beforeTryEnterCompareAndSet?.invoke()
             if (
-                snapshotRef.compareAndSet(
+                packed.compareAndSet(
                     current,
-                    DeliverySnapshot(DeliveryState.ACTIVE, current.inFlight + 1),
+                    pack(DeliveryState.ACTIVE, unpackInFlight(current) + 1),
                 )
             ) {
                 return true
@@ -87,12 +84,12 @@ internal class DeliveryStateMachine(
 
     fun leave() {
         while (true) {
-            val current = snapshotRef.load()
-            check(current.inFlight > 0) { "Callback delivery left without entering" }
+            val current = packed.load()
+            check(unpackInFlight(current) > 0) { "Callback delivery left without entering" }
             if (
-                snapshotRef.compareAndSet(
+                packed.compareAndSet(
                     current,
-                    DeliverySnapshot(current.state, current.inFlight - 1),
+                    pack(unpackState(current), unpackInFlight(current) - 1),
                 )
             ) {
                 return
@@ -100,21 +97,34 @@ internal class DeliveryStateMachine(
         }
     }
 
-    fun close(): Boolean = transitionState(DeliveryState.ACTIVE, DeliveryState.CLOSED)
-
     private fun transitionState(expected: DeliveryState, updated: DeliveryState): Boolean {
         while (true) {
-            val current = snapshotRef.load()
-            if (current.state != expected) return false
+            val current = packed.load()
+            if (unpackState(current) != expected) return false
             if (
-                snapshotRef.compareAndSet(
+                packed.compareAndSet(
                     current,
-                    DeliverySnapshot(updated, current.inFlight),
+                    pack(updated, unpackInFlight(current)),
                 )
             ) {
                 return true
             }
         }
+    }
+
+    private companion object {
+        private const val STATE_BITS = 4
+        private const val IN_FLIGHT_SHIFT = STATE_BITS
+        private const val STATE_MASK = (1L shl STATE_BITS) - 1
+
+        private fun pack(state: DeliveryState, inFlight: Int): Long =
+            (state.ordinal.toLong() and STATE_MASK) or (inFlight.toLong() shl IN_FLIGHT_SHIFT)
+
+        private fun unpackState(packed: Long): DeliveryState =
+            DeliveryState.entries[(packed and STATE_MASK).toInt()]
+
+        private fun unpackInFlight(packed: Long): Int =
+            (packed shr IN_FLIGHT_SHIFT).toInt()
     }
 }
 
