@@ -468,16 +468,23 @@ object JvmDowncallEngine {
      * MethodHandle d'un wrapper struct-par-valeur en argument : [scalarArgLayouts]
      * sont les layouts des arguments scalaires/pointeurs qui PRÉCÈDENT le struct
      * dans l'ordre C (le struct est toujours le dernier argument — vérifié par la
-     * garde kextract à la génération).
+     * garde kextract à la génération). [returnLayout] est null pour les retours
+     * Unit, sinon le layout du retour (ex. C_POINTER pour wgpuGetProcAddress) —
+     * une forme par nom de wrapper, jamais d'overload.
      */
     private fun structArgHandle(
         fn: Long,
         shapeId: Int,
         structName: String,
         scalarArgLayouts: List<ValueLayout> = emptyList(),
+        returnLayout: MemoryLayout? = null,
     ): MethodHandle {
         val layout = structLayout(structName)
-        val descriptor = FunctionDescriptor.ofVoid(*(scalarArgLayouts + layout).toTypedArray())
+        val descriptor = if (returnLayout == null) {
+            FunctionDescriptor.ofVoid(*(scalarArgLayouts + layout).toTypedArray())
+        } else {
+            FunctionDescriptor.of(returnLayout, *(scalarArgLayouts + layout).toTypedArray())
+        }
         return handle(fn, shapeId, descriptor, layoutVersion(structName))
     }
 
@@ -546,14 +553,15 @@ object JvmDowncallEngine {
     }
 
     // --- WGPUStringView en argument, retour pointeur (wgpuGetProcAddress) ---
+    // Forme distincte de callStructArgWGPUStringView (retour Unit) : nom dédié,
+    // pas d'overload — une forme = un nom de wrapper.
 
-    fun callStructArgWGPUStringView(fn: Long, structPtr: Long): Long {
-        val layout = structLayout("WGPUStringView")
-        val handle = handle(
+    fun callStructArgWGPUStringViewRetP(fn: Long, structPtr: Long): Long {
+        val handle = structArgHandle(
             fn,
             ShapeId.S_ARG_STRINGVIEW_RET_P,
-            FunctionDescriptor.of(C_POINTER, layout),
-            layoutVersion("WGPUStringView"),
+            "WGPUStringView",
+            returnLayout = C_POINTER,
         )
         return (handle.invokeExact(structSegment(structPtr, "WGPUStringView")) as MemorySegment).address()
     }

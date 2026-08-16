@@ -192,11 +192,36 @@ class JvmDowncallEngineStructByValueTest : FreeSpec({
             val name = allocator.allocateBuffer(16uL)
             name.writePointer(NativeAddress(0x5000L), 0uL) // data non nul
             name.writeLong(7, 8uL) // length = 7
-            val proc = JvmDowncallEngine.callStructArgWGPUStringView(
+            val proc = JvmDowncallEngine.callStructArgWGPUStringViewRetP(
                 JvmDowncallFixture.symbol("bench_get_proc_address"),
                 name.handler.rawValue,
             )
             proc shouldBe 14L
+        }
+    }
+
+    "struct arg alone consumes the struct by value (FreeMembers shape)" {
+        // La forme S|V des fonctions *FreeMembers : le wrapper marshalle le struct
+        // par valeur, le callee le consomme. La fixture C expose
+        // bench_consume_future(bench_future_t) — même ABI qu'un FreeMembers
+        // (struct {uint64_t} de 8 octets par valeur) ; le layout est enregistré
+        // sous le nom du wrapper exercé.
+        JvmDowncallEngine.registerStructLayout(
+            "WGPUAdapterInfo",
+            sizeBytes = 8L,
+            alignmentBytes = 8L,
+            fields = listOf(
+                JvmDowncallEngine.StructField("id", JvmDowncallEngine.FieldKind.UINT64, 0L),
+            ),
+        )
+        MemoryAllocator().use { allocator ->
+            val info = allocator.allocateBuffer(8uL)
+            info.writeLong(0xDEADBEEF, 0uL)
+            JvmDowncallEngine.callStructArgWGPUAdapterInfo(
+                JvmDowncallFixture.symbol("bench_consume_future"),
+                info.handler.rawValue,
+            )
+            JvmDowncallEngine.callI0(JvmDowncallFixture.symbol("bench_consumed_future_id")) shouldBe 0xDEADBEEFL
         }
     }
 
