@@ -1,6 +1,7 @@
 package consumer
 
 import org.graphiks.kffi.MemoryAllocator
+import org.graphiks.kffi.MemoryBuffer
 import org.graphiks.kffi.memoryScope
 
 fun main() {
@@ -30,5 +31,23 @@ fun main() {
     unsafeBuffer.writeLong(1L, 64uL) // hors bornes : pas d'exception en unsafe
     unsafeAllocator.close()
 
+    // ── Bindings générés par kextract (M3.2) ─────────────────────────────────
+    // Appelle la lib native `consumer` (native/consumer.c, compilée par
+    // `compileConsumerLib`) via les bindings consumer_h* générés depuis
+    // headers/consumer.h. La lib est chargée par KextractNativeBootstrap
+    // (System.loadLibrary("consumer") → -Djava.library.path=build/native-libs).
+    memoryScope { allocator ->
+        check(consumer_negate(5) == -5) { "consumer_negate(5) != -5" }
+        check(consumer_negate(-5) == 5)
+
+        val string = allocator.allocateFrom("kextract")
+        check(consumer_strlen(string.handler) == 8) { "consumer_strlen(\"kextract\") != 8" }
+        consumer_set_string(string.handler)
+
+        val ping = allocator.allocate(8L)
+        consumer_get_ping(ping)
+        check(MemoryBuffer(ping, 8uL).readLong(0uL) == 42L) { "consumer_get_ping != 42" }
+    }
+    println("consumer bindings OK (negate/strlen/set_string/get_ping)")
     println("kffi consumer test OK")
 }

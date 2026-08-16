@@ -1,0 +1,19 @@
+# Kotlin/Native cinterop pour le consumer test (M3.2).
+#
+# Le nom du fichier est CONTRAINT : les bindings native générés par kextract
+# référencent le paquet cinterop « webgpu.native.* » (classificateur codé en
+# dur dans KotlinKmpNamePlan.nativeCinteropClassifier) — le def doit donc
+# s'appeler webgpu.def pour produire ce paquet. Même mécanique que
+# wgpu4k-native/src/nativeInterop/cinterop/webgpu.def (repo hôte).
+#
+# La lib est compilée à la demande par la tâche `compileConsumerLib`
+# (cc → build/native-libs/libconsumer.a + .dylib) ; le .a est lié
+# statiquement au kexe (pas de chargement dynamique côté native).
+
+staticLibraries.macos_arm64 = libconsumer.a
+
+libraryPaths.macos_arm64 = ./build/native-libs/
+
+# kextract passe des CPointer aux fonctions `const char*` (CString kffi) :
+# désactive la conversion String automatique du cinterop.
+noStringConversion = true
