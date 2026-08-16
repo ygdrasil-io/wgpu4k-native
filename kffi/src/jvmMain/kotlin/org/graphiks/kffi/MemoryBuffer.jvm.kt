@@ -15,9 +15,9 @@ import java.lang.foreign.ValueLayout
  *   non détecté (UB documenté, aligné sur Android/native).
  *
  * Mode [unsafe] (I3) : élimine les bornes-check (tout accès hors bornes devient UB) ;
- * l'accès passe par sun.misc.Unsafe sur l'adresse brute. Décision M4.2-(b) : la garde
- * de close I2-(a) est conservée (check isAlive léger avant l'accès), seules les bornes
- * sont sautées.
+ * l'accès passe par sun.misc.Unsafe sur l'adresse brute. Décision M1.1 : la garde
+ * de close I2-(a) est conservée en unsafe via le flag `closed` porté par l'allocateur
+ * (1 load volatil au lieu de scope().isAlive, 2 appels FFM) ; seules les bornes sont sautées.
  */
 actual class MemoryBuffer actual constructor(
     handler: NativeAddress,
@@ -36,8 +36,18 @@ actual class MemoryBuffer actual constructor(
      */
     private var scopedSegment: MemorySegment? = null
 
-    internal constructor(handler: NativeAddress, size: ULong, scopedSegment: MemorySegment, unsafe: Boolean) : this(handler, size, unsafe) {
+    /** Flag de fermeture porté par l'allocateur (1 load volatil vs scope().isAlive). */
+    private var allocatorClosed: java.util.concurrent.atomic.AtomicBoolean? = null
+
+    internal constructor(
+        handler: NativeAddress,
+        size: ULong,
+        scopedSegment: MemorySegment,
+        unsafe: Boolean,
+        allocatorClosed: java.util.concurrent.atomic.AtomicBoolean,
+    ) : this(handler, size, unsafe) {
         this.scopedSegment = scopedSegment
+        this.allocatorClosed = allocatorClosed
     }
 
     /** Segment dérivé de l'adresse brute pour les buffers non scopés (créé une seule fois). */
@@ -48,6 +58,10 @@ actual class MemoryBuffer actual constructor(
 
     /** Vérifie la vie du scope (I2-a) même en mode unsafe, puis retourne l'adresse brute. */
     private fun rawAddress(): Long {
+        allocatorClosed?.let { closed ->
+            if (closed.get()) throw IllegalStateException("MemoryBuffer has been closed")
+            return handler.rawValue
+        }
         val scope = scopedSegment?.scope()
         if (scope != null && !scope.isAlive) {
             throw IllegalStateException("MemoryBuffer has been closed")
