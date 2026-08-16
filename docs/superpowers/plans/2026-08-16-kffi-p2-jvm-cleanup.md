@@ -1435,6 +1435,8 @@ Le `KotlinKmpJvmBuilder` est réécrit sur le modèle Android : structs `ByRefer
 
 ### Task M5.1: Réécrire l'émission des structs (memory-backed)
 
+> **Réalisé** (submodule commits 80e3b74 + 49bf2ca) : structs JVM memory-backed (ByReference/ByValue avec `MemoryBuffer` lazy, accesseurs `buffer.readX/writeX`, pas de CStructure/layouts/VarHandle dans le généré), helpers partagés extraits dans `MemoryFieldAccessors.kt` (Android inchangé, sortie byte-identique), symbole C_STRUCTURE supprimé, imports FFM usage-driven. 396 tests kextract verts. **Limitation trackée (review)** : les champs inline array sont émis comme accès pointeur (lecture 8 octets) — cohérence Android assumée, aucun struct wgpu n'utilise de tableau inline aujourd'hui ; à traiter en P3 si nécessaire.
+
 **Files:**
 - Modify: `kextract/src/main/kotlin/org/graphiks/kextract/kotlin/builders/KotlinKmpJvmBuilder.kt`
 - Test: `kextract/src/test/kotlin/org/graphiks/kextract/integration/KmpJvmMemoryBackedAbiTest.kt` (créer, migré depuis KmpJvmFfmAbiTest)
