@@ -4,7 +4,9 @@ import java.lang.foreign.Arena
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout
 
-actual class MemoryAllocator : AutoCloseable {
+actual class MemoryAllocator actual constructor(unsafe: Boolean) : AutoCloseable {
+
+    private val unsafe: Boolean = unsafe
 
     val arena = Arena.ofConfined()
 
@@ -18,19 +20,19 @@ actual class MemoryAllocator : AutoCloseable {
     actual fun bufferOf(value: Long): MemoryBuffer =
         arena.allocate(ValueLayout.JAVA_LONG)
             .also { it.set(ValueLayout.JAVA_LONG, 0, value) }
-            .let { MemoryBuffer(NativeAddress(it.address()), Long.SIZE_BYTES.toULong(), it) }
+            .let { MemoryBuffer(NativeAddress(it.address()), Long.SIZE_BYTES.toULong(), it, unsafe) }
 
     actual fun allocateFrom(value: String): CString =
         arena.allocateFrom(value)
             .let { segment ->
-                CString(MemoryBuffer(NativeAddress(segment.address()), segment.byteSize().toULong(), segment).handler)
+                CString(MemoryBuffer(NativeAddress(segment.address()), segment.byteSize().toULong(), segment, unsafe).handler)
             }
 
     actual fun bufferOfAddress(value: NativeAddress): MemoryBuffer = bufferOf(value.rawValue)
 
     actual fun allocateBuffer(size: ULong): MemoryBuffer =
         arena.allocate(size.toLong())
-            .let { segment -> MemoryBuffer(NativeAddress(segment.address()), size, segment) }
+            .let { segment -> MemoryBuffer(NativeAddress(segment.address()), size, segment, unsafe) }
 
     actual fun bufferOfAddresses(value: List<NativeAddress>): MemoryBuffer {
         val size = (Long.SIZE_BYTES * value.size).toULong()
