@@ -12,8 +12,9 @@ import java.lang.invoke.MethodHandle
 /**
  * Moteur de downcall JVM typé par forme — symétrique de NativeEngine (Android).
  *
- * Chaque wrapper par forme cache un MethodHandle FFM (invokeExact) et convertit
- * les adresses brutes en segments éphémères à l'appel. Les formes couvertes sont
+ * Chaque wrapper construit le MethodHandle FFM (invokeExact) par appel ; un cache
+ * par (forme, adresse de fonction) est évalué au bake-off M2.2 (le plan exige
+ * downcall ≤ 1.5× baseline). Les formes couvertes sont
  * celles réellement référencées par les bindings générés (union des signatures
  * wgpu) — la table grandit par ajout de wrapper, jamais par combinatoire.
  *
@@ -31,8 +32,10 @@ object JvmDowncallEngine {
     private fun segment(address: Long): MemorySegment =
         MemorySegment.ofAddress(address)
 
-    private fun handle(fn: Long, descriptor: FunctionDescriptor): MethodHandle =
-        linker.downcallHandle(segment(fn), descriptor)
+    private fun handle(fn: Long, descriptor: FunctionDescriptor): MethodHandle {
+        require(fn != 0L) { "Cannot downcall through null function address" }
+        return linker.downcallHandle(segment(fn), descriptor)
+    }
 
     // --- void returns ---
 
