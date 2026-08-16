@@ -6,10 +6,6 @@ import java.lang.foreign.MemorySegment
 internal fun NativeAddress.toJvmSegmentOrNull(): MemorySegment? =
     if (rawValue == 0L) null else MemorySegment.ofAddress(rawValue)
 
-/** Adresse d'un segment FFM ; segment nul → 0. */
-internal fun MemorySegment?.toNativeAddress(): NativeAddress =
-    NativeAddress(this?.address() ?: 0L)
-
 /** Lit/écrit le scope : dérive un segment borné [size] depuis l'adresse brute. */
 internal fun NativeAddress.toJvmSegment(size: Long): MemorySegment {
     require(rawValue != 0L) { "Cannot derive segment from null address" }
