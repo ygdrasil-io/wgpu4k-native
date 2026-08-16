@@ -25,15 +25,15 @@ class MemoryBufferAndroidTest : FreeSpec({
     "scalar write beyond bounds throws" {
         memoryScope { allocator ->
             val buffer = allocator.allocateBuffer(8uL)
-            shouldThrow<IllegalArgumentException> { buffer.writeInt(0, 6uL) }
-            shouldThrow<IllegalArgumentException> { buffer.readLong(4uL) }
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeInt(0, 6uL) }
+            shouldThrow<IndexOutOfBoundsException> { buffer.readLong(4uL) }
         }
     }
-    "bulk write/read with bad offsets throws IllegalArgumentException" {
+    "bulk write/read with bad offsets throws IndexOutOfBoundsException" {
         memoryScope { allocator ->
             val buffer = allocator.allocateBuffer(16uL)
-            shouldThrow<IllegalArgumentException> { buffer.writeInts(IntArray(8), bufferOffset = 8uL) }
-            shouldThrow<IllegalArgumentException> { buffer.writeInts(IntArray(8), arrayIndex = 4u) }
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeInts(IntArray(8), bufferOffset = 8uL) }
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeInts(IntArray(8), arrayIndex = 4u) }
         }
     }
     "bulk ints round-trip through the array helpers" {
@@ -52,17 +52,17 @@ class MemoryBufferAndroidTest : FreeSpec({
     "huge offsets cannot bypass the bounds check" {
         memoryScope { allocator ->
             val buffer = allocator.allocateBuffer(8uL)
-            shouldThrow<IllegalArgumentException> { buffer.readLong(ULong.MAX_VALUE) }
-            shouldThrow<IllegalArgumentException> { buffer.writeInt(1, ULong.MAX_VALUE) }
+            shouldThrow<IndexOutOfBoundsException> { buffer.readLong(ULong.MAX_VALUE) }
+            shouldThrow<IndexOutOfBoundsException> { buffer.writeInt(1, ULong.MAX_VALUE) }
         }
     }
     "huge bufferOffset cannot bypass the array bounds check" {
         memoryScope { allocator ->
             val buffer = allocator.allocateBuffer(16uL)
-            shouldThrow<IllegalArgumentException> {
+            shouldThrow<IndexOutOfBoundsException> {
                 buffer.writeInts(IntArray(4), bufferOffset = ULong.MAX_VALUE)
             }
-            shouldThrow<IllegalArgumentException> {
+            shouldThrow<IndexOutOfBoundsException> {
                 buffer.readInts(IntArray(4), arrayIndex = ULong.MAX_VALUE)
             }
         }

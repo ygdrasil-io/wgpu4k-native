@@ -48,7 +48,8 @@ internal class AndroidArena : AutoCloseable {
         (value + alignment - 1) and -alignment
 }
 
-actual class MemoryAllocator : AutoCloseable {
+actual class MemoryAllocator actual constructor(unsafe: Boolean) : AutoCloseable {
+    private val unsafe: Boolean = unsafe
     private val arena = AndroidArena()
 
     actual fun allocate(sizeInByte: Long): NativeAddress = NativeAddress(arena.allocate(sizeInByte))
@@ -58,7 +59,7 @@ actual class MemoryAllocator : AutoCloseable {
     actual fun bufferOf(value: Long): MemoryBuffer {
         val addr = arena.allocate(Long.SIZE_BYTES.toLong())
         AndroidUnsafe.get().putLong(addr, value)
-        return MemoryBuffer(NativeAddress(addr), Long.SIZE_BYTES.toULong())
+        return MemoryBuffer(NativeAddress(addr), Long.SIZE_BYTES.toULong(), unsafe)
     }
 
     actual fun allocateFrom(value: String): CString {
@@ -73,7 +74,7 @@ actual class MemoryAllocator : AutoCloseable {
     actual fun bufferOfAddress(value: NativeAddress): MemoryBuffer = bufferOf(value.rawValue)
 
     actual fun allocateBuffer(size: ULong): MemoryBuffer =
-        MemoryBuffer(NativeAddress(arena.allocate(size.toLong())), size)
+        MemoryBuffer(NativeAddress(arena.allocate(size.toLong())), size, unsafe)
 
     actual fun bufferOfAddresses(value: List<NativeAddress>): MemoryBuffer {
         val buffer = allocateBuffer((value.size * 8).toULong())
