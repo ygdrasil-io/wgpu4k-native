@@ -265,84 +265,108 @@ private class AcquiredDelivery<C : Callback>(
  * jamais réutilisé, un slot null signifie "plus actif").
  *
  * Concurrence : un slot est écrit UNE fois (publish) et relu en CAS-free
- * (volatile) — l'AtomicArray garantit la visibilité. Le retrait
- * passe le slot à null (pas de copie de map). Le grow est lock-free :
- * le tableau courant est publié par CAS (AtomicReference) et les opérations
- * de slot relisent la référence après leur CAS pour détecter un grow
- * concurrent (un CAS ayant visé un ancien tableau est rejoué sur le
- * tableau courant ; une entrée copiée par le grow est reconnue par
- * identité et comptée une seule fois).
+ * (volatile) — l'AtomicArray garantit la visibilité. Le retrait passe le
+ * slot à null (pas de copie de map). Le grow est lock-free : la génération
+ * courante est publiée par CAS (AtomicReference) ; toute opération de slot
+ * relit la référence après son CAS et rejoue sur la génération courante si
+ * un grow a remplacé la sienne, reconnaissant par identité une entrée déjà
+ * copiée par le grow.
+ *
+ * Invariant de compteur : count == nombre d'entrées visibles dans la
+ * génération courante (slots non null). L'API du runtime publie une entrée
+ * au plus une fois et la retire au plus une fois (lifecycle) ; chaque
+ * insert qui publie incrémente une seule fois, chaque remove qui retire de
+ * la table décrémente une seule fois — les rejouages ci-dessus sont
+ * exactement ce qui maintient cet équilibre lors d'un grow concurrent.
+ *
+ * Terminaison : chaque itération de rejeu consomme une nouvelle génération
+ * (publiée par un grow) ; la capacité double à chaque grow et plafonne à
+ * Int.MAX_VALUE, donc le nombre total de générations est borné par
+ * O(log(MAX_INDEXABLE_TOKEN)) et toute boucle termine.
+ *
+ * Bornes de token : l'index (token - 1) doit tenir dans un Int positif —
+ * plafond MAX_INDEXABLE_TOKEN = 2³¹−1, en dessous de la plage validée par
+ * le codec (1..Long.MAX_VALUE, requireValidCallbackToken). Un token hors
+ * plafond est rejeté par require avec un message dédié (jamais confondu
+ * avec une réutilisation) dans insert/remove, et lu comme "inconnu"
+ * (null) dans get.
  */
 private class TokenIndexTable {
     private val INITIAL_CAPACITY = 64
 
-    // token = index + 1 ; l'index doit tenir dans un Int positif, sinon
-    // route() doit renvoyer null comme pour un token inconnu (pas d'index
-    // négatif ni de troncature vers un mauvais slot).
-    private val MAX_TOKEN = Int.MAX_VALUE.toULong()
+    // token = index + 1 ; l'index doit tenir dans un Int positif.
+    private val MAX_INDEXABLE_TOKEN = Int.MAX_VALUE.toULong()
 
     private val slots = AtomicReference(atomicArrayOfNulls<RegistryEntry<*>>(INITIAL_CAPACITY))
 
     private val count = AtomicLong(0L)
 
     fun insert(token: ULong, entry: RegistryEntry<*>): Boolean {
-        if (token < 1uL || token > MAX_TOKEN) return false
         val index = tokenIndex(token)
         while (true) {
             ensureCapacity(index + 1)
             val current = slots.load()
-            if (current.compareAndSetAt(index, null, entry)) {
-                if (slots.load() === current) break
-                // CAS réussi sur un ancien tableau remplacé par un grow : on
-                // rejoue sur le tableau courant ci-dessous.
-            } else if (slots.load() === current) {
-                // Slot occupé sur le tableau courant : réutilisation de token.
+            val published = current.compareAndSetAt(index, null, entry)
+            val latest = slots.load()
+            if (latest === current) {
+                // Génération stable pendant le CAS : le résultat est définitif.
+                if (published) break
                 return false
             }
-            // CAS échoué ou visé un ancien tableau. Si le tableau courant
-            // contient déjà notre entrée (copiée par le grow), elle est
-            // publiée : on compte et on termine.
-            if (slots.load().loadAt(index) === entry) break
+            // Un grow a publié une génération plus récente pendant le CAS.
+            // Si notre entrée y a été copiée (CAS réussi avant la copie),
+            // elle est déjà publiée : on compte et on termine.
+            if (published && latest.loadAt(index) === entry) break
+            // Sinon, rejouer sur la génération courante.
         }
         count.fetchAndAdd(1)
         return true
     }
 
     fun remove(token: ULong, entry: RegistryEntry<*>): Boolean {
-        if (token < 1uL || token > MAX_TOKEN) return false
         val index = tokenIndex(token)
         var removedFromTable = false
         while (true) {
             val current = slots.load()
             if (index >= current.size) {
-                if (removedFromTable) count.fetchAndAdd(-1)
+                // Atteint uniquement à la première itération (token jamais
+                // inséré, aucune génération ne le couvre) : removedFromTable y
+                // est nécessairement faux, car un CAS réussi a requis
+                // size > index et les générations ne rétrécissent jamais.
                 return removedFromTable
             }
-            if (current.compareAndSetAt(index, entry, null)) {
-                if (slots.load() === current) {
+            val nulled = current.compareAndSetAt(index, entry, null)
+            val latest = slots.load()
+            if (latest === current) {
+                if (nulled) {
                     count.fetchAndAdd(-1)
                     return true
                 }
-                removedFromTable = true
-                // Null-out sur un ancien tableau : le tableau courant peut
-                // encore contenir l'entrée (copiée avant le null-out).
-            } else if (slots.load() === current) {
+                // Le slot de la génération courante ne contient pas cette
+                // entrée (déjà retirée, ou entrée étrangère).
                 if (removedFromTable) count.fetchAndAdd(-1)
                 return removedFromTable
             }
-            // CAS échoué ou visé un ancien tableau : si le tableau courant ne
-            // contient plus l'entrée, le retrait est effectif (le slot y a été
-            // copié déjà null, ou nullé ci-dessus).
-            if (slots.load().loadAt(index) !== entry) {
+            if (nulled) removedFromTable = true
+            // Null-out visé une ancienne génération : la génération courante
+            // peut encore contenir l'entrée (copiée avant le null-out) — on
+            // rejoue pour l'y retirer aussi.
+            if (latest.loadAt(index) !== entry) {
+                // La génération courante ne contient plus l'entrée : le retrait
+                // est effectif (copiée déjà null, ou nullée ci-dessus).
                 if (removedFromTable) count.fetchAndAdd(-1)
                 return removedFromTable
             }
+            // L'entrée est encore présente dans la génération courante :
+            // retenter le CAS.
         }
     }
 
     operator fun get(token: ULong): RegistryEntry<*>? {
-        if (token < 1uL || token > MAX_TOKEN) return null
-        val index = tokenIndex(token)
+        // route() reste null-safe pour tout token (décodage non validé d'un
+        // pointeur étranger) : hors plafond ⇒ inconnu, comme l'ancienne map.
+        if (token < 1uL || token > MAX_INDEXABLE_TOKEN) return null
+        val index = (token - 1uL).toInt()
         val current = slots.load()
         if (index >= current.size) return null
         return current.loadAt(index)
@@ -351,7 +375,12 @@ private class TokenIndexTable {
     val size: Long
         get() = count.load()
 
-    private fun tokenIndex(token: ULong): Int = (token - 1uL).toInt() // token ≥ 1 (monotone)
+    private fun tokenIndex(token: ULong): Int {
+        require(token in 1uL..MAX_INDEXABLE_TOKEN) {
+            "Callback token $token is outside the token index table range (1..$MAX_INDEXABLE_TOKEN)"
+        }
+        return (token - 1uL).toInt() // token ≥ 1 (monotone)
+    }
 
     private fun ensureCapacity(required: Int) {
         while (true) {
