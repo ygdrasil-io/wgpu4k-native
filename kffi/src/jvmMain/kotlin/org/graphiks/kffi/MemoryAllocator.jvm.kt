@@ -16,6 +16,11 @@ actual class MemoryAllocator actual constructor(unsafe: Boolean) : AutoCloseable
     actual fun allocate(sizeInByte: Long): NativeAddress =
         arena.allocate(sizeInByte).let { NativeAddress(it.address()) }
 
+    /**
+     * Le flag est posé avant arena.close() : si la fermeture de l'arène lève
+     * (ex. close depuis un thread non-propriétaire), le flag reste true et les
+     * buffers de cet allocateur continuent de lever (fail-fast délibéré).
+     */
     actual override fun close() {
         closed.set(true)
         arena.close()

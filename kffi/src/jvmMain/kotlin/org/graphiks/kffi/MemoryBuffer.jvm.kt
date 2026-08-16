@@ -58,10 +58,17 @@ actual class MemoryBuffer actual constructor(
 
     /** Vérifie la vie du scope (I2-a) même en mode unsafe, puis retourne l'adresse brute. */
     private fun rawAddress(): Long {
-        allocatorClosed?.let { closed ->
+        val closed = allocatorClosed
+        if (closed != null) {
             if (closed.get()) throw IllegalStateException("MemoryBuffer has been closed")
             return handler.rawValue
         }
+        // Buffer depuis adresse brute : pas de flag — la garde FFM du segment scopé
+        // ne s'applique pas (pas de scopedSegment) ; ce chemin ne porte pas de garde
+        // de close (UB documenté pour les buffers bruts).
+        // NOTE : avec l'invariant scopedSegment ⟺ allocatorClosed, le fallback
+        // scopedSegment?.scope()?.isAlive ci-dessous est du code défensif mort —
+        // conservé comme garde-fou si l'invariant était violé.
         val scope = scopedSegment?.scope()
         if (scope != null && !scope.isAlive) {
             throw IllegalStateException("MemoryBuffer has been closed")
