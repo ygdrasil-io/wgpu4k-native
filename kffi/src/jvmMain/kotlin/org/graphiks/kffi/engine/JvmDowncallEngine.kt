@@ -58,6 +58,52 @@ object JvmDowncallEngine {
          *  unique par (adresse, forme). */
         const val S_ARG_BOX = 18
         const val S_RET_BOX = 19
+
+        // --- Union des signatures wgpu (M5.3) : scalaires ---
+        const val I2PP = 20
+        const val I2PI = 21
+        const val L1P = 22
+        const val I4PLPL = 23
+        const val V2PI = 24
+        const val V3PLP = 25
+        const val V5PPLPL = 26
+        const val V6PPPLPP = 27
+        const val V6PIIIII = 28
+        const val V5PIPLP = 29
+        const val V5PPILL = 30
+        const val V5PIPLL = 31
+        const val I3PPP = 32
+        const val L3PPP = 33
+        const val L3PLP = 34
+        const val I3PIP = 35
+        const val V1I = 36
+        const val V4PIIP = 37
+        const val V4PPLI = 38
+        const val V6PPLPLI = 39
+        const val V3PPI = 40
+        const val V4PPLL = 41
+        const val V6PPLPLL = 42
+        const val V6PPIIPL = 43
+        const val V4PIII = 44
+        const val V7PFFFFFF = 45
+
+        // --- Union des signatures wgpu (M5.3) : structs par valeur ---
+        const val S_ARG_ADAPTER_INFO = 46
+        const val S_ARG_SUPPORTED_FEATURES = 47
+        const val S_ARG_SUPPORTED_INSTANCE_FEATURES = 48
+        const val S_ARG_SUPPORTED_WGSL_LANGUAGE_FEATURES = 49
+        const val S_ARG_SURFACE_CAPABILITIES = 50
+        const val S_ARG_STRINGVIEW_P = 51
+        const val S_ARG_STRINGVIEW_RET_P = 52
+        const val S_RET_FUTURE_P = 53
+        const val S_RET_FUTURE_P_QUEUE_WORK_DONE = 54
+        const val S_RET_FUTURE_P_POP_ERROR_SCOPE = 55
+        const val S_RET_FUTURE_P_COMPILATION_INFO = 56
+        const val S_RET_FUTURE_PP_REQUEST_ADAPTER = 57
+        const val S_RET_FUTURE_PP_REQUEST_DEVICE = 58
+        const val S_RET_FUTURE_PP_CREATE_RENDER_PIPELINE_ASYNC = 59
+        const val S_RET_FUTURE_PP_CREATE_COMPUTE_PIPELINE_ASYNC = 60
+        const val S_RET_FUTURE_PLLL_BUFFER_MAP = 61
     }
 
     /** MéthodeHandle par (adresse de fonction, forme, version de layout). */
@@ -176,6 +222,141 @@ object JvmDowncallEngine {
         return handle.invokeExact(segment(a1)) as Double
     }
 
+    // --- Union des signatures wgpu (M5.3) : scalaires ---
+    // Les formes manquantes du bake-off M2.2 sont ajoutées une à une jusqu'à
+    // couvrir l'union des signatures du moteur wgpu : chaque wrapper suit le
+    // pattern M2.1 (typed, cache (adresse, forme), garde null).
+
+    fun callI2PP(fn: Long, a1: Long, a2: Long): Long {
+        val handle = handle(fn, ShapeId.I2PP, FunctionDescriptor.of(ValueLayout.JAVA_LONG, C_POINTER, C_POINTER))
+        return handle.invokeExact(segment(a1), segment(a2)) as Long
+    }
+
+    fun callI2PI(fn: Long, a1: Long, a2: Int): Long {
+        val handle = handle(fn, ShapeId.I2PI, FunctionDescriptor.of(ValueLayout.JAVA_LONG, C_POINTER, ValueLayout.JAVA_INT))
+        return handle.invokeExact(segment(a1), a2) as Long
+    }
+
+    fun callL1P(fn: Long, a1: Long): Long {
+        val handle = handle(fn, ShapeId.L1P, FunctionDescriptor.of(ValueLayout.JAVA_LONG, C_POINTER))
+        return handle.invokeExact(segment(a1)) as Long
+    }
+
+    fun callI4PLPL(fn: Long, a1: Long, a2: Long, a3: Long, a4: Long): Long {
+        val handle = handle(fn, ShapeId.I4PLPL, FunctionDescriptor.of(ValueLayout.JAVA_LONG, C_POINTER, ValueLayout.JAVA_LONG, C_POINTER, ValueLayout.JAVA_LONG))
+        return handle.invokeExact(segment(a1), a2, segment(a3), a4) as Long
+    }
+
+    fun callV2PI(fn: Long, p1: Long, a2: Int) {
+        val handle = handle(fn, ShapeId.V2PI, FunctionDescriptor.ofVoid(C_POINTER, ValueLayout.JAVA_INT))
+        handle.invokeExact(segment(p1), a2)
+    }
+
+    fun callV3PLP(fn: Long, p1: Long, a2: Long, p3: Long) {
+        val handle = handle(fn, ShapeId.V3PLP, FunctionDescriptor.ofVoid(C_POINTER, ValueLayout.JAVA_LONG, C_POINTER))
+        handle.invokeExact(segment(p1), a2, segment(p3))
+    }
+
+    fun callV5PPLPL(fn: Long, p1: Long, p2: Long, a3: Long, p4: Long, a5: Long) {
+        val handle = handle(fn, ShapeId.V5PPLPL, FunctionDescriptor.ofVoid(C_POINTER, C_POINTER, ValueLayout.JAVA_LONG, C_POINTER, ValueLayout.JAVA_LONG))
+        handle.invokeExact(segment(p1), segment(p2), a3, segment(p4), a5)
+    }
+
+    fun callV6PPPLPP(fn: Long, p1: Long, p2: Long, p3: Long, a4: Long, p5: Long, p6: Long) {
+        val handle = handle(fn, ShapeId.V6PPPLPP, FunctionDescriptor.ofVoid(C_POINTER, C_POINTER, C_POINTER, ValueLayout.JAVA_LONG, C_POINTER, C_POINTER))
+        handle.invokeExact(segment(p1), segment(p2), segment(p3), a4, segment(p5), segment(p6))
+    }
+
+    fun callV6PIIIII(fn: Long, p1: Long, a2: Int, a3: Int, a4: Int, a5: Int, a6: Int) {
+        val handle = handle(fn, ShapeId.V6PIIIII, FunctionDescriptor.ofVoid(C_POINTER, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT))
+        handle.invokeExact(segment(p1), a2, a3, a4, a5, a6)
+    }
+
+    fun callV5PIPLP(fn: Long, p1: Long, a2: Int, p3: Long, a4: Long, p5: Long) {
+        val handle = handle(fn, ShapeId.V5PIPLP, FunctionDescriptor.ofVoid(C_POINTER, ValueLayout.JAVA_INT, C_POINTER, ValueLayout.JAVA_LONG, C_POINTER))
+        handle.invokeExact(segment(p1), a2, segment(p3), a4, segment(p5))
+    }
+
+    fun callV5PPILL(fn: Long, p1: Long, p2: Long, a3: Int, a4: Long, a5: Long) {
+        val handle = handle(fn, ShapeId.V5PPILL, FunctionDescriptor.ofVoid(C_POINTER, C_POINTER, ValueLayout.JAVA_INT, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG))
+        handle.invokeExact(segment(p1), segment(p2), a3, a4, a5)
+    }
+
+    fun callV5PIPLL(fn: Long, p1: Long, a2: Int, p3: Long, a4: Long, a5: Long) {
+        val handle = handle(fn, ShapeId.V5PIPLL, FunctionDescriptor.ofVoid(C_POINTER, ValueLayout.JAVA_INT, C_POINTER, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG))
+        handle.invokeExact(segment(p1), a2, segment(p3), a4, a5)
+    }
+
+    fun callI3PPP(fn: Long, a1: Long, a2: Long, a3: Long): Long {
+        val handle = handle(fn, ShapeId.I3PPP, FunctionDescriptor.of(ValueLayout.JAVA_LONG, C_POINTER, C_POINTER, C_POINTER))
+        return handle.invokeExact(segment(a1), segment(a2), segment(a3)) as Long
+    }
+
+    fun callL3PPP(fn: Long, a1: Long, a2: Long, a3: Long): Long {
+        val handle = handle(fn, ShapeId.L3PPP, FunctionDescriptor.of(ValueLayout.JAVA_LONG, C_POINTER, C_POINTER, C_POINTER))
+        return handle.invokeExact(segment(a1), segment(a2), segment(a3)) as Long
+    }
+
+    fun callL3PLP(fn: Long, a1: Long, a2: Long, a3: Long): Long {
+        val handle = handle(fn, ShapeId.L3PLP, FunctionDescriptor.of(ValueLayout.JAVA_LONG, C_POINTER, ValueLayout.JAVA_LONG, C_POINTER))
+        return handle.invokeExact(segment(a1), a2, segment(a3)) as Long
+    }
+
+    fun callI3PIP(fn: Long, a1: Long, a2: Int, a3: Long): Long {
+        val handle = handle(fn, ShapeId.I3PIP, FunctionDescriptor.of(ValueLayout.JAVA_LONG, C_POINTER, ValueLayout.JAVA_INT, C_POINTER))
+        return handle.invokeExact(segment(a1), a2, segment(a3)) as Long
+    }
+
+    fun callV1I(fn: Long, a1: Int) {
+        val handle = handle(fn, ShapeId.V1I, FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT))
+        handle.invokeExact(a1)
+    }
+
+    fun callV4PIIP(fn: Long, p1: Long, a2: Int, a3: Int, p4: Long) {
+        val handle = handle(fn, ShapeId.V4PIIP, FunctionDescriptor.ofVoid(C_POINTER, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, C_POINTER))
+        handle.invokeExact(segment(p1), a2, a3, segment(p4))
+    }
+
+    fun callV4PPLI(fn: Long, p1: Long, p2: Long, a3: Long, a4: Int) {
+        val handle = handle(fn, ShapeId.V4PPLI, FunctionDescriptor.ofVoid(C_POINTER, C_POINTER, ValueLayout.JAVA_LONG, ValueLayout.JAVA_INT))
+        handle.invokeExact(segment(p1), segment(p2), a3, a4)
+    }
+
+    fun callV6PPLPLI(fn: Long, p1: Long, p2: Long, a3: Long, p4: Long, a5: Long, a6: Int) {
+        val handle = handle(fn, ShapeId.V6PPLPLI, FunctionDescriptor.ofVoid(C_POINTER, C_POINTER, ValueLayout.JAVA_LONG, C_POINTER, ValueLayout.JAVA_LONG, ValueLayout.JAVA_INT))
+        handle.invokeExact(segment(p1), segment(p2), a3, segment(p4), a5, a6)
+    }
+
+    fun callV3PPI(fn: Long, p1: Long, p2: Long, a3: Int) {
+        val handle = handle(fn, ShapeId.V3PPI, FunctionDescriptor.ofVoid(C_POINTER, C_POINTER, ValueLayout.JAVA_INT))
+        handle.invokeExact(segment(p1), segment(p2), a3)
+    }
+
+    fun callV4PPLL(fn: Long, p1: Long, p2: Long, a3: Long, a4: Long) {
+        val handle = handle(fn, ShapeId.V4PPLL, FunctionDescriptor.ofVoid(C_POINTER, C_POINTER, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG))
+        handle.invokeExact(segment(p1), segment(p2), a3, a4)
+    }
+
+    fun callV6PPLPLL(fn: Long, p1: Long, p2: Long, a3: Long, p4: Long, a5: Long, a6: Long) {
+        val handle = handle(fn, ShapeId.V6PPLPLL, FunctionDescriptor.ofVoid(C_POINTER, C_POINTER, ValueLayout.JAVA_LONG, C_POINTER, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG))
+        handle.invokeExact(segment(p1), segment(p2), a3, segment(p4), a5, a6)
+    }
+
+    fun callV6PPIIPL(fn: Long, p1: Long, p2: Long, a3: Int, a4: Int, p5: Long, a6: Long) {
+        val handle = handle(fn, ShapeId.V6PPIIPL, FunctionDescriptor.ofVoid(C_POINTER, C_POINTER, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, C_POINTER, ValueLayout.JAVA_LONG))
+        handle.invokeExact(segment(p1), segment(p2), a3, a4, segment(p5), a6)
+    }
+
+    fun callV4PIII(fn: Long, p1: Long, a2: Int, a3: Int, a4: Int) {
+        val handle = handle(fn, ShapeId.V4PIII, FunctionDescriptor.ofVoid(C_POINTER, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT))
+        handle.invokeExact(segment(p1), a2, a3, a4)
+    }
+
+    fun callV7PFFFFFF(fn: Long, p1: Long, a2: Float, a3: Float, a4: Float, a5: Float, a6: Float, a7: Float) {
+        val handle = handle(fn, ShapeId.V7PFFFFFF, FunctionDescriptor.ofVoid(C_POINTER, ValueLayout.JAVA_FLOAT, ValueLayout.JAVA_FLOAT, ValueLayout.JAVA_FLOAT, ValueLayout.JAVA_FLOAT, ValueLayout.JAVA_FLOAT, ValueLayout.JAVA_FLOAT))
+        handle.invokeExact(segment(p1), a2, a3, a4, a5, a6, a7)
+    }
+
     // --- struct-by-value : registre de layouts (M5.2bis) ---
 
     data class StructField(val cName: String, val kind: FieldKind, val offsetBytes: Long)
@@ -269,6 +450,268 @@ object JvmDowncallEngine {
         val handle = handle(fn, ShapeId.S_RET_BOX, FunctionDescriptor.of(layout, ValueLayout.JAVA_INT), layoutVersion("Box"))
         val segmentAllocator: SegmentAllocator = allocator.arena
         val result = handle.invokeExact(segmentAllocator, a1) as MemorySegment
+        return NativeAddress(result.address())
+    }
+
+    // --- Union des signatures wgpu (M5.3) : structs par valeur ---
+    //
+    // Formes M5.2bis étendues : les signatures wgpu portent des structs par valeur
+    // avec des arguments scalaires AUTOUR du struct (StringView en argument derrière
+    // un pointeur, structs callbackInfo en argument d'une fonction à retour WGPUFuture,
+    // etc.). Chaque wrapper est dédié à une (forme, paire de structs) — le layout de
+    // chaque struct est résolu depuis le registre, le descripteur est construit une
+    // fois par (adresse, forme, version de layout) dans handleCache. Le segment
+    // d'argument struct est borné à la taille de son layout ; le retour struct exige
+    // le SegmentAllocator de l'allocateur appelant (convention FFM).
+
+    /**
+     * MethodHandle d'un wrapper struct-par-valeur en argument : [scalarArgLayouts]
+     * sont les layouts des arguments scalaires/pointeurs qui PRÉCÈDENT le struct
+     * dans l'ordre C (le struct est toujours le dernier argument — vérifié par la
+     * garde kextract à la génération).
+     */
+    private fun structArgHandle(
+        fn: Long,
+        shapeId: Int,
+        structName: String,
+        scalarArgLayouts: List<ValueLayout> = emptyList(),
+    ): MethodHandle {
+        val layout = structLayout(structName)
+        val descriptor = FunctionDescriptor.ofVoid(*(scalarArgLayouts + layout).toTypedArray())
+        return handle(fn, shapeId, descriptor, layoutVersion(structName))
+    }
+
+    /**
+     * MethodHandle d'un wrapper struct-par-valeur en retour, avec zéro ou un struct
+     * par valeur en argument ([argStructNames], dernier argument). La version de
+     * layout de la clé de cache combine les versions de TOUS les structs du
+     * descripteur (retour + arguments) : une re-registration de l'un d'eux
+     * reconstruit le MethodHandle au lieu de réutiliser le descripteur périmé.
+     */
+    private fun structReturnHandle(
+        fn: Long,
+        shapeId: Int,
+        returnName: String,
+        argStructNames: List<String> = emptyList(),
+        scalarArgLayouts: List<ValueLayout> = emptyList(),
+    ): MethodHandle {
+        val argLayouts = argStructNames.map(::structLayout)
+        val descriptor = FunctionDescriptor.of(
+            structLayout(returnName),
+            *(scalarArgLayouts + argLayouts).toTypedArray(),
+        )
+        val version = (listOf(returnName) + argStructNames).fold(0) { acc, name ->
+            acc * 31 + layoutVersion(name)
+        }
+        return handle(fn, shapeId, descriptor, version)
+    }
+
+    private fun structSegment(structPtr: Long, structName: String): MemorySegment {
+        val layout = structLayout(structName)
+        return segment(structPtr).reinterpret(layout.byteSize())
+    }
+
+    // --- struct en argument, retour Unit (freeMembers et consorts) ---
+
+    fun callStructArgWGPUAdapterInfo(fn: Long, structPtr: Long) {
+        val handle = structArgHandle(fn, ShapeId.S_ARG_ADAPTER_INFO, "WGPUAdapterInfo")
+        handle.invokeExact(structSegment(structPtr, "WGPUAdapterInfo"))
+    }
+
+    fun callStructArgWGPUSupportedFeatures(fn: Long, structPtr: Long) {
+        val handle = structArgHandle(fn, ShapeId.S_ARG_SUPPORTED_FEATURES, "WGPUSupportedFeatures")
+        handle.invokeExact(structSegment(structPtr, "WGPUSupportedFeatures"))
+    }
+
+    fun callStructArgWGPUSupportedInstanceFeatures(fn: Long, structPtr: Long) {
+        val handle = structArgHandle(fn, ShapeId.S_ARG_SUPPORTED_INSTANCE_FEATURES, "WGPUSupportedInstanceFeatures")
+        handle.invokeExact(structSegment(structPtr, "WGPUSupportedInstanceFeatures"))
+    }
+
+    fun callStructArgWGPUSupportedWGSLLanguageFeatures(fn: Long, structPtr: Long) {
+        val handle = structArgHandle(fn, ShapeId.S_ARG_SUPPORTED_WGSL_LANGUAGE_FEATURES, "WGPUSupportedWGSLLanguageFeatures")
+        handle.invokeExact(structSegment(structPtr, "WGPUSupportedWGSLLanguageFeatures"))
+    }
+
+    fun callStructArgWGPUSurfaceCapabilities(fn: Long, structPtr: Long) {
+        val handle = structArgHandle(fn, ShapeId.S_ARG_SURFACE_CAPABILITIES, "WGPUSurfaceCapabilities")
+        handle.invokeExact(structSegment(structPtr, "WGPUSurfaceCapabilities"))
+    }
+
+    // --- WGPUStringView en argument (SetLabel / PushDebugGroup / InsertDebugMarker) ---
+
+    fun callStructArgWGPUStringView(fn: Long, p1: Long, structPtr: Long) {
+        val handle = structArgHandle(fn, ShapeId.S_ARG_STRINGVIEW_P, "WGPUStringView", listOf(C_POINTER))
+        handle.invokeExact(segment(p1), structSegment(structPtr, "WGPUStringView"))
+    }
+
+    // --- WGPUStringView en argument, retour pointeur (wgpuGetProcAddress) ---
+
+    fun callStructArgWGPUStringView(fn: Long, structPtr: Long): Long {
+        val layout = structLayout("WGPUStringView")
+        val handle = handle(
+            fn,
+            ShapeId.S_ARG_STRINGVIEW_RET_P,
+            FunctionDescriptor.of(C_POINTER, layout),
+            layoutVersion("WGPUStringView"),
+        )
+        return (handle.invokeExact(structSegment(structPtr, "WGPUStringView")) as MemorySegment).address()
+    }
+
+    // --- WGPUFuture en retour ---
+
+    fun callStructReturnWGPUFuture(fn: Long, allocator: MemoryAllocator, p1: Long): NativeAddress {
+        val handle = structReturnHandle(
+            fn,
+            ShapeId.S_RET_FUTURE_P,
+            returnName = "WGPUFuture",
+            scalarArgLayouts = listOf(C_POINTER),
+        )
+        val segmentAllocator: SegmentAllocator = allocator.arena
+        val result = handle.invokeExact(segmentAllocator, segment(p1)) as MemorySegment
+        return NativeAddress(result.address())
+    }
+
+    fun callStructReturnWGPUFutureWGPUQueueWorkDoneCallbackInfo(fn: Long, allocator: MemoryAllocator, p1: Long, structPtr: Long): NativeAddress {
+        val handle = structReturnHandle(
+            fn,
+            ShapeId.S_RET_FUTURE_P_QUEUE_WORK_DONE,
+            returnName = "WGPUFuture",
+            argStructNames = listOf("WGPUQueueWorkDoneCallbackInfo"),
+            scalarArgLayouts = listOf(C_POINTER),
+        )
+        val segmentAllocator: SegmentAllocator = allocator.arena
+        val result = handle.invokeExact(
+            segmentAllocator,
+            segment(p1),
+            structSegment(structPtr, "WGPUQueueWorkDoneCallbackInfo"),
+        ) as MemorySegment
+        return NativeAddress(result.address())
+    }
+
+    fun callStructReturnWGPUFutureWGPUPopErrorScopeCallbackInfo(fn: Long, allocator: MemoryAllocator, p1: Long, structPtr: Long): NativeAddress {
+        val handle = structReturnHandle(
+            fn,
+            ShapeId.S_RET_FUTURE_P_POP_ERROR_SCOPE,
+            returnName = "WGPUFuture",
+            argStructNames = listOf("WGPUPopErrorScopeCallbackInfo"),
+            scalarArgLayouts = listOf(C_POINTER),
+        )
+        val segmentAllocator: SegmentAllocator = allocator.arena
+        val result = handle.invokeExact(
+            segmentAllocator,
+            segment(p1),
+            structSegment(structPtr, "WGPUPopErrorScopeCallbackInfo"),
+        ) as MemorySegment
+        return NativeAddress(result.address())
+    }
+
+    fun callStructReturnWGPUFutureWGPUCompilationInfoCallbackInfo(fn: Long, allocator: MemoryAllocator, p1: Long, structPtr: Long): NativeAddress {
+        val handle = structReturnHandle(
+            fn,
+            ShapeId.S_RET_FUTURE_P_COMPILATION_INFO,
+            returnName = "WGPUFuture",
+            argStructNames = listOf("WGPUCompilationInfoCallbackInfo"),
+            scalarArgLayouts = listOf(C_POINTER),
+        )
+        val segmentAllocator: SegmentAllocator = allocator.arena
+        val result = handle.invokeExact(
+            segmentAllocator,
+            segment(p1),
+            structSegment(structPtr, "WGPUCompilationInfoCallbackInfo"),
+        ) as MemorySegment
+        return NativeAddress(result.address())
+    }
+
+    fun callStructReturnWGPUFutureWGPURequestAdapterCallbackInfo(fn: Long, allocator: MemoryAllocator, p1: Long, p2: Long, structPtr: Long): NativeAddress {
+        val handle = structReturnHandle(
+            fn,
+            ShapeId.S_RET_FUTURE_PP_REQUEST_ADAPTER,
+            returnName = "WGPUFuture",
+            argStructNames = listOf("WGPURequestAdapterCallbackInfo"),
+            scalarArgLayouts = listOf(C_POINTER, C_POINTER),
+        )
+        val segmentAllocator: SegmentAllocator = allocator.arena
+        val result = handle.invokeExact(
+            segmentAllocator,
+            segment(p1),
+            segment(p2),
+            structSegment(structPtr, "WGPURequestAdapterCallbackInfo"),
+        ) as MemorySegment
+        return NativeAddress(result.address())
+    }
+
+    fun callStructReturnWGPUFutureWGPURequestDeviceCallbackInfo(fn: Long, allocator: MemoryAllocator, p1: Long, p2: Long, structPtr: Long): NativeAddress {
+        val handle = structReturnHandle(
+            fn,
+            ShapeId.S_RET_FUTURE_PP_REQUEST_DEVICE,
+            returnName = "WGPUFuture",
+            argStructNames = listOf("WGPURequestDeviceCallbackInfo"),
+            scalarArgLayouts = listOf(C_POINTER, C_POINTER),
+        )
+        val segmentAllocator: SegmentAllocator = allocator.arena
+        val result = handle.invokeExact(
+            segmentAllocator,
+            segment(p1),
+            segment(p2),
+            structSegment(structPtr, "WGPURequestDeviceCallbackInfo"),
+        ) as MemorySegment
+        return NativeAddress(result.address())
+    }
+
+    fun callStructReturnWGPUFutureWGPUCreateRenderPipelineAsyncCallbackInfo(fn: Long, allocator: MemoryAllocator, p1: Long, p2: Long, structPtr: Long): NativeAddress {
+        val handle = structReturnHandle(
+            fn,
+            ShapeId.S_RET_FUTURE_PP_CREATE_RENDER_PIPELINE_ASYNC,
+            returnName = "WGPUFuture",
+            argStructNames = listOf("WGPUCreateRenderPipelineAsyncCallbackInfo"),
+            scalarArgLayouts = listOf(C_POINTER, C_POINTER),
+        )
+        val segmentAllocator: SegmentAllocator = allocator.arena
+        val result = handle.invokeExact(
+            segmentAllocator,
+            segment(p1),
+            segment(p2),
+            structSegment(structPtr, "WGPUCreateRenderPipelineAsyncCallbackInfo"),
+        ) as MemorySegment
+        return NativeAddress(result.address())
+    }
+
+    fun callStructReturnWGPUFutureWGPUCreateComputePipelineAsyncCallbackInfo(fn: Long, allocator: MemoryAllocator, p1: Long, p2: Long, structPtr: Long): NativeAddress {
+        val handle = structReturnHandle(
+            fn,
+            ShapeId.S_RET_FUTURE_PP_CREATE_COMPUTE_PIPELINE_ASYNC,
+            returnName = "WGPUFuture",
+            argStructNames = listOf("WGPUCreateComputePipelineAsyncCallbackInfo"),
+            scalarArgLayouts = listOf(C_POINTER, C_POINTER),
+        )
+        val segmentAllocator: SegmentAllocator = allocator.arena
+        val result = handle.invokeExact(
+            segmentAllocator,
+            segment(p1),
+            segment(p2),
+            structSegment(structPtr, "WGPUCreateComputePipelineAsyncCallbackInfo"),
+        ) as MemorySegment
+        return NativeAddress(result.address())
+    }
+
+    fun callStructReturnWGPUFutureWGPUBufferMapCallbackInfo(fn: Long, allocator: MemoryAllocator, p1: Long, a2: Long, a3: Long, a4: Long, structPtr: Long): NativeAddress {
+        val handle = structReturnHandle(
+            fn,
+            ShapeId.S_RET_FUTURE_PLLL_BUFFER_MAP,
+            returnName = "WGPUFuture",
+            argStructNames = listOf("WGPUBufferMapCallbackInfo"),
+            scalarArgLayouts = listOf(C_POINTER, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG),
+        )
+        val segmentAllocator: SegmentAllocator = allocator.arena
+        val result = handle.invokeExact(
+            segmentAllocator,
+            segment(p1),
+            a2,
+            a3,
+            a4,
+            structSegment(structPtr, "WGPUBufferMapCallbackInfo"),
+        ) as MemorySegment
         return NativeAddress(result.address())
     }
 }
