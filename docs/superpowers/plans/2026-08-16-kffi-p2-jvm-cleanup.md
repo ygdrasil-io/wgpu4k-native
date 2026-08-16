@@ -2058,3 +2058,22 @@ Résumer : milestones M1-M6, Δ perf JVM vs P0, dette restante (formes moteur ho
 - **P4** — optimisation callback runtime (table d'index par token, zéro-allocation par dispatch).
 - **P5** — kextract générique, release `org.graphiks:kffi-*`, migration finale vers `Graphiks-org/kffi`.
 - Fallback JVM hors table (signatures exotiques non couvertes par `JvmDowncallEngine`) : documenter le refus à la génération (politique C2) — si nécessaire en P3.
+
+---
+
+## Annexe — Dettes P2 trackées, résolues après le plan
+
+| # | Dette | Fix | Commit |
+|---|---|---|---|
+| D1 | `toNativeAddress()` mort (jvmMain) | supprimé | 914fb86f |
+| D2 | `CStructure.kt` Android mort | supprimé | 914fb86f |
+| D3 | letter-table `wrapperForm`/`engineArgLetter` dupliquée JVM↔Android | `engineLetter()` partagé sur `KotlinKmpCAbiType` | kextract 3cfe57e |
+| D4 | `interfaceFieldType` + union-setter byte-copy dupliqués | `interfaceFieldType` + `emitStructByteCopy` partagés | kextract 3cfe57e |
+| D5 | `as KotlinKmpCAbiType.Scalar` → ClassCastException | `when` fail-loudly (les 2 builders) | kextract 3cfe57e |
+| D6 | `Logger.DEFAULT.nErrors` jamais reset (générations empoisonnées) | `Logger.reset()` appelé en entrée de `runGeneration` + test de régression | kextract 3cfe57e |
+| D7 | dépendance implicite Gradle `compileKotlinJvm`/`verifyJvmBootstrapBinding` ↔ `generateBindingsFromHeader` | `dependsOn` déclaré | 11a68a63 |
+| D8 | `testDebugUnitTest` découvrait 0 tests | `useJUnitPlatform()` (match lazy par nom) | 11a68a63 |
+| D9 | docs Dokka stale (symboles supprimés) | régénération via `Sync` + `dokkaGeneratePublicationHtml` (V2) ; **`doc/gfm` supprimé** (7650 fichiers) | cdc49c67 |
+| D10 | preuve re-run P0 log-only | `2026-08-16-p0-jvm-control-rerun.json` archivé + lien dans le rapport | cdc49c67 |
+
+**Note D9 — suppression `doc/gfm`** : Dokka 2.2.0 (V2) ne supporte plus le format Markdown/GFM (aucun plugin `dokka-gfm-plugin` sur Maven Central) ; `doc/gfm` était stale depuis 2025-02-11, n'était pas déployé (`.github/workflows/static.yml` sert uniquement `doc/html/`) et n'était référencé nulle part. La suppression est donc un nettoyage de sortie non régénérable, pas une perte fonctionnelle.
