@@ -497,3 +497,11 @@ git commit -m "docs(wgpu): point kffi usage to published Graphiks-org/kffi artif
 - **P6+ éventuel** : optimisations restantes du callback runtime (stress test concurrent), re-baseline native complète (harness unsafe build-time), migration complète de Kadre.
 - Le submodule kextract reste dans le repo hôte (dépendance de génération) — sa migration vers un repo dédié est traitée séparément (klang-toolkit/kextract, déjà sa propre organisation).
 - La décision unsafe JVM : si l'optimisation M1 ne parvient pas à battre le mode sûr, la conclusion P3/P4 reste (surface API, pas optimisation) — documentée, pas bloquante.
+
+---
+
+## Annexe — Résultats M1 (unsafe JVM optimisé)
+
+- **M1.1** (a21bc505) : garde de close allégée — flag `AtomicBoolean` porté par l'allocateur (1 load volatil) au lieu de `scope().isAlive` (2 appels FFM) par accès unsafe. Contrat I2-a intact (test 4 non modifié, vert).
+- **M1.2** (mesuré, config P3 avgt wi3/i5/1s/fork2) : scalarSafe 1.84 ns (inchangé — le check FFM est JIT-éliminé, plancher ~1.8 ns), scalarUnsafe **2.136 ns vs 2.53 ns P3 (−0.39 ns, −15%)**. Écart sûr/unsafe : 0.70 → **0.29 ns (~16%)** — objectif « écart < 0.3 ns » atteint, CI disjoints.
+- **Conclusion** : l'optimisation est partiellement validée (gap réduit de moitié), mais le mode unsafe JVM reste plus lent que le mode sûr — le résidu ~0.29 ns est le coût du chemin `sun.misc.Unsafe` lui-même. **La décision P3/P4 tient : le mode unsafe JVM est une surface API de parité, pas une optimisation** — l'écart minimal est documenté comme le coût assumé de la surface.
