@@ -18,7 +18,7 @@ import org.openjdk.jmh.infra.Blackhole
 import java.util.concurrent.TimeUnit
 
 @State(Scope.Thread)
-class MarshalingState {
+open class MarshalingState {
     private lateinit var safeAllocator: MemoryAllocator
     private lateinit var unsafeAllocator: MemoryAllocator
     lateinit var safeBuffer: MemoryBuffer
@@ -130,7 +130,7 @@ open class MarshalingBenchmarks {
     // names (state-reused buffer here vs per-iteration memoryScope allocation there).
     @Benchmark
     fun scalarSafe(state: MarshalingState, bh: Blackhole) {
-        val offset = (state.counter and 0x3F).toULong()
+        val offset = (state.counter and 0x38).toULong()
         state.counter++
         bh.consume(state.counter)
         state.safeBuffer.writeLong(1L, offset)
@@ -139,7 +139,7 @@ open class MarshalingBenchmarks {
 
     @Benchmark
     fun scalarUnsafe(state: MarshalingState, bh: Blackhole) {
-        val offset = (state.counter and 0x3F).toULong()
+        val offset = (state.counter and 0x38).toULong()
         state.counter++
         bh.consume(state.counter)
         state.unsafeBuffer.writeLong(1L, offset)
