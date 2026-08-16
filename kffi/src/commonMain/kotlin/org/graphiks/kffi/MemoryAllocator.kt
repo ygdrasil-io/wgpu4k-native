@@ -5,6 +5,14 @@ import kotlin.contracts.contract
 
 val globalMemory = MemoryAllocator()
 
+/**
+ * Allocateur d'arène confinée.
+ * [unsafe] = true propage l'option unsafe à tous les buffers créés par cet
+ * allocateur (bornes-check éliminés, I3). Défaut : false.
+ * NOTE native : la valeur unsafe est figée à la compilation (constante build-time,
+ * voir MemoryBuffer.native.kt) — les distributions native ne peuvent pas basculer
+ * au runtime ; le flag est accepté pour la compatibilité d'API et sans effet.
+ */
 expect class MemoryAllocator(unsafe: Boolean = false) : AutoCloseable {
 
     fun allocate(sizeInByte: Long): NativeAddress

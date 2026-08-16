@@ -1,5 +1,21 @@
 package org.graphiks.kffi
 
+/**
+ * Buffer borné sur une adresse native.
+ *
+ * ## Contrat mémoire (P3 — unifié sur les 3 backends)
+ * - Tout accès typé (scalaire ou tableau) est vérifié : offset + elementSize ≤ size.
+ * - Hors bornes → [IndexOutOfBoundsException] avec offset/taille dans le message.
+ * - [unsafe] = true élimine les bornes-check (opt-in par allocateur ou par buffer,
+ *   I3) : tout accès hors bornes devient UB. Défaut : false (bornes-check actifs).
+ * - `NativeAddress` nu n'est PAS borné par nature ; tout accès typé passe par
+ *   `MemoryBuffer` (borné) ou l'option unsafe.
+ * - Durée de vie (I2-a, P2) : buffer créé via [MemoryAllocator] → use-after-close
+ *   lève IllegalStateException (JVM) ; buffer depuis adresse brute → accès post-close
+ *   non détecté (UB documenté, aligné Android/native).
+ * - Aliasing : deux buffers sur la même zone mémoire sont vus mutuellement ; pas de
+ *   verrou.
+ */
 @OptIn(ExperimentalUnsignedTypes::class)
 expect class MemoryBuffer(handler: NativeAddress, size: ULong, unsafe: Boolean = false) {
     val size: ULong
