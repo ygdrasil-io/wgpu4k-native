@@ -4,48 +4,68 @@ import org.graphiks.kffi.NativeAddress
 import java.lang.foreign.Arena
 import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.Linker
-import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout
 import java.lang.invoke.MethodHandles
-import java.util.concurrent.ConcurrentHashMap
 
 /**
- * Moteur d'upcall JVM : trampolines par forme de signature.
+ * Moteur d'upcall JVM : fabrique de trampolines par forme de signature.
  *
- * Chaque forme expose un trampoline qui enregistre un handler sous un token
- * userdata et retourne un stub natif ; le natif appelle le stub avec le token
- * en premier argument (mirroir de l'emetteur kextract, dont les descripteurs
- * placent le userdata en tete des parametres bruts), et le moteur route vers
- * le handler enregistre. Le code genere par kextract ne reference que ces
- * methodes — jamais Linker/MethodHandles/FunctionDescriptor.
+ * Symétrique d'UpcallEngine (Android). Le code généré (kextract) fournit la
+ * classe + méthode statique du dispatcher et sa signature encodée ; le moteur
+ * construit le stub FFM correspondant. Le moteur ne route pas : le routage par
+ * token reste dans le dispatcher généré via CallbackRuntime.dispatchSafely, le
+ * userdata occupant sa position C réelle (dernier paramètre pour wgpu).
+ *
+ * Encodage dispatchSig (convention Java : I=int, J=long, F=float, D=double,
+ * Z=boolean, V=void) — les pointeurs sont encodés J (carrier long 64-bit,
+ * ABI-identique sur les plateformes cibles, comme le moteur C Android
+ * utilise jlong). V en retour produit un descripteur ofVoid.
+ *
+ * La résolution de la méthode de dispatch utilise privateLookupIn : elle
+ * accepte les objets trampoline privés générés par kextract, à l'instar de
+ * GetStaticMethodID côté Android (kffi_upcall.c) qui ignore les contrôles
+ * d'accès Java.
  */
 object JvmUpcallEngine {
 
     private val linker = Linker.nativeLinker()
     private val arena = Arena.global()
 
-    // --- forme V2PP : void (userdata, ptr, ptr) ---
-
-    private val v2PPDescriptor = FunctionDescriptor.ofVoid(
-        ValueLayout.ADDRESS,
-        ValueLayout.ADDRESS,
-        ValueLayout.ADDRESS,
-    )
-    private val v2PPTarget = MethodHandles.lookup().findStatic(
-        JvmUpcallEngine::class.java,
-        "invokeV2PP",
-        v2PPDescriptor.toMethodType(),
-    )
-    private val v2PPHandlers = ConcurrentHashMap<Long, (Long, Long) -> Unit>()
-
-    fun trampolineV2PP(userdata: Long, handler: (Long, Long) -> Unit): NativeAddress {
-        v2PPHandlers[userdata] = handler
-        val stub = linker.upcallStub(v2PPTarget, v2PPDescriptor, arena)
-        return NativeAddress(stub.address())
+    /**
+     * Crée un trampoline appelant la méthode statique [dispatchMethod] de
+     * [dispatcherClass] avec la signature [dispatchSig] (ex. "(IIJ)V").
+     * Les paramètres du stub suivent l'ordre C : le premier reçoit le premier
+     * argument C, le dernier le userdata/token si le callback est routé.
+     */
+    fun allocateTrampoline(
+        dispatcherClass: Class<*>,
+        dispatchMethod: String,
+        dispatchSig: String,
+    ): NativeAddress {
+        val (returnType, parameterTypes) = parseSig(dispatchSig)
+        val descriptor = if (returnType == null) {
+            FunctionDescriptor.ofVoid(*parameterTypes.map { it.layout }.toTypedArray())
+        } else {
+            FunctionDescriptor.of(returnType.layout, *parameterTypes.map { it.layout }.toTypedArray())
+        }
+        val methodHandle = MethodHandles.privateLookupIn(dispatcherClass, MethodHandles.lookup())
+            .findStatic(dispatcherClass, dispatchMethod, descriptor.toMethodType())
+        return NativeAddress(linker.upcallStub(methodHandle, descriptor, arena).address())
     }
 
-    @JvmStatic
-    private fun invokeV2PP(userdata: MemorySegment, a1: MemorySegment, a2: MemorySegment) {
-        v2PPHandlers[userdata.address()]?.invoke(a1.address(), a2.address())
+    private enum class Carrier(val layout: ValueLayout) {
+        I(ValueLayout.JAVA_INT),
+        J(ValueLayout.JAVA_LONG),
+        F(ValueLayout.JAVA_FLOAT),
+        D(ValueLayout.JAVA_DOUBLE),
+        Z(ValueLayout.JAVA_BOOLEAN),
+    }
+
+    /** "(IIJ)V" -> retour null (void) + paramètres [I, I, J]. */
+    private fun parseSig(sig: String): Pair<Carrier?, List<Carrier>> {
+        val parameters = sig.substringAfter('(').substringBefore(')')
+            .map { Carrier.valueOf(it.toString()) }
+        val returnPart = sig.substringAfter(')')
+        return (if (returnPart == "V") null else Carrier.valueOf(returnPart)) to parameters
     }
 }

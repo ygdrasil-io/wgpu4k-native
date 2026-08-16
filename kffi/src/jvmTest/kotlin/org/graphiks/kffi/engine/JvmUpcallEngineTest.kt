@@ -7,49 +7,57 @@ import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.Linker
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout
+import java.util.concurrent.ConcurrentLinkedQueue
 
-private const val USERDATA_TOKEN = 42L
+/**
+ * Dispatcher statique de test : accessible (objet top-level + @JvmStatic),
+ * comme le sera le dispatcher généré par kextract en M4.2.
+ */
+private object JvmUpcallTestDispatcher {
+    val captured = ConcurrentLinkedQueue<Triple<Int, Int, Long>>()
 
-private fun invokeV2PPStub(stub: Long, userdata: Long, a1: Long, a2: Long) {
-    val handle = Linker.nativeLinker().downcallHandle(
-        MemorySegment.ofAddress(stub),
-        FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS),
-    )
-    handle.invokeExact(
-        MemorySegment.ofAddress(userdata),
-        MemorySegment.ofAddress(a1),
-        MemorySegment.ofAddress(a2),
-    )
+    @JvmStatic
+    fun capture(status: Int, value: Int, userdata: Long) {
+        captured.add(Triple(status, value, userdata))
+    }
+
+    @JvmStatic
+    fun sum(status: Int, userdata: Long): Int = status + userdata.toInt()
 }
 
 class JvmUpcallEngineTest : FreeSpec({
 
-    "V2PP trampoline routes native invocation to the registered handler" {
-        var calls = 0
-        var receivedA1 = 0L
-        var receivedA2 = 0L
-        val stub = JvmUpcallEngine.trampolineV2PP(USERDATA_TOKEN) { a1, a2 ->
-            calls += 1
-            receivedA1 = a1
-            receivedA2 = a2
-        }
+    "trampoline routes native invocation to the static dispatcher (userdata last)" {
+        JvmUpcallTestDispatcher.captured.clear()
+        val stub = JvmUpcallEngine.allocateTrampoline(
+            dispatcherClass = JvmUpcallTestDispatcher::class.java,
+            dispatchMethod = "capture",
+            dispatchSig = "(IIJ)V",
+        )
         stub.rawValue shouldBeGreaterThan 0L
 
-        invokeV2PPStub(stub.rawValue, USERDATA_TOKEN, 0x1111L, 0x2222L)
+        val handle = Linker.nativeLinker().downcallHandle(
+            MemorySegment.ofAddress(stub.rawValue),
+            FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_LONG),
+        )
+        handle.invokeExact(7, 42, 0x1111L)
 
-        calls shouldBe 1
-        receivedA1 shouldBe 0x1111L
-        receivedA2 shouldBe 0x2222L
+        JvmUpcallTestDispatcher.captured.toList() shouldBe listOf(Triple(7, 42, 0x1111L))
     }
 
-    "V2PP trampoline ignores invocation with an unknown userdata token" {
-        var calls = 0
-        val stub = JvmUpcallEngine.trampolineV2PP(USERDATA_TOKEN) { _, _ ->
-            calls += 1
-        }
+    "trampoline supports non-void return via the dispatchSig return carrier" {
+        val stub = JvmUpcallEngine.allocateTrampoline(
+            dispatcherClass = JvmUpcallTestDispatcher::class.java,
+            dispatchMethod = "sum",
+            dispatchSig = "(IJ)I",
+        )
 
-        invokeV2PPStub(stub.rawValue, USERDATA_TOKEN + 1L, 0x1111L, 0x2222L)
+        val handle = Linker.nativeLinker().downcallHandle(
+            MemorySegment.ofAddress(stub.rawValue),
+            FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_LONG),
+        )
+        val result = handle.invokeExact(5, 0x2222L) as Int
 
-        calls shouldBe 0
+        result shouldBe 5 + 0x2222
     }
 })
