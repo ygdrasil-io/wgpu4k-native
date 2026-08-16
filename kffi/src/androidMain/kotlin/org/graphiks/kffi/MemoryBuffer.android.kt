@@ -60,19 +60,7 @@ actual class MemoryBuffer actual constructor(
         // copyMemory(Object,...) or primitive-array copy methods (only
         // copyMemory(long,long,long) on pure addresses), so a memcpy would
         // NoSuchMethodError on device. P4 re-optimizes this hot path.
-        val bytes = size * elementSize.toULong()
-        if (!unsafe) {
-            if (bytes > this.size || bufferOffset > this.size - bytes) {
-                throw IndexOutOfBoundsException(
-                    "MemoryBuffer array write out of bounds: bufferOffset=$bufferOffset bytes=$bytes size=$this.size",
-                )
-            }
-            if (bytes > arrayBytes.toULong() || arrayIndex * elementSize.toULong() > arrayBytes.toULong() - bytes) {
-                throw IndexOutOfBoundsException(
-                    "MemoryBuffer array write out of bounds: arrayIndex=$arrayIndex bytes=$bytes arrayBytes=$arrayBytes",
-                )
-            }
-        }
+        checkArrayBounds("write", arrayBytes, elementSize, arrayIndex, bufferOffset, size)
         val arrayOffset = unsafeAccess.arrayBaseOffset(array.javaClass).toLong() +
             (arrayIndex * elementSize.toULong()).toLong()
         copyElementsToNative(array, arrayOffset, base + bufferOffset.toLong(), size.toInt(), elementSize)
@@ -82,22 +70,28 @@ actual class MemoryBuffer actual constructor(
         arrayBytes: Int, elementSize: Int, array: Any,
         arrayIndex: ULong, bufferOffset: ULong, size: ULong,
     ) {
-        val bytes = size * elementSize.toULong()
-        if (!unsafe) {
-            if (bytes > this.size || bufferOffset > this.size - bytes) {
-                throw IndexOutOfBoundsException(
-                    "MemoryBuffer array read out of bounds: bufferOffset=$bufferOffset bytes=$bytes size=$this.size",
-                )
-            }
-            if (bytes > arrayBytes.toULong() || arrayIndex * elementSize.toULong() > arrayBytes.toULong() - bytes) {
-                throw IndexOutOfBoundsException(
-                    "MemoryBuffer array read out of bounds: arrayIndex=$arrayIndex bytes=$bytes arrayBytes=$arrayBytes",
-                )
-            }
-        }
+        checkArrayBounds("read", arrayBytes, elementSize, arrayIndex, bufferOffset, size)
         val arrayOffset = unsafeAccess.arrayBaseOffset(array.javaClass).toLong() +
             (arrayIndex * elementSize.toULong()).toLong()
         copyElementsFromNative(base + bufferOffset.toLong(), array, arrayOffset, size.toInt(), elementSize)
+    }
+
+    private fun checkArrayBounds(
+        operation: String, arrayBytes: Int, elementSize: Int,
+        arrayIndex: ULong, bufferOffset: ULong, size: ULong,
+    ) {
+        if (unsafe) return
+        val bytes = size * elementSize.toULong()
+        if (bytes > this.size || bufferOffset > this.size - bytes) {
+            throw IndexOutOfBoundsException(
+                "MemoryBuffer array $operation out of bounds: bufferOffset=$bufferOffset bytes=$bytes size=$this.size",
+            )
+        }
+        if (bytes > arrayBytes.toULong() || arrayIndex * elementSize.toULong() > arrayBytes.toULong() - bytes) {
+            throw IndexOutOfBoundsException(
+                "MemoryBuffer array $operation out of bounds: arrayIndex=$arrayIndex bytes=$bytes arrayBytes=$arrayBytes",
+            )
+        }
     }
 
     private fun copyElementsToNative(
