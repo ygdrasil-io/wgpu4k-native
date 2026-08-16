@@ -1170,10 +1170,13 @@ git commit -m "feat(kextract): allocator parameter on struct-by-value return bin
 
 ### Task M3.2: Mettre à jour les callers wgpu existants (sites WGPUFuture)
 
-**Files:**
-- Modify: `wgpu4k-native/src/jvmTest/kotlin/io/ygdrasil/wgpu/GeneratedCallbackJvmTest.kt`
-- Modify: `wgpu4k-native/src/jvmTest/kotlin/io/ygdrasil/wgpu/CallbackInfoFactoryJvmTest.kt`
-- Modify: `kffi-benchmark-jvm/src/jmh/kotlin/org/graphiks/kffi/benchmark/jvm/DowncallBenchmarks.kt`
+**Files (corrigés après enquête — les callers réels vivent dans demo/, pas dans les tests JVM) :**
+- Modify: `demo/common/src/commonMain/kotlin/CallbackStress.kt`
+- Modify: `demo/common/src/commonMain/kotlin/HeadlessTriangle.kt`
+- Modify: `demo/common/src/commonMain/kotlin/ext.kt`
+- Modify: `demo/desktop-and-ios/src/jvmMain/kotlin/Capture.jvm.kt`
+
+> **Note de réalisation M3.2** : les fichiers listés initialement (`GeneratedCallbackJvmTest.kt`, `CallbackInfoFactoryJvmTest.kt`, `DowncallBenchmarks.kt`) ne contiennent AUCUN appel des 9 fonctions WGPUFuture (vérifié par rg) — les callers réels sont dans `demo/`. 7 sites mis à jour (CallbackStress ×3, HeadlessTriangle ×1, ext.kt ×2, Capture.jvm.kt ×1) ; 5 des 9 fonctions n'ont aucun caller (CreateComputePipelineAsync, CreateRenderPipelineAsync, GetLostFuture, PopErrorScope, ShaderModuleGetCompilationInfo). Chaque site est déjà dans un bloc `memoryScope { scope -> ... }` — seul le premier argument `scope` est ajouté.
 
 - [ ] **Step 1: Adapter les appels des 9 fonctions WGPUFuture**
 
