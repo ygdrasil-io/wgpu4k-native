@@ -23,98 +23,144 @@ import kotlinx.cinterop.sizeOf
 import kotlinx.cinterop.toCPointer
 import kotlinx.cinterop.value
 
-actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, actual val size: ULong) {
+/**
+ * Constante compilée : les distributions native sont figées à la compilation
+ * (I3, P3) — la valeur du flag runtime est ignorée au profit de cette constante.
+ * Basculer à la compilation : définir KFFI_NATIVE_UNSAFE=true dans la tâche
+ * cinterop/native du module (voir build.gradle.kts).
+ */
+private const val KFFI_NATIVE_UNSAFE: Boolean = false
+
+actual class MemoryBuffer actual constructor(
+    actual val handler: NativeAddress,
+    actual val size: ULong,
+    unsafe: Boolean,
+) {
+    // Le flag runtime est ignoré au profit de la constante build-time KFFI_NATIVE_UNSAFE :
+    // les distributions native sont figées à la compilation (divergence documentée, I3/P3).
+    private val unsafe: Boolean = KFFI_NATIVE_UNSAFE
 
     private fun <T : CPointed> getPointerAtOffset(offset: ULong): CPointer<T> {
         return (handler.rawValue + offset.toLong()).toCPointer()
             ?: error("fail to get pointer at offset $offset")
     }
 
+    private fun boundsCheck(offset: ULong, width: Long) {
+        if (unsafe) return
+        if (offset >= size || offset + width.toULong() > size) {
+            throw IndexOutOfBoundsException(
+                "MemoryBuffer access out of bounds: offset=$offset width=$width size=$size",
+            )
+        }
+    }
+
     actual fun writeByte(value: Byte, offset: ULong) {
+        boundsCheck(offset, 1L)
         getPointerAtOffset<ByteVar>(offset).pointed.value = value
     }
 
     actual fun readByte(offset: ULong): Byte {
+        boundsCheck(offset, 1L)
         return getPointerAtOffset<ByteVar>(offset).pointed.value
     }
 
     actual fun writeUByte(value: UByte, offset: ULong) {
+        boundsCheck(offset, 1L)
         getPointerAtOffset<UByteVar>(offset).pointed.value = value
     }
 
     actual fun readUByte(offset: ULong): UByte {
+        boundsCheck(offset, 1L)
         return getPointerAtOffset<UByteVar>(offset).pointed.value
     }
 
     actual fun writeShort(value: Short, offset: ULong) {
+        boundsCheck(offset, 2L)
         getPointerAtOffset<ShortVar>(offset).pointed.value = value
     }
 
     actual fun readShort(offset: ULong): Short {
+        boundsCheck(offset, 2L)
         return getPointerAtOffset<ShortVar>(offset).pointed.value
     }
 
     actual fun writeUShort(value: UShort, offset: ULong) {
+        boundsCheck(offset, 2L)
         getPointerAtOffset<UShortVar>(offset).pointed.value = value
     }
 
     actual fun readUShort(offset: ULong): UShort {
+        boundsCheck(offset, 2L)
         return getPointerAtOffset<UShortVar>(offset).pointed.value
     }
 
     actual fun writeInt(value: Int, offset: ULong) {
+        boundsCheck(offset, 4L)
         getPointerAtOffset<IntVar>(offset).pointed.value = value
     }
 
     actual fun readInt(offset: ULong): Int {
+        boundsCheck(offset, 4L)
         return getPointerAtOffset<IntVar>(offset).pointed.value
     }
 
     actual fun writeUInt(value: UInt, offset: ULong) {
+        boundsCheck(offset, 4L)
         getPointerAtOffset<UIntVar>(offset).pointed.value = value
     }
 
     actual fun readUInt(offset: ULong): UInt {
+        boundsCheck(offset, 4L)
         return getPointerAtOffset<UIntVar>(offset).pointed.value
     }
 
     actual fun writeLong(value: Long, offset: ULong) {
+        boundsCheck(offset, 8L)
         getPointerAtOffset<LongVar>(offset).pointed.value = value
     }
 
     actual fun readLong(offset: ULong): Long {
+        boundsCheck(offset, 8L)
         return getPointerAtOffset<LongVar>(offset).pointed.value
     }
 
     actual fun writeULong(value: ULong, offset: ULong) {
+        boundsCheck(offset, 8L)
         getPointerAtOffset<ULongVar>(offset).pointed.value = value
     }
 
     actual fun readULong(offset: ULong): ULong {
+        boundsCheck(offset, 8L)
         return getPointerAtOffset<ULongVar>(offset).pointed.value
     }
 
     actual fun writeFloat(value: Float, offset: ULong) {
+        boundsCheck(offset, 4L)
         getPointerAtOffset<FloatVar>(offset).pointed.value = value
     }
 
     actual fun readFloat(offset: ULong): Float {
+        boundsCheck(offset, 4L)
         return getPointerAtOffset<FloatVar>(offset).pointed.value
     }
 
     actual fun writeDouble(value: Double, offset: ULong) {
+        boundsCheck(offset, 8L)
         getPointerAtOffset<DoubleVar>(offset).pointed.value = value
     }
 
     actual fun readDouble(offset: ULong): Double {
+        boundsCheck(offset, 8L)
         return getPointerAtOffset<DoubleVar>(offset).pointed.value
     }
 
     actual fun writePointer(value: NativeAddress, offset: ULong) {
+        boundsCheck(offset, 8L)
         getPointerAtOffset<LongVar>(offset).pointed.value = value.rawValue
     }
 
     actual fun readPointer(offset: ULong): NativeAddress {
+        boundsCheck(offset, 8L)
         return getPointerAtOffset<LongVar>(offset).pointed.value.toCPointer<COpaque>()
             ?.let(NativeAddress::fromPointer)
             ?: error("fail to read pointer at offset $offset")
@@ -408,8 +454,18 @@ actual class MemoryBuffer actual constructor(actual val handler: NativeAddress, 
         arraySize: Int,
         elementSizeInByte: Long
     ) {
-        val bufferEnd = bufferOffset.toLong() + size.toInt() * elementSizeInByte
-        require(bufferEnd <= this.size.toLong()) { "Buffer overflow: trying to access $bufferEnd but buffer size is ${this.size}" }
-        require(arrayIndex.toInt() + size.toInt() <= arraySize) { "Array overflow: trying to access ${(arrayIndex.toInt() + size.toInt())} but array size is ${arraySize}" }
+        if (unsafe) return
+        val bufferEnd = bufferOffset + size * elementSizeInByte.toULong()
+        if (bufferEnd > this.size) {
+            throw IndexOutOfBoundsException(
+                "Buffer overflow: trying to access $bufferEnd but buffer size is ${this.size}",
+            )
+        }
+        val arrayEnd = arrayIndex + size
+        if (arrayEnd > arraySize.toULong()) {
+            throw IndexOutOfBoundsException(
+                "Array overflow: trying to access $arrayEnd but array size is $arraySize",
+            )
+        }
     }
 }
