@@ -22,6 +22,17 @@
 # modules restent dans le repo hôte jusqu'à M4.3. Le push vers GitHub est M4.4
 # (confirmation utilisateur) — ce script ne pousse pas.
 #
+# HISTORIQUE (décision assumée — duplication de racines) :
+# le repo cible a un "Initial commit" template (0768833) ; l'import subtree
+# greffe les histoires réécrites des 5 modules (racines 06a4cc4, b43cb64,
+# 2056d2a — SHAs déterministes, identiques pour toute re-split du même HEAD).
+# Le graphe résultant a donc plusieurs racines (template + histoires modules).
+# DÉCISION : accepter la duplication — les arbres modules sont disjoints (pas
+# de bloat d'objets), l'historique par fichier est propre, et réécrire
+# l'historique déjà poussé du repo cible (force-push) est exclu. Un re-split
+# depuis zéro ne ferait que dupliquer le stockage d'objets sans gain
+# d'historique.
+#
 # Options (env) :
 #   KFFI_TARGET_URL   URL du repo cible (défaut https://github.com/Graphiks-org/kffi.git)
 #   KFFI_WORKDIR      répertoire de travail (défaut mktemp -d)
@@ -68,15 +79,44 @@ TARGET_DIR="$WORKDIR/kffi-target"
 
 # ---------------------------------------------------------------- phase 1 : split (hôte)
 log "phase 1 — branches de split dans le repo hôte"
+
+# fraîcheur du marqueur : la branche kffi-split doit pointer sur HEAD.
+# Si le hôte a avancé depuis le dernier split, tout est re-fait.
+head_sha="$(git -C "$HOST_REPO" rev-parse HEAD)"
+if git -C "$HOST_REPO" rev-parse --verify --quiet "refs/heads/$KFFI_MARKER_BRANCH" >/dev/null; then
+	marker_head="$(git -C "$HOST_REPO" rev-parse "refs/heads/$KFFI_MARKER_BRANCH")"
+	if [[ "$marker_head" != "$head_sha" ]]; then
+		log "branche $KFFI_MARKER_BRANCH périmée (HEAD avancé) — suppression des branches kffi-split* et re-split complet"
+		for module in "${KFFI_MODULES[@]}"; do
+			git -C "$HOST_REPO" branch -D "kffi-split-$module" >/dev/null 2>&1 || true
+		done
+		git -C "$HOST_REPO" branch -D "$KFFI_MARKER_BRANCH" >/dev/null 2>&1 || true
+	fi
+fi
 git -C "$HOST_REPO" rev-parse --verify --quiet "refs/heads/$KFFI_MARKER_BRANCH" >/dev/null \
 	|| git -C "$HOST_REPO" branch "$KFFI_MARKER_BRANCH" HEAD
 log "branche marqueur $KFFI_MARKER_BRANCH prête (depuis HEAD)"
 
 for module in "${KFFI_MODULES[@]}"; do
 	split_branch="kffi-split-$module"
+	needs_split=false
 	if git -C "$HOST_REPO" rev-parse --verify --quiet "refs/heads/$split_branch" >/dev/null; then
-		log "branch $split_branch déjà présente — réutilisée"
+		# fraîcheur par module : l'arbre du tip de la branch de split doit être
+		# identique à l'arbre du module à HEAD. subtree split est déterministe
+		# (mêmes entrées → mêmes SHAs), donc l'égalité d'arbres ⇒ split à jour.
+		split_tree="$(git -C "$HOST_REPO" rev-parse "refs/heads/$split_branch^{tree}")"
+		module_tree="$(git -C "$HOST_REPO" rev-parse "HEAD:$module")"
+		if [[ "$split_tree" == "$module_tree" ]]; then
+			log "branch $split_branch à jour (arbre = HEAD:$module) — réutilisée"
+		else
+			log "branch $split_branch périmée (arbre ≠ HEAD:$module) — re-split"
+			git -C "$HOST_REPO" branch -D "$split_branch" >/dev/null 2>&1 || true
+			needs_split=true
+		fi
 	else
+		needs_split=true
+	fi
+	if [[ "$needs_split" == true ]]; then
 		log "git subtree split --prefix=$module → $split_branch"
 		git -C "$HOST_REPO" subtree split --prefix="$module" --branch="$split_branch"
 	fi
@@ -86,7 +126,14 @@ done
 
 # ---------------------------------------------------------------- phase 2 : clone cible
 log "phase 2 — clone du repo cible $KFFI_TARGET_URL"
-[[ -d "$TARGET_DIR" ]] && rm -rf "$TARGET_DIR"
+if [[ -d "$TARGET_DIR" ]]; then
+	origin="$(git -C "$TARGET_DIR" config --get remote.origin.url 2>/dev/null || true)"
+	if [[ "$origin" != "$KFFI_TARGET_URL" ]]; then
+		die "le répertoire $TARGET_DIR existe mais n'est pas un clone de $KFFI_TARGET_URL (remote.origin.url : ${origin:-absente}) — suppression refusée"
+	fi
+	log "clone précédent du repo cible détecté dans $TARGET_DIR — suppression"
+	rm -rf "$TARGET_DIR"
+fi
 git clone "$KFFI_TARGET_URL" "$TARGET_DIR" || die "clone du repo cible impossible"
 
 # ---------------------------------------------------------------- phase 3 : subtree add
@@ -334,6 +381,74 @@ YAML
 log "phase 5 — commits dans le repo cible (pas de push)"
 git -C "$TARGET_DIR" add -A
 git -C "$TARGET_DIR" commit -m "chore: adapt root build files for standalone kffi repository"
+
+# purge des fichiers template org (pas produits par l'adaptation) — cf. en-tête :
+# workflows template (échec CI à chaque push), issue/PR templates, politique de
+# contribution, conventions buildSrc io.ygdrasil, module d'exemple shared/,
+# scripts/, docs du site. README.md et LICENSE sont conservés (écrasés par
+# l'adaptation : README kffi-consumer-doc, licence MIT du hôte).
+log "purge des fichiers template org (workflows, issue/PR templates, shared/, scripts/, docs, conventions buildSrc)"
+git -C "$TARGET_DIR" rm -q -r --ignore-unmatch \
+	.github/ISSUE_TEMPLATE \
+	.github/PULL_REQUEST_TEMPLATE.md \
+	.github/contributing-policy.toml \
+	.github/scripts \
+	.github/workflows/ci.yml \
+	.github/workflows/docs.yml \
+	.github/workflows/pr-policy.yml \
+	.github/workflows/publish.yml \
+	CHANGELOG.md \
+	CODE_OF_CONDUCT.md CODE_OF_CONDUCT.fr.md \
+	CONTRIBUTING.md \
+	SECURITY.md SECURITY.fr.md \
+	SUPPORT.md SUPPORT.fr.md \
+	scripts \
+	shared \
+	buildSrc/gradle.properties \
+	buildSrc/src/main/kotlin/ygdrasil \
+	docs/build.gradle.kts \
+	docs/mkdocs.yml \
+	docs/docs
+# workflow template inattendu dans le repo cible
+for wf in "$TARGET_DIR"/.github/workflows/*.yml; do
+	[[ -e "$wf" ]] || continue
+	case "$(basename "$wf")" in
+		kffi-*) ;;
+		*) log "workflow template inattendu : $(basename "$wf") — purgé"
+			git -C "$TARGET_DIR" rm -q "$wf" ;;
+	esac
+done
+# défensif : aucun résidu template (liste à mettre à jour si le template change)
+if git -C "$TARGET_DIR" ls-files | grep -qE '^(shared/|scripts/|CHANGELOG\.md|CODE_OF_CONDUCT|CONTRIBUTING\.md|SECURITY|SUPPORT|\.github/(ISSUE_TEMPLATE/|PULL_REQUEST_TEMPLATE\.md|contributing-policy\.toml|scripts/|workflows/(ci|docs|pr-policy|publish)\.yml)|buildSrc/gradle\.properties|buildSrc/src/main/kotlin/ygdrasil/|docs/(build\.gradle\.kts|mkdocs\.yml|docs/))'; then
+	die "des fichiers template org subsistent après purge — liste du template à jour ?"
+fi
+# le catalog gradle/libs.versions.toml est copié du hôte et contient
+# légitimement des entrées io.ygdrasil (glfw-native, rococoa, …) — exclu
+if git -C "$TARGET_DIR" grep -l 'io\.ygdrasil' -- . ':!gradle/libs.versions.toml' >/dev/null 2>&1; then
+	die "résidus io.ygdrasil détectés dans le repo cible après purge"
+fi
+git -C "$TARGET_DIR" add -A
+git -C "$TARGET_DIR" commit -F - <<'MSG'
+chore: remove org template leftovers
+
+The Graphiks-org/kffi template "Initial commit" (0768833) carried generic
+org scaffolding that the split adaptation does not produce: template CI
+workflows (ci/docs/pr-policy/publish), issue/PR templates, contributing
+policy, buildSrc conventions under io.ygdrasil, a sample `shared/` KMP
+module and `scripts/`. Keeping them would break CI on every push (the
+template workflows would run and fail) and would leak the io.ygdrasil
+namespace into the kffi repository. README.md and LICENSE are kept — they
+are overwritten by the split adaptation (kffi-consumer-doc README, host
+MIT license).
+
+History note (accepted duplication): the target repository already has a
+template root (0768833) and the subtree imports bring the rewritten module
+histories (roots 06a4cc4, b43cb64, 2056d2a — deterministic SHAs). The
+graph therefore has multiple roots. This is accepted: the module file
+history is clean, the module trees are disjoint (no object bloat), and
+rewriting the target's already-pushed history would require a force-push
+that is out of scope.
+MSG
 
 # exclusion kffi/benchmarks/results (chemins absolus hôte dans les JSON)
 git -C "$TARGET_DIR" rm -r -q kffi/benchmarks/results
