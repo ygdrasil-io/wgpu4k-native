@@ -41,7 +41,8 @@ Commit: f6cdb8f0
 - No deviation from the P0 configuration; full suite ran in ~6 min + two focused re-runs:
   (a) reproducibility check on the default JVM (25.0.1: empty 4.03 / add4 4.47 / fmmExact 4.09 /
   jvmEngineAdd4 44.10 ns) and (b) a P0-binary check on Temurin 25.0.3 (empty 4.08 / add4 4.43 /
-  fmmExact 4.11 / jvmEngineAdd4 42.63 ns) — stable on both.
+  fmmExact 4.11 / jvmEngineAdd4 42.63 ns) — stable on both. Raw values archived in
+  [`2026-08-16-p0-jvm-control-rerun.json`](2026-08-16-p0-jvm-control-rerun.json).
 
 ## Δ vs P0 baseline (2026-08-12-012b50e9)
 

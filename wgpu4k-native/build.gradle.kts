@@ -285,15 +285,15 @@ tasks.withType(CInteropProcess::class.java).configureEach {
     dependsOn("fetch-native-dependencies")
 }
 
-tasks.register<Copy>("copyDocsToRoot") {
-    dependsOn("dokkaGfm", "dokkaHtml")
-    from(project.layout.buildDirectory.dir("dokka"))
-    into(rootDir.resolve("doc"))
+tasks.register<Sync>("copyDocsToRoot") {
+    dependsOn("dokkaGeneratePublicationHtml")
+    from(project.layout.buildDirectory.dir("dokka/html"))
+    into(rootDir.resolve("doc/html"))
 }
 
 tasks.register<Task>("generateDocs") {
     group = "documentation"
-    description = "Generates the documentation in HTML and Markdown formats, then copies the files into the 'doc' folder."
+    description = "Generates the documentation in HTML format, then copies the files into the 'doc' folder."
     dependsOn("copyDocsToRoot")
 }
 

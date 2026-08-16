@@ -1,0 +1,45 @@
+{
+  "title": "P0-binary control re-run evidence (M6.2)",
+  "note": "Archived evidence for the P0-JVM control re-run cited in kffi/benchmarks/results/2026-08-16-f6cdb8f0-jvm-baseline.md (Run configuration section and Comparability note). Values are log-cited from the implementer's run on 2026-08-16 — they were not parsed from a JMH result.json, so no raw data, percentiles, or error bars are available. They are reproduced here so the ~4 ns (vs ~26 ns P0 absolutes) claim is independently checkable.",
+  "date": "2026-08-16",
+  "source_report": "kffi/benchmarks/results/2026-08-16-f6cdb8f0-jvm-baseline.md",
+  "source_report_commit": "f6cdb8f0",
+  "cited_in_report_lines": [41, 118],
+  "context": {
+    "host": "macOS 26.5, Apple M2 Max",
+    "jmh_version": "1.36",
+    "jmh_config": "Mode.AverageTime, ns/op, 1 thread, warmup 3 x 1s, measurement 5 x 1s, forks 2 — identical to the P0 run (2026-08-12-012b50e9)",
+    "benchmark_binary": "identical benchmark binary and configuration as the P0 run (kffi-benchmark-jvm, per-benchmark metadata verified against 2026-08-12-012b50e9-jvm-baseline.json)",
+    "fixture": "kffi-benchmark-jvm/build/bench-fixture/libbench_fixture.dylib (C, -O2)",
+    "p0_absolutes_for_reference_ns_per_op": {
+      "org.graphiks.kffi.benchmark.jvm.DowncallBenchmarks.empty": 27.36,
+      "org.graphiks.kffi.benchmark.jvm.DowncallBenchmarks.add4": 26.54,
+      "org.graphiks.kffi.benchmark.jvm.DowncallEngineBakeoff.fmmExact": 25.96
+    }
+  },
+  "runs": [
+    {
+      "id": "p0_binary_rerun",
+      "jvm": "Temurin 25.0.3 (exact P0 JVM binary, via sdkman)",
+      "purpose": "Control: re-run the identical P0 benchmark binary and configuration on the exact P0 JVM binary to check whether the P0 ~26-27 ns absolutes reproduce; they did not (machine-state inflation on 2026-08-12), see Comparability note in the report.",
+      "measurements_ns_per_op": {
+        "org.graphiks.kffi.benchmark.jvm.DowncallBenchmarks.empty": 4.08,
+        "org.graphiks.kffi.benchmark.jvm.DowncallBenchmarks.add4": 4.43,
+        "org.graphiks.kffi.benchmark.jvm.DowncallEngineBakeoff.fmmExact": 4.11,
+        "org.graphiks.kffi.benchmark.jvm.DowncallEngineBakeoff.jvmEngineAdd4": 42.63
+      }
+    },
+    {
+      "id": "jvm_2501_focused_reproducibility_rerun",
+      "jvm": "Temurin 25.0.1 (sdkman default, the P2 run JVM)",
+      "purpose": "Focused reproducibility check of the P2 full-suite run on the default JVM.",
+      "measurements_ns_per_op": {
+        "org.graphiks.kffi.benchmark.jvm.DowncallBenchmarks.empty": 4.03,
+        "org.graphiks.kffi.benchmark.jvm.DowncallBenchmarks.add4": 4.47,
+        "org.graphiks.kffi.benchmark.jvm.DowncallEngineBakeoff.fmmExact": 4.09,
+        "org.graphiks.kffi.benchmark.jvm.DowncallEngineBakeoff.jvmEngineAdd4": 44.10
+      }
+    }
+  ],
+  "conclusion": "Both re-runs reproduce ~4 ns for the byte-identical floor benchmarks, not the P0 ~26-27 ns absolutes; the P0 absolutes were inflated by machine state (concurrent Gradle/Kotlin-Native builds during M1-M5), not by code or JVM changes."
+}
