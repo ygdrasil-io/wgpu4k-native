@@ -1399,7 +1399,16 @@ git commit -m "refactor(kextract): JVM callback trampolines via JvmUpcallEngine"
 
 ```kotlin
 private object JvmFfiTrampolines {
-    val routedStub: NativeAddress = JvmUpcallEngine.trampolineV2PP { _, _ -> }
+    // @JvmStatic fun dispatchRouted(status: Int, value: Int, userdata: Long) route
+    // via CallbackRuntime.dispatchSafely (userdata = dernier paramètre C) ; le
+    // moteur ne route pas — fabrique de stubs, résolution par privateLookupIn.
+    val routedStub: NativeAddress by lazy {
+        JvmUpcallEngine.allocateTrampoline(
+            dispatcherClass = JvmFfiTrampolines::class.java,
+            dispatchMethod = "dispatchRouted",
+            dispatchSig = "(IIJ)V",
+        )
+    }
     // ...
 }
 ```

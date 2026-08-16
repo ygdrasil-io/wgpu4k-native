@@ -3,35 +3,19 @@ package org.graphiks.kffi.engine
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.longs.shouldBeGreaterThan
+import org.graphiks.kffi.engine.upcallfixture.TestUpcallDispatchersBridge
 import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.Linker
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout
-import java.util.concurrent.ConcurrentLinkedQueue
-
-/**
- * Dispatcher statique de test : accessible (objet top-level + @JvmStatic),
- * comme le sera le dispatcher généré par kextract en M4.2.
- */
-private object JvmUpcallTestDispatcher {
-    val captured = ConcurrentLinkedQueue<Triple<Int, Int, Long>>()
-
-    @JvmStatic
-    fun capture(status: Int, value: Int, userdata: Long) {
-        captured.add(Triple(status, value, userdata))
-    }
-
-    @JvmStatic
-    fun sum(status: Int, userdata: Long): Int = status + userdata.toInt()
-}
 
 class JvmUpcallEngineTest : FreeSpec({
 
-    "trampoline routes native invocation to the static dispatcher (userdata last)" {
-        JvmUpcallTestDispatcher.captured.clear()
+    "trampoline routes native invocation to the static dispatcher (userdata last, cross-package private object)" {
+        TestUpcallDispatchersBridge.captured.clear()
         val stub = JvmUpcallEngine.allocateTrampoline(
-            dispatcherClass = JvmUpcallTestDispatcher::class.java,
-            dispatchMethod = "capture",
+            dispatcherClass = TestUpcallDispatchersBridge.dispatcherClass,
+            dispatchMethod = "captureStatusValueUserdata",
             dispatchSig = "(IIJ)V",
         )
         stub.rawValue shouldBeGreaterThan 0L
@@ -42,13 +26,14 @@ class JvmUpcallEngineTest : FreeSpec({
         )
         handle.invokeExact(7, 42, 0x1111L)
 
-        JvmUpcallTestDispatcher.captured.toList() shouldBe listOf(Triple(7, 42, 0x1111L))
+        TestUpcallDispatchersBridge.captured.toList() shouldBe listOf(Triple(7, 42, 0x1111L))
     }
 
     "trampoline supports non-void return via the dispatchSig return carrier" {
+        TestUpcallDispatchersBridge.captured.clear()
         val stub = JvmUpcallEngine.allocateTrampoline(
-            dispatcherClass = JvmUpcallTestDispatcher::class.java,
-            dispatchMethod = "sum",
+            dispatcherClass = TestUpcallDispatchersBridge.dispatcherClass,
+            dispatchMethod = "captureReturningInt",
             dispatchSig = "(IJ)I",
         )
 
@@ -58,6 +43,7 @@ class JvmUpcallEngineTest : FreeSpec({
         )
         val result = handle.invokeExact(5, 0x2222L) as Int
 
-        result shouldBe 5 + 0x2222
+        result shouldBe 6
+        TestUpcallDispatchersBridge.captured.toList() shouldBe listOf(Triple(5, -1, 0x2222L))
     }
 })

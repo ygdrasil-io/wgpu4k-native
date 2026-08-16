@@ -24,7 +24,9 @@ import java.lang.invoke.MethodHandles
  * La résolution de la méthode de dispatch utilise privateLookupIn : elle
  * accepte les objets trampoline privés générés par kextract, à l'instar de
  * GetStaticMethodID côté Android (kffi_upcall.c) qui ignore les contrôles
- * d'accès Java.
+ * d'accès Java. Précondition : classpath (modules non nommés, packages
+ * ouverts) — si kffi ou le consommateur passe sur le module path (module
+ * nommé), l'accès lèvera IllegalAccessException ; à revoir à ce moment.
  */
 object JvmUpcallEngine {
 
