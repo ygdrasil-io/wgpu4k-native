@@ -6279,14 +6279,14 @@ actual fun wgpuAdapterHasFeature(adapter: WGPUAdapter?, feature: WGPUFeatureName
 }
 
 private val wgpuAdapterRequestDevice_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuAdapterRequestDevice") }
-actual fun wgpuAdapterRequestDevice(adapter: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): WGPUFuture {
+actual fun wgpuAdapterRequestDevice(allocator: MemoryAllocator, adapter: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(56uL)
     args.writeLong(adapter?.handler?.rawValue ?: 0L, 0uL)
     args.writeLong(descriptor?.handler?.rawValue ?: 0L, 8uL)
     val callbackInfoBytes = ByteArray(40)
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 16uL, 40uL)
-    val out = MemoryAllocator().allocateBuffer(8uL)
+    val out = allocator.allocateBuffer(8uL)
     NativeEngine.callGeneric(wgpuAdapterRequestDevice_ADDR, 3, "s8:p,p,s40", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
@@ -6391,7 +6391,7 @@ actual fun wgpuBufferGetUsage(buffer: WGPUBuffer?): ULong {
 }
 
 private val wgpuBufferMapAsync_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferMapAsync") }
-actual fun wgpuBufferMapAsync(buffer: WGPUBuffer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo): WGPUFuture {
+actual fun wgpuBufferMapAsync(allocator: MemoryAllocator, buffer: WGPUBuffer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(72uL)
     args.writeLong(buffer?.handler?.rawValue ?: 0L, 0uL)
     args.writeLong(mode.toLong(), 8uL)
@@ -6400,7 +6400,7 @@ actual fun wgpuBufferMapAsync(buffer: WGPUBuffer?, mode: ULong, offset: ULong, s
     val callbackInfoBytes = ByteArray(40)
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 32uL, 40uL)
-    val out = MemoryAllocator().allocateBuffer(8uL)
+    val out = allocator.allocateBuffer(8uL)
     NativeEngine.callGeneric(wgpuBufferMapAsync_ADDR, 5, "s8:p,u64,u64,u64,s40", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
@@ -6710,14 +6710,14 @@ actual fun wgpuDeviceCreateComputePipeline(device: WGPUDevice?, descriptor: WGPU
 }
 
 private val wgpuDeviceCreateComputePipelineAsync_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateComputePipelineAsync") }
-actual fun wgpuDeviceCreateComputePipelineAsync(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): WGPUFuture {
+actual fun wgpuDeviceCreateComputePipelineAsync(allocator: MemoryAllocator, device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(56uL)
     args.writeLong(device?.handler?.rawValue ?: 0L, 0uL)
     args.writeLong(descriptor?.handler?.rawValue ?: 0L, 8uL)
     val callbackInfoBytes = ByteArray(40)
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 16uL, 40uL)
-    val out = MemoryAllocator().allocateBuffer(8uL)
+    val out = allocator.allocateBuffer(8uL)
     NativeEngine.callGeneric(wgpuDeviceCreateComputePipelineAsync_ADDR, 3, "s8:p,p,s40", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
@@ -6743,14 +6743,14 @@ actual fun wgpuDeviceCreateRenderPipeline(device: WGPUDevice?, descriptor: WGPUR
 }
 
 private val wgpuDeviceCreateRenderPipelineAsync_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateRenderPipelineAsync") }
-actual fun wgpuDeviceCreateRenderPipelineAsync(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): WGPUFuture {
+actual fun wgpuDeviceCreateRenderPipelineAsync(allocator: MemoryAllocator, device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(56uL)
     args.writeLong(device?.handler?.rawValue ?: 0L, 0uL)
     args.writeLong(descriptor?.handler?.rawValue ?: 0L, 8uL)
     val callbackInfoBytes = ByteArray(40)
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 16uL, 40uL)
-    val out = MemoryAllocator().allocateBuffer(8uL)
+    val out = allocator.allocateBuffer(8uL)
     NativeEngine.callGeneric(wgpuDeviceCreateRenderPipelineAsync_ADDR, 3, "s8:p,p,s40", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
@@ -6793,10 +6793,10 @@ actual fun wgpuDeviceGetLimits(device: WGPUDevice?, limits: WGPULimits?): WGPUSt
 }
 
 private val wgpuDeviceGetLostFuture_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceGetLostFuture") }
-actual fun wgpuDeviceGetLostFuture(device: WGPUDevice?): WGPUFuture {
+actual fun wgpuDeviceGetLostFuture(allocator: MemoryAllocator, device: WGPUDevice?): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(8uL)
     args.writeLong(device?.handler?.rawValue ?: 0L, 0uL)
-    val out = MemoryAllocator().allocateBuffer(8uL)
+    val out = allocator.allocateBuffer(8uL)
     NativeEngine.callGeneric(wgpuDeviceGetLostFuture_ADDR, 1, "s8:p", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
@@ -6812,13 +6812,13 @@ actual fun wgpuDeviceHasFeature(device: WGPUDevice?, feature: WGPUFeatureName): 
 }
 
 private val wgpuDevicePopErrorScope_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDevicePopErrorScope") }
-actual fun wgpuDevicePopErrorScope(device: WGPUDevice?, callbackInfo: WGPUPopErrorScopeCallbackInfo): WGPUFuture {
+actual fun wgpuDevicePopErrorScope(allocator: MemoryAllocator, device: WGPUDevice?, callbackInfo: WGPUPopErrorScopeCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(48uL)
     args.writeLong(device?.handler?.rawValue ?: 0L, 0uL)
     val callbackInfoBytes = ByteArray(40)
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 8uL, 40uL)
-    val out = MemoryAllocator().allocateBuffer(8uL)
+    val out = allocator.allocateBuffer(8uL)
     NativeEngine.callGeneric(wgpuDevicePopErrorScope_ADDR, 2, "s8:p,s40", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
@@ -6898,14 +6898,14 @@ actual fun wgpuInstanceProcessEvents(instance: WGPUInstance?): Unit {
 }
 
 private val wgpuInstanceRequestAdapter_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuInstanceRequestAdapter") }
-actual fun wgpuInstanceRequestAdapter(instance: WGPUInstance?, options: WGPURequestAdapterOptions?, callbackInfo: WGPURequestAdapterCallbackInfo): WGPUFuture {
+actual fun wgpuInstanceRequestAdapter(allocator: MemoryAllocator, instance: WGPUInstance?, options: WGPURequestAdapterOptions?, callbackInfo: WGPURequestAdapterCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(56uL)
     args.writeLong(instance?.handler?.rawValue ?: 0L, 0uL)
     args.writeLong(options?.handler?.rawValue ?: 0L, 8uL)
     val callbackInfoBytes = ByteArray(40)
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 16uL, 40uL)
-    val out = MemoryAllocator().allocateBuffer(8uL)
+    val out = allocator.allocateBuffer(8uL)
     NativeEngine.callGeneric(wgpuInstanceRequestAdapter_ADDR, 3, "s8:p,p,s40", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
@@ -6990,13 +6990,13 @@ actual fun wgpuQuerySetRelease(querySet: WGPUQuerySet?): Unit {
 }
 
 private val wgpuQueueOnSubmittedWorkDone_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQueueOnSubmittedWorkDone") }
-actual fun wgpuQueueOnSubmittedWorkDone(queue: WGPUQueue?, callbackInfo: WGPUQueueWorkDoneCallbackInfo): WGPUFuture {
+actual fun wgpuQueueOnSubmittedWorkDone(allocator: MemoryAllocator, queue: WGPUQueue?, callbackInfo: WGPUQueueWorkDoneCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(48uL)
     args.writeLong(queue?.handler?.rawValue ?: 0L, 0uL)
     val callbackInfoBytes = ByteArray(40)
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 8uL, 40uL)
-    val out = MemoryAllocator().allocateBuffer(8uL)
+    val out = allocator.allocateBuffer(8uL)
     NativeEngine.callGeneric(wgpuQueueOnSubmittedWorkDone_ADDR, 2, "s8:p,s40", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
@@ -7368,13 +7368,13 @@ actual fun wgpuSamplerRelease(sampler: WGPUSampler?): Unit {
 }
 
 private val wgpuShaderModuleGetCompilationInfo_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuShaderModuleGetCompilationInfo") }
-actual fun wgpuShaderModuleGetCompilationInfo(shaderModule: WGPUShaderModule?, callbackInfo: WGPUCompilationInfoCallbackInfo): WGPUFuture {
+actual fun wgpuShaderModuleGetCompilationInfo(allocator: MemoryAllocator, shaderModule: WGPUShaderModule?, callbackInfo: WGPUCompilationInfoCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(48uL)
     args.writeLong(shaderModule?.handler?.rawValue ?: 0L, 0uL)
     val callbackInfoBytes = ByteArray(40)
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 8uL, 40uL)
-    val out = MemoryAllocator().allocateBuffer(8uL)
+    val out = allocator.allocateBuffer(8uL)
     NativeEngine.callGeneric(wgpuShaderModuleGetCompilationInfo_ADDR, 2, "s8:p,s40", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
@@ -9453,7 +9453,7 @@ private object WGPUCreateComputePipelineAsyncCallbackTrampoline {
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPUCreatePipelineAsyncStatus,
-                    pipeline?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { WGPUComputePipeline(NativeAddress(com.sun.jna.Pointer.nativeValue(it))) },
+                    pipeline?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) }?.let { WGPUComputePipeline(it) },
                     WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
@@ -9515,7 +9515,7 @@ private object WGPUCreateRenderPipelineAsyncCallbackTrampoline {
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPUCreatePipelineAsyncStatus,
-                    pipeline?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { WGPURenderPipeline(NativeAddress(com.sun.jna.Pointer.nativeValue(it))) },
+                    pipeline?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) }?.let { WGPURenderPipeline(it) },
                     WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
@@ -9761,7 +9761,7 @@ private object WGPURequestAdapterCallbackTrampoline {
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPURequestAdapterStatus,
-                    adapter?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { WGPUAdapter(NativeAddress(com.sun.jna.Pointer.nativeValue(it))) },
+                    adapter?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) }?.let { WGPUAdapter(it) },
                     WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
@@ -9823,7 +9823,7 @@ private object WGPURequestDeviceCallbackTrampoline {
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPURequestDeviceStatus,
-                    device?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { WGPUDevice(NativeAddress(com.sun.jna.Pointer.nativeValue(it))) },
+                    device?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) }?.let { WGPUDevice(it) },
                     WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
@@ -9988,3 +9988,4 @@ internal actual fun wgpuSetLogCallbackCallbackBindingPreflight(): (NativeAddress
         NativeEngine.callV2PP(wgpuSetLogCallback_ADDR, callback.toAddress(), userdata.toAddress())
     }
 }
+

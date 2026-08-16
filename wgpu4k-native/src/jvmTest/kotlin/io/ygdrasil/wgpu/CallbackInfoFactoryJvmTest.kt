@@ -293,10 +293,9 @@ private fun assertWiring(
     registration: CallbackRegistration<*>,
     applicationUserdata: NativeAddress,
 ) {
-    assertEquals(registration.callback.rawValue(), assertNotNull(callback).rawValue())
-    assertEquals(applicationUserdata.rawValue(), assertNotNull(userdata1).rawValue())
-    assertEquals(assertNotNull(registration.userdata).rawValue(), assertNotNull(userdata2).rawValue())
+    assertEquals(registration.callback.rawValue, assertNotNull(callback).rawValue)
+    assertEquals(applicationUserdata.rawValue, assertNotNull(userdata1).rawValue)
+    assertEquals(assertNotNull(registration.userdata).rawValue, assertNotNull(userdata2).rawValue)
     assertEquals(expectedMode, actualMode)
 }
 
-private fun NativeAddress.rawValue(): Long = handler.address()

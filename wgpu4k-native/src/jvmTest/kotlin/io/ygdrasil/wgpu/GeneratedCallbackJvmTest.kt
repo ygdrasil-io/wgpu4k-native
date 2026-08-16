@@ -3,6 +3,7 @@ package io.ygdrasil.wgpu
 import org.graphiks.kffi.CallbackPolicy
 import org.graphiks.kffi.CallbackRegistration
 import org.graphiks.kffi.MemoryAllocator
+import org.graphiks.kffi.NativeAddress
 import io.kotest.core.spec.style.FreeSpec
 import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.Linker
@@ -17,20 +18,20 @@ class GeneratedCallbackJvmTest : FreeSpec({
         val firstApplicationUserdata = allocator.allocate(1)
         val secondApplicationUserdata = allocator.allocate(1)
         val first = WGPUCompilationInfoCallback.register(CallbackPolicy.REPEATING) { _, _, userdata1 ->
-            deliveries += "first" to userdata1?.handler?.address()
+            deliveries += "first" to userdata1?.rawValue
         }
         val second = WGPUCompilationInfoCallback.register(CallbackPolicy.REPEATING) { _, _, userdata1 ->
-            deliveries += "second" to userdata1?.handler?.address()
+            deliveries += "second" to userdata1?.rawValue
         }
 
         try {
-            dispatch(first, firstApplicationUserdata.handler)
-            dispatch(second, secondApplicationUserdata.handler)
+            dispatch(first, firstApplicationUserdata)
+            dispatch(second, secondApplicationUserdata)
 
             assertEquals(
                 listOf<Pair<String, Long?>>(
-                    "first" to firstApplicationUserdata.handler.address(),
-                    "second" to secondApplicationUserdata.handler.address(),
+                    "first" to firstApplicationUserdata.rawValue,
+                    "second" to secondApplicationUserdata.rawValue,
                 ),
                 deliveries,
             )
@@ -44,17 +45,17 @@ class GeneratedCallbackJvmTest : FreeSpec({
 
 private fun dispatch(
     registration: CallbackRegistration<WGPUCompilationInfoCallback>,
-    applicationUserdata: MemorySegment,
+    applicationUserdata: NativeAddress,
 ) {
     val trampoline = Linker.nativeLinker().downcallHandle(
-        registration.callback.handler,
+        MemorySegment.ofAddress(registration.callback.rawValue),
         COMPILATION_INFO_CALLBACK_DESCRIPTOR,
     )
     trampoline.invokeWithArguments(
         WGPUCompilationInfoRequestStatus_Success.toInt(),
         MemorySegment.NULL,
-        applicationUserdata,
-        requireNotNull(registration.userdata).handler,
+        MemorySegment.ofAddress(applicationUserdata.rawValue),
+        MemorySegment.ofAddress(requireNotNull(registration.userdata).rawValue),
     )
 }
 
