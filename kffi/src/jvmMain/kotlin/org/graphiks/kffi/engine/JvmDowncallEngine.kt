@@ -393,6 +393,25 @@ object JvmDowncallEngine {
 
     private val structDescriptors = java.util.concurrent.ConcurrentHashMap<String, MemoryLayout>()
 
+    /**
+     * Layout FFM d'un struct enregistré, construit depuis les métadonnées
+     * [registerStructLayout] (taille, alignement, champs, padding explicite).
+     *
+     * API publique : utilisée par le code généré (kextract) — y compris les
+     * trampolines de callbacks FFM de secours — pour construire les descripteurs
+     * de fonctions portant des structs par valeur.
+     *
+     * Contrat :
+     * - [name] doit avoir été enregistré via [registerStructLayout] avant le
+     *   premier appel (le code généré s'en charge à l'initialisation du fichier,
+     *   avant tout downcall/upcall) ;
+     * - nom inconnu → `NoSuchElementException` ;
+     * - métadonnées incohérentes avec la taille calculée → `IllegalStateException`
+     *   (garde `check`) ;
+     * - le layout est mis en cache et reconstruit à chaque ré-enregistrement
+     *   (version bump) — les descripteurs dérivés d'un layout ancien sont
+     *   invalidés avec lui.
+     */
     fun structLayout(name: String): MemoryLayout =
         structDescriptors.computeIfAbsent(name) { structName ->
             val (size, fields) = structLayouts.getValue(structName)
