@@ -1561,7 +1561,7 @@ fun registerStructLayout(name: String, sizeBytes: Long, alignmentBytes: Long, fi
     structDescriptors.remove(name)
 }
 
-private fun structLayout(name: String): ValueLayout {
+internal fun structLayout(name: String): MemoryLayout {
     return structDescriptors.computeIfAbsent(name) { structName ->
         val (size, fields) = structLayouts.getValue(structName)
         val elements = fields.map { field ->
@@ -1576,6 +1576,8 @@ private fun structLayout(name: String): ValueLayout {
     }
 }
 ```
+
+> **Notes de review M2.1** : (1) `structLayout` retourne `MemoryLayout` (GroupLayout), pas `ValueLayout` — le squelette M2.1 a été corrigé en conséquence ; visibilité `internal` requise pour les wrappers struct-by-value. (2) Les métadonnées `StructField` portent un `offsetBytes` qui sert à dériver le padding — kextract émet un champ `PADDING` explicite par écart > 0 (comme `structLayoutElements` avec `paddingLayout`), et `paddingLayout(offsetBytes)` du squelette est à interpréter comme la TAILLE du padding (corriger la sémantique dans l'implémentation M5.2bis : émettre `paddingLayout(gap)` avec gap = écart entre champs). (3) La table des formes complètes (callStructArg<Name>/callStructReturn<Name> par struct, y compris `reinterpret(layout.byteSize())` sur le segment d'argument) est ajoutée ici.
 
 - [ ] **Step 4: Ajouter les wrappers struct-by-value**
 
