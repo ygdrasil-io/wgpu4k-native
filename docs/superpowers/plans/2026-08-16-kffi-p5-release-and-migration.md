@@ -498,6 +498,14 @@ git commit -m "docs(wgpu): point kffi usage to published Graphiks-org/kffi artif
 - Le submodule kextract reste dans le repo hôte (dépendance de génération) — sa migration vers un repo dédié est traitée séparément (klang-toolkit/kextract, déjà sa propre organisation).
 - La décision unsafe JVM : si l'optimisation M1 ne parvient pas à battre le mode sûr, la conclusion P3/P4 reste (surface API, pas optimisation) — documentée, pas bloquante.
 
+## Annexe — Follow-ups trackés (reviews M2.1)
+
+- **F1 (Important, AVANT M4.2)** : les 4 modules benchmark (`kffi-benchmark-spi`, `-jvm`, `-native`, `-android`) publient sous `io.ygdrasil` au lieu de `org.graphiks` — `group = "org.graphiks"` est no-op pour les coordonnées vanniktech (groupId figé à l'application du plugin, avant l'override de groupe). Confirmé empiriquement : pom généré `io.ygdrasil`. Le trigger push-main activé par M2.1 rend ce bug actif (mis-publication automatique à chaque push main). Fix : miroir du `afterEvaluate { groupId = "org.graphiks" }` de kffi/build.gradle.kts:221-227 dans les 4 modules benchmark. `verifyPublicationMetadata` ne couvre que `:kffi` et `:wgpu4k-native` — zéro couverture benchmark : étendre la vérification.
+- **F2 (M4.4)** : mismatch de branche par défaut — le repo cible `Graphiks-org/kffi` a `master`, le workflow snapshots déclenche sur `main`. Décision : **renommer la branche par défaut du repo cible en `main`** (Settings → Branches → rename, cohérent avec `kffi-benchmark-ci.yml` et le workflow push-main) au moment du push M4.4.
+- **F3 (préexistant, non bloquant)** : `verifyPublicationMetadata` échoue sans `-x :wgpu4k-native:generateBindingsFromHeader` — Gradle 9.5 strict-validation : `sourcesJar`-family consomme la sortie de `generateBindingsFromHeader` sans `dependsOn` déclaré. Fix à ajouter dans `wgpu4k-native/build.gradle.kts` (follow-up CI, pas dans le scope P5).
+- **F4 (mineur)** : `inceptionYear.set("2024")` faux pour kffi (créé 2026) — conditionner ou retirer.
+- **F5 (mineur, optionnel)** : pas de `paths:` filter sur le workflow snapshots — les push docs déclenchent des publications inutiles (snapshots timestampés, inoffensifs).
+
 ---
 
 ## Annexe — Résultats M1 (unsafe JVM optimisé)
