@@ -35,8 +35,9 @@ val verifyPublicationMetadata by tasks.registering {
 		val kffiCoordinatePath = kffiGroup.replace('.', '/')
 		val wgpuCoordinatePath = wgpuGroup.replace('.', '/')
 		val publishedVersion = project.version.toString()
-		fun uniquePublishedFile(coordinatePath: String, artifact: String, extension: String): File {
-			val versionDirectory = repository.resolve("$coordinatePath/$artifact/$publishedVersion")
+		val kffiPublishedVersion = project(":kffi").version.toString()
+		fun uniquePublishedFile(coordinatePath: String, artifact: String, extension: String, version: String): File {
+			val versionDirectory = repository.resolve("$coordinatePath/$artifact/$version")
 			val candidates = versionDirectory.listFiles { file ->
 				file.isFile &&
 					file.name.startsWith("$artifact-") &&
@@ -49,8 +50,8 @@ val verifyPublicationMetadata by tasks.registering {
 			return candidates.single()
 		}
 
-		uniquePublishedFile(kffiCoordinatePath, "kffi-jvm", "module")
-		val metadataFile = uniquePublishedFile(wgpuCoordinatePath, "wgpu4k-native-jvm", "module")
+		uniquePublishedFile(kffiCoordinatePath, "kffi-jvm", "module", kffiPublishedVersion)
+		val metadataFile = uniquePublishedFile(wgpuCoordinatePath, "wgpu4k-native-jvm", "module", publishedVersion)
 		val root = JsonParser.parseString(metadataFile.readText()).asJsonObject
 		val dependencies = root.getAsJsonArray("variants")
 			.flatMap { variant ->
@@ -68,12 +69,12 @@ val verifyPublicationMetadata by tasks.registering {
 				version.get("requires")?.asString ?: version.get("strictly")?.asString
 			}
 		}
-		require(publishedDependencyVersions.all { it == publishedVersion }) {
+		require(publishedDependencyVersions.all { it == kffiPublishedVersion }) {
 			"Expected every wgpu4k-native-jvm metadata edge to $kffiGroup:kffi " +
-				"to use $publishedVersion, but found $publishedDependencyVersions"
+				"to use $kffiPublishedVersion, but found $publishedDependencyVersions"
 		}
 
-		val pomFile = uniquePublishedFile(wgpuCoordinatePath, "wgpu4k-native-jvm", "pom")
+		val pomFile = uniquePublishedFile(wgpuCoordinatePath, "wgpu4k-native-jvm", "pom", publishedVersion)
 		val pom = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(pomFile)
 		val pomDependencies = pom.getElementsByTagName("dependency")
 		val kffiJvmDependencies = (0 until pomDependencies.length)
@@ -90,8 +91,8 @@ val verifyPublicationMetadata by tasks.registering {
 			.getElementsByTagName("version")
 			.item(0)
 			.textContent
-		require(pomDependencyVersion == publishedVersion) {
-			"Expected wgpu4k-native-jvm POM to depend on kffi-jvm $publishedVersion, " +
+		require(pomDependencyVersion == kffiPublishedVersion) {
+			"Expected wgpu4k-native-jvm POM to depend on kffi-jvm $kffiPublishedVersion, " +
 				"but found $pomDependencyVersion"
 		}
 	}

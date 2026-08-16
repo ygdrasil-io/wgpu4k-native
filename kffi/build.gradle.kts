@@ -219,16 +219,19 @@ android {
 group = "org.graphiks"
 
 val kffiVersion = providers.gradleProperty("kffi.version")
-    .orElse(System.getenv("KFFI_VERSION") ?: "1.0.0-SNAPSHOT")
-version = kffiVersion
+    .orElse(providers.environmentVariable("KFFI_VERSION"))
+    .orElse("1.0.0-SNAPSHOT")
+    .map { it.trim().ifEmpty { "1.0.0-SNAPSHOT" } }
+version = kffiVersion.get()
 
 afterEvaluate {
-	publishing {
-		publications.withType<MavenPublication>().all {
-			groupId = "org.graphiks"
-			version = kffiVersion.get()
-		}
-	}
+    // vanniktech freezes groupId/version at plugin-apply time; re-assert them post-evaluation so the kffi version chain wins.
+    publishing {
+        publications.withType<MavenPublication>().all {
+            groupId = "org.graphiks"
+            version = kffiVersion.get()
+        }
+    }
 }
 
 kotlin {
@@ -349,6 +352,7 @@ tasks.withType<Test>().configureEach {
 
 tasks.named<Test>("jvmTest") {
     jvmArgs("--enable-native-access=ALL-UNNAMED")
+    systemProperty("kffi.version", kffiVersion.get())
     when (callbackFixtureHost) {
         "macos", "linux" -> {
             val sharedLibrary = requireNotNull(callbackFixtureSharedLibrary)
