@@ -18,14 +18,33 @@ allprojects {
 val publicationVerificationRepository = layout.buildDirectory
 	.dir("publication-verification/repository")
 
+// kffi vit désormais dans Graphiks-org/kffi (split M4) : la version publiée est un
+// snapshot mavenLocal, pas un projet du repo hôte.
+val kffiPublishedVersion = "1.0.0-SNAPSHOT"
+val mavenLocalRepositoryDirectory = providers.gradleProperty("maven.repo.local")
+	.map(::File)
+	.getOrElse(File(System.getProperty("user.home"), ".m2/repository"))
+
 val cleanPublicationVerificationRepository by tasks.registering(Delete::class) {
 	delete(publicationVerificationRepository)
+}
+
+// Le repo hôte ne peut plus publier kffi dans le repo de vérification ; on y stage
+// les artifacts org.graphiks:kffi* publiés (mavenLocal) pour que les checks de
+// métadonnées et le consumer isolé puissent les résoudre.
+val stageKffiPublicationsFromMavenLocal by tasks.registering(Copy::class) {
+	group = "verification"
+	description = "Stages the published org.graphiks:kffi artifacts from mavenLocal into the verification repository"
+	from(mavenLocalRepositoryDirectory.resolve("org/graphiks"))
+	into(publicationVerificationRepository.get().asFile.resolve("org/graphiks"))
+	include("kffi*/$kffiPublishedVersion/**")
+	dependsOn(cleanPublicationVerificationRepository)
 }
 
 val verifyPublicationMetadata by tasks.registering {
 	group = "verification"
 	dependsOn(
-		":kffi:publishAllPublicationsToPublicationVerificationRepository",
+		stageKffiPublicationsFromMavenLocal,
 		":wgpu4k-native:publishAllPublicationsToPublicationVerificationRepository",
 	)
 	doLast {
@@ -35,7 +54,6 @@ val verifyPublicationMetadata by tasks.registering {
 		val kffiCoordinatePath = kffiGroup.replace('.', '/')
 		val wgpuCoordinatePath = wgpuGroup.replace('.', '/')
 		val publishedVersion = project.version.toString()
-		val kffiPublishedVersion = project(":kffi").version.toString()
 		fun uniquePublishedFile(coordinatePath: String, artifact: String, extension: String, version: String): File {
 			val versionDirectory = repository.resolve("$coordinatePath/$artifact/$version")
 			val candidates = versionDirectory.listFiles { file ->
@@ -100,7 +118,7 @@ val verifyPublicationMetadata by tasks.registering {
 
 tasks.register<GradleBuild>("verifyPublishedConsumer") {
 	group = "verification"
-	description = "Publishes KFFI and wgpu4k-native locally, then compiles an isolated consumer."
+	description = "Publishes wgpu4k-native locally (kffi staged from mavenLocal), then compiles an isolated consumer."
 	dependsOn(verifyPublicationMetadata)
 	dir = file("gradle/publication-consumer")
 	tasks = listOf("clean", "compileJava")

@@ -22,16 +22,14 @@ dependencyResolutionManagement {
 	repositories {
 		google()
 		mavenCentral()
+		// Snapshots kffi (org.graphiks:kffi:1.0.0-SNAPSHOT) — publiés par
+		// Graphiks-org/kffi (split M4). En local, mavenLocal() prime.
+		maven("https://oss.sonatype.org/content/repositories/snapshots/")
 	}
 }
 
 include("wgpu4k-native")
 include("wgpu4k-native-specs")
-include("kffi")
-include("kffi-benchmark-spi")
-include("kffi-benchmark-jvm")
-include("kffi-benchmark-native")
-include("kffi-benchmark-android")
 include("demo:common")
 include("demo:desktop-and-ios")
 include("demo:android")

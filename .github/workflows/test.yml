@@ -72,7 +72,6 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: >-
           ./gradlew -Pwgpu4k.jvmVerificationPublication=true
-          :kffi:publishJvmPublicationToMavenLocal
           :wgpu4k-native:publishJvmPublicationToMavenLocal
       - name: Verify published JVM consumer
         if: matrix.os == 'ubuntu-latest'
@@ -85,7 +84,7 @@ jobs:
           rm -f kextract/build/test-plan-completion/test.properties
           ./gradlew :kextract:test
       - name: Run targeted JVM callback tests
-        run: ./gradlew :kffi:jvmTest :wgpu4k-native:jvmTest :demo:common:jvmTest
+        run: ./gradlew :wgpu4k-native:jvmTest :demo:common:jvmTest
       - name: Prepare macOS Native dependencies
         if: matrix.os == 'macos-latest'
         run: >-
@@ -130,8 +129,6 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: >-
           ./gradlew
-          :kffi:compileKotlinIosX64 :kffi:compileKotlinIosArm64 :kffi:compileKotlinIosSimulatorArm64
-          :kffi:compileKotlinMacosArm64 :kffi:compileKotlinMacosX64
           :wgpu4k-native:compileKotlinIosX64 :wgpu4k-native:compileKotlinIosArm64
           :wgpu4k-native:compileKotlinIosSimulatorArm64
           :wgpu4k-native:compileKotlinMacosArm64 :wgpu4k-native:compileKotlinMacosX64
@@ -140,33 +137,31 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: >-
           ./gradlew
-          :kffi:compileKotlinLinuxX64 :kffi:compileKotlinLinuxArm64
           :wgpu4k-native:compileKotlinLinuxX64 :wgpu4k-native:compileKotlinLinuxArm64
           -x :wgpu4k-native:fetch-native-dependencies
       - name: Compile MinGW callback token codecs
         if: matrix.os == 'windows-latest'
         run: >-
           ./gradlew
-          :kffi:compileKotlinMingwX64
           :wgpu4k-native:compileKotlinMingwX64
           -x :wgpu4k-native:fetch-native-dependencies
       - name: Run macOS Native tests
         if: matrix.os == 'macos-latest'
         run: |
           if [[ "$(uname -m)" == "arm64" ]]; then
-            ./gradlew :kffi:macosArm64Test :wgpu4k-native:macosArm64Test -x :wgpu4k-native:fetch-native-dependencies
+            ./gradlew :wgpu4k-native:macosArm64Test -x :wgpu4k-native:fetch-native-dependencies
           else
-            ./gradlew :kffi:macosX64Test :wgpu4k-native:macosX64Test -x :wgpu4k-native:fetch-native-dependencies
+            ./gradlew :wgpu4k-native:macosX64Test -x :wgpu4k-native:fetch-native-dependencies
           fi
       - name: Run Linux Native tests
         if: matrix.os == 'ubuntu-latest'
         run: >-
-          ./gradlew :kffi:linuxX64Test :wgpu4k-native:linuxX64Test
+          ./gradlew :wgpu4k-native:linuxX64Test
           -x :wgpu4k-native:fetch-native-dependencies
       - name: Run Windows Native tests
         if: matrix.os == 'windows-latest'
         run: >-
-          ./gradlew :kffi:mingwX64Test :wgpu4k-native:mingwX64Test
+          ./gradlew :wgpu4k-native:mingwX64Test
           -x :wgpu4k-native:fetch-native-dependencies
       - name: Verify binding-generation configuration
         run: ./gradlew :wgpu4k-native:verifyBindingGenerationConfiguration

@@ -15,6 +15,8 @@ dependencyResolutionManagement {
                 ignoreGradleMetadataRedirection()
             }
         }
+        // Snapshots kffi (org.graphiks:kffi-jvm:1.0.0-SNAPSHOT) — publiés par Graphiks-org/kffi.
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
         mavenCentral()
     }
 }

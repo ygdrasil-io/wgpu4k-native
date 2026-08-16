@@ -4,6 +4,8 @@ import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.CInteropProcess
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinNativeCompile
 import java.nio.file.Files
 
 plugins {
@@ -79,7 +81,9 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api(project(":kffi"))
+                // kffi est publié par Graphiks-org/kffi (split M4) ; l'artifact racine
+                // org.graphiks:kffi résout la variante de plateforme (jvm/android/native).
+                api("org.graphiks:kffi:1.0.0-SNAPSHOT")
             }
         }
 
@@ -454,6 +458,18 @@ tasks.register("verifyJvmBootstrapBinding") {
 tasks.named("compileKotlinJvm") {
     dependsOn("generateBindingsFromHeader")
 }
+// AGP registers compileDebugKotlinAndroid lazily, so match by name with a live collection.
+tasks.withType<KotlinCompile>()
+    .matching { it.name == "compileDebugKotlinAndroid" }
+    .configureEach {
+        dependsOn("generateBindingsFromHeader")
+    }
+// KMP native compile tasks are registered lazily too (main compiles only).
+tasks.withType<KotlinNativeCompile>()
+    .matching { it.name.startsWith("compileKotlin") }
+    .configureEach {
+        dependsOn("generateBindingsFromHeader")
+    }
 tasks.named("verifyJvmBootstrapBinding") {
     dependsOn("generateBindingsFromHeader")
 }
