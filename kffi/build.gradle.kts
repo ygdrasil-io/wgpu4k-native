@@ -80,6 +80,58 @@ val compileCallbackFixtureShared = callbackFixtureSharedLibrary?.let { sharedLib
     }
 }
 
+val downcallFixtureSource = layout.projectDirectory.file("src/ffiTest/resources/downcall_fixture.c")
+val downcallFixtureHeader = layout.projectDirectory.file("src/ffiTest/resources/downcall_fixture.h")
+val downcallFixtureOutputDirectory = layout.buildDirectory.dir("downcall-fixture")
+val downcallFixtureHost = providers.gradleProperty("kffi.downcallFixture.hostForTest")
+    .orNull
+    ?.lowercase()
+    ?: when {
+        System.getProperty("os.name").contains("mac", ignoreCase = true) -> "macos"
+        System.getProperty("os.name").contains("linux", ignoreCase = true) -> "linux"
+        System.getProperty("os.name").contains("windows", ignoreCase = true) -> "windows"
+        else -> error("Unsupported downcall fixture host: ${System.getProperty("os.name")}")
+    }
+require(downcallFixtureHost in setOf("macos", "linux", "windows")) {
+    "Unsupported downcall fixture host override: $downcallFixtureHost"
+}
+val downcallFixtureSharedLibrary = when (downcallFixtureHost) {
+    "macos" -> downcallFixtureOutputDirectory.map { it.file("libdowncall_fixture.dylib") }
+    "linux" -> downcallFixtureOutputDirectory.map { it.file("libdowncall_fixture.so") }
+    "windows" -> null
+    else -> error("Unsupported downcall fixture host: $downcallFixtureHost")
+}
+val compileDowncallFixtureShared = downcallFixtureSharedLibrary?.let { sharedLibrary ->
+    tasks.register<Exec>("compileDowncallFixtureShared") {
+        group = "verification"
+        description = "Compiles the scalar/pointer downcall C fixture for JVM FFM engine tests."
+        inputs.files(downcallFixtureSource, downcallFixtureHeader)
+        outputs.file(sharedLibrary)
+        doFirst {
+            downcallFixtureOutputDirectory.get().asFile.mkdirs()
+        }
+        commandLine(
+            buildList {
+                addAll(listOf("cc", "-std=c11", "-fPIC"))
+                add(
+                    when (downcallFixtureHost) {
+                        "macos" -> "-dynamiclib"
+                        "linux" -> "-shared"
+                        else -> error("No shared downcall fixture on $downcallFixtureHost")
+                    },
+                )
+                addAll(
+                    listOf(
+                        downcallFixtureSource.asFile.absolutePath,
+                        "-o",
+                        sharedLibrary.get().asFile.absolutePath,
+                    ),
+                )
+            },
+        )
+    }
+}
+
 val compileCallbackFixtureObject = if (callbackFixtureHost == "macos") {
     tasks.register<Exec>("compileCallbackFixtureObject") {
         group = "verification"
@@ -300,6 +352,9 @@ tasks.named<Test>("jvmTest") {
             dependsOn(requireNotNull(compileCallbackFixtureWatchdogProbe))
             inputs.file(sharedLibrary)
             inputs.file(watchdogProbe)
+            val downcallSharedLibrary = requireNotNull(downcallFixtureSharedLibrary)
+            dependsOn(requireNotNull(compileDowncallFixtureShared))
+            inputs.file(downcallSharedLibrary)
             doFirst {
                 systemProperty(
                     "kffi.callback.fixture.library",
@@ -309,6 +364,10 @@ tasks.named<Test>("jvmTest") {
                     "kffi.callback.fixture.watchdog.probe",
                     watchdogProbe.get().asFile.absolutePath,
                 )
+                systemProperty(
+                    "kffi.downcall.fixture.library",
+                    downcallSharedLibrary.get().asFile.absolutePath,
+                )
             }
         }
 
@@ -316,6 +375,7 @@ tasks.named<Test>("jvmTest") {
             // callback_fixture.c requires pthreads; keep every other JVM test in Windows CI.
             excludeTestsMatching("org.graphiks.kffi.CallbackFfiJvmTest")
             excludeTestsMatching("org.graphiks.kffi.CallbackFixtureWatchdogJvmTest")
+            excludeTestsMatching("org.graphiks.kffi.engine.JvmDowncallEngineTest")
         }
     }
 }
