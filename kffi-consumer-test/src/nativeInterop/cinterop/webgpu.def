@@ -12,6 +12,9 @@
 
 staticLibraries.macos_arm64 = libconsumer.a
 
+# Les libraryPaths se résolvent par rapport au répertoire du projet consumer
+# (kffi-consumer-test/) : `./build/native-libs/` présuppose `buildDir` sous le
+# projet — fragile si le répertoire de build est relocalisé (-PbuildDir=…).
 libraryPaths.macos_arm64 = ./build/native-libs/
 
 # kextract passe des CPointer aux fonctions `const char*` (CString kffi) :

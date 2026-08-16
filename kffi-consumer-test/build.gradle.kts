@@ -56,7 +56,8 @@ kotlin {
         }
     }
 
-    // Toolchain >= jvmTarget 24 (kffi requiert JDK 24+ pour java.lang.foreign)
+    // Toolchain 25 (>= jvmTarget 24 requis par kffi pour java.lang.foreign) :
+    // on compile en JVM_24 avec un toolchain plus récent (contrainte FFM restreinte).
     jvmToolchain(25)
 }
 
@@ -94,9 +95,11 @@ tasks.register<Exec>("compileConsumerObject") {
 
 tasks.register<Exec>("archiveConsumerStaticLib") {
     dependsOn("compileConsumerObject")
+    inputs.file(consumerObjectFile)
     outputs.file(consumerStaticLib)
-    // `ar` du PATH peut être GNU binutils (homebrew) — ses archives sont rejetées
-    // par ld (Apple) : utiliser l'ar du toolchain Xcode quand il est disponible.
+    // Résolution de `ar` via le toolchain Xcode — REQUISE sur macOS : l'ar du
+    // PATH peut être GNU binutils (homebrew), dont les archives sont rejetées
+    // par ld (Apple). Pas de fallback : ce build cible jvm + macosArm64.
     val appleAr = providers.exec { commandLine("xcrun", "--find", "ar") }
         .standardOutput.asText.map { it.trim() }
     executable(appleAr.get())
@@ -105,6 +108,7 @@ tasks.register<Exec>("archiveConsumerStaticLib") {
 
 tasks.register<Exec>("linkConsumerSharedLib") {
     dependsOn("compileConsumerObject")
+    inputs.file(consumerObjectFile)
     outputs.file(consumerSharedLib)
     commandLine("cc", "-shared", "-fPIC", "-o", consumerSharedLib.get(), consumerObjectFile.get())
 }

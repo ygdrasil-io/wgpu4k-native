@@ -1,3 +1,6 @@
+// NOTE (mainteneur) : fichier généré par `kextract --multiplatform` — le consumer
+// ne déclare AUCUN target android, ce fichier n'est donc jamais compilé ; il est
+// conservé pour la parité avec la sortie du générateur (regénération idempotente).
 package consumer
 
 import org.graphiks.kffi.NativeAddress
