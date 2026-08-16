@@ -101,17 +101,32 @@ git commit -m "perf(kffi): lightweight unsafe-mode close guard via allocator-own
 **Files:**
 - Modify: `kffi-benchmark-jvm/src/jmh/kotlin/org/graphiks/kffi/benchmark/jvm/MarshalingBenchmarks.kt` (axes existants scalarSafe/scalarUnsafe)
 
-- [ ] **Step 1: Lancer le smoke des axes scalarSafe/scalarUnsafe**
+- [x] **Step 1: Lancer le smoke des axes scalarSafe/scalarUnsafe**
 
 Run: `./gradlew :kffi-benchmark-jvm:jmhJar` puis `java -jar ... "MarshalingBenchmarks" -f 1 -wi 3 -i 5`
 Expected: comparer scalarSafe vs scalarUnsafe — objectif : unsafe ≤ safe (ou écart < 0.3 ns).
 
-- [ ] **Step 2: Analyser**
+Résultat M1.2 (post-M1.1, même config que P3 : avgt, wi=3, i=5, 1s, fork=2, serial) :
 
-Si unsafe > safe encore : documenter le chemin restant (le sun.misc.Unsafe lui-même peut coûter plus que le check FFM JIT-éliminé — dans ce cas la conclusion P3/P4 reste : le mode unsafe JVM est une surface API, pas une optimisation, et l'objectif P5 est de réduire l'écart au minimum).
-Si unsafe ≤ safe : la décision d'optimiser est validée.
+| axe | P3 (avant M1.1) | M1.2 (après) | Δ |
+|---|---|---|---|
+| scalarSafe | 1,83 ± 0,01 ns | 1,842 ± 0,010 ns | ~0 (bruit) |
+| scalarUnsafe | 2,53 ns | 2,136 ± 0,071 ns | **-0,39 ns (-15%)** |
+| écart | 0,70 ns (27,6%) | **0,294 ns (~16%)** | -0,41 ns |
 
-- [ ] **Step 3: Commit (si changements de benchmark)**
+Smoke (f1, wi3, i5) : scalarSafe 1,984 ± 0,027 vs scalarUnsafe 2,198 ± 0,008 — écart 0,214 ns, même direction. Intervalles de confiance disjoints (1,842±0,010 vs 2,136±0,071) — l'écart résiduel est réel.
+
+- [x] **Step 2: Analyser**
+
+**Verdict : unsafe > safe encore, mais objectif d'écart atteint.** L'optimisation M1.1 est **partiellement validée** :
+- Le gap a fondu de 0,70 ns → 0,29 ns (sous le seuil 0,3 ns de l'objectif) ; le chemin unsafe gagne -0,39 ns (-15%), l'écart relatif passe de 27,6% à ~16%.
+- scalarSafe est inchangé (1,83 → 1,84 ns) — confirme la conclusion d'escape-analysis P4 : le check de la voie sûre est JIT-éliminé, le plancher ~1,8 ns est le write+read FFM nu.
+- **Chemin restant documenté** : le résidu ~0,29 ns est le coût du chemin `sun.misc.Unsafe` lui-même (le JVM check de l'appel Unsafe), pas la garde de close (désormais 1 load volatil). La conclusion P3/P4 tient : **le mode unsafe JVM est une surface API, pas une optimisation** — l'objectif P5 (réduire l'écart au minimum) est atteint à ~0,29 ns près du plancher.
+- Machine flakiness P3/P4 respectée : run serial (-t 1), même config, smoke f1 puis confirmation fork=2.
+
+- [x] **Step 3: Commit (si changements de benchmark)**
+
+Aucun changement de benchmark nécessaire — les axes existaient déjà et n'ont pas eu besoin d'adaptation. Résultat documenté dans ce plan (commit docs).
 
 ```bash
 git add kffi-benchmark-jvm/src/jmh/kotlin/org/graphiks/kffi/benchmark/jvm/MarshalingBenchmarks.kt
