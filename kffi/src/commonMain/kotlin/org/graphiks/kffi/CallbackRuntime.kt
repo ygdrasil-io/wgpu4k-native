@@ -5,7 +5,6 @@
 
 package org.graphiks.kffi
 
-import kotlin.concurrent.atomics.AtomicArray
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.AtomicLong
 import kotlin.concurrent.atomics.AtomicReference
