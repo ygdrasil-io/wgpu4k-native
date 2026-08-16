@@ -1,0 +1,6 @@
+[
+  {"axis": "DOWNCALL", "scenario": "downcall.empty", "backend": "native-macosArm64", "nsPerOp": 11.24, "variant": "bounded"},
+  {"axis": "MARSHALING", "scenario": "marshaling.array_i32_16", "backend": "native-macosArm64", "nsPerOp": 3036.82, "variant": "bounded"},
+  {"axis": "DOWNCALL", "scenario": "downcall.empty", "backend": "native-macosArm64", "nsPerOp": 10.42, "variant": "unsafe"},
+  {"axis": "MARSHALING", "scenario": "marshaling.array_i32_16", "backend": "native-macosArm64", "nsPerOp": 2784.79, "variant": "unsafe"}
+]
