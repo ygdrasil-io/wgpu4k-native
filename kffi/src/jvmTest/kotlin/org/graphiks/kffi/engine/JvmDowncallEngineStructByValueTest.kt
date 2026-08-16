@@ -117,4 +117,47 @@ class JvmDowncallEngineStructByValueTest : FreeSpec({
             JvmDowncallEngine.structLayout("Broken")
         }
     }
+
+    "re-registering a struct layout rebuilds the cached downcall handle descriptor" {
+        // La clé du handleCache porte une version du layout : une re-registration de
+        // "Box" doit invalider le MethodHandle construit avec l'ancien descripteur,
+        // sinon le wrapper continuerait à marshaller l'ancienne taille (ici 8 octets
+        // découpés depuis un segment d'argument de 4 octets → IndexOutOfBoundsException).
+        MemoryAllocator().use { allocator ->
+            val box = allocator.allocateBuffer(8uL)
+            box.writeInt(20, 0uL)
+            box.writeInt(22, 4uL)
+            JvmDowncallEngine.callStructArgBox(
+                JvmDowncallFixture.symbol("bench_consume_box"),
+                box.handler.rawValue,
+            )
+            JvmDowncallEngine.callI0(JvmDowncallFixture.symbol("bench_consume_box_get")) shouldBe 42L
+
+            JvmDowncallEngine.registerStructLayout(
+                "Box",
+                sizeBytes = 4L,
+                alignmentBytes = 4L,
+                fields = listOf(
+                    JvmDowncallEngine.StructField("a", JvmDowncallEngine.FieldKind.INT32, 0L),
+                ),
+            )
+            val narrow = allocator.allocateBuffer(4uL)
+            narrow.writeInt(20, 0uL)
+            JvmDowncallEngine.callStructArgBox(
+                JvmDowncallFixture.symbol("bench_consume_box"),
+                narrow.handler.rawValue,
+            )
+
+            // Restaure le layout canonique pour les autres tests de la classe.
+            JvmDowncallEngine.registerStructLayout(
+                "Box",
+                sizeBytes = 8L,
+                alignmentBytes = 4L,
+                fields = listOf(
+                    JvmDowncallEngine.StructField("a", JvmDowncallEngine.FieldKind.INT32, 0L),
+                    JvmDowncallEngine.StructField("b", JvmDowncallEngine.FieldKind.INT32, 4L),
+                ),
+            )
+        }
+    }
 })

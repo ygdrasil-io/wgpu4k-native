@@ -60,7 +60,7 @@ object JvmDowncallEngine {
         const val S_RET_BOX = 19
     }
 
-    /** MéthodeHandle par (adresse de fonction, forme) ; borné par les adresses résolues. */
+    /** MéthodeHandle par (adresse de fonction, forme, version de layout). */
     private val handleCache = java.util.concurrent.ConcurrentHashMap<Long, MethodHandle>()
 
     fun resolveSymbol(name: String): Long = findOrThrow(name)
@@ -68,11 +68,19 @@ object JvmDowncallEngine {
     private fun segment(address: Long): MemorySegment =
         MemorySegment.ofAddress(address)
 
-    private fun handle(fn: Long, shapeId: Int, descriptor: FunctionDescriptor): MethodHandle {
+    /**
+     * Clé de [handleCache] : `(fn shl 16) or (layoutVersion shl 8) or shapeId` —
+     * shapeId en bits 0-7, version du layout struct en bits 8-15, adresse en bits
+     * 16+. L'encodage est injectif (plages disjointes, décalage sans perte pour les
+     * adresses alignées page) : la version du layout fait partie de la forme, donc
+     * une re-registration (registerStructLayout) construit un nouveau MethodHandle
+     * au lieu de réutiliser celui du descripteur précédent (corruption ABI silencieuse
+     * sinon). Les formes scalaires passent version 0.
+     */
+    private fun handle(fn: Long, shapeId: Int, descriptor: FunctionDescriptor, layoutVersion: Int = 0): MethodHandle {
         require(fn != 0L) { "Cannot downcall through null function address" }
-        // (fn shl 8) est sans perte : les adresses de fonction sont alignées page,
-        // les 8 bits bas sont toujours à zéro.
-        return handleCache.computeIfAbsent((fn shl 8) or shapeId.toLong()) {
+        val key = (fn shl 16) or (layoutVersion.toLong() shl 8) or shapeId.toLong()
+        return handleCache.computeIfAbsent(key) {
             linker.downcallHandle(segment(fn), descriptor)
         }
     }
@@ -177,6 +185,13 @@ object JvmDowncallEngine {
     private val structAlignments = java.util.concurrent.ConcurrentHashMap<String, Long>()
 
     /**
+     * Version par struct, incrémentée à chaque [registerStructLayout] : elle fait
+     * partie de la clé de [handleCache] (bits 8-15) pour que les wrappers
+     * struct-by-value reconstruisent le MethodHandle quand le descripteur change.
+     */
+    private val layoutVersions = java.util.concurrent.ConcurrentHashMap<String, Int>()
+
+    /**
      * Enregistre les métadonnées de layout d'un struct par valeur, émises par le
      * code généré (kextract) au chargement du fichier de bindings. Les champs
      * [StructField] portent le type ([FieldKind]) et, pour PADDING, la TAILLE du
@@ -187,8 +202,11 @@ object JvmDowncallEngine {
     fun registerStructLayout(name: String, sizeBytes: Long, alignmentBytes: Long, fields: List<StructField>) {
         structLayouts[name] = sizeBytes to fields
         structAlignments[name] = alignmentBytes
+        layoutVersions[name] = (layoutVersions[name] ?: 0) + 1
         structDescriptors.remove(name)
     }
+
+    private fun layoutVersion(name: String): Int = layoutVersions[name] ?: 0
 
     private val structDescriptors = java.util.concurrent.ConcurrentHashMap<String, MemoryLayout>()
 
@@ -240,13 +258,13 @@ object JvmDowncallEngine {
 
     fun callStructArgBox(fn: Long, structPtr: Long) {
         val layout = structLayout("Box")
-        val handle = handle(fn, ShapeId.S_ARG_BOX, FunctionDescriptor.ofVoid(layout))
+        val handle = handle(fn, ShapeId.S_ARG_BOX, FunctionDescriptor.ofVoid(layout), layoutVersion("Box"))
         handle.invokeExact(segment(structPtr).reinterpret(layout.byteSize()))
     }
 
     fun callStructReturnBox(fn: Long, allocator: MemoryAllocator, a1: Int): NativeAddress {
         val layout = structLayout("Box")
-        val handle = handle(fn, ShapeId.S_RET_BOX, FunctionDescriptor.of(layout, ValueLayout.JAVA_INT))
+        val handle = handle(fn, ShapeId.S_RET_BOX, FunctionDescriptor.of(layout, ValueLayout.JAVA_INT), layoutVersion("Box"))
         val segmentAllocator: SegmentAllocator = allocator.arena
         val result = handle.invokeExact(segmentAllocator, a1) as MemorySegment
         return NativeAddress(result.address())
