@@ -19,12 +19,11 @@ import java.lang.foreign.MemorySegment
 import java.lang.foreign.SymbolLookup
 import java.lang.foreign.ValueLayout
 import java.lang.invoke.MethodHandle
-import java.lang.invoke.MethodHandles
-import java.lang.invoke.MethodType
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.time.Duration.Companion.seconds
+import org.graphiks.kffi.engine.JvmUpcallEngine
 
 private const val MANY_CALLBACK_COUNT = 1_000
 
@@ -43,75 +42,53 @@ private object JvmFfiTrampolines {
     val rearmedNoUserdataType =
         CallbackType<JvmFfiCallback>("ffi-jvm-no-userdata-rearmed", hasRoutingUserdata = false)
 
-    private val linker = Linker.nativeLinker()
-    private val lookup = MethodHandles.lookup()
-    private val callbackDescriptor = FunctionDescriptor.ofVoid(
-        ValueLayout.JAVA_INT,
-        ValueLayout.ADDRESS,
-        ValueLayout.ADDRESS,
-    )
-    private val noUserdataDescriptor = FunctionDescriptor.ofVoid(ValueLayout.JAVA_INT)
+    // Stubs fabriqués par JvmUpcallEngine (resolve de la méthode de dispatch
+    // via privateLookupIn) ; le moteur ne route pas — le dispatchSafely par
+    // token reste ici, le userdata occupant sa position C réelle (dernier
+    // paramètre, carrier long).
+    val routedStub: NativeAddress by lazy {
+        JvmUpcallEngine.allocateTrampoline(
+            dispatcherClass = JvmFfiTrampolines::class.java,
+            dispatchMethod = "dispatchRouted",
+            dispatchSig = "(IJJ)V",
+        )
+    }
 
-    val routedStub: NativeAddress = NativeAddress(
-        linker.upcallStub(
-            lookup.findStatic(
-                JvmFfiTrampolines::class.java,
-                "route",
-                MethodType.methodType(
-                    Void.TYPE,
-                    Integer.TYPE,
-                    MemorySegment::class.java,
-                    MemorySegment::class.java,
-                ),
-            ),
-            callbackDescriptor,
-            Arena.global(),
-        ).address(),
-    )
+    val retiredNoUserdataStub: NativeAddress by lazy {
+        JvmUpcallEngine.allocateTrampoline(
+            dispatcherClass = JvmFfiTrampolines::class.java,
+            dispatchMethod = "dispatchRetiredNoUserdata",
+            dispatchSig = "(I)V",
+        )
+    }
 
-    val retiredNoUserdataStub: NativeAddress = NativeAddress(
-        linker.upcallStub(
-            lookup.findStatic(
-                JvmFfiTrampolines::class.java,
-                "routeRetiredNoUserdata",
-                MethodType.methodType(Void.TYPE, Integer.TYPE),
-            ),
-            noUserdataDescriptor,
-            Arena.global(),
-        ).address(),
-    )
-
-    val rearmedNoUserdataStub: NativeAddress = NativeAddress(
-        linker.upcallStub(
-            lookup.findStatic(
-                JvmFfiTrampolines::class.java,
-                "routeRearmedNoUserdata",
-                MethodType.methodType(Void.TYPE, Integer.TYPE),
-            ),
-            noUserdataDescriptor,
-            Arena.global(),
-        ).address(),
-    )
+    val rearmedNoUserdataStub: NativeAddress by lazy {
+        JvmUpcallEngine.allocateTrampoline(
+            dispatcherClass = JvmFfiTrampolines::class.java,
+            dispatchMethod = "dispatchRearmedNoUserdata",
+            dispatchSig = "(I)V",
+        )
+    }
 
     @JvmStatic
-    fun route(
+    fun dispatchRouted(
         value: Int,
-        @Suppress("UNUSED_PARAMETER") applicationUserdata: MemorySegment,
-        routingUserdata: MemorySegment,
+        @Suppress("UNUSED_PARAMETER") applicationUserdata: Long,
+        routingUserdata: Long,
     ) {
         CallbackRuntime.dispatchSafely(
             routedType,
-            routingUserdata.toNativeAddress(),
+            routingUserdata.takeIf { it != 0L }?.let(::NativeAddress),
         ) { it.invoke(value) }
     }
 
     @JvmStatic
-    fun routeRetiredNoUserdata(value: Int) {
+    fun dispatchRetiredNoUserdata(value: Int) {
         CallbackRuntime.dispatchSafely(retiredNoUserdataType, null) { it.invoke(value) }
     }
 
     @JvmStatic
-    fun routeRearmedNoUserdata(value: Int) {
+    fun dispatchRearmedNoUserdata(value: Int) {
         CallbackRuntime.dispatchSafely(rearmedNoUserdataType, null) { it.invoke(value) }
     }
 }
