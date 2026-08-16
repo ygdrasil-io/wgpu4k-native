@@ -913,3 +913,13 @@ git commit -m "bench(kffi): P3 re-baseline reports (bounds-check overhead, JVM +
 - **P5** — kextract générique, release `org.graphiks:kffi-*`, migration finale.
 - Décision I2-(b) (UB post-close partout) : rejetée en P2 — le mode unsafe JVM garde la garde de close légère (recommandation M4.2).
 - Basculer la constante native à la compilation : doc dans le KDoc + cette annexe (pas de tâche CI multi-variantes en P3).
+
+---
+
+## Annexe — Notes P4 (optimisations identifiées en M4.2, hors scope P3)
+
+- **Chemin unsafe JVM array** : remplacer la boucle élément-par-élément par un `Unsafe.copyMemory` bulk (pas de contrainte ART côté JVM) — hot path du mode unsafe.
+- **Hoisting du `when (elementSize)`** hors du `repeat(count)` (JVM unsafe array loops) — pattern Android déjà hoisté.
+- **Centraliser la branche dual-path** des 20 accesseurs scalaires JVM (helper `access(offset, width, safeBlock, unsafeBlock)`) — réduit la surface de drift.
+- **Cas Float/Double des tableaux unsafe** : ajouter un round-trip de test dédié (le code est correct, la garantie est non testée).
+- Migrer `sun.misc.Unsafe` (dépréciation terminale JDK 23+) vers `jdk.internal.misc.Unsafe` (`--add-opens java.base/jdk.internal.misc`) ou FFM raw segments quand nécessaire.
