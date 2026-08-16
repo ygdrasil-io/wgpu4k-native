@@ -26,8 +26,8 @@ import kotlinx.cinterop.value
 /**
  * Constante compilée : les distributions native sont figées à la compilation
  * (I3, P3) — la valeur du flag runtime est ignorée au profit de cette constante.
- * Basculer à la compilation : définir KFFI_NATIVE_UNSAFE=true dans la tâche
- * cinterop/native du module (voir build.gradle.kts).
+ * Basculer à la compilation : éditer la constante `KFFI_NATIVE_UNSAFE` en tête
+ * de ce fichier puis recompiler le module.
  */
 private const val KFFI_NATIVE_UNSAFE: Boolean = false
 
@@ -172,7 +172,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ByteVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ByteVar>())
 
         val buffer = getPointerAtOffset<ByteVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -186,7 +186,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ByteVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ByteVar>())
 
         val buffer = getPointerAtOffset<ByteVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -200,7 +200,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UByteVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UByteVar>())
 
         val buffer = getPointerAtOffset<UByteVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -214,7 +214,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UByteVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UByteVar>())
 
         val buffer = getPointerAtOffset<UByteVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -228,7 +228,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ShortVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ShortVar>())
 
         val buffer = getPointerAtOffset<ShortVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -242,7 +242,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ShortVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ShortVar>())
 
         val buffer = getPointerAtOffset<ShortVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -256,7 +256,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UShortVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UShortVar>())
 
         val buffer = getPointerAtOffset<UShortVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -270,7 +270,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UShortVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UShortVar>())
 
         val buffer = getPointerAtOffset<UShortVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -285,7 +285,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<IntVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<IntVar>())
 
         val buffer = getPointerAtOffset<IntVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -299,7 +299,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<IntVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<IntVar>())
 
         val buffer = getPointerAtOffset<IntVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -313,7 +313,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UIntVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UIntVar>())
 
         val buffer = getPointerAtOffset<UIntVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -327,7 +327,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UIntVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<UIntVar>())
 
         val buffer = getPointerAtOffset<UIntVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -341,7 +341,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<LongVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<LongVar>())
 
         val buffer = getPointerAtOffset<LongVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -355,7 +355,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<LongVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<LongVar>())
 
         val buffer = getPointerAtOffset<LongVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -369,7 +369,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ULongVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ULongVar>())
 
         val buffer = getPointerAtOffset<ULongVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -383,7 +383,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ULongVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<ULongVar>())
 
         val buffer = getPointerAtOffset<ULongVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -397,7 +397,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<FloatVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<FloatVar>())
 
         val buffer = getPointerAtOffset<FloatVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -411,7 +411,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<FloatVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<FloatVar>())
 
         val buffer = getPointerAtOffset<FloatVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -425,7 +425,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<DoubleVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<DoubleVar>())
 
         val buffer = getPointerAtOffset<DoubleVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -439,7 +439,7 @@ actual class MemoryBuffer actual constructor(
         bufferOffset: ULong,
         size: ULong
     ) {
-        boundCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<DoubleVar>())
+        boundsCheck(bufferOffset, size, arrayIndex, array.size, sizeOf<DoubleVar>())
 
         val buffer = getPointerAtOffset<DoubleVar>(bufferOffset)
         (0 until size.toInt()).forEach { index ->
@@ -447,7 +447,7 @@ actual class MemoryBuffer actual constructor(
         }
     }
 
-    private fun boundCheck(
+    private fun boundsCheck(
         bufferOffset: ULong,
         size: ULong,
         arrayIndex: ULong,
