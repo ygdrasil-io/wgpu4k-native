@@ -2,7 +2,6 @@ package org.graphiks.kffi
 
 import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.Linker
-import java.lang.foreign.MemorySegment
 import java.lang.foreign.SymbolLookup
 import java.lang.foreign.ValueLayout
 import java.lang.invoke.MethodHandle
@@ -23,9 +22,11 @@ private val SYMBOL_LOOKUP by lazy {
         .or(Linker.nativeLinker().defaultLookup())
 }
 
-fun findOrThrow(symbol: String): MemorySegment {
+/** Résout un symbole et retourne son adresse brute (0 si introuvable). */
+fun findOrThrow(symbol: String): Long {
     return SYMBOL_LOOKUP.find(symbol)
         .orElseThrow { UnsatisfiedLinkError("unresolved symbol: $symbol") }
+        .address()
 }
 
 fun upcallHandle(fi: Class<*>?, name: String?, fdesc: FunctionDescriptor): MethodHandle {
