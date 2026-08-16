@@ -17,6 +17,10 @@ This library uses the Firefox backend written in Rust, [available here](https://
 
 - [How to regenerate kextract bindings (C/ObjC headers)](doc/how_to_regenerate_kextract_bindings.md)
 
+## Dependencies
+
+- [kffi](https://github.com/Graphiks-org/kffi) — multiplatform FFI foundation (bindings generation via [kextract](https://github.com/klang-toolkit/kextract), runtime memory/callback layer). Consumed as published artifacts `org.graphiks:kffi` (currently `1.0.0-SNAPSHOT`; quickstart: https://github.com/Graphiks-org/kffi/blob/main/docs/quickstart.md)
+
 ## How to Run the demo
 
 1. On JVM: `./gradlew demo:desktop-and-ios:runJvm`
