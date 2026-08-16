@@ -43,6 +43,18 @@ class CallbackStateMachineTest : FreeSpec({
         machine.isQuiescent shouldBe true
     }
 
+    "ONCE packed claim carries inFlight 1 and leave preserves CLAIMED" {
+        val machine = DeliveryStateMachine(CallbackPolicy.ONCE)
+
+        machine.tryEnter() shouldBe true
+        machine.state shouldBe DeliveryState.CLAIMED
+        machine.inFlight shouldBe 1
+
+        machine.leave()
+        machine.state shouldBe DeliveryState.CLAIMED
+        machine.inFlight shouldBe 0
+    }
+
     "REPEATING close rejects new entries" {
         val machine = DeliveryStateMachine(CallbackPolicy.REPEATING)
 
@@ -75,6 +87,26 @@ class CallbackStateMachineTest : FreeSpec({
         machine.isQuiescent shouldBe false
         machine.leave()
         machine.isQuiescent shouldBe true
+    }
+
+    "REPEATING packed encoding keeps state ACTIVE while inFlight grows and shrinks" {
+        val machine = DeliveryStateMachine(CallbackPolicy.REPEATING)
+
+        machine.tryEnter() shouldBe true
+        machine.tryEnter() shouldBe true
+        machine.tryEnter() shouldBe true
+        machine.state shouldBe DeliveryState.ACTIVE
+        machine.inFlight shouldBe 3
+        machine.isClosed shouldBe false
+        machine.isQuiescent shouldBe false
+
+        machine.leave()
+        machine.state shouldBe DeliveryState.ACTIVE
+        machine.inFlight shouldBe 2
+
+        machine.close() shouldBe true
+        machine.state shouldBe DeliveryState.CLOSED
+        machine.inFlight shouldBe 2
     }
 
     "leaving without an acquisition preserves closed quiescence" {
