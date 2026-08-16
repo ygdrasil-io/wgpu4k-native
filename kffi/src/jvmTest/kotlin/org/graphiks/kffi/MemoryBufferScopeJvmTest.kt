@@ -27,11 +27,9 @@ class MemoryBufferScopeJvmTest : FreeSpec({
     "unsafe buffer from raw address has no scope" {
         // I2-(a) : un buffer construit depuis une adresse brute ne porte AUCUN scope
         // d'arène -> les accès ne lèvent pas IllegalStateException (contrairement au
-        // chemin scopé). Le chunk natif de l'arène fermée ne doit PAS être écrit
+        // chemin scopé). Un chunk natif d'arène fermée ne doit PAS être écrit
         // (use-after-free, UB documenté) : le buffer est construit sur un chunk natif
         // stable via une arène distincte, encore vivante pendant le test.
-        val allocator = MemoryAllocator()
-        allocator.close()
         val stable = Arena.ofAuto()
         val chunk = stable.allocate(16L)
         val buffer = MemoryBuffer(NativeAddress(chunk.address()), 16u)
