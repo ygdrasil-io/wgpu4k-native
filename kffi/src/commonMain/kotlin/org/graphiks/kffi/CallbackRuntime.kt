@@ -496,6 +496,21 @@ object CallbackRuntime {
         return registration
     }
 
+    /**
+     * Dispatch sécurisé d'un upcall natif : point d'entrée du moteur
+     * d'upcall. Aucun Throwable ne s'échappe vers la native — tout est
+     * contenu et routé vers l'un des deux canaux de signalement :
+     *
+     * - échecs de routage et d'entrée (route, tryEnter, unpublish ONCE)
+     *   → reportUnroutedFailure ;
+     * - échecs du callback et du leave → reportDeliveryFailure(onError).
+     *
+     * Le leave est gardé par le try/finally interne : il tourne au plus
+     * une fois, uniquement après un tryEnter réussi, et son propre échec
+     * est contenu (jamais propagé, donc jamais masquant) — signalé via
+     * onError. Un token inconnu ou un tryEnter échoué est un no-op
+     * silencieux : return sans effet de bord (ni leave, ni signalement).
+     */
     fun <C : Callback> dispatchSafely(
         type: CallbackType<C>,
         userdata: NativeAddress?,
@@ -504,6 +519,9 @@ object CallbackRuntime {
         try {
             val entry = route(type, userdata) ?: return
             if (!entry.lifecycle.tryEnter()) return
+            // ONCE : le retrait ne vient qu'après un claim réussi — un racer
+            // perdant ne dé-publie jamais. Si unpublish lance, l'entrée reste
+            // en CLAIMED sans leave (cas préexistant, comportement inchangé).
             if (entry.policy == CallbackPolicy.ONCE) unpublish(entry)
             try {
                 invoke(entry.callback)
