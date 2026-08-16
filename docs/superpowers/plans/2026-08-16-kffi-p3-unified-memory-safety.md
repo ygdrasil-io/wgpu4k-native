@@ -407,7 +407,7 @@ private fun boundsCheck(offset: ULong, width: Long) {
 }
 ```
 
-> **Notes de review M1.1/M2.1 (résolues)** : `MemoryBufferArrayTest` (commonTest) avait 30 assertions `shouldThrow<IllegalArgumentException>` sur les bornes de tableaux — **déjà migrées vers `IndexOutOfBoundsException` en M2.1** (commit 1ae5df3c, déclenchée par la migration native des tableaux). **Découverte M2.1** : le chemin **JVM array** (`writeArray`/`readArray` → `write()`/`read()` dans `MemoryBuffer.jvm.kt`) utilise aussi `require` → IllegalArgumentException ; seule la voie scalaire JVM hérite de l'IndexOutOfBoundsException FFM. **M3.1 doit donc aussi migrer les `require` des tableaux JVM**, sinon `MemoryBufferArrayTest` reste rouge sur JVM.
+> **Notes de review M1.1/M2.1/M3.1 (résolues/ajustées)** : `MemoryBufferArrayTest` (commonTest) avait 30 assertions `shouldThrow<IllegalArgumentException>` sur les bornes de tableaux — **déjà migrées vers `IndexOutOfBoundsException` en M2.1** (commit 1ae5df3c, déclenchée par la migration native des tableaux). **Découverte M2.1** : le chemin **JVM array** (`writeArray`/`readArray` → `write()`/`read()` dans `MemoryBuffer.jvm.kt`) utilise aussi `require` → IllegalArgumentException ; seule la voie scalaire JVM hérite de l'IndexOutOfBoundsException FFM. **La migration JVM array-require est déplacée en M4.2** (le double chemin unsafe JVM y est implémenté de toute façon — plus cohérent que M3.1, qui est android-only). **M3.1 (résolu)** : test Android du flag `unsafe` ajouté (`MemoryBufferUnsafeAndroidTest`, hors-bornes ne lève pas).
 
 - [ ] **Step 2: Remplacer les `require(...) { "Out of ... bounds" }` des tableaux**
 
