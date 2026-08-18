@@ -1,4 +1,4 @@
-# Kotlin/Native cinterop pour le consumer test (M3.2).
+# Kotlin/Native cinterop pour le consumer test.
 #
 # Le nom du fichier est CONTRAINT : les bindings native générés par kextract
 # référencent le paquet cinterop « webgpu.native.* » (classificateur codé en

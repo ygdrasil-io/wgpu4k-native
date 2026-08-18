@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stddef.h>
 
-/* Implémentation C du consumer test (M3.2). Compilée en lib partagée
+/* Implémentation C du consumer test. Compilée en lib partagée
  * (JVM : libconsumer.dylib via System.loadLibrary) et en lib statique
  * (native : cinterop/link statique). Toujours des symboles C linkage. */
 

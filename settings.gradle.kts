@@ -23,8 +23,14 @@ dependencyResolutionManagement {
 		google()
 		mavenCentral()
 		// Snapshots kffi (org.graphiks:kffi:1.0.0-SNAPSHOT) — publiés par
-		// Graphiks-org/kffi (split M4). En local, mavenLocal() prime.
-		maven("https://oss.sonatype.org/content/repositories/snapshots/")
+		// Graphiks-org/kffi via Central Portal.
+		maven {
+			name = "CentralPortalSnapshots"
+			url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+			content {
+				includeGroup("org.graphiks")
+			}
+		}
 	}
 }
 

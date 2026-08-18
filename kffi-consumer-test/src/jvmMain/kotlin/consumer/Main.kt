@@ -31,7 +31,7 @@ fun main() {
     unsafeBuffer.writeLong(1L, 64uL) // hors bornes : pas d'exception en unsafe
     unsafeAllocator.close()
 
-    // ── Bindings générés par kextract (M3.2) ─────────────────────────────────
+    // ── Bindings générés par kextract ────────────────────────────────────────
     // Appelle la lib native `consumer` (native/consumer.c, compilée par
     // `compileConsumerLib`) via les bindings consumer_h* générés depuis
     // headers/consumer.h. La lib est chargée par KextractNativeBootstrap

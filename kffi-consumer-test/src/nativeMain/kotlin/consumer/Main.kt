@@ -37,7 +37,7 @@ fun main() {
     check(outOfBoundsDetected)
     allocator.close()
 
-    // ── Bindings générés par kextract (M3.2) ─────────────────────────────────
+    // ── Bindings générés par kextract ────────────────────────────────────────
     // Appelle la lib `consumer` (native/consumer.c) via les bindings
     // consumer_h* générés depuis headers/consumer.h. Côté native les bindings
     // passent par le cinterop `webgpu.native.*` (webgpu.def) : la lib est liée

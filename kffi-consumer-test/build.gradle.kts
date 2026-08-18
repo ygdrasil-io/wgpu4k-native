@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.CInteropProcess
 
 plugins {
-    kotlin("multiplatform") version "2.3.21"
+    kotlin("multiplatform") version "2.4.10"
 }
 
 kotlin {
@@ -12,7 +12,7 @@ kotlin {
             jvmTarget = JvmTarget.JVM_24
         }
         // DSL KMP/JVM binaries (kotl.in/jvm-binaries-dsl) — remplace le plugin
-        // `application`, incompatible avec kotlin.multiplatform depuis Kotlin 2.3.
+        // `application`, incompatible avec le plugin Kotlin Multiplatform moderne.
         binaries {
             executable {
                 mainClass.set("consumer.MainKt")
@@ -66,7 +66,7 @@ tasks.withType<JavaExec>().configureEach {
     jvmArgs("--enable-native-access=ALL-UNNAMED")
 }
 
-// ── Lib native du consumer (M3.2) ────────────────────────────────────────────
+// ── Native consumer library ───────────────────────────────────────────────────
 // Compile headers/consumer.h (voir native/consumer.c) :
 //   - libconsumer.dylib  → chargée au run JVM (System.loadLibrary, java.library.path)
 //   - libconsumer.a      → liée statiquement au kexe natif (webgpu.def)

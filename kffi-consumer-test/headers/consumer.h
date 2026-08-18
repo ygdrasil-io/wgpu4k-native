@@ -2,9 +2,9 @@
 #define KFFI_CONSUMER_H
 
 /*
- * Header minimal du consumer test (M3.2) : transformé par kextract en
- * bindings KMP (src/commonMain|jvmMain|nativeMain). Les formes sont
- * choisies dans la table actuelle de JvmDowncallEngine (P2/M5.3) :
+ * Header minimal du consumer test : transformé par kextract en bindings KMP
+ * (src/commonMain|jvmMain|nativeMain). Les formes sont choisies dans la table
+ * actuelle de JvmDowncallEngine :
  *   - int → int                    (scalaire 32 bits)
  *   - const unsigned char* → int   (pointeur vers scalaire)
  *   - const unsigned char* → void  (pointeur entrant)

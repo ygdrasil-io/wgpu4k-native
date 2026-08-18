@@ -18,8 +18,8 @@ allprojects {
 val publicationVerificationRepository = layout.buildDirectory
 	.dir("publication-verification/repository")
 
-// kffi vit désormais dans Graphiks-org/kffi (split M4) : la version publiée est un
-// snapshot mavenLocal, pas un projet du repo hôte.
+// kffi est consommé comme une dépendance publiée par Graphiks-org/kffi,
+// indépendamment de la version du repo hôte.
 val kffiPublishedVersion = "1.0.0-SNAPSHOT"
 val mavenLocalRepositoryDirectory = providers.gradleProperty("maven.repo.local")
 	.map(::File)
@@ -29,9 +29,8 @@ val cleanPublicationVerificationRepository by tasks.registering(Delete::class) {
 	delete(publicationVerificationRepository)
 }
 
-// Le repo hôte ne peut plus publier kffi dans le repo de vérification ; on y stage
-// les artifacts org.graphiks:kffi* publiés (mavenLocal) pour que les checks de
-// métadonnées et le consumer isolé puissent les résoudre.
+// Les artifacts org.graphiks:kffi* déjà publiés localement sont copiés dans le
+// repository de vérification pour valider les métadonnées du module hôte.
 val stageKffiPublicationsFromMavenLocal by tasks.registering(Copy::class) {
 	group = "verification"
 	description = "Stages the published org.graphiks:kffi artifacts from mavenLocal into the verification repository"
@@ -118,7 +117,7 @@ val verifyPublicationMetadata by tasks.registering {
 
 tasks.register<GradleBuild>("verifyPublishedConsumer") {
 	group = "verification"
-	description = "Publishes wgpu4k-native locally (kffi staged from mavenLocal), then compiles an isolated consumer."
+	description = "Publishes wgpu4k-native locally, then compiles an isolated consumer."
 	dependsOn(verifyPublicationMetadata)
 	dir = file("gradle/publication-consumer")
 	tasks = listOf("clean", "compileJava")

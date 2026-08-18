@@ -42,7 +42,11 @@ Les versions **release** sont publiées sur Maven Central. Les **snapshots**
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
-        maven("https://oss.sonatype.org/content/repositories/snapshots/")
+        maven {
+            name = "CentralPortalSnapshots"
+            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+            content { includeGroup("org.graphiks") }
+        }
     }
 }
 ```
@@ -70,11 +74,6 @@ Targets natives publiées : `kffi-iosx64`, `kffi-iosarm64`,
 `kffi-androidnativex64`.
 
 ### Déclaration de dépendance
-
-> **Note M2.4** : la coordonnée snapshot finale est `1.0.0-SNAPSHOT` — effective
-> après la migration M2.4 (versionnement indépendant du module kffi). Avant
-> cette migration, le module hérite de la version du dépôt hôte et les
-> snapshots publiés sont `v29.0.0-<timestamp>-SNAPSHOT` (dépôt Sonatype).
 
 ```kotlin
 // build.gradle.kts — projet KMP
@@ -297,19 +296,14 @@ table de tokens (token jamais réutilisé).
 
 ## Versionnement
 
-Semver strict. `1.0.0` est le **premier contrat stable** : le redessin
-P1-P4 (moteurs downcall/upcall, politique de durée de vie I2-a, option unsafe
-I3, optimisation M1) est le dernier avant 1.0. Les API publiques sont
-stabilisées à partir de cette version ; toute rupture passe par un bump
+Semver strict. `1.0.0` est le **premier contrat stable**. Les API publiques
+sont stabilisées à partir de cette version ; toute rupture passe par un bump
 majeur.
 
-- Les **releases** sont versionnées `x.y.z` (actuellement en préparation de
-  `1.0.0`).
+- Les **releases** sont versionnées `x.y.z`.
 - Les **snapshots** sont publiés à chaque push sur `main`, en `-SNAPSHOT`
-  (ex. `1.0.0-SNAPSHOT` — coordonnée finale après la migration M2.4 ; avant,
-  snapshots publiés `v29.0.0-<timestamp>-SNAPSHOT`).
-- La version courante du runtime est exposée : `Kffi.VERSION` (`1.0.0` — à
-  partir de la version module M2.4).
+  (ex. `1.0.0-SNAPSHOT`).
+- La version courante du runtime est exposée : `Kffi.VERSION` (`1.0.0`).
 
 ## Licence
 

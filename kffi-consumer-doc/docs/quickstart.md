@@ -15,15 +15,14 @@ releases sur Maven Central :
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
-        maven("https://oss.sonatype.org/content/repositories/snapshots/")
+        maven {
+            name = "CentralPortalSnapshots"
+            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+            content { includeGroup("org.graphiks") }
+        }
     }
 }
 ```
-
-> **Note M2.4** : la coordonnée snapshot finale est `1.0.0-SNAPSHOT` —
-> effective après la migration M2.4 (versionnement indépendant du module kffi).
-> Avant cette migration, les snapshots publiés sont `v29.0.0-<timestamp>-SNAPSHOT`
-> (dépôt Sonatype).
 
 ```kotlin
 // build.gradle.kts — projet KMP : l'artifact racine résout la variante plateforme

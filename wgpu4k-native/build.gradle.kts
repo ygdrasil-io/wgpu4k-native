@@ -81,7 +81,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                // kffi est publié par Graphiks-org/kffi (split M4) ; l'artifact racine
+                // kffi est publié par Graphiks-org/kffi ; l'artifact racine
                 // org.graphiks:kffi résout la variante de plateforme (jvm/android/native).
                 api("org.graphiks:kffi:1.0.0-SNAPSHOT")
             }
@@ -456,6 +456,13 @@ tasks.register("verifyJvmBootstrapBinding") {
 // dependency chain so Gradle's strict implicit-dependency validation passes when
 // compile/test tasks and verifyGeneratedBindingsClean run in one invocation.
 tasks.named("compileKotlinJvm") {
+    dependsOn("generateBindingsFromHeader")
+}
+// KSP also scans the generated common/JVM source roots before Kotlin compilation.
+// Keep its lazily registered target tasks behind binding generation as well.
+tasks.matching {
+    it.name.startsWith("ksp") && it.name.contains("Kotlin")
+}.configureEach {
     dependsOn("generateBindingsFromHeader")
 }
 // AGP registers compileDebugKotlinAndroid lazily, so match by name with a live collection.

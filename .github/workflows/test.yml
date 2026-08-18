@@ -153,6 +153,10 @@ jobs:
           else
             ./gradlew :wgpu4k-native:macosX64Test -x :wgpu4k-native:fetch-native-dependencies
           fi
+      - name: Verify external kffi JVM consumer
+        if: matrix.os == 'macos-latest'
+        working-directory: kffi-consumer-test
+        run: ./gradlew --no-daemon --refresh-dependencies runJvm
       - name: Run Linux Native tests
         if: matrix.os == 'ubuntu-latest'
         run: >-

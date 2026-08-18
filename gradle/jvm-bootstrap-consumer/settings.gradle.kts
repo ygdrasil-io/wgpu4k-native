@@ -15,8 +15,15 @@ dependencyResolutionManagement {
                 ignoreGradleMetadataRedirection()
             }
         }
-        // Snapshots kffi (org.graphiks:kffi-jvm:1.0.0-SNAPSHOT) — publiés par Graphiks-org/kffi.
-        maven("https://oss.sonatype.org/content/repositories/snapshots/")
+        // Snapshots kffi (org.graphiks:kffi-jvm:1.0.0-SNAPSHOT) — publiés par
+        // Graphiks-org/kffi via Central Portal.
+        maven {
+            name = "CentralPortalSnapshots"
+            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+            content {
+                includeGroup("org.graphiks")
+            }
+        }
         mavenCentral()
     }
 }
