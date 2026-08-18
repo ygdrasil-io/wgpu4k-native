@@ -8,7 +8,6 @@ plugins {
 kotlin {
     jvm {
         compilerOptions {
-            // jvmTarget cohérent avec kffi (JVM_24, voir kffi/build.gradle.kts)
             jvmTarget = JvmTarget.JVM_24
         }
         // DSL KMP/JVM binaries (kotl.in/jvm-binaries-dsl) — remplace le plugin
