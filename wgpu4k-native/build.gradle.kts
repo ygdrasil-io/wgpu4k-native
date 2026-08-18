@@ -460,7 +460,7 @@ tasks.named("compileKotlinJvm") {
 }
 // AGP registers compileDebugKotlinAndroid lazily, so match by name with a live collection.
 tasks.withType<KotlinCompile>()
-    .matching { it.name == "compileDebugKotlinAndroid" }
+    .matching { it.name.startsWith("compile") && it.name.endsWith("KotlinAndroid") }
     .configureEach {
         dependsOn("generateBindingsFromHeader")
     }
@@ -471,6 +471,19 @@ tasks.withType<KotlinNativeCompile>()
         dependsOn("generateBindingsFromHeader")
     }
 tasks.named("verifyJvmBootstrapBinding") {
+    dependsOn("generateBindingsFromHeader")
+}
+
+// Packaging, metadata, and Dokka tasks also read the generated source roots.
+// Declare the dependency explicitly so Gradle's strict validation cannot run
+// them before the kextract output has been refreshed.
+tasks.matching {
+    it.name.endsWith("sourcesJar", ignoreCase = true) || it.name in setOf(
+        "compileCommonMainKotlinMetadata",
+        "compileNativeMainKotlinMetadata",
+        "dokkaGeneratePublicationHtml",
+    )
+}.configureEach {
     dependsOn("generateBindingsFromHeader")
 }
 
