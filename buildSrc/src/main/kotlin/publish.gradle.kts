@@ -1,7 +1,6 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.SourcesJar
-import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 
 plugins {
     id("com.vanniktech.maven.publish")
@@ -55,20 +54,5 @@ mavenPublishing {
             developerConnection.set("scm:git:${projectHomepage}.git")
             url.set(projectHomepage)
         }
-    }
-}
-
-val publicationVerificationRepository = publishing.repositories.maven {
-    name = "PublicationVerification"
-    url = rootProject.layout.buildDirectory
-        .dir("publication-verification/repository")
-        .get()
-        .asFile
-        .toURI()
-}
-
-tasks.withType<PublishToMavenRepository>().configureEach {
-    if (repository == publicationVerificationRepository) {
-        dependsOn(rootProject.tasks.named("cleanPublicationVerificationRepository"))
     }
 }
