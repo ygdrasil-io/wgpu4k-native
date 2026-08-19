@@ -20,6 +20,15 @@ import kotlin.UnsupportedOperationException
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 
+private object KextractAndroidBootstrap {
+    init {
+        java.lang.System.loadLibrary("wgpu4k")
+    }
+    
+    private val libraryHandle: kotlin.Long by lazy { NativeEngine.loadNativeLibrary(java.lang.System.mapLibraryName("wgpu4k")).takeIf { it != 0L } ?: error("Unable to load native library: wgpu4k") }
+    fun resolve(name: kotlin.String): kotlin.Long = NativeEngine.resolveSymbolIn(libraryHandle, name)
+}
+
 actual interface WGPUStringView {
     actual var data: CString?
     actual var length: ULong
@@ -6225,28 +6234,28 @@ actual interface WGPURenderPipelineDescriptor {
     }
 }
 
-private val wgpuCreateInstance_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCreateInstance") }
+private val wgpuCreateInstance_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCreateInstance") }
 actual fun wgpuCreateInstance(descriptor: WGPUInstanceDescriptor?): WGPUInstance? {
     return NativeEngine.callP1P(wgpuCreateInstance_ADDR, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUInstance)
 }
 
-private val wgpuGetInstanceFeatures_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuGetInstanceFeatures") }
+private val wgpuGetInstanceFeatures_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuGetInstanceFeatures") }
 actual fun wgpuGetInstanceFeatures(features: WGPUSupportedInstanceFeatures?): Unit {
     NativeEngine.callV1P(wgpuGetInstanceFeatures_ADDR, features?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuGetInstanceLimits_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuGetInstanceLimits") }
+private val wgpuGetInstanceLimits_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuGetInstanceLimits") }
 actual fun wgpuGetInstanceLimits(limits: WGPUInstanceLimits?): WGPUStatus {
     return (NativeEngine.callI1P(wgpuGetInstanceLimits_ADDR, limits?.handler?.rawValue ?: 0L).toInt()).toUInt()
 }
 
-private val wgpuHasInstanceFeature_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuHasInstanceFeature") }
+private val wgpuHasInstanceFeature_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuHasInstanceFeature") }
 actual fun wgpuHasInstanceFeature(feature: WGPUInstanceFeatureName): UInt {
     return NativeEngine.callI1I(wgpuHasInstanceFeature_ADDR, feature.toInt()).toInt().toUInt()
 }
 
-private val wgpuGetProcAddress_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuGetProcAddress") }
+private val wgpuGetProcAddress_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuGetProcAddress") }
 actual fun wgpuGetProcAddress(procName: WGPUStringView): NativeAddress? {
     val args = MemoryAllocator().allocateBuffer(16uL)
     val procNameBytes = ByteArray(16)
@@ -6257,28 +6266,28 @@ actual fun wgpuGetProcAddress(procName: WGPUStringView): NativeAddress? {
     return out.readLong(0uL).takeIf { it != 0L }?.let(::NativeAddress)
 }
 
-private val wgpuAdapterGetFeatures_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuAdapterGetFeatures") }
+private val wgpuAdapterGetFeatures_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuAdapterGetFeatures") }
 actual fun wgpuAdapterGetFeatures(adapter: WGPUAdapter?, features: WGPUSupportedFeatures?): Unit {
     NativeEngine.callV2PP(wgpuAdapterGetFeatures_ADDR, adapter?.handler?.rawValue ?: 0L, features?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuAdapterGetInfo_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuAdapterGetInfo") }
+private val wgpuAdapterGetInfo_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuAdapterGetInfo") }
 actual fun wgpuAdapterGetInfo(adapter: WGPUAdapter?, info: WGPUAdapterInfo?): WGPUStatus {
     return (NativeEngine.callI2PP(wgpuAdapterGetInfo_ADDR, adapter?.handler?.rawValue ?: 0L, info?.handler?.rawValue ?: 0L).toInt()).toUInt()
 }
 
-private val wgpuAdapterGetLimits_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuAdapterGetLimits") }
+private val wgpuAdapterGetLimits_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuAdapterGetLimits") }
 actual fun wgpuAdapterGetLimits(adapter: WGPUAdapter?, limits: WGPULimits?): WGPUStatus {
     return (NativeEngine.callI2PP(wgpuAdapterGetLimits_ADDR, adapter?.handler?.rawValue ?: 0L, limits?.handler?.rawValue ?: 0L).toInt()).toUInt()
 }
 
-private val wgpuAdapterHasFeature_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuAdapterHasFeature") }
+private val wgpuAdapterHasFeature_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuAdapterHasFeature") }
 actual fun wgpuAdapterHasFeature(adapter: WGPUAdapter?, feature: WGPUFeatureName): UInt {
     return NativeEngine.callI2PI(wgpuAdapterHasFeature_ADDR, adapter?.handler?.rawValue ?: 0L, feature.toInt()).toInt().toUInt()
 }
 
-private val wgpuAdapterRequestDevice_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuAdapterRequestDevice") }
+private val wgpuAdapterRequestDevice_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuAdapterRequestDevice") }
 actual fun wgpuAdapterRequestDevice(allocator: MemoryAllocator, adapter: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(56uL)
     args.writeLong(adapter?.handler?.rawValue ?: 0L, 0uL)
@@ -6287,23 +6296,23 @@ actual fun wgpuAdapterRequestDevice(allocator: MemoryAllocator, adapter: WGPUAda
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 16uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuAdapterRequestDevice_ADDR, 3, "s8@8(i64):p,p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuAdapterRequestDevice_ADDR, 3, "u64:p,p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
-private val wgpuAdapterAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuAdapterAddRef") }
+private val wgpuAdapterAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuAdapterAddRef") }
 actual fun wgpuAdapterAddRef(adapter: WGPUAdapter?): Unit {
     NativeEngine.callV1P(wgpuAdapterAddRef_ADDR, adapter?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuAdapterRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuAdapterRelease") }
+private val wgpuAdapterRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuAdapterRelease") }
 actual fun wgpuAdapterRelease(adapter: WGPUAdapter?): Unit {
     NativeEngine.callV1P(wgpuAdapterRelease_ADDR, adapter?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuAdapterInfoFreeMembers_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuAdapterInfoFreeMembers") }
+private val wgpuAdapterInfoFreeMembers_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuAdapterInfoFreeMembers") }
 actual fun wgpuAdapterInfoFreeMembers(adapterInfo: WGPUAdapterInfo): Unit {
     val args = MemoryAllocator().allocateBuffer(96uL)
     val adapterInfoBytes = ByteArray(96)
@@ -6313,7 +6322,7 @@ actual fun wgpuAdapterInfoFreeMembers(adapterInfo: WGPUAdapterInfo): Unit {
     NativeEngine.callGeneric(wgpuAdapterInfoFreeMembers_ADDR, 1, "v:s96@8(p,s16@8(p,i64),s16@8(p,i64),s16@8(p,i64),s16@8(p,i64),u32,u32,i32,i32,i32,i32)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuBindGroupSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBindGroupSetLabel") }
+private val wgpuBindGroupSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBindGroupSetLabel") }
 actual fun wgpuBindGroupSetLabel(bindGroup: WGPUBindGroup?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(bindGroup?.handler?.rawValue ?: 0L, 0uL)
@@ -6324,19 +6333,19 @@ actual fun wgpuBindGroupSetLabel(bindGroup: WGPUBindGroup?, label: WGPUStringVie
     NativeEngine.callGeneric(wgpuBindGroupSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuBindGroupAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBindGroupAddRef") }
+private val wgpuBindGroupAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBindGroupAddRef") }
 actual fun wgpuBindGroupAddRef(bindGroup: WGPUBindGroup?): Unit {
     NativeEngine.callV1P(wgpuBindGroupAddRef_ADDR, bindGroup?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuBindGroupRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBindGroupRelease") }
+private val wgpuBindGroupRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBindGroupRelease") }
 actual fun wgpuBindGroupRelease(bindGroup: WGPUBindGroup?): Unit {
     NativeEngine.callV1P(wgpuBindGroupRelease_ADDR, bindGroup?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuBindGroupLayoutSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBindGroupLayoutSetLabel") }
+private val wgpuBindGroupLayoutSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBindGroupLayoutSetLabel") }
 actual fun wgpuBindGroupLayoutSetLabel(bindGroupLayout: WGPUBindGroupLayout?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(bindGroupLayout?.handler?.rawValue ?: 0L, 0uL)
@@ -6347,50 +6356,50 @@ actual fun wgpuBindGroupLayoutSetLabel(bindGroupLayout: WGPUBindGroupLayout?, la
     NativeEngine.callGeneric(wgpuBindGroupLayoutSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuBindGroupLayoutAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBindGroupLayoutAddRef") }
+private val wgpuBindGroupLayoutAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBindGroupLayoutAddRef") }
 actual fun wgpuBindGroupLayoutAddRef(bindGroupLayout: WGPUBindGroupLayout?): Unit {
     NativeEngine.callV1P(wgpuBindGroupLayoutAddRef_ADDR, bindGroupLayout?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuBindGroupLayoutRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBindGroupLayoutRelease") }
+private val wgpuBindGroupLayoutRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBindGroupLayoutRelease") }
 actual fun wgpuBindGroupLayoutRelease(bindGroupLayout: WGPUBindGroupLayout?): Unit {
     NativeEngine.callV1P(wgpuBindGroupLayoutRelease_ADDR, bindGroupLayout?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuBufferDestroy_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferDestroy") }
+private val wgpuBufferDestroy_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferDestroy") }
 actual fun wgpuBufferDestroy(buffer: WGPUBuffer?): Unit {
     NativeEngine.callV1P(wgpuBufferDestroy_ADDR, buffer?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuBufferGetConstMappedRange_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferGetConstMappedRange") }
+private val wgpuBufferGetConstMappedRange_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferGetConstMappedRange") }
 actual fun wgpuBufferGetConstMappedRange(buffer: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress? {
     return NativeEngine.callP3PLL(wgpuBufferGetConstMappedRange_ADDR, buffer?.handler?.rawValue ?: 0L, offset.toLong(), size.toLong()).takeIf { it != 0L }?.let(::NativeAddress)
 }
 
-private val wgpuBufferGetMappedRange_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferGetMappedRange") }
+private val wgpuBufferGetMappedRange_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferGetMappedRange") }
 actual fun wgpuBufferGetMappedRange(buffer: WGPUBuffer?, offset: ULong, size: ULong): NativeAddress? {
     return NativeEngine.callP3PLL(wgpuBufferGetMappedRange_ADDR, buffer?.handler?.rawValue ?: 0L, offset.toLong(), size.toLong()).takeIf { it != 0L }?.let(::NativeAddress)
 }
 
-private val wgpuBufferGetMapState_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferGetMapState") }
+private val wgpuBufferGetMapState_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferGetMapState") }
 actual fun wgpuBufferGetMapState(buffer: WGPUBuffer?): WGPUBufferMapState {
     return (NativeEngine.callI1P(wgpuBufferGetMapState_ADDR, buffer?.handler?.rawValue ?: 0L).toInt()).toUInt()
 }
 
-private val wgpuBufferGetSize_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferGetSize") }
+private val wgpuBufferGetSize_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferGetSize") }
 actual fun wgpuBufferGetSize(buffer: WGPUBuffer?): ULong {
     return NativeEngine.callL1P(wgpuBufferGetSize_ADDR, buffer?.handler?.rawValue ?: 0L).toULong()
 }
 
-private val wgpuBufferGetUsage_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferGetUsage") }
+private val wgpuBufferGetUsage_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferGetUsage") }
 actual fun wgpuBufferGetUsage(buffer: WGPUBuffer?): ULong {
     return NativeEngine.callL1P(wgpuBufferGetUsage_ADDR, buffer?.handler?.rawValue ?: 0L).toULong()
 }
 
-private val wgpuBufferMapAsync_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferMapAsync") }
+private val wgpuBufferMapAsync_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferMapAsync") }
 actual fun wgpuBufferMapAsync(allocator: MemoryAllocator, buffer: WGPUBuffer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(72uL)
     args.writeLong(buffer?.handler?.rawValue ?: 0L, 0uL)
@@ -6401,16 +6410,16 @@ actual fun wgpuBufferMapAsync(allocator: MemoryAllocator, buffer: WGPUBuffer?, m
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 32uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuBufferMapAsync_ADDR, 5, "s8@8(i64):p,u64,u64,u64,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuBufferMapAsync_ADDR, 5, "u64:p,u64,u64,u64,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
-private val wgpuBufferReadMappedRange_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferReadMappedRange") }
+private val wgpuBufferReadMappedRange_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferReadMappedRange") }
 actual fun wgpuBufferReadMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus {
     return (NativeEngine.callI4PLPL(wgpuBufferReadMappedRange_ADDR, buffer?.handler?.rawValue ?: 0L, offset.toLong(), data.toAddress(), size.toLong()).toInt()).toUInt()
 }
 
-private val wgpuBufferSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferSetLabel") }
+private val wgpuBufferSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferSetLabel") }
 actual fun wgpuBufferSetLabel(buffer: WGPUBuffer?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(buffer?.handler?.rawValue ?: 0L, 0uL)
@@ -6421,30 +6430,30 @@ actual fun wgpuBufferSetLabel(buffer: WGPUBuffer?, label: WGPUStringView): Unit 
     NativeEngine.callGeneric(wgpuBufferSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuBufferUnmap_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferUnmap") }
+private val wgpuBufferUnmap_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferUnmap") }
 actual fun wgpuBufferUnmap(buffer: WGPUBuffer?): Unit {
     NativeEngine.callV1P(wgpuBufferUnmap_ADDR, buffer?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuBufferWriteMappedRange_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferWriteMappedRange") }
+private val wgpuBufferWriteMappedRange_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferWriteMappedRange") }
 actual fun wgpuBufferWriteMappedRange(buffer: WGPUBuffer?, offset: ULong, data: NativeAddress?, size: ULong): WGPUStatus {
     return (NativeEngine.callI4PLPL(wgpuBufferWriteMappedRange_ADDR, buffer?.handler?.rawValue ?: 0L, offset.toLong(), data.toAddress(), size.toLong()).toInt()).toUInt()
 }
 
-private val wgpuBufferAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferAddRef") }
+private val wgpuBufferAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferAddRef") }
 actual fun wgpuBufferAddRef(buffer: WGPUBuffer?): Unit {
     NativeEngine.callV1P(wgpuBufferAddRef_ADDR, buffer?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuBufferRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferRelease") }
+private val wgpuBufferRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuBufferRelease") }
 actual fun wgpuBufferRelease(buffer: WGPUBuffer?): Unit {
     NativeEngine.callV1P(wgpuBufferRelease_ADDR, buffer?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuCommandBufferSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandBufferSetLabel") }
+private val wgpuCommandBufferSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandBufferSetLabel") }
 actual fun wgpuCommandBufferSetLabel(commandBuffer: WGPUCommandBuffer?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(commandBuffer?.handler?.rawValue ?: 0L, 0uL)
@@ -6455,64 +6464,64 @@ actual fun wgpuCommandBufferSetLabel(commandBuffer: WGPUCommandBuffer?, label: W
     NativeEngine.callGeneric(wgpuCommandBufferSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuCommandBufferAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandBufferAddRef") }
+private val wgpuCommandBufferAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandBufferAddRef") }
 actual fun wgpuCommandBufferAddRef(commandBuffer: WGPUCommandBuffer?): Unit {
     NativeEngine.callV1P(wgpuCommandBufferAddRef_ADDR, commandBuffer?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuCommandBufferRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandBufferRelease") }
+private val wgpuCommandBufferRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandBufferRelease") }
 actual fun wgpuCommandBufferRelease(commandBuffer: WGPUCommandBuffer?): Unit {
     NativeEngine.callV1P(wgpuCommandBufferRelease_ADDR, commandBuffer?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuCommandEncoderBeginComputePass_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderBeginComputePass") }
+private val wgpuCommandEncoderBeginComputePass_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderBeginComputePass") }
 actual fun wgpuCommandEncoderBeginComputePass(commandEncoder: WGPUCommandEncoder?, descriptor: WGPUComputePassDescriptor?): WGPUComputePassEncoder? {
     return NativeEngine.callP2PP(wgpuCommandEncoderBeginComputePass_ADDR, commandEncoder?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUComputePassEncoder)
 }
 
-private val wgpuCommandEncoderBeginRenderPass_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderBeginRenderPass") }
+private val wgpuCommandEncoderBeginRenderPass_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderBeginRenderPass") }
 actual fun wgpuCommandEncoderBeginRenderPass(commandEncoder: WGPUCommandEncoder?, descriptor: WGPURenderPassDescriptor?): WGPURenderPassEncoder? {
     return NativeEngine.callP2PP(wgpuCommandEncoderBeginRenderPass_ADDR, commandEncoder?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPURenderPassEncoder)
 }
 
-private val wgpuCommandEncoderClearBuffer_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderClearBuffer") }
+private val wgpuCommandEncoderClearBuffer_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderClearBuffer") }
 actual fun wgpuCommandEncoderClearBuffer(commandEncoder: WGPUCommandEncoder?, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit {
     NativeEngine.callV4PPLL(wgpuCommandEncoderClearBuffer_ADDR, commandEncoder?.handler?.rawValue ?: 0L, buffer?.handler?.rawValue ?: 0L, offset.toLong(), size.toLong())
     return
 }
 
-private val wgpuCommandEncoderCopyBufferToBuffer_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderCopyBufferToBuffer") }
+private val wgpuCommandEncoderCopyBufferToBuffer_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderCopyBufferToBuffer") }
 actual fun wgpuCommandEncoderCopyBufferToBuffer(commandEncoder: WGPUCommandEncoder?, source: WGPUBuffer?, sourceOffset: ULong, destination: WGPUBuffer?, destinationOffset: ULong, size: ULong): Unit {
     NativeEngine.callV6PPLPLL(wgpuCommandEncoderCopyBufferToBuffer_ADDR, commandEncoder?.handler?.rawValue ?: 0L, source?.handler?.rawValue ?: 0L, sourceOffset.toLong(), destination?.handler?.rawValue ?: 0L, destinationOffset.toLong(), size.toLong())
     return
 }
 
-private val wgpuCommandEncoderCopyBufferToTexture_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderCopyBufferToTexture") }
+private val wgpuCommandEncoderCopyBufferToTexture_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderCopyBufferToTexture") }
 actual fun wgpuCommandEncoderCopyBufferToTexture(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyBufferInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit {
     NativeEngine.callV4PPPP(wgpuCommandEncoderCopyBufferToTexture_ADDR, commandEncoder?.handler?.rawValue ?: 0L, source?.handler?.rawValue ?: 0L, destination?.handler?.rawValue ?: 0L, copySize?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuCommandEncoderCopyTextureToBuffer_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderCopyTextureToBuffer") }
+private val wgpuCommandEncoderCopyTextureToBuffer_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderCopyTextureToBuffer") }
 actual fun wgpuCommandEncoderCopyTextureToBuffer(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyBufferInfo?, copySize: WGPUExtent3D?): Unit {
     NativeEngine.callV4PPPP(wgpuCommandEncoderCopyTextureToBuffer_ADDR, commandEncoder?.handler?.rawValue ?: 0L, source?.handler?.rawValue ?: 0L, destination?.handler?.rawValue ?: 0L, copySize?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuCommandEncoderCopyTextureToTexture_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderCopyTextureToTexture") }
+private val wgpuCommandEncoderCopyTextureToTexture_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderCopyTextureToTexture") }
 actual fun wgpuCommandEncoderCopyTextureToTexture(commandEncoder: WGPUCommandEncoder?, source: WGPUTexelCopyTextureInfo?, destination: WGPUTexelCopyTextureInfo?, copySize: WGPUExtent3D?): Unit {
     NativeEngine.callV4PPPP(wgpuCommandEncoderCopyTextureToTexture_ADDR, commandEncoder?.handler?.rawValue ?: 0L, source?.handler?.rawValue ?: 0L, destination?.handler?.rawValue ?: 0L, copySize?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuCommandEncoderFinish_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderFinish") }
+private val wgpuCommandEncoderFinish_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderFinish") }
 actual fun wgpuCommandEncoderFinish(commandEncoder: WGPUCommandEncoder?, descriptor: WGPUCommandBufferDescriptor?): WGPUCommandBuffer? {
     return NativeEngine.callP2PP(wgpuCommandEncoderFinish_ADDR, commandEncoder?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUCommandBuffer)
 }
 
-private val wgpuCommandEncoderInsertDebugMarker_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderInsertDebugMarker") }
+private val wgpuCommandEncoderInsertDebugMarker_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderInsertDebugMarker") }
 actual fun wgpuCommandEncoderInsertDebugMarker(commandEncoder: WGPUCommandEncoder?, markerLabel: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(commandEncoder?.handler?.rawValue ?: 0L, 0uL)
@@ -6523,13 +6532,13 @@ actual fun wgpuCommandEncoderInsertDebugMarker(commandEncoder: WGPUCommandEncode
     NativeEngine.callGeneric(wgpuCommandEncoderInsertDebugMarker_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuCommandEncoderPopDebugGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderPopDebugGroup") }
+private val wgpuCommandEncoderPopDebugGroup_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderPopDebugGroup") }
 actual fun wgpuCommandEncoderPopDebugGroup(commandEncoder: WGPUCommandEncoder?): Unit {
     NativeEngine.callV1P(wgpuCommandEncoderPopDebugGroup_ADDR, commandEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuCommandEncoderPushDebugGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderPushDebugGroup") }
+private val wgpuCommandEncoderPushDebugGroup_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderPushDebugGroup") }
 actual fun wgpuCommandEncoderPushDebugGroup(commandEncoder: WGPUCommandEncoder?, groupLabel: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(commandEncoder?.handler?.rawValue ?: 0L, 0uL)
@@ -6540,13 +6549,13 @@ actual fun wgpuCommandEncoderPushDebugGroup(commandEncoder: WGPUCommandEncoder?,
     NativeEngine.callGeneric(wgpuCommandEncoderPushDebugGroup_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuCommandEncoderResolveQuerySet_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderResolveQuerySet") }
+private val wgpuCommandEncoderResolveQuerySet_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderResolveQuerySet") }
 actual fun wgpuCommandEncoderResolveQuerySet(commandEncoder: WGPUCommandEncoder?, querySet: WGPUQuerySet?, firstQuery: UInt, queryCount: UInt, destination: WGPUBuffer?, destinationOffset: ULong): Unit {
     NativeEngine.callV6PPIIPL(wgpuCommandEncoderResolveQuerySet_ADDR, commandEncoder?.handler?.rawValue ?: 0L, querySet?.handler?.rawValue ?: 0L, firstQuery.toInt(), queryCount.toInt(), destination?.handler?.rawValue ?: 0L, destinationOffset.toLong())
     return
 }
 
-private val wgpuCommandEncoderSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderSetLabel") }
+private val wgpuCommandEncoderSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderSetLabel") }
 actual fun wgpuCommandEncoderSetLabel(commandEncoder: WGPUCommandEncoder?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(commandEncoder?.handler?.rawValue ?: 0L, 0uL)
@@ -6557,43 +6566,43 @@ actual fun wgpuCommandEncoderSetLabel(commandEncoder: WGPUCommandEncoder?, label
     NativeEngine.callGeneric(wgpuCommandEncoderSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuCommandEncoderWriteTimestamp_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderWriteTimestamp") }
+private val wgpuCommandEncoderWriteTimestamp_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderWriteTimestamp") }
 actual fun wgpuCommandEncoderWriteTimestamp(commandEncoder: WGPUCommandEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
     NativeEngine.callV3PPI(wgpuCommandEncoderWriteTimestamp_ADDR, commandEncoder?.handler?.rawValue ?: 0L, querySet?.handler?.rawValue ?: 0L, queryIndex.toInt())
     return
 }
 
-private val wgpuCommandEncoderAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderAddRef") }
+private val wgpuCommandEncoderAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderAddRef") }
 actual fun wgpuCommandEncoderAddRef(commandEncoder: WGPUCommandEncoder?): Unit {
     NativeEngine.callV1P(wgpuCommandEncoderAddRef_ADDR, commandEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuCommandEncoderRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderRelease") }
+private val wgpuCommandEncoderRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderRelease") }
 actual fun wgpuCommandEncoderRelease(commandEncoder: WGPUCommandEncoder?): Unit {
     NativeEngine.callV1P(wgpuCommandEncoderRelease_ADDR, commandEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuComputePassEncoderDispatchWorkgroups_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderDispatchWorkgroups") }
+private val wgpuComputePassEncoderDispatchWorkgroups_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderDispatchWorkgroups") }
 actual fun wgpuComputePassEncoderDispatchWorkgroups(computePassEncoder: WGPUComputePassEncoder?, workgroupCountX: UInt, workgroupCountY: UInt, workgroupCountZ: UInt): Unit {
     NativeEngine.callV4PIII(wgpuComputePassEncoderDispatchWorkgroups_ADDR, computePassEncoder?.handler?.rawValue ?: 0L, workgroupCountX.toInt(), workgroupCountY.toInt(), workgroupCountZ.toInt())
     return
 }
 
-private val wgpuComputePassEncoderDispatchWorkgroupsIndirect_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderDispatchWorkgroupsIndirect") }
+private val wgpuComputePassEncoderDispatchWorkgroupsIndirect_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderDispatchWorkgroupsIndirect") }
 actual fun wgpuComputePassEncoderDispatchWorkgroupsIndirect(computePassEncoder: WGPUComputePassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
     NativeEngine.callV3PPL(wgpuComputePassEncoderDispatchWorkgroupsIndirect_ADDR, computePassEncoder?.handler?.rawValue ?: 0L, indirectBuffer?.handler?.rawValue ?: 0L, indirectOffset.toLong())
     return
 }
 
-private val wgpuComputePassEncoderEnd_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderEnd") }
+private val wgpuComputePassEncoderEnd_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderEnd") }
 actual fun wgpuComputePassEncoderEnd(computePassEncoder: WGPUComputePassEncoder?): Unit {
     NativeEngine.callV1P(wgpuComputePassEncoderEnd_ADDR, computePassEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuComputePassEncoderInsertDebugMarker_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderInsertDebugMarker") }
+private val wgpuComputePassEncoderInsertDebugMarker_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderInsertDebugMarker") }
 actual fun wgpuComputePassEncoderInsertDebugMarker(computePassEncoder: WGPUComputePassEncoder?, markerLabel: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(computePassEncoder?.handler?.rawValue ?: 0L, 0uL)
@@ -6604,13 +6613,13 @@ actual fun wgpuComputePassEncoderInsertDebugMarker(computePassEncoder: WGPUCompu
     NativeEngine.callGeneric(wgpuComputePassEncoderInsertDebugMarker_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuComputePassEncoderPopDebugGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderPopDebugGroup") }
+private val wgpuComputePassEncoderPopDebugGroup_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderPopDebugGroup") }
 actual fun wgpuComputePassEncoderPopDebugGroup(computePassEncoder: WGPUComputePassEncoder?): Unit {
     NativeEngine.callV1P(wgpuComputePassEncoderPopDebugGroup_ADDR, computePassEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuComputePassEncoderPushDebugGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderPushDebugGroup") }
+private val wgpuComputePassEncoderPushDebugGroup_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderPushDebugGroup") }
 actual fun wgpuComputePassEncoderPushDebugGroup(computePassEncoder: WGPUComputePassEncoder?, groupLabel: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(computePassEncoder?.handler?.rawValue ?: 0L, 0uL)
@@ -6621,13 +6630,13 @@ actual fun wgpuComputePassEncoderPushDebugGroup(computePassEncoder: WGPUComputeP
     NativeEngine.callGeneric(wgpuComputePassEncoderPushDebugGroup_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuComputePassEncoderSetBindGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderSetBindGroup") }
+private val wgpuComputePassEncoderSetBindGroup_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderSetBindGroup") }
 actual fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit {
     NativeEngine.callV5PIPLP(wgpuComputePassEncoderSetBindGroup_ADDR, computePassEncoder?.handler?.rawValue ?: 0L, groupIndex.toInt(), group?.handler?.rawValue ?: 0L, dynamicOffsetCount.toLong(), dynamicOffsets.toAddress())
     return
 }
 
-private val wgpuComputePassEncoderSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderSetLabel") }
+private val wgpuComputePassEncoderSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderSetLabel") }
 actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEncoder?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(computePassEncoder?.handler?.rawValue ?: 0L, 0uL)
@@ -6638,30 +6647,30 @@ actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEnc
     NativeEngine.callGeneric(wgpuComputePassEncoderSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuComputePassEncoderSetPipeline_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderSetPipeline") }
+private val wgpuComputePassEncoderSetPipeline_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderSetPipeline") }
 actual fun wgpuComputePassEncoderSetPipeline(computePassEncoder: WGPUComputePassEncoder?, pipeline: WGPUComputePipeline?): Unit {
     NativeEngine.callV2PP(wgpuComputePassEncoderSetPipeline_ADDR, computePassEncoder?.handler?.rawValue ?: 0L, pipeline?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuComputePassEncoderAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderAddRef") }
+private val wgpuComputePassEncoderAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderAddRef") }
 actual fun wgpuComputePassEncoderAddRef(computePassEncoder: WGPUComputePassEncoder?): Unit {
     NativeEngine.callV1P(wgpuComputePassEncoderAddRef_ADDR, computePassEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuComputePassEncoderRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderRelease") }
+private val wgpuComputePassEncoderRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderRelease") }
 actual fun wgpuComputePassEncoderRelease(computePassEncoder: WGPUComputePassEncoder?): Unit {
     NativeEngine.callV1P(wgpuComputePassEncoderRelease_ADDR, computePassEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuComputePipelineGetBindGroupLayout_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePipelineGetBindGroupLayout") }
+private val wgpuComputePipelineGetBindGroupLayout_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePipelineGetBindGroupLayout") }
 actual fun wgpuComputePipelineGetBindGroupLayout(computePipeline: WGPUComputePipeline?, groupIndex: UInt): WGPUBindGroupLayout? {
     return NativeEngine.callP2PI(wgpuComputePipelineGetBindGroupLayout_ADDR, computePipeline?.handler?.rawValue ?: 0L, groupIndex.toInt()).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUBindGroupLayout)
 }
 
-private val wgpuComputePipelineSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePipelineSetLabel") }
+private val wgpuComputePipelineSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePipelineSetLabel") }
 actual fun wgpuComputePipelineSetLabel(computePipeline: WGPUComputePipeline?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(computePipeline?.handler?.rawValue ?: 0L, 0uL)
@@ -6672,44 +6681,44 @@ actual fun wgpuComputePipelineSetLabel(computePipeline: WGPUComputePipeline?, la
     NativeEngine.callGeneric(wgpuComputePipelineSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuComputePipelineAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePipelineAddRef") }
+private val wgpuComputePipelineAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePipelineAddRef") }
 actual fun wgpuComputePipelineAddRef(computePipeline: WGPUComputePipeline?): Unit {
     NativeEngine.callV1P(wgpuComputePipelineAddRef_ADDR, computePipeline?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuComputePipelineRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePipelineRelease") }
+private val wgpuComputePipelineRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePipelineRelease") }
 actual fun wgpuComputePipelineRelease(computePipeline: WGPUComputePipeline?): Unit {
     NativeEngine.callV1P(wgpuComputePipelineRelease_ADDR, computePipeline?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuDeviceCreateBindGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateBindGroup") }
+private val wgpuDeviceCreateBindGroup_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateBindGroup") }
 actual fun wgpuDeviceCreateBindGroup(device: WGPUDevice?, descriptor: WGPUBindGroupDescriptor?): WGPUBindGroup? {
     return NativeEngine.callP2PP(wgpuDeviceCreateBindGroup_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUBindGroup)
 }
 
-private val wgpuDeviceCreateBindGroupLayout_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateBindGroupLayout") }
+private val wgpuDeviceCreateBindGroupLayout_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateBindGroupLayout") }
 actual fun wgpuDeviceCreateBindGroupLayout(device: WGPUDevice?, descriptor: WGPUBindGroupLayoutDescriptor?): WGPUBindGroupLayout? {
     return NativeEngine.callP2PP(wgpuDeviceCreateBindGroupLayout_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUBindGroupLayout)
 }
 
-private val wgpuDeviceCreateBuffer_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateBuffer") }
+private val wgpuDeviceCreateBuffer_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateBuffer") }
 actual fun wgpuDeviceCreateBuffer(device: WGPUDevice?, descriptor: WGPUBufferDescriptor?): WGPUBuffer? {
     return NativeEngine.callP2PP(wgpuDeviceCreateBuffer_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUBuffer)
 }
 
-private val wgpuDeviceCreateCommandEncoder_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateCommandEncoder") }
+private val wgpuDeviceCreateCommandEncoder_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateCommandEncoder") }
 actual fun wgpuDeviceCreateCommandEncoder(device: WGPUDevice?, descriptor: WGPUCommandEncoderDescriptor?): WGPUCommandEncoder? {
     return NativeEngine.callP2PP(wgpuDeviceCreateCommandEncoder_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUCommandEncoder)
 }
 
-private val wgpuDeviceCreateComputePipeline_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateComputePipeline") }
+private val wgpuDeviceCreateComputePipeline_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateComputePipeline") }
 actual fun wgpuDeviceCreateComputePipeline(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?): WGPUComputePipeline? {
     return NativeEngine.callP2PP(wgpuDeviceCreateComputePipeline_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUComputePipeline)
 }
 
-private val wgpuDeviceCreateComputePipelineAsync_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateComputePipelineAsync") }
+private val wgpuDeviceCreateComputePipelineAsync_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateComputePipelineAsync") }
 actual fun wgpuDeviceCreateComputePipelineAsync(allocator: MemoryAllocator, device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(56uL)
     args.writeLong(device?.handler?.rawValue ?: 0L, 0uL)
@@ -6718,31 +6727,31 @@ actual fun wgpuDeviceCreateComputePipelineAsync(allocator: MemoryAllocator, devi
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 16uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuDeviceCreateComputePipelineAsync_ADDR, 3, "s8@8(i64):p,p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuDeviceCreateComputePipelineAsync_ADDR, 3, "u64:p,p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
-private val wgpuDeviceCreatePipelineLayout_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreatePipelineLayout") }
+private val wgpuDeviceCreatePipelineLayout_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreatePipelineLayout") }
 actual fun wgpuDeviceCreatePipelineLayout(device: WGPUDevice?, descriptor: WGPUPipelineLayoutDescriptor?): WGPUPipelineLayout? {
     return NativeEngine.callP2PP(wgpuDeviceCreatePipelineLayout_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUPipelineLayout)
 }
 
-private val wgpuDeviceCreateQuerySet_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateQuerySet") }
+private val wgpuDeviceCreateQuerySet_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateQuerySet") }
 actual fun wgpuDeviceCreateQuerySet(device: WGPUDevice?, descriptor: WGPUQuerySetDescriptor?): WGPUQuerySet? {
     return NativeEngine.callP2PP(wgpuDeviceCreateQuerySet_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUQuerySet)
 }
 
-private val wgpuDeviceCreateRenderBundleEncoder_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateRenderBundleEncoder") }
+private val wgpuDeviceCreateRenderBundleEncoder_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateRenderBundleEncoder") }
 actual fun wgpuDeviceCreateRenderBundleEncoder(device: WGPUDevice?, descriptor: WGPURenderBundleEncoderDescriptor?): WGPURenderBundleEncoder? {
     return NativeEngine.callP2PP(wgpuDeviceCreateRenderBundleEncoder_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPURenderBundleEncoder)
 }
 
-private val wgpuDeviceCreateRenderPipeline_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateRenderPipeline") }
+private val wgpuDeviceCreateRenderPipeline_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateRenderPipeline") }
 actual fun wgpuDeviceCreateRenderPipeline(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?): WGPURenderPipeline? {
     return NativeEngine.callP2PP(wgpuDeviceCreateRenderPipeline_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPURenderPipeline)
 }
 
-private val wgpuDeviceCreateRenderPipelineAsync_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateRenderPipelineAsync") }
+private val wgpuDeviceCreateRenderPipelineAsync_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateRenderPipelineAsync") }
 actual fun wgpuDeviceCreateRenderPipelineAsync(allocator: MemoryAllocator, device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(56uL)
     args.writeLong(device?.handler?.rawValue ?: 0L, 0uL)
@@ -6751,67 +6760,67 @@ actual fun wgpuDeviceCreateRenderPipelineAsync(allocator: MemoryAllocator, devic
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 16uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuDeviceCreateRenderPipelineAsync_ADDR, 3, "s8@8(i64):p,p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuDeviceCreateRenderPipelineAsync_ADDR, 3, "u64:p,p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
-private val wgpuDeviceCreateSampler_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateSampler") }
+private val wgpuDeviceCreateSampler_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateSampler") }
 actual fun wgpuDeviceCreateSampler(device: WGPUDevice?, descriptor: WGPUSamplerDescriptor?): WGPUSampler? {
     return NativeEngine.callP2PP(wgpuDeviceCreateSampler_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUSampler)
 }
 
-private val wgpuDeviceCreateShaderModule_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateShaderModule") }
+private val wgpuDeviceCreateShaderModule_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateShaderModule") }
 actual fun wgpuDeviceCreateShaderModule(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?): WGPUShaderModule? {
     return NativeEngine.callP2PP(wgpuDeviceCreateShaderModule_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUShaderModule)
 }
 
-private val wgpuDeviceCreateTexture_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateTexture") }
+private val wgpuDeviceCreateTexture_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateTexture") }
 actual fun wgpuDeviceCreateTexture(device: WGPUDevice?, descriptor: WGPUTextureDescriptor?): WGPUTexture? {
     return NativeEngine.callP2PP(wgpuDeviceCreateTexture_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUTexture)
 }
 
-private val wgpuDeviceDestroy_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceDestroy") }
+private val wgpuDeviceDestroy_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceDestroy") }
 actual fun wgpuDeviceDestroy(device: WGPUDevice?): Unit {
     NativeEngine.callV1P(wgpuDeviceDestroy_ADDR, device?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuDeviceGetAdapterInfo_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceGetAdapterInfo") }
+private val wgpuDeviceGetAdapterInfo_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceGetAdapterInfo") }
 actual fun wgpuDeviceGetAdapterInfo(device: WGPUDevice?, adapterInfo: WGPUAdapterInfo?): WGPUStatus {
     return (NativeEngine.callI2PP(wgpuDeviceGetAdapterInfo_ADDR, device?.handler?.rawValue ?: 0L, adapterInfo?.handler?.rawValue ?: 0L).toInt()).toUInt()
 }
 
-private val wgpuDeviceGetFeatures_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceGetFeatures") }
+private val wgpuDeviceGetFeatures_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceGetFeatures") }
 actual fun wgpuDeviceGetFeatures(device: WGPUDevice?, features: WGPUSupportedFeatures?): Unit {
     NativeEngine.callV2PP(wgpuDeviceGetFeatures_ADDR, device?.handler?.rawValue ?: 0L, features?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuDeviceGetLimits_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceGetLimits") }
+private val wgpuDeviceGetLimits_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceGetLimits") }
 actual fun wgpuDeviceGetLimits(device: WGPUDevice?, limits: WGPULimits?): WGPUStatus {
     return (NativeEngine.callI2PP(wgpuDeviceGetLimits_ADDR, device?.handler?.rawValue ?: 0L, limits?.handler?.rawValue ?: 0L).toInt()).toUInt()
 }
 
-private val wgpuDeviceGetLostFuture_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceGetLostFuture") }
+private val wgpuDeviceGetLostFuture_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceGetLostFuture") }
 actual fun wgpuDeviceGetLostFuture(allocator: MemoryAllocator, device: WGPUDevice?): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(8uL)
     args.writeLong(device?.handler?.rawValue ?: 0L, 0uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuDeviceGetLostFuture_ADDR, 1, "s8@8(i64):p", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuDeviceGetLostFuture_ADDR, 1, "u64:p", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
-private val wgpuDeviceGetQueue_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceGetQueue") }
+private val wgpuDeviceGetQueue_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceGetQueue") }
 actual fun wgpuDeviceGetQueue(device: WGPUDevice?): WGPUQueue? {
     return NativeEngine.callP1P(wgpuDeviceGetQueue_ADDR, device?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUQueue)
 }
 
-private val wgpuDeviceHasFeature_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceHasFeature") }
+private val wgpuDeviceHasFeature_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceHasFeature") }
 actual fun wgpuDeviceHasFeature(device: WGPUDevice?, feature: WGPUFeatureName): UInt {
     return NativeEngine.callI2PI(wgpuDeviceHasFeature_ADDR, device?.handler?.rawValue ?: 0L, feature.toInt()).toInt().toUInt()
 }
 
-private val wgpuDevicePopErrorScope_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDevicePopErrorScope") }
+private val wgpuDevicePopErrorScope_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDevicePopErrorScope") }
 actual fun wgpuDevicePopErrorScope(allocator: MemoryAllocator, device: WGPUDevice?, callbackInfo: WGPUPopErrorScopeCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(48uL)
     args.writeLong(device?.handler?.rawValue ?: 0L, 0uL)
@@ -6819,17 +6828,17 @@ actual fun wgpuDevicePopErrorScope(allocator: MemoryAllocator, device: WGPUDevic
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 8uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuDevicePopErrorScope_ADDR, 2, "s8@8(i64):p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuDevicePopErrorScope_ADDR, 2, "u64:p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
-private val wgpuDevicePushErrorScope_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDevicePushErrorScope") }
+private val wgpuDevicePushErrorScope_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDevicePushErrorScope") }
 actual fun wgpuDevicePushErrorScope(device: WGPUDevice?, filter: WGPUErrorFilter): Unit {
     NativeEngine.callV2PI(wgpuDevicePushErrorScope_ADDR, device?.handler?.rawValue ?: 0L, filter.toInt())
     return
 }
 
-private val wgpuDeviceSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceSetLabel") }
+private val wgpuDeviceSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceSetLabel") }
 actual fun wgpuDeviceSetLabel(device: WGPUDevice?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(device?.handler?.rawValue ?: 0L, 0uL)
@@ -6840,19 +6849,19 @@ actual fun wgpuDeviceSetLabel(device: WGPUDevice?, label: WGPUStringView): Unit 
     NativeEngine.callGeneric(wgpuDeviceSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuDeviceAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceAddRef") }
+private val wgpuDeviceAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceAddRef") }
 actual fun wgpuDeviceAddRef(device: WGPUDevice?): Unit {
     NativeEngine.callV1P(wgpuDeviceAddRef_ADDR, device?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuDeviceRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceRelease") }
+private val wgpuDeviceRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceRelease") }
 actual fun wgpuDeviceRelease(device: WGPUDevice?): Unit {
     NativeEngine.callV1P(wgpuDeviceRelease_ADDR, device?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuExternalTextureSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuExternalTextureSetLabel") }
+private val wgpuExternalTextureSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuExternalTextureSetLabel") }
 actual fun wgpuExternalTextureSetLabel(externalTexture: WGPUExternalTexture?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(externalTexture?.handler?.rawValue ?: 0L, 0uL)
@@ -6863,41 +6872,41 @@ actual fun wgpuExternalTextureSetLabel(externalTexture: WGPUExternalTexture?, la
     NativeEngine.callGeneric(wgpuExternalTextureSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuExternalTextureAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuExternalTextureAddRef") }
+private val wgpuExternalTextureAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuExternalTextureAddRef") }
 actual fun wgpuExternalTextureAddRef(externalTexture: WGPUExternalTexture?): Unit {
     NativeEngine.callV1P(wgpuExternalTextureAddRef_ADDR, externalTexture?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuExternalTextureRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuExternalTextureRelease") }
+private val wgpuExternalTextureRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuExternalTextureRelease") }
 actual fun wgpuExternalTextureRelease(externalTexture: WGPUExternalTexture?): Unit {
     NativeEngine.callV1P(wgpuExternalTextureRelease_ADDR, externalTexture?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuInstanceCreateSurface_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuInstanceCreateSurface") }
+private val wgpuInstanceCreateSurface_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuInstanceCreateSurface") }
 actual fun wgpuInstanceCreateSurface(instance: WGPUInstance?, descriptor: WGPUSurfaceDescriptor?): WGPUSurface? {
     return NativeEngine.callP2PP(wgpuInstanceCreateSurface_ADDR, instance?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUSurface)
 }
 
-private val wgpuInstanceGetWGSLLanguageFeatures_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuInstanceGetWGSLLanguageFeatures") }
+private val wgpuInstanceGetWGSLLanguageFeatures_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuInstanceGetWGSLLanguageFeatures") }
 actual fun wgpuInstanceGetWGSLLanguageFeatures(instance: WGPUInstance?, features: WGPUSupportedWGSLLanguageFeatures?): Unit {
     NativeEngine.callV2PP(wgpuInstanceGetWGSLLanguageFeatures_ADDR, instance?.handler?.rawValue ?: 0L, features?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuInstanceHasWGSLLanguageFeature_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuInstanceHasWGSLLanguageFeature") }
+private val wgpuInstanceHasWGSLLanguageFeature_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuInstanceHasWGSLLanguageFeature") }
 actual fun wgpuInstanceHasWGSLLanguageFeature(instance: WGPUInstance?, feature: WGPUWGSLLanguageFeatureName): UInt {
     return NativeEngine.callI2PI(wgpuInstanceHasWGSLLanguageFeature_ADDR, instance?.handler?.rawValue ?: 0L, feature.toInt()).toInt().toUInt()
 }
 
-private val wgpuInstanceProcessEvents_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuInstanceProcessEvents") }
+private val wgpuInstanceProcessEvents_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuInstanceProcessEvents") }
 actual fun wgpuInstanceProcessEvents(instance: WGPUInstance?): Unit {
     NativeEngine.callV1P(wgpuInstanceProcessEvents_ADDR, instance?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuInstanceRequestAdapter_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuInstanceRequestAdapter") }
+private val wgpuInstanceRequestAdapter_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuInstanceRequestAdapter") }
 actual fun wgpuInstanceRequestAdapter(allocator: MemoryAllocator, instance: WGPUInstance?, options: WGPURequestAdapterOptions?, callbackInfo: WGPURequestAdapterCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(56uL)
     args.writeLong(instance?.handler?.rawValue ?: 0L, 0uL)
@@ -6906,28 +6915,28 @@ actual fun wgpuInstanceRequestAdapter(allocator: MemoryAllocator, instance: WGPU
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 16uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuInstanceRequestAdapter_ADDR, 3, "s8@8(i64):p,p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuInstanceRequestAdapter_ADDR, 3, "u64:p,p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
-private val wgpuInstanceWaitAny_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuInstanceWaitAny") }
+private val wgpuInstanceWaitAny_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuInstanceWaitAny") }
 actual fun wgpuInstanceWaitAny(instance: WGPUInstance?, futureCount: ULong, futures: WGPUFutureWaitInfo?, timeoutNS: ULong): WGPUWaitStatus {
     return (NativeEngine.callI4PLPL(wgpuInstanceWaitAny_ADDR, instance?.handler?.rawValue ?: 0L, futureCount.toLong(), futures?.handler?.rawValue ?: 0L, timeoutNS.toLong()).toInt()).toUInt()
 }
 
-private val wgpuInstanceAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuInstanceAddRef") }
+private val wgpuInstanceAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuInstanceAddRef") }
 actual fun wgpuInstanceAddRef(instance: WGPUInstance?): Unit {
     NativeEngine.callV1P(wgpuInstanceAddRef_ADDR, instance?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuInstanceRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuInstanceRelease") }
+private val wgpuInstanceRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuInstanceRelease") }
 actual fun wgpuInstanceRelease(instance: WGPUInstance?): Unit {
     NativeEngine.callV1P(wgpuInstanceRelease_ADDR, instance?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuPipelineLayoutSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuPipelineLayoutSetLabel") }
+private val wgpuPipelineLayoutSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuPipelineLayoutSetLabel") }
 actual fun wgpuPipelineLayoutSetLabel(pipelineLayout: WGPUPipelineLayout?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(pipelineLayout?.handler?.rawValue ?: 0L, 0uL)
@@ -6938,35 +6947,35 @@ actual fun wgpuPipelineLayoutSetLabel(pipelineLayout: WGPUPipelineLayout?, label
     NativeEngine.callGeneric(wgpuPipelineLayoutSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuPipelineLayoutAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuPipelineLayoutAddRef") }
+private val wgpuPipelineLayoutAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuPipelineLayoutAddRef") }
 actual fun wgpuPipelineLayoutAddRef(pipelineLayout: WGPUPipelineLayout?): Unit {
     NativeEngine.callV1P(wgpuPipelineLayoutAddRef_ADDR, pipelineLayout?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuPipelineLayoutRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuPipelineLayoutRelease") }
+private val wgpuPipelineLayoutRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuPipelineLayoutRelease") }
 actual fun wgpuPipelineLayoutRelease(pipelineLayout: WGPUPipelineLayout?): Unit {
     NativeEngine.callV1P(wgpuPipelineLayoutRelease_ADDR, pipelineLayout?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuQuerySetDestroy_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQuerySetDestroy") }
+private val wgpuQuerySetDestroy_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQuerySetDestroy") }
 actual fun wgpuQuerySetDestroy(querySet: WGPUQuerySet?): Unit {
     NativeEngine.callV1P(wgpuQuerySetDestroy_ADDR, querySet?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuQuerySetGetCount_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQuerySetGetCount") }
+private val wgpuQuerySetGetCount_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQuerySetGetCount") }
 actual fun wgpuQuerySetGetCount(querySet: WGPUQuerySet?): UInt {
     return NativeEngine.callI1P(wgpuQuerySetGetCount_ADDR, querySet?.handler?.rawValue ?: 0L).toInt().toUInt()
 }
 
-private val wgpuQuerySetGetType_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQuerySetGetType") }
+private val wgpuQuerySetGetType_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQuerySetGetType") }
 actual fun wgpuQuerySetGetType(querySet: WGPUQuerySet?): WGPUQueryType {
     return (NativeEngine.callI1P(wgpuQuerySetGetType_ADDR, querySet?.handler?.rawValue ?: 0L).toInt()).toUInt()
 }
 
-private val wgpuQuerySetSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQuerySetSetLabel") }
+private val wgpuQuerySetSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQuerySetSetLabel") }
 actual fun wgpuQuerySetSetLabel(querySet: WGPUQuerySet?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(querySet?.handler?.rawValue ?: 0L, 0uL)
@@ -6977,19 +6986,19 @@ actual fun wgpuQuerySetSetLabel(querySet: WGPUQuerySet?, label: WGPUStringView):
     NativeEngine.callGeneric(wgpuQuerySetSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuQuerySetAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQuerySetAddRef") }
+private val wgpuQuerySetAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQuerySetAddRef") }
 actual fun wgpuQuerySetAddRef(querySet: WGPUQuerySet?): Unit {
     NativeEngine.callV1P(wgpuQuerySetAddRef_ADDR, querySet?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuQuerySetRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQuerySetRelease") }
+private val wgpuQuerySetRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQuerySetRelease") }
 actual fun wgpuQuerySetRelease(querySet: WGPUQuerySet?): Unit {
     NativeEngine.callV1P(wgpuQuerySetRelease_ADDR, querySet?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuQueueOnSubmittedWorkDone_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQueueOnSubmittedWorkDone") }
+private val wgpuQueueOnSubmittedWorkDone_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQueueOnSubmittedWorkDone") }
 actual fun wgpuQueueOnSubmittedWorkDone(allocator: MemoryAllocator, queue: WGPUQueue?, callbackInfo: WGPUQueueWorkDoneCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(48uL)
     args.writeLong(queue?.handler?.rawValue ?: 0L, 0uL)
@@ -6997,11 +7006,11 @@ actual fun wgpuQueueOnSubmittedWorkDone(allocator: MemoryAllocator, queue: WGPUQ
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 8uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuQueueOnSubmittedWorkDone_ADDR, 2, "s8@8(i64):p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuQueueOnSubmittedWorkDone_ADDR, 2, "u64:p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
-private val wgpuQueueSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQueueSetLabel") }
+private val wgpuQueueSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQueueSetLabel") }
 actual fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(queue?.handler?.rawValue ?: 0L, 0uL)
@@ -7012,37 +7021,37 @@ actual fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit {
     NativeEngine.callGeneric(wgpuQueueSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuQueueSubmit_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQueueSubmit") }
+private val wgpuQueueSubmit_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQueueSubmit") }
 actual fun wgpuQueueSubmit(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): Unit {
     NativeEngine.callV3PLP(wgpuQueueSubmit_ADDR, queue?.handler?.rawValue ?: 0L, commandCount.toLong(), commands.toAddress())
     return
 }
 
-private val wgpuQueueWriteBuffer_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQueueWriteBuffer") }
+private val wgpuQueueWriteBuffer_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQueueWriteBuffer") }
 actual fun wgpuQueueWriteBuffer(queue: WGPUQueue?, buffer: WGPUBuffer?, bufferOffset: ULong, data: NativeAddress?, size: ULong): Unit {
     NativeEngine.callV5PPLPL(wgpuQueueWriteBuffer_ADDR, queue?.handler?.rawValue ?: 0L, buffer?.handler?.rawValue ?: 0L, bufferOffset.toLong(), data.toAddress(), size.toLong())
     return
 }
 
-private val wgpuQueueWriteTexture_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQueueWriteTexture") }
+private val wgpuQueueWriteTexture_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQueueWriteTexture") }
 actual fun wgpuQueueWriteTexture(queue: WGPUQueue?, destination: WGPUTexelCopyTextureInfo?, data: NativeAddress?, dataSize: ULong, dataLayout: WGPUTexelCopyBufferLayout?, writeSize: WGPUExtent3D?): Unit {
     NativeEngine.callV6PPPLPP(wgpuQueueWriteTexture_ADDR, queue?.handler?.rawValue ?: 0L, destination?.handler?.rawValue ?: 0L, data.toAddress(), dataSize.toLong(), dataLayout?.handler?.rawValue ?: 0L, writeSize?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuQueueAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQueueAddRef") }
+private val wgpuQueueAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQueueAddRef") }
 actual fun wgpuQueueAddRef(queue: WGPUQueue?): Unit {
     NativeEngine.callV1P(wgpuQueueAddRef_ADDR, queue?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuQueueRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQueueRelease") }
+private val wgpuQueueRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQueueRelease") }
 actual fun wgpuQueueRelease(queue: WGPUQueue?): Unit {
     NativeEngine.callV1P(wgpuQueueRelease_ADDR, queue?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderBundleSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleSetLabel") }
+private val wgpuRenderBundleSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleSetLabel") }
 actual fun wgpuRenderBundleSetLabel(renderBundle: WGPURenderBundle?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(renderBundle?.handler?.rawValue ?: 0L, 0uL)
@@ -7053,48 +7062,48 @@ actual fun wgpuRenderBundleSetLabel(renderBundle: WGPURenderBundle?, label: WGPU
     NativeEngine.callGeneric(wgpuRenderBundleSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuRenderBundleAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleAddRef") }
+private val wgpuRenderBundleAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleAddRef") }
 actual fun wgpuRenderBundleAddRef(renderBundle: WGPURenderBundle?): Unit {
     NativeEngine.callV1P(wgpuRenderBundleAddRef_ADDR, renderBundle?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderBundleRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleRelease") }
+private val wgpuRenderBundleRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleRelease") }
 actual fun wgpuRenderBundleRelease(renderBundle: WGPURenderBundle?): Unit {
     NativeEngine.callV1P(wgpuRenderBundleRelease_ADDR, renderBundle?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderBundleEncoderDraw_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderDraw") }
+private val wgpuRenderBundleEncoderDraw_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderDraw") }
 actual fun wgpuRenderBundleEncoderDraw(renderBundleEncoder: WGPURenderBundleEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit {
     NativeEngine.callV5PIIII(wgpuRenderBundleEncoderDraw_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L, vertexCount.toInt(), instanceCount.toInt(), firstVertex.toInt(), firstInstance.toInt())
     return
 }
 
-private val wgpuRenderBundleEncoderDrawIndexed_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderDrawIndexed") }
+private val wgpuRenderBundleEncoderDrawIndexed_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderDrawIndexed") }
 actual fun wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder: WGPURenderBundleEncoder?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit {
     NativeEngine.callV6PIIIII(wgpuRenderBundleEncoderDrawIndexed_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L, indexCount.toInt(), instanceCount.toInt(), firstIndex.toInt(), baseVertex, firstInstance.toInt())
     return
 }
 
-private val wgpuRenderBundleEncoderDrawIndexedIndirect_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderDrawIndexedIndirect") }
+private val wgpuRenderBundleEncoderDrawIndexedIndirect_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderDrawIndexedIndirect") }
 actual fun wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
     NativeEngine.callV3PPL(wgpuRenderBundleEncoderDrawIndexedIndirect_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L, indirectBuffer?.handler?.rawValue ?: 0L, indirectOffset.toLong())
     return
 }
 
-private val wgpuRenderBundleEncoderDrawIndirect_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderDrawIndirect") }
+private val wgpuRenderBundleEncoderDrawIndirect_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderDrawIndirect") }
 actual fun wgpuRenderBundleEncoderDrawIndirect(renderBundleEncoder: WGPURenderBundleEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
     NativeEngine.callV3PPL(wgpuRenderBundleEncoderDrawIndirect_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L, indirectBuffer?.handler?.rawValue ?: 0L, indirectOffset.toLong())
     return
 }
 
-private val wgpuRenderBundleEncoderFinish_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderFinish") }
+private val wgpuRenderBundleEncoderFinish_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderFinish") }
 actual fun wgpuRenderBundleEncoderFinish(renderBundleEncoder: WGPURenderBundleEncoder?, descriptor: WGPURenderBundleDescriptor?): WGPURenderBundle? {
     return NativeEngine.callP2PP(wgpuRenderBundleEncoderFinish_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPURenderBundle)
 }
 
-private val wgpuRenderBundleEncoderInsertDebugMarker_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderInsertDebugMarker") }
+private val wgpuRenderBundleEncoderInsertDebugMarker_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderInsertDebugMarker") }
 actual fun wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder: WGPURenderBundleEncoder?, markerLabel: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(renderBundleEncoder?.handler?.rawValue ?: 0L, 0uL)
@@ -7105,13 +7114,13 @@ actual fun wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder: WGPURen
     NativeEngine.callGeneric(wgpuRenderBundleEncoderInsertDebugMarker_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuRenderBundleEncoderPopDebugGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderPopDebugGroup") }
+private val wgpuRenderBundleEncoderPopDebugGroup_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderPopDebugGroup") }
 actual fun wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder?): Unit {
     NativeEngine.callV1P(wgpuRenderBundleEncoderPopDebugGroup_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderBundleEncoderPushDebugGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderPushDebugGroup") }
+private val wgpuRenderBundleEncoderPushDebugGroup_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderPushDebugGroup") }
 actual fun wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupLabel: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(renderBundleEncoder?.handler?.rawValue ?: 0L, 0uL)
@@ -7122,19 +7131,19 @@ actual fun wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: WGPURender
     NativeEngine.callGeneric(wgpuRenderBundleEncoderPushDebugGroup_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuRenderBundleEncoderSetBindGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderSetBindGroup") }
+private val wgpuRenderBundleEncoderSetBindGroup_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderSetBindGroup") }
 actual fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit {
     NativeEngine.callV5PIPLP(wgpuRenderBundleEncoderSetBindGroup_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L, groupIndex.toInt(), group?.handler?.rawValue ?: 0L, dynamicOffsetCount.toLong(), dynamicOffsets.toAddress())
     return
 }
 
-private val wgpuRenderBundleEncoderSetIndexBuffer_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderSetIndexBuffer") }
+private val wgpuRenderBundleEncoderSetIndexBuffer_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderSetIndexBuffer") }
 actual fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit {
     NativeEngine.callV5PPILL(wgpuRenderBundleEncoderSetIndexBuffer_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L, buffer?.handler?.rawValue ?: 0L, format.toInt(), offset.toLong(), size.toLong())
     return
 }
 
-private val wgpuRenderBundleEncoderSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderSetLabel") }
+private val wgpuRenderBundleEncoderSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderSetLabel") }
 actual fun wgpuRenderBundleEncoderSetLabel(renderBundleEncoder: WGPURenderBundleEncoder?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(renderBundleEncoder?.handler?.rawValue ?: 0L, 0uL)
@@ -7145,79 +7154,79 @@ actual fun wgpuRenderBundleEncoderSetLabel(renderBundleEncoder: WGPURenderBundle
     NativeEngine.callGeneric(wgpuRenderBundleEncoderSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuRenderBundleEncoderSetPipeline_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderSetPipeline") }
+private val wgpuRenderBundleEncoderSetPipeline_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderSetPipeline") }
 actual fun wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder: WGPURenderBundleEncoder?, pipeline: WGPURenderPipeline?): Unit {
     NativeEngine.callV2PP(wgpuRenderBundleEncoderSetPipeline_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L, pipeline?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderBundleEncoderSetVertexBuffer_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderSetVertexBuffer") }
+private val wgpuRenderBundleEncoderSetVertexBuffer_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderSetVertexBuffer") }
 actual fun wgpuRenderBundleEncoderSetVertexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit {
     NativeEngine.callV5PIPLL(wgpuRenderBundleEncoderSetVertexBuffer_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L, slot.toInt(), buffer?.handler?.rawValue ?: 0L, offset.toLong(), size.toLong())
     return
 }
 
-private val wgpuRenderBundleEncoderAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderAddRef") }
+private val wgpuRenderBundleEncoderAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderAddRef") }
 actual fun wgpuRenderBundleEncoderAddRef(renderBundleEncoder: WGPURenderBundleEncoder?): Unit {
     NativeEngine.callV1P(wgpuRenderBundleEncoderAddRef_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderBundleEncoderRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderRelease") }
+private val wgpuRenderBundleEncoderRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderRelease") }
 actual fun wgpuRenderBundleEncoderRelease(renderBundleEncoder: WGPURenderBundleEncoder?): Unit {
     NativeEngine.callV1P(wgpuRenderBundleEncoderRelease_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderPassEncoderBeginOcclusionQuery_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderBeginOcclusionQuery") }
+private val wgpuRenderPassEncoderBeginOcclusionQuery_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderBeginOcclusionQuery") }
 actual fun wgpuRenderPassEncoderBeginOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?, queryIndex: UInt): Unit {
     NativeEngine.callV2PI(wgpuRenderPassEncoderBeginOcclusionQuery_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, queryIndex.toInt())
     return
 }
 
-private val wgpuRenderPassEncoderDraw_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderDraw") }
+private val wgpuRenderPassEncoderDraw_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderDraw") }
 actual fun wgpuRenderPassEncoderDraw(renderPassEncoder: WGPURenderPassEncoder?, vertexCount: UInt, instanceCount: UInt, firstVertex: UInt, firstInstance: UInt): Unit {
     NativeEngine.callV5PIIII(wgpuRenderPassEncoderDraw_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, vertexCount.toInt(), instanceCount.toInt(), firstVertex.toInt(), firstInstance.toInt())
     return
 }
 
-private val wgpuRenderPassEncoderDrawIndexed_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderDrawIndexed") }
+private val wgpuRenderPassEncoderDrawIndexed_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderDrawIndexed") }
 actual fun wgpuRenderPassEncoderDrawIndexed(renderPassEncoder: WGPURenderPassEncoder?, indexCount: UInt, instanceCount: UInt, firstIndex: UInt, baseVertex: Int, firstInstance: UInt): Unit {
     NativeEngine.callV6PIIIII(wgpuRenderPassEncoderDrawIndexed_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, indexCount.toInt(), instanceCount.toInt(), firstIndex.toInt(), baseVertex, firstInstance.toInt())
     return
 }
 
-private val wgpuRenderPassEncoderDrawIndexedIndirect_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderDrawIndexedIndirect") }
+private val wgpuRenderPassEncoderDrawIndexedIndirect_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderDrawIndexedIndirect") }
 actual fun wgpuRenderPassEncoderDrawIndexedIndirect(renderPassEncoder: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
     NativeEngine.callV3PPL(wgpuRenderPassEncoderDrawIndexedIndirect_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, indirectBuffer?.handler?.rawValue ?: 0L, indirectOffset.toLong())
     return
 }
 
-private val wgpuRenderPassEncoderDrawIndirect_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderDrawIndirect") }
+private val wgpuRenderPassEncoderDrawIndirect_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderDrawIndirect") }
 actual fun wgpuRenderPassEncoderDrawIndirect(renderPassEncoder: WGPURenderPassEncoder?, indirectBuffer: WGPUBuffer?, indirectOffset: ULong): Unit {
     NativeEngine.callV3PPL(wgpuRenderPassEncoderDrawIndirect_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, indirectBuffer?.handler?.rawValue ?: 0L, indirectOffset.toLong())
     return
 }
 
-private val wgpuRenderPassEncoderEnd_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderEnd") }
+private val wgpuRenderPassEncoderEnd_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderEnd") }
 actual fun wgpuRenderPassEncoderEnd(renderPassEncoder: WGPURenderPassEncoder?): Unit {
     NativeEngine.callV1P(wgpuRenderPassEncoderEnd_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderPassEncoderEndOcclusionQuery_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderEndOcclusionQuery") }
+private val wgpuRenderPassEncoderEndOcclusionQuery_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderEndOcclusionQuery") }
 actual fun wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit {
     NativeEngine.callV1P(wgpuRenderPassEncoderEndOcclusionQuery_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderPassEncoderExecuteBundles_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderExecuteBundles") }
+private val wgpuRenderPassEncoderExecuteBundles_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderExecuteBundles") }
 actual fun wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder?, bundleCount: ULong, bundles: NativeAddress?): Unit {
     NativeEngine.callV3PLP(wgpuRenderPassEncoderExecuteBundles_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, bundleCount.toLong(), bundles.toAddress())
     return
 }
 
-private val wgpuRenderPassEncoderInsertDebugMarker_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderInsertDebugMarker") }
+private val wgpuRenderPassEncoderInsertDebugMarker_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderInsertDebugMarker") }
 actual fun wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: WGPURenderPassEncoder?, markerLabel: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(renderPassEncoder?.handler?.rawValue ?: 0L, 0uL)
@@ -7228,13 +7237,13 @@ actual fun wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: WGPURenderP
     NativeEngine.callGeneric(wgpuRenderPassEncoderInsertDebugMarker_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuRenderPassEncoderPopDebugGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderPopDebugGroup") }
+private val wgpuRenderPassEncoderPopDebugGroup_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderPopDebugGroup") }
 actual fun wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder: WGPURenderPassEncoder?): Unit {
     NativeEngine.callV1P(wgpuRenderPassEncoderPopDebugGroup_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderPassEncoderPushDebugGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderPushDebugGroup") }
+private val wgpuRenderPassEncoderPushDebugGroup_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderPushDebugGroup") }
 actual fun wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: WGPURenderPassEncoder?, groupLabel: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(renderPassEncoder?.handler?.rawValue ?: 0L, 0uL)
@@ -7245,25 +7254,25 @@ actual fun wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: WGPURenderPass
     NativeEngine.callGeneric(wgpuRenderPassEncoderPushDebugGroup_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuRenderPassEncoderSetBindGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderSetBindGroup") }
+private val wgpuRenderPassEncoderSetBindGroup_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetBindGroup") }
 actual fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit {
     NativeEngine.callV5PIPLP(wgpuRenderPassEncoderSetBindGroup_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, groupIndex.toInt(), group?.handler?.rawValue ?: 0L, dynamicOffsetCount.toLong(), dynamicOffsets.toAddress())
     return
 }
 
-private val wgpuRenderPassEncoderSetBlendConstant_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderSetBlendConstant") }
+private val wgpuRenderPassEncoderSetBlendConstant_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetBlendConstant") }
 actual fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder?, color: WGPUColor?): Unit {
     NativeEngine.callV2PP(wgpuRenderPassEncoderSetBlendConstant_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, color?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderPassEncoderSetIndexBuffer_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderSetIndexBuffer") }
+private val wgpuRenderPassEncoderSetIndexBuffer_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetIndexBuffer") }
 actual fun wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit {
     NativeEngine.callV5PPILL(wgpuRenderPassEncoderSetIndexBuffer_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, buffer?.handler?.rawValue ?: 0L, format.toInt(), offset.toLong(), size.toLong())
     return
 }
 
-private val wgpuRenderPassEncoderSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderSetLabel") }
+private val wgpuRenderPassEncoderSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetLabel") }
 actual fun wgpuRenderPassEncoderSetLabel(renderPassEncoder: WGPURenderPassEncoder?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(renderPassEncoder?.handler?.rawValue ?: 0L, 0uL)
@@ -7274,54 +7283,54 @@ actual fun wgpuRenderPassEncoderSetLabel(renderPassEncoder: WGPURenderPassEncode
     NativeEngine.callGeneric(wgpuRenderPassEncoderSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuRenderPassEncoderSetPipeline_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderSetPipeline") }
+private val wgpuRenderPassEncoderSetPipeline_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetPipeline") }
 actual fun wgpuRenderPassEncoderSetPipeline(renderPassEncoder: WGPURenderPassEncoder?, pipeline: WGPURenderPipeline?): Unit {
     NativeEngine.callV2PP(wgpuRenderPassEncoderSetPipeline_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, pipeline?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderPassEncoderSetScissorRect_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderSetScissorRect") }
+private val wgpuRenderPassEncoderSetScissorRect_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetScissorRect") }
 actual fun wgpuRenderPassEncoderSetScissorRect(renderPassEncoder: WGPURenderPassEncoder?, x: UInt, y: UInt, width: UInt, height: UInt): Unit {
     NativeEngine.callV5PIIII(wgpuRenderPassEncoderSetScissorRect_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, x.toInt(), y.toInt(), width.toInt(), height.toInt())
     return
 }
 
-private val wgpuRenderPassEncoderSetStencilReference_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderSetStencilReference") }
+private val wgpuRenderPassEncoderSetStencilReference_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetStencilReference") }
 actual fun wgpuRenderPassEncoderSetStencilReference(renderPassEncoder: WGPURenderPassEncoder?, reference: UInt): Unit {
     NativeEngine.callV2PI(wgpuRenderPassEncoderSetStencilReference_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, reference.toInt())
     return
 }
 
-private val wgpuRenderPassEncoderSetVertexBuffer_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderSetVertexBuffer") }
+private val wgpuRenderPassEncoderSetVertexBuffer_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetVertexBuffer") }
 actual fun wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder: WGPURenderPassEncoder?, slot: UInt, buffer: WGPUBuffer?, offset: ULong, size: ULong): Unit {
     NativeEngine.callV5PIPLL(wgpuRenderPassEncoderSetVertexBuffer_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, slot.toInt(), buffer?.handler?.rawValue ?: 0L, offset.toLong(), size.toLong())
     return
 }
 
-private val wgpuRenderPassEncoderSetViewport_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderSetViewport") }
+private val wgpuRenderPassEncoderSetViewport_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetViewport") }
 actual fun wgpuRenderPassEncoderSetViewport(renderPassEncoder: WGPURenderPassEncoder?, x: Float, y: Float, width: Float, height: Float, minDepth: Float, maxDepth: Float): Unit {
     NativeEngine.callV7PFFFFFF(wgpuRenderPassEncoderSetViewport_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, x, y, width, height, minDepth, maxDepth)
     return
 }
 
-private val wgpuRenderPassEncoderAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderAddRef") }
+private val wgpuRenderPassEncoderAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderAddRef") }
 actual fun wgpuRenderPassEncoderAddRef(renderPassEncoder: WGPURenderPassEncoder?): Unit {
     NativeEngine.callV1P(wgpuRenderPassEncoderAddRef_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderPassEncoderRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderRelease") }
+private val wgpuRenderPassEncoderRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderRelease") }
 actual fun wgpuRenderPassEncoderRelease(renderPassEncoder: WGPURenderPassEncoder?): Unit {
     NativeEngine.callV1P(wgpuRenderPassEncoderRelease_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderPipelineGetBindGroupLayout_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPipelineGetBindGroupLayout") }
+private val wgpuRenderPipelineGetBindGroupLayout_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPipelineGetBindGroupLayout") }
 actual fun wgpuRenderPipelineGetBindGroupLayout(renderPipeline: WGPURenderPipeline?, groupIndex: UInt): WGPUBindGroupLayout? {
     return NativeEngine.callP2PI(wgpuRenderPipelineGetBindGroupLayout_ADDR, renderPipeline?.handler?.rawValue ?: 0L, groupIndex.toInt()).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUBindGroupLayout)
 }
 
-private val wgpuRenderPipelineSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPipelineSetLabel") }
+private val wgpuRenderPipelineSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPipelineSetLabel") }
 actual fun wgpuRenderPipelineSetLabel(renderPipeline: WGPURenderPipeline?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(renderPipeline?.handler?.rawValue ?: 0L, 0uL)
@@ -7332,19 +7341,19 @@ actual fun wgpuRenderPipelineSetLabel(renderPipeline: WGPURenderPipeline?, label
     NativeEngine.callGeneric(wgpuRenderPipelineSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuRenderPipelineAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPipelineAddRef") }
+private val wgpuRenderPipelineAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPipelineAddRef") }
 actual fun wgpuRenderPipelineAddRef(renderPipeline: WGPURenderPipeline?): Unit {
     NativeEngine.callV1P(wgpuRenderPipelineAddRef_ADDR, renderPipeline?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderPipelineRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPipelineRelease") }
+private val wgpuRenderPipelineRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPipelineRelease") }
 actual fun wgpuRenderPipelineRelease(renderPipeline: WGPURenderPipeline?): Unit {
     NativeEngine.callV1P(wgpuRenderPipelineRelease_ADDR, renderPipeline?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuSamplerSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSamplerSetLabel") }
+private val wgpuSamplerSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSamplerSetLabel") }
 actual fun wgpuSamplerSetLabel(sampler: WGPUSampler?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(sampler?.handler?.rawValue ?: 0L, 0uL)
@@ -7355,19 +7364,19 @@ actual fun wgpuSamplerSetLabel(sampler: WGPUSampler?, label: WGPUStringView): Un
     NativeEngine.callGeneric(wgpuSamplerSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuSamplerAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSamplerAddRef") }
+private val wgpuSamplerAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSamplerAddRef") }
 actual fun wgpuSamplerAddRef(sampler: WGPUSampler?): Unit {
     NativeEngine.callV1P(wgpuSamplerAddRef_ADDR, sampler?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuSamplerRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSamplerRelease") }
+private val wgpuSamplerRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSamplerRelease") }
 actual fun wgpuSamplerRelease(sampler: WGPUSampler?): Unit {
     NativeEngine.callV1P(wgpuSamplerRelease_ADDR, sampler?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuShaderModuleGetCompilationInfo_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuShaderModuleGetCompilationInfo") }
+private val wgpuShaderModuleGetCompilationInfo_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuShaderModuleGetCompilationInfo") }
 actual fun wgpuShaderModuleGetCompilationInfo(allocator: MemoryAllocator, shaderModule: WGPUShaderModule?, callbackInfo: WGPUCompilationInfoCallbackInfo): WGPUFuture {
     val args = MemoryAllocator().allocateBuffer(48uL)
     args.writeLong(shaderModule?.handler?.rawValue ?: 0L, 0uL)
@@ -7375,11 +7384,11 @@ actual fun wgpuShaderModuleGetCompilationInfo(allocator: MemoryAllocator, shader
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 8uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuShaderModuleGetCompilationInfo_ADDR, 2, "s8@8(i64):p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuShaderModuleGetCompilationInfo_ADDR, 2, "u64:p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
-private val wgpuShaderModuleSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuShaderModuleSetLabel") }
+private val wgpuShaderModuleSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuShaderModuleSetLabel") }
 actual fun wgpuShaderModuleSetLabel(shaderModule: WGPUShaderModule?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(shaderModule?.handler?.rawValue ?: 0L, 0uL)
@@ -7390,19 +7399,19 @@ actual fun wgpuShaderModuleSetLabel(shaderModule: WGPUShaderModule?, label: WGPU
     NativeEngine.callGeneric(wgpuShaderModuleSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuShaderModuleAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuShaderModuleAddRef") }
+private val wgpuShaderModuleAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuShaderModuleAddRef") }
 actual fun wgpuShaderModuleAddRef(shaderModule: WGPUShaderModule?): Unit {
     NativeEngine.callV1P(wgpuShaderModuleAddRef_ADDR, shaderModule?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuShaderModuleRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuShaderModuleRelease") }
+private val wgpuShaderModuleRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuShaderModuleRelease") }
 actual fun wgpuShaderModuleRelease(shaderModule: WGPUShaderModule?): Unit {
     NativeEngine.callV1P(wgpuShaderModuleRelease_ADDR, shaderModule?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuSupportedFeaturesFreeMembers_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSupportedFeaturesFreeMembers") }
+private val wgpuSupportedFeaturesFreeMembers_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSupportedFeaturesFreeMembers") }
 actual fun wgpuSupportedFeaturesFreeMembers(supportedFeatures: WGPUSupportedFeatures): Unit {
     val args = MemoryAllocator().allocateBuffer(16uL)
     val supportedFeaturesBytes = ByteArray(16)
@@ -7412,7 +7421,7 @@ actual fun wgpuSupportedFeaturesFreeMembers(supportedFeatures: WGPUSupportedFeat
     NativeEngine.callGeneric(wgpuSupportedFeaturesFreeMembers_ADDR, 1, "v:s16@8(i64,p)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuSupportedInstanceFeaturesFreeMembers_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSupportedInstanceFeaturesFreeMembers") }
+private val wgpuSupportedInstanceFeaturesFreeMembers_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSupportedInstanceFeaturesFreeMembers") }
 actual fun wgpuSupportedInstanceFeaturesFreeMembers(supportedInstanceFeatures: WGPUSupportedInstanceFeatures): Unit {
     val args = MemoryAllocator().allocateBuffer(16uL)
     val supportedInstanceFeaturesBytes = ByteArray(16)
@@ -7422,7 +7431,7 @@ actual fun wgpuSupportedInstanceFeaturesFreeMembers(supportedInstanceFeatures: W
     NativeEngine.callGeneric(wgpuSupportedInstanceFeaturesFreeMembers_ADDR, 1, "v:s16@8(i64,p)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuSupportedWGSLLanguageFeaturesFreeMembers_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSupportedWGSLLanguageFeaturesFreeMembers") }
+private val wgpuSupportedWGSLLanguageFeaturesFreeMembers_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSupportedWGSLLanguageFeaturesFreeMembers") }
 actual fun wgpuSupportedWGSLLanguageFeaturesFreeMembers(supportedWGSLLanguageFeatures: WGPUSupportedWGSLLanguageFeatures): Unit {
     val args = MemoryAllocator().allocateBuffer(16uL)
     val supportedWGSLLanguageFeaturesBytes = ByteArray(16)
@@ -7432,29 +7441,29 @@ actual fun wgpuSupportedWGSLLanguageFeaturesFreeMembers(supportedWGSLLanguageFea
     NativeEngine.callGeneric(wgpuSupportedWGSLLanguageFeaturesFreeMembers_ADDR, 1, "v:s16@8(i64,p)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuSurfaceConfigure_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSurfaceConfigure") }
+private val wgpuSurfaceConfigure_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSurfaceConfigure") }
 actual fun wgpuSurfaceConfigure(surface: WGPUSurface?, config: WGPUSurfaceConfiguration?): Unit {
     NativeEngine.callV2PP(wgpuSurfaceConfigure_ADDR, surface?.handler?.rawValue ?: 0L, config?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuSurfaceGetCapabilities_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSurfaceGetCapabilities") }
+private val wgpuSurfaceGetCapabilities_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSurfaceGetCapabilities") }
 actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus {
     return (NativeEngine.callI3PPP(wgpuSurfaceGetCapabilities_ADDR, surface?.handler?.rawValue ?: 0L, adapter?.handler?.rawValue ?: 0L, capabilities?.handler?.rawValue ?: 0L).toInt()).toUInt()
 }
 
-private val wgpuSurfaceGetCurrentTexture_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSurfaceGetCurrentTexture") }
+private val wgpuSurfaceGetCurrentTexture_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSurfaceGetCurrentTexture") }
 actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit {
     NativeEngine.callV2PP(wgpuSurfaceGetCurrentTexture_ADDR, surface?.handler?.rawValue ?: 0L, surfaceTexture?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuSurfacePresent_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSurfacePresent") }
+private val wgpuSurfacePresent_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSurfacePresent") }
 actual fun wgpuSurfacePresent(surface: WGPUSurface?): WGPUStatus {
     return (NativeEngine.callI1P(wgpuSurfacePresent_ADDR, surface?.handler?.rawValue ?: 0L).toInt()).toUInt()
 }
 
-private val wgpuSurfaceSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSurfaceSetLabel") }
+private val wgpuSurfaceSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSurfaceSetLabel") }
 actual fun wgpuSurfaceSetLabel(surface: WGPUSurface?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(surface?.handler?.rawValue ?: 0L, 0uL)
@@ -7465,25 +7474,25 @@ actual fun wgpuSurfaceSetLabel(surface: WGPUSurface?, label: WGPUStringView): Un
     NativeEngine.callGeneric(wgpuSurfaceSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuSurfaceUnconfigure_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSurfaceUnconfigure") }
+private val wgpuSurfaceUnconfigure_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSurfaceUnconfigure") }
 actual fun wgpuSurfaceUnconfigure(surface: WGPUSurface?): Unit {
     NativeEngine.callV1P(wgpuSurfaceUnconfigure_ADDR, surface?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuSurfaceAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSurfaceAddRef") }
+private val wgpuSurfaceAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSurfaceAddRef") }
 actual fun wgpuSurfaceAddRef(surface: WGPUSurface?): Unit {
     NativeEngine.callV1P(wgpuSurfaceAddRef_ADDR, surface?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuSurfaceRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSurfaceRelease") }
+private val wgpuSurfaceRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSurfaceRelease") }
 actual fun wgpuSurfaceRelease(surface: WGPUSurface?): Unit {
     NativeEngine.callV1P(wgpuSurfaceRelease_ADDR, surface?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuSurfaceCapabilitiesFreeMembers_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSurfaceCapabilitiesFreeMembers") }
+private val wgpuSurfaceCapabilitiesFreeMembers_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSurfaceCapabilitiesFreeMembers") }
 actual fun wgpuSurfaceCapabilitiesFreeMembers(surfaceCapabilities: WGPUSurfaceCapabilities): Unit {
     val args = MemoryAllocator().allocateBuffer(64uL)
     val surfaceCapabilitiesBytes = ByteArray(64)
@@ -7493,63 +7502,63 @@ actual fun wgpuSurfaceCapabilitiesFreeMembers(surfaceCapabilities: WGPUSurfaceCa
     NativeEngine.callGeneric(wgpuSurfaceCapabilitiesFreeMembers_ADDR, 1, "v:s64@8(p,i64,i64,p,i64,p,i64,p)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuTextureCreateView_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureCreateView") }
+private val wgpuTextureCreateView_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureCreateView") }
 actual fun wgpuTextureCreateView(texture: WGPUTexture?, descriptor: WGPUTextureViewDescriptor?): WGPUTextureView? {
     return NativeEngine.callP2PP(wgpuTextureCreateView_ADDR, texture?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUTextureView)
 }
 
-private val wgpuTextureDestroy_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureDestroy") }
+private val wgpuTextureDestroy_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureDestroy") }
 actual fun wgpuTextureDestroy(texture: WGPUTexture?): Unit {
     NativeEngine.callV1P(wgpuTextureDestroy_ADDR, texture?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuTextureGetDepthOrArrayLayers_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureGetDepthOrArrayLayers") }
+private val wgpuTextureGetDepthOrArrayLayers_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureGetDepthOrArrayLayers") }
 actual fun wgpuTextureGetDepthOrArrayLayers(texture: WGPUTexture?): UInt {
     return NativeEngine.callI1P(wgpuTextureGetDepthOrArrayLayers_ADDR, texture?.handler?.rawValue ?: 0L).toInt().toUInt()
 }
 
-private val wgpuTextureGetDimension_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureGetDimension") }
+private val wgpuTextureGetDimension_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureGetDimension") }
 actual fun wgpuTextureGetDimension(texture: WGPUTexture?): WGPUTextureDimension {
     return (NativeEngine.callI1P(wgpuTextureGetDimension_ADDR, texture?.handler?.rawValue ?: 0L).toInt()).toUInt()
 }
 
-private val wgpuTextureGetFormat_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureGetFormat") }
+private val wgpuTextureGetFormat_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureGetFormat") }
 actual fun wgpuTextureGetFormat(texture: WGPUTexture?): WGPUTextureFormat {
     return (NativeEngine.callI1P(wgpuTextureGetFormat_ADDR, texture?.handler?.rawValue ?: 0L).toInt()).toUInt()
 }
 
-private val wgpuTextureGetHeight_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureGetHeight") }
+private val wgpuTextureGetHeight_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureGetHeight") }
 actual fun wgpuTextureGetHeight(texture: WGPUTexture?): UInt {
     return NativeEngine.callI1P(wgpuTextureGetHeight_ADDR, texture?.handler?.rawValue ?: 0L).toInt().toUInt()
 }
 
-private val wgpuTextureGetMipLevelCount_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureGetMipLevelCount") }
+private val wgpuTextureGetMipLevelCount_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureGetMipLevelCount") }
 actual fun wgpuTextureGetMipLevelCount(texture: WGPUTexture?): UInt {
     return NativeEngine.callI1P(wgpuTextureGetMipLevelCount_ADDR, texture?.handler?.rawValue ?: 0L).toInt().toUInt()
 }
 
-private val wgpuTextureGetSampleCount_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureGetSampleCount") }
+private val wgpuTextureGetSampleCount_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureGetSampleCount") }
 actual fun wgpuTextureGetSampleCount(texture: WGPUTexture?): UInt {
     return NativeEngine.callI1P(wgpuTextureGetSampleCount_ADDR, texture?.handler?.rawValue ?: 0L).toInt().toUInt()
 }
 
-private val wgpuTextureGetTextureBindingViewDimension_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureGetTextureBindingViewDimension") }
+private val wgpuTextureGetTextureBindingViewDimension_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureGetTextureBindingViewDimension") }
 actual fun wgpuTextureGetTextureBindingViewDimension(texture: WGPUTexture?): WGPUTextureViewDimension {
     return (NativeEngine.callI1P(wgpuTextureGetTextureBindingViewDimension_ADDR, texture?.handler?.rawValue ?: 0L).toInt()).toUInt()
 }
 
-private val wgpuTextureGetUsage_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureGetUsage") }
+private val wgpuTextureGetUsage_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureGetUsage") }
 actual fun wgpuTextureGetUsage(texture: WGPUTexture?): ULong {
     return NativeEngine.callL1P(wgpuTextureGetUsage_ADDR, texture?.handler?.rawValue ?: 0L).toULong()
 }
 
-private val wgpuTextureGetWidth_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureGetWidth") }
+private val wgpuTextureGetWidth_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureGetWidth") }
 actual fun wgpuTextureGetWidth(texture: WGPUTexture?): UInt {
     return NativeEngine.callI1P(wgpuTextureGetWidth_ADDR, texture?.handler?.rawValue ?: 0L).toInt().toUInt()
 }
 
-private val wgpuTextureSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureSetLabel") }
+private val wgpuTextureSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureSetLabel") }
 actual fun wgpuTextureSetLabel(texture: WGPUTexture?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(texture?.handler?.rawValue ?: 0L, 0uL)
@@ -7560,19 +7569,19 @@ actual fun wgpuTextureSetLabel(texture: WGPUTexture?, label: WGPUStringView): Un
     NativeEngine.callGeneric(wgpuTextureSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuTextureAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureAddRef") }
+private val wgpuTextureAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureAddRef") }
 actual fun wgpuTextureAddRef(texture: WGPUTexture?): Unit {
     NativeEngine.callV1P(wgpuTextureAddRef_ADDR, texture?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuTextureRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureRelease") }
+private val wgpuTextureRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureRelease") }
 actual fun wgpuTextureRelease(texture: WGPUTexture?): Unit {
     NativeEngine.callV1P(wgpuTextureRelease_ADDR, texture?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuTextureViewSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureViewSetLabel") }
+private val wgpuTextureViewSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureViewSetLabel") }
 actual fun wgpuTextureViewSetLabel(textureView: WGPUTextureView?, label: WGPUStringView): Unit {
     val args = MemoryAllocator().allocateBuffer(24uL)
     args.writeLong(textureView?.handler?.rawValue ?: 0L, 0uL)
@@ -7583,13 +7592,13 @@ actual fun wgpuTextureViewSetLabel(textureView: WGPUTextureView?, label: WGPUStr
     NativeEngine.callGeneric(wgpuTextureViewSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
-private val wgpuTextureViewAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureViewAddRef") }
+private val wgpuTextureViewAddRef_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureViewAddRef") }
 actual fun wgpuTextureViewAddRef(textureView: WGPUTextureView?): Unit {
     NativeEngine.callV1P(wgpuTextureViewAddRef_ADDR, textureView?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuTextureViewRelease_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureViewRelease") }
+private val wgpuTextureViewRelease_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureViewRelease") }
 actual fun wgpuTextureViewRelease(textureView: WGPUTextureView?): Unit {
     NativeEngine.callV1P(wgpuTextureViewRelease_ADDR, textureView?.handler?.rawValue ?: 0L)
     return
@@ -9093,156 +9102,167 @@ actual interface WGPUPrimitiveStateExtras {
     }
 }
 
-private val wgpuGenerateReport_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuGenerateReport") }
+private val wgpuGenerateReport_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuGenerateReport") }
 actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit {
     NativeEngine.callV2PP(wgpuGenerateReport_ADDR, instance?.handler?.rawValue ?: 0L, report?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuInstanceEnumerateAdapters_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuInstanceEnumerateAdapters") }
+private val wgpuInstanceEnumerateAdapters_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuInstanceEnumerateAdapters") }
 actual fun wgpuInstanceEnumerateAdapters(instance: WGPUInstance?, options: WGPUInstanceEnumerateAdapterOptions?, adapters: NativeAddress?): ULong {
     return NativeEngine.callL3PPP(wgpuInstanceEnumerateAdapters_ADDR, instance?.handler?.rawValue ?: 0L, options?.handler?.rawValue ?: 0L, adapters.toAddress()).toULong()
 }
 
-private val wgpuQueueSubmitForIndex_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQueueSubmitForIndex") }
+private val wgpuQueueSubmitForIndex_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQueueSubmitForIndex") }
 actual fun wgpuQueueSubmitForIndex(queue: WGPUQueue?, commandCount: ULong, commands: NativeAddress?): ULong {
     return NativeEngine.callL3PLP(wgpuQueueSubmitForIndex_ADDR, queue?.handler?.rawValue ?: 0L, commandCount.toLong(), commands.toAddress()).toULong()
 }
 
-private val wgpuQueueGetTimestampPeriod_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQueueGetTimestampPeriod") }
+private val wgpuQueueGetTimestampPeriod_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQueueGetTimestampPeriod") }
 actual fun wgpuQueueGetTimestampPeriod(queue: WGPUQueue?): Float {
     return NativeEngine.callF1P(wgpuQueueGetTimestampPeriod_ADDR, queue?.handler?.rawValue ?: 0L)
 }
 
-private val wgpuDevicePoll_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDevicePoll") }
+private val wgpuDevicePoll_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDevicePoll") }
 actual fun wgpuDevicePoll(device: WGPUDevice?, wait: UInt, submissionIndex: NativeAddress?): UInt {
     return NativeEngine.callI3PIP(wgpuDevicePoll_ADDR, device?.handler?.rawValue ?: 0L, wait.toInt(), submissionIndex.toAddress()).toInt().toUInt()
 }
 
-private val wgpuDeviceCreateShaderModuleSpirV_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceCreateShaderModuleSpirV") }
+private val wgpuDeviceCreateShaderModuleSpirV_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateShaderModuleSpirV") }
 actual fun wgpuDeviceCreateShaderModuleSpirV(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptorSpirV?): WGPUShaderModule? {
     return NativeEngine.callP2PP(wgpuDeviceCreateShaderModuleSpirV_ADDR, device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUShaderModule)
 }
 
-private val wgpuSetLogCallback_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSetLogCallback") }
+private val wgpuSetLogCallback_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSetLogCallback") }
 actual fun wgpuSetLogCallback(callback: NativeAddress?, userdata: NativeAddress?): Unit {
     NativeEngine.callV2PP(wgpuSetLogCallback_ADDR, callback.toAddress(), userdata.toAddress())
     return
 }
 
-private val wgpuSetLogLevel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSetLogLevel") }
+private val wgpuSetLogLevel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuSetLogLevel") }
 actual fun wgpuSetLogLevel(level: WGPULogLevel): Unit {
     NativeEngine.callV1I(wgpuSetLogLevel_ADDR, level.toInt())
     return
 }
 
-private val wgpuGetVersion_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuGetVersion") }
+private val wgpuGetVersion_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuGetVersion") }
 actual fun wgpuGetVersion(): UInt {
     return NativeEngine.callI0(wgpuGetVersion_ADDR).toInt().toUInt()
 }
 
-private val wgpuDeviceGetNativeMetalDevice_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceGetNativeMetalDevice") }
+private val wgpuDeviceGetNativeMetalDevice_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceGetNativeMetalDevice") }
 actual fun wgpuDeviceGetNativeMetalDevice(device: WGPUDevice?): NativeAddress? {
     return NativeEngine.callP1P(wgpuDeviceGetNativeMetalDevice_ADDR, device?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)
 }
 
-private val wgpuQueueGetNativeMetalCommandQueue_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQueueGetNativeMetalCommandQueue") }
+private val wgpuQueueGetNativeMetalCommandQueue_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuQueueGetNativeMetalCommandQueue") }
 actual fun wgpuQueueGetNativeMetalCommandQueue(queue: WGPUQueue?): NativeAddress? {
     return NativeEngine.callP1P(wgpuQueueGetNativeMetalCommandQueue_ADDR, queue?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)
 }
 
-private val wgpuTextureGetNativeMetalTexture_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureGetNativeMetalTexture") }
+private val wgpuTextureGetNativeMetalTexture_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureGetNativeMetalTexture") }
 actual fun wgpuTextureGetNativeMetalTexture(texture: WGPUTexture?): NativeAddress? {
     return NativeEngine.callP1P(wgpuTextureGetNativeMetalTexture_ADDR, texture?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)
 }
 
-private val wgpuRenderPassEncoderSetImmediates_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderSetImmediates") }
+private val wgpuRenderPassEncoderSetImmediates_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetImmediates") }
 actual fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
     NativeEngine.callV4PIIP(wgpuRenderPassEncoderSetImmediates_ADDR, encoder?.handler?.rawValue ?: 0L, offset.toInt(), sizeBytes.toInt(), data.toAddress())
     return
 }
 
-private val wgpuComputePassEncoderSetImmediates_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderSetImmediates") }
+private val wgpuComputePassEncoderSetImmediates_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderSetImmediates") }
 actual fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
     NativeEngine.callV4PIIP(wgpuComputePassEncoderSetImmediates_ADDR, encoder?.handler?.rawValue ?: 0L, offset.toInt(), sizeBytes.toInt(), data.toAddress())
     return
 }
 
-private val wgpuRenderBundleEncoderSetImmediates_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderSetImmediates") }
+private val wgpuRenderBundleEncoderSetImmediates_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderSetImmediates") }
 actual fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
     NativeEngine.callV4PIIP(wgpuRenderBundleEncoderSetImmediates_ADDR, encoder?.handler?.rawValue ?: 0L, offset.toInt(), sizeBytes.toInt(), data.toAddress())
     return
 }
 
-private val wgpuRenderPassEncoderMultiDrawIndirect_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderMultiDrawIndirect") }
+private val wgpuRenderPassEncoderMultiDrawIndirect_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderMultiDrawIndirect") }
 actual fun wgpuRenderPassEncoderMultiDrawIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit {
     NativeEngine.callV4PPLI(wgpuRenderPassEncoderMultiDrawIndirect_ADDR, encoder?.handler?.rawValue ?: 0L, buffer?.handler?.rawValue ?: 0L, offset.toLong(), count.toInt())
     return
 }
 
-private val wgpuRenderPassEncoderMultiDrawIndexedIndirect_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderMultiDrawIndexedIndirect") }
+private val wgpuRenderPassEncoderMultiDrawIndexedIndirect_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderMultiDrawIndexedIndirect") }
 actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit {
     NativeEngine.callV4PPLI(wgpuRenderPassEncoderMultiDrawIndexedIndirect_ADDR, encoder?.handler?.rawValue ?: 0L, buffer?.handler?.rawValue ?: 0L, offset.toLong(), count.toInt())
     return
 }
 
-private val wgpuRenderPassEncoderMultiDrawIndirectCount_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderMultiDrawIndirectCount") }
+private val wgpuRenderPassEncoderMultiDrawIndirectCount_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderMultiDrawIndirectCount") }
 actual fun wgpuRenderPassEncoderMultiDrawIndirectCount(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count_buffer: WGPUBuffer?, count_buffer_offset: ULong, max_count: UInt): Unit {
     NativeEngine.callV6PPLPLI(wgpuRenderPassEncoderMultiDrawIndirectCount_ADDR, encoder?.handler?.rawValue ?: 0L, buffer?.handler?.rawValue ?: 0L, offset.toLong(), count_buffer?.handler?.rawValue ?: 0L, count_buffer_offset.toLong(), max_count.toInt())
     return
 }
 
-private val wgpuRenderPassEncoderMultiDrawIndexedIndirectCount_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderMultiDrawIndexedIndirectCount") }
+private val wgpuRenderPassEncoderMultiDrawIndexedIndirectCount_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderMultiDrawIndexedIndirectCount") }
 actual fun wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count_buffer: WGPUBuffer?, count_buffer_offset: ULong, max_count: UInt): Unit {
     NativeEngine.callV6PPLPLI(wgpuRenderPassEncoderMultiDrawIndexedIndirectCount_ADDR, encoder?.handler?.rawValue ?: 0L, buffer?.handler?.rawValue ?: 0L, offset.toLong(), count_buffer?.handler?.rawValue ?: 0L, count_buffer_offset.toLong(), max_count.toInt())
     return
 }
 
-private val wgpuComputePassEncoderBeginPipelineStatisticsQuery_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderBeginPipelineStatisticsQuery") }
+private val wgpuComputePassEncoderBeginPipelineStatisticsQuery_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderBeginPipelineStatisticsQuery") }
 actual fun wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
     NativeEngine.callV3PPI(wgpuComputePassEncoderBeginPipelineStatisticsQuery_ADDR, computePassEncoder?.handler?.rawValue ?: 0L, querySet?.handler?.rawValue ?: 0L, queryIndex.toInt())
     return
 }
 
-private val wgpuComputePassEncoderEndPipelineStatisticsQuery_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderEndPipelineStatisticsQuery") }
+private val wgpuComputePassEncoderEndPipelineStatisticsQuery_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderEndPipelineStatisticsQuery") }
 actual fun wgpuComputePassEncoderEndPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder?): Unit {
     NativeEngine.callV1P(wgpuComputePassEncoderEndPipelineStatisticsQuery_ADDR, computePassEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuRenderPassEncoderBeginPipelineStatisticsQuery_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderBeginPipelineStatisticsQuery") }
+private val wgpuRenderPassEncoderBeginPipelineStatisticsQuery_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderBeginPipelineStatisticsQuery") }
 actual fun wgpuRenderPassEncoderBeginPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
     NativeEngine.callV3PPI(wgpuRenderPassEncoderBeginPipelineStatisticsQuery_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, querySet?.handler?.rawValue ?: 0L, queryIndex.toInt())
     return
 }
 
-private val wgpuRenderPassEncoderEndPipelineStatisticsQuery_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderEndPipelineStatisticsQuery") }
+private val wgpuRenderPassEncoderEndPipelineStatisticsQuery_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderEndPipelineStatisticsQuery") }
 actual fun wgpuRenderPassEncoderEndPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder?): Unit {
     NativeEngine.callV1P(wgpuRenderPassEncoderEndPipelineStatisticsQuery_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L)
     return
 }
 
-private val wgpuComputePassEncoderWriteTimestamp_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderWriteTimestamp") }
+private val wgpuComputePassEncoderWriteTimestamp_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderWriteTimestamp") }
 actual fun wgpuComputePassEncoderWriteTimestamp(computePassEncoder: WGPUComputePassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
     NativeEngine.callV3PPI(wgpuComputePassEncoderWriteTimestamp_ADDR, computePassEncoder?.handler?.rawValue ?: 0L, querySet?.handler?.rawValue ?: 0L, queryIndex.toInt())
     return
 }
 
-private val wgpuRenderPassEncoderWriteTimestamp_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderWriteTimestamp") }
+private val wgpuRenderPassEncoderWriteTimestamp_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderWriteTimestamp") }
 actual fun wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: WGPURenderPassEncoder?, querySet: WGPUQuerySet?, queryIndex: UInt): Unit {
     NativeEngine.callV3PPI(wgpuRenderPassEncoderWriteTimestamp_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, querySet?.handler?.rawValue ?: 0L, queryIndex.toInt())
     return
 }
 
-private val wgpuDeviceStartGraphicsDebuggerCapture_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceStartGraphicsDebuggerCapture") }
+private val wgpuDeviceStartGraphicsDebuggerCapture_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceStartGraphicsDebuggerCapture") }
 actual fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): UInt {
     return NativeEngine.callI1P(wgpuDeviceStartGraphicsDebuggerCapture_ADDR, device?.handler?.rawValue ?: 0L).toInt().toUInt()
 }
 
-private val wgpuDeviceStopGraphicsDebuggerCapture_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceStopGraphicsDebuggerCapture") }
+private val wgpuDeviceStopGraphicsDebuggerCapture_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceStopGraphicsDebuggerCapture") }
 actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit {
     NativeEngine.callV1P(wgpuDeviceStopGraphicsDebuggerCapture_ADDR, device?.handler?.rawValue ?: 0L)
     return
+}
+
+private open class WGPUStringViewJna : com.sun.jna.Structure {
+    @JvmField var data: com.sun.jna.Pointer? = null
+    @JvmField var length: Long = 0
+    
+    constructor() : super()
+    constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
+    override fun getFieldOrder() = listOf<String>("data", "length")
+    
+    class ByValue(pointer: com.sun.jna.Pointer? = null) : WGPUStringViewJna(pointer), com.sun.jna.Structure.ByValue
 }
 
 // TODO(M5.5): emit this callback through UpcallEngine once its
@@ -9316,7 +9336,7 @@ actual fun WGPUProc.Companion.rearmAfterNativeQuiescence(
 private fun interface WGPUBufferMapCallbackJna : com.sun.jna.Callback {
     fun invoke(
         status: Int,
-        message: com.sun.jna.Pointer?,
+        message: WGPUStringViewJna.ByValue,
         userdata1: com.sun.jna.Pointer?,
         userdata2: com.sun.jna.Pointer?,
     )
@@ -9332,7 +9352,7 @@ private object WGPUBufferMapCallbackTrampoline {
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPUMapAsyncStatus,
-                    WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
+                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
             }
@@ -9437,7 +9457,7 @@ private fun interface WGPUCreateComputePipelineAsyncCallbackJna : com.sun.jna.Ca
     fun invoke(
         status: Int,
         pipeline: com.sun.jna.Pointer?,
-        message: com.sun.jna.Pointer?,
+        message: WGPUStringViewJna.ByValue,
         userdata1: com.sun.jna.Pointer?,
         userdata2: com.sun.jna.Pointer?,
     )
@@ -9454,7 +9474,7 @@ private object WGPUCreateComputePipelineAsyncCallbackTrampoline {
                 callback.invoke(
                     status.toUInt() as WGPUCreatePipelineAsyncStatus,
                     pipeline?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) }?.let { WGPUComputePipeline(it) },
-                    WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
+                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
             }
@@ -9499,7 +9519,7 @@ private fun interface WGPUCreateRenderPipelineAsyncCallbackJna : com.sun.jna.Cal
     fun invoke(
         status: Int,
         pipeline: com.sun.jna.Pointer?,
-        message: com.sun.jna.Pointer?,
+        message: WGPUStringViewJna.ByValue,
         userdata1: com.sun.jna.Pointer?,
         userdata2: com.sun.jna.Pointer?,
     )
@@ -9516,7 +9536,7 @@ private object WGPUCreateRenderPipelineAsyncCallbackTrampoline {
                 callback.invoke(
                     status.toUInt() as WGPUCreatePipelineAsyncStatus,
                     pipeline?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) }?.let { WGPURenderPipeline(it) },
-                    WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
+                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
             }
@@ -9561,7 +9581,7 @@ private fun interface WGPUDeviceLostCallbackJna : com.sun.jna.Callback {
     fun invoke(
         device: com.sun.jna.Pointer?,
         reason: Int,
-        message: com.sun.jna.Pointer?,
+        message: WGPUStringViewJna.ByValue,
         userdata1: com.sun.jna.Pointer?,
         userdata2: com.sun.jna.Pointer?,
     )
@@ -9578,7 +9598,7 @@ private object WGPUDeviceLostCallbackTrampoline {
                 callback.invoke(
                     device?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                     reason.toUInt() as WGPUDeviceLostReason,
-                    WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
+                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
             }
@@ -9623,7 +9643,7 @@ private fun interface WGPUPopErrorScopeCallbackJna : com.sun.jna.Callback {
     fun invoke(
         status: Int,
         type: Int,
-        message: com.sun.jna.Pointer?,
+        message: WGPUStringViewJna.ByValue,
         userdata1: com.sun.jna.Pointer?,
         userdata2: com.sun.jna.Pointer?,
     )
@@ -9640,7 +9660,7 @@ private object WGPUPopErrorScopeCallbackTrampoline {
                 callback.invoke(
                     status.toUInt() as WGPUPopErrorScopeStatus,
                     type.toUInt() as WGPUErrorType,
-                    WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
+                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
             }
@@ -9684,7 +9704,7 @@ internal actual fun WGPUPopErrorScopeCallback.Companion.prepare(
 private fun interface WGPUQueueWorkDoneCallbackJna : com.sun.jna.Callback {
     fun invoke(
         status: Int,
-        message: com.sun.jna.Pointer?,
+        message: WGPUStringViewJna.ByValue,
         userdata1: com.sun.jna.Pointer?,
         userdata2: com.sun.jna.Pointer?,
     )
@@ -9700,7 +9720,7 @@ private object WGPUQueueWorkDoneCallbackTrampoline {
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPUQueueWorkDoneStatus,
-                    WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
+                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
             }
@@ -9745,7 +9765,7 @@ private fun interface WGPURequestAdapterCallbackJna : com.sun.jna.Callback {
     fun invoke(
         status: Int,
         adapter: com.sun.jna.Pointer?,
-        message: com.sun.jna.Pointer?,
+        message: WGPUStringViewJna.ByValue,
         userdata1: com.sun.jna.Pointer?,
         userdata2: com.sun.jna.Pointer?,
     )
@@ -9762,7 +9782,7 @@ private object WGPURequestAdapterCallbackTrampoline {
                 callback.invoke(
                     status.toUInt() as WGPURequestAdapterStatus,
                     adapter?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) }?.let { WGPUAdapter(it) },
-                    WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
+                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
             }
@@ -9807,7 +9827,7 @@ private fun interface WGPURequestDeviceCallbackJna : com.sun.jna.Callback {
     fun invoke(
         status: Int,
         device: com.sun.jna.Pointer?,
-        message: com.sun.jna.Pointer?,
+        message: WGPUStringViewJna.ByValue,
         userdata1: com.sun.jna.Pointer?,
         userdata2: com.sun.jna.Pointer?,
     )
@@ -9824,7 +9844,7 @@ private object WGPURequestDeviceCallbackTrampoline {
                 callback.invoke(
                     status.toUInt() as WGPURequestDeviceStatus,
                     device?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) }?.let { WGPUDevice(it) },
-                    WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
+                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
             }
@@ -9869,7 +9889,7 @@ private fun interface WGPUUncapturedErrorCallbackJna : com.sun.jna.Callback {
     fun invoke(
         device: com.sun.jna.Pointer?,
         type: Int,
-        message: com.sun.jna.Pointer?,
+        message: WGPUStringViewJna.ByValue,
         userdata1: com.sun.jna.Pointer?,
         userdata2: com.sun.jna.Pointer?,
     )
@@ -9886,7 +9906,7 @@ private object WGPUUncapturedErrorCallbackTrampoline {
                 callback.invoke(
                     device?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                     type.toUInt() as WGPUErrorType,
-                    WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
+                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
                     userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
                 )
             }
@@ -9930,7 +9950,7 @@ internal actual fun WGPUUncapturedErrorCallback.Companion.prepare(
 private fun interface WGPULogCallbackJna : com.sun.jna.Callback {
     fun invoke(
         level: Int,
-        message: com.sun.jna.Pointer?,
+        message: WGPUStringViewJna.ByValue,
         userdata: com.sun.jna.Pointer?,
     )
 }
@@ -9945,7 +9965,7 @@ private object WGPULogCallbackTrampoline {
             ) { callback ->
                 callback.invoke(
                     level.toUInt() as WGPULogLevel,
-                    WGPUStringView.ByValue(message?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) } ?: NativeAddress(0L)),
+                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
                 )
             }
         } catch (failure: Throwable) {

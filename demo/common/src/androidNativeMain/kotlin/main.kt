@@ -7,7 +7,14 @@
 import org.graphiks.kffi.CallbackPolicy
 import org.graphiks.kffi.CallbackRegistration
 import org.graphiks.kffi.NativeAddress
+import org.graphiks.kffi.memoryScope
 import io.ygdrasil.wgpu.HelloTriangleScene
+import io.ygdrasil.wgpu.WGPUBackendType_OpenGLES
+import io.ygdrasil.wgpu.WGPUBackendType_Vulkan
+import io.ygdrasil.wgpu.WGPUInstanceBackend_GL
+import io.ygdrasil.wgpu.WGPUInstanceBackend_Vulkan
+import io.ygdrasil.wgpu.WGPUInstanceDescriptor
+import io.ygdrasil.wgpu.WGPUInstanceExtras
 import io.ygdrasil.wgpu.WGPULogCallback
 import io.ygdrasil.wgpu.WGPULogLevel
 import io.ygdrasil.wgpu.WGPULogLevel_Debug
@@ -19,8 +26,11 @@ import io.ygdrasil.wgpu.configureSurface
 import io.ygdrasil.wgpu.getAdapter
 import io.ygdrasil.wgpu.getDevice
 import io.ygdrasil.wgpu.getSurfaceAndroidView
+import io.ygdrasil.wgpu.selectAndroidBackend
 import io.ygdrasil.wgpu.surfaceCapabilities
+import io.ygdrasil.wgpu.wgpuAdapterRelease
 import io.ygdrasil.wgpu.wgpuCreateInstance
+import io.ygdrasil.wgpu.wgpuInstanceRelease
 import io.ygdrasil.wgpu.wgpuSetLogCallback
 import io.ygdrasil.wgpu.wgpuSetLogLevel
 import kotlinx.cinterop.COpaquePointer
@@ -43,21 +53,72 @@ private fun logInfo(message: String) {
     __android_log_print(ANDROID_LOG_INFO.toInt(), LOG_TAG, message)
 }
 
+private fun createAndroidInstance(backends: ULong): io.ygdrasil.wgpu.WGPUInstance = memoryScope { scope ->
+    val extras = WGPUInstanceExtras.allocate(scope).apply {
+        chain.sType = io.ygdrasil.wgpu.WGPUSType_InstanceExtras
+        this.backends = backends
+    }
+    val descriptor = WGPUInstanceDescriptor.allocate(scope).apply {
+        nextInChain = extras.chain
+    }
+    wgpuCreateInstance(descriptor) ?: error("fail to create instance")
+}
+
 private val onNativeWindowCreatedCallback = staticCFunction<CPointer<ANativeActivity>?, COpaquePointer?, Unit> { activity, window ->
     logInfo("onNativeWindowCreated called")
 
     val window = window ?: error("window is null")
     val windowPtr = window.toNativeAddress()
 
-    val instance = wgpuCreateInstance(null) ?: error("fail to create instance")
+    /*
+     * Android backend selection:
+     * Requesting an adapter with a compatible ANativeWindow while Vulkan and
+     * GLES are both enabled can claim the BufferQueue before GLES creates its
+     * EGL surface. Probe and select the backend without a surface, then bind
+     * the window only when the surface is configured.
+     *
+     * The instance must also be restricted to the selected backend. wgpu's
+     * Android GLES backend can leave an EGL connection behind when it is
+     * initialized from an all-backends instance after a Vulkan probe.
+     */
+    val probeInstance = createAndroidInstance(WGPUInstanceBackend_Vulkan)
+    val selectedBackend = try {
+        selectAndroidBackend(
+            probeVulkan = {
+                val probeAdapter = getAdapter(
+                    surface = null,
+                    instance = probeInstance,
+                    backendType = WGPUBackendType_Vulkan,
+                )
+                wgpuAdapterRelease(probeAdapter)
+                true
+            },
+            onFallback = ::logInfo,
+        )
+    } finally {
+        wgpuInstanceRelease(probeInstance)
+    }
+    val instance = createAndroidInstance(
+        if (selectedBackend == WGPUBackendType_Vulkan) {
+            WGPUInstanceBackend_Vulkan
+        } else {
+            WGPUInstanceBackend_GL
+        },
+    )
     val surface = getSurfaceAndroidView(instance, windowPtr)
-    val adapter = getAdapter(surface, instance)
+    // Do not let adapter selection touch the Android window. On API 29 the GL
+    // backend may create a temporary EGL window surface for a compatible-surface
+    // hint; configuring the real surface afterwards then fails with
+    // EGL_BAD_ALLOC / BufferQueue "already connected".
+    val adapter = getAdapter(surface = null, instance = instance, backendType = selectedBackend)
     val device = getDevice(adapter, instance)
     val surfaceCapabilities = surfaceCapabilities(surface, adapter)
+    val surfaceFormat = surfaceCapabilities.formats.first()
+    val alphaMode = surfaceCapabilities.alphaModes.first()
     val width = ANativeWindow_getWidth(window.reinterpret())
     val height = ANativeWindow_getHeight(window.reinterpret())
-    configureSurface(device, width, height, surface, surfaceCapabilities.formats.first(), surfaceCapabilities.alphaModes.first(), listOf(surfaceCapabilities.formats.first()))
-    val scene = HelloTriangleScene(device, surfaceCapabilities.formats.first(), surface).apply {
+    configureSurface(device, width, height, surface, surfaceFormat, alphaMode, listOf(surfaceFormat))
+    val scene = HelloTriangleScene(device, surfaceFormat, surface).apply {
         initialize()
     }
     scene.render()

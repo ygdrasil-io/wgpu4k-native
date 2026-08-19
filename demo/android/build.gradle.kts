@@ -99,6 +99,14 @@ tasks.register("verifyAndroidJvmApk") {
             require(actualAbis == setOf("arm64-v8a", "x86_64")) {
                 "Unexpected Android/JVM APK ABIs: $actualAbis"
             }
+            setOf(
+                "lib/arm64-v8a/libjnidispatch.so",
+                "lib/x86_64/libjnidispatch.so",
+            ).forEach { entry ->
+                require(zip.getEntry(entry) != null) {
+                    "Android/JVM APK is missing JNA runtime library $entry"
+                }
+            }
         }
     }
 }

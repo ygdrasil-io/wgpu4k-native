@@ -140,6 +140,28 @@ internal fun <A : Any> resolveAdapterRequestResult(
     return adapter ?: error("fail to get adapter: success status returned no adapter")
 }
 
+fun selectAndroidBackend(
+    probeVulkan: () -> Boolean,
+    onFallback: (String) -> Unit,
+): UInt {
+    val vulkanAvailable = runCatching(probeVulkan).getOrElse { failure ->
+        onFallback(
+            "Vulkan unavailable (${failure.message ?: "adapter probe failed"}); " +
+                "falling back to OpenGLES because probing Vulkan and GLES against " +
+                "the same Android surface can leave the EGL BufferQueue connected.",
+        )
+        return WGPUBackendType_OpenGLES
+    }
+
+    if (vulkanAvailable) return WGPUBackendType_Vulkan
+
+    onFallback(
+        "Vulkan unavailable; falling back to OpenGLES because probing Vulkan and " +
+            "GLES against the same Android surface can leave the EGL BufferQueue connected.",
+    )
+    return WGPUBackendType_OpenGLES
+}
+
 fun getAdapter(
     surface: WGPUSurface?,
     instance: WGPUInstance,

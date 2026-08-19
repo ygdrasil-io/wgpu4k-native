@@ -1,4 +1,5 @@
 import com.android.build.gradle.tasks.MergeSourceSetFolders
+import com.android.build.api.attributes.BuildTypeAttr
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -83,17 +84,25 @@ kotlin {
             dependencies {
                 // kffi est publié par Graphiks-org/kffi ; l'artifact racine
                 // org.graphiks:kffi résout la variante de plateforme (jvm/android/native).
-                api("org.graphiks:kffi:1.0.0-SNAPSHOT")
+                api("org.graphiks:kffi:1.0.0-SNAPSHOT") {
+                    // The published debug snapshot may lag behind the release
+                    // native artifact. Keep Android consumers on the tested
+                    // release variant until the debug publication is refreshed.
+                    attributes {
+                        attribute(BuildTypeAttr.ATTRIBUTE, objects.named("release"))
+                    }
+                }
             }
         }
 
         androidMain {
             dependencies {
-                // JNA is kept (as the plain jar, not the @aar packaging) only for the
-                // callback trampolines the kffi upcall engine cannot express
-                // (TODO(M6/P2): per-typedef upcall CIFs retire this jar).
+                // JNA is kept only for the callback trampolines the kffi upcall engine
+                // cannot express yet (TODO(M6/P2): per-typedef upcall CIFs retire this
+                // dependency). Android must use the AAR variant so libjnidispatch.so
+                // is packaged alongside the generated callback bindings.
                 // Downcalls and memory-backed structs ride the kffi NativeEngine instead.
-                api(libs.jna)
+                api("net.java.dev.jna:jna:5.17.0@aar")
             }
         }
 
