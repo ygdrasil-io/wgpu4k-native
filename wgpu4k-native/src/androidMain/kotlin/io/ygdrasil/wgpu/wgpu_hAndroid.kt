@@ -6253,7 +6253,7 @@ actual fun wgpuGetProcAddress(procName: WGPUStringView): NativeAddress? {
     MemoryBuffer(procName.handler, 16uL).readBytes(procNameBytes, 0u, 0uL, 16uL)
     args.writeBytes(procNameBytes, 0u, 0uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuGetProcAddress_ADDR, 1, "p:s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuGetProcAddress_ADDR, 1, "p:s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
     return out.readLong(0uL).takeIf { it != 0L }?.let(::NativeAddress)
 }
 
@@ -6287,7 +6287,7 @@ actual fun wgpuAdapterRequestDevice(allocator: MemoryAllocator, adapter: WGPUAda
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 16uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuAdapterRequestDevice_ADDR, 3, "s8:p,p,s40", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuAdapterRequestDevice_ADDR, 3, "s8@8(i64):p,p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
@@ -6310,7 +6310,7 @@ actual fun wgpuAdapterInfoFreeMembers(adapterInfo: WGPUAdapterInfo): Unit {
     MemoryBuffer(adapterInfo.handler, 96uL).readBytes(adapterInfoBytes, 0u, 0uL, 96uL)
     args.writeBytes(adapterInfoBytes, 0u, 0uL, 96uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuAdapterInfoFreeMembers_ADDR, 1, "v:s96", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuAdapterInfoFreeMembers_ADDR, 1, "v:s96@8(p,s16@8(p,i64),s16@8(p,i64),s16@8(p,i64),s16@8(p,i64),u32,u32,i32,i32,i32,i32)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuBindGroupSetLabel_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBindGroupSetLabel") }
@@ -6321,7 +6321,7 @@ actual fun wgpuBindGroupSetLabel(bindGroup: WGPUBindGroup?, label: WGPUStringVie
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuBindGroupSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuBindGroupSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuBindGroupAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBindGroupAddRef") }
@@ -6344,7 +6344,7 @@ actual fun wgpuBindGroupLayoutSetLabel(bindGroupLayout: WGPUBindGroupLayout?, la
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuBindGroupLayoutSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuBindGroupLayoutSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuBindGroupLayoutAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBindGroupLayoutAddRef") }
@@ -6401,7 +6401,7 @@ actual fun wgpuBufferMapAsync(allocator: MemoryAllocator, buffer: WGPUBuffer?, m
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 32uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuBufferMapAsync_ADDR, 5, "s8:p,u64,u64,u64,s40", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuBufferMapAsync_ADDR, 5, "s8@8(i64):p,u64,u64,u64,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
@@ -6418,7 +6418,7 @@ actual fun wgpuBufferSetLabel(buffer: WGPUBuffer?, label: WGPUStringView): Unit 
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuBufferSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuBufferSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuBufferUnmap_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuBufferUnmap") }
@@ -6452,7 +6452,7 @@ actual fun wgpuCommandBufferSetLabel(commandBuffer: WGPUCommandBuffer?, label: W
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuCommandBufferSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuCommandBufferSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuCommandBufferAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandBufferAddRef") }
@@ -6520,7 +6520,7 @@ actual fun wgpuCommandEncoderInsertDebugMarker(commandEncoder: WGPUCommandEncode
     MemoryBuffer(markerLabel.handler, 16uL).readBytes(markerLabelBytes, 0u, 0uL, 16uL)
     args.writeBytes(markerLabelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuCommandEncoderInsertDebugMarker_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuCommandEncoderInsertDebugMarker_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuCommandEncoderPopDebugGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderPopDebugGroup") }
@@ -6537,7 +6537,7 @@ actual fun wgpuCommandEncoderPushDebugGroup(commandEncoder: WGPUCommandEncoder?,
     MemoryBuffer(groupLabel.handler, 16uL).readBytes(groupLabelBytes, 0u, 0uL, 16uL)
     args.writeBytes(groupLabelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuCommandEncoderPushDebugGroup_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuCommandEncoderPushDebugGroup_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuCommandEncoderResolveQuerySet_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderResolveQuerySet") }
@@ -6554,7 +6554,7 @@ actual fun wgpuCommandEncoderSetLabel(commandEncoder: WGPUCommandEncoder?, label
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuCommandEncoderSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuCommandEncoderSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuCommandEncoderWriteTimestamp_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuCommandEncoderWriteTimestamp") }
@@ -6601,7 +6601,7 @@ actual fun wgpuComputePassEncoderInsertDebugMarker(computePassEncoder: WGPUCompu
     MemoryBuffer(markerLabel.handler, 16uL).readBytes(markerLabelBytes, 0u, 0uL, 16uL)
     args.writeBytes(markerLabelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuComputePassEncoderInsertDebugMarker_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuComputePassEncoderInsertDebugMarker_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuComputePassEncoderPopDebugGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderPopDebugGroup") }
@@ -6618,7 +6618,7 @@ actual fun wgpuComputePassEncoderPushDebugGroup(computePassEncoder: WGPUComputeP
     MemoryBuffer(groupLabel.handler, 16uL).readBytes(groupLabelBytes, 0u, 0uL, 16uL)
     args.writeBytes(groupLabelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuComputePassEncoderPushDebugGroup_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuComputePassEncoderPushDebugGroup_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuComputePassEncoderSetBindGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderSetBindGroup") }
@@ -6635,7 +6635,7 @@ actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEnc
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuComputePassEncoderSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuComputePassEncoderSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuComputePassEncoderSetPipeline_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePassEncoderSetPipeline") }
@@ -6669,7 +6669,7 @@ actual fun wgpuComputePipelineSetLabel(computePipeline: WGPUComputePipeline?, la
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuComputePipelineSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuComputePipelineSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuComputePipelineAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuComputePipelineAddRef") }
@@ -6718,7 +6718,7 @@ actual fun wgpuDeviceCreateComputePipelineAsync(allocator: MemoryAllocator, devi
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 16uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuDeviceCreateComputePipelineAsync_ADDR, 3, "s8:p,p,s40", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuDeviceCreateComputePipelineAsync_ADDR, 3, "s8@8(i64):p,p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
@@ -6751,7 +6751,7 @@ actual fun wgpuDeviceCreateRenderPipelineAsync(allocator: MemoryAllocator, devic
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 16uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuDeviceCreateRenderPipelineAsync_ADDR, 3, "s8:p,p,s40", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuDeviceCreateRenderPipelineAsync_ADDR, 3, "s8@8(i64):p,p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
@@ -6797,7 +6797,7 @@ actual fun wgpuDeviceGetLostFuture(allocator: MemoryAllocator, device: WGPUDevic
     val args = MemoryAllocator().allocateBuffer(8uL)
     args.writeLong(device?.handler?.rawValue ?: 0L, 0uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuDeviceGetLostFuture_ADDR, 1, "s8:p", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuDeviceGetLostFuture_ADDR, 1, "s8@8(i64):p", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
@@ -6819,7 +6819,7 @@ actual fun wgpuDevicePopErrorScope(allocator: MemoryAllocator, device: WGPUDevic
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 8uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuDevicePopErrorScope_ADDR, 2, "s8:p,s40", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuDevicePopErrorScope_ADDR, 2, "s8@8(i64):p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
@@ -6837,7 +6837,7 @@ actual fun wgpuDeviceSetLabel(device: WGPUDevice?, label: WGPUStringView): Unit 
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuDeviceSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuDeviceSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuDeviceAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuDeviceAddRef") }
@@ -6860,7 +6860,7 @@ actual fun wgpuExternalTextureSetLabel(externalTexture: WGPUExternalTexture?, la
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuExternalTextureSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuExternalTextureSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuExternalTextureAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuExternalTextureAddRef") }
@@ -6906,7 +6906,7 @@ actual fun wgpuInstanceRequestAdapter(allocator: MemoryAllocator, instance: WGPU
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 16uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuInstanceRequestAdapter_ADDR, 3, "s8:p,p,s40", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuInstanceRequestAdapter_ADDR, 3, "s8@8(i64):p,p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
@@ -6935,7 +6935,7 @@ actual fun wgpuPipelineLayoutSetLabel(pipelineLayout: WGPUPipelineLayout?, label
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuPipelineLayoutSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuPipelineLayoutSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuPipelineLayoutAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuPipelineLayoutAddRef") }
@@ -6974,7 +6974,7 @@ actual fun wgpuQuerySetSetLabel(querySet: WGPUQuerySet?, label: WGPUStringView):
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuQuerySetSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuQuerySetSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuQuerySetAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQuerySetAddRef") }
@@ -6997,7 +6997,7 @@ actual fun wgpuQueueOnSubmittedWorkDone(allocator: MemoryAllocator, queue: WGPUQ
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 8uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuQueueOnSubmittedWorkDone_ADDR, 2, "s8:p,s40", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuQueueOnSubmittedWorkDone_ADDR, 2, "s8@8(i64):p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
@@ -7009,7 +7009,7 @@ actual fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit {
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuQueueSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuQueueSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuQueueSubmit_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuQueueSubmit") }
@@ -7050,7 +7050,7 @@ actual fun wgpuRenderBundleSetLabel(renderBundle: WGPURenderBundle?, label: WGPU
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuRenderBundleSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuRenderBundleSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuRenderBundleAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleAddRef") }
@@ -7102,7 +7102,7 @@ actual fun wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder: WGPURen
     MemoryBuffer(markerLabel.handler, 16uL).readBytes(markerLabelBytes, 0u, 0uL, 16uL)
     args.writeBytes(markerLabelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuRenderBundleEncoderInsertDebugMarker_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuRenderBundleEncoderInsertDebugMarker_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuRenderBundleEncoderPopDebugGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderPopDebugGroup") }
@@ -7119,7 +7119,7 @@ actual fun wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: WGPURender
     MemoryBuffer(groupLabel.handler, 16uL).readBytes(groupLabelBytes, 0u, 0uL, 16uL)
     args.writeBytes(groupLabelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuRenderBundleEncoderPushDebugGroup_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuRenderBundleEncoderPushDebugGroup_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuRenderBundleEncoderSetBindGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderSetBindGroup") }
@@ -7142,7 +7142,7 @@ actual fun wgpuRenderBundleEncoderSetLabel(renderBundleEncoder: WGPURenderBundle
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuRenderBundleEncoderSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuRenderBundleEncoderSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuRenderBundleEncoderSetPipeline_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderBundleEncoderSetPipeline") }
@@ -7225,7 +7225,7 @@ actual fun wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: WGPURenderP
     MemoryBuffer(markerLabel.handler, 16uL).readBytes(markerLabelBytes, 0u, 0uL, 16uL)
     args.writeBytes(markerLabelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuRenderPassEncoderInsertDebugMarker_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuRenderPassEncoderInsertDebugMarker_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuRenderPassEncoderPopDebugGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderPopDebugGroup") }
@@ -7242,7 +7242,7 @@ actual fun wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: WGPURenderPass
     MemoryBuffer(groupLabel.handler, 16uL).readBytes(groupLabelBytes, 0u, 0uL, 16uL)
     args.writeBytes(groupLabelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuRenderPassEncoderPushDebugGroup_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuRenderPassEncoderPushDebugGroup_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuRenderPassEncoderSetBindGroup_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderSetBindGroup") }
@@ -7271,7 +7271,7 @@ actual fun wgpuRenderPassEncoderSetLabel(renderPassEncoder: WGPURenderPassEncode
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuRenderPassEncoderSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuRenderPassEncoderSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuRenderPassEncoderSetPipeline_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPassEncoderSetPipeline") }
@@ -7329,7 +7329,7 @@ actual fun wgpuRenderPipelineSetLabel(renderPipeline: WGPURenderPipeline?, label
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuRenderPipelineSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuRenderPipelineSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuRenderPipelineAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuRenderPipelineAddRef") }
@@ -7352,7 +7352,7 @@ actual fun wgpuSamplerSetLabel(sampler: WGPUSampler?, label: WGPUStringView): Un
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuSamplerSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuSamplerSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuSamplerAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSamplerAddRef") }
@@ -7375,7 +7375,7 @@ actual fun wgpuShaderModuleGetCompilationInfo(allocator: MemoryAllocator, shader
     MemoryBuffer(callbackInfo.handler, 40uL).readBytes(callbackInfoBytes, 0u, 0uL, 40uL)
     args.writeBytes(callbackInfoBytes, 0u, 8uL, 40uL)
     val out = allocator.allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuShaderModuleGetCompilationInfo_ADDR, 2, "s8:p,s40", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuShaderModuleGetCompilationInfo_ADDR, 2, "s8@8(i64):p,s40@8(p,u32,p,p,p)", args.handler.rawValue, out.handler.rawValue)
     return WGPUFuture.ByValue(out.handler)
 }
 
@@ -7387,7 +7387,7 @@ actual fun wgpuShaderModuleSetLabel(shaderModule: WGPUShaderModule?, label: WGPU
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuShaderModuleSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuShaderModuleSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuShaderModuleAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuShaderModuleAddRef") }
@@ -7409,7 +7409,7 @@ actual fun wgpuSupportedFeaturesFreeMembers(supportedFeatures: WGPUSupportedFeat
     MemoryBuffer(supportedFeatures.handler, 16uL).readBytes(supportedFeaturesBytes, 0u, 0uL, 16uL)
     args.writeBytes(supportedFeaturesBytes, 0u, 0uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuSupportedFeaturesFreeMembers_ADDR, 1, "v:s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuSupportedFeaturesFreeMembers_ADDR, 1, "v:s16@8(i64,p)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuSupportedInstanceFeaturesFreeMembers_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSupportedInstanceFeaturesFreeMembers") }
@@ -7419,7 +7419,7 @@ actual fun wgpuSupportedInstanceFeaturesFreeMembers(supportedInstanceFeatures: W
     MemoryBuffer(supportedInstanceFeatures.handler, 16uL).readBytes(supportedInstanceFeaturesBytes, 0u, 0uL, 16uL)
     args.writeBytes(supportedInstanceFeaturesBytes, 0u, 0uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuSupportedInstanceFeaturesFreeMembers_ADDR, 1, "v:s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuSupportedInstanceFeaturesFreeMembers_ADDR, 1, "v:s16@8(i64,p)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuSupportedWGSLLanguageFeaturesFreeMembers_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSupportedWGSLLanguageFeaturesFreeMembers") }
@@ -7429,7 +7429,7 @@ actual fun wgpuSupportedWGSLLanguageFeaturesFreeMembers(supportedWGSLLanguageFea
     MemoryBuffer(supportedWGSLLanguageFeatures.handler, 16uL).readBytes(supportedWGSLLanguageFeaturesBytes, 0u, 0uL, 16uL)
     args.writeBytes(supportedWGSLLanguageFeaturesBytes, 0u, 0uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuSupportedWGSLLanguageFeaturesFreeMembers_ADDR, 1, "v:s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuSupportedWGSLLanguageFeaturesFreeMembers_ADDR, 1, "v:s16@8(i64,p)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuSurfaceConfigure_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSurfaceConfigure") }
@@ -7462,7 +7462,7 @@ actual fun wgpuSurfaceSetLabel(surface: WGPUSurface?, label: WGPUStringView): Un
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuSurfaceSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuSurfaceSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuSurfaceUnconfigure_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuSurfaceUnconfigure") }
@@ -7490,7 +7490,7 @@ actual fun wgpuSurfaceCapabilitiesFreeMembers(surfaceCapabilities: WGPUSurfaceCa
     MemoryBuffer(surfaceCapabilities.handler, 64uL).readBytes(surfaceCapabilitiesBytes, 0u, 0uL, 64uL)
     args.writeBytes(surfaceCapabilitiesBytes, 0u, 0uL, 64uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuSurfaceCapabilitiesFreeMembers_ADDR, 1, "v:s64", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuSurfaceCapabilitiesFreeMembers_ADDR, 1, "v:s64@8(p,i64,i64,p,i64,p,i64,p)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuTextureCreateView_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureCreateView") }
@@ -7557,7 +7557,7 @@ actual fun wgpuTextureSetLabel(texture: WGPUTexture?, label: WGPUStringView): Un
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuTextureSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuTextureSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuTextureAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureAddRef") }
@@ -7580,7 +7580,7 @@ actual fun wgpuTextureViewSetLabel(textureView: WGPUTextureView?, label: WGPUStr
     MemoryBuffer(label.handler, 16uL).readBytes(labelBytes, 0u, 0uL, 16uL)
     args.writeBytes(labelBytes, 0u, 8uL, 16uL)
     val out = MemoryAllocator().allocateBuffer(8uL)
-    NativeEngine.callGeneric(wgpuTextureViewSetLabel_ADDR, 2, "v:p,s16", args.handler.rawValue, out.handler.rawValue)
+    NativeEngine.callGeneric(wgpuTextureViewSetLabel_ADDR, 2, "v:p,s16@8(p,i64)", args.handler.rawValue, out.handler.rawValue)
 }
 
 private val wgpuTextureViewAddRef_ADDR: Long by lazy { NativeEngine.resolveSymbol("wgpuTextureViewAddRef") }
