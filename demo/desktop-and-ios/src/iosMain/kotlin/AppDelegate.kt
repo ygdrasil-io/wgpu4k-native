@@ -56,7 +56,7 @@ class AppDelegate {
             val layer = view.layer
             val layerPointer: COpaquePointer = interpretCPointer<COpaque>(layer.objcPtr())!!.reinterpret()
             val instance = wgpuCreateInstance(null) ?: error("Can't create WGPU instance")
-            val surface = getSurfaceFromMetalLayer(instance, layerPointer.let(::NativeAddress)) ?: error("Can't create Surface")
+            val surface = getSurfaceFromMetalLayer(instance, NativeAddress.fromPointer(layerPointer)) ?: error("Can't create Surface")
             val adapter = getAdapter(surface, instance)
             val device = getDevice(adapter, instance)
             val compatibleFormat = compatibleFormat(surface, adapter)
