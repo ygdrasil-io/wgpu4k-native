@@ -19,7 +19,9 @@ includeBuild("Kadre") {
 }
 
 dependencyResolutionManagement {
+	repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
 	repositories {
+		mavenLocal()
 		google()
 		mavenCentral()
 		// Snapshots kffi (org.graphiks:kffi:1.0.0-SNAPSHOT) — publiés par
