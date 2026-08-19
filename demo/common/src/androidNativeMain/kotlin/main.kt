@@ -7,7 +7,6 @@
 import org.graphiks.kffi.CallbackPolicy
 import org.graphiks.kffi.CallbackRegistration
 import org.graphiks.kffi.NativeAddress
-import org.graphiks.kffi.Pointer
 import io.ygdrasil.wgpu.HelloTriangleScene
 import io.ygdrasil.wgpu.WGPULogCallback
 import io.ygdrasil.wgpu.WGPULogLevel
@@ -111,4 +110,4 @@ private fun <T> withLogCallbackConfigurationLock(block: () -> T): T {
     }
 }
 
-private fun COpaquePointer.toNativeAddress() = Pointer(reinterpret())
+private fun COpaquePointer.toNativeAddress() = NativeAddress.fromPointer(this)
