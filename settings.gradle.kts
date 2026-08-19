@@ -21,7 +21,13 @@ includeBuild("Kadre") {
 dependencyResolutionManagement {
 	repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
 	repositories {
-		mavenLocal()
+		mavenLocal {
+			// Published kffi snapshots must not be shadowed by an older local install.
+			// Keep other local org.graphiks.* projects, such as Kadre, available.
+			content {
+				excludeGroup("org.graphiks")
+			}
+		}
 		google()
 		mavenCentral()
 		// Snapshots kffi (org.graphiks:kffi:1.0.0-SNAPSHOT) — publiés par

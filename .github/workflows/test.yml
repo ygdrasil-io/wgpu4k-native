@@ -190,7 +190,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
       - name: Fetch native dependencies
         run: ./gradlew fetch-native-dependencies
-      - name: Run Android JNA smoke test
+      - name: Run Android smoke test
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34

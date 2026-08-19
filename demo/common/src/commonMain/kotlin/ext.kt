@@ -241,7 +241,6 @@ fun getSurfaceAndroidView(
         window = surfaceHolder
     }
 
-    // JNA keeps Structure fields in Java until the parent structure is written.
     // Commit the complete surface source, including its native window, before
     // exposing the embedded chain through the descriptor.
     androidNativeWindow.handler

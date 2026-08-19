@@ -97,12 +97,7 @@ kotlin {
 
         androidMain {
             dependencies {
-                // JNA is kept only for the callback trampolines the kffi upcall engine
-                // cannot express yet (TODO(M6/P2): per-typedef upcall CIFs retire this
-                // dependency). Android must use the AAR variant so libjnidispatch.so
-                // is packaged alongside the generated callback bindings.
-                // Downcalls and memory-backed structs ride the kffi NativeEngine instead.
-                api("net.java.dev.jna:jna:5.17.0@aar")
+                // Android bindings use kffi for both downcalls and callback trampolines.
             }
         }
 

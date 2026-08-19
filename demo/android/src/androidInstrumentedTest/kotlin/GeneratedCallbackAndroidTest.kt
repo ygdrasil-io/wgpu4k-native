@@ -1,13 +1,17 @@
 package io.ygdrasil.wgpu
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.graphiks.kffi.CallbackPolicy
-import io.kotest.core.spec.style.FreeSpec
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
+import org.junit.runner.RunWith
 
-class GeneratedCallbackAndroidTest : FreeSpec({
-    "Android JNA creates a routable safe callback registration" {
+@RunWith(AndroidJUnit4::class)
+class GeneratedCallbackAndroidTest {
+    @Test
+    fun kffiCreatesARoutableSafeCallbackRegistration() {
         val registration = WGPUBufferMapCallback.register(CallbackPolicy.REPEATING) { _, _, _ -> }
         try {
             assertNotNull(registration.userdata)
@@ -17,4 +21,4 @@ class GeneratedCallbackAndroidTest : FreeSpec({
         }
         assertTrue(registration.isClosed)
     }
-})
+}

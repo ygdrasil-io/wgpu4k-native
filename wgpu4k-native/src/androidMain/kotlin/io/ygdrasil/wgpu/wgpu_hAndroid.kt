@@ -24,7 +24,7 @@ private object KextractAndroidBootstrap {
     init {
         java.lang.System.loadLibrary("wgpu4k")
     }
-    
+
     private val libraryHandle: kotlin.Long by lazy { NativeEngine.loadNativeLibrary(java.lang.System.mapLibraryName("wgpu4k")).takeIf { it != 0L } ?: error("Unable to load native library: wgpu4k") }
     fun resolve(name: kotlin.String): kotlin.Long = NativeEngine.resolveSymbolIn(libraryHandle, name)
 }
@@ -45,7 +45,7 @@ actual interface WGPUStringView {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUStringView {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var data: CString?
@@ -57,7 +57,7 @@ actual interface WGPUStringView {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUStringView {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var data: CString?
@@ -156,7 +156,7 @@ actual interface WGPUChainedStruct {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUChainedStruct {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var next: WGPUChainedStruct?
@@ -168,7 +168,7 @@ actual interface WGPUChainedStruct {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUChainedStruct {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var next: WGPUChainedStruct?
@@ -201,7 +201,7 @@ actual interface WGPUBufferMapCallbackInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBufferMapCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -222,7 +222,7 @@ actual interface WGPUBufferMapCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBufferMapCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -264,7 +264,7 @@ actual interface WGPUCompilationInfoCallbackInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompilationInfoCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -285,7 +285,7 @@ actual interface WGPUCompilationInfoCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompilationInfoCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -327,7 +327,7 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCreateComputePipelineAsyncCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -348,7 +348,7 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCreateComputePipelineAsyncCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -390,7 +390,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCreateRenderPipelineAsyncCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -411,7 +411,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCreateRenderPipelineAsyncCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -453,7 +453,7 @@ actual interface WGPUDeviceLostCallbackInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUDeviceLostCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -474,7 +474,7 @@ actual interface WGPUDeviceLostCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUDeviceLostCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -516,7 +516,7 @@ actual interface WGPUPopErrorScopeCallbackInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPopErrorScopeCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -537,7 +537,7 @@ actual interface WGPUPopErrorScopeCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPopErrorScopeCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -579,7 +579,7 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUQueueWorkDoneCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -600,7 +600,7 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUQueueWorkDoneCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -642,7 +642,7 @@ actual interface WGPURequestAdapterCallbackInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestAdapterCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -663,7 +663,7 @@ actual interface WGPURequestAdapterCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestAdapterCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -705,7 +705,7 @@ actual interface WGPURequestDeviceCallbackInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestDeviceCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -726,7 +726,7 @@ actual interface WGPURequestDeviceCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestDeviceCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -767,7 +767,7 @@ actual interface WGPUUncapturedErrorCallbackInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUUncapturedErrorCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -785,7 +785,7 @@ actual interface WGPUUncapturedErrorCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUUncapturedErrorCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -830,7 +830,7 @@ actual interface WGPUAdapterInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUAdapterInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 96uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -885,7 +885,7 @@ actual interface WGPUAdapterInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUAdapterInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 96uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -959,7 +959,7 @@ actual interface WGPUBlendComponent {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBlendComponent {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 12uL) }
         override var operation: WGPUBlendOperation
@@ -974,7 +974,7 @@ actual interface WGPUBlendComponent {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBlendComponent {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 12uL) }
         override var operation: WGPUBlendOperation
@@ -1009,7 +1009,7 @@ actual interface WGPUBufferBindingLayout {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBufferBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1027,7 +1027,7 @@ actual interface WGPUBufferBindingLayout {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBufferBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1066,7 +1066,7 @@ actual interface WGPUBufferDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBufferDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1091,7 +1091,7 @@ actual interface WGPUBufferDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBufferDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1136,7 +1136,7 @@ actual interface WGPUColor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUColor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var r: Double
@@ -1154,7 +1154,7 @@ actual interface WGPUColor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUColor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var r: Double
@@ -1190,7 +1190,7 @@ actual interface WGPUCommandBufferDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCommandBufferDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1206,7 +1206,7 @@ actual interface WGPUCommandBufferDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCommandBufferDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1240,7 +1240,7 @@ actual interface WGPUCommandEncoderDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCommandEncoderDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1256,7 +1256,7 @@ actual interface WGPUCommandEncoderDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCommandEncoderDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1293,7 +1293,7 @@ actual interface WGPUCompatibilityModeLimits {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompatibilityModeLimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -1318,7 +1318,7 @@ actual interface WGPUCompatibilityModeLimits {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompatibilityModeLimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -1366,7 +1366,7 @@ actual interface WGPUCompilationMessage {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompilationMessage {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1397,7 +1397,7 @@ actual interface WGPUCompilationMessage {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompilationMessage {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1447,7 +1447,7 @@ actual interface WGPUConstantEntry {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUConstantEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1466,7 +1466,7 @@ actual interface WGPUConstantEntry {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUConstantEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1504,7 +1504,7 @@ actual interface WGPUExtent3D {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUExtent3D {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 12uL) }
         override var width: UInt
@@ -1519,7 +1519,7 @@ actual interface WGPUExtent3D {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUExtent3D {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 12uL) }
         override var width: UInt
@@ -1552,7 +1552,7 @@ actual interface WGPUExternalTextureBindingEntry {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUExternalTextureBindingEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -1568,7 +1568,7 @@ actual interface WGPUExternalTextureBindingEntry {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUExternalTextureBindingEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -1601,7 +1601,7 @@ actual interface WGPUExternalTextureBindingLayout {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUExternalTextureBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var chain: WGPUChainedStruct
@@ -1614,7 +1614,7 @@ actual interface WGPUExternalTextureBindingLayout {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUExternalTextureBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var chain: WGPUChainedStruct
@@ -1644,7 +1644,7 @@ actual interface WGPUFuture {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUFuture {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 8uL) }
         override var id: ULong
@@ -1653,7 +1653,7 @@ actual interface WGPUFuture {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUFuture {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 8uL) }
         override var id: ULong
@@ -1680,7 +1680,7 @@ actual interface WGPUInstanceLimits {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceLimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1692,7 +1692,7 @@ actual interface WGPUInstanceLimits {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceLimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1724,7 +1724,7 @@ actual interface WGPUMultisampleState {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUMultisampleState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1742,7 +1742,7 @@ actual interface WGPUMultisampleState {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUMultisampleState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1779,7 +1779,7 @@ actual interface WGPUOrigin3D {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUOrigin3D {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 12uL) }
         override var x: UInt
@@ -1794,7 +1794,7 @@ actual interface WGPUOrigin3D {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUOrigin3D {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 12uL) }
         override var x: UInt
@@ -1829,7 +1829,7 @@ actual interface WGPUPassTimestampWrites {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPassTimestampWrites {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1847,7 +1847,7 @@ actual interface WGPUPassTimestampWrites {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPassTimestampWrites {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1886,7 +1886,7 @@ actual interface WGPUPipelineLayoutDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPipelineLayoutDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1911,7 +1911,7 @@ actual interface WGPUPipelineLayoutDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPipelineLayoutDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1958,7 +1958,7 @@ actual interface WGPUPrimitiveState {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPrimitiveState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1982,7 +1982,7 @@ actual interface WGPUPrimitiveState {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPrimitiveState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2026,7 +2026,7 @@ actual interface WGPUQuerySetDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUQuerySetDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2048,7 +2048,7 @@ actual interface WGPUQuerySetDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUQuerySetDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2088,7 +2088,7 @@ actual interface WGPUQueueDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUQueueDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2104,7 +2104,7 @@ actual interface WGPUQueueDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUQueueDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2138,7 +2138,7 @@ actual interface WGPURenderBundleDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderBundleDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2154,7 +2154,7 @@ actual interface WGPURenderBundleDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderBundleDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2194,7 +2194,7 @@ actual interface WGPURenderBundleEncoderDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderBundleEncoderDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 56uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2228,7 +2228,7 @@ actual interface WGPURenderBundleEncoderDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderBundleEncoderDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 56uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2288,7 +2288,7 @@ actual interface WGPURenderPassDepthStencilAttachment {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassDepthStencilAttachment {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2324,7 +2324,7 @@ actual interface WGPURenderPassDepthStencilAttachment {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassDepthStencilAttachment {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2378,7 +2378,7 @@ actual interface WGPURenderPassMaxDrawCount {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassMaxDrawCount {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -2394,7 +2394,7 @@ actual interface WGPURenderPassMaxDrawCount {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassMaxDrawCount {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -2428,7 +2428,7 @@ actual interface WGPURequestAdapterWebXROptions {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestAdapterWebXROptions {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -2444,7 +2444,7 @@ actual interface WGPURequestAdapterWebXROptions {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestAdapterWebXROptions {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -2478,7 +2478,7 @@ actual interface WGPUSamplerBindingLayout {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSamplerBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2490,7 +2490,7 @@ actual interface WGPUSamplerBindingLayout {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSamplerBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2530,7 +2530,7 @@ actual interface WGPUSamplerDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSamplerDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2576,7 +2576,7 @@ actual interface WGPUSamplerDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSamplerDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2641,7 +2641,7 @@ actual interface WGPUShaderSourceSPIRV {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderSourceSPIRV {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -2660,7 +2660,7 @@ actual interface WGPUShaderSourceSPIRV {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderSourceSPIRV {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -2697,7 +2697,7 @@ actual interface WGPUShaderSourceWGSL {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderSourceWGSL {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -2717,7 +2717,7 @@ actual interface WGPUShaderSourceWGSL {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderSourceWGSL {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -2757,7 +2757,7 @@ actual interface WGPUStencilFaceState {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUStencilFaceState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var compare: WGPUCompareFunction
@@ -2775,7 +2775,7 @@ actual interface WGPUStencilFaceState {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUStencilFaceState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var compare: WGPUCompareFunction
@@ -2813,7 +2813,7 @@ actual interface WGPUStorageTextureBindingLayout {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUStorageTextureBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2831,7 +2831,7 @@ actual interface WGPUStorageTextureBindingLayout {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUStorageTextureBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2867,7 +2867,7 @@ actual interface WGPUSupportedFeatures {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSupportedFeatures {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var featureCount: ULong
@@ -2879,7 +2879,7 @@ actual interface WGPUSupportedFeatures {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSupportedFeatures {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var featureCount: ULong
@@ -2909,7 +2909,7 @@ actual interface WGPUSupportedInstanceFeatures {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSupportedInstanceFeatures {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var featureCount: ULong
@@ -2921,7 +2921,7 @@ actual interface WGPUSupportedInstanceFeatures {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSupportedInstanceFeatures {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var featureCount: ULong
@@ -2951,7 +2951,7 @@ actual interface WGPUSupportedWGSLLanguageFeatures {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSupportedWGSLLanguageFeatures {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var featureCount: ULong
@@ -2963,7 +2963,7 @@ actual interface WGPUSupportedWGSLLanguageFeatures {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSupportedWGSLLanguageFeatures {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var featureCount: ULong
@@ -2999,7 +2999,7 @@ actual interface WGPUSurfaceCapabilities {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceCapabilities {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3029,7 +3029,7 @@ actual interface WGPUSurfaceCapabilities {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceCapabilities {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3078,7 +3078,7 @@ actual interface WGPUSurfaceColorManagement {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceColorManagement {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3097,7 +3097,7 @@ actual interface WGPUSurfaceColorManagement {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceColorManagement {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3142,7 +3142,7 @@ actual interface WGPUSurfaceConfiguration {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceConfiguration {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3178,7 +3178,7 @@ actual interface WGPUSurfaceConfiguration {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceConfiguration {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3232,7 +3232,7 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceAndroidNativeWindow {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3248,7 +3248,7 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceAndroidNativeWindow {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3282,7 +3282,7 @@ actual interface WGPUSurfaceSourceMetalLayer {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceMetalLayer {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3298,7 +3298,7 @@ actual interface WGPUSurfaceSourceMetalLayer {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceMetalLayer {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3333,7 +3333,7 @@ actual interface WGPUSurfaceSourceWaylandSurface {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceWaylandSurface {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3352,7 +3352,7 @@ actual interface WGPUSurfaceSourceWaylandSurface {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceWaylandSurface {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3390,7 +3390,7 @@ actual interface WGPUSurfaceSourceWindowsHWND {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceWindowsHWND {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3409,7 +3409,7 @@ actual interface WGPUSurfaceSourceWindowsHWND {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceWindowsHWND {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3447,7 +3447,7 @@ actual interface WGPUSurfaceSourceXCBWindow {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceXCBWindow {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3466,7 +3466,7 @@ actual interface WGPUSurfaceSourceXCBWindow {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceXCBWindow {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3504,7 +3504,7 @@ actual interface WGPUSurfaceSourceXlibWindow {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceXlibWindow {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3523,7 +3523,7 @@ actual interface WGPUSurfaceSourceXlibWindow {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceXlibWindow {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3561,7 +3561,7 @@ actual interface WGPUSurfaceTexture {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceTexture {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3576,7 +3576,7 @@ actual interface WGPUSurfaceTexture {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceTexture {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3610,7 +3610,7 @@ actual interface WGPUTexelCopyBufferLayout {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTexelCopyBufferLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var offset: ULong
@@ -3625,7 +3625,7 @@ actual interface WGPUTexelCopyBufferLayout {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTexelCopyBufferLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var offset: ULong
@@ -3660,7 +3660,7 @@ actual interface WGPUTextureBindingLayout {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3678,7 +3678,7 @@ actual interface WGPUTextureBindingLayout {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3714,7 +3714,7 @@ actual interface WGPUTextureBindingViewDimension {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureBindingViewDimension {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3730,7 +3730,7 @@ actual interface WGPUTextureBindingViewDimension {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureBindingViewDimension {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3766,7 +3766,7 @@ actual interface WGPUTextureComponentSwizzle {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureComponentSwizzle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var r: WGPUComponentSwizzle
@@ -3784,7 +3784,7 @@ actual interface WGPUTextureComponentSwizzle {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureComponentSwizzle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var r: WGPUComponentSwizzle
@@ -3822,7 +3822,7 @@ actual interface WGPUVertexAttribute {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUVertexAttribute {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3840,7 +3840,7 @@ actual interface WGPUVertexAttribute {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUVertexAttribute {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3881,7 +3881,7 @@ actual interface WGPUBindGroupEntry {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 56uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3908,7 +3908,7 @@ actual interface WGPUBindGroupEntry {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 56uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3959,7 +3959,7 @@ actual interface WGPUBindGroupLayoutEntry {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupLayoutEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 120uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4005,7 +4005,7 @@ actual interface WGPUBindGroupLayoutEntry {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupLayoutEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 120uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4069,7 +4069,7 @@ actual interface WGPUBlendState {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBlendState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var color: WGPUBlendComponent
@@ -4089,7 +4089,7 @@ actual interface WGPUBlendState {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBlendState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var color: WGPUBlendComponent
@@ -4128,7 +4128,7 @@ actual interface WGPUCompilationInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompilationInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4143,7 +4143,7 @@ actual interface WGPUCompilationInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompilationInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4177,7 +4177,7 @@ actual interface WGPUComputePassDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUComputePassDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4196,7 +4196,7 @@ actual interface WGPUComputePassDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUComputePassDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4236,7 +4236,7 @@ actual interface WGPUComputeState {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUComputeState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4261,7 +4261,7 @@ actual interface WGPUComputeState {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUComputeState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4313,7 +4313,7 @@ actual interface WGPUDepthStencilState {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUDepthStencilState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 72uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4360,7 +4360,7 @@ actual interface WGPUDepthStencilState {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUDepthStencilState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 72uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4425,7 +4425,7 @@ actual interface WGPUFutureWaitInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUFutureWaitInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var future: WGPUFuture
@@ -4441,7 +4441,7 @@ actual interface WGPUFutureWaitInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUFutureWaitInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var future: WGPUFuture
@@ -4477,7 +4477,7 @@ actual interface WGPUInstanceDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4495,7 +4495,7 @@ actual interface WGPUInstanceDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4562,7 +4562,7 @@ actual interface WGPULimits {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPULimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 152uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4667,7 +4667,7 @@ actual interface WGPULimits {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPULimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 152uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4795,7 +4795,7 @@ actual interface WGPURenderPassColorAttachment {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassColorAttachment {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 72uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4826,7 +4826,7 @@ actual interface WGPURenderPassColorAttachment {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassColorAttachment {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 72uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4879,7 +4879,7 @@ actual interface WGPURequestAdapterOptions {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestAdapterOptions {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4903,7 +4903,7 @@ actual interface WGPURequestAdapterOptions {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestAdapterOptions {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4945,7 +4945,7 @@ actual interface WGPUShaderModuleDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderModuleDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4961,7 +4961,7 @@ actual interface WGPUShaderModuleDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderModuleDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4995,7 +4995,7 @@ actual interface WGPUSurfaceDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5011,7 +5011,7 @@ actual interface WGPUSurfaceDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5045,7 +5045,7 @@ actual interface WGPUTexelCopyBufferInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTexelCopyBufferInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var layout: WGPUTexelCopyBufferLayout
@@ -5061,7 +5061,7 @@ actual interface WGPUTexelCopyBufferInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTexelCopyBufferInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var layout: WGPUTexelCopyBufferLayout
@@ -5097,7 +5097,7 @@ actual interface WGPUTexelCopyTextureInfo {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTexelCopyTextureInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var texture: WGPUTexture?
@@ -5119,7 +5119,7 @@ actual interface WGPUTexelCopyTextureInfo {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTexelCopyTextureInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var texture: WGPUTexture?
@@ -5159,7 +5159,7 @@ actual interface WGPUTextureComponentSwizzleDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureComponentSwizzleDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -5179,7 +5179,7 @@ actual interface WGPUTextureComponentSwizzleDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureComponentSwizzleDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -5225,7 +5225,7 @@ actual interface WGPUTextureDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 80uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5269,7 +5269,7 @@ actual interface WGPUTextureDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 80uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5334,7 +5334,7 @@ actual interface WGPUVertexBufferLayout {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUVertexBufferLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5355,7 +5355,7 @@ actual interface WGPUVertexBufferLayout {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUVertexBufferLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5397,7 +5397,7 @@ actual interface WGPUBindGroupDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5422,7 +5422,7 @@ actual interface WGPUBindGroupDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5467,7 +5467,7 @@ actual interface WGPUBindGroupLayoutDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupLayoutDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5489,7 +5489,7 @@ actual interface WGPUBindGroupLayoutDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupLayoutDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5531,7 +5531,7 @@ actual interface WGPUColorTargetState {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUColorTargetState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5549,7 +5549,7 @@ actual interface WGPUColorTargetState {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUColorTargetState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5587,7 +5587,7 @@ actual interface WGPUComputePipelineDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUComputePipelineDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 80uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5613,7 +5613,7 @@ actual interface WGPUComputePipelineDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUComputePipelineDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 80uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5663,7 +5663,7 @@ actual interface WGPUDeviceDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUDeviceDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 144uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5709,7 +5709,7 @@ actual interface WGPUDeviceDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUDeviceDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 144uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5778,7 +5778,7 @@ actual interface WGPURenderPassDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5809,7 +5809,7 @@ actual interface WGPURenderPassDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5866,7 +5866,7 @@ actual interface WGPUTextureViewDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureViewDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5906,7 +5906,7 @@ actual interface WGPUTextureViewDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureViewDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5969,7 +5969,7 @@ actual interface WGPUVertexState {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUVertexState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6000,7 +6000,7 @@ actual interface WGPUVertexState {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUVertexState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6054,7 +6054,7 @@ actual interface WGPUFragmentState {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUFragmentState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6085,7 +6085,7 @@ actual interface WGPUFragmentState {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUFragmentState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6140,7 +6140,7 @@ actual interface WGPURenderPipelineDescriptor {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPipelineDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 168uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6186,7 +6186,7 @@ actual interface WGPURenderPipelineDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPipelineDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 168uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -7620,7 +7620,7 @@ actual interface WGPUXlibDisplayHandle {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUXlibDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var display: NativeAddress?
@@ -7632,7 +7632,7 @@ actual interface WGPUXlibDisplayHandle {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUXlibDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var display: NativeAddress?
@@ -7662,7 +7662,7 @@ actual interface WGPUXcbDisplayHandle {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUXcbDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var connection: NativeAddress?
@@ -7674,7 +7674,7 @@ actual interface WGPUXcbDisplayHandle {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUXcbDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var connection: NativeAddress?
@@ -7703,7 +7703,7 @@ actual interface WGPUWaylandDisplayHandle {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUWaylandDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 8uL) }
         override var display: NativeAddress?
@@ -7712,7 +7712,7 @@ actual interface WGPUWaylandDisplayHandle {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUWaylandDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 8uL) }
         override var display: NativeAddress?
@@ -7744,7 +7744,7 @@ actual interface WGPUNativeDisplayHandle {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUNativeDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var type: WGPUNativeDisplayHandleType
@@ -7777,7 +7777,7 @@ actual interface WGPUNativeDisplayHandle {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUNativeDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var type: WGPUNativeDisplayHandleType
@@ -7838,7 +7838,7 @@ actual interface WGPUInstanceExtras {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 112uL) }
         override var chain: WGPUChainedStruct
@@ -7892,7 +7892,7 @@ actual interface WGPUInstanceExtras {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 112uL) }
         override var chain: WGPUChainedStruct
@@ -7964,7 +7964,7 @@ actual interface WGPUDeviceExtras {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUDeviceExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -7984,7 +7984,7 @@ actual interface WGPUDeviceExtras {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUDeviceExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -8024,7 +8024,7 @@ actual interface WGPUNativeLimits {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUNativeLimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -8046,7 +8046,7 @@ actual interface WGPUNativeLimits {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUNativeLimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -8086,7 +8086,7 @@ actual interface WGPUPipelineLayoutExtras {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPipelineLayoutExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8102,7 +8102,7 @@ actual interface WGPUPipelineLayoutExtras {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPipelineLayoutExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8136,7 +8136,7 @@ actual interface WGPUShaderDefine {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderDefine {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var name: WGPUStringView
@@ -8156,7 +8156,7 @@ actual interface WGPUShaderDefine {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderDefine {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var name: WGPUStringView
@@ -8197,7 +8197,7 @@ actual interface WGPUShaderSourceGLSL {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderSourceGLSL {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 56uL) }
         override var chain: WGPUChainedStruct
@@ -8226,7 +8226,7 @@ actual interface WGPUShaderSourceGLSL {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderSourceGLSL {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 56uL) }
         override var chain: WGPUChainedStruct
@@ -8274,7 +8274,7 @@ actual interface WGPUShaderModuleDescriptorSpirV {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderModuleDescriptorSpirV {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var label: WGPUStringView
@@ -8293,7 +8293,7 @@ actual interface WGPUShaderModuleDescriptorSpirV {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderModuleDescriptorSpirV {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var label: WGPUStringView
@@ -8332,7 +8332,7 @@ actual interface WGPURegistryReport {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURegistryReport {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var numAllocated: ULong
@@ -8350,7 +8350,7 @@ actual interface WGPURegistryReport {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURegistryReport {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var numAllocated: ULong
@@ -8401,7 +8401,7 @@ actual interface WGPUHubReport {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUHubReport {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 544uL) }
         override var adapters: WGPURegistryReport
@@ -8526,7 +8526,7 @@ actual interface WGPUHubReport {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUHubReport {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 544uL) }
         override var adapters: WGPURegistryReport
@@ -8669,7 +8669,7 @@ actual interface WGPUGlobalReport {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUGlobalReport {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 576uL) }
         override var surfaces: WGPURegistryReport
@@ -8689,7 +8689,7 @@ actual interface WGPUGlobalReport {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUGlobalReport {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 576uL) }
         override var surfaces: WGPURegistryReport
@@ -8727,7 +8727,7 @@ actual interface WGPUInstanceEnumerateAdapterOptions {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceEnumerateAdapterOptions {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -8739,7 +8739,7 @@ actual interface WGPUInstanceEnumerateAdapterOptions {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceEnumerateAdapterOptions {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -8774,7 +8774,7 @@ actual interface WGPUBindGroupEntryExtras {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupEntryExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var chain: WGPUChainedStruct
@@ -8805,7 +8805,7 @@ actual interface WGPUBindGroupEntryExtras {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupEntryExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var chain: WGPUChainedStruct
@@ -8854,7 +8854,7 @@ actual interface WGPUBindGroupLayoutEntryExtras {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupLayoutEntryExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8870,7 +8870,7 @@ actual interface WGPUBindGroupLayoutEntryExtras {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupLayoutEntryExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8905,7 +8905,7 @@ actual interface WGPUQuerySetDescriptorExtras {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUQuerySetDescriptorExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -8924,7 +8924,7 @@ actual interface WGPUQuerySetDescriptorExtras {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUQuerySetDescriptorExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -8961,7 +8961,7 @@ actual interface WGPUSurfaceConfigurationExtras {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceConfigurationExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8977,7 +8977,7 @@ actual interface WGPUSurfaceConfigurationExtras {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceConfigurationExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -9011,7 +9011,7 @@ actual interface WGPUSurfaceSourceSwapChainPanel {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceSwapChainPanel {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -9027,7 +9027,7 @@ actual interface WGPUSurfaceSourceSwapChainPanel {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceSwapChainPanel {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -9062,7 +9062,7 @@ actual interface WGPUPrimitiveStateExtras {
             return result
         }
     }
-    
+
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPrimitiveStateExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -9081,7 +9081,7 @@ actual interface WGPUPrimitiveStateExtras {
         override val handler: NativeAddress
             get() = handle
     }
-    
+
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPrimitiveStateExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -9254,27 +9254,19 @@ actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit {
     return
 }
 
-private open class WGPUStringViewJna : com.sun.jna.Structure {
-    @JvmField var data: com.sun.jna.Pointer? = null
-    @JvmField var length: Long = 0
-    
-    constructor() : super()
-    constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
-    override fun getFieldOrder() = listOf<String>("data", "length")
-    
-    class ByValue(pointer: com.sun.jna.Pointer? = null) : WGPUStringViewJna(pointer), com.sun.jna.Structure.ByValue
-}
-
-// TODO(M5.5): emit this callback through UpcallEngine once its
-// fixed (uint32_t value, void * routing_userdata) CIF generalizes to this shape.
-private fun interface WGPUProcJna : com.sun.jna.Callback {
-    fun invoke(
-    )
-}
-
 @OptIn(CallbackRuntimeApi::class)
 private object WGPUProcTrampoline {
-    private val callback: WGPUProcJna = WGPUProcJna {
+    val address: NativeAddress by lazy {
+        NativeAddress(UpcallEngine.allocateTrampoline(
+            dispatcherClass = WGPUProcTrampoline::class.java,
+            dispatchMethod = "dispatch",
+            dispatchJvmSignature = "()V",
+            dispatchAbiSignature = "v()",
+        ))
+    }
+
+    @JvmStatic
+    fun dispatch() {
         try {
             CallbackRuntime.dispatchSafely(
                 type = WGPUProcType,
@@ -9285,9 +9277,6 @@ private object WGPUProcTrampoline {
         } catch (failure: Throwable) {
             CallbackRuntime.reportUnroutedFailure(failure)
         }
-    }
-    val address: NativeAddress by lazy {
-        NativeAddress(com.sun.jna.Pointer.nativeValue(com.sun.jna.CallbackReference.getFunctionPointer(callback)))
     }
 }
 
@@ -9331,37 +9320,33 @@ actual fun WGPUProc.Companion.rearmAfterNativeQuiescence(
     callback = callback,
 )
 
-// TODO(M5.5): emit this callback through UpcallEngine once its
-// fixed (uint32_t value, void * routing_userdata) CIF generalizes to this shape.
-private fun interface WGPUBufferMapCallbackJna : com.sun.jna.Callback {
-    fun invoke(
-        status: Int,
-        message: WGPUStringViewJna.ByValue,
-        userdata1: com.sun.jna.Pointer?,
-        userdata2: com.sun.jna.Pointer?,
-    )
-}
-
 @OptIn(CallbackRuntimeApi::class)
 private object WGPUBufferMapCallbackTrampoline {
-    private val callback: WGPUBufferMapCallbackJna = WGPUBufferMapCallbackJna { status, message, userdata1, userdata2 ->
+    val address: NativeAddress by lazy {
+        NativeAddress(UpcallEngine.allocateTrampoline(
+            dispatcherClass = WGPUBufferMapCallbackTrampoline::class.java,
+            dispatchMethod = "dispatch",
+            dispatchJvmSignature = "(JIJJ)V",
+            dispatchAbiSignature = "v(u32,struct(ptr,u64),ptr,ptr)",
+        ))
+    }
+
+    @JvmStatic
+    fun dispatch(token: Long, status: Int, message: Long, userdata1: Long) {
         try {
             CallbackRuntime.dispatchSafely(
                 type = WGPUBufferMapCallbackType,
-                userdata = userdata2?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                userdata = NativeAddress(token),
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPUMapAsyncStatus,
-                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
-                    userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                    WGPUStringView.ByValue(NativeAddress(message)),
+                    userdata1.takeIf { it != 0L }?.let { NativeAddress(it) },
                 )
             }
         } catch (failure: Throwable) {
             CallbackRuntime.reportUnroutedFailure(failure)
         }
-    }
-    val address: NativeAddress by lazy {
-        NativeAddress(com.sun.jna.Pointer.nativeValue(com.sun.jna.CallbackReference.getFunctionPointer(callback)))
     }
 }
 
@@ -9391,37 +9376,33 @@ internal actual fun WGPUBufferMapCallback.Companion.prepare(
     callback = callback,
 )
 
-// TODO(M5.5): emit this callback through UpcallEngine once its
-// fixed (uint32_t value, void * routing_userdata) CIF generalizes to this shape.
-private fun interface WGPUCompilationInfoCallbackJna : com.sun.jna.Callback {
-    fun invoke(
-        status: Int,
-        compilationInfo: com.sun.jna.Pointer?,
-        userdata1: com.sun.jna.Pointer?,
-        userdata2: com.sun.jna.Pointer?,
-    )
-}
-
 @OptIn(CallbackRuntimeApi::class)
 private object WGPUCompilationInfoCallbackTrampoline {
-    private val callback: WGPUCompilationInfoCallbackJna = WGPUCompilationInfoCallbackJna { status, compilationInfo, userdata1, userdata2 ->
+    val address: NativeAddress by lazy {
+        NativeAddress(UpcallEngine.allocateTrampoline(
+            dispatcherClass = WGPUCompilationInfoCallbackTrampoline::class.java,
+            dispatchMethod = "dispatch",
+            dispatchJvmSignature = "(JIJJ)V",
+            dispatchAbiSignature = "v(u32,ptr,ptr,ptr)",
+        ))
+    }
+
+    @JvmStatic
+    fun dispatch(token: Long, status: Int, compilationInfo: Long, userdata1: Long) {
         try {
             CallbackRuntime.dispatchSafely(
                 type = WGPUCompilationInfoCallbackType,
-                userdata = userdata2?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                userdata = NativeAddress(token),
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPUCompilationInfoRequestStatus,
-                    compilationInfo?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
-                    userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                    compilationInfo.takeIf { it != 0L }?.let { NativeAddress(it) },
+                    userdata1.takeIf { it != 0L }?.let { NativeAddress(it) },
                 )
             }
         } catch (failure: Throwable) {
             CallbackRuntime.reportUnroutedFailure(failure)
         }
-    }
-    val address: NativeAddress by lazy {
-        NativeAddress(com.sun.jna.Pointer.nativeValue(com.sun.jna.CallbackReference.getFunctionPointer(callback)))
     }
 }
 
@@ -9451,39 +9432,34 @@ internal actual fun WGPUCompilationInfoCallback.Companion.prepare(
     callback = callback,
 )
 
-// TODO(M5.5): emit this callback through UpcallEngine once its
-// fixed (uint32_t value, void * routing_userdata) CIF generalizes to this shape.
-private fun interface WGPUCreateComputePipelineAsyncCallbackJna : com.sun.jna.Callback {
-    fun invoke(
-        status: Int,
-        pipeline: com.sun.jna.Pointer?,
-        message: WGPUStringViewJna.ByValue,
-        userdata1: com.sun.jna.Pointer?,
-        userdata2: com.sun.jna.Pointer?,
-    )
-}
-
 @OptIn(CallbackRuntimeApi::class)
 private object WGPUCreateComputePipelineAsyncCallbackTrampoline {
-    private val callback: WGPUCreateComputePipelineAsyncCallbackJna = WGPUCreateComputePipelineAsyncCallbackJna { status, pipeline, message, userdata1, userdata2 ->
+    val address: NativeAddress by lazy {
+        NativeAddress(UpcallEngine.allocateTrampoline(
+            dispatcherClass = WGPUCreateComputePipelineAsyncCallbackTrampoline::class.java,
+            dispatchMethod = "dispatch",
+            dispatchJvmSignature = "(JIJJJ)V",
+            dispatchAbiSignature = "v(u32,ptr,struct(ptr,u64),ptr,ptr)",
+        ))
+    }
+
+    @JvmStatic
+    fun dispatch(token: Long, status: Int, pipeline: Long, message: Long, userdata1: Long) {
         try {
             CallbackRuntime.dispatchSafely(
                 type = WGPUCreateComputePipelineAsyncCallbackType,
-                userdata = userdata2?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                userdata = NativeAddress(token),
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPUCreatePipelineAsyncStatus,
-                    pipeline?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) }?.let { WGPUComputePipeline(it) },
-                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
-                    userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                    pipeline.takeIf { it != 0L }?.let { NativeAddress(it) }?.let { WGPUComputePipeline(it) },
+                    WGPUStringView.ByValue(NativeAddress(message)),
+                    userdata1.takeIf { it != 0L }?.let { NativeAddress(it) },
                 )
             }
         } catch (failure: Throwable) {
             CallbackRuntime.reportUnroutedFailure(failure)
         }
-    }
-    val address: NativeAddress by lazy {
-        NativeAddress(com.sun.jna.Pointer.nativeValue(com.sun.jna.CallbackReference.getFunctionPointer(callback)))
     }
 }
 
@@ -9513,39 +9489,34 @@ internal actual fun WGPUCreateComputePipelineAsyncCallback.Companion.prepare(
     callback = callback,
 )
 
-// TODO(M5.5): emit this callback through UpcallEngine once its
-// fixed (uint32_t value, void * routing_userdata) CIF generalizes to this shape.
-private fun interface WGPUCreateRenderPipelineAsyncCallbackJna : com.sun.jna.Callback {
-    fun invoke(
-        status: Int,
-        pipeline: com.sun.jna.Pointer?,
-        message: WGPUStringViewJna.ByValue,
-        userdata1: com.sun.jna.Pointer?,
-        userdata2: com.sun.jna.Pointer?,
-    )
-}
-
 @OptIn(CallbackRuntimeApi::class)
 private object WGPUCreateRenderPipelineAsyncCallbackTrampoline {
-    private val callback: WGPUCreateRenderPipelineAsyncCallbackJna = WGPUCreateRenderPipelineAsyncCallbackJna { status, pipeline, message, userdata1, userdata2 ->
+    val address: NativeAddress by lazy {
+        NativeAddress(UpcallEngine.allocateTrampoline(
+            dispatcherClass = WGPUCreateRenderPipelineAsyncCallbackTrampoline::class.java,
+            dispatchMethod = "dispatch",
+            dispatchJvmSignature = "(JIJJJ)V",
+            dispatchAbiSignature = "v(u32,ptr,struct(ptr,u64),ptr,ptr)",
+        ))
+    }
+
+    @JvmStatic
+    fun dispatch(token: Long, status: Int, pipeline: Long, message: Long, userdata1: Long) {
         try {
             CallbackRuntime.dispatchSafely(
                 type = WGPUCreateRenderPipelineAsyncCallbackType,
-                userdata = userdata2?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                userdata = NativeAddress(token),
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPUCreatePipelineAsyncStatus,
-                    pipeline?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) }?.let { WGPURenderPipeline(it) },
-                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
-                    userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                    pipeline.takeIf { it != 0L }?.let { NativeAddress(it) }?.let { WGPURenderPipeline(it) },
+                    WGPUStringView.ByValue(NativeAddress(message)),
+                    userdata1.takeIf { it != 0L }?.let { NativeAddress(it) },
                 )
             }
         } catch (failure: Throwable) {
             CallbackRuntime.reportUnroutedFailure(failure)
         }
-    }
-    val address: NativeAddress by lazy {
-        NativeAddress(com.sun.jna.Pointer.nativeValue(com.sun.jna.CallbackReference.getFunctionPointer(callback)))
     }
 }
 
@@ -9575,39 +9546,34 @@ internal actual fun WGPUCreateRenderPipelineAsyncCallback.Companion.prepare(
     callback = callback,
 )
 
-// TODO(M5.5): emit this callback through UpcallEngine once its
-// fixed (uint32_t value, void * routing_userdata) CIF generalizes to this shape.
-private fun interface WGPUDeviceLostCallbackJna : com.sun.jna.Callback {
-    fun invoke(
-        device: com.sun.jna.Pointer?,
-        reason: Int,
-        message: WGPUStringViewJna.ByValue,
-        userdata1: com.sun.jna.Pointer?,
-        userdata2: com.sun.jna.Pointer?,
-    )
-}
-
 @OptIn(CallbackRuntimeApi::class)
 private object WGPUDeviceLostCallbackTrampoline {
-    private val callback: WGPUDeviceLostCallbackJna = WGPUDeviceLostCallbackJna { device, reason, message, userdata1, userdata2 ->
+    val address: NativeAddress by lazy {
+        NativeAddress(UpcallEngine.allocateTrampoline(
+            dispatcherClass = WGPUDeviceLostCallbackTrampoline::class.java,
+            dispatchMethod = "dispatch",
+            dispatchJvmSignature = "(JJIJJ)V",
+            dispatchAbiSignature = "v(ptr,u32,struct(ptr,u64),ptr,ptr)",
+        ))
+    }
+
+    @JvmStatic
+    fun dispatch(token: Long, device: Long, reason: Int, message: Long, userdata1: Long) {
         try {
             CallbackRuntime.dispatchSafely(
                 type = WGPUDeviceLostCallbackType,
-                userdata = userdata2?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                userdata = NativeAddress(token),
             ) { callback ->
                 callback.invoke(
-                    device?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                    device.takeIf { it != 0L }?.let { NativeAddress(it) },
                     reason.toUInt() as WGPUDeviceLostReason,
-                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
-                    userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                    WGPUStringView.ByValue(NativeAddress(message)),
+                    userdata1.takeIf { it != 0L }?.let { NativeAddress(it) },
                 )
             }
         } catch (failure: Throwable) {
             CallbackRuntime.reportUnroutedFailure(failure)
         }
-    }
-    val address: NativeAddress by lazy {
-        NativeAddress(com.sun.jna.Pointer.nativeValue(com.sun.jna.CallbackReference.getFunctionPointer(callback)))
     }
 }
 
@@ -9637,39 +9603,34 @@ internal actual fun WGPUDeviceLostCallback.Companion.prepare(
     callback = callback,
 )
 
-// TODO(M5.5): emit this callback through UpcallEngine once its
-// fixed (uint32_t value, void * routing_userdata) CIF generalizes to this shape.
-private fun interface WGPUPopErrorScopeCallbackJna : com.sun.jna.Callback {
-    fun invoke(
-        status: Int,
-        type: Int,
-        message: WGPUStringViewJna.ByValue,
-        userdata1: com.sun.jna.Pointer?,
-        userdata2: com.sun.jna.Pointer?,
-    )
-}
-
 @OptIn(CallbackRuntimeApi::class)
 private object WGPUPopErrorScopeCallbackTrampoline {
-    private val callback: WGPUPopErrorScopeCallbackJna = WGPUPopErrorScopeCallbackJna { status, type, message, userdata1, userdata2 ->
+    val address: NativeAddress by lazy {
+        NativeAddress(UpcallEngine.allocateTrampoline(
+            dispatcherClass = WGPUPopErrorScopeCallbackTrampoline::class.java,
+            dispatchMethod = "dispatch",
+            dispatchJvmSignature = "(JIIJJ)V",
+            dispatchAbiSignature = "v(u32,u32,struct(ptr,u64),ptr,ptr)",
+        ))
+    }
+
+    @JvmStatic
+    fun dispatch(token: Long, status: Int, type: Int, message: Long, userdata1: Long) {
         try {
             CallbackRuntime.dispatchSafely(
                 type = WGPUPopErrorScopeCallbackType,
-                userdata = userdata2?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                userdata = NativeAddress(token),
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPUPopErrorScopeStatus,
                     type.toUInt() as WGPUErrorType,
-                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
-                    userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                    WGPUStringView.ByValue(NativeAddress(message)),
+                    userdata1.takeIf { it != 0L }?.let { NativeAddress(it) },
                 )
             }
         } catch (failure: Throwable) {
             CallbackRuntime.reportUnroutedFailure(failure)
         }
-    }
-    val address: NativeAddress by lazy {
-        NativeAddress(com.sun.jna.Pointer.nativeValue(com.sun.jna.CallbackReference.getFunctionPointer(callback)))
     }
 }
 
@@ -9699,37 +9660,33 @@ internal actual fun WGPUPopErrorScopeCallback.Companion.prepare(
     callback = callback,
 )
 
-// TODO(M5.5): emit this callback through UpcallEngine once its
-// fixed (uint32_t value, void * routing_userdata) CIF generalizes to this shape.
-private fun interface WGPUQueueWorkDoneCallbackJna : com.sun.jna.Callback {
-    fun invoke(
-        status: Int,
-        message: WGPUStringViewJna.ByValue,
-        userdata1: com.sun.jna.Pointer?,
-        userdata2: com.sun.jna.Pointer?,
-    )
-}
-
 @OptIn(CallbackRuntimeApi::class)
 private object WGPUQueueWorkDoneCallbackTrampoline {
-    private val callback: WGPUQueueWorkDoneCallbackJna = WGPUQueueWorkDoneCallbackJna { status, message, userdata1, userdata2 ->
+    val address: NativeAddress by lazy {
+        NativeAddress(UpcallEngine.allocateTrampoline(
+            dispatcherClass = WGPUQueueWorkDoneCallbackTrampoline::class.java,
+            dispatchMethod = "dispatch",
+            dispatchJvmSignature = "(JIJJ)V",
+            dispatchAbiSignature = "v(u32,struct(ptr,u64),ptr,ptr)",
+        ))
+    }
+
+    @JvmStatic
+    fun dispatch(token: Long, status: Int, message: Long, userdata1: Long) {
         try {
             CallbackRuntime.dispatchSafely(
                 type = WGPUQueueWorkDoneCallbackType,
-                userdata = userdata2?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                userdata = NativeAddress(token),
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPUQueueWorkDoneStatus,
-                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
-                    userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                    WGPUStringView.ByValue(NativeAddress(message)),
+                    userdata1.takeIf { it != 0L }?.let { NativeAddress(it) },
                 )
             }
         } catch (failure: Throwable) {
             CallbackRuntime.reportUnroutedFailure(failure)
         }
-    }
-    val address: NativeAddress by lazy {
-        NativeAddress(com.sun.jna.Pointer.nativeValue(com.sun.jna.CallbackReference.getFunctionPointer(callback)))
     }
 }
 
@@ -9759,39 +9716,34 @@ internal actual fun WGPUQueueWorkDoneCallback.Companion.prepare(
     callback = callback,
 )
 
-// TODO(M5.5): emit this callback through UpcallEngine once its
-// fixed (uint32_t value, void * routing_userdata) CIF generalizes to this shape.
-private fun interface WGPURequestAdapterCallbackJna : com.sun.jna.Callback {
-    fun invoke(
-        status: Int,
-        adapter: com.sun.jna.Pointer?,
-        message: WGPUStringViewJna.ByValue,
-        userdata1: com.sun.jna.Pointer?,
-        userdata2: com.sun.jna.Pointer?,
-    )
-}
-
 @OptIn(CallbackRuntimeApi::class)
 private object WGPURequestAdapterCallbackTrampoline {
-    private val callback: WGPURequestAdapterCallbackJna = WGPURequestAdapterCallbackJna { status, adapter, message, userdata1, userdata2 ->
+    val address: NativeAddress by lazy {
+        NativeAddress(UpcallEngine.allocateTrampoline(
+            dispatcherClass = WGPURequestAdapterCallbackTrampoline::class.java,
+            dispatchMethod = "dispatch",
+            dispatchJvmSignature = "(JIJJJ)V",
+            dispatchAbiSignature = "v(u32,ptr,struct(ptr,u64),ptr,ptr)",
+        ))
+    }
+
+    @JvmStatic
+    fun dispatch(token: Long, status: Int, adapter: Long, message: Long, userdata1: Long) {
         try {
             CallbackRuntime.dispatchSafely(
                 type = WGPURequestAdapterCallbackType,
-                userdata = userdata2?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                userdata = NativeAddress(token),
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPURequestAdapterStatus,
-                    adapter?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) }?.let { WGPUAdapter(it) },
-                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
-                    userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                    adapter.takeIf { it != 0L }?.let { NativeAddress(it) }?.let { WGPUAdapter(it) },
+                    WGPUStringView.ByValue(NativeAddress(message)),
+                    userdata1.takeIf { it != 0L }?.let { NativeAddress(it) },
                 )
             }
         } catch (failure: Throwable) {
             CallbackRuntime.reportUnroutedFailure(failure)
         }
-    }
-    val address: NativeAddress by lazy {
-        NativeAddress(com.sun.jna.Pointer.nativeValue(com.sun.jna.CallbackReference.getFunctionPointer(callback)))
     }
 }
 
@@ -9821,39 +9773,34 @@ internal actual fun WGPURequestAdapterCallback.Companion.prepare(
     callback = callback,
 )
 
-// TODO(M5.5): emit this callback through UpcallEngine once its
-// fixed (uint32_t value, void * routing_userdata) CIF generalizes to this shape.
-private fun interface WGPURequestDeviceCallbackJna : com.sun.jna.Callback {
-    fun invoke(
-        status: Int,
-        device: com.sun.jna.Pointer?,
-        message: WGPUStringViewJna.ByValue,
-        userdata1: com.sun.jna.Pointer?,
-        userdata2: com.sun.jna.Pointer?,
-    )
-}
-
 @OptIn(CallbackRuntimeApi::class)
 private object WGPURequestDeviceCallbackTrampoline {
-    private val callback: WGPURequestDeviceCallbackJna = WGPURequestDeviceCallbackJna { status, device, message, userdata1, userdata2 ->
+    val address: NativeAddress by lazy {
+        NativeAddress(UpcallEngine.allocateTrampoline(
+            dispatcherClass = WGPURequestDeviceCallbackTrampoline::class.java,
+            dispatchMethod = "dispatch",
+            dispatchJvmSignature = "(JIJJJ)V",
+            dispatchAbiSignature = "v(u32,ptr,struct(ptr,u64),ptr,ptr)",
+        ))
+    }
+
+    @JvmStatic
+    fun dispatch(token: Long, status: Int, device: Long, message: Long, userdata1: Long) {
         try {
             CallbackRuntime.dispatchSafely(
                 type = WGPURequestDeviceCallbackType,
-                userdata = userdata2?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                userdata = NativeAddress(token),
             ) { callback ->
                 callback.invoke(
                     status.toUInt() as WGPURequestDeviceStatus,
-                    device?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) }?.let { WGPUDevice(it) },
-                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
-                    userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                    device.takeIf { it != 0L }?.let { NativeAddress(it) }?.let { WGPUDevice(it) },
+                    WGPUStringView.ByValue(NativeAddress(message)),
+                    userdata1.takeIf { it != 0L }?.let { NativeAddress(it) },
                 )
             }
         } catch (failure: Throwable) {
             CallbackRuntime.reportUnroutedFailure(failure)
         }
-    }
-    val address: NativeAddress by lazy {
-        NativeAddress(com.sun.jna.Pointer.nativeValue(com.sun.jna.CallbackReference.getFunctionPointer(callback)))
     }
 }
 
@@ -9883,39 +9830,34 @@ internal actual fun WGPURequestDeviceCallback.Companion.prepare(
     callback = callback,
 )
 
-// TODO(M5.5): emit this callback through UpcallEngine once its
-// fixed (uint32_t value, void * routing_userdata) CIF generalizes to this shape.
-private fun interface WGPUUncapturedErrorCallbackJna : com.sun.jna.Callback {
-    fun invoke(
-        device: com.sun.jna.Pointer?,
-        type: Int,
-        message: WGPUStringViewJna.ByValue,
-        userdata1: com.sun.jna.Pointer?,
-        userdata2: com.sun.jna.Pointer?,
-    )
-}
-
 @OptIn(CallbackRuntimeApi::class)
 private object WGPUUncapturedErrorCallbackTrampoline {
-    private val callback: WGPUUncapturedErrorCallbackJna = WGPUUncapturedErrorCallbackJna { device, type, message, userdata1, userdata2 ->
+    val address: NativeAddress by lazy {
+        NativeAddress(UpcallEngine.allocateTrampoline(
+            dispatcherClass = WGPUUncapturedErrorCallbackTrampoline::class.java,
+            dispatchMethod = "dispatch",
+            dispatchJvmSignature = "(JJIJJ)V",
+            dispatchAbiSignature = "v(ptr,u32,struct(ptr,u64),ptr,ptr)",
+        ))
+    }
+
+    @JvmStatic
+    fun dispatch(token: Long, device: Long, type: Int, message: Long, userdata1: Long) {
         try {
             CallbackRuntime.dispatchSafely(
                 type = WGPUUncapturedErrorCallbackType,
-                userdata = userdata2?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                userdata = NativeAddress(token),
             ) { callback ->
                 callback.invoke(
-                    device?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                    device.takeIf { it != 0L }?.let { NativeAddress(it) },
                     type.toUInt() as WGPUErrorType,
-                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
-                    userdata1?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                    WGPUStringView.ByValue(NativeAddress(message)),
+                    userdata1.takeIf { it != 0L }?.let { NativeAddress(it) },
                 )
             }
         } catch (failure: Throwable) {
             CallbackRuntime.reportUnroutedFailure(failure)
         }
-    }
-    val address: NativeAddress by lazy {
-        NativeAddress(com.sun.jna.Pointer.nativeValue(com.sun.jna.CallbackReference.getFunctionPointer(callback)))
     }
 }
 
@@ -9945,35 +9887,32 @@ internal actual fun WGPUUncapturedErrorCallback.Companion.prepare(
     callback = callback,
 )
 
-// TODO(M5.5): emit this callback through UpcallEngine once its
-// fixed (uint32_t value, void * routing_userdata) CIF generalizes to this shape.
-private fun interface WGPULogCallbackJna : com.sun.jna.Callback {
-    fun invoke(
-        level: Int,
-        message: WGPUStringViewJna.ByValue,
-        userdata: com.sun.jna.Pointer?,
-    )
-}
-
 @OptIn(CallbackRuntimeApi::class)
 private object WGPULogCallbackTrampoline {
-    private val callback: WGPULogCallbackJna = WGPULogCallbackJna { level, message, userdata ->
+    val address: NativeAddress by lazy {
+        NativeAddress(UpcallEngine.allocateTrampoline(
+            dispatcherClass = WGPULogCallbackTrampoline::class.java,
+            dispatchMethod = "dispatch",
+            dispatchJvmSignature = "(JIJ)V",
+            dispatchAbiSignature = "v(u32,struct(ptr,u64),ptr)",
+        ))
+    }
+
+    @JvmStatic
+    fun dispatch(token: Long, level: Int, message: Long) {
         try {
             CallbackRuntime.dispatchSafely(
                 type = WGPULogCallbackType,
-                userdata = userdata?.takeIf { com.sun.jna.Pointer.nativeValue(it) != 0L }?.let { NativeAddress(com.sun.jna.Pointer.nativeValue(it)) },
+                userdata = NativeAddress(token),
             ) { callback ->
                 callback.invoke(
                     level.toUInt() as WGPULogLevel,
-                    WGPUStringView.ByValue(NativeAddress(com.sun.jna.Pointer.nativeValue(message.getPointer()))),
+                    WGPUStringView.ByValue(NativeAddress(message)),
                 )
             }
         } catch (failure: Throwable) {
             CallbackRuntime.reportUnroutedFailure(failure)
         }
-    }
-    val address: NativeAddress by lazy {
-        NativeAddress(com.sun.jna.Pointer.nativeValue(com.sun.jna.CallbackReference.getFunctionPointer(callback)))
     }
 }
 
