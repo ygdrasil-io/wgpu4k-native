@@ -45,6 +45,7 @@ jobs:
         if: github.ref_name != 'fix/jvm-native-bootstrap' && github.head_ref != 'fix/jvm-native-bootstrap'
         run: >-
           ./gradlew build
+          --refresh-dependencies
           -x :kextract:test
           -x lintAnalyzeDebug
           -x lintAnalyzeDebugAndroidTest
@@ -199,4 +200,4 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu software -no-snapshot -no-audio -no-boot-anim
           disable-animations: true
-          script: ./gradlew :demo:android:connectedDebugAndroidTest --no-daemon --stacktrace
+          script: ./gradlew :demo:android:connectedDebugAndroidTest --refresh-dependencies --no-daemon --stacktrace

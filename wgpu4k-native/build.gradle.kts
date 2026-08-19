@@ -341,18 +341,33 @@ tasks.named("jvmProcessResources") {
     dependsOn(*jvmNativeResourceTasks.toTypedArray())
 }
 
-// kextract rejects the variable-width C `size_t` scalar (LP64/LLP64) in the multiplatform
-// direct ABI path used by the Android engine wrapper table. The wgpu headers only ever use
-// size_t as a 64-bit width on every supported target, so the sanitizer rewrites it to the
-// fixed-width `unsigned long long` (I64) before generation. This keeps the emitted
-// common/jvm/native bindings byte-identical while unblocking the Android backend.
+// kextract must see the same WebGPU ABI on every generation host. The platform stdlib headers
+// behind stdint.h/stddef.h/math.h are not part of the WebGPU API and leak host-specific types
+// such as `long` and Windows' private `_Wchar` record into libclang. Replace them only in the
+// generator input with the fixed-width types and macros WebGPU actually uses. The original
+// downloaded headers remain untouched for cinterop and native compilation.
 val sanitizedNativeHeadersDirectory = project.file("build/native/sanitized")
 val sanitizedNativeHeader = sanitizedNativeHeadersDirectory.resolve("wgpu.h")
 val sanitizedWebGpuHeader = sanitizedNativeHeadersDirectory.resolve("webgpu.h")
 
+val kextractWebGpuAbiPrelude = """
+    typedef unsigned char uint8_t;
+    typedef unsigned short uint16_t;
+    typedef signed int int32_t;
+    typedef unsigned int uint32_t;
+    typedef signed long long int64_t;
+    typedef unsigned long long uint64_t;
+    typedef unsigned long long size_t;
+    #define UINT32_MAX 4294967295U
+    #define UINT64_MAX 18446744073709551615ULL
+    #define SIZE_MAX 18446744073709551615ULL
+    #define NULL ((void*)0)
+    #define NAN (0.0f / 0.0f)
+""".trimIndent()
+
 tasks.register("sanitizeNativeHeaders") {
     group = "generation"
-    description = "Rewrites variable-width C types (size_t) in the wgpu headers to fixed-width equivalents"
+    description = "Rewrites WebGPU's system-header dependencies to fixed-width generator definitions"
     dependsOn(*jvmBindingNativeDependencyTasks.toTypedArray())
     inputs.file(project.file("build/native/wgpu.h"))
     inputs.file(project.file("build/native/webgpu.h"))
@@ -361,12 +376,46 @@ tasks.register("sanitizeNativeHeaders") {
     doLast {
         fun sanitize(source: File, target: File) {
             target.parentFile.mkdirs()
+            val header = source.readText()
             target.writeText(
-                source.readText().replace(Regex("\\bsize_t\\b"), "unsigned long long"),
+                if (source.name == "webgpu.h") {
+                    header
+                        .replace("#include <stdint.h>", kextractWebGpuAbiPrelude)
+                        .replace("#include <stddef.h>", "")
+                        .replace("#include <math.h>", "")
+                } else {
+                    header
+                },
             )
         }
         sanitize(project.file("build/native/wgpu.h"), sanitizedNativeHeader)
         sanitize(project.file("build/native/webgpu.h"), sanitizedWebGpuHeader)
+    }
+}
+
+tasks.register("verifySanitizedNativeHeaders") {
+    group = "verification"
+    description = "Verifies that kextract reads a host-independent WebGPU header surface."
+    dependsOn("sanitizeNativeHeaders")
+    inputs.file(sanitizedWebGpuHeader)
+
+    doLast {
+        val header = sanitizedWebGpuHeader.readText()
+        require("#include <stdint.h>" !in header) {
+            "The kextract header must not import the host stdint.h implementation"
+        }
+        require("#include <stddef.h>" !in header) {
+            "The kextract header must not import the host stddef.h implementation"
+        }
+        require("#include <math.h>" !in header) {
+            "The kextract header must not import the host math.h implementation"
+        }
+        require("typedef unsigned long long uint64_t;" in header) {
+            "The kextract header must define uint64_t with a fixed 64-bit ABI"
+        }
+        require("typedef unsigned long long size_t;" in header) {
+            "The kextract header must define size_t with the WebGPU 64-bit ABI"
+        }
     }
 }
 
@@ -376,6 +425,7 @@ tasks.register<Exec>("generateBindingsFromHeader") {
     dependsOn(":kextract:createKextractImage")
     dependsOn(*jvmBindingNativeDependencyTasks.toTypedArray())
     dependsOn("sanitizeNativeHeaders")
+    dependsOn("verifySanitizedNativeHeaders")
 
     val callbackBindings = project(":wgpu4k-native-specs")
         .file("src/jvmMain/resources/callback-bindings.yml")
