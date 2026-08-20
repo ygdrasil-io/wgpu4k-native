@@ -5,8 +5,6 @@ import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.CInteropProcess
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.gradle.tasks.KotlinNativeCompile
 import java.nio.file.Files
 
 plugins {
@@ -506,47 +504,9 @@ tasks.register("verifyJvmBootstrapBinding") {
     }
 }
 
-// Binding generation writes into src/ (commonMain/jvmMain); declare the explicit
-// dependency chain so Gradle's strict implicit-dependency validation passes when
-// compile/test tasks and verifyGeneratedBindingsClean run in one invocation.
-tasks.named("compileKotlinJvm") {
-    dependsOn("generateBindingsFromHeader")
-}
-// KSP also scans the generated common/JVM source roots before Kotlin compilation.
-// Keep its lazily registered target tasks behind binding generation as well.
-tasks.matching {
-    it.name.startsWith("ksp") && it.name.contains("Kotlin")
-}.configureEach {
-    dependsOn("generateBindingsFromHeader")
-}
-// AGP registers compileDebugKotlinAndroid lazily, so match by name with a live collection.
-tasks.withType<KotlinCompile>()
-    .matching { it.name.startsWith("compile") && it.name.endsWith("KotlinAndroid") }
-    .configureEach {
-        dependsOn("generateBindingsFromHeader")
-    }
-// KMP native compile tasks are registered lazily too (main compiles only).
-tasks.withType<KotlinNativeCompile>()
-    .matching { it.name.startsWith("compileKotlin") }
-    .configureEach {
-        dependsOn("generateBindingsFromHeader")
-    }
-tasks.named("verifyJvmBootstrapBinding") {
-    dependsOn("generateBindingsFromHeader")
-}
-
-// Packaging, metadata, and Dokka tasks also read the generated source roots.
-// Declare the dependency explicitly so Gradle's strict validation cannot run
-// them before the kextract output has been refreshed.
-tasks.matching {
-    it.name.endsWith("sourcesJar", ignoreCase = true) || it.name in setOf(
-        "compileCommonMainKotlinMetadata",
-        "compileNativeMainKotlinMetadata",
-        "dokkaGeneratePublicationHtml",
-    )
-}.configureEach {
-    dependsOn("generateBindingsFromHeader")
-}
+// Binding sources are versioned. Normal compilation, packaging, and tests consume the
+// committed files; run generateBindingsFromHeader explicitly when kffi, kextract, or the
+// WebGPU header changes, then review and commit the regenerated bindings.
 
 tasks.register("verifyBindingGenerationConfiguration") {
     group = "verification"
@@ -594,6 +554,32 @@ tasks.register("verifyBindingGenerationConfiguration") {
             .toSet()
         require(generationTask.path in verificationDependencies) {
             "verifyGeneratedBindingsClean must depend on ${generationTask.path}; found $verificationDependencies"
+        }
+
+        val buildConsumers = tasks.filter { task ->
+            task.name == "compileKotlinJvm" ||
+                (task.name.startsWith("compile") && task.name.endsWith("KotlinAndroid")) ||
+                task.name.startsWith("compileKotlin") ||
+                task.name.endsWith("sourcesJar", ignoreCase = true) ||
+                task.name in setOf(
+                    "compileCommonMainKotlinMetadata",
+                    "compileNativeMainKotlinMetadata",
+                    "dokkaGeneratePublicationHtml",
+                )
+        }
+        buildConsumers.forEach { task ->
+            val dependencies = task.taskDependencies
+                .getDependencies(task)
+                .map { it.path }
+                .toSet()
+            require(generationTask.path !in dependencies) {
+                "${task.path} must compile committed bindings without regenerating them; found $dependencies"
+            }
+        }
+
+        val testWorkflow = rootDir.resolve(".github/workflows/test.yml")
+        require("verifyGeneratedBindingsClean" !in testWorkflow.readText()) {
+            "The normal test workflow must not regenerate versioned WebGPU bindings"
         }
 
         val expectedLauncherSuffix = if (bindingGenerationHost == "windows") {

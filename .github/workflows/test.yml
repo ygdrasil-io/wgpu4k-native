@@ -166,9 +166,6 @@ jobs:
           -x :wgpu4k-native:fetch-native-dependencies
       - name: Verify binding-generation configuration
         run: ./gradlew :wgpu4k-native:verifyBindingGenerationConfiguration
-      - name: Regenerate and verify WebGPU bindings
-        if: matrix.os == 'macos-latest'
-        run: ./gradlew :wgpu4k-native:verifyGeneratedBindingsClean
 
   android-smoke:
     if: github.ref_name != 'fix/jvm-native-bootstrap' && github.head_ref != 'fix/jvm-native-bootstrap'
