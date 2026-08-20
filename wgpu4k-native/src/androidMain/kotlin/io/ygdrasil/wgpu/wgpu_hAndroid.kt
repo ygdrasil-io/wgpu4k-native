@@ -9947,4 +9947,3 @@ internal actual fun wgpuSetLogCallbackCallbackBindingPreflight(): (NativeAddress
         NativeEngine.callV2PP(wgpuSetLogCallback_ADDR, callback.toAddress(), userdata.toAddress())
     }
 }
-

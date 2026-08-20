@@ -298,4 +298,3 @@ private fun assertWiring(
     assertEquals(assertNotNull(registration.userdata).rawValue, assertNotNull(userdata2).rawValue)
     assertEquals(expectedMode, actualMode)
 }
-
