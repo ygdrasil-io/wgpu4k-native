@@ -3,7 +3,7 @@
 package io.ygdrasil.wgpu
 
 import cnames.structs.GLFWwindow
-import io.ygdrasil.kffi.NativeAddress
+import org.graphiks.kffi.NativeAddress
 import glfw.glfwGetCocoaWindow
 import kotlinx.cinterop.*
 import platform.AppKit.NSWindow
@@ -15,6 +15,5 @@ actual fun getSurface(instance: WGPUInstance, window: CPointer<GLFWwindow>): WGP
     val layer = CAMetalLayer.layer()
     nsWindow.contentView()?.setLayer(layer)
     val layerPointer: COpaquePointer = interpretCPointer<COpaque>(layer.objcPtr())!!.reinterpret()
-    return getSurfaceFromMetalLayer(instance, layerPointer.let(::NativeAddress)) ?: error("fail to get surface on MacOs")
+    return getSurfaceFromMetalLayer(instance, NativeAddress.fromPointer(layerPointer)) ?: error("fail to get surface on MacOs")
 }
-

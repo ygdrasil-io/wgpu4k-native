@@ -1,6 +1,7 @@
 .gradle
 **/build/
 !src/**/build/
+**/.cxx/
 .DS_Store
 
 # Ignore Gradle GUI config
@@ -31,6 +32,9 @@ gradle-app.setting
 **/node_modules/
 /.kotlin/
 /local.properties
+
+# Git worktrees
+/.worktrees/
 
 /demo/desktop-and-ios/iosApp.xcodeproj/xcuserdata/
 /demo/desktop-and-ios/iosApp.xcodeproj/project.xcworkspace/xcuserdata/

@@ -1,4 +1,5 @@
 import com.android.build.gradle.tasks.MergeSourceSetFolders
+import com.android.build.api.attributes.BuildTypeAttr
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -57,7 +58,7 @@ kotlin {
 
     jvm {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_24
+            jvmTarget = JvmTarget.fromTarget("25")
         }
     }
 
@@ -79,14 +80,22 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api(project(":kffi"))
+                // kffi est publié par Graphiks-org/kffi ; l'artifact racine
+                // org.graphiks:kffi résout la variante de plateforme (jvm/android/native).
+                api("org.graphiks:kffi:1.0.0-SNAPSHOT") {
+                    // The published debug snapshot may lag behind the release
+                    // native artifact. Keep Android consumers on the tested
+                    // release variant until the debug publication is refreshed.
+                    attributes {
+                        attribute(BuildTypeAttr.ATTRIBUTE, objects.named("release"))
+                    }
+                }
             }
         }
 
         androidMain {
             dependencies {
-                val jna = libs.jna.get()
-                api("${jna.module.group}:${jna.module.name}:${jna.versionConstraint}:@aar")
+                // Android bindings use kffi for both downcalls and callback trampolines.
             }
         }
 
@@ -268,6 +277,13 @@ tasks.named<Test>("jvmTest") {
     }
 }
 
+// Android unit tests run on the host JVM through AGP's unit-test runner; the Kotest
+// specs in androidUnitTest need the JUnit Platform engine, mirroring jvmTest above.
+// AGP registers testDebugUnitTest lazily, so match by name with a live collection.
+tasks.withType<Test>().matching { it.name == "testDebugUnitTest" }.configureEach {
+    useJUnitPlatform()
+}
+
 tasks.withType(MergeSourceSetFolders::class.java).configureEach {
     dependsOn("fetch-native-dependencies")
 }
@@ -275,15 +291,15 @@ tasks.withType(CInteropProcess::class.java).configureEach {
     dependsOn("fetch-native-dependencies")
 }
 
-tasks.register<Copy>("copyDocsToRoot") {
-    dependsOn("dokkaGfm", "dokkaHtml")
-    from(project.layout.buildDirectory.dir("dokka"))
-    into(rootDir.resolve("doc"))
+tasks.register<Sync>("copyDocsToRoot") {
+    dependsOn("dokkaGeneratePublicationHtml")
+    from(project.layout.buildDirectory.dir("dokka/html"))
+    into(rootDir.resolve("doc/html"))
 }
 
 tasks.register<Task>("generateDocs") {
     group = "documentation"
-    description = "Generates the documentation in HTML and Markdown formats, then copies the files into the 'doc' folder."
+    description = "Generates the documentation in HTML format, then copies the files into the 'doc' folder."
     dependsOn("copyDocsToRoot")
 }
 
@@ -305,7 +321,7 @@ val kextractLauncher = kextractDistribution.map { distribution ->
 val generatedJvmBinding = project.file(
     "src/jvmMain/kotlin/io/ygdrasil/wgpu/wgpu_hJvm.kt",
 )
-val genericJvmLookupImport = "import io.ygdrasil.kffi.findOrThrow"
+val genericJvmLookupImport = "import org.graphiks.kffi.findOrThrow"
 val generatedJvmBootstrapResolver = "KextractNativeBootstrap.resolve("
 val jvmNativeResourceTasks = listOf(
     "unzip-libwgpu_native.dylib-from-wgpu-macos-aarch64-release.zip",
@@ -322,20 +338,97 @@ val jvmBindingNativeDependencyTasks = listOf(
 tasks.named("jvmProcessResources") {
     dependsOn(*jvmNativeResourceTasks.toTypedArray())
 }
-val generatedAndroidBindings = project.file(
-    "src/androidMain/kotlin/io/ygdrasil/wgpu/wgpu_hAndroid.kt",
-)
+
+// kextract must see the same WebGPU ABI on every generation host. The platform stdlib headers
+// behind stdint.h/stddef.h/math.h are not part of the WebGPU API and leak host-specific types
+// such as `long` and Windows' private `_Wchar` record into libclang. Replace them only in the
+// generator input with the fixed-width types and macros WebGPU actually uses. The original
+// downloaded headers remain untouched for cinterop and native compilation.
+val sanitizedNativeHeadersDirectory = project.file("build/native/sanitized")
+val sanitizedNativeHeader = sanitizedNativeHeadersDirectory.resolve("wgpu.h")
+val sanitizedWebGpuHeader = sanitizedNativeHeadersDirectory.resolve("webgpu.h")
+
+val kextractWebGpuAbiPrelude = """
+    typedef unsigned char uint8_t;
+    typedef unsigned short uint16_t;
+    typedef signed int int32_t;
+    typedef unsigned int uint32_t;
+    typedef signed long long int64_t;
+    typedef unsigned long long uint64_t;
+    typedef unsigned long long size_t;
+    #define UINT32_MAX 4294967295U
+    #define UINT64_MAX 18446744073709551615ULL
+    #define SIZE_MAX 18446744073709551615ULL
+    #define NULL ((void*)0)
+    #define NAN (0.0f / 0.0f)
+""".trimIndent()
+
+tasks.register("sanitizeNativeHeaders") {
+    group = "generation"
+    description = "Rewrites WebGPU's system-header dependencies to fixed-width generator definitions"
+    dependsOn(*jvmBindingNativeDependencyTasks.toTypedArray())
+    inputs.file(project.file("build/native/wgpu.h"))
+    inputs.file(project.file("build/native/webgpu.h"))
+    outputs.file(sanitizedNativeHeader)
+    outputs.file(sanitizedWebGpuHeader)
+    doLast {
+        fun sanitize(source: File, target: File) {
+            target.parentFile.mkdirs()
+            val header = source.readText()
+            target.writeText(
+                if (source.name == "webgpu.h") {
+                    header
+                        .replace("#include <stdint.h>", kextractWebGpuAbiPrelude)
+                        .replace("#include <stddef.h>", "")
+                        .replace("#include <math.h>", "")
+                } else {
+                    header
+                },
+            )
+        }
+        sanitize(project.file("build/native/wgpu.h"), sanitizedNativeHeader)
+        sanitize(project.file("build/native/webgpu.h"), sanitizedWebGpuHeader)
+    }
+}
+
+tasks.register("verifySanitizedNativeHeaders") {
+    group = "verification"
+    description = "Verifies that kextract reads a host-independent WebGPU header surface."
+    dependsOn("sanitizeNativeHeaders")
+    inputs.file(sanitizedWebGpuHeader)
+
+    doLast {
+        val header = sanitizedWebGpuHeader.readText()
+        require("#include <stdint.h>" !in header) {
+            "The kextract header must not import the host stdint.h implementation"
+        }
+        require("#include <stddef.h>" !in header) {
+            "The kextract header must not import the host stddef.h implementation"
+        }
+        require("#include <math.h>" !in header) {
+            "The kextract header must not import the host math.h implementation"
+        }
+        require("typedef unsigned long long uint64_t;" in header) {
+            "The kextract header must define uint64_t with a fixed 64-bit ABI"
+        }
+        require("typedef unsigned long long size_t;" in header) {
+            "The kextract header must define size_t with the WebGPU 64-bit ABI"
+        }
+    }
+}
 
 tasks.register<Exec>("generateBindingsFromHeader") {
     group = "generation"
     description = "Generates unified KMP bindings from webgpu.h using kextract CLI"
     dependsOn(":kextract:createKextractImage")
     dependsOn(*jvmBindingNativeDependencyTasks.toTypedArray())
+    dependsOn("sanitizeNativeHeaders")
+    dependsOn("verifySanitizedNativeHeaders")
 
     val callbackBindings = project(":wgpu4k-native-specs")
         .file("src/jvmMain/resources/callback-bindings.yml")
-    val nativeHeader = project.file("build/native/wgpu.h")
-    val webGpuHeader = project.file("build/native/webgpu.h")
+    val nativeHeader = sanitizedNativeHeader
+    val webGpuHeader = sanitizedWebGpuHeader
 
     inputs.dir(kextractDistribution)
         .withPropertyName("kextractDistribution")
@@ -395,67 +488,6 @@ tasks.register<Exec>("generateBindingsFromHeader") {
         "-D", "WGPU_SKIP_PROCS",
         nativeHeader.absolutePath,
     ) + clangArgs
-
-    doLast {
-        // kextract currently exposes struct pointer parameters as raw JNA pointers, so JNA cannot
-        // auto-read output structures after the native call. Keep this downstream correction
-        // deterministic until the generator emits the readbacks itself.
-        fun replaceGeneratedFunction(
-            source: String,
-            generatedFunction: String,
-            patchedFunction: String,
-            functionName: String,
-        ): String {
-            val firstMatch = source.indexOf(generatedFunction)
-            require(firstMatch >= 0) {
-                "Could not apply the Android JNA output readback for $functionName: generated function changed."
-            }
-            require(firstMatch == source.lastIndexOf(generatedFunction)) {
-                "Could not apply the Android JNA output readback for $functionName: generated function is ambiguous."
-            }
-            return source.replaceRange(
-                firstMatch,
-                firstMatch + generatedFunction.length,
-                patchedFunction,
-            )
-        }
-
-        val generatedSource = generatedAndroidBindings.readText()
-        val withCapabilitiesReadback = replaceGeneratedFunction(
-            generatedSource,
-            """actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus {
-    return (io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCapabilities(surface?.handler, adapter?.handler, capabilities?.handler)).toUInt()
-}""",
-            """actual fun wgpuSurfaceGetCapabilities(surface: WGPUSurface?, adapter: WGPUAdapter?, capabilities: WGPUSurfaceCapabilities?): WGPUStatus {
-    val status = io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCapabilities(surface?.handler, adapter?.handler, capabilities?.handler)
-    when (capabilities) {
-        is WGPUSurfaceCapabilities.ByReference -> capabilities.handle.read()
-        is WGPUSurfaceCapabilities.ByValue -> capabilities.handle.read()
-        null -> Unit
-    }
-    return status.toUInt()
-}""",
-            "wgpuSurfaceGetCapabilities",
-        )
-        val withSurfaceTextureReadback = replaceGeneratedFunction(
-            withCapabilitiesReadback,
-            """actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit {
-    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCurrentTexture(surface?.handler, surfaceTexture?.handler)
-    return
-}""",
-            """actual fun wgpuSurfaceGetCurrentTexture(surface: WGPUSurface?, surfaceTexture: WGPUSurfaceTexture?): Unit {
-    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuSurfaceGetCurrentTexture(surface?.handler, surfaceTexture?.handler)
-    when (surfaceTexture) {
-        is WGPUSurfaceTexture.ByReference -> surfaceTexture.handle.read()
-        is WGPUSurfaceTexture.ByValue -> surfaceTexture.handle.read()
-        null -> Unit
-    }
-    return
-}""",
-            "wgpuSurfaceGetCurrentTexture",
-        )
-        generatedAndroidBindings.writeText(withSurfaceTextureReadback.trimEnd() + "\n")
-    }
 }
 
 tasks.register("verifyJvmBootstrapBinding") {
@@ -471,6 +503,10 @@ tasks.register("verifyJvmBootstrapBinding") {
         }
     }
 }
+
+// Binding sources are versioned. Normal compilation, packaging, and tests consume the
+// committed files; run generateBindingsFromHeader explicitly when kffi, kextract, or the
+// WebGPU header changes, then review and commit the regenerated bindings.
 
 tasks.register("verifyBindingGenerationConfiguration") {
     group = "verification"
@@ -520,6 +556,32 @@ tasks.register("verifyBindingGenerationConfiguration") {
             "verifyGeneratedBindingsClean must depend on ${generationTask.path}; found $verificationDependencies"
         }
 
+        val buildConsumers = tasks.filter { task ->
+            task.name == "compileKotlinJvm" ||
+                (task.name.startsWith("compile") && task.name.endsWith("KotlinAndroid")) ||
+                task.name.startsWith("compileKotlin") ||
+                task.name.endsWith("sourcesJar", ignoreCase = true) ||
+                task.name in setOf(
+                    "compileCommonMainKotlinMetadata",
+                    "compileNativeMainKotlinMetadata",
+                    "dokkaGeneratePublicationHtml",
+                )
+        }
+        buildConsumers.forEach { task ->
+            val dependencies = task.taskDependencies
+                .getDependencies(task)
+                .map { it.path }
+                .toSet()
+            require(generationTask.path !in dependencies) {
+                "${task.path} must compile committed bindings without regenerating them; found $dependencies"
+            }
+        }
+
+        val testWorkflow = rootDir.resolve(".github/workflows/test.yml")
+        require("verifyGeneratedBindingsClean" !in testWorkflow.readText()) {
+            "The normal test workflow must not regenerate versioned WebGPU bindings"
+        }
+
         val expectedLauncherSuffix = if (bindingGenerationHost == "windows") {
             "bin/kextract.bat"
         } else {
@@ -533,8 +595,8 @@ tasks.register("verifyBindingGenerationConfiguration") {
         val callbackBindings = project(":wgpu4k-native-specs")
             .file("src/jvmMain/resources/callback-bindings.yml")
             .absoluteFile
-        val nativeHeader = project.file("build/native/wgpu.h").absoluteFile
-        val webGpuHeader = project.file("build/native/webgpu.h").absoluteFile
+        val nativeHeader = sanitizedNativeHeader.absoluteFile
+        val webGpuHeader = sanitizedWebGpuHeader.absoluteFile
         val declaredInputs = generationTask.inputs.files.files.map { it.absoluteFile }.toSet()
         val expectedDistributionPath = kextractDistribution.get().asFile
             .toPath()

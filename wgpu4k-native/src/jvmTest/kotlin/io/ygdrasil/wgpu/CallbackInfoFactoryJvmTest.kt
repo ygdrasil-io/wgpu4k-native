@@ -1,9 +1,9 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.CallbackRegistration
-import io.ygdrasil.kffi.CallbackPolicy
-import io.ygdrasil.kffi.MemoryAllocator
-import io.ygdrasil.kffi.NativeAddress
+import org.graphiks.kffi.CallbackRegistration
+import org.graphiks.kffi.CallbackPolicy
+import org.graphiks.kffi.MemoryAllocator
+import org.graphiks.kffi.NativeAddress
 import io.kotest.core.spec.style.FreeSpec
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -293,10 +293,8 @@ private fun assertWiring(
     registration: CallbackRegistration<*>,
     applicationUserdata: NativeAddress,
 ) {
-    assertEquals(registration.callback.rawValue(), assertNotNull(callback).rawValue())
-    assertEquals(applicationUserdata.rawValue(), assertNotNull(userdata1).rawValue())
-    assertEquals(assertNotNull(registration.userdata).rawValue(), assertNotNull(userdata2).rawValue())
+    assertEquals(registration.callback.rawValue, assertNotNull(callback).rawValue)
+    assertEquals(applicationUserdata.rawValue, assertNotNull(userdata1).rawValue)
+    assertEquals(assertNotNull(registration.userdata).rawValue, assertNotNull(userdata2).rawValue)
     assertEquals(expectedMode, actualMode)
 }
-
-private fun NativeAddress.rawValue(): Long = handler.address()

@@ -2,11 +2,11 @@
 
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.ArrayHolder
-import io.ygdrasil.kffi.CallbackPolicy
-import io.ygdrasil.kffi.CallbackRegistration
-import io.ygdrasil.kffi.NativeAddress
-import io.ygdrasil.kffi.memoryScope
+import org.graphiks.kffi.ArrayHolder
+import org.graphiks.kffi.CallbackPolicy
+import org.graphiks.kffi.CallbackRegistration
+import org.graphiks.kffi.NativeAddress
+import org.graphiks.kffi.memoryScope
 import kotlin.concurrent.atomics.AtomicInt
 
 private val logCallbackConfigurationLock = AtomicInt(0)
@@ -87,7 +87,7 @@ fun getDevice(adapter: WGPUAdapter, instance: WGPUInstance): WGPUDevice {
                     WGPUCallbackMode_WaitAnyOnly,
                     registration,
                 )
-                wgpuAdapterRequestDevice(adapter, null, info).id
+                wgpuAdapterRequestDevice(scope, adapter, null, info).id
             }
             awaitCallbackFuture(
                 futureId = futureId,
@@ -140,6 +140,28 @@ internal fun <A : Any> resolveAdapterRequestResult(
     return adapter ?: error("fail to get adapter: success status returned no adapter")
 }
 
+fun selectAndroidBackend(
+    probeVulkan: () -> Boolean,
+    onFallback: (String) -> Unit,
+): UInt {
+    val vulkanAvailable = runCatching(probeVulkan).getOrElse { failure ->
+        onFallback(
+            "Vulkan unavailable (${failure.message ?: "adapter probe failed"}); " +
+                "falling back to OpenGLES because probing Vulkan and GLES against " +
+                "the same Android surface can leave the EGL BufferQueue connected.",
+        )
+        return WGPUBackendType_OpenGLES
+    }
+
+    if (vulkanAvailable) return WGPUBackendType_Vulkan
+
+    onFallback(
+        "Vulkan unavailable; falling back to OpenGLES because probing Vulkan and " +
+            "GLES against the same Android surface can leave the EGL BufferQueue connected.",
+    )
+    return WGPUBackendType_OpenGLES
+}
+
 fun getAdapter(
     surface: WGPUSurface?,
     instance: WGPUInstance,
@@ -166,7 +188,7 @@ fun getAdapter(
                     WGPUCallbackMode_WaitAnyOnly,
                     registration,
                 )
-                wgpuInstanceRequestAdapter(instance, options, info).id
+                wgpuInstanceRequestAdapter(scope, instance, options, info).id
             }
             awaitCallbackFuture(
                 futureId = futureId,
@@ -219,7 +241,6 @@ fun getSurfaceAndroidView(
         window = surfaceHolder
     }
 
-    // JNA keeps Structure fields in Java until the parent structure is written.
     // Commit the complete surface source, including its native window, before
     // exposing the embedded chain through the descriptor.
     androidNativeWindow.handler

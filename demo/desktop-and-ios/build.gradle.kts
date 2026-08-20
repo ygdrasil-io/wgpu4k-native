@@ -65,7 +65,7 @@ kotlin {
 
     jvm {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_24
+            jvmTarget = JvmTarget.fromTarget("25")
         }
     }
 
@@ -102,7 +102,6 @@ kotlin {
             dependencies {
                 implementation("org.graphiks.kadre:kadre:1.0.0")
                 api(libs.rococoa)
-                api(libs.jnaPlatform)
                 val lwjglVersion = "3.3.6"
                 api("org.lwjgl:lwjgl:$lwjglVersion")
                 api("org.lwjgl:lwjgl-glfw:$lwjglVersion")

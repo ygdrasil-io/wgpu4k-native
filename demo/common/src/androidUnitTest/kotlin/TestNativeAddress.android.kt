@@ -1,6 +1,5 @@
 package io.ygdrasil.wgpu
 
-import com.sun.jna.Pointer
-import io.ygdrasil.kffi.NativeAddress
+import org.graphiks.kffi.NativeAddress
 
-actual fun testNativeAddress(): NativeAddress = Pointer(1L)
+actual fun testNativeAddress(): NativeAddress = NativeAddress(1L)

@@ -1,3 +1,0 @@
-headers = callback_fixture.h
-package = callbackFixture
-staticLibraries = libcallback_fixture.a

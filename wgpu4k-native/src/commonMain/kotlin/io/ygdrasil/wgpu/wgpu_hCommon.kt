@@ -1,18 +1,18 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.NativeAddress
-import io.ygdrasil.kffi.Callback
-import io.ygdrasil.kffi.CallbackExceptionHandler
-import io.ygdrasil.kffi.CallbackPolicy
-import io.ygdrasil.kffi.CallbackRegistration
-import io.ygdrasil.kffi.CallbackRuntime
-import io.ygdrasil.kffi.CallbackRuntimeApi
-import io.ygdrasil.kffi.CallbackType
-import io.ygdrasil.kffi.PreparedCallbackRegistration
-import io.ygdrasil.kffi.UnsafeCallbackRearmApi
-import io.ygdrasil.kffi.CString
-import io.ygdrasil.kffi.ArrayHolder
-import io.ygdrasil.kffi.MemoryAllocator
+import org.graphiks.kffi.NativeAddress
+import org.graphiks.kffi.Callback
+import org.graphiks.kffi.CallbackExceptionHandler
+import org.graphiks.kffi.CallbackPolicy
+import org.graphiks.kffi.CallbackRegistration
+import org.graphiks.kffi.CallbackRuntime
+import org.graphiks.kffi.CallbackRuntimeApi
+import org.graphiks.kffi.CallbackType
+import org.graphiks.kffi.PreparedCallbackRegistration
+import org.graphiks.kffi.UnsafeCallbackRearmApi
+import org.graphiks.kffi.CString
+import org.graphiks.kffi.ArrayHolder
+import org.graphiks.kffi.MemoryAllocator
 import kotlin.OptIn
 
 /**
@@ -4778,7 +4778,7 @@ expect fun wgpuAdapterGetLimits(adapter: WGPUAdapter?, limits: WGPULimits?): WGP
 
 expect fun wgpuAdapterHasFeature(adapter: WGPUAdapter?, feature: WGPUFeatureName): UInt
 
-expect fun wgpuAdapterRequestDevice(adapter: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): WGPUFuture
+expect fun wgpuAdapterRequestDevice(allocator: MemoryAllocator, adapter: WGPUAdapter?, descriptor: WGPUDeviceDescriptor?, callbackInfo: WGPURequestDeviceCallbackInfo): WGPUFuture
 
 expect fun wgpuAdapterAddRef(adapter: WGPUAdapter?): Unit
 
@@ -4881,7 +4881,7 @@ expect fun wgpuBufferGetUsage(buffer: WGPUBuffer?): ULong
  * Byte size of the region to map.
  * If this is @ref WGPU_WHOLE_MAP_SIZE, it defaults to `buffer.size - offset`.
  */
-expect fun wgpuBufferMapAsync(buffer: WGPUBuffer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo): WGPUFuture
+expect fun wgpuBufferMapAsync(allocator: MemoryAllocator, buffer: WGPUBuffer?, mode: ULong, offset: ULong, size: ULong, callbackInfo: WGPUBufferMapCallbackInfo): WGPUFuture
 
 /**
  * Copies a range of data from the buffer mapping into the provided destination pointer.
@@ -5084,7 +5084,7 @@ expect fun wgpuDeviceCreateCommandEncoder(device: WGPUDevice?, descriptor: WGPUC
  */
 expect fun wgpuDeviceCreateComputePipeline(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?): WGPUComputePipeline?
 
-expect fun wgpuDeviceCreateComputePipelineAsync(device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): WGPUFuture
+expect fun wgpuDeviceCreateComputePipelineAsync(allocator: MemoryAllocator, device: WGPUDevice?, descriptor: WGPUComputePipelineDescriptor?, callbackInfo: WGPUCreateComputePipelineAsyncCallbackInfo): WGPUFuture
 
 /**
  * @returns
@@ -5110,7 +5110,7 @@ expect fun wgpuDeviceCreateRenderBundleEncoder(device: WGPUDevice?, descriptor: 
  */
 expect fun wgpuDeviceCreateRenderPipeline(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?): WGPURenderPipeline?
 
-expect fun wgpuDeviceCreateRenderPipelineAsync(device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): WGPUFuture
+expect fun wgpuDeviceCreateRenderPipelineAsync(allocator: MemoryAllocator, device: WGPUDevice?, descriptor: WGPURenderPipelineDescriptor?, callbackInfo: WGPUCreateRenderPipelineAsyncCallbackInfo): WGPUFuture
 
 /**
  * @returns
@@ -5159,7 +5159,7 @@ expect fun wgpuDeviceGetLimits(device: WGPUDevice?, limits: WGPULimits?): WGPUSt
  * @returns
  * The @ref WGPUFuture for the device-lost event of the device.
  */
-expect fun wgpuDeviceGetLostFuture(device: WGPUDevice?): WGPUFuture
+expect fun wgpuDeviceGetLostFuture(allocator: MemoryAllocator, device: WGPUDevice?): WGPUFuture
 
 /**
  * @returns
@@ -5173,7 +5173,7 @@ expect fun wgpuDeviceHasFeature(device: WGPUDevice?, feature: WGPUFeatureName): 
  * Pops an error scope to the current thread's error scope stack,
  * asynchronously returning the result. See @ref ErrorScopes.
  */
-expect fun wgpuDevicePopErrorScope(device: WGPUDevice?, callbackInfo: WGPUPopErrorScopeCallbackInfo): WGPUFuture
+expect fun wgpuDevicePopErrorScope(allocator: MemoryAllocator, device: WGPUDevice?, callbackInfo: WGPUPopErrorScopeCallbackInfo): WGPUFuture
 
 /**
  * Pushes an error scope to the current thread's error scope stack.
@@ -5231,7 +5231,7 @@ expect fun wgpuInstanceHasWGSLLanguageFeature(instance: WGPUInstance?, feature: 
  */
 expect fun wgpuInstanceProcessEvents(instance: WGPUInstance?): Unit
 
-expect fun wgpuInstanceRequestAdapter(instance: WGPUInstance?, options: WGPURequestAdapterOptions?, callbackInfo: WGPURequestAdapterCallbackInfo): WGPUFuture
+expect fun wgpuInstanceRequestAdapter(allocator: MemoryAllocator, instance: WGPUInstance?, options: WGPURequestAdapterOptions?, callbackInfo: WGPURequestAdapterCallbackInfo): WGPUFuture
 
 /**
  * Wait for at least one WGPUFuture in `futures` to complete, and call callbacks of the respective completed asynchronous operations.
@@ -5280,7 +5280,7 @@ expect fun wgpuQuerySetRelease(querySet: WGPUQuerySet?): Unit
  *
  * @{
  */
-expect fun wgpuQueueOnSubmittedWorkDone(queue: WGPUQueue?, callbackInfo: WGPUQueueWorkDoneCallbackInfo): WGPUFuture
+expect fun wgpuQueueOnSubmittedWorkDone(allocator: MemoryAllocator, queue: WGPUQueue?, callbackInfo: WGPUQueueWorkDoneCallbackInfo): WGPUFuture
 
 expect fun wgpuQueueSetLabel(queue: WGPUQueue?, label: WGPUStringView): Unit
 
@@ -5445,7 +5445,7 @@ expect fun wgpuSamplerRelease(sampler: WGPUSampler?): Unit
  *
  * @{
  */
-expect fun wgpuShaderModuleGetCompilationInfo(shaderModule: WGPUShaderModule?, callbackInfo: WGPUCompilationInfoCallbackInfo): WGPUFuture
+expect fun wgpuShaderModuleGetCompilationInfo(allocator: MemoryAllocator, shaderModule: WGPUShaderModule?, callbackInfo: WGPUCompilationInfoCallbackInfo): WGPUFuture
 
 expect fun wgpuShaderModuleSetLabel(shaderModule: WGPUShaderModule?, label: WGPUStringView): Unit
 

@@ -2,7 +2,7 @@
 
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.memoryScope
+import org.graphiks.kffi.memoryScope
 import kotlin.concurrent.atomics.AtomicReference
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds

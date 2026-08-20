@@ -1,6 +1,6 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.NativeAddress
+import org.graphiks.kffi.NativeAddress
 import org.graphiks.kadre.ActiveEventLoop
 import org.graphiks.kadre.ApplicationHandler
 import org.graphiks.kadre.EventLoop
@@ -10,7 +10,6 @@ import org.graphiks.kadre.WindowAttributes
 import org.graphiks.kadre.WindowId
 import org.graphiks.kadre.core.RawWindowHandle
 import org.graphiks.kadre.core.WindowEvent
-import java.lang.foreign.MemorySegment
 
 fun main(args: Array<String>) {
     val verifyCaptureIndex = args.indexOf("--verify-capture")
@@ -164,4 +163,4 @@ private fun getSurface(instance: WGPUInstance, rawWindowHandle: Any): WGPUSurfac
         else -> error("Unsupported Kadre window handle for the JVM demo: $rawWindowHandle")
     } ?: error("fail to create surface from Kadre window handle")
 
-private fun Long.toNativeAddress() = NativeAddress(MemorySegment.ofAddress(this))
+private fun Long.toNativeAddress() = NativeAddress(this)

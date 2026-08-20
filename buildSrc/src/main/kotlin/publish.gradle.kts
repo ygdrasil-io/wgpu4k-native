@@ -1,7 +1,6 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.SourcesJar
-import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 
 plugins {
     id("com.vanniktech.maven.publish")
@@ -9,9 +8,7 @@ plugins {
 }
 
 val libraryDescription = "wgpu4k kotlin native binding."
-val jvmVerificationPublication = providers.gradleProperty("wgpu4k.jvmVerificationPublication")
-    .map(String::toBoolean)
-    .orElse(false)
+val projectHomepage = "https://github.com/wgpu4k/wgpu4k-native"
 val dokkaHtml = tasks.named("dokkaGeneratePublicationHtml")
 
 mavenPublishing {
@@ -20,11 +17,7 @@ mavenPublishing {
 
     configure(
         KotlinMultiplatform(
-            javadocJar = if (jvmVerificationPublication.get()) {
-                JavadocJar.Empty()
-            } else {
-                JavadocJar.Dokka(dokkaHtml)
-            },
+            javadocJar = JavadocJar.Dokka(dokkaHtml),
             sourcesJar = SourcesJar.Sources(),
             androidVariantsToPublish = listOf("debug", "release"),
         ),
@@ -35,7 +28,7 @@ mavenPublishing {
     pom {
         name.set(project.name)
         description.set(libraryDescription)
-        url.set("https://github.com/wgpu4k/wgpu4k-native")
+        url.set(projectHomepage)
         inceptionYear.set("2024")
         licenses {
             license {
@@ -50,24 +43,9 @@ mavenPublishing {
             }
         }
         scm {
-            connection.set("scm:git:https://github.com/wgpu4k/wgpu4k-native.git")
-            developerConnection.set("scm:git:https://github.com/wgpu4k/wgpu4k-native.git")
-            url.set("https://github.com/wgpu4k/wgpu4k-native")
+            connection.set("scm:git:${projectHomepage}.git")
+            developerConnection.set("scm:git:${projectHomepage}.git")
+            url.set(projectHomepage)
         }
-    }
-}
-
-val publicationVerificationRepository = publishing.repositories.maven {
-    name = "PublicationVerification"
-    url = rootProject.layout.buildDirectory
-        .dir("publication-verification/repository")
-        .get()
-        .asFile
-        .toURI()
-}
-
-tasks.withType<PublishToMavenRepository>().configureEach {
-    if (repository == publicationVerificationRepository) {
-        dependsOn(rootProject.tasks.named("cleanPublicationVerificationRepository"))
     }
 }

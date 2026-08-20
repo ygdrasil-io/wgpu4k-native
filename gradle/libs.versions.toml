@@ -1,15 +1,14 @@
 [versions]
-kotlin = "2.3.21"
+kotlin = "2.4.10"
 wgpu = "v29.0.0.0"
 download = "5.6.0"
 agp = "9.0.0"
-jna = "5.18.1"
 dokka = "2.2.0"
 maven-publish = "0.36.0"
 
 # Tests
 kotest = "6.1.11"
-ksp = "2.2.20-2.0.3"
+ksp = "2.3.11"
 androidx-test-ext-junit = "1.2.1"
 androidx-test-runner = "1.6.2"
 
@@ -23,12 +22,10 @@ android-native-helper = "0.0.2"
 
 [libraries]
 android-library = { module = "com.android.library:com.android.library.gradle.plugin", version.ref = "agp" }
-jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 
 # Jvm demo
 ygdrasil-glfw-native = { module = "io.ygdrasil:glfw-native", version.ref = "glfwNative" }
 rococoa = { module = "io.ygdrasil:rococoa", version.ref = "rococoa" }
-jnaPlatform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
 
 # Android demo
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }

@@ -2,9 +2,9 @@
 
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.CallbackPolicy
-import io.ygdrasil.kffi.CallbackRegistration
-import io.ygdrasil.kffi.memoryScope
+import org.graphiks.kffi.CallbackPolicy
+import org.graphiks.kffi.CallbackRegistration
+import org.graphiks.kffi.memoryScope
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
@@ -167,7 +167,7 @@ private fun requestStressAdapter(instance: WGPUInstance): WGPUAdapter {
                     WGPUCallbackMode_AllowProcessEvents,
                     requestRegistration,
                 )
-                wgpuInstanceRequestAdapter(instance, options, requestInfo).id
+                wgpuInstanceRequestAdapter(scope, instance, options, requestInfo).id
             }
             awaitCallbackFutureOrPump(
                 futureId = futureId,
@@ -217,7 +217,7 @@ private fun requestStressDevice(
                     WGPUCallbackMode_AllowProcessEvents,
                     requestRegistration,
                 )
-                wgpuAdapterRequestDevice(adapter, descriptor, requestInfo).id
+                wgpuAdapterRequestDevice(scope, adapter, descriptor, requestInfo).id
             }
             awaitCallbackFutureOrPump(
                 futureId = futureId,
@@ -294,7 +294,7 @@ private fun runQueueCallbackPhase(
         registrations.forEach { registration ->
             futureIds += memoryScope { scope ->
                 val callbackInfo = WGPUQueueWorkDoneCallbackInfo.allocate(scope, mode, registration)
-                wgpuQueueOnSubmittedWorkDone(queue, callbackInfo).id
+                wgpuQueueOnSubmittedWorkDone(scope, queue, callbackInfo).id
             }
             if (deadline.hasPassedNow()) {
                 failQueuePhase(modeName, "create-futures", calls, suppressBeforeDelivery)

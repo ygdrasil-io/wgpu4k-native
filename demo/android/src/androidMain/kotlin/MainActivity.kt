@@ -2,9 +2,15 @@ package io.ygdrasil.wgpu
 
 import android.view.Surface
 import android.os.Bundle
-import io.ygdrasil.kffi.NativeAddress
+import org.graphiks.kffi.NativeAddress
 import io.ygdrasil.nativeHelper.Helper
-import io.ygdrasil.kffi.memoryScope
+import org.graphiks.kffi.memoryScope
+import io.ygdrasil.wgpu.WGPUBackendType_OpenGLES
+import io.ygdrasil.wgpu.WGPUBackendType_Vulkan
+import io.ygdrasil.wgpu.WGPUInstanceBackend_GL
+import io.ygdrasil.wgpu.WGPUInstanceBackend_Vulkan
+import io.ygdrasil.wgpu.WGPUInstanceDescriptor
+import io.ygdrasil.wgpu.WGPUInstanceExtras
 import org.graphiks.kadre.ActiveEventLoop
 import org.graphiks.kadre.ApplicationHandler
 import org.graphiks.kadre.PhysicalSize
@@ -75,9 +81,39 @@ private class HelloTriangleAndroidKadreApp : ApplicationHandler {
     private fun ensureScene(currentWindow: Window, size: PhysicalSize<Int>) {
         if (scene != null || size.width <= 0 || size.height <= 0) return
 
-        val createdInstance = wgpuCreateInstance(null) ?: error("fail to create instance")
+        val probeInstance = createAndroidInstance(WGPUInstanceBackend_Vulkan)
+        val selectedBackend = try {
+            selectAndroidBackend(
+                probeVulkan = {
+                    val probeAdapter = getAdapter(
+                        surface = null,
+                        instance = probeInstance,
+                        backendType = WGPUBackendType_Vulkan,
+                    )
+                    wgpuAdapterRelease(probeAdapter)
+                    true
+                },
+                onFallback = { println("[Android] $it") },
+            )
+        } finally {
+            wgpuInstanceRelease(probeInstance)
+        }
+        val createdInstance = createAndroidInstance(
+            if (selectedBackend == WGPUBackendType_Vulkan) {
+                WGPUInstanceBackend_Vulkan
+            } else {
+                WGPUInstanceBackend_GL
+            },
+        )
         val createdSurface = getSurface(createdInstance, currentWindow.rawWindowHandle)
-        val createdAdapter = getAdapter(createdSurface, createdInstance)
+        // Keep adapter selection independent from the Android window. On API 29
+        // a GL compatible-surface probe can leave the BufferQueue connected and
+        // make the later surface configuration fail with EGL_BAD_ALLOC.
+        val createdAdapter = getAdapter(
+            surface = null,
+            instance = createdInstance,
+            backendType = selectedBackend,
+        )
         val createdDevice = getDevice(createdAdapter, createdInstance)
         val capabilities = surfaceCapabilities(createdSurface, createdAdapter)
         val format = capabilities.formats.first()
@@ -160,4 +196,15 @@ private fun getSurface(instance: WGPUInstance, rawWindowHandle: Any): WGPUSurfac
         ?: error("Kadre Android window handle did not expose android.view.Surface")
     val nativeWindow = Helper.nativeWindowFromSurface(androidSurface)
     getSurfaceAndroidView(instance, NativeAddress(nativeWindow))
+}
+
+private fun createAndroidInstance(backends: ULong): WGPUInstance = memoryScope { scope ->
+    val extras = WGPUInstanceExtras.allocate(scope).apply {
+        chain.sType = WGPUSType_InstanceExtras
+        this.backends = backends
+    }
+    val descriptor = WGPUInstanceDescriptor.allocate(scope).apply {
+        nextInChain = extras.chain
+    }
+    wgpuCreateInstance(descriptor) ?: error("fail to create instance")
 }

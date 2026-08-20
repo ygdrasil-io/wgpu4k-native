@@ -1,7 +1,7 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.kffi.MemoryAllocator
-import io.ygdrasil.kffi.memoryScope
+import org.graphiks.kffi.MemoryAllocator
+import org.graphiks.kffi.memoryScope
 
 
 class HelloTriangleScene internal constructor(
@@ -47,7 +47,7 @@ class HelloTriangleScene internal constructor(
                     val fragmentModule = createWgslShaderModule(device, scope, redFragmentShader)
                     shaderCleanup.defer { wgpuShaderModuleRelease(fragmentModule) }
 
-                    // JNA caches by-value fields, so complete child structures before copying them into the descriptor.
+                    // Complete child structures before exposing their memory through the descriptor.
                     val vertex = WGPUVertexState.allocate(scope).apply {
                         module = vertexModule
                         entryPoint = stringView(scope, "main")
@@ -57,7 +57,7 @@ class HelloTriangleScene internal constructor(
                         module = fragmentModule
                         targetCount = 1u
                         var target: WGPUColorTargetState? = null
-                        // Keep the initialized array element: wrapping its pointer would write a fresh zeroed JNA structure.
+                        // Keep the initialized array element so the descriptor references its populated memory.
                         WGPUColorTargetState.allocateArray(scope, 1u) { _, structure ->
                             structure.format = renderingContextFormat
                             structure.writeMask = WGPUColorWriteMask_All
@@ -146,7 +146,7 @@ class HelloTriangleScene internal constructor(
             a = 1.0
         }
         var colorAttachment: WGPURenderPassColorAttachment? = null
-        // Keep the initialized array element for the same JNA pointer-caching reason as the pipeline target.
+        // Keep the initialized array element so the descriptor references its populated memory.
         WGPURenderPassColorAttachment.allocateArray(scope, 1u) { _, structure ->
             structure.view = frame
             structure.loadOp = WGPULoadOp_Clear
