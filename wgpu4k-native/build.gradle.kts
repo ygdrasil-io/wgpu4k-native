@@ -58,7 +58,7 @@ kotlin {
 
     jvm {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_24
+            jvmTarget = JvmTarget.fromTarget("25")
         }
     }
 
