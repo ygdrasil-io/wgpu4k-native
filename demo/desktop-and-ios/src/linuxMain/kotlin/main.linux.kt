@@ -17,6 +17,5 @@ actual fun getSurface(instance: WGPUInstance, window: CPointer<GLFWwindow>): WGP
     val display = glfwGetX11Display() ?: error("fail to get X11 display")
     val x11_window = glfwGetX11Window(window).takeIf { it != 0uL } ?: error("fail to get X11 window")
 
-    return getSurfaceFromX11Window(instance, display.let(::NativeAddress), x11_window) ?: error("fail to get surface on MacOs")
+    return getSurfaceFromX11Window(instance, NativeAddress.fromPointer(display), x11_window) ?: error("fail to get surface on MacOs")
 }
-

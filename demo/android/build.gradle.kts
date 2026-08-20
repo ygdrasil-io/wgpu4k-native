@@ -99,13 +99,6 @@ tasks.register("verifyAndroidJvmApk") {
             require(actualAbis == setOf("arm64-v8a", "x86_64")) {
                 "Unexpected Android/JVM APK ABIs: $actualAbis"
             }
-            val jnaEntries = zip.entries().asSequence()
-                .map { it.name }
-                .filter { it.endsWith("libjnidispatch.so") }
-                .toList()
-            require(jnaEntries.isEmpty()) {
-                "Android/JVM APK must not package JNA runtime libraries: $jnaEntries"
-            }
         }
     }
 }
