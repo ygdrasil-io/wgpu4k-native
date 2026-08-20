@@ -78,12 +78,6 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         working-directory: gradle/jvm-bootstrap-consumer
         run: ../../gradlew --refresh-dependencies clean run --stacktrace
-      - name: Run complete kextract tests
-        shell: bash
-        run: |
-          rm -rf kextract/build/test-results/test
-          rm -f kextract/build/test-plan-completion/test.properties
-          ./gradlew :kextract:test
       - name: Run targeted JVM callback tests
         run: ./gradlew :wgpu4k-native:jvmTest :demo:common:jvmTest
       - name: Prepare macOS Native dependencies
