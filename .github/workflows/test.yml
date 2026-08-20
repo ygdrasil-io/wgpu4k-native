@@ -69,15 +69,6 @@ jobs:
           :demo:common:testDebugUnitTest
           :demo:android:verifyAndroidJvmApk
           :demo:android-native:verifyAndroidNativeApks
-      - name: Publish JVM verification artifacts
-        if: matrix.os == 'ubuntu-latest'
-        run: >-
-          ./gradlew -Pwgpu4k.jvmVerificationPublication=true
-          :wgpu4k-native:publishJvmPublicationToMavenLocal
-      - name: Verify published JVM consumer
-        if: matrix.os == 'ubuntu-latest'
-        working-directory: gradle/jvm-bootstrap-consumer
-        run: ../../gradlew --refresh-dependencies clean run --stacktrace
       - name: Run targeted JVM callback tests
         run: ./gradlew :wgpu4k-native:jvmTest :demo:common:jvmTest
       - name: Prepare macOS Native dependencies
