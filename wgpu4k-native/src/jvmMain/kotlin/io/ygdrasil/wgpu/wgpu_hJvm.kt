@@ -219,7 +219,7 @@ actual interface WGPUStringView {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUStringView {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var data: CString?
@@ -231,7 +231,7 @@ actual interface WGPUStringView {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUStringView {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var data: CString?
@@ -330,7 +330,7 @@ actual interface WGPUChainedStruct {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUChainedStruct {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var next: WGPUChainedStruct?
@@ -342,7 +342,7 @@ actual interface WGPUChainedStruct {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUChainedStruct {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var next: WGPUChainedStruct?
@@ -375,7 +375,7 @@ actual interface WGPUBufferMapCallbackInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBufferMapCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -396,7 +396,7 @@ actual interface WGPUBufferMapCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBufferMapCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -438,7 +438,7 @@ actual interface WGPUCompilationInfoCallbackInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompilationInfoCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -459,7 +459,7 @@ actual interface WGPUCompilationInfoCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompilationInfoCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -501,7 +501,7 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCreateComputePipelineAsyncCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -522,7 +522,7 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCreateComputePipelineAsyncCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -564,7 +564,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCreateRenderPipelineAsyncCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -585,7 +585,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCreateRenderPipelineAsyncCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -627,7 +627,7 @@ actual interface WGPUDeviceLostCallbackInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUDeviceLostCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -648,7 +648,7 @@ actual interface WGPUDeviceLostCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUDeviceLostCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -690,7 +690,7 @@ actual interface WGPUPopErrorScopeCallbackInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPopErrorScopeCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -711,7 +711,7 @@ actual interface WGPUPopErrorScopeCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPopErrorScopeCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -753,7 +753,7 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUQueueWorkDoneCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -774,7 +774,7 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUQueueWorkDoneCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -816,7 +816,7 @@ actual interface WGPURequestAdapterCallbackInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestAdapterCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -837,7 +837,7 @@ actual interface WGPURequestAdapterCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestAdapterCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -879,7 +879,7 @@ actual interface WGPURequestDeviceCallbackInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestDeviceCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -900,7 +900,7 @@ actual interface WGPURequestDeviceCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestDeviceCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -941,7 +941,7 @@ actual interface WGPUUncapturedErrorCallbackInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUUncapturedErrorCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -959,7 +959,7 @@ actual interface WGPUUncapturedErrorCallbackInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUUncapturedErrorCallbackInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1004,7 +1004,7 @@ actual interface WGPUAdapterInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUAdapterInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 96uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1059,7 +1059,7 @@ actual interface WGPUAdapterInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUAdapterInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 96uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1133,7 +1133,7 @@ actual interface WGPUBlendComponent {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBlendComponent {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 12uL) }
         override var operation: WGPUBlendOperation
@@ -1148,7 +1148,7 @@ actual interface WGPUBlendComponent {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBlendComponent {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 12uL) }
         override var operation: WGPUBlendOperation
@@ -1183,7 +1183,7 @@ actual interface WGPUBufferBindingLayout {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBufferBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1201,7 +1201,7 @@ actual interface WGPUBufferBindingLayout {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBufferBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1240,7 +1240,7 @@ actual interface WGPUBufferDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBufferDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1265,7 +1265,7 @@ actual interface WGPUBufferDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBufferDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1310,7 +1310,7 @@ actual interface WGPUColor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUColor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var r: Double
@@ -1328,7 +1328,7 @@ actual interface WGPUColor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUColor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var r: Double
@@ -1364,7 +1364,7 @@ actual interface WGPUCommandBufferDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCommandBufferDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1380,7 +1380,7 @@ actual interface WGPUCommandBufferDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCommandBufferDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1414,7 +1414,7 @@ actual interface WGPUCommandEncoderDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCommandEncoderDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1430,7 +1430,7 @@ actual interface WGPUCommandEncoderDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCommandEncoderDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1467,7 +1467,7 @@ actual interface WGPUCompatibilityModeLimits {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompatibilityModeLimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -1492,7 +1492,7 @@ actual interface WGPUCompatibilityModeLimits {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompatibilityModeLimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -1540,7 +1540,7 @@ actual interface WGPUCompilationMessage {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompilationMessage {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1571,7 +1571,7 @@ actual interface WGPUCompilationMessage {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompilationMessage {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1621,7 +1621,7 @@ actual interface WGPUConstantEntry {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUConstantEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1640,7 +1640,7 @@ actual interface WGPUConstantEntry {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUConstantEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1678,7 +1678,7 @@ actual interface WGPUExtent3D {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUExtent3D {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 12uL) }
         override var width: UInt
@@ -1693,7 +1693,7 @@ actual interface WGPUExtent3D {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUExtent3D {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 12uL) }
         override var width: UInt
@@ -1726,7 +1726,7 @@ actual interface WGPUExternalTextureBindingEntry {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUExternalTextureBindingEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -1742,7 +1742,7 @@ actual interface WGPUExternalTextureBindingEntry {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUExternalTextureBindingEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -1775,7 +1775,7 @@ actual interface WGPUExternalTextureBindingLayout {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUExternalTextureBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var chain: WGPUChainedStruct
@@ -1788,7 +1788,7 @@ actual interface WGPUExternalTextureBindingLayout {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUExternalTextureBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var chain: WGPUChainedStruct
@@ -1818,7 +1818,7 @@ actual interface WGPUFuture {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUFuture {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 8uL) }
         override var id: ULong
@@ -1827,7 +1827,7 @@ actual interface WGPUFuture {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUFuture {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 8uL) }
         override var id: ULong
@@ -1854,7 +1854,7 @@ actual interface WGPUInstanceLimits {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceLimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1866,7 +1866,7 @@ actual interface WGPUInstanceLimits {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceLimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1898,7 +1898,7 @@ actual interface WGPUMultisampleState {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUMultisampleState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1916,7 +1916,7 @@ actual interface WGPUMultisampleState {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUMultisampleState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -1953,7 +1953,7 @@ actual interface WGPUOrigin3D {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUOrigin3D {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 12uL) }
         override var x: UInt
@@ -1968,7 +1968,7 @@ actual interface WGPUOrigin3D {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUOrigin3D {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 12uL) }
         override var x: UInt
@@ -2003,7 +2003,7 @@ actual interface WGPUPassTimestampWrites {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPassTimestampWrites {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2021,7 +2021,7 @@ actual interface WGPUPassTimestampWrites {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPassTimestampWrites {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2060,7 +2060,7 @@ actual interface WGPUPipelineLayoutDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPipelineLayoutDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2085,7 +2085,7 @@ actual interface WGPUPipelineLayoutDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPipelineLayoutDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2132,7 +2132,7 @@ actual interface WGPUPrimitiveState {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPrimitiveState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2156,7 +2156,7 @@ actual interface WGPUPrimitiveState {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPrimitiveState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2200,7 +2200,7 @@ actual interface WGPUQuerySetDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUQuerySetDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2222,7 +2222,7 @@ actual interface WGPUQuerySetDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUQuerySetDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2262,7 +2262,7 @@ actual interface WGPUQueueDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUQueueDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2278,7 +2278,7 @@ actual interface WGPUQueueDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUQueueDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2312,7 +2312,7 @@ actual interface WGPURenderBundleDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderBundleDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2328,7 +2328,7 @@ actual interface WGPURenderBundleDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderBundleDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2368,7 +2368,7 @@ actual interface WGPURenderBundleEncoderDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderBundleEncoderDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 56uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2402,7 +2402,7 @@ actual interface WGPURenderBundleEncoderDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderBundleEncoderDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 56uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2462,7 +2462,7 @@ actual interface WGPURenderPassDepthStencilAttachment {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassDepthStencilAttachment {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2498,7 +2498,7 @@ actual interface WGPURenderPassDepthStencilAttachment {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassDepthStencilAttachment {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2552,7 +2552,7 @@ actual interface WGPURenderPassMaxDrawCount {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassMaxDrawCount {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -2568,7 +2568,7 @@ actual interface WGPURenderPassMaxDrawCount {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassMaxDrawCount {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -2602,7 +2602,7 @@ actual interface WGPURequestAdapterWebXROptions {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestAdapterWebXROptions {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -2618,7 +2618,7 @@ actual interface WGPURequestAdapterWebXROptions {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestAdapterWebXROptions {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -2652,7 +2652,7 @@ actual interface WGPUSamplerBindingLayout {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSamplerBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2664,7 +2664,7 @@ actual interface WGPUSamplerBindingLayout {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSamplerBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2704,7 +2704,7 @@ actual interface WGPUSamplerDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSamplerDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2750,7 +2750,7 @@ actual interface WGPUSamplerDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSamplerDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -2815,7 +2815,7 @@ actual interface WGPUShaderSourceSPIRV {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderSourceSPIRV {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -2834,7 +2834,7 @@ actual interface WGPUShaderSourceSPIRV {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderSourceSPIRV {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -2871,7 +2871,7 @@ actual interface WGPUShaderSourceWGSL {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderSourceWGSL {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -2891,7 +2891,7 @@ actual interface WGPUShaderSourceWGSL {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderSourceWGSL {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -2931,7 +2931,7 @@ actual interface WGPUStencilFaceState {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUStencilFaceState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var compare: WGPUCompareFunction
@@ -2949,7 +2949,7 @@ actual interface WGPUStencilFaceState {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUStencilFaceState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var compare: WGPUCompareFunction
@@ -2987,7 +2987,7 @@ actual interface WGPUStorageTextureBindingLayout {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUStorageTextureBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3005,7 +3005,7 @@ actual interface WGPUStorageTextureBindingLayout {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUStorageTextureBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3041,7 +3041,7 @@ actual interface WGPUSupportedFeatures {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSupportedFeatures {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var featureCount: ULong
@@ -3053,7 +3053,7 @@ actual interface WGPUSupportedFeatures {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSupportedFeatures {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var featureCount: ULong
@@ -3083,7 +3083,7 @@ actual interface WGPUSupportedInstanceFeatures {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSupportedInstanceFeatures {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var featureCount: ULong
@@ -3095,7 +3095,7 @@ actual interface WGPUSupportedInstanceFeatures {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSupportedInstanceFeatures {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var featureCount: ULong
@@ -3125,7 +3125,7 @@ actual interface WGPUSupportedWGSLLanguageFeatures {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSupportedWGSLLanguageFeatures {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var featureCount: ULong
@@ -3137,7 +3137,7 @@ actual interface WGPUSupportedWGSLLanguageFeatures {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSupportedWGSLLanguageFeatures {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var featureCount: ULong
@@ -3173,7 +3173,7 @@ actual interface WGPUSurfaceCapabilities {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceCapabilities {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3203,7 +3203,7 @@ actual interface WGPUSurfaceCapabilities {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceCapabilities {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3252,7 +3252,7 @@ actual interface WGPUSurfaceColorManagement {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceColorManagement {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3271,7 +3271,7 @@ actual interface WGPUSurfaceColorManagement {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceColorManagement {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3316,7 +3316,7 @@ actual interface WGPUSurfaceConfiguration {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceConfiguration {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3352,7 +3352,7 @@ actual interface WGPUSurfaceConfiguration {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceConfiguration {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3406,7 +3406,7 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceAndroidNativeWindow {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3422,7 +3422,7 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceAndroidNativeWindow {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3456,7 +3456,7 @@ actual interface WGPUSurfaceSourceMetalLayer {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceMetalLayer {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3472,7 +3472,7 @@ actual interface WGPUSurfaceSourceMetalLayer {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceMetalLayer {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3507,7 +3507,7 @@ actual interface WGPUSurfaceSourceWaylandSurface {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceWaylandSurface {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3526,7 +3526,7 @@ actual interface WGPUSurfaceSourceWaylandSurface {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceWaylandSurface {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3564,7 +3564,7 @@ actual interface WGPUSurfaceSourceWindowsHWND {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceWindowsHWND {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3583,7 +3583,7 @@ actual interface WGPUSurfaceSourceWindowsHWND {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceWindowsHWND {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3621,7 +3621,7 @@ actual interface WGPUSurfaceSourceXCBWindow {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceXCBWindow {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3640,7 +3640,7 @@ actual interface WGPUSurfaceSourceXCBWindow {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceXCBWindow {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3678,7 +3678,7 @@ actual interface WGPUSurfaceSourceXlibWindow {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceXlibWindow {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3697,7 +3697,7 @@ actual interface WGPUSurfaceSourceXlibWindow {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceXlibWindow {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -3735,7 +3735,7 @@ actual interface WGPUSurfaceTexture {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceTexture {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3750,7 +3750,7 @@ actual interface WGPUSurfaceTexture {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceTexture {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3784,7 +3784,7 @@ actual interface WGPUTexelCopyBufferLayout {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTexelCopyBufferLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var offset: ULong
@@ -3799,7 +3799,7 @@ actual interface WGPUTexelCopyBufferLayout {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTexelCopyBufferLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var offset: ULong
@@ -3834,7 +3834,7 @@ actual interface WGPUTextureBindingLayout {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3852,7 +3852,7 @@ actual interface WGPUTextureBindingLayout {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureBindingLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -3888,7 +3888,7 @@ actual interface WGPUTextureBindingViewDimension {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureBindingViewDimension {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3904,7 +3904,7 @@ actual interface WGPUTextureBindingViewDimension {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureBindingViewDimension {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -3940,7 +3940,7 @@ actual interface WGPUTextureComponentSwizzle {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureComponentSwizzle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var r: WGPUComponentSwizzle
@@ -3958,7 +3958,7 @@ actual interface WGPUTextureComponentSwizzle {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureComponentSwizzle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var r: WGPUComponentSwizzle
@@ -3996,7 +3996,7 @@ actual interface WGPUVertexAttribute {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUVertexAttribute {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4014,7 +4014,7 @@ actual interface WGPUVertexAttribute {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUVertexAttribute {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4055,7 +4055,7 @@ actual interface WGPUBindGroupEntry {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 56uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4082,7 +4082,7 @@ actual interface WGPUBindGroupEntry {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 56uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4133,7 +4133,7 @@ actual interface WGPUBindGroupLayoutEntry {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupLayoutEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 120uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4179,7 +4179,7 @@ actual interface WGPUBindGroupLayoutEntry {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupLayoutEntry {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 120uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4243,7 +4243,7 @@ actual interface WGPUBlendState {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBlendState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var color: WGPUBlendComponent
@@ -4263,7 +4263,7 @@ actual interface WGPUBlendState {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBlendState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var color: WGPUBlendComponent
@@ -4302,7 +4302,7 @@ actual interface WGPUCompilationInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompilationInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4317,7 +4317,7 @@ actual interface WGPUCompilationInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUCompilationInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4351,7 +4351,7 @@ actual interface WGPUComputePassDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUComputePassDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4370,7 +4370,7 @@ actual interface WGPUComputePassDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUComputePassDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4410,7 +4410,7 @@ actual interface WGPUComputeState {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUComputeState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4435,7 +4435,7 @@ actual interface WGPUComputeState {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUComputeState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4487,7 +4487,7 @@ actual interface WGPUDepthStencilState {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUDepthStencilState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 72uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4534,7 +4534,7 @@ actual interface WGPUDepthStencilState {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUDepthStencilState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 72uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4599,7 +4599,7 @@ actual interface WGPUFutureWaitInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUFutureWaitInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var future: WGPUFuture
@@ -4615,7 +4615,7 @@ actual interface WGPUFutureWaitInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUFutureWaitInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var future: WGPUFuture
@@ -4651,7 +4651,7 @@ actual interface WGPUInstanceDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4669,7 +4669,7 @@ actual interface WGPUInstanceDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4736,7 +4736,7 @@ actual interface WGPULimits {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPULimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 152uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4841,7 +4841,7 @@ actual interface WGPULimits {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPULimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 152uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -4969,7 +4969,7 @@ actual interface WGPURenderPassColorAttachment {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassColorAttachment {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 72uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5000,7 +5000,7 @@ actual interface WGPURenderPassColorAttachment {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassColorAttachment {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 72uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5053,7 +5053,7 @@ actual interface WGPURequestAdapterOptions {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestAdapterOptions {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5077,7 +5077,7 @@ actual interface WGPURequestAdapterOptions {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURequestAdapterOptions {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5119,7 +5119,7 @@ actual interface WGPUShaderModuleDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderModuleDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5135,7 +5135,7 @@ actual interface WGPUShaderModuleDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderModuleDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5169,7 +5169,7 @@ actual interface WGPUSurfaceDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5185,7 +5185,7 @@ actual interface WGPUSurfaceDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5219,7 +5219,7 @@ actual interface WGPUTexelCopyBufferInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTexelCopyBufferInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var layout: WGPUTexelCopyBufferLayout
@@ -5235,7 +5235,7 @@ actual interface WGPUTexelCopyBufferInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTexelCopyBufferInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var layout: WGPUTexelCopyBufferLayout
@@ -5271,7 +5271,7 @@ actual interface WGPUTexelCopyTextureInfo {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTexelCopyTextureInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var texture: WGPUTexture?
@@ -5293,7 +5293,7 @@ actual interface WGPUTexelCopyTextureInfo {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTexelCopyTextureInfo {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var texture: WGPUTexture?
@@ -5333,7 +5333,7 @@ actual interface WGPUTextureComponentSwizzleDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureComponentSwizzleDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -5353,7 +5353,7 @@ actual interface WGPUTextureComponentSwizzleDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureComponentSwizzleDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -5399,7 +5399,7 @@ actual interface WGPUTextureDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 80uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5443,7 +5443,7 @@ actual interface WGPUTextureDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 80uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5508,7 +5508,7 @@ actual interface WGPUVertexBufferLayout {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUVertexBufferLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5529,7 +5529,7 @@ actual interface WGPUVertexBufferLayout {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUVertexBufferLayout {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5571,7 +5571,7 @@ actual interface WGPUBindGroupDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5596,7 +5596,7 @@ actual interface WGPUBindGroupDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 48uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5641,7 +5641,7 @@ actual interface WGPUBindGroupLayoutDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupLayoutDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5663,7 +5663,7 @@ actual interface WGPUBindGroupLayoutDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupLayoutDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 40uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5705,7 +5705,7 @@ actual interface WGPUColorTargetState {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUColorTargetState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5723,7 +5723,7 @@ actual interface WGPUColorTargetState {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUColorTargetState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5761,7 +5761,7 @@ actual interface WGPUComputePipelineDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUComputePipelineDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 80uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5787,7 +5787,7 @@ actual interface WGPUComputePipelineDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUComputePipelineDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 80uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5837,7 +5837,7 @@ actual interface WGPUDeviceDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUDeviceDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 144uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5883,7 +5883,7 @@ actual interface WGPUDeviceDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUDeviceDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 144uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5952,7 +5952,7 @@ actual interface WGPURenderPassDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -5983,7 +5983,7 @@ actual interface WGPURenderPassDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPassDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6040,7 +6040,7 @@ actual interface WGPUTextureViewDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureViewDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6080,7 +6080,7 @@ actual interface WGPUTextureViewDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUTextureViewDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6143,7 +6143,7 @@ actual interface WGPUVertexState {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUVertexState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6174,7 +6174,7 @@ actual interface WGPUVertexState {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUVertexState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6228,7 +6228,7 @@ actual interface WGPUFragmentState {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUFragmentState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6259,7 +6259,7 @@ actual interface WGPUFragmentState {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUFragmentState {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6314,7 +6314,7 @@ actual interface WGPURenderPipelineDescriptor {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPipelineDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 168uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -6360,7 +6360,7 @@ actual interface WGPURenderPipelineDescriptor {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURenderPipelineDescriptor {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 168uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -7556,7 +7556,7 @@ actual interface WGPUXlibDisplayHandle {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUXlibDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var display: NativeAddress?
@@ -7568,7 +7568,7 @@ actual interface WGPUXlibDisplayHandle {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUXlibDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var display: NativeAddress?
@@ -7598,7 +7598,7 @@ actual interface WGPUXcbDisplayHandle {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUXcbDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var connection: NativeAddress?
@@ -7610,7 +7610,7 @@ actual interface WGPUXcbDisplayHandle {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUXcbDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var connection: NativeAddress?
@@ -7639,7 +7639,7 @@ actual interface WGPUWaylandDisplayHandle {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUWaylandDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 8uL) }
         override var display: NativeAddress?
@@ -7648,7 +7648,7 @@ actual interface WGPUWaylandDisplayHandle {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUWaylandDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 8uL) }
         override var display: NativeAddress?
@@ -7680,7 +7680,7 @@ actual interface WGPUNativeDisplayHandle {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUNativeDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var type: WGPUNativeDisplayHandleType
@@ -7713,7 +7713,7 @@ actual interface WGPUNativeDisplayHandle {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUNativeDisplayHandle {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var type: WGPUNativeDisplayHandleType
@@ -7774,7 +7774,7 @@ actual interface WGPUInstanceExtras {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 112uL) }
         override var chain: WGPUChainedStruct
@@ -7828,7 +7828,7 @@ actual interface WGPUInstanceExtras {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 112uL) }
         override var chain: WGPUChainedStruct
@@ -7900,7 +7900,7 @@ actual interface WGPUDeviceExtras {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUDeviceExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -7920,7 +7920,7 @@ actual interface WGPUDeviceExtras {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUDeviceExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -7960,7 +7960,7 @@ actual interface WGPUNativeLimits {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUNativeLimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -7982,7 +7982,7 @@ actual interface WGPUNativeLimits {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUNativeLimits {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -8022,7 +8022,7 @@ actual interface WGPUPipelineLayoutExtras {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPipelineLayoutExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8038,7 +8038,7 @@ actual interface WGPUPipelineLayoutExtras {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPipelineLayoutExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8072,7 +8072,7 @@ actual interface WGPUShaderDefine {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderDefine {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var name: WGPUStringView
@@ -8092,7 +8092,7 @@ actual interface WGPUShaderDefine {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderDefine {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var name: WGPUStringView
@@ -8133,7 +8133,7 @@ actual interface WGPUShaderSourceGLSL {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderSourceGLSL {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 56uL) }
         override var chain: WGPUChainedStruct
@@ -8162,7 +8162,7 @@ actual interface WGPUShaderSourceGLSL {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderSourceGLSL {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 56uL) }
         override var chain: WGPUChainedStruct
@@ -8210,7 +8210,7 @@ actual interface WGPUShaderModuleDescriptorSpirV {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderModuleDescriptorSpirV {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var label: WGPUStringView
@@ -8229,7 +8229,7 @@ actual interface WGPUShaderModuleDescriptorSpirV {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUShaderModuleDescriptorSpirV {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var label: WGPUStringView
@@ -8268,7 +8268,7 @@ actual interface WGPURegistryReport {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPURegistryReport {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var numAllocated: ULong
@@ -8286,7 +8286,7 @@ actual interface WGPURegistryReport {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPURegistryReport {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var numAllocated: ULong
@@ -8337,7 +8337,7 @@ actual interface WGPUHubReport {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUHubReport {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 544uL) }
         override var adapters: WGPURegistryReport
@@ -8462,7 +8462,7 @@ actual interface WGPUHubReport {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUHubReport {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 544uL) }
         override var adapters: WGPURegistryReport
@@ -8605,7 +8605,7 @@ actual interface WGPUGlobalReport {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUGlobalReport {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 576uL) }
         override var surfaces: WGPURegistryReport
@@ -8625,7 +8625,7 @@ actual interface WGPUGlobalReport {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUGlobalReport {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 576uL) }
         override var surfaces: WGPURegistryReport
@@ -8663,7 +8663,7 @@ actual interface WGPUInstanceEnumerateAdapterOptions {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceEnumerateAdapterOptions {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -8675,7 +8675,7 @@ actual interface WGPUInstanceEnumerateAdapterOptions {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUInstanceEnumerateAdapterOptions {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 16uL) }
         override var nextInChain: WGPUChainedStruct?
@@ -8710,7 +8710,7 @@ actual interface WGPUBindGroupEntryExtras {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupEntryExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var chain: WGPUChainedStruct
@@ -8741,7 +8741,7 @@ actual interface WGPUBindGroupEntryExtras {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupEntryExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 64uL) }
         override var chain: WGPUChainedStruct
@@ -8790,7 +8790,7 @@ actual interface WGPUBindGroupLayoutEntryExtras {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupLayoutEntryExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8806,7 +8806,7 @@ actual interface WGPUBindGroupLayoutEntryExtras {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUBindGroupLayoutEntryExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8841,7 +8841,7 @@ actual interface WGPUQuerySetDescriptorExtras {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUQuerySetDescriptorExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -8860,7 +8860,7 @@ actual interface WGPUQuerySetDescriptorExtras {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUQuerySetDescriptorExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 32uL) }
         override var chain: WGPUChainedStruct
@@ -8897,7 +8897,7 @@ actual interface WGPUSurfaceConfigurationExtras {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceConfigurationExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8913,7 +8913,7 @@ actual interface WGPUSurfaceConfigurationExtras {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceConfigurationExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8947,7 +8947,7 @@ actual interface WGPUSurfaceSourceSwapChainPanel {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceSwapChainPanel {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8963,7 +8963,7 @@ actual interface WGPUSurfaceSourceSwapChainPanel {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSurfaceSourceSwapChainPanel {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -8998,7 +8998,7 @@ actual interface WGPUPrimitiveStateExtras {
             return result
         }
     }
-
+    
     class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPrimitiveStateExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -9017,7 +9017,7 @@ actual interface WGPUPrimitiveStateExtras {
         override val handler: NativeAddress
             get() = handle
     }
-
+    
     class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPrimitiveStateExtras {
         private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
         override var chain: WGPUChainedStruct
@@ -9199,7 +9199,7 @@ private object WGPUProcTrampoline {
             dispatchSig = "()V",
         )
     }
-
+    
     @JvmStatic
     fun dispatch(
     ) {
@@ -9269,7 +9269,7 @@ private object WGPUBufferMapCallbackTrampoline {
     val address: NativeAddress by lazy {
         NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()).address())
     }
-
+    
     @JvmStatic
     private fun invoke(
         status: Int,
@@ -9329,7 +9329,7 @@ private object WGPUCompilationInfoCallbackTrampoline {
             dispatchSig = "(IJJJ)V",
         )
     }
-
+    
     @JvmStatic
     fun dispatch(
         status: Int,
@@ -9393,7 +9393,7 @@ private object WGPUCreateComputePipelineAsyncCallbackTrampoline {
     val address: NativeAddress by lazy {
         NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()).address())
     }
-
+    
     @JvmStatic
     private fun invoke(
         status: Int,
@@ -9459,7 +9459,7 @@ private object WGPUCreateRenderPipelineAsyncCallbackTrampoline {
     val address: NativeAddress by lazy {
         NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()).address())
     }
-
+    
     @JvmStatic
     private fun invoke(
         status: Int,
@@ -9525,7 +9525,7 @@ private object WGPUDeviceLostCallbackTrampoline {
     val address: NativeAddress by lazy {
         NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()).address())
     }
-
+    
     @JvmStatic
     private fun invoke(
         device: MemorySegment,
@@ -9591,7 +9591,7 @@ private object WGPUPopErrorScopeCallbackTrampoline {
     val address: NativeAddress by lazy {
         NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()).address())
     }
-
+    
     @JvmStatic
     private fun invoke(
         status: Int,
@@ -9657,7 +9657,7 @@ private object WGPUQueueWorkDoneCallbackTrampoline {
     val address: NativeAddress by lazy {
         NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()).address())
     }
-
+    
     @JvmStatic
     private fun invoke(
         status: Int,
@@ -9721,7 +9721,7 @@ private object WGPURequestAdapterCallbackTrampoline {
     val address: NativeAddress by lazy {
         NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()).address())
     }
-
+    
     @JvmStatic
     private fun invoke(
         status: Int,
@@ -9787,7 +9787,7 @@ private object WGPURequestDeviceCallbackTrampoline {
     val address: NativeAddress by lazy {
         NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()).address())
     }
-
+    
     @JvmStatic
     private fun invoke(
         status: Int,
@@ -9853,7 +9853,7 @@ private object WGPUUncapturedErrorCallbackTrampoline {
     val address: NativeAddress by lazy {
         NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()).address())
     }
-
+    
     @JvmStatic
     private fun invoke(
         device: MemorySegment,
@@ -9919,7 +9919,7 @@ private object WGPULogCallbackTrampoline {
     val address: NativeAddress by lazy {
         NativeAddress(Linker.nativeLinker().upcallStub(methodHandle, descriptor, Arena.global()).address())
     }
-
+    
     @JvmStatic
     private fun invoke(
         level: Int,
@@ -9976,1235 +9976,1686 @@ internal actual fun wgpuSetLogCallbackCallbackBindingPreflight(): (NativeAddress
 // Layouts des structs par valeur : enregistrés au chargement du fichier
 // (classe façade), donc avant tout downcall — les companions de structs
 // imbriqués ne sont pas garantis initialisés à ce moment.
-private val __kffiJvmStructLayouts: Unit = run {
+// Les listes de champs sont découpées en fonctions : un bloc unique dépasse
+// la limite JVM de 64 Ko par méthode pour les gros en-têtes (structs opaques).
+private fun __kffiJvmStructFields0_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("data", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("length", JvmDowncallEngine.FieldKind.UINT64, 8L),
+)
+private fun __kffiJvmRegisterStructLayout0() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUStringView",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("data", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("length", JvmDowncallEngine.FieldKind.UINT64, 8L),
-        ),
+        __kffiJvmStructFields0_0(),
     )
+}
+private fun __kffiJvmStructFields1_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("next", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("sType", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout1() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUChainedStruct",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("next", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("sType", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields1_0(),
     )
+}
+private fun __kffiJvmStructFields2_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
+)
+private fun __kffiJvmRegisterStructLayout2() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUBufferMapCallbackInfo",
         40L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
-        ),
+        __kffiJvmStructFields2_0(),
     )
+}
+private fun __kffiJvmStructFields3_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
+)
+private fun __kffiJvmRegisterStructLayout3() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUCompilationInfoCallbackInfo",
         40L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
-        ),
+        __kffiJvmStructFields3_0(),
     )
+}
+private fun __kffiJvmStructFields4_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
+)
+private fun __kffiJvmRegisterStructLayout4() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUCreateComputePipelineAsyncCallbackInfo",
         40L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
-        ),
+        __kffiJvmStructFields4_0(),
     )
+}
+private fun __kffiJvmStructFields5_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
+)
+private fun __kffiJvmRegisterStructLayout5() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUCreateRenderPipelineAsyncCallbackInfo",
         40L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
-        ),
+        __kffiJvmStructFields5_0(),
     )
+}
+private fun __kffiJvmStructFields6_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
+)
+private fun __kffiJvmRegisterStructLayout6() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUDeviceLostCallbackInfo",
         40L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
-        ),
+        __kffiJvmStructFields6_0(),
     )
+}
+private fun __kffiJvmStructFields7_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
+)
+private fun __kffiJvmRegisterStructLayout7() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUPopErrorScopeCallbackInfo",
         40L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
-        ),
+        __kffiJvmStructFields7_0(),
     )
+}
+private fun __kffiJvmStructFields8_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
+)
+private fun __kffiJvmRegisterStructLayout8() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUQueueWorkDoneCallbackInfo",
         40L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
-        ),
+        __kffiJvmStructFields8_0(),
     )
+}
+private fun __kffiJvmStructFields9_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
+)
+private fun __kffiJvmRegisterStructLayout9() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURequestAdapterCallbackInfo",
         40L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
-        ),
+        __kffiJvmStructFields9_0(),
     )
+}
+private fun __kffiJvmStructFields10_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
+)
+private fun __kffiJvmRegisterStructLayout10() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURequestDeviceCallbackInfo",
         40L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("mode", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 32L),
-        ),
+        __kffiJvmStructFields10_0(),
     )
+}
+private fun __kffiJvmStructFields11_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 8L),
+    JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 24L),
+)
+private fun __kffiJvmRegisterStructLayout11() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUUncapturedErrorCallbackInfo",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("callback", JvmDowncallEngine.FieldKind.POINTER, 8L),
-            JvmDowncallEngine.StructField("userdata1", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("userdata2", JvmDowncallEngine.FieldKind.POINTER, 24L),
-        ),
+        __kffiJvmStructFields11_0(),
     )
+}
+private fun __kffiJvmStructFields12_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 24L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 40L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 56L),
+    JvmDowncallEngine.StructField("backendType", JvmDowncallEngine.FieldKind.UINT32, 72L),
+    JvmDowncallEngine.StructField("adapterType", JvmDowncallEngine.FieldKind.UINT32, 76L),
+    JvmDowncallEngine.StructField("vendorID", JvmDowncallEngine.FieldKind.UINT32, 80L),
+    JvmDowncallEngine.StructField("deviceID", JvmDowncallEngine.FieldKind.UINT32, 84L),
+    JvmDowncallEngine.StructField("subgroupMinSize", JvmDowncallEngine.FieldKind.UINT32, 88L),
+    JvmDowncallEngine.StructField("subgroupMaxSize", JvmDowncallEngine.FieldKind.UINT32, 92L),
+)
+private fun __kffiJvmRegisterStructLayout12() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUAdapterInfo",
         96L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 24L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 40L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 56L),
-            JvmDowncallEngine.StructField("backendType", JvmDowncallEngine.FieldKind.UINT32, 72L),
-            JvmDowncallEngine.StructField("adapterType", JvmDowncallEngine.FieldKind.UINT32, 76L),
-            JvmDowncallEngine.StructField("vendorID", JvmDowncallEngine.FieldKind.UINT32, 80L),
-            JvmDowncallEngine.StructField("deviceID", JvmDowncallEngine.FieldKind.UINT32, 84L),
-            JvmDowncallEngine.StructField("subgroupMinSize", JvmDowncallEngine.FieldKind.UINT32, 88L),
-            JvmDowncallEngine.StructField("subgroupMaxSize", JvmDowncallEngine.FieldKind.UINT32, 92L),
-        ),
+        __kffiJvmStructFields12_0(),
     )
+}
+private fun __kffiJvmStructFields13_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("operation", JvmDowncallEngine.FieldKind.UINT32, 0L),
+    JvmDowncallEngine.StructField("srcFactor", JvmDowncallEngine.FieldKind.UINT32, 4L),
+    JvmDowncallEngine.StructField("dstFactor", JvmDowncallEngine.FieldKind.UINT32, 8L),
+)
+private fun __kffiJvmRegisterStructLayout13() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUBlendComponent",
         12L, 4L,
-        listOf(
-            JvmDowncallEngine.StructField("operation", JvmDowncallEngine.FieldKind.UINT32, 0L),
-            JvmDowncallEngine.StructField("srcFactor", JvmDowncallEngine.FieldKind.UINT32, 4L),
-            JvmDowncallEngine.StructField("dstFactor", JvmDowncallEngine.FieldKind.UINT32, 8L),
-        ),
+        __kffiJvmStructFields13_0(),
     )
+}
+private fun __kffiJvmStructFields14_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("type", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("hasDynamicOffset", JvmDowncallEngine.FieldKind.UINT32, 12L),
+    JvmDowncallEngine.StructField("minBindingSize", JvmDowncallEngine.FieldKind.UINT64, 16L),
+)
+private fun __kffiJvmRegisterStructLayout14() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUBufferBindingLayout",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("type", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("hasDynamicOffset", JvmDowncallEngine.FieldKind.UINT32, 12L),
-            JvmDowncallEngine.StructField("minBindingSize", JvmDowncallEngine.FieldKind.UINT64, 16L),
-        ),
+        __kffiJvmStructFields14_0(),
     )
+}
+private fun __kffiJvmStructFields15_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("usage", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("size", JvmDowncallEngine.FieldKind.UINT64, 32L),
+    JvmDowncallEngine.StructField("mappedAtCreation", JvmDowncallEngine.FieldKind.UINT32, 40L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout15() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUBufferDescriptor",
         48L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("usage", JvmDowncallEngine.FieldKind.UINT64, 24L),
-            JvmDowncallEngine.StructField("size", JvmDowncallEngine.FieldKind.UINT64, 32L),
-            JvmDowncallEngine.StructField("mappedAtCreation", JvmDowncallEngine.FieldKind.UINT32, 40L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields15_0(),
     )
+}
+private fun __kffiJvmStructFields16_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("r", JvmDowncallEngine.FieldKind.FLOAT64, 0L),
+    JvmDowncallEngine.StructField("g", JvmDowncallEngine.FieldKind.FLOAT64, 8L),
+    JvmDowncallEngine.StructField("b", JvmDowncallEngine.FieldKind.FLOAT64, 16L),
+    JvmDowncallEngine.StructField("a", JvmDowncallEngine.FieldKind.FLOAT64, 24L),
+)
+private fun __kffiJvmRegisterStructLayout16() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUColor",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("r", JvmDowncallEngine.FieldKind.FLOAT64, 0L),
-            JvmDowncallEngine.StructField("g", JvmDowncallEngine.FieldKind.FLOAT64, 8L),
-            JvmDowncallEngine.StructField("b", JvmDowncallEngine.FieldKind.FLOAT64, 16L),
-            JvmDowncallEngine.StructField("a", JvmDowncallEngine.FieldKind.FLOAT64, 24L),
-        ),
+        __kffiJvmStructFields16_0(),
     )
+}
+private fun __kffiJvmStructFields17_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+)
+private fun __kffiJvmRegisterStructLayout17() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUCommandBufferDescriptor",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-        ),
+        __kffiJvmStructFields17_0(),
     )
+}
+private fun __kffiJvmStructFields18_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+)
+private fun __kffiJvmRegisterStructLayout18() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUCommandEncoderDescriptor",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-        ),
+        __kffiJvmStructFields18_0(),
     )
+}
+private fun __kffiJvmStructFields19_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("maxStorageBuffersInVertexStage", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("maxStorageTexturesInVertexStage", JvmDowncallEngine.FieldKind.UINT32, 20L),
+    JvmDowncallEngine.StructField("maxStorageBuffersInFragmentStage", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("maxStorageTexturesInFragmentStage", JvmDowncallEngine.FieldKind.UINT32, 28L),
+)
+private fun __kffiJvmRegisterStructLayout19() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUCompatibilityModeLimits",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("maxStorageBuffersInVertexStage", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("maxStorageTexturesInVertexStage", JvmDowncallEngine.FieldKind.UINT32, 20L),
-            JvmDowncallEngine.StructField("maxStorageBuffersInFragmentStage", JvmDowncallEngine.FieldKind.UINT32, 24L),
-            JvmDowncallEngine.StructField("maxStorageTexturesInFragmentStage", JvmDowncallEngine.FieldKind.UINT32, 28L),
-        ),
+        __kffiJvmStructFields19_0(),
     )
+}
+private fun __kffiJvmStructFields20_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("type", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("lineNum", JvmDowncallEngine.FieldKind.UINT64, 32L),
+    JvmDowncallEngine.StructField("linePos", JvmDowncallEngine.FieldKind.UINT64, 40L),
+    JvmDowncallEngine.StructField("offset", JvmDowncallEngine.FieldKind.UINT64, 48L),
+    JvmDowncallEngine.StructField("length", JvmDowncallEngine.FieldKind.UINT64, 56L),
+)
+private fun __kffiJvmRegisterStructLayout20() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUCompilationMessage",
         64L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("type", JvmDowncallEngine.FieldKind.UINT32, 24L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("lineNum", JvmDowncallEngine.FieldKind.UINT64, 32L),
-            JvmDowncallEngine.StructField("linePos", JvmDowncallEngine.FieldKind.UINT64, 40L),
-            JvmDowncallEngine.StructField("offset", JvmDowncallEngine.FieldKind.UINT64, 48L),
-            JvmDowncallEngine.StructField("length", JvmDowncallEngine.FieldKind.UINT64, 56L),
-        ),
+        __kffiJvmStructFields20_0(),
     )
+}
+private fun __kffiJvmStructFields21_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("value", JvmDowncallEngine.FieldKind.FLOAT64, 24L),
+)
+private fun __kffiJvmRegisterStructLayout21() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUConstantEntry",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("value", JvmDowncallEngine.FieldKind.FLOAT64, 24L),
-        ),
+        __kffiJvmStructFields21_0(),
     )
+}
+private fun __kffiJvmStructFields22_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("width", JvmDowncallEngine.FieldKind.UINT32, 0L),
+    JvmDowncallEngine.StructField("height", JvmDowncallEngine.FieldKind.UINT32, 4L),
+    JvmDowncallEngine.StructField("depthOrArrayLayers", JvmDowncallEngine.FieldKind.UINT32, 8L),
+)
+private fun __kffiJvmRegisterStructLayout22() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUExtent3D",
         12L, 4L,
-        listOf(
-            JvmDowncallEngine.StructField("width", JvmDowncallEngine.FieldKind.UINT32, 0L),
-            JvmDowncallEngine.StructField("height", JvmDowncallEngine.FieldKind.UINT32, 4L),
-            JvmDowncallEngine.StructField("depthOrArrayLayers", JvmDowncallEngine.FieldKind.UINT32, 8L),
-        ),
+        __kffiJvmStructFields22_0(),
     )
+}
+private fun __kffiJvmStructFields23_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("externalTexture", JvmDowncallEngine.FieldKind.POINTER, 16L),
+)
+private fun __kffiJvmRegisterStructLayout23() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUExternalTextureBindingEntry",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("externalTexture", JvmDowncallEngine.FieldKind.POINTER, 16L),
-        ),
+        __kffiJvmStructFields23_0(),
     )
+}
+private fun __kffiJvmStructFields24_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+)
+private fun __kffiJvmRegisterStructLayout24() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUExternalTextureBindingLayout",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-        ),
+        __kffiJvmStructFields24_0(),
     )
+}
+private fun __kffiJvmStructFields25_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("id", JvmDowncallEngine.FieldKind.UINT64, 0L),
+)
+private fun __kffiJvmRegisterStructLayout25() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUFuture",
         8L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("id", JvmDowncallEngine.FieldKind.UINT64, 0L),
-        ),
+        __kffiJvmStructFields25_0(),
     )
+}
+private fun __kffiJvmStructFields26_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("timedWaitAnyMaxCount", JvmDowncallEngine.FieldKind.UINT64, 8L),
+)
+private fun __kffiJvmRegisterStructLayout26() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUInstanceLimits",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("timedWaitAnyMaxCount", JvmDowncallEngine.FieldKind.UINT64, 8L),
-        ),
+        __kffiJvmStructFields26_0(),
     )
+}
+private fun __kffiJvmStructFields27_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("count", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("mask", JvmDowncallEngine.FieldKind.UINT32, 12L),
+    JvmDowncallEngine.StructField("alphaToCoverageEnabled", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout27() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUMultisampleState",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("count", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("mask", JvmDowncallEngine.FieldKind.UINT32, 12L),
-            JvmDowncallEngine.StructField("alphaToCoverageEnabled", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields27_0(),
     )
+}
+private fun __kffiJvmStructFields28_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("x", JvmDowncallEngine.FieldKind.UINT32, 0L),
+    JvmDowncallEngine.StructField("y", JvmDowncallEngine.FieldKind.UINT32, 4L),
+    JvmDowncallEngine.StructField("z", JvmDowncallEngine.FieldKind.UINT32, 8L),
+)
+private fun __kffiJvmRegisterStructLayout28() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUOrigin3D",
         12L, 4L,
-        listOf(
-            JvmDowncallEngine.StructField("x", JvmDowncallEngine.FieldKind.UINT32, 0L),
-            JvmDowncallEngine.StructField("y", JvmDowncallEngine.FieldKind.UINT32, 4L),
-            JvmDowncallEngine.StructField("z", JvmDowncallEngine.FieldKind.UINT32, 8L),
-        ),
+        __kffiJvmStructFields28_0(),
     )
+}
+private fun __kffiJvmStructFields29_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("querySet", JvmDowncallEngine.FieldKind.POINTER, 8L),
+    JvmDowncallEngine.StructField("beginningOfPassWriteIndex", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("endOfPassWriteIndex", JvmDowncallEngine.FieldKind.UINT32, 20L),
+)
+private fun __kffiJvmRegisterStructLayout29() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUPassTimestampWrites",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("querySet", JvmDowncallEngine.FieldKind.POINTER, 8L),
-            JvmDowncallEngine.StructField("beginningOfPassWriteIndex", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("endOfPassWriteIndex", JvmDowncallEngine.FieldKind.UINT32, 20L),
-        ),
+        __kffiJvmStructFields29_0(),
     )
+}
+private fun __kffiJvmStructFields30_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("bindGroupLayoutCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("bindGroupLayouts", JvmDowncallEngine.FieldKind.POINTER, 32L),
+    JvmDowncallEngine.StructField("immediateSize", JvmDowncallEngine.FieldKind.UINT32, 40L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout30() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUPipelineLayoutDescriptor",
         48L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("bindGroupLayoutCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
-            JvmDowncallEngine.StructField("bindGroupLayouts", JvmDowncallEngine.FieldKind.POINTER, 32L),
-            JvmDowncallEngine.StructField("immediateSize", JvmDowncallEngine.FieldKind.UINT32, 40L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields30_0(),
     )
+}
+private fun __kffiJvmStructFields31_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("topology", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("stripIndexFormat", JvmDowncallEngine.FieldKind.UINT32, 12L),
+    JvmDowncallEngine.StructField("frontFace", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("cullMode", JvmDowncallEngine.FieldKind.UINT32, 20L),
+    JvmDowncallEngine.StructField("unclippedDepth", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout31() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUPrimitiveState",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("topology", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("stripIndexFormat", JvmDowncallEngine.FieldKind.UINT32, 12L),
-            JvmDowncallEngine.StructField("frontFace", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("cullMode", JvmDowncallEngine.FieldKind.UINT32, 20L),
-            JvmDowncallEngine.StructField("unclippedDepth", JvmDowncallEngine.FieldKind.UINT32, 24L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields31_0(),
     )
+}
+private fun __kffiJvmStructFields32_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("type", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("count", JvmDowncallEngine.FieldKind.UINT32, 28L),
+)
+private fun __kffiJvmRegisterStructLayout32() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUQuerySetDescriptor",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("type", JvmDowncallEngine.FieldKind.UINT32, 24L),
-            JvmDowncallEngine.StructField("count", JvmDowncallEngine.FieldKind.UINT32, 28L),
-        ),
+        __kffiJvmStructFields32_0(),
     )
+}
+private fun __kffiJvmStructFields33_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+)
+private fun __kffiJvmRegisterStructLayout33() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUQueueDescriptor",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-        ),
+        __kffiJvmStructFields33_0(),
     )
+}
+private fun __kffiJvmStructFields34_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+)
+private fun __kffiJvmRegisterStructLayout34() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURenderBundleDescriptor",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-        ),
+        __kffiJvmStructFields34_0(),
     )
+}
+private fun __kffiJvmStructFields35_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("colorFormatCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("colorFormats", JvmDowncallEngine.FieldKind.POINTER, 32L),
+    JvmDowncallEngine.StructField("depthStencilFormat", JvmDowncallEngine.FieldKind.UINT32, 40L),
+    JvmDowncallEngine.StructField("sampleCount", JvmDowncallEngine.FieldKind.UINT32, 44L),
+    JvmDowncallEngine.StructField("depthReadOnly", JvmDowncallEngine.FieldKind.UINT32, 48L),
+    JvmDowncallEngine.StructField("stencilReadOnly", JvmDowncallEngine.FieldKind.UINT32, 52L),
+)
+private fun __kffiJvmRegisterStructLayout35() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURenderBundleEncoderDescriptor",
         56L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("colorFormatCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
-            JvmDowncallEngine.StructField("colorFormats", JvmDowncallEngine.FieldKind.POINTER, 32L),
-            JvmDowncallEngine.StructField("depthStencilFormat", JvmDowncallEngine.FieldKind.UINT32, 40L),
-            JvmDowncallEngine.StructField("sampleCount", JvmDowncallEngine.FieldKind.UINT32, 44L),
-            JvmDowncallEngine.StructField("depthReadOnly", JvmDowncallEngine.FieldKind.UINT32, 48L),
-            JvmDowncallEngine.StructField("stencilReadOnly", JvmDowncallEngine.FieldKind.UINT32, 52L),
-        ),
+        __kffiJvmStructFields35_0(),
     )
+}
+private fun __kffiJvmStructFields36_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("view", JvmDowncallEngine.FieldKind.POINTER, 8L),
+    JvmDowncallEngine.StructField("depthLoadOp", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("depthStoreOp", JvmDowncallEngine.FieldKind.UINT32, 20L),
+    JvmDowncallEngine.StructField("depthClearValue", JvmDowncallEngine.FieldKind.FLOAT32, 24L),
+    JvmDowncallEngine.StructField("depthReadOnly", JvmDowncallEngine.FieldKind.UINT32, 28L),
+    JvmDowncallEngine.StructField("stencilLoadOp", JvmDowncallEngine.FieldKind.UINT32, 32L),
+    JvmDowncallEngine.StructField("stencilStoreOp", JvmDowncallEngine.FieldKind.UINT32, 36L),
+    JvmDowncallEngine.StructField("stencilClearValue", JvmDowncallEngine.FieldKind.UINT32, 40L),
+    JvmDowncallEngine.StructField("stencilReadOnly", JvmDowncallEngine.FieldKind.UINT32, 44L),
+)
+private fun __kffiJvmRegisterStructLayout36() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURenderPassDepthStencilAttachment",
         48L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("view", JvmDowncallEngine.FieldKind.POINTER, 8L),
-            JvmDowncallEngine.StructField("depthLoadOp", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("depthStoreOp", JvmDowncallEngine.FieldKind.UINT32, 20L),
-            JvmDowncallEngine.StructField("depthClearValue", JvmDowncallEngine.FieldKind.FLOAT32, 24L),
-            JvmDowncallEngine.StructField("depthReadOnly", JvmDowncallEngine.FieldKind.UINT32, 28L),
-            JvmDowncallEngine.StructField("stencilLoadOp", JvmDowncallEngine.FieldKind.UINT32, 32L),
-            JvmDowncallEngine.StructField("stencilStoreOp", JvmDowncallEngine.FieldKind.UINT32, 36L),
-            JvmDowncallEngine.StructField("stencilClearValue", JvmDowncallEngine.FieldKind.UINT32, 40L),
-            JvmDowncallEngine.StructField("stencilReadOnly", JvmDowncallEngine.FieldKind.UINT32, 44L),
-        ),
+        __kffiJvmStructFields36_0(),
     )
+}
+private fun __kffiJvmStructFields37_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("maxDrawCount", JvmDowncallEngine.FieldKind.UINT64, 16L),
+)
+private fun __kffiJvmRegisterStructLayout37() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURenderPassMaxDrawCount",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("maxDrawCount", JvmDowncallEngine.FieldKind.UINT64, 16L),
-        ),
+        __kffiJvmStructFields37_0(),
     )
+}
+private fun __kffiJvmStructFields38_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("xrCompatible", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout38() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURequestAdapterWebXROptions",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("xrCompatible", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields38_0(),
     )
+}
+private fun __kffiJvmStructFields39_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("type", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout39() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSamplerBindingLayout",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("type", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields39_0(),
     )
+}
+private fun __kffiJvmStructFields40_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("addressModeU", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("addressModeV", JvmDowncallEngine.FieldKind.UINT32, 28L),
+    JvmDowncallEngine.StructField("addressModeW", JvmDowncallEngine.FieldKind.UINT32, 32L),
+    JvmDowncallEngine.StructField("magFilter", JvmDowncallEngine.FieldKind.UINT32, 36L),
+    JvmDowncallEngine.StructField("minFilter", JvmDowncallEngine.FieldKind.UINT32, 40L),
+    JvmDowncallEngine.StructField("mipmapFilter", JvmDowncallEngine.FieldKind.UINT32, 44L),
+    JvmDowncallEngine.StructField("lodMinClamp", JvmDowncallEngine.FieldKind.FLOAT32, 48L),
+    JvmDowncallEngine.StructField("lodMaxClamp", JvmDowncallEngine.FieldKind.FLOAT32, 52L),
+    JvmDowncallEngine.StructField("compare", JvmDowncallEngine.FieldKind.UINT32, 56L),
+    JvmDowncallEngine.StructField("maxAnisotropy", JvmDowncallEngine.FieldKind.UINT16, 60L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 2L),
+)
+private fun __kffiJvmRegisterStructLayout40() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSamplerDescriptor",
         64L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("addressModeU", JvmDowncallEngine.FieldKind.UINT32, 24L),
-            JvmDowncallEngine.StructField("addressModeV", JvmDowncallEngine.FieldKind.UINT32, 28L),
-            JvmDowncallEngine.StructField("addressModeW", JvmDowncallEngine.FieldKind.UINT32, 32L),
-            JvmDowncallEngine.StructField("magFilter", JvmDowncallEngine.FieldKind.UINT32, 36L),
-            JvmDowncallEngine.StructField("minFilter", JvmDowncallEngine.FieldKind.UINT32, 40L),
-            JvmDowncallEngine.StructField("mipmapFilter", JvmDowncallEngine.FieldKind.UINT32, 44L),
-            JvmDowncallEngine.StructField("lodMinClamp", JvmDowncallEngine.FieldKind.FLOAT32, 48L),
-            JvmDowncallEngine.StructField("lodMaxClamp", JvmDowncallEngine.FieldKind.FLOAT32, 52L),
-            JvmDowncallEngine.StructField("compare", JvmDowncallEngine.FieldKind.UINT32, 56L),
-            JvmDowncallEngine.StructField("maxAnisotropy", JvmDowncallEngine.FieldKind.UINT16, 60L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 2L),
-        ),
+        __kffiJvmStructFields40_0(),
     )
+}
+private fun __kffiJvmStructFields41_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("codeSize", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("code", JvmDowncallEngine.FieldKind.POINTER, 24L),
+)
+private fun __kffiJvmRegisterStructLayout41() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUShaderSourceSPIRV",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("codeSize", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("code", JvmDowncallEngine.FieldKind.POINTER, 24L),
-        ),
+        __kffiJvmStructFields41_0(),
     )
+}
+private fun __kffiJvmStructFields42_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
+)
+private fun __kffiJvmRegisterStructLayout42() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUShaderSourceWGSL",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
-        ),
+        __kffiJvmStructFields42_0(),
     )
+}
+private fun __kffiJvmStructFields43_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("compare", JvmDowncallEngine.FieldKind.UINT32, 0L),
+    JvmDowncallEngine.StructField("failOp", JvmDowncallEngine.FieldKind.UINT32, 4L),
+    JvmDowncallEngine.StructField("depthFailOp", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("passOp", JvmDowncallEngine.FieldKind.UINT32, 12L),
+)
+private fun __kffiJvmRegisterStructLayout43() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUStencilFaceState",
         16L, 4L,
-        listOf(
-            JvmDowncallEngine.StructField("compare", JvmDowncallEngine.FieldKind.UINT32, 0L),
-            JvmDowncallEngine.StructField("failOp", JvmDowncallEngine.FieldKind.UINT32, 4L),
-            JvmDowncallEngine.StructField("depthFailOp", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("passOp", JvmDowncallEngine.FieldKind.UINT32, 12L),
-        ),
+        __kffiJvmStructFields43_0(),
     )
+}
+private fun __kffiJvmStructFields44_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("access", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 12L),
+    JvmDowncallEngine.StructField("viewDimension", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout44() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUStorageTextureBindingLayout",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("access", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 12L),
-            JvmDowncallEngine.StructField("viewDimension", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields44_0(),
     )
+}
+private fun __kffiJvmStructFields45_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("featureCount", JvmDowncallEngine.FieldKind.UINT64, 0L),
+    JvmDowncallEngine.StructField("features", JvmDowncallEngine.FieldKind.POINTER, 8L),
+)
+private fun __kffiJvmRegisterStructLayout45() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSupportedFeatures",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("featureCount", JvmDowncallEngine.FieldKind.UINT64, 0L),
-            JvmDowncallEngine.StructField("features", JvmDowncallEngine.FieldKind.POINTER, 8L),
-        ),
+        __kffiJvmStructFields45_0(),
     )
+}
+private fun __kffiJvmStructFields46_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("featureCount", JvmDowncallEngine.FieldKind.UINT64, 0L),
+    JvmDowncallEngine.StructField("features", JvmDowncallEngine.FieldKind.POINTER, 8L),
+)
+private fun __kffiJvmRegisterStructLayout46() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSupportedInstanceFeatures",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("featureCount", JvmDowncallEngine.FieldKind.UINT64, 0L),
-            JvmDowncallEngine.StructField("features", JvmDowncallEngine.FieldKind.POINTER, 8L),
-        ),
+        __kffiJvmStructFields46_0(),
     )
+}
+private fun __kffiJvmStructFields47_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("featureCount", JvmDowncallEngine.FieldKind.UINT64, 0L),
+    JvmDowncallEngine.StructField("features", JvmDowncallEngine.FieldKind.POINTER, 8L),
+)
+private fun __kffiJvmRegisterStructLayout47() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSupportedWGSLLanguageFeatures",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("featureCount", JvmDowncallEngine.FieldKind.UINT64, 0L),
-            JvmDowncallEngine.StructField("features", JvmDowncallEngine.FieldKind.POINTER, 8L),
-        ),
+        __kffiJvmStructFields47_0(),
     )
+}
+private fun __kffiJvmStructFields48_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("usages", JvmDowncallEngine.FieldKind.UINT64, 8L),
+    JvmDowncallEngine.StructField("formatCount", JvmDowncallEngine.FieldKind.UINT64, 16L),
+    JvmDowncallEngine.StructField("formats", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("presentModeCount", JvmDowncallEngine.FieldKind.UINT64, 32L),
+    JvmDowncallEngine.StructField("presentModes", JvmDowncallEngine.FieldKind.POINTER, 40L),
+    JvmDowncallEngine.StructField("alphaModeCount", JvmDowncallEngine.FieldKind.UINT64, 48L),
+    JvmDowncallEngine.StructField("alphaModes", JvmDowncallEngine.FieldKind.POINTER, 56L),
+)
+private fun __kffiJvmRegisterStructLayout48() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceCapabilities",
         64L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("usages", JvmDowncallEngine.FieldKind.UINT64, 8L),
-            JvmDowncallEngine.StructField("formatCount", JvmDowncallEngine.FieldKind.UINT64, 16L),
-            JvmDowncallEngine.StructField("formats", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("presentModeCount", JvmDowncallEngine.FieldKind.UINT64, 32L),
-            JvmDowncallEngine.StructField("presentModes", JvmDowncallEngine.FieldKind.POINTER, 40L),
-            JvmDowncallEngine.StructField("alphaModeCount", JvmDowncallEngine.FieldKind.UINT64, 48L),
-            JvmDowncallEngine.StructField("alphaModes", JvmDowncallEngine.FieldKind.POINTER, 56L),
-        ),
+        __kffiJvmStructFields48_0(),
     )
+}
+private fun __kffiJvmStructFields49_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("colorSpace", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("toneMappingMode", JvmDowncallEngine.FieldKind.UINT32, 20L),
+)
+private fun __kffiJvmRegisterStructLayout49() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceColorManagement",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("colorSpace", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("toneMappingMode", JvmDowncallEngine.FieldKind.UINT32, 20L),
-        ),
+        __kffiJvmStructFields49_0(),
     )
+}
+private fun __kffiJvmStructFields50_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("device", JvmDowncallEngine.FieldKind.POINTER, 8L),
+    JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("usage", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("width", JvmDowncallEngine.FieldKind.UINT32, 32L),
+    JvmDowncallEngine.StructField("height", JvmDowncallEngine.FieldKind.UINT32, 36L),
+    JvmDowncallEngine.StructField("viewFormatCount", JvmDowncallEngine.FieldKind.UINT64, 40L),
+    JvmDowncallEngine.StructField("viewFormats", JvmDowncallEngine.FieldKind.POINTER, 48L),
+    JvmDowncallEngine.StructField("alphaMode", JvmDowncallEngine.FieldKind.UINT32, 56L),
+    JvmDowncallEngine.StructField("presentMode", JvmDowncallEngine.FieldKind.UINT32, 60L),
+)
+private fun __kffiJvmRegisterStructLayout50() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceConfiguration",
         64L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("device", JvmDowncallEngine.FieldKind.POINTER, 8L),
-            JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("usage", JvmDowncallEngine.FieldKind.UINT64, 24L),
-            JvmDowncallEngine.StructField("width", JvmDowncallEngine.FieldKind.UINT32, 32L),
-            JvmDowncallEngine.StructField("height", JvmDowncallEngine.FieldKind.UINT32, 36L),
-            JvmDowncallEngine.StructField("viewFormatCount", JvmDowncallEngine.FieldKind.UINT64, 40L),
-            JvmDowncallEngine.StructField("viewFormats", JvmDowncallEngine.FieldKind.POINTER, 48L),
-            JvmDowncallEngine.StructField("alphaMode", JvmDowncallEngine.FieldKind.UINT32, 56L),
-            JvmDowncallEngine.StructField("presentMode", JvmDowncallEngine.FieldKind.UINT32, 60L),
-        ),
+        __kffiJvmStructFields50_0(),
     )
+}
+private fun __kffiJvmStructFields51_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("window", JvmDowncallEngine.FieldKind.POINTER, 16L),
+)
+private fun __kffiJvmRegisterStructLayout51() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceSourceAndroidNativeWindow",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("window", JvmDowncallEngine.FieldKind.POINTER, 16L),
-        ),
+        __kffiJvmStructFields51_0(),
     )
+}
+private fun __kffiJvmStructFields52_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("layer", JvmDowncallEngine.FieldKind.POINTER, 16L),
+)
+private fun __kffiJvmRegisterStructLayout52() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceSourceMetalLayer",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("layer", JvmDowncallEngine.FieldKind.POINTER, 16L),
-        ),
+        __kffiJvmStructFields52_0(),
     )
+}
+private fun __kffiJvmStructFields53_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("display", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("surface", JvmDowncallEngine.FieldKind.POINTER, 24L),
+)
+private fun __kffiJvmRegisterStructLayout53() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceSourceWaylandSurface",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("display", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("surface", JvmDowncallEngine.FieldKind.POINTER, 24L),
-        ),
+        __kffiJvmStructFields53_0(),
     )
+}
+private fun __kffiJvmStructFields54_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("hinstance", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("hwnd", JvmDowncallEngine.FieldKind.POINTER, 24L),
+)
+private fun __kffiJvmRegisterStructLayout54() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceSourceWindowsHWND",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("hinstance", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("hwnd", JvmDowncallEngine.FieldKind.POINTER, 24L),
-        ),
+        __kffiJvmStructFields54_0(),
     )
+}
+private fun __kffiJvmStructFields55_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("connection", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("window", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout55() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceSourceXCBWindow",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("connection", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("window", JvmDowncallEngine.FieldKind.UINT32, 24L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields55_0(),
     )
+}
+private fun __kffiJvmStructFields56_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("display", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("window", JvmDowncallEngine.FieldKind.UINT64, 24L),
+)
+private fun __kffiJvmRegisterStructLayout56() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceSourceXlibWindow",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("display", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("window", JvmDowncallEngine.FieldKind.UINT64, 24L),
-        ),
+        __kffiJvmStructFields56_0(),
     )
+}
+private fun __kffiJvmStructFields57_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("texture", JvmDowncallEngine.FieldKind.POINTER, 8L),
+    JvmDowncallEngine.StructField("status", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout57() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceTexture",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("texture", JvmDowncallEngine.FieldKind.POINTER, 8L),
-            JvmDowncallEngine.StructField("status", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields57_0(),
     )
+}
+private fun __kffiJvmStructFields58_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("offset", JvmDowncallEngine.FieldKind.UINT64, 0L),
+    JvmDowncallEngine.StructField("bytesPerRow", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("rowsPerImage", JvmDowncallEngine.FieldKind.UINT32, 12L),
+)
+private fun __kffiJvmRegisterStructLayout58() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUTexelCopyBufferLayout",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("offset", JvmDowncallEngine.FieldKind.UINT64, 0L),
-            JvmDowncallEngine.StructField("bytesPerRow", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("rowsPerImage", JvmDowncallEngine.FieldKind.UINT32, 12L),
-        ),
+        __kffiJvmStructFields58_0(),
     )
+}
+private fun __kffiJvmStructFields59_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("sampleType", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("viewDimension", JvmDowncallEngine.FieldKind.UINT32, 12L),
+    JvmDowncallEngine.StructField("multisampled", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout59() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUTextureBindingLayout",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("sampleType", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("viewDimension", JvmDowncallEngine.FieldKind.UINT32, 12L),
-            JvmDowncallEngine.StructField("multisampled", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields59_0(),
     )
+}
+private fun __kffiJvmStructFields60_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("textureBindingViewDimension", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout60() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUTextureBindingViewDimension",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("textureBindingViewDimension", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields60_0(),
     )
+}
+private fun __kffiJvmStructFields61_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("r", JvmDowncallEngine.FieldKind.UINT32, 0L),
+    JvmDowncallEngine.StructField("g", JvmDowncallEngine.FieldKind.UINT32, 4L),
+    JvmDowncallEngine.StructField("b", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("a", JvmDowncallEngine.FieldKind.UINT32, 12L),
+)
+private fun __kffiJvmRegisterStructLayout61() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUTextureComponentSwizzle",
         16L, 4L,
-        listOf(
-            JvmDowncallEngine.StructField("r", JvmDowncallEngine.FieldKind.UINT32, 0L),
-            JvmDowncallEngine.StructField("g", JvmDowncallEngine.FieldKind.UINT32, 4L),
-            JvmDowncallEngine.StructField("b", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("a", JvmDowncallEngine.FieldKind.UINT32, 12L),
-        ),
+        __kffiJvmStructFields61_0(),
     )
+}
+private fun __kffiJvmStructFields62_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("offset", JvmDowncallEngine.FieldKind.UINT64, 16L),
+    JvmDowncallEngine.StructField("shaderLocation", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout62() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUVertexAttribute",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("offset", JvmDowncallEngine.FieldKind.UINT64, 16L),
-            JvmDowncallEngine.StructField("shaderLocation", JvmDowncallEngine.FieldKind.UINT32, 24L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields62_0(),
     )
+}
+private fun __kffiJvmStructFields63_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("binding", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("buffer", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("offset", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("size", JvmDowncallEngine.FieldKind.UINT64, 32L),
+    JvmDowncallEngine.StructField("sampler", JvmDowncallEngine.FieldKind.POINTER, 40L),
+    JvmDowncallEngine.StructField("textureView", JvmDowncallEngine.FieldKind.POINTER, 48L),
+)
+private fun __kffiJvmRegisterStructLayout63() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUBindGroupEntry",
         56L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("binding", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("buffer", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("offset", JvmDowncallEngine.FieldKind.UINT64, 24L),
-            JvmDowncallEngine.StructField("size", JvmDowncallEngine.FieldKind.UINT64, 32L),
-            JvmDowncallEngine.StructField("sampler", JvmDowncallEngine.FieldKind.POINTER, 40L),
-            JvmDowncallEngine.StructField("textureView", JvmDowncallEngine.FieldKind.POINTER, 48L),
-        ),
+        __kffiJvmStructFields63_0(),
     )
+}
+private fun __kffiJvmStructFields64_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("binding", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("visibility", JvmDowncallEngine.FieldKind.UINT64, 16L),
+    JvmDowncallEngine.StructField("bindingArraySize", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("WGPUBufferBindingLayout", JvmDowncallEngine.FieldKind.STRUCT, 32L),
+    JvmDowncallEngine.StructField("WGPUSamplerBindingLayout", JvmDowncallEngine.FieldKind.STRUCT, 56L),
+    JvmDowncallEngine.StructField("WGPUTextureBindingLayout", JvmDowncallEngine.FieldKind.STRUCT, 72L),
+    JvmDowncallEngine.StructField("WGPUStorageTextureBindingLayout", JvmDowncallEngine.FieldKind.STRUCT, 96L),
+)
+private fun __kffiJvmRegisterStructLayout64() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUBindGroupLayoutEntry",
         120L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("binding", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("visibility", JvmDowncallEngine.FieldKind.UINT64, 16L),
-            JvmDowncallEngine.StructField("bindingArraySize", JvmDowncallEngine.FieldKind.UINT32, 24L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("WGPUBufferBindingLayout", JvmDowncallEngine.FieldKind.STRUCT, 32L),
-            JvmDowncallEngine.StructField("WGPUSamplerBindingLayout", JvmDowncallEngine.FieldKind.STRUCT, 56L),
-            JvmDowncallEngine.StructField("WGPUTextureBindingLayout", JvmDowncallEngine.FieldKind.STRUCT, 72L),
-            JvmDowncallEngine.StructField("WGPUStorageTextureBindingLayout", JvmDowncallEngine.FieldKind.STRUCT, 96L),
-        ),
+        __kffiJvmStructFields64_0(),
     )
+}
+private fun __kffiJvmStructFields65_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUBlendComponent", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("WGPUBlendComponent", JvmDowncallEngine.FieldKind.STRUCT, 12L),
+)
+private fun __kffiJvmRegisterStructLayout65() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUBlendState",
         24L, 4L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUBlendComponent", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("WGPUBlendComponent", JvmDowncallEngine.FieldKind.STRUCT, 12L),
-        ),
+        __kffiJvmStructFields65_0(),
     )
+}
+private fun __kffiJvmStructFields66_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("messageCount", JvmDowncallEngine.FieldKind.UINT64, 8L),
+    JvmDowncallEngine.StructField("messages", JvmDowncallEngine.FieldKind.POINTER, 16L),
+)
+private fun __kffiJvmRegisterStructLayout66() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUCompilationInfo",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("messageCount", JvmDowncallEngine.FieldKind.UINT64, 8L),
-            JvmDowncallEngine.StructField("messages", JvmDowncallEngine.FieldKind.POINTER, 16L),
-        ),
+        __kffiJvmStructFields66_0(),
     )
+}
+private fun __kffiJvmStructFields67_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("timestampWrites", JvmDowncallEngine.FieldKind.POINTER, 24L),
+)
+private fun __kffiJvmRegisterStructLayout67() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUComputePassDescriptor",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("timestampWrites", JvmDowncallEngine.FieldKind.POINTER, 24L),
-        ),
+        __kffiJvmStructFields67_0(),
     )
+}
+private fun __kffiJvmStructFields68_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("module", JvmDowncallEngine.FieldKind.POINTER, 8L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
+    JvmDowncallEngine.StructField("constantCount", JvmDowncallEngine.FieldKind.UINT64, 32L),
+    JvmDowncallEngine.StructField("constants", JvmDowncallEngine.FieldKind.POINTER, 40L),
+)
+private fun __kffiJvmRegisterStructLayout68() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUComputeState",
         48L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("module", JvmDowncallEngine.FieldKind.POINTER, 8L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
-            JvmDowncallEngine.StructField("constantCount", JvmDowncallEngine.FieldKind.UINT64, 32L),
-            JvmDowncallEngine.StructField("constants", JvmDowncallEngine.FieldKind.POINTER, 40L),
-        ),
+        __kffiJvmStructFields68_0(),
     )
+}
+private fun __kffiJvmStructFields69_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("depthWriteEnabled", JvmDowncallEngine.FieldKind.UINT32, 12L),
+    JvmDowncallEngine.StructField("depthCompare", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("WGPUStencilFaceState", JvmDowncallEngine.FieldKind.STRUCT, 20L),
+    JvmDowncallEngine.StructField("WGPUStencilFaceState", JvmDowncallEngine.FieldKind.STRUCT, 36L),
+    JvmDowncallEngine.StructField("stencilReadMask", JvmDowncallEngine.FieldKind.UINT32, 52L),
+    JvmDowncallEngine.StructField("stencilWriteMask", JvmDowncallEngine.FieldKind.UINT32, 56L),
+    JvmDowncallEngine.StructField("depthBias", JvmDowncallEngine.FieldKind.INT32, 60L),
+    JvmDowncallEngine.StructField("depthBiasSlopeScale", JvmDowncallEngine.FieldKind.FLOAT32, 64L),
+    JvmDowncallEngine.StructField("depthBiasClamp", JvmDowncallEngine.FieldKind.FLOAT32, 68L),
+)
+private fun __kffiJvmRegisterStructLayout69() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUDepthStencilState",
         72L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("depthWriteEnabled", JvmDowncallEngine.FieldKind.UINT32, 12L),
-            JvmDowncallEngine.StructField("depthCompare", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("WGPUStencilFaceState", JvmDowncallEngine.FieldKind.STRUCT, 20L),
-            JvmDowncallEngine.StructField("WGPUStencilFaceState", JvmDowncallEngine.FieldKind.STRUCT, 36L),
-            JvmDowncallEngine.StructField("stencilReadMask", JvmDowncallEngine.FieldKind.UINT32, 52L),
-            JvmDowncallEngine.StructField("stencilWriteMask", JvmDowncallEngine.FieldKind.UINT32, 56L),
-            JvmDowncallEngine.StructField("depthBias", JvmDowncallEngine.FieldKind.INT32, 60L),
-            JvmDowncallEngine.StructField("depthBiasSlopeScale", JvmDowncallEngine.FieldKind.FLOAT32, 64L),
-            JvmDowncallEngine.StructField("depthBiasClamp", JvmDowncallEngine.FieldKind.FLOAT32, 68L),
-        ),
+        __kffiJvmStructFields69_0(),
     )
+}
+private fun __kffiJvmStructFields70_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUFuture", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("completed", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout70() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUFutureWaitInfo",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUFuture", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("completed", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields70_0(),
     )
+}
+private fun __kffiJvmStructFields71_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("requiredFeatureCount", JvmDowncallEngine.FieldKind.UINT64, 8L),
+    JvmDowncallEngine.StructField("requiredFeatures", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("requiredLimits", JvmDowncallEngine.FieldKind.POINTER, 24L),
+)
+private fun __kffiJvmRegisterStructLayout71() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUInstanceDescriptor",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("requiredFeatureCount", JvmDowncallEngine.FieldKind.UINT64, 8L),
-            JvmDowncallEngine.StructField("requiredFeatures", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("requiredLimits", JvmDowncallEngine.FieldKind.POINTER, 24L),
-        ),
+        __kffiJvmStructFields71_0(),
     )
+}
+private fun __kffiJvmStructFields72_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("maxTextureDimension1D", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("maxTextureDimension2D", JvmDowncallEngine.FieldKind.UINT32, 12L),
+    JvmDowncallEngine.StructField("maxTextureDimension3D", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("maxTextureArrayLayers", JvmDowncallEngine.FieldKind.UINT32, 20L),
+    JvmDowncallEngine.StructField("maxBindGroups", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("maxBindGroupsPlusVertexBuffers", JvmDowncallEngine.FieldKind.UINT32, 28L),
+    JvmDowncallEngine.StructField("maxBindingsPerBindGroup", JvmDowncallEngine.FieldKind.UINT32, 32L),
+    JvmDowncallEngine.StructField("maxDynamicUniformBuffersPerPipelineLayout", JvmDowncallEngine.FieldKind.UINT32, 36L),
+    JvmDowncallEngine.StructField("maxDynamicStorageBuffersPerPipelineLayout", JvmDowncallEngine.FieldKind.UINT32, 40L),
+    JvmDowncallEngine.StructField("maxSampledTexturesPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 44L),
+    JvmDowncallEngine.StructField("maxSamplersPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 48L),
+    JvmDowncallEngine.StructField("maxStorageBuffersPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 52L),
+    JvmDowncallEngine.StructField("maxStorageTexturesPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 56L),
+    JvmDowncallEngine.StructField("maxUniformBuffersPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 60L),
+    JvmDowncallEngine.StructField("maxUniformBufferBindingSize", JvmDowncallEngine.FieldKind.UINT64, 64L),
+    JvmDowncallEngine.StructField("maxStorageBufferBindingSize", JvmDowncallEngine.FieldKind.UINT64, 72L),
+    JvmDowncallEngine.StructField("minUniformBufferOffsetAlignment", JvmDowncallEngine.FieldKind.UINT32, 80L),
+    JvmDowncallEngine.StructField("minStorageBufferOffsetAlignment", JvmDowncallEngine.FieldKind.UINT32, 84L),
+    JvmDowncallEngine.StructField("maxVertexBuffers", JvmDowncallEngine.FieldKind.UINT32, 88L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("maxBufferSize", JvmDowncallEngine.FieldKind.UINT64, 96L),
+    JvmDowncallEngine.StructField("maxVertexAttributes", JvmDowncallEngine.FieldKind.UINT32, 104L),
+    JvmDowncallEngine.StructField("maxVertexBufferArrayStride", JvmDowncallEngine.FieldKind.UINT32, 108L),
+    JvmDowncallEngine.StructField("maxInterStageShaderVariables", JvmDowncallEngine.FieldKind.UINT32, 112L),
+    JvmDowncallEngine.StructField("maxColorAttachments", JvmDowncallEngine.FieldKind.UINT32, 116L),
+    JvmDowncallEngine.StructField("maxColorAttachmentBytesPerSample", JvmDowncallEngine.FieldKind.UINT32, 120L),
+    JvmDowncallEngine.StructField("maxComputeWorkgroupStorageSize", JvmDowncallEngine.FieldKind.UINT32, 124L),
+    JvmDowncallEngine.StructField("maxComputeInvocationsPerWorkgroup", JvmDowncallEngine.FieldKind.UINT32, 128L),
+    JvmDowncallEngine.StructField("maxComputeWorkgroupSizeX", JvmDowncallEngine.FieldKind.UINT32, 132L),
+    JvmDowncallEngine.StructField("maxComputeWorkgroupSizeY", JvmDowncallEngine.FieldKind.UINT32, 136L),
+    JvmDowncallEngine.StructField("maxComputeWorkgroupSizeZ", JvmDowncallEngine.FieldKind.UINT32, 140L),
+    JvmDowncallEngine.StructField("maxComputeWorkgroupsPerDimension", JvmDowncallEngine.FieldKind.UINT32, 144L),
+    JvmDowncallEngine.StructField("maxImmediateSize", JvmDowncallEngine.FieldKind.UINT32, 148L),
+)
+private fun __kffiJvmRegisterStructLayout72() {
     JvmDowncallEngine.registerStructLayout(
         "WGPULimits",
         152L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("maxTextureDimension1D", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("maxTextureDimension2D", JvmDowncallEngine.FieldKind.UINT32, 12L),
-            JvmDowncallEngine.StructField("maxTextureDimension3D", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("maxTextureArrayLayers", JvmDowncallEngine.FieldKind.UINT32, 20L),
-            JvmDowncallEngine.StructField("maxBindGroups", JvmDowncallEngine.FieldKind.UINT32, 24L),
-            JvmDowncallEngine.StructField("maxBindGroupsPlusVertexBuffers", JvmDowncallEngine.FieldKind.UINT32, 28L),
-            JvmDowncallEngine.StructField("maxBindingsPerBindGroup", JvmDowncallEngine.FieldKind.UINT32, 32L),
-            JvmDowncallEngine.StructField("maxDynamicUniformBuffersPerPipelineLayout", JvmDowncallEngine.FieldKind.UINT32, 36L),
-            JvmDowncallEngine.StructField("maxDynamicStorageBuffersPerPipelineLayout", JvmDowncallEngine.FieldKind.UINT32, 40L),
-            JvmDowncallEngine.StructField("maxSampledTexturesPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 44L),
-            JvmDowncallEngine.StructField("maxSamplersPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 48L),
-            JvmDowncallEngine.StructField("maxStorageBuffersPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 52L),
-            JvmDowncallEngine.StructField("maxStorageTexturesPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 56L),
-            JvmDowncallEngine.StructField("maxUniformBuffersPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 60L),
-            JvmDowncallEngine.StructField("maxUniformBufferBindingSize", JvmDowncallEngine.FieldKind.UINT64, 64L),
-            JvmDowncallEngine.StructField("maxStorageBufferBindingSize", JvmDowncallEngine.FieldKind.UINT64, 72L),
-            JvmDowncallEngine.StructField("minUniformBufferOffsetAlignment", JvmDowncallEngine.FieldKind.UINT32, 80L),
-            JvmDowncallEngine.StructField("minStorageBufferOffsetAlignment", JvmDowncallEngine.FieldKind.UINT32, 84L),
-            JvmDowncallEngine.StructField("maxVertexBuffers", JvmDowncallEngine.FieldKind.UINT32, 88L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("maxBufferSize", JvmDowncallEngine.FieldKind.UINT64, 96L),
-            JvmDowncallEngine.StructField("maxVertexAttributes", JvmDowncallEngine.FieldKind.UINT32, 104L),
-            JvmDowncallEngine.StructField("maxVertexBufferArrayStride", JvmDowncallEngine.FieldKind.UINT32, 108L),
-            JvmDowncallEngine.StructField("maxInterStageShaderVariables", JvmDowncallEngine.FieldKind.UINT32, 112L),
-            JvmDowncallEngine.StructField("maxColorAttachments", JvmDowncallEngine.FieldKind.UINT32, 116L),
-            JvmDowncallEngine.StructField("maxColorAttachmentBytesPerSample", JvmDowncallEngine.FieldKind.UINT32, 120L),
-            JvmDowncallEngine.StructField("maxComputeWorkgroupStorageSize", JvmDowncallEngine.FieldKind.UINT32, 124L),
-            JvmDowncallEngine.StructField("maxComputeInvocationsPerWorkgroup", JvmDowncallEngine.FieldKind.UINT32, 128L),
-            JvmDowncallEngine.StructField("maxComputeWorkgroupSizeX", JvmDowncallEngine.FieldKind.UINT32, 132L),
-            JvmDowncallEngine.StructField("maxComputeWorkgroupSizeY", JvmDowncallEngine.FieldKind.UINT32, 136L),
-            JvmDowncallEngine.StructField("maxComputeWorkgroupSizeZ", JvmDowncallEngine.FieldKind.UINT32, 140L),
-            JvmDowncallEngine.StructField("maxComputeWorkgroupsPerDimension", JvmDowncallEngine.FieldKind.UINT32, 144L),
-            JvmDowncallEngine.StructField("maxImmediateSize", JvmDowncallEngine.FieldKind.UINT32, 148L),
-        ),
+        __kffiJvmStructFields72_0(),
     )
+}
+private fun __kffiJvmStructFields73_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("view", JvmDowncallEngine.FieldKind.POINTER, 8L),
+    JvmDowncallEngine.StructField("depthSlice", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("resolveTarget", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("loadOp", JvmDowncallEngine.FieldKind.UINT32, 32L),
+    JvmDowncallEngine.StructField("storeOp", JvmDowncallEngine.FieldKind.UINT32, 36L),
+    JvmDowncallEngine.StructField("WGPUColor", JvmDowncallEngine.FieldKind.STRUCT, 40L),
+)
+private fun __kffiJvmRegisterStructLayout73() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURenderPassColorAttachment",
         72L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("view", JvmDowncallEngine.FieldKind.POINTER, 8L),
-            JvmDowncallEngine.StructField("depthSlice", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("resolveTarget", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("loadOp", JvmDowncallEngine.FieldKind.UINT32, 32L),
-            JvmDowncallEngine.StructField("storeOp", JvmDowncallEngine.FieldKind.UINT32, 36L),
-            JvmDowncallEngine.StructField("WGPUColor", JvmDowncallEngine.FieldKind.STRUCT, 40L),
-        ),
+        __kffiJvmStructFields73_0(),
     )
+}
+private fun __kffiJvmStructFields74_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("featureLevel", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("powerPreference", JvmDowncallEngine.FieldKind.UINT32, 12L),
+    JvmDowncallEngine.StructField("forceFallbackAdapter", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("backendType", JvmDowncallEngine.FieldKind.UINT32, 20L),
+    JvmDowncallEngine.StructField("compatibleSurface", JvmDowncallEngine.FieldKind.POINTER, 24L),
+)
+private fun __kffiJvmRegisterStructLayout74() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURequestAdapterOptions",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("featureLevel", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("powerPreference", JvmDowncallEngine.FieldKind.UINT32, 12L),
-            JvmDowncallEngine.StructField("forceFallbackAdapter", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("backendType", JvmDowncallEngine.FieldKind.UINT32, 20L),
-            JvmDowncallEngine.StructField("compatibleSurface", JvmDowncallEngine.FieldKind.POINTER, 24L),
-        ),
+        __kffiJvmStructFields74_0(),
     )
+}
+private fun __kffiJvmStructFields75_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+)
+private fun __kffiJvmRegisterStructLayout75() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUShaderModuleDescriptor",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-        ),
+        __kffiJvmStructFields75_0(),
     )
+}
+private fun __kffiJvmStructFields76_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+)
+private fun __kffiJvmRegisterStructLayout76() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceDescriptor",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-        ),
+        __kffiJvmStructFields76_0(),
     )
+}
+private fun __kffiJvmStructFields77_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUTexelCopyBufferLayout", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("buffer", JvmDowncallEngine.FieldKind.POINTER, 16L),
+)
+private fun __kffiJvmRegisterStructLayout77() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUTexelCopyBufferInfo",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUTexelCopyBufferLayout", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("buffer", JvmDowncallEngine.FieldKind.POINTER, 16L),
-        ),
+        __kffiJvmStructFields77_0(),
     )
+}
+private fun __kffiJvmStructFields78_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("texture", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("mipLevel", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("WGPUOrigin3D", JvmDowncallEngine.FieldKind.STRUCT, 12L),
+    JvmDowncallEngine.StructField("aspect", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout78() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUTexelCopyTextureInfo",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("texture", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("mipLevel", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("WGPUOrigin3D", JvmDowncallEngine.FieldKind.STRUCT, 12L),
-            JvmDowncallEngine.StructField("aspect", JvmDowncallEngine.FieldKind.UINT32, 24L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields78_0(),
     )
+}
+private fun __kffiJvmStructFields79_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("WGPUTextureComponentSwizzle", JvmDowncallEngine.FieldKind.STRUCT, 16L),
+)
+private fun __kffiJvmRegisterStructLayout79() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUTextureComponentSwizzleDescriptor",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("WGPUTextureComponentSwizzle", JvmDowncallEngine.FieldKind.STRUCT, 16L),
-        ),
+        __kffiJvmStructFields79_0(),
     )
+}
+private fun __kffiJvmStructFields80_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("usage", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("dimension", JvmDowncallEngine.FieldKind.UINT32, 32L),
+    JvmDowncallEngine.StructField("WGPUExtent3D", JvmDowncallEngine.FieldKind.STRUCT, 36L),
+    JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 48L),
+    JvmDowncallEngine.StructField("mipLevelCount", JvmDowncallEngine.FieldKind.UINT32, 52L),
+    JvmDowncallEngine.StructField("sampleCount", JvmDowncallEngine.FieldKind.UINT32, 56L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("viewFormatCount", JvmDowncallEngine.FieldKind.UINT64, 64L),
+    JvmDowncallEngine.StructField("viewFormats", JvmDowncallEngine.FieldKind.POINTER, 72L),
+)
+private fun __kffiJvmRegisterStructLayout80() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUTextureDescriptor",
         80L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("usage", JvmDowncallEngine.FieldKind.UINT64, 24L),
-            JvmDowncallEngine.StructField("dimension", JvmDowncallEngine.FieldKind.UINT32, 32L),
-            JvmDowncallEngine.StructField("WGPUExtent3D", JvmDowncallEngine.FieldKind.STRUCT, 36L),
-            JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 48L),
-            JvmDowncallEngine.StructField("mipLevelCount", JvmDowncallEngine.FieldKind.UINT32, 52L),
-            JvmDowncallEngine.StructField("sampleCount", JvmDowncallEngine.FieldKind.UINT32, 56L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("viewFormatCount", JvmDowncallEngine.FieldKind.UINT64, 64L),
-            JvmDowncallEngine.StructField("viewFormats", JvmDowncallEngine.FieldKind.POINTER, 72L),
-        ),
+        __kffiJvmStructFields80_0(),
     )
+}
+private fun __kffiJvmStructFields81_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("stepMode", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("arrayStride", JvmDowncallEngine.FieldKind.UINT64, 16L),
+    JvmDowncallEngine.StructField("attributeCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("attributes", JvmDowncallEngine.FieldKind.POINTER, 32L),
+)
+private fun __kffiJvmRegisterStructLayout81() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUVertexBufferLayout",
         40L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("stepMode", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("arrayStride", JvmDowncallEngine.FieldKind.UINT64, 16L),
-            JvmDowncallEngine.StructField("attributeCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
-            JvmDowncallEngine.StructField("attributes", JvmDowncallEngine.FieldKind.POINTER, 32L),
-        ),
+        __kffiJvmStructFields81_0(),
     )
+}
+private fun __kffiJvmStructFields82_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("layout", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("entryCount", JvmDowncallEngine.FieldKind.UINT64, 32L),
+    JvmDowncallEngine.StructField("entries", JvmDowncallEngine.FieldKind.POINTER, 40L),
+)
+private fun __kffiJvmRegisterStructLayout82() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUBindGroupDescriptor",
         48L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("layout", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("entryCount", JvmDowncallEngine.FieldKind.UINT64, 32L),
-            JvmDowncallEngine.StructField("entries", JvmDowncallEngine.FieldKind.POINTER, 40L),
-        ),
+        __kffiJvmStructFields82_0(),
     )
+}
+private fun __kffiJvmStructFields83_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("entryCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("entries", JvmDowncallEngine.FieldKind.POINTER, 32L),
+)
+private fun __kffiJvmRegisterStructLayout83() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUBindGroupLayoutDescriptor",
         40L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("entryCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
-            JvmDowncallEngine.StructField("entries", JvmDowncallEngine.FieldKind.POINTER, 32L),
-        ),
+        __kffiJvmStructFields83_0(),
     )
+}
+private fun __kffiJvmStructFields84_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("blend", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("writeMask", JvmDowncallEngine.FieldKind.UINT64, 24L),
+)
+private fun __kffiJvmRegisterStructLayout84() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUColorTargetState",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("blend", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("writeMask", JvmDowncallEngine.FieldKind.UINT64, 24L),
-        ),
+        __kffiJvmStructFields84_0(),
     )
+}
+private fun __kffiJvmStructFields85_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("layout", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("WGPUComputeState", JvmDowncallEngine.FieldKind.STRUCT, 32L),
+)
+private fun __kffiJvmRegisterStructLayout85() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUComputePipelineDescriptor",
         80L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("layout", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("WGPUComputeState", JvmDowncallEngine.FieldKind.STRUCT, 32L),
-        ),
+        __kffiJvmStructFields85_0(),
     )
+}
+private fun __kffiJvmStructFields86_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("requiredFeatureCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("requiredFeatures", JvmDowncallEngine.FieldKind.POINTER, 32L),
+    JvmDowncallEngine.StructField("requiredLimits", JvmDowncallEngine.FieldKind.POINTER, 40L),
+    JvmDowncallEngine.StructField("WGPUQueueDescriptor", JvmDowncallEngine.FieldKind.STRUCT, 48L),
+    JvmDowncallEngine.StructField("WGPUDeviceLostCallbackInfo", JvmDowncallEngine.FieldKind.STRUCT, 72L),
+    JvmDowncallEngine.StructField("WGPUUncapturedErrorCallbackInfo", JvmDowncallEngine.FieldKind.STRUCT, 112L),
+)
+private fun __kffiJvmRegisterStructLayout86() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUDeviceDescriptor",
         144L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("requiredFeatureCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
-            JvmDowncallEngine.StructField("requiredFeatures", JvmDowncallEngine.FieldKind.POINTER, 32L),
-            JvmDowncallEngine.StructField("requiredLimits", JvmDowncallEngine.FieldKind.POINTER, 40L),
-            JvmDowncallEngine.StructField("WGPUQueueDescriptor", JvmDowncallEngine.FieldKind.STRUCT, 48L),
-            JvmDowncallEngine.StructField("WGPUDeviceLostCallbackInfo", JvmDowncallEngine.FieldKind.STRUCT, 72L),
-            JvmDowncallEngine.StructField("WGPUUncapturedErrorCallbackInfo", JvmDowncallEngine.FieldKind.STRUCT, 112L),
-        ),
+        __kffiJvmStructFields86_0(),
     )
+}
+private fun __kffiJvmStructFields87_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("colorAttachmentCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("colorAttachments", JvmDowncallEngine.FieldKind.POINTER, 32L),
+    JvmDowncallEngine.StructField("depthStencilAttachment", JvmDowncallEngine.FieldKind.POINTER, 40L),
+    JvmDowncallEngine.StructField("occlusionQuerySet", JvmDowncallEngine.FieldKind.POINTER, 48L),
+    JvmDowncallEngine.StructField("timestampWrites", JvmDowncallEngine.FieldKind.POINTER, 56L),
+)
+private fun __kffiJvmRegisterStructLayout87() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURenderPassDescriptor",
         64L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("colorAttachmentCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
-            JvmDowncallEngine.StructField("colorAttachments", JvmDowncallEngine.FieldKind.POINTER, 32L),
-            JvmDowncallEngine.StructField("depthStencilAttachment", JvmDowncallEngine.FieldKind.POINTER, 40L),
-            JvmDowncallEngine.StructField("occlusionQuerySet", JvmDowncallEngine.FieldKind.POINTER, 48L),
-            JvmDowncallEngine.StructField("timestampWrites", JvmDowncallEngine.FieldKind.POINTER, 56L),
-        ),
+        __kffiJvmStructFields87_0(),
     )
+}
+private fun __kffiJvmStructFields88_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("dimension", JvmDowncallEngine.FieldKind.UINT32, 28L),
+    JvmDowncallEngine.StructField("baseMipLevel", JvmDowncallEngine.FieldKind.UINT32, 32L),
+    JvmDowncallEngine.StructField("mipLevelCount", JvmDowncallEngine.FieldKind.UINT32, 36L),
+    JvmDowncallEngine.StructField("baseArrayLayer", JvmDowncallEngine.FieldKind.UINT32, 40L),
+    JvmDowncallEngine.StructField("arrayLayerCount", JvmDowncallEngine.FieldKind.UINT32, 44L),
+    JvmDowncallEngine.StructField("aspect", JvmDowncallEngine.FieldKind.UINT32, 48L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("usage", JvmDowncallEngine.FieldKind.UINT64, 56L),
+)
+private fun __kffiJvmRegisterStructLayout88() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUTextureViewDescriptor",
         64L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("format", JvmDowncallEngine.FieldKind.UINT32, 24L),
-            JvmDowncallEngine.StructField("dimension", JvmDowncallEngine.FieldKind.UINT32, 28L),
-            JvmDowncallEngine.StructField("baseMipLevel", JvmDowncallEngine.FieldKind.UINT32, 32L),
-            JvmDowncallEngine.StructField("mipLevelCount", JvmDowncallEngine.FieldKind.UINT32, 36L),
-            JvmDowncallEngine.StructField("baseArrayLayer", JvmDowncallEngine.FieldKind.UINT32, 40L),
-            JvmDowncallEngine.StructField("arrayLayerCount", JvmDowncallEngine.FieldKind.UINT32, 44L),
-            JvmDowncallEngine.StructField("aspect", JvmDowncallEngine.FieldKind.UINT32, 48L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("usage", JvmDowncallEngine.FieldKind.UINT64, 56L),
-        ),
+        __kffiJvmStructFields88_0(),
     )
+}
+private fun __kffiJvmStructFields89_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("module", JvmDowncallEngine.FieldKind.POINTER, 8L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
+    JvmDowncallEngine.StructField("constantCount", JvmDowncallEngine.FieldKind.UINT64, 32L),
+    JvmDowncallEngine.StructField("constants", JvmDowncallEngine.FieldKind.POINTER, 40L),
+    JvmDowncallEngine.StructField("bufferCount", JvmDowncallEngine.FieldKind.UINT64, 48L),
+    JvmDowncallEngine.StructField("buffers", JvmDowncallEngine.FieldKind.POINTER, 56L),
+)
+private fun __kffiJvmRegisterStructLayout89() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUVertexState",
         64L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("module", JvmDowncallEngine.FieldKind.POINTER, 8L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
-            JvmDowncallEngine.StructField("constantCount", JvmDowncallEngine.FieldKind.UINT64, 32L),
-            JvmDowncallEngine.StructField("constants", JvmDowncallEngine.FieldKind.POINTER, 40L),
-            JvmDowncallEngine.StructField("bufferCount", JvmDowncallEngine.FieldKind.UINT64, 48L),
-            JvmDowncallEngine.StructField("buffers", JvmDowncallEngine.FieldKind.POINTER, 56L),
-        ),
+        __kffiJvmStructFields89_0(),
     )
+}
+private fun __kffiJvmStructFields90_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("module", JvmDowncallEngine.FieldKind.POINTER, 8L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
+    JvmDowncallEngine.StructField("constantCount", JvmDowncallEngine.FieldKind.UINT64, 32L),
+    JvmDowncallEngine.StructField("constants", JvmDowncallEngine.FieldKind.POINTER, 40L),
+    JvmDowncallEngine.StructField("targetCount", JvmDowncallEngine.FieldKind.UINT64, 48L),
+    JvmDowncallEngine.StructField("targets", JvmDowncallEngine.FieldKind.POINTER, 56L),
+)
+private fun __kffiJvmRegisterStructLayout90() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUFragmentState",
         64L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("module", JvmDowncallEngine.FieldKind.POINTER, 8L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
-            JvmDowncallEngine.StructField("constantCount", JvmDowncallEngine.FieldKind.UINT64, 32L),
-            JvmDowncallEngine.StructField("constants", JvmDowncallEngine.FieldKind.POINTER, 40L),
-            JvmDowncallEngine.StructField("targetCount", JvmDowncallEngine.FieldKind.UINT64, 48L),
-            JvmDowncallEngine.StructField("targets", JvmDowncallEngine.FieldKind.POINTER, 56L),
-        ),
+        __kffiJvmStructFields90_0(),
     )
+}
+private fun __kffiJvmStructFields91_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
+    JvmDowncallEngine.StructField("layout", JvmDowncallEngine.FieldKind.POINTER, 24L),
+    JvmDowncallEngine.StructField("WGPUVertexState", JvmDowncallEngine.FieldKind.STRUCT, 32L),
+    JvmDowncallEngine.StructField("WGPUPrimitiveState", JvmDowncallEngine.FieldKind.STRUCT, 96L),
+    JvmDowncallEngine.StructField("depthStencil", JvmDowncallEngine.FieldKind.POINTER, 128L),
+    JvmDowncallEngine.StructField("WGPUMultisampleState", JvmDowncallEngine.FieldKind.STRUCT, 136L),
+    JvmDowncallEngine.StructField("fragment", JvmDowncallEngine.FieldKind.POINTER, 160L),
+)
+private fun __kffiJvmRegisterStructLayout91() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURenderPipelineDescriptor",
         168L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 8L),
-            JvmDowncallEngine.StructField("layout", JvmDowncallEngine.FieldKind.POINTER, 24L),
-            JvmDowncallEngine.StructField("WGPUVertexState", JvmDowncallEngine.FieldKind.STRUCT, 32L),
-            JvmDowncallEngine.StructField("WGPUPrimitiveState", JvmDowncallEngine.FieldKind.STRUCT, 96L),
-            JvmDowncallEngine.StructField("depthStencil", JvmDowncallEngine.FieldKind.POINTER, 128L),
-            JvmDowncallEngine.StructField("WGPUMultisampleState", JvmDowncallEngine.FieldKind.STRUCT, 136L),
-            JvmDowncallEngine.StructField("fragment", JvmDowncallEngine.FieldKind.POINTER, 160L),
-        ),
+        __kffiJvmStructFields91_0(),
     )
+}
+private fun __kffiJvmStructFields92_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("display", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("screen", JvmDowncallEngine.FieldKind.INT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout92() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUXlibDisplayHandle",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("display", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("screen", JvmDowncallEngine.FieldKind.INT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields92_0(),
     )
+}
+private fun __kffiJvmStructFields93_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("connection", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("screen", JvmDowncallEngine.FieldKind.INT32, 8L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout93() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUXcbDisplayHandle",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("connection", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("screen", JvmDowncallEngine.FieldKind.INT32, 8L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields93_0(),
     )
+}
+private fun __kffiJvmStructFields94_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("display", JvmDowncallEngine.FieldKind.POINTER, 0L),
+)
+private fun __kffiJvmRegisterStructLayout94() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUWaylandDisplayHandle",
         8L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("display", JvmDowncallEngine.FieldKind.POINTER, 0L),
-        ),
+        __kffiJvmStructFields94_0(),
     )
+}
+private fun __kffiJvmStructFields95_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("backends", JvmDowncallEngine.FieldKind.UINT64, 16L),
+    JvmDowncallEngine.StructField("flags", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("dx12ShaderCompiler", JvmDowncallEngine.FieldKind.UINT32, 32L),
+    JvmDowncallEngine.StructField("gles3MinorVersion", JvmDowncallEngine.FieldKind.UINT32, 36L),
+    JvmDowncallEngine.StructField("glFenceBehaviour", JvmDowncallEngine.FieldKind.UINT32, 40L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 48L),
+    JvmDowncallEngine.StructField("dxcMaxShaderModel", JvmDowncallEngine.FieldKind.UINT32, 64L),
+    JvmDowncallEngine.StructField("dx12PresentationSystem", JvmDowncallEngine.FieldKind.UINT32, 68L),
+    JvmDowncallEngine.StructField("budgetForDeviceCreation", JvmDowncallEngine.FieldKind.POINTER, 72L),
+    JvmDowncallEngine.StructField("budgetForDeviceLoss", JvmDowncallEngine.FieldKind.POINTER, 80L),
+    JvmDowncallEngine.StructField("WGPUNativeDisplayHandle", JvmDowncallEngine.FieldKind.STRUCT, 88L),
+)
+private fun __kffiJvmRegisterStructLayout95() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUInstanceExtras",
         112L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("backends", JvmDowncallEngine.FieldKind.UINT64, 16L),
-            JvmDowncallEngine.StructField("flags", JvmDowncallEngine.FieldKind.UINT64, 24L),
-            JvmDowncallEngine.StructField("dx12ShaderCompiler", JvmDowncallEngine.FieldKind.UINT32, 32L),
-            JvmDowncallEngine.StructField("gles3MinorVersion", JvmDowncallEngine.FieldKind.UINT32, 36L),
-            JvmDowncallEngine.StructField("glFenceBehaviour", JvmDowncallEngine.FieldKind.UINT32, 40L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 48L),
-            JvmDowncallEngine.StructField("dxcMaxShaderModel", JvmDowncallEngine.FieldKind.UINT32, 64L),
-            JvmDowncallEngine.StructField("dx12PresentationSystem", JvmDowncallEngine.FieldKind.UINT32, 68L),
-            JvmDowncallEngine.StructField("budgetForDeviceCreation", JvmDowncallEngine.FieldKind.POINTER, 72L),
-            JvmDowncallEngine.StructField("budgetForDeviceLoss", JvmDowncallEngine.FieldKind.POINTER, 80L),
-            JvmDowncallEngine.StructField("WGPUNativeDisplayHandle", JvmDowncallEngine.FieldKind.STRUCT, 88L),
-        ),
+        __kffiJvmStructFields95_0(),
     )
+}
+private fun __kffiJvmStructFields96_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
+)
+private fun __kffiJvmRegisterStructLayout96() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUDeviceExtras",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
-        ),
+        __kffiJvmStructFields96_0(),
     )
+}
+private fun __kffiJvmStructFields97_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("maxImmediateSize", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("maxNonSamplerBindings", JvmDowncallEngine.FieldKind.UINT32, 20L),
+    JvmDowncallEngine.StructField("maxBindingArrayElementsPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout97() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUNativeLimits",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("maxImmediateSize", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("maxNonSamplerBindings", JvmDowncallEngine.FieldKind.UINT32, 20L),
-            JvmDowncallEngine.StructField("maxBindingArrayElementsPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 24L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields97_0(),
     )
+}
+private fun __kffiJvmStructFields98_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("immediateDataSize", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout98() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUPipelineLayoutExtras",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("immediateDataSize", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields98_0(),
     )
+}
+private fun __kffiJvmStructFields99_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
+)
+private fun __kffiJvmRegisterStructLayout99() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUShaderDefine",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
-        ),
+        __kffiJvmStructFields99_0(),
     )
+}
+private fun __kffiJvmStructFields100_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("stage", JvmDowncallEngine.FieldKind.UINT64, 16L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 24L),
+    JvmDowncallEngine.StructField("defineCount", JvmDowncallEngine.FieldKind.UINT32, 40L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("defines", JvmDowncallEngine.FieldKind.POINTER, 48L),
+)
+private fun __kffiJvmRegisterStructLayout100() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUShaderSourceGLSL",
         56L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("stage", JvmDowncallEngine.FieldKind.UINT64, 16L),
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 24L),
-            JvmDowncallEngine.StructField("defineCount", JvmDowncallEngine.FieldKind.UINT32, 40L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("defines", JvmDowncallEngine.FieldKind.POINTER, 48L),
-        ),
+        __kffiJvmStructFields100_0(),
     )
+}
+private fun __kffiJvmStructFields101_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("sourceSize", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("source", JvmDowncallEngine.FieldKind.POINTER, 24L),
+)
+private fun __kffiJvmRegisterStructLayout101() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUShaderModuleDescriptorSpirV",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("sourceSize", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-            JvmDowncallEngine.StructField("source", JvmDowncallEngine.FieldKind.POINTER, 24L),
-        ),
+        __kffiJvmStructFields101_0(),
     )
+}
+private fun __kffiJvmStructFields102_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("numAllocated", JvmDowncallEngine.FieldKind.UINT64, 0L),
+    JvmDowncallEngine.StructField("numKeptFromUser", JvmDowncallEngine.FieldKind.UINT64, 8L),
+    JvmDowncallEngine.StructField("numReleasedFromUser", JvmDowncallEngine.FieldKind.UINT64, 16L),
+    JvmDowncallEngine.StructField("elementSize", JvmDowncallEngine.FieldKind.UINT64, 24L),
+)
+private fun __kffiJvmRegisterStructLayout102() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURegistryReport",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("numAllocated", JvmDowncallEngine.FieldKind.UINT64, 0L),
-            JvmDowncallEngine.StructField("numKeptFromUser", JvmDowncallEngine.FieldKind.UINT64, 8L),
-            JvmDowncallEngine.StructField("numReleasedFromUser", JvmDowncallEngine.FieldKind.UINT64, 16L),
-            JvmDowncallEngine.StructField("elementSize", JvmDowncallEngine.FieldKind.UINT64, 24L),
-        ),
+        __kffiJvmStructFields102_0(),
     )
+}
+private fun __kffiJvmStructFields103_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 32L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 64L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 96L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 128L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 160L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 192L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 224L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 256L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 288L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 320L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 352L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 384L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 416L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 448L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 480L),
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 512L),
+)
+private fun __kffiJvmRegisterStructLayout103() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUHubReport",
         544L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 32L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 64L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 96L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 128L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 160L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 192L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 224L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 256L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 288L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 320L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 352L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 384L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 416L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 448L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 480L),
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 512L),
-        ),
+        __kffiJvmStructFields103_0(),
     )
+}
+private fun __kffiJvmStructFields104_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("WGPUHubReport", JvmDowncallEngine.FieldKind.STRUCT, 32L),
+)
+private fun __kffiJvmRegisterStructLayout104() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUGlobalReport",
         576L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("WGPUHubReport", JvmDowncallEngine.FieldKind.STRUCT, 32L),
-        ),
+        __kffiJvmStructFields104_0(),
     )
+}
+private fun __kffiJvmStructFields105_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("backends", JvmDowncallEngine.FieldKind.UINT64, 8L),
+)
+private fun __kffiJvmRegisterStructLayout105() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUInstanceEnumerateAdapterOptions",
         16L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-            JvmDowncallEngine.StructField("backends", JvmDowncallEngine.FieldKind.UINT64, 8L),
-        ),
+        __kffiJvmStructFields105_0(),
     )
+}
+private fun __kffiJvmStructFields106_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("buffers", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("bufferCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("samplers", JvmDowncallEngine.FieldKind.POINTER, 32L),
+    JvmDowncallEngine.StructField("samplerCount", JvmDowncallEngine.FieldKind.UINT64, 40L),
+    JvmDowncallEngine.StructField("textureViews", JvmDowncallEngine.FieldKind.POINTER, 48L),
+    JvmDowncallEngine.StructField("textureViewCount", JvmDowncallEngine.FieldKind.UINT64, 56L),
+)
+private fun __kffiJvmRegisterStructLayout106() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUBindGroupEntryExtras",
         64L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("buffers", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("bufferCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
-            JvmDowncallEngine.StructField("samplers", JvmDowncallEngine.FieldKind.POINTER, 32L),
-            JvmDowncallEngine.StructField("samplerCount", JvmDowncallEngine.FieldKind.UINT64, 40L),
-            JvmDowncallEngine.StructField("textureViews", JvmDowncallEngine.FieldKind.POINTER, 48L),
-            JvmDowncallEngine.StructField("textureViewCount", JvmDowncallEngine.FieldKind.UINT64, 56L),
-        ),
+        __kffiJvmStructFields106_0(),
     )
+}
+private fun __kffiJvmStructFields107_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("count", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout107() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUBindGroupLayoutEntryExtras",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("count", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields107_0(),
     )
+}
+private fun __kffiJvmStructFields108_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("pipelineStatistics", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("pipelineStatisticCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
+)
+private fun __kffiJvmRegisterStructLayout108() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUQuerySetDescriptorExtras",
         32L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("pipelineStatistics", JvmDowncallEngine.FieldKind.POINTER, 16L),
-            JvmDowncallEngine.StructField("pipelineStatisticCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
-        ),
+        __kffiJvmStructFields108_0(),
     )
+}
+private fun __kffiJvmStructFields109_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("desiredMaximumFrameLatency", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout109() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceConfigurationExtras",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("desiredMaximumFrameLatency", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
-        ),
+        __kffiJvmStructFields109_0(),
     )
+}
+private fun __kffiJvmStructFields110_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("panelNative", JvmDowncallEngine.FieldKind.POINTER, 16L),
+)
+private fun __kffiJvmRegisterStructLayout110() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUSurfaceSourceSwapChainPanel",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("panelNative", JvmDowncallEngine.FieldKind.POINTER, 16L),
-        ),
+        __kffiJvmStructFields110_0(),
     )
+}
+private fun __kffiJvmStructFields111_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("polygonMode", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("conservative", JvmDowncallEngine.FieldKind.UINT32, 20L),
+)
+private fun __kffiJvmRegisterStructLayout111() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUPrimitiveStateExtras",
         24L, 8L,
-        listOf(
-            JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-            JvmDowncallEngine.StructField("polygonMode", JvmDowncallEngine.FieldKind.UINT32, 16L),
-            JvmDowncallEngine.StructField("conservative", JvmDowncallEngine.FieldKind.UINT32, 20L),
-        ),
+        __kffiJvmStructFields111_0(),
     )
 }
+private val __kffiJvmStructLayouts: Unit = run {
+    __kffiJvmRegisterStructLayout0()
+    __kffiJvmRegisterStructLayout1()
+    __kffiJvmRegisterStructLayout2()
+    __kffiJvmRegisterStructLayout3()
+    __kffiJvmRegisterStructLayout4()
+    __kffiJvmRegisterStructLayout5()
+    __kffiJvmRegisterStructLayout6()
+    __kffiJvmRegisterStructLayout7()
+    __kffiJvmRegisterStructLayout8()
+    __kffiJvmRegisterStructLayout9()
+    __kffiJvmRegisterStructLayout10()
+    __kffiJvmRegisterStructLayout11()
+    __kffiJvmRegisterStructLayout12()
+    __kffiJvmRegisterStructLayout13()
+    __kffiJvmRegisterStructLayout14()
+    __kffiJvmRegisterStructLayout15()
+    __kffiJvmRegisterStructLayout16()
+    __kffiJvmRegisterStructLayout17()
+    __kffiJvmRegisterStructLayout18()
+    __kffiJvmRegisterStructLayout19()
+    __kffiJvmRegisterStructLayout20()
+    __kffiJvmRegisterStructLayout21()
+    __kffiJvmRegisterStructLayout22()
+    __kffiJvmRegisterStructLayout23()
+    __kffiJvmRegisterStructLayout24()
+    __kffiJvmRegisterStructLayout25()
+    __kffiJvmRegisterStructLayout26()
+    __kffiJvmRegisterStructLayout27()
+    __kffiJvmRegisterStructLayout28()
+    __kffiJvmRegisterStructLayout29()
+    __kffiJvmRegisterStructLayout30()
+    __kffiJvmRegisterStructLayout31()
+    __kffiJvmRegisterStructLayout32()
+    __kffiJvmRegisterStructLayout33()
+    __kffiJvmRegisterStructLayout34()
+    __kffiJvmRegisterStructLayout35()
+    __kffiJvmRegisterStructLayout36()
+    __kffiJvmRegisterStructLayout37()
+    __kffiJvmRegisterStructLayout38()
+    __kffiJvmRegisterStructLayout39()
+    __kffiJvmRegisterStructLayout40()
+    __kffiJvmRegisterStructLayout41()
+    __kffiJvmRegisterStructLayout42()
+    __kffiJvmRegisterStructLayout43()
+    __kffiJvmRegisterStructLayout44()
+    __kffiJvmRegisterStructLayout45()
+    __kffiJvmRegisterStructLayout46()
+    __kffiJvmRegisterStructLayout47()
+    __kffiJvmRegisterStructLayout48()
+    __kffiJvmRegisterStructLayout49()
+    __kffiJvmRegisterStructLayout50()
+    __kffiJvmRegisterStructLayout51()
+    __kffiJvmRegisterStructLayout52()
+    __kffiJvmRegisterStructLayout53()
+    __kffiJvmRegisterStructLayout54()
+    __kffiJvmRegisterStructLayout55()
+    __kffiJvmRegisterStructLayout56()
+    __kffiJvmRegisterStructLayout57()
+    __kffiJvmRegisterStructLayout58()
+    __kffiJvmRegisterStructLayout59()
+    __kffiJvmRegisterStructLayout60()
+    __kffiJvmRegisterStructLayout61()
+    __kffiJvmRegisterStructLayout62()
+    __kffiJvmRegisterStructLayout63()
+    __kffiJvmRegisterStructLayout64()
+    __kffiJvmRegisterStructLayout65()
+    __kffiJvmRegisterStructLayout66()
+    __kffiJvmRegisterStructLayout67()
+    __kffiJvmRegisterStructLayout68()
+    __kffiJvmRegisterStructLayout69()
+    __kffiJvmRegisterStructLayout70()
+    __kffiJvmRegisterStructLayout71()
+    __kffiJvmRegisterStructLayout72()
+    __kffiJvmRegisterStructLayout73()
+    __kffiJvmRegisterStructLayout74()
+    __kffiJvmRegisterStructLayout75()
+    __kffiJvmRegisterStructLayout76()
+    __kffiJvmRegisterStructLayout77()
+    __kffiJvmRegisterStructLayout78()
+    __kffiJvmRegisterStructLayout79()
+    __kffiJvmRegisterStructLayout80()
+    __kffiJvmRegisterStructLayout81()
+    __kffiJvmRegisterStructLayout82()
+    __kffiJvmRegisterStructLayout83()
+    __kffiJvmRegisterStructLayout84()
+    __kffiJvmRegisterStructLayout85()
+    __kffiJvmRegisterStructLayout86()
+    __kffiJvmRegisterStructLayout87()
+    __kffiJvmRegisterStructLayout88()
+    __kffiJvmRegisterStructLayout89()
+    __kffiJvmRegisterStructLayout90()
+    __kffiJvmRegisterStructLayout91()
+    __kffiJvmRegisterStructLayout92()
+    __kffiJvmRegisterStructLayout93()
+    __kffiJvmRegisterStructLayout94()
+    __kffiJvmRegisterStructLayout95()
+    __kffiJvmRegisterStructLayout96()
+    __kffiJvmRegisterStructLayout97()
+    __kffiJvmRegisterStructLayout98()
+    __kffiJvmRegisterStructLayout99()
+    __kffiJvmRegisterStructLayout100()
+    __kffiJvmRegisterStructLayout101()
+    __kffiJvmRegisterStructLayout102()
+    __kffiJvmRegisterStructLayout103()
+    __kffiJvmRegisterStructLayout104()
+    __kffiJvmRegisterStructLayout105()
+    __kffiJvmRegisterStructLayout106()
+    __kffiJvmRegisterStructLayout107()
+    __kffiJvmRegisterStructLayout108()
+    __kffiJvmRegisterStructLayout109()
+    __kffiJvmRegisterStructLayout110()
+    __kffiJvmRegisterStructLayout111()
+}
+
